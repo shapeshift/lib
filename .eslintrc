@@ -9,11 +9,7 @@
     "plugin:jsx-a11y/recommended",
     "plugin:jest/recommended"
   ],
-  "plugins": [
-    "@typescript-eslint",
-    "prettier",
-    "jest"
-  ],
+  "plugins": ["@typescript-eslint", "prettier", "jest"],
   "env": {
     "node": true,
     "browser": true,
@@ -31,16 +27,11 @@
     "@typescript-eslint/no-use-before-define": "error",
     "@typescript-eslint/member-delimiter-style": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-shadow": [
-      "error"
-    ]
+    "@typescript-eslint/no-shadow": ["error"]
   },
   "overrides": [
     {
-      "files": [
-        "**/*.test.{j,t}s",
-        "**/*CLI.ts"
-      ],
+      "files": ["**/*.test.{j,t}s", "**/*TestModule.ts"],
       "rules": {
         "no-console": "off",
         "@typescript-eslint/no-non-null-assertion": "off"
