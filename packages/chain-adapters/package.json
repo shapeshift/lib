@@ -18,7 +18,7 @@
     "dev": "tsc --watch",
     "clean": "rm -rf dist",
     "test": "jest test",
-    "adapterCli": "yarn build && node ./dist/ChainAdapterCLI.js"
+    "test:module": "yarn build && node ./dist/ChainAdapterTestModule.js"
   },
   "dependencies": {
     "@shapeshiftoss/hdwallet-core": "^1.15.5-alpha.0",
