@@ -20,6 +20,8 @@
     "publish:lerna": "lerna publish from-package --no-private --yes"
   },
   "devDependencies": {
+    "@commitlint/cli": "^13.1.0",
+    "@commitlint/config-conventional": "^13.1.0",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
     "@types/jest": "^27.0.1",
@@ -32,6 +34,7 @@
     "eslint-plugin-jest": "24.3.6",
     "eslint-plugin-jsx-a11y": "6.4.1",
     "eslint-plugin-prettier": "3.4.0",
+    "husky": "^7.0.2",
     "jest": "^27.1.0",
     "jest-mock-extended": "^1.0.9",
     "lerna": "^4.0.0",
