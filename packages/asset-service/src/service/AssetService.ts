@@ -12,8 +12,12 @@ export class AssetService {
     this.assetFileUrl = assetFileUrl
   }
 
+  get isInitialized(): boolean {
+    return !(Array.isArray(this.assetData) && Array.isArray(this.flatAssetData))
+  }
+
   private checkInitialized() {
-    if (!this.assetData || !this.flatAssetData) throw new Error('Asset service not initialized')
+    if (!this.isInitialized) throw new Error('Asset service not initialized')
   }
 
   /**
