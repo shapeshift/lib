@@ -1,6 +1,6 @@
-import { TokenData, ContractTypes } from '../types'
+import { TokenAsset, ContractTypes } from '../../types'
 
-export const tokensToOverride: Array<TokenData> = [
+export const tokensToOverride: Array<TokenAsset> = [
   // example overriding FOX token with custom values instead of goingecko
   {
     displayName: 'Fox',
