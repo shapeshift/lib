@@ -1,13 +1,11 @@
 export type TokenAsset = {
   displayName: string
   precision: number
-  contractAddress: string
+  tokenId: string
   contractType: ContractTypes
   color: string
   secondaryColor: string
   icon: string
-  explorer: string
-  explorerTxLink: string
   sendSupport: boolean
   receiveSupport: boolean
   symbol: string
@@ -38,12 +36,12 @@ export type Asset = {
   color: string
   secondaryColor: string
   icon: string
-  explorer: string
-  explorerTxLink: string
+  explorer?: string
+  explorerTxLink?: string
   sendSupport: boolean
   receiveSupport: boolean
   slip44?: number
-  contractAddress?: string
+  tokenId?: string
   contractType?: ContractTypes
 }
 

@@ -49,13 +49,11 @@ export const baseAssets: Array<BaseAsset> = [
       {
         displayName: 'Test Token',
         precision: 18,
-        contractAddress: '0x1da00b6fc705f2ce4c25d7e7add25a3cc045e54a',
+        tokenId: '0x1da00b6fc705f2ce4c25d7e7add25a3cc045e54a',
         contractType: ContractTypes.ERC20,
         color: '#FFFFFF',
         secondaryColor: '#FFFFFF',
         icon: 'https://assets.coingecko.com/coins/images/17049/thumb/BUNNY.png?1626148809',
-        explorer: 'https://ropsten.etherscan.io/',
-        explorerTxLink: 'https://ropsten.etherscan.io/tx/',
         sendSupport: true,
         receiveSupport: true,
         symbol: 'TST'

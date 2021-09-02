@@ -1,4 +1,3 @@
-
 import axios from 'axios'
 import { ContractTypes, TokenAsset } from '../../types'
 import lodash from 'lodash'
@@ -21,7 +20,7 @@ export async function getTokens(): Promise<TokenAsset[]> {
   const tokens = uniswapTokenData.tokens.map((token: CoingeckoTokenData) => {
     const overrideToken: TokenAsset | undefined = lodash.find(
       tokensToOverride,
-      (override: TokenAsset) => override.contractAddress === token.address
+      (override: TokenAsset) => override.tokenId === token.address
     )
 
     if (overrideToken) return overrideToken
@@ -29,7 +28,7 @@ export async function getTokens(): Promise<TokenAsset[]> {
     return {
       displayName: token.name,
       precision: token.decimals,
-      contractAddress: token.address.toLowerCase(),
+      tokenId: token.address.toLowerCase(),
       contractType: ContractTypes.ERC20,
       color: '#FFFFFF', // TODO
       secondaryColor: '#FFFFFF', // TODO
