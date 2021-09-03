@@ -2,7 +2,6 @@ import fs from 'fs'
 import { baseAssets } from './baseAssets'
 import { getTokens } from './ethTokens'
 import { BaseAsset, NetworkTypes } from '../types'
-import { AssetService } from '../'
 
 const generateAssetData = async () => {
   const generatedAssetData = await Promise.all(
@@ -21,13 +20,6 @@ const generateAssetData = async () => {
     `./src/service/generatedAssetData.json`,
     JSON.stringify(generatedAssetData)
   )
-
-  const assetService = new AssetService('blah')
-
-  await assetService.initialize()
-  const assets = assetService.byNetwork(NetworkTypes.ETH_ROPSTEN)
-
-  console.log('assets is', assets)
 }
 
 generateAssetData().then(() => {
