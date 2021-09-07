@@ -1,5 +1,5 @@
 {
-  "name": "asset-service",
+  "name": "@shapeshiftoss/asset-service",
   "version": "0.0.1",
   "description": "Service to return supported asset details",
   "homepage": "",
