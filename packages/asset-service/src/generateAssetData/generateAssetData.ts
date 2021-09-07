@@ -2,6 +2,7 @@ import fs from 'fs'
 import { baseAssets } from './baseAssets'
 import { getTokens } from './ethTokens'
 import { BaseAsset, NetworkTypes } from '../types'
+import { AssetService } from '../'
 
 const generateAssetData = async () => {
   const generatedAssetData = await Promise.all(

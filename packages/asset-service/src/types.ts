@@ -36,10 +36,10 @@ export type Asset = {
   color: string
   secondaryColor: string
   icon: string
-  explorer?: string
-  explorerTxLink?: string
   sendSupport: boolean
   receiveSupport: boolean
+  explorer?: string
+  explorerTxLink?: string
   slip44?: number
   tokenId?: string
   contractType?: ContractTypes

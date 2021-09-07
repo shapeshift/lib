@@ -13,7 +13,7 @@ export class AssetService {
   }
 
   get isInitialized(): boolean {
-    return !(Array.isArray(this.assetData) && Array.isArray(this.flatAssetData))
+    return Array.isArray(this.assetData) && Array.isArray(this.flatAssetData)
   }
 
   private checkInitialized() {
@@ -42,7 +42,10 @@ export class AssetService {
           flatAssetData.push({
             ...tokenAsset,
             chain: baseAsset.chain,
-            network: baseAsset.network
+            network: baseAsset.network,
+            slip44: baseAsset.slip44,
+            explorer: baseAsset.explorer,
+            explorerTxLink: baseAsset.explorerTxLink
           })
         }
       }
