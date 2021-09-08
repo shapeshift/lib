@@ -65,12 +65,17 @@ export class AssetService {
       : this.flatAssetData
   }
 
-  async description(name: string, tokenId?: string): Promise<string> {
-    const isToken = !!tokenId
-    const contractUrl = isToken ? `contract/${tokenId?.toLowerCase()}` : ''
-    const { data } = await axios.get(
-      `https://api.coingecko.com/api/v3/coins/${name.toLowerCase()}/${contractUrl}`
-    )
-    return data.description.en
+  async description(name: string, tokenId?: string): Promise<string | null> {
+    if (typeof name !== 'string') throw new Error('Invalid asset name')
+    const contractUrl = typeof tokenId === 'string' ? `/contract/${tokenId?.toLowerCase()}` : ''
+    try {
+      const { data } = await axios.get(
+        `https://api.coingecko.com/api/v3/coins/${name.toLowerCase()}${contractUrl}`
+      )
+      return data?.description?.en || null
+    } catch (e) {
+      console.error('AssetService:description:error', e)
+      return null
+    }
   }
 }
