@@ -8,8 +8,8 @@ export class AssetService {
   private assetData: BaseAsset[]
   private flatAssetData: Asset[]
 
-  constructor(assetFileUrl: string) {
-    this.assetFileUrl = assetFileUrl
+  constructor(assetFileUrl?: string) {
+    this.assetFileUrl = assetFileUrl || ''
   }
 
   get isInitialized(): boolean {
@@ -63,5 +63,14 @@ export class AssetService {
     return network
       ? this.flatAssetData.filter((asset) => asset.network == network)
       : this.flatAssetData
+  }
+
+  async description(name: string, tokenId?: string): Promise<string> {
+    const isToken = !!tokenId
+    const contractUrl = isToken ? `contract/${tokenId?.toLowerCase()}` : ''
+    const { data } = await axios.get(
+      `https://api.coingecko.com/api/v3/coins/${name.toLowerCase()}/${contractUrl}`
+    )
+    return data.description.en
   }
 }
