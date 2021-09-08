@@ -3,13 +3,13 @@ import axios from 'axios'
 import localAssetData from './generatedAssetData.json'
 
 export class AssetService {
-  private assetFileUrl: string
+  private assetFileUrl: string | undefined
 
   private assetData: BaseAsset[]
   private flatAssetData: Asset[]
 
   constructor(assetFileUrl?: string) {
-    this.assetFileUrl = assetFileUrl || ''
+    this.assetFileUrl = assetFileUrl
   }
 
   get isInitialized(): boolean {
@@ -25,6 +25,7 @@ export class AssetService {
    */
   async initialize() {
     try {
+      if (!this.assetFileUrl) throw new Error()
       const { data } = await axios.get<BaseAsset[]>(this.assetFileUrl)
       this.assetData = data
     } catch (err) {
