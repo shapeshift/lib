@@ -1,5 +1,5 @@
 {
-  "branches": "semantic_release_test2",
+  "branches": "develop",
   "repositoryUrl": "https://github.com/shapeshift/lib",
   "debug": "true",
   "plugins": [
