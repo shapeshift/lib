@@ -1,6 +1,6 @@
 {
   "branches": "semantic_release_test2",
-  "repositoryUrl": "https://github.com/sterl/lib",
+  "repositoryUrl": "https://github.com/shapeshift/lib",
   "debug": "true",
   "plugins": [
     "@semantic-release/commit-analyzer",
