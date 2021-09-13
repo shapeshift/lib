@@ -22,16 +22,12 @@ export class CoinGeckoMarketService implements MarketService {
   baseUrl = 'https://api.coingecko.com/api/v3'
 
   getMarketData = async (chain: ChainTypes, tokenId?: string): Promise<MarketData | null> => {
-    let coingecko_id
-    if (chain === ChainTypes.ETH) coingecko_id = 'ethereum'
-    else throw new Error('Unsuppored chain type')
-
     try {
       const isToken = !!tokenId
-      const contractUrl = isToken ? `contract/${tokenId}` : ''
+      const contractUrl = isToken ? `/contract/${tokenId}` : ''
 
       const { data }: { data: CoinGeckoAssetData } = await axios.get(
-        `${this.baseUrl}/coins/${coingecko_id}/${contractUrl}`
+        `${this.baseUrl}/coins/${chain}${contractUrl}`
       )
 
       // TODO: get correct localizations
@@ -50,7 +46,7 @@ export class CoinGeckoMarketService implements MarketService {
   }
 
   getPriceHistory = async (
-    network: string,
+    chain: ChainTypes,
     timeframe: HistoryTimeframe,
     contractAddress?: string
   ): Promise<HistoryData[]> => {
@@ -80,11 +76,11 @@ export class CoinGeckoMarketService implements MarketService {
       const from = start.valueOf() / 1000
       const to = end.valueOf() / 1000
       const contract = contractAddress ? `contract/${contractAddress}` : ''
-      const url = `${this.baseUrl}/coins/${network}/${contract}`
+      const url = `${this.baseUrl}/coins/${chain}/${contract}`
       // TODO: change vs_currency to localized currency
       const currency = 'usd'
       const { data: historyData } = await axios.get(
-        `${url}/market_chart/range?id=${network}&vs_currency=${currency}&from=${from}&to=${to}`
+        `${url}/market_chart/range?id=${chain}&vs_currency=${currency}&from=${from}&to=${to}`
       )
       return historyData?.prices?.map((data: [string, number]) => {
         return {
