@@ -30,7 +30,7 @@ export type HistoryData = {
 type MarketDataType = (chain: ChainTypes, tokenId?: string) => Promise<MarketData | null>
 
 type PriceHistoryType = (
-  name: ChainTypes,
+  chain: ChainTypes,
   timeframe: HistoryTimeframe,
   tokenId?: string
 ) => Promise<HistoryData[]>
@@ -47,8 +47,8 @@ export const getDefaultMarketService = (): MarketService => {
   return new CoinGeckoMarketService()
 }
 
-export const getMarketData: MarketDataType = async (network, tokenId) => {
-  return getDefaultMarketService().getMarketData(network, tokenId)
+export const getMarketData: MarketDataType = async (chain, tokenId) => {
+  return getDefaultMarketService().getMarketData(chain, tokenId)
 }
 
 export const getPriceHistory: PriceHistoryType = (
