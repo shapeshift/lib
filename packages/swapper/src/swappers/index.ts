@@ -1,2 +1,2 @@
-export * from './api'
-export * from './ZrxSwapper/ZrxSwapper'
+export * from '../api'
+export * from './zrx/ZrxSwapper'
