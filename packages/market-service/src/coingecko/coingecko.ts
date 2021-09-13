@@ -82,8 +82,9 @@ export class CoinGeckoMarketService implements MarketService {
         start = end.subtract(20, 'years')
     }
 
-    try {
-      const id = getId(chain)
+    const id = coinGeckoChains[chain]
+    if (id) {
+      try {
       const from = start.valueOf() / 1000
       const to = end.valueOf() / 1000
       const contract = contractAddress ? `/contract/${contractAddress}` : ''
