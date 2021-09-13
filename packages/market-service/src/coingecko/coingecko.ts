@@ -18,12 +18,11 @@ type CoinGeckoAssetData = {
   }
 }
 
-const getId = (chain: string) => {
-  if (chain === ChainTypes.ETH) return 'ethereum'
-  if (chain === ChainTypes.BTC) return 'bitcoin'
-  if (chain === ChainTypes.LTC) return 'litecoin'
-  throw new Error('Unsuppored chain type')
-}
+const coinGeckoIds = Object.freeze({
+  [ChainTypes.ETH]: 'ethereum',
+  [ChainTypes.BTC]: 'bitcoin',
+  [ChainTypes.LTC]: 'litecoin'
+})
 
 export class CoinGeckoMarketService implements MarketService {
   baseUrl = 'https://api.coingecko.com/api/v3'
