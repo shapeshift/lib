@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/market-service",
-  "version": "0.0.11",
+  "version": "1.0.0",
   "description": "Package to share reusable code",
   "homepage": "",
   "license": "MIT",
@@ -15,11 +15,13 @@
   },
   "scripts": {
     "build": "yarn clean && tsc --project tsconfig.build.json",
-    "dev": "tsc --watch",
     "clean": "rm -rf dist",
-    "test": "jest test"
+    "dev": "tsc --watch",
+    "test": "jest test",
+    "type-check": "tsc --project ./tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@shapeshiftoss/asset-service": "^1.0.0",
     "axios": "^0.21.1",
     "dayjs": "^1.10.6"
   },

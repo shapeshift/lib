@@ -1,19 +1,11 @@
 import axios from 'axios'
 import dayjs from 'dayjs'
-import { MarketService, AssetMarketData, HistoryData, HistoryTimeframe } from '../api'
+import { MarketService, MarketData, HistoryData, HistoryTimeframe } from '../api'
+import { ChainTypes } from '@shapeshiftoss/asset-service'
 
 // tons more parms here: https://www.coingecko.com/en/api/documentation
 type CoinGeckoAssetData = {
-  id: string
-  symbol: string
-  name: string
-  localization: { [key: string]: string }
-  description: { [key: string]: string }
-  image: {
-    thumb: string
-    small: string
-    large: string
-  }
+  chain: ChainTypes
   market_data: {
     current_price: { [key: string]: string }
     market_cap: { [key: string]: string }
@@ -29,16 +21,17 @@ type CoinGeckoAssetData = {
 export class CoinGeckoMarketService implements MarketService {
   baseUrl = 'https://api.coingecko.com/api/v3'
 
-  getAssetData = async (
-    network: string,
-    contractAddress?: string
-  ): Promise<AssetMarketData | null> => {
+  getMarketData = async (chain: ChainTypes, tokenId?: string): Promise<MarketData | null> => {
+    let coingecko_id
+    if (chain === ChainTypes.ETH) coingecko_id = 'ethereum'
+    else throw new Error('Unsuppored chain type')
+
     try {
-      const isToken = !!contractAddress
-      const contractUrl = isToken ? `contract/${contractAddress}` : ''
+      const isToken = !!tokenId
+      const contractUrl = isToken ? `contract/${tokenId}` : ''
 
       const { data }: { data: CoinGeckoAssetData } = await axios.get(
-        `${this.baseUrl}/coins/${network}/${contractUrl}`
+        `${this.baseUrl}/coins/${coingecko_id}/${contractUrl}`
       )
 
       // TODO: get correct localizations
@@ -46,19 +39,12 @@ export class CoinGeckoMarketService implements MarketService {
       const marketData = data?.market_data
       return {
         price: marketData?.current_price?.[currency],
-        symbol: data?.symbol,
-        name: data?.name,
-        description: data?.description?.en,
         marketCap: marketData?.market_cap?.[currency],
         changePercent24Hr: marketData?.price_change_percentage_24h,
-        icon: data?.image?.large,
-        volume: marketData?.total_volume?.[currency],
-        network,
-        contractAddress
+        volume: marketData?.total_volume?.[currency]
       }
     } catch (e) {
       console.warn(e)
-      Promise.reject(e)
       return null
     }
   }
@@ -100,7 +86,7 @@ export class CoinGeckoMarketService implements MarketService {
       const { data: historyData } = await axios.get(
         `${url}/market_chart/range?id=${network}&vs_currency=${currency}&from=${from}&to=${to}`
       )
-      return historyData?.prices?.map((data: any) => {
+      return historyData?.prices?.map((data: [string, number]) => {
         return {
           date: new Date(data[0]),
           price: data[1]
@@ -108,7 +94,6 @@ export class CoinGeckoMarketService implements MarketService {
       })
     } catch (e) {
       console.warn(e)
-      Promise.reject(e)
       return []
     }
   }
