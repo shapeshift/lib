@@ -30,7 +30,7 @@ export type HistoryData = {
 type MarketDataType = (chain: ChainTypes, tokenId?: string) => Promise<MarketData | null>
 
 type PriceHistoryType = (
-  name: string,
+  chain: ChainTypes,
   timeframe: HistoryTimeframe,
   tokenId?: string
 ) => Promise<HistoryData[]>
@@ -52,9 +52,9 @@ export const getMarketData: MarketDataType = async (network, tokenId) => {
 }
 
 export const getPriceHistory: PriceHistoryType = (
-  name,
+  chain,
   timeline,
   tokenId
 ): Promise<HistoryData[]> => {
-  return getDefaultMarketService().getPriceHistory(name, timeline, tokenId)
+  return getDefaultMarketService().getPriceHistory(chain, timeline, tokenId)
 }
