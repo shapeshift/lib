@@ -28,7 +28,9 @@ export class CoinGeckoMarketService implements MarketService {
   baseUrl = 'https://api.coingecko.com/api/v3'
 
   getMarketData = async (chain: ChainTypes, tokenId?: string): Promise<MarketData | null> => {
-    const id = getId(chain)
+    const id = coinGeckoIds[chain]
+    
+    if (id) {
 
     try {
       const isToken = !!tokenId
