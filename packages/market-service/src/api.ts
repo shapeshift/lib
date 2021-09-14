@@ -1,5 +1,3 @@
-import { CoinGeckoMarketService } from './coingecko/coingecko'
-
 export enum ChainTypes {
   Ethereum = 'ethereum',
   Bitcoin = 'bitcoin',
@@ -27,9 +25,9 @@ export type HistoryData = {
   date: string
 }
 
-type MarketDataType = (chain: ChainTypes, tokenId?: string) => Promise<MarketData | null>
+export type MarketDataType = (chain: ChainTypes, tokenId?: string) => Promise<MarketData | null>
 
-type PriceHistoryType = (
+export type PriceHistoryType = (
   chain: ChainTypes,
   timeframe: HistoryTimeframe,
   tokenId?: string
@@ -41,20 +39,4 @@ export interface MarketService {
   getMarketData: MarketDataType
 
   getPriceHistory: PriceHistoryType
-}
-
-export const getDefaultMarketService = (): MarketService => {
-  return new CoinGeckoMarketService()
-}
-
-export const getMarketData: MarketDataType = async (chain, tokenId) => {
-  return getDefaultMarketService().getMarketData(chain, tokenId)
-}
-
-export const getPriceHistory: PriceHistoryType = (
-  chain,
-  timeline,
-  tokenId
-): Promise<HistoryData[]> => {
-  return getDefaultMarketService().getPriceHistory(chain, timeline, tokenId)
 }
