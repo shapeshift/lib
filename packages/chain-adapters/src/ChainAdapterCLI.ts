@@ -7,8 +7,10 @@ dotenv.config()
 
 // const foxContractAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
 const defaultEthPath = `m/44'/60'/0'/0/0`
+const defaultBtcPath = `m/44'/0'/0'/0/0`
 
-const getWallet = async (): Promise<HDWallet> => {
+const getWallet = async (): Promise<NativeHDWallet> => {
+  console.log('process.env.CLI_MNEMONIC: ', process.env.CLI_MNEMONIC)
   const nativeAdapterArgs: NativeAdapterArgs = {
     mnemonic: process.env.CLI_MNEMONIC,
     deviceId: 'test'
@@ -20,6 +22,7 @@ const getWallet = async (): Promise<HDWallet> => {
 }
 
 const unchainedUrls = {
+  [ChainIdentifier.Bitcoin]: 'http://localhost:31300/api/v1',
   [ChainIdentifier.Ethereum]: 'http://localhost:31300/api/v1'
 }
 
@@ -27,12 +30,14 @@ const main = async () => {
   try {
     const chainAdapterManager = new ChainAdapterManager(unchainedUrls)
     const wallet = await getWallet()
-    const ethChainAdapter = chainAdapterManager.byChain(ChainIdentifier.Ethereum)
-    const address = await ethChainAdapter.getAddress({ wallet, path: defaultEthPath })
+    const ethChainAdapter = chainAdapterManager.byChain(ChainIdentifier.Bitcoin)
+    const address = await ethChainAdapter.getAddress({ wallet, path: defaultBtcPath })
+    console.log('address: ', address)
 
     const balanceInfo = await ethChainAdapter.getBalance(address)
+    console.log('balanceInfo: ', balanceInfo)
     // const txHistory = await ethChainAdapter.getTxHistory(address)
-    console.info({ balance: balanceInfo?.tokens })
+    // console.info({ balance: balanceInfo })
     // console.dir({ txHistory }, { color: true, depth: 4 })
 
     //    console.log('Wallet address is', address)

@@ -1,10 +1,13 @@
 import { ChainAdapter, ChainIdentifier } from './api'
+import { BitcoinChainAdapter } from './bitcoin'
 import { EthereumChainAdapter } from './ethereum'
 import { UnchainedProvider } from './providers'
+import { bip32ToAddressNList } from '@shapeshiftoss/hdwallet-core'
 
-export type UnchainedUrls = Record<ChainIdentifier.Ethereum, string>
+export type UnchainedUrls = Record<ChainIdentifier.Ethereum | ChainIdentifier.Bitcoin, string>
 
 const chainAdapterMap = {
+  [ChainIdentifier.Bitcoin]: BitcoinChainAdapter,
   [ChainIdentifier.Ethereum]: EthereumChainAdapter
 } as const
 
@@ -19,7 +22,7 @@ export class ChainAdapterManager {
       throw new Error('Blockchain urls required')
     }
     ;(Object.keys(unchainedUrls) as Array<ChainAdapterKeys>).forEach((key: ChainAdapterKeys) => {
-      const Adapter = chainAdapterMap[key]
+      const Adapter: any = chainAdapterMap[key]
       if (!Adapter) throw new Error(`No chain adapter for ${key}`)
       this.addChain(key, () => new Adapter({ provider: new UnchainedProvider(unchainedUrls[key]) }))
     })

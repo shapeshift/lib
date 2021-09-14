@@ -1,5 +1,6 @@
 import { Params } from './types/Params.type'
 import { ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 
 export type Transaction = {
   network: string
@@ -47,12 +48,23 @@ export type BalanceResponse = {
   tokens: Token[]
 }
 
+export type GetAddressParams = {
+  wallet: NativeHDWallet
+  path: string
+}
+
 export type BroadcastTxResponse = {
   network: string
   txid: string
 }
 
+export type Asset = {
+  id: string
+  symbol: string
+}
+
 export type BuildSendTxInput = {
+  asset: Asset
   to: string
   value: string
   wallet: HDWallet
@@ -62,6 +74,7 @@ export type BuildSendTxInput = {
   /*** Optional param for eth txs indicating what ERC20 is being sent */
   erc20ContractAddress?: string
   limit?: string
+  memo?: string
 }
 
 export type SignTxInput = {
@@ -99,7 +112,8 @@ export type FeeData = {
 }
 
 export enum ChainIdentifier {
-  Ethereum = 'ethereum'
+  Ethereum = 'ethereum',
+  Bitcoin = 'bitcoin'
 }
 
 export enum ValidAddressResultType {
