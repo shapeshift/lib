@@ -1,5 +1,5 @@
+import { BalanceResponse, FeeEstimateInput, TxHistoryResponse } from '../api'
 import { Params } from './Params.type'
-import { TxHistoryResponse, FeeEstimateInput, BalanceResponse } from '../api'
 
 export interface BlockchainProvider {
   getBalance: (address: string) => Promise<BalanceResponse | undefined>

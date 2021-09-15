@@ -1,8 +1,9 @@
-import { ChainAdapterManager } from './ChainAdapterManager'
-import { ChainIdentifier } from '.'
-import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import dotenv from 'dotenv'
+
+import { ChainIdentifier } from '.'
+import { ChainAdapterManager } from './ChainAdapterManager'
 dotenv.config()
 
 // const foxContractAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'

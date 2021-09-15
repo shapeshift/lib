@@ -1,4 +1,4 @@
-import { BaseAsset, ContractTypes, NetworkTypes, ChainTypes } from '../types'
+import { BaseAsset, ChainTypes, ContractTypes, NetworkTypes } from '../types'
 
 export const baseAssets: Array<BaseAsset> = [
   {

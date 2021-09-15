@@ -1,5 +1,6 @@
-import { Params } from './types/Params.type'
 import { ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
+
+import { Params } from './types/Params.type'
 
 export type Transaction = {
   network: string

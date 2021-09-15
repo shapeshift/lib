@@ -1,8 +1,9 @@
 import axios, { AxiosInstance } from 'axios'
-import { Params } from '../types/Params.type'
-import { BlockchainProvider } from '../types/BlockchainProvider.type'
-import { TxHistoryResponse, BalanceResponse, BroadcastTxResponse, FeeEstimateInput } from '..'
 import https from 'https'
+
+import { BalanceResponse, BroadcastTxResponse, FeeEstimateInput, TxHistoryResponse } from '..'
+import { BlockchainProvider } from '../types/BlockchainProvider.type'
+import { Params } from '../types/Params.type'
 
 const axiosClient = (baseURL: string) =>
   axios.create({

@@ -1,8 +1,9 @@
 import fs from 'fs'
+
+import { ChainTypes } from '..'
+import { BaseAsset, NetworkTypes } from '../types'
 import { baseAssets } from './baseAssets'
 import { getTokens } from './ethTokens'
-import { BaseAsset, NetworkTypes } from '../types'
-import { ChainTypes } from '..'
 
 const generateAssetData = async () => {
   const generatedAssetData = await Promise.all(

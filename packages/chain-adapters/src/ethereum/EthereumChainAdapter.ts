@@ -1,26 +1,27 @@
+import { Contract } from '@ethersproject/contracts'
+import { bip32ToAddressNList, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
+import axios from 'axios'
+import BigNumber from 'bignumber.js'
+import WAValidator from 'multicoin-address-validator'
+import { numberToHex } from 'web3-utils'
+
 import {
-  ChainAdapter,
-  TxHistoryResponse,
+  BalanceResponse,
   BuildSendTxInput,
-  SignTxInput,
+  ChainAdapter,
+  ChainIdentifier,
+  FeeData,
   GetAddressInput,
   GetFeeDataInput,
-  FeeData,
-  BalanceResponse,
-  ChainIdentifier,
+  SignTxInput,
+  TxHistoryResponse,
   ValidAddressResult,
   ValidAddressResultType
 } from '../api'
+import { ErrorHandler } from '../error/ErrorHandler'
 import { BlockchainProvider } from '../types/BlockchainProvider.type'
 import { Params } from '../types/Params.type'
-import { ErrorHandler } from '../error/ErrorHandler'
-import { bip32ToAddressNList, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
-import { numberToHex } from 'web3-utils'
-import { Contract } from '@ethersproject/contracts'
 import erc20Abi from './erc20Abi.json'
-import WAValidator from 'multicoin-address-validator'
-import axios from 'axios'
-import BigNumber from 'bignumber.js'
 
 export type EthereumChainAdapterDependencies = {
   provider: BlockchainProvider

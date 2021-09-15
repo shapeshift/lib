@@ -1,5 +1,6 @@
-import { BaseAsset, Asset, NetworkTypes, ChainTypes } from '../types'
 import axios from 'axios'
+
+import { Asset, BaseAsset, ChainTypes, NetworkTypes } from '../types'
 import localAssetData from './generatedAssetData.json'
 
 export class AssetService {

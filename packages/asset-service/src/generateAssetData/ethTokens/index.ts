@@ -1,6 +1,7 @@
 import axios from 'axios'
-import { ContractTypes, TokenAsset } from '../../types'
 import lodash from 'lodash'
+
+import { ContractTypes, TokenAsset } from '../../types'
 import { tokensToOverride } from './overrides'
 
 type CoingeckoTokenData = {

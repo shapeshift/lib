@@ -1,5 +1,5 @@
-import { CoinGeckoMarketService } from './coingecko/coingecko'
 import * as api from './api'
+import { CoinGeckoMarketService } from './coingecko/coingecko'
 
 export * from './api'
 
