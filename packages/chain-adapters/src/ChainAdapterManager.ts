@@ -41,6 +41,7 @@ export class ChainAdapterManager {
   }
 
   getSupportedChains(): Array<ChainIdentifier> {
+    console.log('getSupportedChains')
     return Array.from(this.supported.keys())
   }
 

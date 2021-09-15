@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - develop
+      - demo
 
 jobs:
   commitlint-lint-test-build:
