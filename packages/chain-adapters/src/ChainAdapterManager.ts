@@ -13,6 +13,7 @@ export class ChainAdapterManager {
   private instances: Map<string, ChainAdapter> = new Map()
 
   constructor(unchainedUrls: UnchainedUrls) {
+    console.log('constructor')
     if (!unchainedUrls) {
       throw new Error('Blockchain urls required')
     }
