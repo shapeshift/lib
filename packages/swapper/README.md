@@ -17,7 +17,15 @@ import { SwapperManager, SwapperType, ZrxSwapper } from '@shapeshiftoss/swapper'
 const manager = new SwapperManager<MyCustomSwapperTypes>()
 
 // Add a swapper to the manager, you can add your own if they follow the `Swapper` api spec
-manager.addSwapper(SwapperType.Zrx, () => new ZrxSwapper())
+manager
+  .addSwapper(SwapperType.Zrx, new ZrxSwapper())
+  .addSwapper(SwapperType.Thorchain, new ThorchainSwapper())
+
+// Get a swapper from the manager
+const swapper = manager.getSwapper(SwapperType.Zrx)
+
+// Remove a swapper from the manager
+manager.removeSwapper(SwapperType.Zrx)
 ```
 
 ### Working with the manager
@@ -27,26 +35,23 @@ manager.addSwapper(SwapperType.Zrx, () => new ZrxSwapper())
 const { swapperType, quote } = await manager.getBestQuote(...args)
 
 // Get the swapper and do stuff
-const swapper = manager.bySwapper(swapperType)
+const swapper = manager.getSwapper(swapperType)
 ```
 
 ### Working with a specific swapper
 
 ```ts
-// Get a specific swapper from the manager
-const swapper = manager.bySwapper(SwapperType.Zrx)
-
 // Get a list of supported assets/trading pairs
 const assets = await swapper.getSupportedAssets()
 
-// Get a specific swapper from the manager
+// Get a quote from a swapper
 const quote = await swapper.getQuote(...args)
 
 // Execute a Trade
 const txToSign = await swapper.buildTransaction(...args)
 
-// Sign your TX
-// const signedTx = adapter.signTransaction(...args)
-
+// broadcast your TX
 const tx = await swapper.execute(signedTx)
+// or
+const tx = await adapter.broadcastTransaction(...args)
 ```

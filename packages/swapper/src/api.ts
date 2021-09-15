@@ -1,6 +1,6 @@
 export enum SwapperType {
   Zrx = '0x',
-  ThorChain = 'ThorChain'
+  Thorchain = 'Thorchain'
 }
 
 export interface Swapper {

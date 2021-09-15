@@ -2,6 +2,6 @@ import { Swapper, SwapperType } from '../../api'
 
 export class ThorchainSwapper implements Swapper {
   getType() {
-    return SwapperType.ThorChain
+    return SwapperType.Thorchain
   }
 }
