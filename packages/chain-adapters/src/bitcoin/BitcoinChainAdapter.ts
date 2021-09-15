@@ -43,7 +43,7 @@ export class BitcoinChainAdapter {
 
   getBalance = async (address: string): Promise<BalanceResponse | undefined> => {
     try {
-      const balanceData = await this.provider.getBalance(address)
+      const balanceData = await this.provider.getAccount(address)
       return balanceData
     } catch (err) {
       return ErrorHandler(err)

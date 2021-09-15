@@ -19,8 +19,8 @@ export class UnchainedProvider implements BlockchainProvider {
     this.axios = axiosClient(baseURL)
   }
 
-  async getBalance(address: string): Promise<BalanceResponse | undefined> {
-    const { data } = await this.axios.get<BalanceResponse>(`/balance/${address}`)
+  async getAccount(address: string): Promise<BalanceResponse | undefined> {
+    const { data } = await this.axios.get<BalanceResponse>(`/account/${address}`)
     return data
   }
 
