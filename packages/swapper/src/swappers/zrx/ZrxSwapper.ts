@@ -1,5 +1,4 @@
-import { SwapperType } from '..'
-import { Swapper } from '../../api'
+import { Swapper, SwapperType } from '../../api'
 
 export class ZrxSwapper implements Swapper {
   getType() {

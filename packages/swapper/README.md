@@ -24,7 +24,7 @@ manager.addSwapper(SwapperType.Zrx, () => new ZrxSwapper())
 
 ```ts
 // Get best quote and swapper for a trading pair
-const { swapperType, quote } = await manager.getBestQuote(asset1, asset2)
+const { swapperType, quote } = await manager.getBestQuote(...args)
 
 // Get the swapper and do stuff
 const swapper = manager.bySwapper(swapperType)
@@ -40,10 +40,10 @@ const swapper = manager.bySwapper(SwapperType.Zrx)
 const assets = await swapper.getSupportedAssets()
 
 // Get a specific swapper from the manager
-const quote = await swapper.getQuote()
+const quote = await swapper.getQuote(...args)
 
 // Execute a Trade
-const txToSign = await swapper.buildTransaction()
+const txToSign = await swapper.buildTransaction(...args)
 
 // Sign your TX
 // const signedTx = adapter.signTransaction(...args)
