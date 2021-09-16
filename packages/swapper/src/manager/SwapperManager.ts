@@ -12,7 +12,7 @@ function validateSwapper(swapper: Swapper) {
     throw new SwapperError('validateSwapper - invalid swapper instance')
 }
 
-export class SwapperManger<T extends SwapperType> {
+export class SwapperManager<T extends SwapperType> {
   public swappers: Map<T, Swapper>
 
   constructor() {
