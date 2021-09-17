@@ -1,7 +1,13 @@
 import axios, { AxiosInstance } from 'axios'
 import { Params } from '../types/Params.type'
 import { BlockchainProvider } from '../types/BlockchainProvider.type'
-import { TxHistoryResponse, BalanceResponse, BroadcastTxResponse, FeeEstimateInput } from '..'
+import {
+  TxHistoryResponse,
+  AccountResponse,
+  BroadcastTxResponse,
+  FeeEstimateInput,
+  UtxoResponse
+} from '..'
 import https from 'https'
 
 const axiosClient = (baseURL: string) =>
@@ -19,8 +25,13 @@ export class UnchainedProvider implements BlockchainProvider {
     this.axios = axiosClient(baseURL)
   }
 
-  async getAccount(address: string): Promise<BalanceResponse | undefined> {
-    const { data } = await this.axios.get<BalanceResponse>(`/account/${address}`)
+  async getUtxos(account: string): Promise<UtxoResponse | undefined> {
+    const { data } = await this.axios.get<UtxoResponse>(`/account/${account}`)
+    return data
+  }
+
+  async getAccount(address: string): Promise<AccountResponse | undefined> {
+    const { data } = await this.axios.get<AccountResponse>(`/account/${address}`)
     return data
   }
 

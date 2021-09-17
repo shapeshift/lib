@@ -1,8 +1,7 @@
 import { ChainAdapter, ChainIdentifier } from './api'
 import { BitcoinChainAdapter } from './bitcoin'
 import { EthereumChainAdapter } from './ethereum'
-import { UnchainedProvider } from './providers'
-import { bip32ToAddressNList } from '@shapeshiftoss/hdwallet-core'
+import { Ethereum, Bitcoin } from '@shapeshiftoss/unchained-client'
 
 export type UnchainedUrls = Record<ChainIdentifier.Ethereum | ChainIdentifier.Bitcoin, string>
 
@@ -10,6 +9,17 @@ const chainAdapterMap = {
   [ChainIdentifier.Bitcoin]: BitcoinChainAdapter,
   [ChainIdentifier.Ethereum]: EthereumChainAdapter
 } as const
+
+const unchainedClientMap = {
+  [ChainIdentifier.Ethereum]: (url: string): Ethereum.V1Api => {
+    const config = new Ethereum.Configuration({ basePath: url })
+    return new Ethereum.V1Api(config)
+  },
+  [ChainIdentifier.Bitcoin]: (url: string): Bitcoin.V1Api => {
+    const config = new Bitcoin.Configuration({ basePath: url })
+    return new Bitcoin.V1Api(config)
+  }
+}
 
 type ChainAdapterKeys = keyof typeof chainAdapterMap
 
@@ -22,9 +32,12 @@ export class ChainAdapterManager {
       throw new Error('Blockchain urls required')
     }
     ;(Object.keys(unchainedUrls) as Array<ChainAdapterKeys>).forEach((key: ChainAdapterKeys) => {
-      const Adapter: any = chainAdapterMap[key]
+      const Adapter = chainAdapterMap[key]
       if (!Adapter) throw new Error(`No chain adapter for ${key}`)
-      this.addChain(key, () => new Adapter({ provider: new UnchainedProvider(unchainedUrls[key]) }))
+      this.addChain(
+        key,
+        () => new Adapter({ provider: unchainedClientMap[key](unchainedUrls[key]) })
+      )
     })
   }
 

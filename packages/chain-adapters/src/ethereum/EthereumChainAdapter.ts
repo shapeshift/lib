@@ -6,10 +6,11 @@ import {
   GetAddressInput,
   GetFeeDataInput,
   FeeData,
-  BalanceResponse,
+  AccountResponse,
   ChainIdentifier,
   ValidAddressResult,
-  ValidAddressResultType
+  ValidAddressResultType,
+  UtxoResponse
 } from '../api'
 import { BlockchainProvider } from '../types/BlockchainProvider.type'
 import { Params } from '../types/Params.type'
@@ -21,9 +22,10 @@ import erc20Abi from './erc20Abi.json'
 import WAValidator from 'multicoin-address-validator'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
+import { Ethereum } from '@shapeshiftoss/unchained-client'
 
 export type EthereumChainAdapterDependencies = {
-  provider: BlockchainProvider
+  provider: Ethereum.V1Api
 }
 
 type ZrxFeeResult = {
@@ -56,7 +58,7 @@ async function getErc20Data(to: string, value: string, contractAddress?: string)
 }
 
 export class EthereumChainAdapter implements ChainAdapter {
-  private readonly provider: BlockchainProvider
+  private readonly provider: Ethereum.V1Api
 
   constructor(deps: EthereumChainAdapterDependencies) {
     this.provider = deps.provider
@@ -66,18 +68,23 @@ export class EthereumChainAdapter implements ChainAdapter {
     return ChainIdentifier.Ethereum
   }
 
-  getBalance = async (address: string): Promise<BalanceResponse | undefined> => {
+  getAccount = async (
+    address: string
+  ): Promise<import('axios').AxiosResponse<Ethereum.EthereumBalance> | undefined> => {
     try {
-      const balanceData = await this.provider.getAccount(address)
+      const balanceData = await this.provider.getAccount({ pubkey: address })
       return balanceData
     } catch (err) {
       return ErrorHandler(err)
     }
   }
 
-  getTxHistory = async (address: string, params?: Params): Promise<TxHistoryResponse> => {
+  getTxHistory = async (
+    address: string,
+    params?: Params
+  ): Promise<import('axios').AxiosResponse<Ethereum.TxHistory>> => {
     try {
-      return this.provider.getTxHistory(address, params)
+      return this.provider.getTxHistory({ pubkey: address }, params)
     } catch (err) {
       return ErrorHandler(err)
     }
@@ -95,7 +102,7 @@ export class EthereumChainAdapter implements ChainAdapter {
 
       const data = await getErc20Data(to, value, erc20ContractAddress)
       const from = await this.getAddress({ wallet, path })
-      const nonce = await this.provider.getNonce(from)
+      const nonce = await this.provider.getNonce({ address: from })
 
       let gasPrice = fee
       let gasLimit = limit
@@ -196,4 +203,6 @@ export class EthereumChainAdapter implements ChainAdapter {
     if (isValidAddress) return { valid: true, result: ValidAddressResultType.Valid }
     return { valid: false, result: ValidAddressResultType.Invalid }
   }
+
+  // async getUtxos(pubkey: string): Promise<UtxoResponse> {}
 }

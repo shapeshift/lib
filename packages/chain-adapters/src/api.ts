@@ -1,6 +1,7 @@
 import { Params } from './types/Params.type'
 import { ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
+import { Ethereum, Bitcoin } from '@shapeshiftoss/unchained-client'
 
 export type Transaction = {
   network: string
@@ -37,7 +38,7 @@ export type Token = {
   totalSent?: string
 }
 
-export type BalanceResponse = {
+export type AccountResponse = {
   network: string
   symbol: string
   address: string
@@ -46,6 +47,18 @@ export type BalanceResponse = {
   unconfirmedTxs: number
   txs: number
   tokens: Token[]
+}
+
+export type UtxoResponse = {
+  txid: string
+  vout: number
+  value: string
+  height?: number
+  confirmations: number
+  address?: string
+  path?: string
+  locktime?: number
+  coinbase?: boolean
 }
 
 export type GetAddressParams = {
@@ -112,8 +125,8 @@ export type FeeData = {
 }
 
 export enum ChainIdentifier {
-  Ethereum = 'ethereum',
-  Bitcoin = 'bitcoin'
+  'Ethereum' = 'ethereum',
+  'Bitcoin' = 'bitcoin'
 }
 
 export enum ValidAddressResultType {
@@ -148,12 +161,19 @@ export interface ChainAdapter {
   /**
    * Get the balance of an address
    */
-  getBalance(address: string): Promise<BalanceResponse | undefined>
+  getAccount(
+    pubkey: string
+  ): Promise<
+    Ethereum.EthereumBalance | import('axios').AxiosResponse<Bitcoin.BitcoinBalance> | undefined
+  >
 
   /**
    * Get Transaction History for an address
    */
-  getTxHistory(address: string, params?: Params): Promise<TxHistoryResponse>
+  getTxHistory(
+    address: string,
+    params?: Params
+  ): Promise<import('axios').AxiosResponse<Bitcoin.TxHistory>>
 
   buildSendTransaction(
     input: BuildSendTxInput

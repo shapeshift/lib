@@ -30,11 +30,12 @@ const main = async () => {
   try {
     const chainAdapterManager = new ChainAdapterManager(unchainedUrls)
     const wallet = await getWallet()
+    console.log('wallet: ', wallet)
     const ethChainAdapter = chainAdapterManager.byChain(ChainIdentifier.Bitcoin)
     const address = await ethChainAdapter.getAddress({ wallet, path: defaultBtcPath })
     console.log('address: ', address)
 
-    const balanceInfo = await ethChainAdapter.getBalance(address)
+    const balanceInfo = await ethChainAdapter.getAccount(address)
     console.log('balanceInfo: ', balanceInfo)
     // const txHistory = await ethChainAdapter.getTxHistory(address)
     // console.info({ balance: balanceInfo })

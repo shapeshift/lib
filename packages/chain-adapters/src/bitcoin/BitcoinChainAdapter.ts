@@ -6,7 +6,7 @@ import {
   GetAddressInput,
   GetFeeDataInput,
   FeeData,
-  BalanceResponse,
+  AccountResponse,
   ChainIdentifier,
   ValidAddressResult,
   ValidAddressResultType,
@@ -24,14 +24,14 @@ import {
 import { numberToHex } from 'web3-utils'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
+import { Bitcoin } from '@shapeshiftoss/unchained-client'
 
 export type BitcoinChainAdapterDependencies = {
-  provider: BlockchainProvider
+  provider: Bitcoin.V1Api
 }
 
-export class BitcoinChainAdapter {
-  //implements ChainAdapter {
-  private readonly provider: BlockchainProvider
+export class BitcoinChainAdapter implements ChainAdapter {
+  private readonly provider: Bitcoin.V1Api
 
   constructor(deps: BitcoinChainAdapterDependencies) {
     this.provider = deps.provider
@@ -41,116 +41,115 @@ export class BitcoinChainAdapter {
     return ChainIdentifier.Bitcoin
   }
 
-  getBalance = async (address: string): Promise<BalanceResponse | undefined> => {
+  getAccount = async (
+    address: string
+  ): Promise<import('axios').AxiosResponse<Bitcoin.BitcoinBalance> | undefined> => {
     try {
-      const balanceData = await this.provider.getAccount(address)
+      const balanceData = await this.provider.getAccount({ pubkey: address })
       return balanceData
     } catch (err) {
       return ErrorHandler(err)
     }
   }
 
-  // getTxHistory = async (address: string, params?: Params): Promise<TxHistoryResponse> => {
-  //   try {
-  //     return this.provider.getTxHistory(address, params)
-  //   } catch (err) {
-  //     return ErrorHandler(err)
-  //   }
-  // }
+  getTxHistory = async (
+    address: string,
+    params?: Params
+  ): Promise<import('axios').AxiosResponse<Bitcoin.TxHistory>> => {
+    try {
+      return this.provider.getTxHistory({ address }, params)
+    } catch (err) {
+      return ErrorHandler(err)
+    }
+  }
 
-  // buildSendTransaction = async (tx: BuildSendTxInput): Promise<any> => {
-  //   //Promise<{ txToSign: BTCSignTx; estimatedFees: FeeData }> => {
-  //   try {
-  //     const { to, erc20ContractAddress, path, wallet, fee, limit } = tx
-  //     const value = erc20ContractAddress ? '0' : tx?.value
-  //     const destAddress = erc20ContractAddress ?? to
+  buildSendTransaction = async (tx: BuildSendTxInput): Promise<any> => {
+    //Promise<{ txToSign: BTCSignTx; estimatedFees: FeeData }> => {
+    try {
+      const utxos = this.provider.getUtxos({
+        pubkey:
+          'ypub6WwgXWCu9dLC5n12qZXLUJxHPT2itq9UBkVXcTmXH4Nbs5n5mh3asajLnZ4ncv7vm2frTjDqM3rxTWdqZ1GYExzxJWXy1cMZeGSefyTa1kw'
+      })
+      console.log('utxos: ', utxos)
+      // const { to, erc20ContractAddress, path, wallet, fee, limit } = tx
+      // const value = erc20ContractAddress ? '0' : tx?.value
+      // const destAddress = erc20ContractAddress ?? to
 
-  //     const addressNList = bip32ToAddressNList(path)
+      // const addressNList = bip32ToAddressNList(path)
 
-  //     const from = await this.getAddress({ wallet, path })
-  //     const nonce = await this.provider.getNonce(from)
+      // const estimatedFees = await this.getFeeData({
+      //   to,
+      //   from,
+      //   value,
+      //   contractAddress: erc20ContractAddress
+      // })
 
-  //     let gasPrice = fee
-  //     let gasLimit = limit
-  //     const estimatedFees = await this.getFeeData({
-  //       to,
-  //       from,
-  //       value,
-  //       contractAddress: erc20ContractAddress
-  //     })
+      // const txToSign: BTCSignTx = {
+      //   coin: 'bitcoin',
+      //   inputs,
+      //   outputs
+      // }
+      // return { txToSign, estimatedFees }
+      return 'dope'
+    } catch (err) {
+      return ErrorHandler(err)
+    }
+  }
 
-  //     if (!gasPrice || !gasLimit) {
-  //       // Default to average gas price if fee is not passed
-  //       !gasPrice && (gasPrice = estimatedFees.average.feeUnitPrice)
-  //       !gasLimit && (gasLimit = estimatedFees.average.feeUnits)
-  //     }
+  signTransaction = async (signTxInput: SignTxInput): Promise<string> => {
+    try {
+      // const { txToSign, wallet } = signTxInput
+      // const signedTx = await (wallet as BTCWallet).btcSignTx(txToSign)
 
-  //     const txToSign: BTCSignTx = {
-  //       value: numberToHex(value),
-  //       to: destAddress,
-  //       chainId: 1, // TODO: implement for multiple chains
-  //       nonce: String(nonce),
-  //       gasPrice: numberToHex(gasPrice),
-  //       gasLimit: numberToHex(gasLimit)
-  //     }
-  //     return { txToSign, estimatedFees }
-  //   } catch (err) {
-  //     return ErrorHandler(err)
-  //   }
-  // }
+      // if (!signedTx) throw new Error('Error signing tx')
 
-  // signTransaction = async (signTxInput: SignTxInput): Promise<string> => {
-  //   try {
-  //     const { txToSign, wallet } = signTxInput
-  //     const signedTx = await (wallet as BTCWallet).btcSignTx(txToSign)
+      // return signedTx.serialized
+      return 'dope'
+    } catch (err) {
+      return ErrorHandler(err)
+    }
+  }
 
-  //     if (!signedTx) throw new Error('Error signing tx')
+  broadcastTransaction = async (hex: string) => {
+    // return this.provider.broadcastTx(hex)
+    return 'dope'
+  }
 
-  //     return signedTx.serialized
-  //   } catch (err) {
-  //     return ErrorHandler(err)
-  //   }
-  // }
+  getFeeData = async ({ to, from, contractAddress, value }: GetFeeDataInput): Promise<FeeData> => {
+    // const { data: responseData } = await axios.get<ZrxGasApiResponse>('https://gas.api.0x.org/')
+    // const fees = responseData.result.find((result) => result.source === 'MEDIAN')
 
-  // broadcastTransaction = async (hex: string) => {
-  //   return this.provider.broadcastTx(hex)
-  // }
+    // if (!fees) throw new TypeError('BTC fee should always exist')
 
-  // getFeeData = async ({ to, from, contractAddress, value }: GetFeeDataInput): Promise<FeeData> => {
-  //   const { data: responseData } = await axios.get<ZrxGasApiResponse>('https://gas.api.0x.org/')
-  //   const fees = responseData.result.find((result) => result.source === 'MEDIAN')
+    // const data = await getErc20Data(to, value, contractAddress)
+    // const feeUnits = await this.provider.getFeeUnits({
+    //   from,
+    //   to,
+    //   value,
+    //   data
+    // })
 
-  //   if (!fees) throw new TypeError('BTC fee should always exist')
+    // // PAD LIMIT
+    // const gasLimit = new BigNumber(feeUnits).times(2).toString()
 
-  //   const data = await getErc20Data(to, value, contractAddress)
-  //   const feeUnits = await this.provider.getFeeUnits({
-  //     from,
-  //     to,
-  //     value,
-  //     data
-  //   })
-
-  //   // PAD LIMIT
-  //   const gasLimit = new BigNumber(feeUnits).times(2).toString()
-
-  //   return {
-  //     fast: {
-  //       feeUnits: gasLimit,
-  //       feeUnitPrice: String(fees.instant),
-  //       networkFee: new BigNumber(fees.instant).times(gasLimit).toPrecision()
-  //     },
-  //     average: {
-  //       feeUnits: gasLimit,
-  //       feeUnitPrice: String(fees.fast),
-  //       networkFee: new BigNumber(fees.fast).times(gasLimit).toPrecision()
-  //     },
-  //     slow: {
-  //       feeUnits: gasLimit,
-  //       feeUnitPrice: String(fees.low),
-  //       networkFee: new BigNumber(fees.low).times(gasLimit).toPrecision()
-  //     }
-  //   }
-  // }
+    return {
+      fast: {
+        feeUnits: '100',
+        feeUnitPrice: '111',
+        networkFee: new BigNumber(1).toPrecision()
+      },
+      average: {
+        feeUnits: '100',
+        feeUnitPrice: '111',
+        networkFee: new BigNumber(1).toPrecision()
+      },
+      slow: {
+        feeUnits: '100',
+        feeUnitPrice: '111',
+        networkFee: new BigNumber(1).toPrecision()
+      }
+    }
+  }
 
   getAddress = async ({ wallet, path }: GetAddressParams): Promise<string> => {
     const addressNList = bip32ToAddressNList(path)
@@ -162,9 +161,10 @@ export class BitcoinChainAdapter {
     return btcAddress
   }
 
-  // async validateAddress(address: string): Promise<ValidAddressResult> {
-  //   const isValidAddress = WAValidator.validate(address, this.getType())
-  //   if (isValidAddress) return { valid: true, result: ValidAddressResultType.Valid }
-  //   return { valid: false, result: ValidAddressResultType.Invalid }
-  // }
+  async validateAddress(address: string): Promise<ValidAddressResult> {
+    console.log('address: ', address)
+    // const isValidAddress = WAValidator.validate(address, this.getType())
+    // if (isValidAddress) return { valid: true, result: ValidAddressResultType.Valid }
+    return { valid: false, result: ValidAddressResultType.Invalid }
+  }
 }
