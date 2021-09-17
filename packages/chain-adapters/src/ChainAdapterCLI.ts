@@ -22,8 +22,8 @@ const getWallet = async (): Promise<NativeHDWallet> => {
 }
 
 const unchainedUrls = {
-  [ChainIdentifier.Bitcoin]: 'http://localhost:31300/api/v1',
-  [ChainIdentifier.Ethereum]: 'http://localhost:31300/api/v1'
+  [ChainIdentifier.Bitcoin]: 'http://localhost:31300',
+  [ChainIdentifier.Ethereum]: 'http://localhost:31300'
 }
 
 const main = async () => {
@@ -31,11 +31,11 @@ const main = async () => {
     const chainAdapterManager = new ChainAdapterManager(unchainedUrls)
     const wallet = await getWallet()
     console.log('wallet: ', wallet)
-    const ethChainAdapter = chainAdapterManager.byChain(ChainIdentifier.Bitcoin)
-    const address = await ethChainAdapter.getAddress({ wallet, path: defaultBtcPath })
+    const btcChainAdapter = chainAdapterManager.byChain(ChainIdentifier.Bitcoin)
+    const address = await btcChainAdapter.getAddress({ wallet, path: defaultBtcPath })
     console.log('address: ', address)
 
-    const balanceInfo = await ethChainAdapter.getAccount(address)
+    const balanceInfo = await btcChainAdapter.getAccount(address)
     console.log('balanceInfo: ', balanceInfo)
     // const txHistory = await ethChainAdapter.getTxHistory(address)
     // console.info({ balance: balanceInfo })
