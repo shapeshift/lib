@@ -5,23 +5,18 @@ import { Ethereum, Bitcoin } from '@shapeshiftoss/unchained-client'
 
 export type UnchainedUrls = Record<ChainIdentifier.Ethereum | ChainIdentifier.Bitcoin, string>
 
-const chainAdapterMap = {
-  [ChainIdentifier.Bitcoin]: BitcoinChainAdapter,
-  [ChainIdentifier.Ethereum]: EthereumChainAdapter
+const chainAdapters = {
+  [ChainIdentifier.Bitcoin]: (url: string): BitcoinChainAdapter => {
+    const provider = new Bitcoin.V1Api(new Bitcoin.Configuration({ basePath: url }))
+    return new BitcoinChainAdapter({ provider })
+  },
+  [ChainIdentifier.Ethereum]: (url: string): EthereumChainAdapter => {
+    const provider = new Ethereum.V1Api(new Ethereum.Configuration({ basePath: url }))
+    return new EthereumChainAdapter({ provider })
+  }
 } as const
 
-const unchainedClientMap = {
-  [ChainIdentifier.Ethereum]: (url: string): Ethereum.V1Api => {
-    const config = new Ethereum.Configuration({ basePath: url })
-    return new Ethereum.V1Api(config)
-  },
-  [ChainIdentifier.Bitcoin]: (url: string): Bitcoin.V1Api => {
-    const config = new Bitcoin.Configuration({ basePath: url })
-    return new Bitcoin.V1Api(config)
-  }
-}
-
-type ChainAdapterKeys = keyof typeof chainAdapterMap
+type ChainAdapterKeys = keyof typeof chainAdapters
 
 export class ChainAdapterManager {
   private supported: Map<ChainAdapterKeys, () => ChainAdapter> = new Map()
@@ -31,13 +26,10 @@ export class ChainAdapterManager {
     if (!unchainedUrls) {
       throw new Error('Blockchain urls required')
     }
-    ;(Object.keys(unchainedUrls) as Array<ChainAdapterKeys>).forEach((key: ChainAdapterKeys) => {
-      const Adapter = chainAdapterMap[key]
+    ;(Object.keys(unchainedUrls) as Array<ChainAdapterKeys>).forEach((key) => {
+      const Adapter = chainAdapters[key]
       if (!Adapter) throw new Error(`No chain adapter for ${key}`)
-      this.addChain(
-        key,
-        () => new Adapter({ provider: unchainedClientMap[key](unchainedUrls[key]) })
-      )
+      this.addChain(key, () => Adapter(unchainedUrls[key]))
     })
   }
 

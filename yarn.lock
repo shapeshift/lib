@@ -2275,10 +2275,10 @@
     tiny-secp256k1 "^1.1.6"
     web-encoding "^1.1.0"
 
-"@shapeshiftoss/unchained-client@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@shapeshiftoss/unchained-client/-/unchained-client-1.0.0.tgz#dd3a512b602033eef6edb5321345b87e9f6ccdf6"
-  integrity sha512-it5wxWhEDUHSgRpfnNGZe50bXvlT89f5Wk03fMWRNW8xILbs0W56544NgFSqOq2ge7k3n4Qq7ELOc41xVPkNAQ==
+"@shapeshiftoss/unchained-client@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/unchained-client/-/unchained-client-1.0.1.tgz#364ba9c0746a1a789d7f3ab5207381ac27d8dd4d"
+  integrity sha512-fQ46Z0nPX2Q9S88LDt3Xro575fWjPED8fVgGAvosJeFMcAEt+wNLNnayIRTpFrdwEMdzTNug+xi3OOhJbdS8+g==
 
 "@sinonjs/commons@^1.7.0":
   version "1.8.3"

@@ -1,28 +1,17 @@
 import {
   ChainAdapter,
-  TxHistoryResponse,
   BuildSendTxInput,
   SignTxInput,
-  GetAddressInput,
   GetFeeDataInput,
   FeeData,
-  AccountResponse,
   ChainIdentifier,
   ValidAddressResult,
   ValidAddressResultType,
-  GetAddressParams
+  GetAddressParams,
+  Params
 } from '../api'
-import { BlockchainProvider } from '../types/BlockchainProvider.type'
-import { Params } from '../types/Params.type'
 import { ErrorHandler } from '../error/ErrorHandler'
-import {
-  bip32ToAddressNList,
-  BTCSignTx,
-  BTCWallet,
-  BTCInputScriptType
-} from '@shapeshiftoss/hdwallet-core'
-import { numberToHex } from 'web3-utils'
-import axios from 'axios'
+import { bip32ToAddressNList, BTCInputScriptType } from '@shapeshiftoss/hdwallet-core'
 import BigNumber from 'bignumber.js'
 import { Bitcoin } from '@shapeshiftoss/unchained-client'
 
@@ -41,23 +30,19 @@ export class BitcoinChainAdapter implements ChainAdapter {
     return ChainIdentifier.Bitcoin
   }
 
-  getAccount = async (
-    address: string
-  ): Promise<import('axios').AxiosResponse<Bitcoin.BitcoinBalance> | undefined> => {
+  getAccount = async (address: string): Promise<Bitcoin.BitcoinAccount> => {
     try {
-      const balanceData = await this.provider.getAccount({ pubkey: address })
-      return balanceData
+      const { data } = await this.provider.getAccount({ pubkey: address })
+      return data
     } catch (err) {
       return ErrorHandler(err)
     }
   }
 
-  getTxHistory = async (
-    address: string,
-    params?: Params
-  ): Promise<import('axios').AxiosResponse<Bitcoin.TxHistory>> => {
+  getTxHistory = async (address: string, params?: Params): Promise<Bitcoin.TxHistory> => {
     try {
-      return this.provider.getTxHistory({ address }, params)
+      const { data } = await this.provider.getTxHistory({ pubkey: address, ...params })
+      return data
     } catch (err) {
       return ErrorHandler(err)
     }

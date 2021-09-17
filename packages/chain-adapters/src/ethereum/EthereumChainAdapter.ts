@@ -1,19 +1,15 @@
 import {
   ChainAdapter,
-  TxHistoryResponse,
   BuildSendTxInput,
   SignTxInput,
   GetAddressInput,
   GetFeeDataInput,
   FeeData,
-  AccountResponse,
   ChainIdentifier,
   ValidAddressResult,
   ValidAddressResultType,
-  UtxoResponse
+  Params
 } from '../api'
-import { BlockchainProvider } from '../types/BlockchainProvider.type'
-import { Params } from '../types/Params.type'
 import { ErrorHandler } from '../error/ErrorHandler'
 import { bip32ToAddressNList, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
 import { numberToHex } from 'web3-utils'
@@ -68,23 +64,19 @@ export class EthereumChainAdapter implements ChainAdapter {
     return ChainIdentifier.Ethereum
   }
 
-  getAccount = async (
-    address: string
-  ): Promise<import('axios').AxiosResponse<Ethereum.EthereumBalance> | undefined> => {
+  getAccount = async (address: string): Promise<Ethereum.EthereumAccount> => {
     try {
-      const balanceData = await this.provider.getAccount({ pubkey: address })
-      return balanceData
+      const { data } = await this.provider.getAccount({ pubkey: address })
+      return data
     } catch (err) {
       return ErrorHandler(err)
     }
   }
 
-  getTxHistory = async (
-    address: string,
-    params?: Params
-  ): Promise<import('axios').AxiosResponse<Ethereum.TxHistory>> => {
+  getTxHistory = async (address: string, params?: Params): Promise<Ethereum.TxHistory> => {
     try {
-      return this.provider.getTxHistory({ pubkey: address }, params)
+      const { data } = await this.provider.getTxHistory({ pubkey: address, ...params })
+      return data
     } catch (err) {
       return ErrorHandler(err)
     }
@@ -102,7 +94,9 @@ export class EthereumChainAdapter implements ChainAdapter {
 
       const data = await getErc20Data(to, value, erc20ContractAddress)
       const from = await this.getAddress({ wallet, path })
-      const nonce = await this.provider.getNonce({ address: from })
+      const {
+        data: { nonce }
+      } = await this.provider.getAccount({ pubkey: from })
 
       let gasPrice = fee
       let gasLimit = limit
@@ -149,25 +143,25 @@ export class EthereumChainAdapter implements ChainAdapter {
   }
 
   broadcastTransaction = async (hex: string) => {
-    return this.provider.broadcastTx(hex)
+    const { data } = await this.provider.sendTx({ sendTxBody: { hex } })
+    return data
   }
 
-  getFeeData = async ({ to, from, contractAddress, value }: GetFeeDataInput): Promise<FeeData> => {
+  getFeeData = async ({ to, contractAddress, value }: GetFeeDataInput): Promise<FeeData> => {
     const { data: responseData } = await axios.get<ZrxGasApiResponse>('https://gas.api.0x.org/')
     const fees = responseData.result.find((result) => result.source === 'MEDIAN')
 
     if (!fees) throw new TypeError('ETH Gas Fees should always exist')
 
     const data = await getErc20Data(to, value, contractAddress)
-    const feeUnits = await this.provider.getFeeUnits({
-      from,
+    const { data: gasPrice } = await this.provider.getGasPrice({
       to,
       value,
       data
     })
 
     // PAD LIMIT
-    const gasLimit = new BigNumber(feeUnits).times(2).toString()
+    const gasLimit = new BigNumber(gasPrice).times(2).toString()
 
     return {
       fast: {
@@ -203,6 +197,4 @@ export class EthereumChainAdapter implements ChainAdapter {
     if (isValidAddress) return { valid: true, result: ValidAddressResultType.Valid }
     return { valid: false, result: ValidAddressResultType.Invalid }
   }
-
-  // async getUtxos(pubkey: string): Promise<UtxoResponse> {}
 }

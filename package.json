@@ -10,6 +10,7 @@
   },
   "scripts": {
     "build": "lerna run build --include-dependencies",
+    "clean": "lerna run clean && rm -rf node_modules",
     "dev": "lerna run dev --stream --parallel",
     "lint": "eslint --cache .",
     "test": "jest",

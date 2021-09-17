@@ -1,4 +1,3 @@
-import { Params } from './types/Params.type'
 import { ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { Ethereum, Bitcoin } from '@shapeshiftoss/unchained-client'
@@ -152,6 +151,12 @@ export type FeeEstimateInput = {
   value: string
 }
 
+export type Params = {
+  pageNum?: number
+  pageSize?: number
+  contract?: string
+}
+
 export interface ChainAdapter {
   /**
    * Get type of adapter
@@ -161,19 +166,12 @@ export interface ChainAdapter {
   /**
    * Get the balance of an address
    */
-  getAccount(
-    pubkey: string
-  ): Promise<
-    Ethereum.EthereumBalance | import('axios').AxiosResponse<Bitcoin.BitcoinBalance> | undefined
-  >
+  getAccount(pubkey: string): Promise<Ethereum.EthereumAccount | Bitcoin.BitcoinAccount>
 
   /**
    * Get Transaction History for an address
    */
-  getTxHistory(
-    address: string,
-    params?: Params
-  ): Promise<import('axios').AxiosResponse<Bitcoin.TxHistory>>
+  getTxHistory(address: string, params?: Params): Promise<Ethereum.TxHistory | Bitcoin.TxHistory>
 
   buildSendTransaction(
     input: BuildSendTxInput
