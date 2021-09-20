@@ -14,6 +14,7 @@ import { ErrorHandler } from '../error/ErrorHandler'
 import { bip32ToAddressNList, BTCInputScriptType } from '@shapeshiftoss/hdwallet-core'
 import BigNumber from 'bignumber.js'
 import { Bitcoin } from '@shapeshiftoss/unchained-client'
+import WAValidator from 'multicoin-address-validator'
 
 export type BitcoinChainAdapterDependencies = {
   provider: Bitcoin.V1Api
@@ -155,8 +156,8 @@ export class BitcoinChainAdapter implements ChainAdapter {
 
   async validateAddress(address: string): Promise<ValidAddressResult> {
     console.log('address: ', address)
-    // const isValidAddress = WAValidator.validate(address, this.getType())
-    // if (isValidAddress) return { valid: true, result: ValidAddressResultType.Valid }
+    const isValidAddress = WAValidator.validate(address, this.getType())
+    if (isValidAddress) return { valid: true, result: ValidAddressResultType.Valid }
     return { valid: false, result: ValidAddressResultType.Invalid }
   }
 }
