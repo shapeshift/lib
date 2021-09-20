@@ -30,15 +30,26 @@ const main = async () => {
   try {
     const chainAdapterManager = new ChainAdapterManager(unchainedUrls)
     const wallet = await getWallet()
-    console.log('wallet: ', wallet)
     const btcChainAdapter = chainAdapterManager.byChain(ChainIdentifier.Bitcoin)
     const address = await btcChainAdapter.getAddress({ wallet, path: defaultBtcPath })
     console.log('address: ', address)
 
-    const balanceInfo = await btcChainAdapter.getAccount(address)
-    console.log('balanceInfo: ', balanceInfo)
-    // const txHistory = await ethChainAdapter.getTxHistory(address)
-    // console.info({ balance: balanceInfo })
+    const txInput = {
+      asset: { id: '123', symbol: 'BTC' },
+      to: '1FH6ehAd5ZFXCM1cLGzHxK1s4dGdq1JusM',
+      value: '500',
+      wallet,
+      // path: string,
+      fee: '5'
+    }
+
+    const sent = await btcChainAdapter.buildSendTransaction(txInput)
+    console.log('sent: ', sent)
+
+    // const balanceInfo = await btcChainAdapter.getAccount(address)
+    // console.log('balanceInfo: ', balanceInfo)
+    // const txHistory = await btcChainAdapter.getTxHistory(address)
+    // console.log('txHistory: ', txHistory)
     // console.dir({ txHistory }, { color: true, depth: 4 })
 
     //    console.log('Wallet address is', address)

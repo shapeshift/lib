@@ -51,11 +51,18 @@ export class BitcoinChainAdapter implements ChainAdapter {
   buildSendTransaction = async (tx: BuildSendTxInput): Promise<any> => {
     //Promise<{ txToSign: BTCSignTx; estimatedFees: FeeData }> => {
     try {
-      const utxos = this.provider.getUtxos({
+      const { to, value, fee, wallet } = tx
+      const { data: utxos } = await this.provider.getUtxos({
         pubkey:
           'ypub6WwgXWCu9dLC5n12qZXLUJxHPT2itq9UBkVXcTmXH4Nbs5n5mh3asajLnZ4ncv7vm2frTjDqM3rxTWdqZ1GYExzxJWXy1cMZeGSefyTa1kw'
       })
-      console.log('utxos: ', utxos)
+
+      const { data: account } = await this.provider.getAccount({
+        pubkey:
+          'ypub6WwgXWCu9dLC5n12qZXLUJxHPT2itq9UBkVXcTmXH4Nbs5n5mh3asajLnZ4ncv7vm2frTjDqM3rxTWdqZ1GYExzxJWXy1cMZeGSefyTa1kw'
+      })
+      console.log('account: ', account)
+      // console.log('utxos: ', utxos)
       // const { to, erc20ContractAddress, path, wallet, fee, limit } = tx
       // const value = erc20ContractAddress ? '0' : tx?.value
       // const destAddress = erc20ContractAddress ?? to

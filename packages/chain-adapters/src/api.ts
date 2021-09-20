@@ -80,7 +80,7 @@ export type BuildSendTxInput = {
   to: string
   value: string
   wallet: HDWallet
-  path: string
+  path?: string
   /*** In base units */
   fee?: string
   /*** Optional param for eth txs indicating what ERC20 is being sent */
@@ -175,7 +175,7 @@ export interface ChainAdapter {
 
   buildSendTransaction(
     input: BuildSendTxInput
-  ): Promise<{ txToSign: ETHSignTx; estimatedFees: FeeData }>
+  ): Promise<{ txToSign: ETHSignTx; estimatedFees: FeeData } | undefined>
 
   getAddress(input: GetAddressInput): Promise<string>
 
