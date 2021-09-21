@@ -1,4 +1,4 @@
-import { Swapper, SwapperType } from '..'
+import { GetQuoteInput, Swapper, SwapperType } from '..'
 
 export class SwapperError extends Error {
   constructor(message: string) {
@@ -55,4 +55,13 @@ export class SwapperManager<T extends SwapperType> {
     this.swappers.delete(swapperType)
     return this
   }
+
+  getQuotes(swapperType: T, quoteParams: GetQuoteInput): void {
+   const swapper = this.getSwapper(swapperType)
+   const quote = swapper.getQuote(quoteParams)
+   console.log('quote', quote)
+  }
+
 }
+
+
