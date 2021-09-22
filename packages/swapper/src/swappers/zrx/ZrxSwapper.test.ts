@@ -10,12 +10,6 @@ jest.mock('web3')
 
 const setup = () => {
   // @ts-ignore
-  Web3.providers.HttpProvider.mockImplementation(() => ({
-    host: 'test',
-    options: {}
-  }))
-
-  // @ts-ignore
   Web3.mockImplementation(() => ({
     eth: {
       Contract: jest.fn(() => ({
@@ -76,6 +70,7 @@ describe('ZrxSwapper', () => {
       })
 
       it('should return 0 if allowanceOnChain is 0', async () => {
+        const allowanceOnChain = '0'
         const quote = {
           success: true,
           sellAsset: {
@@ -94,7 +89,7 @@ describe('ZrxSwapper', () => {
         web3Instance.eth.Contract.mockImplementation(() => ({
           methods: {
             allowance: jest.fn(() => ({
-              call: jest.fn(() => '0')
+              call: jest.fn(() => allowanceOnChain)
             }))
           }
         }))
@@ -103,12 +98,166 @@ describe('ZrxSwapper', () => {
           await getAllowanceRequired({ quote, web3: web3Instance, erc20AllowanceAbi })
         ).toEqual(new BigNumber(0))
       })
+
+      it('should thow error if allowanceOnChain null or undefined', async () => {
+        const quote = {
+          success: true,
+          allowanceContract: '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
+          receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+          sellAsset: {
+            tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+            symbol: 'FOX',
+            network: 'ethereum'
+          },
+          buyAsset: {
+            tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+            symbol: 'LINK',
+            network: 'ethereum'
+          }
+        }
+
+        // @ts-ignore
+        web3Instance.eth.Contract.mockImplementation(() => ({
+          methods: {
+            allowance: jest.fn(() => ({
+              call: jest.fn(() => null)
+            }))
+          }
+        }))
+
+        expect(async () => {
+          await getAllowanceRequired({ quote, web3: web3Instance, erc20AllowanceAbi })
+        }).rejects.toThrow(
+          `No allowance data for ${quote.allowanceContract} to ${quote.receiveAddress}`
+        )
+      })
+
+      it('should return 0 if sellAmount minus allowanceOnChain is negative', async () => {
+        const sellAmount = '100'
+        const allowanceOnChain = '1000'
+        const quote = {
+          success: true,
+          allowanceContract: '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
+          receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+          sellAsset: {
+            tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+            symbol: 'FOX',
+            network: 'ethereum'
+          },
+          buyAsset: {
+            tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+            symbol: 'LINK',
+            network: 'ethereum'
+          },
+          sellAmount
+        }
+
+        // @ts-ignore
+        web3Instance.eth.Contract.mockImplementation(() => ({
+          methods: {
+            allowance: jest.fn(() => ({
+              call: jest.fn(() => allowanceOnChain)
+            }))
+          }
+        }))
+
+        expect(
+          await getAllowanceRequired({ quote, web3: web3Instance, erc20AllowanceAbi })
+        ).toEqual(new BigNumber(0))
+      })
+
+      it('should return sellAsset minus allowanceOnChain', async () => {
+        const sellAmount = '1000'
+        const allowanceOnChain = '100'
+        const quote = {
+          success: true,
+          allowanceContract: '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
+          receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+          sellAsset: {
+            tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+            symbol: 'FOX',
+            network: 'ethereum'
+          },
+          buyAsset: {
+            tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+            symbol: 'LINK',
+            network: 'ethereum'
+          },
+          sellAmount
+        }
+
+        // @ts-ignore
+        web3Instance.eth.Contract.mockImplementation(() => ({
+          methods: {
+            allowance: jest.fn(() => ({
+              call: jest.fn(() => allowanceOnChain)
+            }))
+          }
+        }))
+
+        expect(
+          await getAllowanceRequired({ quote, web3: web3Instance, erc20AllowanceAbi })
+        ).toEqual(new BigNumber(900))
+      })
     })
   })
 
-  describe.skip('buildQuoteTx', () => {
-    it('should throw error if sellAsset is NOT provided', () => {
-      const input = {
+  describe('buildQuoteTx', () => {
+    it('should throw error if sellAmount AND buyAmount is provided', async () => {
+      const walletAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
+      const input = ({
+        buyAsset: {},
+        sellAsset: {},
+        buyAmount: '1234.12',
+        sellAmount: '1234.12'
+      } as unknown) as GetQuoteInput
+
+      const wallet = ({
+        ethGetAddress: jest.fn(() => Promise.resolve(walletAddress))
+      } as unknown) as HDWallet
+
+      const { web3Instance, ethChainAdapter } = setup()
+
+      const zrxSwapper = new ZrxSwapper({ adapter: ethChainAdapter, web3: web3Instance })
+      expect(async () => {
+        await zrxSwapper.buildQuoteTx(input, wallet)
+      }).rejects.toThrow(
+        'ZrxSwapper:buildQuoteTx Exactly one of buyAmount or sellAmount is required'
+      )
+    })
+
+    it('should throw error if sellAmount AND buyAmount are NOT provided', async () => {
+      const walletAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
+      const input = ({
+        buyAsset: {
+          tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+          symbol: 'FOX',
+          network: 'ethereum'
+        },
+        sellAsset: {
+          tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+          symbol: 'LINK',
+          network: 'ethereum'
+        }
+      } as unknown) as GetQuoteInput
+
+      const wallet = ({
+        ethGetAddress: jest.fn(() => Promise.resolve(walletAddress))
+      } as unknown) as HDWallet
+
+      const { web3Instance, ethChainAdapter } = setup()
+
+      const zrxSwapper = new ZrxSwapper({ adapter: ethChainAdapter, web3: web3Instance })
+      expect(async () => {
+        await zrxSwapper.buildQuoteTx(input, wallet)
+      }).rejects.toThrow(
+        'ZrxSwapper:buildQuoteTx Exactly one of buyAmount or sellAmount is required'
+      )
+    })
+
+    it('should throw error if sellAssetAccountId is NOT provided', async () => {
+      const walletAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
+      const input = ({
         buyAsset: {
           tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
           symbol: 'FOX',
@@ -119,19 +268,116 @@ describe('ZrxSwapper', () => {
           symbol: 'LINK',
           network: 'ethereum'
         },
-        buyAmount: '1234.12',
         sellAmount: '1234.12',
-        buyAssetAccountId: 'buyAssetId',
-        sellAssetAccountId: 'sellAssetId'
-      } as unknown as GetQuoteInput
+        buyAssetAccountId: 'buyAccountId'
+      } as unknown) as GetQuoteInput
 
-      const wallet = ({} as unknown) as HDWallet
+      const wallet = ({
+        ethGetAddress: jest.fn(() => Promise.resolve(walletAddress))
+      } as unknown) as HDWallet
 
       const { web3Instance, ethChainAdapter } = setup()
 
       const zrxSwapper = new ZrxSwapper({ adapter: ethChainAdapter, web3: web3Instance })
-      expect(zrxSwapper.buildQuoteTx(input, wallet)).toThrowError(
-        'ZrxSwapper:buildQuoteTx Both sellAsset and buyAsset are required'
+      expect(async () => {
+        await zrxSwapper.buildQuoteTx(input, wallet)
+      }).rejects.toThrow(
+        'ZrxSwapper:buildQuoteTx Both sellAssetAccountId and buyAssetAccountId are required'
+      )
+    })
+
+    it('should throw error if buyAssetAccountId is NOT provided', async () => {
+      const walletAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
+      const input = ({
+        buyAsset: {
+          tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+          symbol: 'FOX',
+          network: 'ethereum'
+        },
+        sellAsset: {
+          tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+          symbol: 'LINK',
+          network: 'ethereum'
+        },
+        sellAmount: '1234.12',
+        sellAssetAccountId: 'sellAccountId'
+      } as unknown) as GetQuoteInput
+
+      const wallet = ({
+        ethGetAddress: jest.fn(() => Promise.resolve(walletAddress))
+      } as unknown) as HDWallet
+
+      const { web3Instance, ethChainAdapter } = setup()
+
+      const zrxSwapper = new ZrxSwapper({ adapter: ethChainAdapter, web3: web3Instance })
+      expect(async () => {
+        await zrxSwapper.buildQuoteTx(input, wallet)
+      }).rejects.toThrow(
+        'ZrxSwapper:buildQuoteTx Both sellAssetAccountId and buyAssetAccountId are required'
+      )
+    })
+
+    it('should throw error if tokenId, symbol and network are not provided for buyAsset', async () => {
+      const walletAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
+      const input = ({
+        buyAsset: {
+          tokenId: '',
+          symbol: '',
+          network: ''
+        },
+        sellAsset: {
+          tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+          symbol: 'LINK',
+          network: 'ethereum'
+        },
+        sellAmount: '1234.12',
+        sellAssetAccountId: 'sellAccountId',
+        buyAssetAccountId: 'buyAccountId'
+      } as unknown) as GetQuoteInput
+
+      const wallet = ({
+        ethGetAddress: jest.fn(() => Promise.resolve(walletAddress))
+      } as unknown) as HDWallet
+
+      const { web3Instance, ethChainAdapter } = setup()
+
+      const zrxSwapper = new ZrxSwapper({ adapter: ethChainAdapter, web3: web3Instance })
+      expect(async () => {
+        await zrxSwapper.buildQuoteTx(input, wallet)
+      }).rejects.toThrow(
+        'ZrxSwapper:buildQuoteTx One of buyAssetContract or buyAssetSymbol or buyAssetNetwork are required'
+      )
+    })
+
+    it('should throw error if tokenId, symbol and network are not provided for sellAsset', async () => {
+      const walletAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
+      const input = ({
+        buyAsset: {
+          tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+          symbol: 'LINK',
+          network: 'ethereum'
+        },
+        sellAsset: {
+          tokenId: '',
+          symbol: '',
+          network: ''
+        },
+        sellAmount: '1234.12',
+        sellAssetAccountId: 'sellAccountId',
+        buyAssetAccountId: 'buyAccountId'
+      } as unknown) as GetQuoteInput
+
+      const wallet = ({
+        ethGetAddress: jest.fn(() => Promise.resolve(walletAddress))
+      } as unknown) as HDWallet
+
+      const { web3Instance, ethChainAdapter } = setup()
+
+      const zrxSwapper = new ZrxSwapper({ adapter: ethChainAdapter, web3: web3Instance })
+      expect(async () => {
+        await zrxSwapper.buildQuoteTx(input, wallet)
+      }).rejects.toThrow(
+        'ZrxSwapper:buildQuoteTx One of sellAssetContract or sellAssetSymbol or sellAssetNetwork are required'
       )
     })
   })
