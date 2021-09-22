@@ -1,5 +1,5 @@
-import { Asset } from "@shapeshiftoss/asset-service";
-import { HDWallet } from "@shapeshiftoss/hdwallet-core";
+import { Asset } from '@shapeshiftoss/asset-service'
+import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 
 export enum SwapperType {
   Zrx = '0x',
@@ -23,22 +23,22 @@ export type SwapSource = {
 }
 
 export interface QuoteResponse {
-  price: string;
-  guaranteedPrice: string;
-  to: string;
-  data?: string;
-  value?: string;
-  gas?: string;
-  estimatedGas?: string;
-  gasPrice?: string;
-  protocolFee?: string;
-  minimumProtocolFee?: string;
-  buyTokenAddress?: string;
-  sellTokenAddress?: string;
-  buyAmount?: string;
-  sellAmount?: string;
-  allowanceTarget?: string;
-  sources?: Array<SwapSource>;  // waiting on refactor of liquidifier to use this field
+  price: string
+  guaranteedPrice: string
+  to: string
+  data?: string
+  value?: string
+  gas?: string
+  estimatedGas?: string
+  gasPrice?: string
+  protocolFee?: string
+  minimumProtocolFee?: string
+  buyTokenAddress?: string
+  sellTokenAddress?: string
+  buyAmount?: string
+  sellAmount?: string
+  allowanceTarget?: string
+  sources?: Array<SwapSource> // waiting on refactor of liquidifier to use this field
 }
 export interface Quote {
   success: boolean
@@ -92,6 +92,5 @@ export interface Swapper {
    * Get a basic quote (rate) for a trading pair
    * @param input
    */
-   getQuote(input: GetQuoteInput, wallet?: HDWallet): Promise<Quote | undefined>
-
+  getQuote(input: GetQuoteInput, wallet?: HDWallet): Promise<Quote | undefined>
 }

@@ -4,7 +4,7 @@ import { ZrxSwapper } from './ZrxSwapper'
 import { zrxService } from './utils'
 import { DEFAULT_SLIPPAGE } from '../../utils/constants'
 
-const axios = jest.genMockFromModule('axios')
+const axios = jest.createMockFromModule('axios')
 //@ts-ignore
 axios.create = jest.fn(() => axios)
 jest.mock('./utils')

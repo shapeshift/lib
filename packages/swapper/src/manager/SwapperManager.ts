@@ -1,4 +1,5 @@
 import { GetQuoteInput, Swapper, SwapperType } from '..'
+import { Quote } from '../api'
 
 export class SwapperError extends Error {
   constructor(message: string) {
@@ -56,12 +57,8 @@ export class SwapperManager<T extends SwapperType> {
     return this
   }
 
-  getQuotes(swapperType: T, quoteParams: GetQuoteInput): void {
-   const swapper = this.getSwapper(swapperType)
-   const quote = swapper.getQuote(quoteParams)
-   console.log('quote', quote)
+  async getQuote(swapperType: T, quoteParams: GetQuoteInput): Promise<Quote | undefined> {
+    const swapper = this.getSwapper(swapperType)
+    return swapper.getQuote(quoteParams)
   }
-
 }
-
-
