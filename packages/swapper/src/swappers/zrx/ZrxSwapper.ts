@@ -2,14 +2,13 @@ import BigNumber from 'bignumber.js'
 import { ChainTypes } from '../../../../asset-service/dist'
 import { GetQuoteInput, Quote, QuoteResponse, Swapper, SwapperType } from '../../api'
 import { APPROVAL_GAS_LIMIT, DEFAULT_SOURCE, MAX_ZRX_TRADE } from '../../utils/constants'
-import axios, { AxiosResponse } from 'axios'
-
-const axiosConfig = {
-  baseURL: 'https://api.0x.org/',
-  timeout: 10000,
-  headers: {
-    Accept: 'application/json',
-    'Content-Type': 'application/json'
+import { AxiosResponse, AxiosError } from 'axios'
+import { zrxService } from './utils'
+import { SwapSource } from '../..'
+export class ZrxError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.message = `ZrxError:${message}`
   }
 }
 export class ZrxSwapper implements Swapper {
@@ -18,10 +17,8 @@ export class ZrxSwapper implements Swapper {
   }
 
   private normalizeAmount(amount: string | undefined): string | undefined {
-    if (amount) {
-      return new BigNumber(amount).toNumber().toLocaleString('fullwide', { useGrouping: false })
-    }
-    return undefined
+    if (!amount) return undefined
+    return new BigNumber(amount).toNumber().toLocaleString('fullwide', { useGrouping: false })
   }
 
   /**
@@ -38,37 +35,37 @@ export class ZrxSwapper implements Swapper {
       slippage
     } = input
     if (!sellAmount) {
-      throw new Error('sellAmount is required')
+      throw new ZrxError('getQuote - sellAmount is required')
     }
 
-    if (sellAsset.chain !== ChainTypes.Ethereum || buyAsset.chain !== ChainTypes.Ethereum) {
-      return
+    if (sellAsset.chain !== ChainTypes.Ethereum) {
+      throw new ZrxError('getQuote - Both assets need to be on the Ethereum chain to use Zrx')
+    }
+    if (buyAsset.chain !== ChainTypes.Ethereum) {
+      throw new ZrxError('getQuote - Both assets need to be on the Ethereum chain to use Zrx')
     }
 
-    const buyToken = buyAsset.tokenId || buyAsset.symbol || buyAsset.network
-    const sellToken = sellAsset.tokenId || sellAsset.symbol || sellAsset.network
-    if (!buyToken) {
-      throw new Error(
-        'ZrxSwapper:getQuote: One of buyAssetContract or buyAssetSymbol or buyAssetNetwork are required'
-      )
-    }
-    if (!sellToken) {
-      throw new Error(
-        'ZrxSwapper:getQuote: One of sellAssetContract or sellAssetSymbol or sellAssetNetwork are required'
-      )
+    const buyToken = buyAsset.tokenId || buyAsset.symbol
+    const sellToken = sellAsset.tokenId || sellAsset.symbol
+
+    const minQuoteSellAmountWei = minQuoteSellAmount
+      ? new BigNumber(minQuoteSellAmount as string).times(
+          new BigNumber(10).exponentiatedBy(sellAsset.precision)
+        )
+      : null
+
+    const normalizedSellAmount =
+      !this.normalizeAmount(sellAmount) || this.normalizeAmount(sellAmount) === '0'
+        ? this.normalizeAmount(minQuoteSellAmountWei?.toString())
+        : this.normalizeAmount(sellAmount)
+
+    if (!normalizedSellAmount || normalizedSellAmount === '0') {
+      throw new ZrxError('getQuote - Must have valid sellAmount or minimum amount')
     }
 
-    const minQuoteSellAmountWei = new BigNumber(minQuoteSellAmount as string).times(
-      new BigNumber(10).exponentiatedBy(sellAsset.precision)
-    )
+    const slippagePercentage = slippage ? new BigNumber(slippage).div(100).toString() : undefined
+
     try {
-      const normalizedSellAmount =
-        !this.normalizeAmount(sellAmount) || this.normalizeAmount(sellAmount) === '0'
-          ? this.normalizeAmount(minQuoteSellAmountWei?.toString())
-          : this.normalizeAmount(sellAmount)
-
-      const slippagePercentage = slippage ? new BigNumber(slippage).div(100).toString() : undefined
-
       /**
        * /swap/v1/price
        * params: {
@@ -78,7 +75,7 @@ export class ZrxSwapper implements Swapper {
        *   buyAmount?: integer string value of the smallest incremtent of the buy token
        * }
        */
-      const quoteResponse: AxiosResponse<QuoteResponse> = await axios.create(axiosConfig).get<QuoteResponse>(
+      const quoteResponse: AxiosResponse<QuoteResponse> = await zrxService.get<QuoteResponse>(
         '/swap/v1/price',
         {
           params: {
@@ -89,20 +86,19 @@ export class ZrxSwapper implements Swapper {
           }
         }
       )
-
       const quotePrice = new BigNumber(quoteResponse?.data?.price)
-
       const priceDifference = quotePrice.minus(minimumPrice as string)
       const priceImpact = priceDifference
         .dividedBy(minimumPrice as string)
         .abs()
         .valueOf()
 
-      const { data } = quoteResponse as any
-
-      // estimatedGas from 0x price endpoint is never accurate and often too low
-      // Low estimate causes our sendmax to be too high and fail on getQuote from 0x because amount+accurateQuoteFee > balance
-      // DEFAULT_GAS_ESTIMATE is a high estimate that should leave enough buffer room on sendmax transactions
+      const { data } = quoteResponse
+      /**
+       * estimatedGas from 0x price endpoint is never accurate and often too low
+       * Low estimate causes our sendmax to be too high and fail on getQuote from 0x because amount+accurateQuoteFee > balance
+       * DEFAULT_GAS_ESTIMATE is a high estimate that should leave enough buffer room on sendmax transactions
+       */
       const estimatedGas = quoteResponse?.data?.estimatedGas
         ? new BigNumber(quoteResponse.data.estimatedGas).times(1.5)
         : new BigNumber(0)
@@ -129,8 +125,10 @@ export class ZrxSwapper implements Swapper {
         sellAmount: data.sellAmount,
         buyAmount: data.buyAmount,
         guaranteedPrice: data.guaranteedPrice,
-        sources: data.sources?.filter((s: any) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE
+        sources:
+          data.sources?.filter((s: SwapSource) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE
       }
+      // prettier-ignore
     } catch (e: any) {
       return {
         sellAsset,

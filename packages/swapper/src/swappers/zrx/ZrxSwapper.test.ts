@@ -1,5 +1,13 @@
 import { ChainTypes, ContractTypes, NetworkTypes } from '@shapeshiftoss/asset-service'
+import BigNumber from 'bignumber.js'
 import { ZrxSwapper } from './ZrxSwapper'
+import { zrxService } from './utils'
+import { DEFAULT_SLIPPAGE } from '../../utils/constants'
+
+const axios = jest.genMockFromModule('axios')
+//@ts-ignore
+axios.create = jest.fn(() => axios)
+jest.mock('./utils')
 
 const setupQuote = () => {
   const sellAsset = {
@@ -36,45 +44,107 @@ const setupQuote = () => {
   const quoteInput = {
     sellAsset,
     buyAsset,
-    sellAmount: '1000000000000000000'
+    sellAmount: '1000000000000000000',
+    slippage: DEFAULT_SLIPPAGE
   }
   return { quoteInput, buyAsset, sellAsset }
 }
 
 describe('ZrxSwapper', () => {
   describe('getQuote', () => {
-    const { quoteInput, sellAsset, buyAsset } = setupQuote()
-    const swapper = new ZrxSwapper()
     it('returns quote', async () => {
+      const { quoteInput } = setupQuote()
+      const swapper = new ZrxSwapper()
+      ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
+        Promise.resolve({ data: { success: true, price: '100', gasPrice: '1000' } })
+      )
       const quote = await swapper.getQuote(quoteInput)
+      console.log('quote', quote)
       expect(quote?.success).toBeTruthy()
     })
     it('fails on no sellAmount', async () => {
-      try {
-        await swapper.getQuote({ ...quoteInput, sellAmount: undefined })
-      } catch (e) {
-        expect(e).toBeTruthy()
-      }
+      const { quoteInput } = setupQuote()
+      const swapper = new ZrxSwapper()
+      await expect(swapper.getQuote({ ...quoteInput, sellAmount: undefined })).rejects.toThrow(
+        'ZrxError:getQuote - sellAmount is required'
+      )
     })
-    it('fails on no sellAmount', async () => {
-      try {
-        await swapper.getQuote({ ...quoteInput, sellAmount: undefined })
-      } catch (e) {
-        expect(e).toBeTruthy()
-      }
+    it('slippage is undefined', async () => {
+      const { quoteInput } = setupQuote()
+      const swapper = new ZrxSwapper()
+      ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
+        Promise.resolve({ data: { success: true } })
+      )
+      const quote = await swapper.getQuote({ ...quoteInput, slippage: undefined })
+      expect(quote?.slippage).toBeFalsy()
+    })
+    it('fails on non ethereum chain for buyAsset', async () => {
+      const { quoteInput, buyAsset } = setupQuote()
+      const swapper = new ZrxSwapper()
+      ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
+        Promise.resolve({ data: { success: false } })
+      )
+      await expect(
+        swapper.getQuote({
+          ...quoteInput,
+          buyAsset: { ...buyAsset, chain: ChainTypes.Bitcoin }
+        })
+      ).rejects.toThrow(
+        'ZrxError:getQuote - Both assets need to be on the Ethereum chain to use Zrx'
+      )
     })
     it('fails on non ethereum chain for sellAsset', async () => {
-      try {
-        await swapper.getQuote({
+      const { quoteInput, sellAsset } = setupQuote()
+      const swapper = new ZrxSwapper()
+      ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
+        Promise.resolve({ data: { success: false } })
+      )
+      await expect(
+        swapper.getQuote({
           ...quoteInput,
-          sellAsset: { ...sellAsset, chain: ChainTypes.Litecoin }
+          sellAsset: { ...sellAsset, chain: ChainTypes.Bitcoin }
         })
-      } catch (e) {
-        expect(e).toBeTruthy()
-      }
+      ).rejects.toThrow(
+        'ZrxError:getQuote - Both assets need to be on the Ethereum chain to use Zrx'
+      )
     })
-    it('fails on non ethereum chain for buyAsseasdfasdft', async () => {
-      swapper.normalize
+    it('uses symbol when weth tokenId is undefined', async () => {
+      const { quoteInput, buyAsset } = setupQuote()
+      const swapper = new ZrxSwapper()
+      const quote = await swapper.getQuote({
+        ...quoteInput,
+        buyAsset: { ...buyAsset, tokenId: undefined }
+      })
+      expect(quote?.success).toBeTruthy()
+    })
+    it('use minQuoteSellAmount when sellAmount is 0', async () => {
+      const { quoteInput, sellAsset } = setupQuote()
+      const swapper = new ZrxSwapper()
+      ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
+        Promise.resolve({ data: { sellAmount: '20000000000000000000' } })
+      )
+      const minimum = '20'
+      const quote = await swapper.getQuote({
+        ...quoteInput,
+        sellAmount: '0',
+        minimum
+      })
+      expect(quote?.sellAmount).toBe(
+        new BigNumber(minimum)
+          .times(new BigNumber(10).exponentiatedBy(sellAsset.precision))
+          .toString()
+      )
+    })
+    it('normalizedAmount returns undefined when amount is 0', async () => {
+      const { quoteInput } = setupQuote()
+      const swapper = new ZrxSwapper()
+      await expect(
+        swapper.getQuote({
+          ...quoteInput,
+          sellAmount: '0',
+          minimum: undefined
+        })
+      ).rejects.toThrow('ZrxError:getQuote - Must have valid sellAmount or minimum amount')
     })
   })
 })

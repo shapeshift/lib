@@ -10,3 +10,5 @@ export const LIQUIDITY_GAS_LIMIT = '350000' // Most Liquidity txs are around 150
 export const MAX_GAS_PRICE = '1000000000000' // 1000 GWei
 export const MAX_ZRX_TRADE = '100000000000000000000000000'
 export const DEFAULT_SOURCE = [{ name: '0x', proportion: '1' }]
+export const DEFAULT_SLIPPAGE = '3.0' // 3%
+
