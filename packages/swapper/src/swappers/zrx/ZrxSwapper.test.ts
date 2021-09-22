@@ -52,15 +52,40 @@ const setupQuote = () => {
 
 describe('ZrxSwapper', () => {
   describe('getQuote', () => {
-    it('returns quote', async () => {
+    it('returns quote with fee data', async () => {
       const { quoteInput } = setupQuote()
       const swapper = new ZrxSwapper()
       ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
-        Promise.resolve({ data: { success: true, price: '100', gasPrice: '1000' } })
+        Promise.resolve({
+          data: { success: true, price: '100', gasPrice: '1000', estimatedGas: '1000000' }
+        })
+      )
+      const quote = await swapper.getQuote(quoteInput)
+      expect(quote?.success).toBeTruthy()
+      expect(quote?.feeData).toStrictEqual({
+        fee: '1500000000',
+        estimatedGas: '1500000',
+        gasPrice: '1000',
+        approvalFee: '100000000'
+      })
+    })
+    it('returns quote without fee data', async () => {
+      const { quoteInput } = setupQuote()
+      const swapper = new ZrxSwapper()
+      ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
+        Promise.resolve({
+          data: { success: true, price: '100', gasPrice: '1000' }
+        })
       )
       const quote = await swapper.getQuote(quoteInput)
       console.log('quote', quote)
       expect(quote?.success).toBeTruthy()
+      expect(quote?.feeData).toStrictEqual({
+        fee: '1500000000',
+        estimatedGas: '1500000',
+        gasPrice: '1000',
+        approvalFee: '100000000'
+      })
     })
     it('fails on no sellAmount', async () => {
       const { quoteInput } = setupQuote()
@@ -111,6 +136,9 @@ describe('ZrxSwapper', () => {
     it('uses symbol when weth tokenId is undefined', async () => {
       const { quoteInput, buyAsset } = setupQuote()
       const swapper = new ZrxSwapper()
+      ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
+        Promise.resolve({ data: { success: true } })
+      )
       const quote = await swapper.getQuote({
         ...quoteInput,
         buyAsset: { ...buyAsset, tokenId: undefined }

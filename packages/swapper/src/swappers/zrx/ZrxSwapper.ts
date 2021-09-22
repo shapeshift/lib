@@ -38,10 +38,10 @@ export class ZrxSwapper implements Swapper {
       throw new ZrxError('getQuote - sellAmount is required')
     }
 
-    if (sellAsset.chain !== ChainTypes.Ethereum) {
+    if (buyAsset.chain !== ChainTypes.Ethereum) {
       throw new ZrxError('getQuote - Both assets need to be on the Ethereum chain to use Zrx')
     }
-    if (buyAsset.chain !== ChainTypes.Ethereum) {
+    if (sellAsset.chain !== ChainTypes.Ethereum) {
       throw new ZrxError('getQuote - Both assets need to be on the Ethereum chain to use Zrx')
     }
 
