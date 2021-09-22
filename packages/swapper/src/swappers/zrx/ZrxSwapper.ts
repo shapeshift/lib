@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js'
 import { ChainTypes } from '../../../../asset-service/dist'
 import { GetQuoteInput, Quote, QuoteResponse, Swapper, SwapperType } from '../../api'
 import { APPROVAL_GAS_LIMIT, DEFAULT_SOURCE, MAX_ZRX_TRADE } from '../../utils/constants'
-import { AxiosResponse, AxiosError } from 'axios'
+import { AxiosResponse } from 'axios'
 import { zrxService } from './utils'
 import { SwapSource } from '../..'
 export class ZrxError extends Error {
@@ -128,15 +128,15 @@ export class ZrxSwapper implements Swapper {
         sources:
           data.sources?.filter((s: SwapSource) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE
       }
-      // prettier-ignore
-    } catch (e: any) {
+    } catch (e) {
+      const statusCode = e?.response.data.validationErrors?.[0]?.code || e.response.data.code || -1
       return {
         sellAsset,
         buyAsset,
         minimum: minQuoteSellAmount,
         maximum: MAX_ZRX_TRADE,
         success: false,
-        statusCode: e.response.data.validationErrors?.[0]?.code || e.response.data.code || -1,
+        statusCode,
         statusReason:
           e.response.data.validationErrors?.[0]?.reason || e.response.data.reason || 'Unknown Error'
       }

@@ -1,11 +1,11 @@
-import { GetQuoteInput, Swapper, SwapperType } from '../../api'
+import { Swapper, SwapperType } from '../../api'
 
 export class ThorchainSwapper implements Swapper {
   getType() {
     return SwapperType.Thorchain
   }
 
-  async getQuote(input: GetQuoteInput) {
+  async getQuote() {
     return undefined
   }
 }
