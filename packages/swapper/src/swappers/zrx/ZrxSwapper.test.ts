@@ -80,8 +80,8 @@ describe('ZrxSwapper', () => {
       const quote = await swapper.getQuote(quoteInput)
       expect(quote?.success).toBeTruthy()
       expect(quote?.feeData).toStrictEqual({
-        fee: '1500000000',
-        estimatedGas: '1500000',
+        fee: '0',
+        estimatedGas: '0',
         gasPrice: '1000',
         approvalFee: '100000000'
       })
