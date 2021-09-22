@@ -1,4 +1,5 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { ChainIdentifier } from '@shapeshiftoss/chain-adapters'
 
 export enum SwapperType {
   Zrx = '0x',
@@ -9,6 +10,7 @@ type AssetType = {
   tokenId: string
   symbol: string
   network: string
+  chain: ChainIdentifier
 }
 
 export class SwapError extends Error {}

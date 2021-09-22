@@ -3,7 +3,7 @@ import Web3 from 'web3'
 import { AbiItem } from 'web3-utils'
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
-import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
+import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { Swapper, SwapperType, Quote, GetQuoteInput, SwapError } from '../../api'
 import { applyAxiosRetry } from '../../utils/applyAxiosRetry'
@@ -16,8 +16,9 @@ const AFFILIATE_ADDRESS = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
 const APPROVAL_GAS_LIMIT = '100000' // Most approvals are around 40k, we've seen 72k in the wild, so 100000 for safety.
 
 type SwapperArgs = {
-  adapter: ChainAdapter
+  adapterManager: ChainAdapterManager
   web3: Web3
+  zrxHttpClient: AxiosInstance
 }
 
 type LiquiditySource = {
@@ -101,13 +102,13 @@ export const getAllowanceRequired = async ({
 
 export class ZrxSwapper implements Swapper {
   public static swapperName = 'ZrxSwapper'
-  adapter: ChainAdapter
-  zrx: AxiosInstance
+  adapterManager: ChainAdapterManager
+  zrxHttpClient: AxiosInstance
   web3: Web3
 
   constructor(args: SwapperArgs) {
-    this.adapter = args.adapter
-    this.zrx = axios.create(axiosConfig)
+    this.adapterManager = args.adapterManager
+    this.zrxHttpClient = args.zrxHttpClient
     this.web3 = args.web3
   }
 
@@ -130,6 +131,7 @@ export class ZrxSwapper implements Swapper {
     if (!sellAsset || !buyAsset) {
       throw new SwapError('ZrxSwapper:buildQuoteTx Both sellAsset and buyAsset are required')
     }
+
     if ((buyAmount && sellAmount) || (!buyAmount && !sellAmount)) {
       throw new SwapError(
         'ZrxSwapper:buildQuoteTx Exactly one of buyAmount or sellAmount is required'
@@ -155,7 +157,8 @@ export class ZrxSwapper implements Swapper {
       )
     }
 
-    const receiveAddress = await this.adapter.getAddress({ wallet, path: DEFAULT_ETH_PATH })
+    const adapter = this.adapterManager.byChain(buyAsset.chain)
+    const receiveAddress = await adapter.getAddress({ wallet, path: DEFAULT_ETH_PATH })
 
     const slippagePercentage = slippage
       ? new BigNumber(slippage).div(100).toString()
