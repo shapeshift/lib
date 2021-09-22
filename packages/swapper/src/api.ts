@@ -38,7 +38,7 @@ export interface QuoteResponse {
   buyAmount?: string
   sellAmount?: string
   allowanceTarget?: string
-  sources?: Array<SwapSource> // waiting on refactor of liquidifier to use this field
+  sources?: Array<SwapSource>
 }
 export interface Quote {
   success: boolean
