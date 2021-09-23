@@ -61,5 +61,4 @@ export class SwapperManager<T extends SwapperType> {
     const swapper = this.getSwapper(swapperType)
     return swapper.getQuote(quoteParams)
   }
-  
 }

@@ -6,7 +6,7 @@ import { MAX_ZRX_TRADE, APPROVAL_GAS_LIMIT, DEFAULT_SOURCE } from '../constants'
 import { normalizeAmount, zrxService } from '../utils'
 import { ZrxError } from '../ZrxSwapper'
 
-export async function getZrxQuote(input: GetQuoteInput): Promise<Quote | undefined> {
+export async function getZrxQuote(input: GetQuoteInput): Promise<Quote> {
   const {
     sellAsset,
     buyAsset,
@@ -67,16 +67,17 @@ export async function getZrxQuote(input: GetQuoteInput): Promise<Quote | undefin
         }
       }
     )
-    const quotePrice = new BigNumber(quoteResponse?.data?.price)
+
+    const { data } = quoteResponse
+    const quotePrice = new BigNumber(data.price)
     const priceDifference = quotePrice.minus(minimumPrice as string)
     const priceImpact = priceDifference
       .dividedBy(minimumPrice as string)
       .abs()
       .valueOf()
 
-    const data = quoteResponse?.data
-    const estimatedGas = data?.estimatedGas
-      ? new BigNumber(data?.estimatedGas).times(1.5)
+    const estimatedGas = data.estimatedGas
+      ? new BigNumber(data.estimatedGas).times(1.5)
       : new BigNumber(0)
     return {
       sellAsset,
@@ -85,29 +86,32 @@ export async function getZrxQuote(input: GetQuoteInput): Promise<Quote | undefin
       slippage,
       success: true,
       statusCode: 0,
-      rate: data?.price,
+      rate: data.price,
       minimum: minQuoteSellAmount, // $1 worth of the sell token.
       maximum: MAX_ZRX_TRADE, // Arbitrarily large value. 10e+28 here.
       feeData: {
         fee: new BigNumber(estimatedGas || 0)
-          .multipliedBy(new BigNumber(data?.gasPrice || 0))
+          .multipliedBy(new BigNumber(data.gasPrice || 0))
           .toString(),
         estimatedGas: estimatedGas.toString(),
-        gasPrice: data?.gasPrice,
+        gasPrice: data.gasPrice,
         approvalFee:
           sellAsset.tokenId &&
-          new BigNumber(APPROVAL_GAS_LIMIT).multipliedBy(data?.gasPrice || 0).toString()
+          new BigNumber(APPROVAL_GAS_LIMIT).multipliedBy(data.gasPrice || 0).toString()
       },
-      sellAmount: data?.sellAmount,
-      buyAmount: data?.buyAmount,
-      guaranteedPrice: data?.guaranteedPrice,
+      sellAmount: data.sellAmount,
+      buyAmount: data.buyAmount,
+      guaranteedPrice: data.guaranteedPrice,
       sources:
-        data?.sources?.filter((s: SwapSource) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE
+        data.sources?.filter((s: SwapSource) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE
     }
   } catch (e) {
-    const statusCode = e?.response.data.validationErrors?.[0]?.code || e.response.data.code || -1
+    const statusCode =
+      e?.response?.data?.validationErrors?.[0]?.code || e?.response?.data?.code || -1
     const statusReason =
-      e.response.data.validationErrors?.[0]?.reason || e.response.data.reason || 'Unknown Error'
+      e?.response?.data?.validationErrors?.[0]?.reason ||
+      e?.response?.data?.reason ||
+      'Unknown Error'
     return {
       sellAsset,
       buyAsset,

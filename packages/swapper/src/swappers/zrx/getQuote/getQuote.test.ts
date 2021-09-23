@@ -53,6 +53,26 @@ const setupQuote = () => {
 }
 
 describe('getZrxQuote', () => {
+  it('quote fails with no error message', async () => {
+    const { quoteInput } = setupQuote()
+    const swapper = new ZrxSwapper()
+    ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve(undefined))
+    const quote = await swapper.getQuote(quoteInput)
+    expect(quote.statusCode).toBe(-1)
+    expect(quote.success).toBe(false)
+    expect(quote.statusReason).toBe('Unknown Error')
+  })
+  it('quote fails with validation error message', async () => {
+    const { quoteInput } = setupQuote()
+    const swapper = new ZrxSwapper()
+    ;(zrxService.get as jest.Mock<unknown>).mockRejectedValue({
+      response: { data: { code: 502, reason: 'Failed to do some stuff' } }
+    } as never)
+    const quote = await swapper.getQuote(quoteInput)
+    expect(quote.statusCode).toBe(502)
+    expect(quote.success).toBe(false)
+    expect(quote.statusReason).toBe('Failed to do some stuff')
+  })
   it('returns quote with fee data', async () => {
     const { quoteInput } = setupQuote()
     const swapper = new ZrxSwapper()
@@ -102,15 +122,6 @@ describe('getZrxQuote', () => {
     )
     const quote = await swapper.getQuote({ ...quoteInput, slippage: undefined })
     expect(quote?.slippage).toBeFalsy()
-  })
-  it('quote fails', async () => {
-    const { quoteInput } = setupQuote()
-    const swapper = new ZrxSwapper()
-    ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
-      Promise.resolve(undefined)
-    )
-    const quote = await swapper.getQuote({ ...quoteInput, slippage: undefined })
-    expect(quote).toBe(undefined)
   })
   it('fails on non ethereum chain for buyAsset', async () => {
     const { quoteInput, buyAsset } = setupQuote()

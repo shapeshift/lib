@@ -12,7 +12,7 @@ export class ZrxSwapper implements Swapper {
     return SwapperType.Zrx
   }
 
-  async getQuote(input: GetQuoteInput): Promise<Quote | undefined> {
+  async getQuote(input: GetQuoteInput): Promise<Quote> {
     return getZrxQuote(input)
   }
 
