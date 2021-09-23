@@ -31,7 +31,6 @@ export async function getZrxQuote(input: GetQuoteInput): Promise<Quote | undefin
 
   let minQuoteSellAmountWei = null
   if (minQuoteSellAmount) {
-    console.log('wtf')
     minQuoteSellAmountWei = new BigNumber(minQuoteSellAmount as string).times(
       new BigNumber(10).exponentiatedBy(sellAsset.precision)
     )
