@@ -1,7 +1,7 @@
 import { ChainTypes, ContractTypes, NetworkTypes } from '@shapeshiftoss/asset-service'
 import BigNumber from 'bignumber.js'
 import { ZrxSwapper } from '../..'
-import { DEFAULT_SLIPPAGE } from '../../../utils/constants'
+import { DEFAULT_SLIPPAGE } from '../constants'
 import { zrxService, normalizeAmount } from '../utils'
 
 const axios = jest.createMockFromModule('axios')
@@ -75,7 +75,7 @@ describe('getZrxQuote', () => {
     const swapper = new ZrxSwapper()
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({
-        data: { success: true, price: '100', gasPrice: '1000' }
+        data: { success: true, price: '100' }
       })
     )
     const quote = await swapper.getQuote(quoteInput)
@@ -83,8 +83,8 @@ describe('getZrxQuote', () => {
     expect(quote?.feeData).toStrictEqual({
       fee: '0',
       estimatedGas: '0',
-      gasPrice: '1000',
-      approvalFee: '100000000'
+      approvalFee: '0',
+      gasPrice: undefined
     })
   })
   it('fails on no sellAmount', async () => {

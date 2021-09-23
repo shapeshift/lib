@@ -1,7 +1,7 @@
 import { ChainTypes, NetworkTypes, ContractTypes } from '@shapeshiftoss/asset-service'
 import { ZrxSwapper } from '..'
 import { SwapperType, ZrxError } from '../..'
-import { DEFAULT_SLIPPAGE } from '../../utils/constants'
+import { DEFAULT_SLIPPAGE } from './constants'
 import { getZrxQuote } from './getQuote/getQuote'
 
 jest.mock('./getQuote/getQuote', () => ({
