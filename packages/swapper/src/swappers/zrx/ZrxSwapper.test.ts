@@ -65,6 +65,6 @@ describe('ZrxSwapper', () => {
   it('handles ZrxError message', () => {
     const message = 'test error'
     const error = new ZrxError(message)
-    expect(error.message).toBe(message)
+    expect(error.message).toBe(`ZrxError:${message}`)
   })
 })
