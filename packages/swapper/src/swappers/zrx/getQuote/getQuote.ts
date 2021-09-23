@@ -74,9 +74,9 @@ export async function getZrxQuote(input: GetQuoteInput): Promise<Quote | undefin
       .abs()
       .valueOf()
 
-    const { data } = quoteResponse
-    const estimatedGas = quoteResponse?.data?.estimatedGas
-      ? new BigNumber(quoteResponse.data.estimatedGas).times(1.5)
+    const data = quoteResponse?.data
+    const estimatedGas = data?.estimatedGas
+      ? new BigNumber(data?.estimatedGas).times(1.5)
       : new BigNumber(0)
     return {
       sellAsset,
@@ -85,24 +85,24 @@ export async function getZrxQuote(input: GetQuoteInput): Promise<Quote | undefin
       slippage,
       success: true,
       statusCode: 0,
-      rate: data.price,
+      rate: data?.price,
       minimum: minQuoteSellAmount, // $1 worth of the sell token.
       maximum: MAX_ZRX_TRADE, // Arbitrarily large value. 10e+28 here.
       feeData: {
         fee: new BigNumber(estimatedGas || 0)
-          .multipliedBy(new BigNumber(data.gasPrice || 0))
+          .multipliedBy(new BigNumber(data?.gasPrice || 0))
           .toString(),
         estimatedGas: estimatedGas.toString(),
-        gasPrice: data.gasPrice,
+        gasPrice: data?.gasPrice,
         approvalFee:
           sellAsset.tokenId &&
-          new BigNumber(APPROVAL_GAS_LIMIT).multipliedBy(data.gasPrice || 0).toString()
+          new BigNumber(APPROVAL_GAS_LIMIT).multipliedBy(data?.gasPrice || 0).toString()
       },
-      sellAmount: data.sellAmount,
-      buyAmount: data.buyAmount,
-      guaranteedPrice: data.guaranteedPrice,
+      sellAmount: data?.sellAmount,
+      buyAmount: data?.buyAmount,
+      guaranteedPrice: data?.guaranteedPrice,
       sources:
-        data.sources?.filter((s: SwapSource) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE
+        data?.sources?.filter((s: SwapSource) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE
     }
   } catch (e) {
     const statusCode = e?.response.data.validationErrors?.[0]?.code || e.response.data.code || -1

@@ -103,6 +103,15 @@ describe('getZrxQuote', () => {
     const quote = await swapper.getQuote({ ...quoteInput, slippage: undefined })
     expect(quote?.slippage).toBeFalsy()
   })
+  it('quote fails', async () => {
+    const { quoteInput } = setupQuote()
+    const swapper = new ZrxSwapper()
+    ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
+      Promise.resolve(undefined)
+    )
+    const quote = await swapper.getQuote({ ...quoteInput, slippage: undefined })
+    expect(quote).toBe(undefined)
+  })
   it('fails on non ethereum chain for buyAsset', async () => {
     const { quoteInput, buyAsset } = setupQuote()
     const swapper = new ZrxSwapper()
