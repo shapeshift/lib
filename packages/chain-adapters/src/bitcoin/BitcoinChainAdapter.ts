@@ -13,13 +13,14 @@ import {
 } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
 import { bip32ToAddressNList, BTCInputScriptType } from '@shapeshiftoss/hdwallet-core'
-import BigNumber from 'bignumber.js'
+import axios from 'axios'
 import { Bitcoin } from '@shapeshiftoss/unchained-client'
-import { Transaction } from '../../../../../hdwallet/node_modules/@bithighlander/bitcoin-cash-js-lib/types'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const coinSelect = require('coinselect')
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const bitcoin = require('bitcoinjs-lib')
+import WAValidator from 'multicoin-address-validator'
+
+const MIN_RELAY_FEE = 3000 // sats/kbyte
+const DEFAULT_FEE = undefined
 
 export type BitcoinChainAdapterDependencies = {
   provider: Bitcoin.V1Api
@@ -287,40 +288,53 @@ export class BitcoinChainAdapter implements ChainAdapter {
     return 'dope'
   }
 
-  getFeeData = async ({ to, from, contractAddress, value }: GetFeeDataInput): Promise<FeeData> => {
-    // const { data: responseData } = await axios.get<ZrxGasApiResponse>('https://gas.api.0x.org/')
-    // const fees = responseData.result.find((result) => result.source === 'MEDIAN')
-
-    // if (!fees) throw new TypeError('BTC fee should always exist')
-
-    // const data = await getErc20Data(to, value, contractAddress)
-    // const feeUnits = await this.provider.getFeeUnits({
-    //   from,
-    //   to,
-    //   value,
-    //   data
-    // })
-
-    // // PAD LIMIT
-    // const gasLimit = new BigNumber(feeUnits).times(2).toString()
-
-    return {
-      fast: {
-        feeUnits: '100',
-        feeUnitPrice: '111',
-        networkFee: new BigNumber(1).toPrecision()
+  getFeeData = async (): Promise<any> => {
+    const responseData: any = (await axios.get('https://bitcoinfees.earn.com/api/v1/fees/list'))[
+      'data'
+    ]
+    const confTimes: any = {
+      fastest: {
+        maxMinutes: 36,
+        effort: 5,
+        fee: DEFAULT_FEE
       },
-      average: {
-        feeUnits: '100',
-        feeUnitPrice: '111',
-        networkFee: new BigNumber(1).toPrecision()
+      halfHour: {
+        maxMinutes: 36,
+        effort: 4,
+        fee: DEFAULT_FEE
       },
-      slow: {
-        feeUnits: '100',
-        feeUnitPrice: '111',
-        networkFee: new BigNumber(1).toPrecision()
+      '1hour': {
+        maxMinutes: 60,
+        effort: 3,
+        fee: DEFAULT_FEE
+      },
+      '6hour': {
+        maxMinutes: 360,
+        effort: 2,
+        fee: DEFAULT_FEE
+      },
+      '24hour': {
+        maxMinutes: 1440,
+        effort: 1,
+        fee: DEFAULT_FEE
       }
     }
+
+    for (const time of Object.keys(confTimes)) {
+      for (const fee of responseData['fees']) {
+        if (fee['maxMinutes'] < confTimes[time]['maxMinutes']) {
+          confTimes[time]['fee'] = Math.max(fee['minFee'] * 1024, MIN_RELAY_FEE)
+          confTimes[time]['minMinutes'] = fee['minMinutes']
+          confTimes[time]['maxMinutes'] = fee['maxMinutes']
+          break
+        }
+      }
+      if (confTimes[time]['fee'] === undefined) {
+        confTimes[time]['fee'] = Math.max(responseData.length[-1]['minFee'] * 1024, MIN_RELAY_FEE)
+      }
+    }
+
+    return confTimes
   }
 
   getAddress = async ({
@@ -363,8 +377,8 @@ export class BitcoinChainAdapter implements ChainAdapter {
 
   async validateAddress(address: string): Promise<ValidAddressResult> {
     console.log('address: ', address)
-    // const isValidAddress = WAValidator.validate(address, this.getType())
-    // if (isValidAddress) return { valid: true, result: ValidAddressResultType.Valid }
+    const isValidAddress = WAValidator.validate(address, this.getType())
+    if (isValidAddress) return { valid: true, result: ValidAddressResultType.Valid }
     return { valid: false, result: ValidAddressResultType.Invalid }
   }
 }
