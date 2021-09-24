@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import Web3 from 'web3'
 import { SwapperType } from '../api'
 import { ThorchainSwapper, ZrxSwapper } from '../swappers'
 import { SwapperManager } from './SwapperManager'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import Web3 from 'web3'
 
 describe('SwapperManager', () => {
   const zrxSwapperDeps = {
-    web3: {} as unknown as Web3,
-    adapterManager: {} as unknown as ChainAdapterManager
+    web3: ({} as unknown) as Web3,
+    adapterManager: ({} as unknown) as ChainAdapterManager
   }
 
   describe('constructor', () => {
@@ -19,7 +19,6 @@ describe('SwapperManager', () => {
   })
 
   describe('addSwapper', () => {
-
     it('should add swapper', () => {
       const manager = new SwapperManager()
       manager.addSwapper(SwapperType.Thorchain, new ThorchainSwapper())
@@ -27,7 +26,6 @@ describe('SwapperManager', () => {
     })
 
     it('should be chainable', async () => {
-
       const manager = new SwapperManager()
       manager
         .addSwapper(SwapperType.Thorchain, new ThorchainSwapper())

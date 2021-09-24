@@ -9,7 +9,7 @@ import { getDeps } from '../zrx/utils/helpers/helpers'
 
 export type ZrxSwapperDeps = {
   adapterManager: ChainAdapterManager
-  web3: Web3 //TODO: (ryankk) make web3 optional dependency
+  web3: Web3
 }
 
 export class ZrxError extends Error {

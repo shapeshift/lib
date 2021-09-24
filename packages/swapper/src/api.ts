@@ -96,10 +96,10 @@ export interface Swapper {
   getType(): SwapperType
 
   /**
-  * Get a Quote along with an unsigned transaction that can be signed and broadcast to execute the swap
-  * @param input
-  * @param wallet
-  **/
+   * Get a Quote along with an unsigned transaction that can be signed and broadcast to execute the swap
+   * @param input
+   * @param wallet
+   **/
   buildQuoteTx?(args: BuildQuoteTxArgs): Promise<Quote>
 
   /**

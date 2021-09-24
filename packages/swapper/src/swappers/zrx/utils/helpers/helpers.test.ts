@@ -3,8 +3,7 @@ import BigNumber from 'bignumber.js'
 import { setupQuote } from '../test-data/setupSwapQuote'
 import { ChainAdapterManager, ChainIdentifier } from '@shapeshiftoss/chain-adapters'
 import { erc20AllowanceAbi } from '../../utils/abi/erc20-abi'
-import { normalizeAmount, getAllowanceRequired, getDeps } from '../helpers/helpers'
-import { ZrxSwapper } from '../../ZrxSwapper'
+import { normalizeAmount, getAllowanceRequired } from '../helpers/helpers'
 
 jest.mock('web3')
 
@@ -35,7 +34,7 @@ const setup = () => {
 
 describe('utils', () => {
   const { quoteInput, sellAsset } = setupQuote()
-  const { web3Instance, adapterManager } = setup()
+  const { web3Instance } = setup()
 
   describe('normalizeAmount', () => {
     it('should return undefined if not amount is given', () => {
@@ -54,16 +53,14 @@ describe('utils', () => {
         ...quoteInput,
         sellAsset: { ...sellAsset, symbol: 'ETH' }
       }
-      expect(
-        await getAllowanceRequired({ quote, web3: web3Instance, erc20AllowanceAbi })
-      ).toEqual(new BigNumber(0))
+      expect(await getAllowanceRequired({ quote, web3: web3Instance, erc20AllowanceAbi })).toEqual(
+        new BigNumber(0)
+      )
     })
 
     it('should return sellAmount if allowanceOnChain is 0', async () => {
       const allowanceOnChain = '0'
-
-      // @ts-ignore
-      web3Instance.eth.Contract.mockImplementation(() => ({
+      ;(web3Instance.eth.Contract as jest.Mock<unknown>).mockImplementation(() => ({
         methods: {
           allowance: jest.fn(() => ({
             call: jest.fn(() => allowanceOnChain)
@@ -78,9 +75,7 @@ describe('utils', () => {
 
     it('should thow error if allowanceOnChain is undefined', async () => {
       const allowanceOnChain = undefined
-
-      // @ts-ignore
-      web3Instance.eth.Contract.mockImplementation(() => ({
+      ;(web3Instance.eth.Contract as jest.Mock<unknown>).mockImplementation(() => ({
         methods: {
           allowance: jest.fn(() => ({
             call: jest.fn(() => allowanceOnChain)
@@ -88,9 +83,9 @@ describe('utils', () => {
         }
       }))
 
-      expect(async () => {
-        await getAllowanceRequired({ quote: quoteInput, web3: web3Instance, erc20AllowanceAbi })
-      }).rejects.toThrow(
+      await expect(
+        getAllowanceRequired({ quote: quoteInput, web3: web3Instance, erc20AllowanceAbi })
+      ).rejects.toThrow(
         `No allowance data for ${quoteInput.allowanceContract} to ${quoteInput.receiveAddress}`
       )
     })
@@ -102,9 +97,7 @@ describe('utils', () => {
         ...quoteInput,
         sellAmount
       }
-
-      // @ts-ignore
-      web3Instance.eth.Contract.mockImplementation(() => ({
+      ;(web3Instance.eth.Contract as jest.Mock<unknown>).mockImplementation(() => ({
         methods: {
           allowance: jest.fn(() => ({
             call: jest.fn(() => allowanceOnChain)
@@ -112,9 +105,9 @@ describe('utils', () => {
         }
       }))
 
-      expect(
-        await getAllowanceRequired({ quote, web3: web3Instance, erc20AllowanceAbi })
-      ).toEqual(new BigNumber(0))
+      expect(await getAllowanceRequired({ quote, web3: web3Instance, erc20AllowanceAbi })).toEqual(
+        new BigNumber(0)
+      )
     })
 
     it('should return sellAsset minus allowanceOnChain', async () => {
@@ -124,9 +117,7 @@ describe('utils', () => {
         ...quoteInput,
         sellAmount
       }
-
-      // @ts-ignore
-      web3Instance.eth.Contract.mockImplementation(() => ({
+      ;(web3Instance.eth.Contract as jest.Mock<unknown>).mockImplementation(() => ({
         methods: {
           allowance: jest.fn(() => ({
             call: jest.fn(() => allowanceOnChain)
@@ -134,18 +125,9 @@ describe('utils', () => {
         }
       }))
 
-      expect(
-        await getAllowanceRequired({ quote, web3: web3Instance, erc20AllowanceAbi })
-      ).toEqual(new BigNumber(900))
-    })
-  })
-
-  // TODO: (ryankk) implement this
-  describe.skip('getDeps', () => {
-    it('returns dependency list for binded class', () => {
-      const deps = { web3: web3Instance, adapterManager }
-      const swapper = new ZrxSwapper(deps)
-      expect(getDeps.call(swapper)).toEqual(deps)
+      expect(await getAllowanceRequired({ quote, web3: web3Instance, erc20AllowanceAbi })).toEqual(
+        new BigNumber(900)
+      )
     })
   })
 })

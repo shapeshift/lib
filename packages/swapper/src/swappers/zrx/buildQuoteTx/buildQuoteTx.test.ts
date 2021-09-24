@@ -111,51 +111,33 @@ describe('buildQuoteTx', () => {
   }
 
   it('should throw error if sellAmount AND buyAmount is provided', async () => {
-    const input = {
-      ...quoteInput,
-      buyAmount: '1234.12',
-      sellAmount: '1234.12'
-    }
+    const input = { ...quoteInput, buyAmount: '1234.12', sellAmount: '1234.12' }
 
-    expect(async () => {
-      await buildQuoteTx(deps, { input, wallet })
-    }).rejects.toThrow('ZrxSwapper:buildQuoteTx Exactly one of buyAmount or sellAmount is required')
+    await expect(buildQuoteTx(deps, { input, wallet })).rejects.toThrow(
+      'ZrxSwapper:buildQuoteTx Exactly one of buyAmount or sellAmount is required'
+    )
   })
 
   it('should throw error if sellAmount AND buyAmount are NOT provided', async () => {
-    const input = {
-      ...quoteInput,
-      sellAmount: '',
-      buyAmount: ''
-    }
+    const input = { ...quoteInput, sellAmount: '', buyAmount: '' }
 
-    expect(async () => {
-      await buildQuoteTx(deps, { input, wallet })
-    }).rejects.toThrow('ZrxSwapper:buildQuoteTx Exactly one of buyAmount or sellAmount is required')
+    await expect(buildQuoteTx(deps, { input, wallet })).rejects.toThrow(
+      'ZrxSwapper:buildQuoteTx Exactly one of buyAmount or sellAmount is required'
+    )
   })
 
   it('should throw error if sellAssetAccountId is NOT provided', async () => {
-    const input = {
-      ...quoteInput,
-      sellAssetAccountId: ''
-    }
+    const input = { ...quoteInput, sellAssetAccountId: '' }
 
-    expect(async () => {
-      await buildQuoteTx(deps, { input, wallet })
-    }).rejects.toThrow(
+    await expect(buildQuoteTx(deps, { input, wallet })).rejects.toThrow(
       'ZrxSwapper:buildQuoteTx Both sellAssetAccountId and buyAssetAccountId are required'
     )
   })
 
   it('should throw error if buyAssetAccountId is NOT provided', async () => {
-    const input = {
-      ...quoteInput,
-      buyAssetAccountId: ''
-    }
+    const input = { ...quoteInput, buyAssetAccountId: '' }
 
-    expect(async () => {
-      await buildQuoteTx(deps, { input, wallet })
-    }).rejects.toThrow(
+    await expect(buildQuoteTx(deps, { input, wallet })).rejects.toThrow(
       'ZrxSwapper:buildQuoteTx Both sellAssetAccountId and buyAssetAccountId are required'
     )
   })
@@ -171,9 +153,7 @@ describe('buildQuoteTx', () => {
       }
     } as unknown) as GetQuoteInput
 
-    expect(async () => {
-      await buildQuoteTx(deps, { input, wallet })
-    }).rejects.toThrow(
+    await expect(buildQuoteTx(deps, { input, wallet })).rejects.toThrow(
       'ZrxSwapper:buildQuoteTx One of buyAssetContract or buyAssetSymbol or buyAssetNetwork are required'
     )
   })
@@ -189,9 +169,7 @@ describe('buildQuoteTx', () => {
       }
     } as unknown) as GetQuoteInput
 
-    expect(async () => {
-      await buildQuoteTx(deps, { input, wallet })
-    }).rejects.toThrow(
+    await expect(buildQuoteTx(deps, { input, wallet })).rejects.toThrow(
       'ZrxSwapper:buildQuoteTx One of sellAssetContract or sellAssetSymbol or sellAssetNetwork are required'
     )
   })
@@ -201,9 +179,7 @@ describe('buildQuoteTx', () => {
     const data = {
       ...quoteInput
     }
-
-    // @ts-ignore
-    web3Instance.eth.Contract.mockImplementation(() => ({
+    ;(web3Instance.eth.Contract as jest.Mock<unknown>).mockImplementation(() => ({
       methods: {
         allowance: jest.fn(() => ({
           call: jest.fn(() => allowanceOnChain)
@@ -222,9 +198,7 @@ describe('buildQuoteTx', () => {
       ...quoteInput,
       price
     }
-
-    // @ts-ignore
-    web3Instance.eth.Contract.mockImplementation(() => ({
+    ;(web3Instance.eth.Contract as jest.Mock<unknown>).mockImplementation(() => ({
       methods: {
         allowance: jest.fn(() => ({
           call: jest.fn(() => allowanceOnChain)
@@ -233,7 +207,10 @@ describe('buildQuoteTx', () => {
     }))
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data }))
 
-    expect(await buildQuoteTx(deps, { input: quoteInput, wallet })).toEqual({ ...mockQuoteResponse, rate: price })
+    expect(await buildQuoteTx(deps, { input: quoteInput, wallet })).toEqual({
+      ...mockQuoteResponse,
+      rate: price
+    })
   })
 
   it('should return a quote response with gasPrice times estimatedGas', async () => {
@@ -282,7 +259,7 @@ describe('buildQuoteTx', () => {
       statusCode: -1,
       statusReason: 'Unknown Client Failure',
       buyAsset: { ...mockQuoteResponse.buyAsset },
-      sellAsset: { ...mockQuoteResponse.sellAsset },
+      sellAsset: { ...mockQuoteResponse.sellAsset }
     })
   })
 })

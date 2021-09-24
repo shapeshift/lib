@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js'
 import { ZrxSwapper } from '../..'
 import { DEFAULT_SLIPPAGE } from '../utils/constants'
 import { zrxService } from '../utils/zrxService'
-import {  normalizeAmount } from '../utils/helpers/helpers'
+import { normalizeAmount } from '../utils/helpers/helpers'
 
 const axios = jest.createMockFromModule('axios')
 //@ts-ignore
@@ -58,8 +58,8 @@ const setupQuote = () => {
 
 describe('getZrxQuote', () => {
   const zrxSwapperDeps = {
-    web3: {} as unknown as Web3,
-    adapterManager: {} as unknown as ChainAdapterManager
+    web3: ({} as unknown) as Web3,
+    adapterManager: ({} as unknown) as ChainAdapterManager
   }
   it('returns quote with fee data', async () => {
     const { quoteInput } = setupQuote()

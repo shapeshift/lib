@@ -78,11 +78,10 @@ const setupQuote = () => {
 }
 
 describe('ZrxSwapper', () => {
-  // TODO: (ryankk) remove when optional dependencies are implemented for ZrxSwapper
-  const input = {} as unknown as GetQuoteInput
-  const wallet = {} as unknown as HDWallet
-  const web3 = {} as unknown as Web3
-  const adapterManager = {} as unknown as ChainAdapterManager
+  const input = ({} as unknown) as GetQuoteInput
+  const wallet = ({} as unknown) as HDWallet
+  const web3 = ({} as unknown) as Web3
+  const adapterManager = ({} as unknown) as ChainAdapterManager
   const zrxSwapperDeps = { web3, adapterManager }
 
   it('calls getZrxQuote on getQuote', async () => {

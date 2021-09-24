@@ -101,7 +101,6 @@ export async function buildQuoteTx(
      * }
      */
 
-    // TODO: remove the axios instance and use shared instance in utils
     const zrxRetry = applyAxiosRetry(zrxService, {
       statusCodesToRetry: [[400, 400]],
       shouldRetry: (err) => {
@@ -176,7 +175,7 @@ export async function buildQuoteTx(
       }
     }
     return quote
-  } catch (e: any) {
+  } catch (e) {
     if (e.status === 400) {
       return {
         sellAsset,
