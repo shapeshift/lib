@@ -16,8 +16,8 @@ export class ZrxSwapper implements Swapper {
   web3: Web3
 
   constructor(deps: ZrxSwapperDeps) {
+    // TODO: (ryankk) add both dependencies as optional
     this.adapterManager = deps.adapterManager
-    // TODO: add default web3 instance
     this.web3 = deps.web3
   }
 

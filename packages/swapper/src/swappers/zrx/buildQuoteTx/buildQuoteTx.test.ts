@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js'
 import { ChainAdapterManager, ChainIdentifier } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import Web3 from 'web3'
@@ -198,7 +199,7 @@ describe('buildQuoteTx', () => {
   it('should return a quote response', async () => {
     const allowanceOnChain = '1000'
     const data = {
-      ...quoteInput,
+      ...quoteInput
     }
 
     // @ts-ignore
@@ -212,5 +213,76 @@ describe('buildQuoteTx', () => {
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data }))
 
     expect(await buildQuoteTx(deps, { input: quoteInput, wallet })).toEqual(mockQuoteResponse)
+  })
+
+  it('should return a quote response with rate when price is given', async () => {
+    const allowanceOnChain = '1000'
+    const price = '1000'
+    const data = {
+      ...quoteInput,
+      price
+    }
+
+    // @ts-ignore
+    web3Instance.eth.Contract.mockImplementation(() => ({
+      methods: {
+        allowance: jest.fn(() => ({
+          call: jest.fn(() => allowanceOnChain)
+        }))
+      }
+    }))
+    ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data }))
+
+    expect(await buildQuoteTx(deps, { input: quoteInput, wallet })).toEqual({ ...mockQuoteResponse, rate: price })
+  })
+
+  it('should return a quote response with gasPrice times estimatedGas', async () => {
+    const gasPrice = '10000'
+    const estimatedGas = '100'
+    const data = {
+      ...quoteInput,
+      gas: estimatedGas,
+      gasPrice
+    }
+    ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data }))
+
+    expect(await buildQuoteTx(deps, { input: quoteInput, wallet })).toEqual({
+      ...mockQuoteResponse,
+      feeData: {
+        ...mockQuoteResponse.feeData,
+        approvalFee: '1000000000',
+        gasPrice,
+        estimatedGas,
+        fee: new BigNumber(gasPrice).multipliedBy(estimatedGas).toString()
+      }
+    })
+  })
+
+  it('should return a quote response with allowanceContract when allowanceTarget is provided', async () => {
+    const allowanceTarget = '100'
+    const data = {
+      ...quoteInput,
+      allowanceTarget
+    }
+    ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data }))
+
+    expect(await buildQuoteTx(deps, { input: quoteInput, wallet })).toEqual({
+      ...mockQuoteResponse,
+      allowanceContract: allowanceTarget
+    })
+  })
+
+  it('should throw on api call status of 400', async () => {
+    ;(zrxService.get as jest.Mock<unknown>).mockImplementation(() =>
+      Promise.reject({ status: 400 })
+    )
+
+    expect(await buildQuoteTx(deps, { input: quoteInput, wallet })).toEqual({
+      success: false,
+      statusCode: -1,
+      statusReason: 'Unknown Client Failure',
+      buyAsset: { ...mockQuoteResponse.buyAsset },
+      sellAsset: { ...mockQuoteResponse.sellAsset },
+    })
   })
 })

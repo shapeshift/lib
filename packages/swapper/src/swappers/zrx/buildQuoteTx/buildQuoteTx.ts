@@ -1,6 +1,4 @@
 import BigNumber from 'bignumber.js'
-import { AbiItem } from 'web3-utils'
-import Web3 from 'web3'
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 import { ChainAdapter, ChainIdentifier } from '@shapeshiftoss/chain-adapters'
@@ -8,13 +6,15 @@ import { Quote, SwapError, BuildQuoteTxArgs } from '../../..'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 import { applyAxiosRetry } from '../../../utils/applyAxiosRetry'
 import { erc20AllowanceAbi } from '../../../utils/abi/erc20-abi'
+import { normalizeAmount, getAllowanceRequired } from '../../../utils/helpers/helpers'
 import { zrxService } from '../../../utils/axiosInstance'
-
-const DEFAULT_SLIPPAGE = new BigNumber(0.5).div(100).toString() // 0.5%
-const DEFAULT_SOURCE = [{ name: '0x', proportion: '1' }]
-const DEFAULT_ETH_PATH = `m/44'/60'/0'/0/0`
-const AFFILIATE_ADDRESS = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
-const APPROVAL_GAS_LIMIT = '100000' // Most approvals are around 40k, we've seen 72k in the wild, so 100000 for safety.
+import {
+  DEFAULT_SLIPPAGE,
+  DEFAULT_SOURCE,
+  DEFAULT_ETH_PATH,
+  AFFILIATE_ADDRESS,
+  APPROVAL_GAS_LIMIT
+} from '../../../utils/constants'
 
 type LiquiditySource = {
   name: string
@@ -40,52 +40,6 @@ type QuoteResponse = {
   sources?: Array<LiquiditySource>
 }
 
-type GetAllowanceRequiredArgs = {
-  quote: Quote
-  web3: Web3
-  erc20AllowanceAbi: AbiItem[]
-}
-
-/**
- * Very large amounts like those found in ERC20s with a precision of 18 get converted
- * to exponential notation ('1.6e+21') in javascript. The 0x api doesn't play well with
- * exponential notation so we need to ensure that it is represented as an integer string.
- * This function keeps 17 significant digits, so even if we try to trade 1 Billion of an
- * ETH or ERC20, we still keep 7 decimal places.
- * @param amount
- */
-export const normalizeAmount = (amount: string | undefined): string | undefined => {
-  if (!amount) return
-  return new BigNumber(amount).toNumber().toLocaleString('fullwide', { useGrouping: false })
-}
-
-export const getAllowanceRequired = async ({
-  quote,
-  web3,
-  erc20AllowanceAbi
-}: GetAllowanceRequiredArgs): Promise<BigNumber> => {
-  if (quote.sellAsset.symbol === 'ETH') {
-    return new BigNumber(0)
-  }
-
-  const ownerAddress = quote.receiveAddress
-  const spenderAddress = quote.allowanceContract
-
-  const erc20Contract = new web3.eth.Contract(erc20AllowanceAbi, quote.sellAsset.tokenId)
-  const allowanceOnChain = erc20Contract.methods.allowance(ownerAddress, spenderAddress).call()
-
-  if (allowanceOnChain === '0') {
-    return new BigNumber(quote.sellAmount || 0)
-  }
-  if (!allowanceOnChain) {
-    throw new SwapError(
-      `No allowance data for ${quote.allowanceContract} to ${quote.receiveAddress}`
-    )
-  }
-  const allowanceRequired = new BigNumber(quote.sellAmount || 0).minus(allowanceOnChain)
-  return allowanceRequired.lt(0) ? new BigNumber(0) : allowanceRequired
-}
-
 export async function buildQuoteTx(
   { adapterManager, web3 }: ZrxSwapperDeps,
   { input, wallet }: BuildQuoteTxArgs
@@ -100,10 +54,6 @@ export async function buildQuoteTx(
     buyAssetAccountId,
     priceImpact
   } = input
-
-  if (!sellAsset || !buyAsset) {
-    throw new SwapError('ZrxSwapper:buildQuoteTx Both sellAsset and buyAsset are required')
-  }
 
   if ((buyAmount && sellAmount) || (!buyAmount && !sellAmount)) {
     throw new SwapError(
@@ -131,7 +81,9 @@ export async function buildQuoteTx(
   }
 
   // TODO: (ryankk) Remove the type cast when we unify ChainIdentifier and ChainTypes
-  const adapter: ChainAdapter = adapterManager.byChain(buyAsset.chain as unknown as ChainIdentifier)
+  const adapter: ChainAdapter = adapterManager.byChain(
+    (buyAsset.chain as unknown) as ChainIdentifier
+  )
   const receiveAddress = await adapter.getAddress({ wallet, path: DEFAULT_ETH_PATH })
 
   const slippagePercentage = slippage
