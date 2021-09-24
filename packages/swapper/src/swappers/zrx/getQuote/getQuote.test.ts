@@ -1,13 +1,17 @@
 import { ChainTypes, ContractTypes, NetworkTypes } from '@shapeshiftoss/asset-service'
+import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+import Web3 from 'web3'
 import BigNumber from 'bignumber.js'
 import { ZrxSwapper } from '../..'
-import { DEFAULT_SLIPPAGE } from '../constants'
-import { zrxService, normalizeAmount } from '../utils'
+import { DEFAULT_SLIPPAGE } from '../utils/constants'
+import { zrxService } from '../utils/zrxService'
+import {  normalizeAmount } from '../utils/helpers/helpers'
 
 const axios = jest.createMockFromModule('axios')
 //@ts-ignore
 axios.create = jest.fn(() => axios)
-jest.mock('../utils')
+jest.mock('../utils/helpers/helpers')
+jest.mock('../utils/zrxService')
 
 const setupQuote = () => {
   const sellAmount = '1000000000000000000'
@@ -53,9 +57,13 @@ const setupQuote = () => {
 }
 
 describe('getZrxQuote', () => {
+  const zrxSwapperDeps = {
+    web3: {} as unknown as Web3,
+    adapterManager: {} as unknown as ChainAdapterManager
+  }
   it('returns quote with fee data', async () => {
     const { quoteInput } = setupQuote()
-    const swapper = new ZrxSwapper()
+    const swapper = new ZrxSwapper(zrxSwapperDeps)
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({
         data: { success: true, price: '100', gasPrice: '1000', estimatedGas: '1000000' }
@@ -73,7 +81,7 @@ describe('getZrxQuote', () => {
   })
   it('quote fails with no error message', async () => {
     const { quoteInput } = setupQuote()
-    const swapper = new ZrxSwapper()
+    const swapper = new ZrxSwapper(zrxSwapperDeps)
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve(undefined))
     const quote = await swapper.getQuote(quoteInput)
     expect(quote.statusCode).toBe(-1)
@@ -82,7 +90,7 @@ describe('getZrxQuote', () => {
   })
   it('quote fails with validation error message', async () => {
     const { quoteInput } = setupQuote()
-    const swapper = new ZrxSwapper()
+    const swapper = new ZrxSwapper(zrxSwapperDeps)
     ;(zrxService.get as jest.Mock<unknown>).mockRejectedValue({
       response: { data: { code: 502, reason: 'Failed to do some stuff' } }
     } as never)
@@ -93,7 +101,7 @@ describe('getZrxQuote', () => {
   })
   it('returns quote without fee data', async () => {
     const { quoteInput } = setupQuote()
-    const swapper = new ZrxSwapper()
+    const swapper = new ZrxSwapper(zrxSwapperDeps)
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({
         data: { success: true, price: '100' }
@@ -110,14 +118,14 @@ describe('getZrxQuote', () => {
   })
   it('fails on no sellAmount', async () => {
     const { quoteInput } = setupQuote()
-    const swapper = new ZrxSwapper()
+    const swapper = new ZrxSwapper(zrxSwapperDeps)
     await expect(swapper.getQuote({ ...quoteInput, sellAmount: undefined })).rejects.toThrow(
       'ZrxError:getQuote - sellAmount is required'
     )
   })
   it('slippage is undefined', async () => {
     const { quoteInput } = setupQuote()
-    const swapper = new ZrxSwapper()
+    const swapper = new ZrxSwapper(zrxSwapperDeps)
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: { success: true } })
     )
@@ -126,7 +134,7 @@ describe('getZrxQuote', () => {
   })
   it('fails on non ethereum chain for buyAsset', async () => {
     const { quoteInput, buyAsset } = setupQuote()
-    const swapper = new ZrxSwapper()
+    const swapper = new ZrxSwapper(zrxSwapperDeps)
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: { success: false } })
     )
@@ -139,7 +147,7 @@ describe('getZrxQuote', () => {
   })
   it('fails on non ethereum chain for sellAsset', async () => {
     const { quoteInput, sellAsset } = setupQuote()
-    const swapper = new ZrxSwapper()
+    const swapper = new ZrxSwapper(zrxSwapperDeps)
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: { success: false } })
     )
@@ -152,7 +160,7 @@ describe('getZrxQuote', () => {
   })
   it('uses symbol when weth tokenId is undefined', async () => {
     const { quoteInput, buyAsset } = setupQuote()
-    const swapper = new ZrxSwapper()
+    const swapper = new ZrxSwapper(zrxSwapperDeps)
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: { success: true } })
     )
@@ -165,7 +173,7 @@ describe('getZrxQuote', () => {
   })
   it('uses symbol when fox tokenId is undefined', async () => {
     const { quoteInput, sellAsset } = setupQuote()
-    const swapper = new ZrxSwapper()
+    const swapper = new ZrxSwapper(zrxSwapperDeps)
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: { success: true } })
     )
@@ -178,7 +186,7 @@ describe('getZrxQuote', () => {
   })
   it('use minQuoteSellAmount when sellAmount is 0', async () => {
     const { quoteInput, sellAsset } = setupQuote()
-    const swapper = new ZrxSwapper()
+    const swapper = new ZrxSwapper(zrxSwapperDeps)
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: { sellAmount: '20000000000000000000' } })
     )
@@ -196,7 +204,7 @@ describe('getZrxQuote', () => {
   })
   it('normalizedAmount returns undefined when amount is 0', async () => {
     const { quoteInput } = setupQuote()
-    const swapper = new ZrxSwapper()
+    const swapper = new ZrxSwapper(zrxSwapperDeps)
     const quote = await swapper.getQuote({
       ...quoteInput,
       sellAmount: '0',

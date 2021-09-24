@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js'
 import { AbiItem } from 'web3-utils'
 import Web3 from 'web3'
-import { Quote, SwapError, Swapper } from '../../api'
+import { Quote, SwapError, Swapper } from '../../../../api'
 
 export type GetAllowanceRequiredArgs = {
   quote: Quote

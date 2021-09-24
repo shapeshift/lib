@@ -5,23 +5,26 @@ import { BuildQuoteTxArgs, GetQuoteInput, Quote, Swapper, SwapperType } from '..
 
 import { buildQuoteTx } from './buildQuoteTx/buildQuoteTx'
 import { getZrxQuote } from './getQuote/getQuote'
-import { getDeps } from '../../utils/helpers/helpers'
+import { getDeps } from '../zrx/utils/helpers/helpers'
 
 export type ZrxSwapperDeps = {
   adapterManager: ChainAdapterManager
   web3: Web3 //TODO: (ryankk) make web3 optional dependency
-  message?: string
+}
+
+export class ZrxError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.message = `ZrxError:${message}`
+  }
 }
 
 export class ZrxSwapper implements Swapper {
   public static swapperName = 'ZrxSwapper'
   adapterManager: ChainAdapterManager
   web3: Web3
-  message: string
 
   constructor(deps: ZrxSwapperDeps) {
-    // TODO: (ryankk) add both dependencies as optional
-    this.message = `ZrxError:${deps.message}`
     this.adapterManager = deps.adapterManager
     this.web3 = deps.web3
   }

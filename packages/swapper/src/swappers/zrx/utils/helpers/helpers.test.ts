@@ -4,7 +4,7 @@ import { setupQuote } from '../test-data/setupSwapQuote'
 import { ChainAdapterManager, ChainIdentifier } from '@shapeshiftoss/chain-adapters'
 import { erc20AllowanceAbi } from '../../utils/abi/erc20-abi'
 import { normalizeAmount, getAllowanceRequired, getDeps } from '../helpers/helpers'
-import { ZrxSwapper } from '../../swappers/zrx/ZrxSwapper'
+import { ZrxSwapper } from '../../ZrxSwapper'
 
 jest.mock('web3')
 

@@ -4,7 +4,7 @@ import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { ChainTypes, NetworkTypes, ContractTypes } from '@shapeshiftoss/asset-service'
 import { ZrxSwapper } from '..'
 import { GetQuoteInput, SwapperType, ZrxError } from '../..'
-import { DEFAULT_SLIPPAGE } from './constants'
+import { DEFAULT_SLIPPAGE } from './utils/constants'
 import { buildQuoteTx } from '../zrx/buildQuoteTx/buildQuoteTx'
 import { getZrxQuote } from './getQuote/getQuote'
 
@@ -83,16 +83,16 @@ describe('ZrxSwapper', () => {
   const wallet = {} as unknown as HDWallet
   const web3 = {} as unknown as Web3
   const adapterManager = {} as unknown as ChainAdapterManager
-  const deps = { web3, adapterManager }
+  const zrxSwapperDeps = { web3, adapterManager }
 
   it('calls getZrxQuote on getQuote', async () => {
     const { quoteInput } = setupQuote()
-    const swapper = new ZrxSwapper()
+    const swapper = new ZrxSwapper(zrxSwapperDeps)
     await swapper.getQuote(quoteInput)
     expect(getZrxQuote).toHaveBeenCalled()
   })
   it('returns Zrx type', () => {
-    const swapper = new ZrxSwapper()
+    const swapper = new ZrxSwapper(zrxSwapperDeps)
     const type = swapper.getType()
     expect(type).toBe(SwapperType.Zrx)
   })
@@ -102,22 +102,22 @@ describe('ZrxSwapper', () => {
     expect(error.message).toBe(`ZrxError:${message}`)
   })
   it('available assets filters out all non-ethereum assets', () => {
-    const swapper = new ZrxSwapper()
+    const swapper = new ZrxSwapper(zrxSwapperDeps)
     const availableAssets = swapper.getAvailableAssets([BTC, FOX, WETH])
     expect(availableAssets).toStrictEqual([FOX, WETH])
   })
   it('canTradePair fails on non-eth chains', () => {
-    const swapper = new ZrxSwapper()
+    const swapper = new ZrxSwapper(zrxSwapperDeps)
     const canTradePair = swapper.canTradePair(BTC, WETH)
     expect(canTradePair).toBeFalsy()
   })
   it('canTradePair succeeds on eth chains', () => {
-    const swapper = new ZrxSwapper()
+    const swapper = new ZrxSwapper(zrxSwapperDeps)
     const canTradePair = swapper.canTradePair(FOX, WETH)
     expect(canTradePair).toBeTruthy()
   })
   it('calls buildQuoteTx on swapper.buildQuoteTx', async () => {
-    const swapper = new ZrxSwapper(deps)
+    const swapper = new ZrxSwapper(zrxSwapperDeps)
     const args = { input, wallet }
 
     await swapper.buildQuoteTx(args)

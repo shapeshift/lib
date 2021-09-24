@@ -4,17 +4,17 @@ import * as rax from 'retry-axios'
 import { ChainAdapter, ChainIdentifier } from '@shapeshiftoss/chain-adapters'
 import { Quote, SwapError, BuildQuoteTxArgs } from '../../..'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
-import { applyAxiosRetry } from '../../../utils/applyAxiosRetry'
-import { erc20AllowanceAbi } from '../../../utils/abi/erc20-abi'
-import { normalizeAmount, getAllowanceRequired } from '../../../utils/helpers/helpers'
-import { zrxService } from '../../../utils/axiosInstance'
+import { applyAxiosRetry } from '../utils/applyAxiosRetry'
+import { erc20AllowanceAbi } from '../utils/abi/erc20-abi'
+import { normalizeAmount, getAllowanceRequired } from '../utils/helpers/helpers'
+import { zrxService } from '../utils/zrxService'
 import {
   DEFAULT_SLIPPAGE,
   DEFAULT_SOURCE,
   DEFAULT_ETH_PATH,
   AFFILIATE_ADDRESS,
   APPROVAL_GAS_LIMIT
-} from '../../../utils/constants'
+} from '../utils/constants'
 
 type LiquiditySource = {
   name: string

@@ -3,9 +3,9 @@ import { ChainAdapterManager, ChainIdentifier } from '@shapeshiftoss/chain-adapt
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import Web3 from 'web3'
 import { buildQuoteTx } from './buildQuoteTx'
-import { setupQuote } from '../../../utils/test-data/setupSwapQuote'
+import { setupQuote } from '../utils/test-data/setupSwapQuote'
 import { GetQuoteInput } from '../../../api'
-import { zrxService } from '../../../utils/axiosInstance'
+import { zrxService } from '../utils/zrxService'
 
 jest.mock('web3')
 
