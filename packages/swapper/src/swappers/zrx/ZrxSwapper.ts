@@ -16,12 +16,12 @@ export class ZrxSwapper implements Swapper {
     return getZrxQuote(input)
   }
 
-  availableAssets(assets: Asset[]): Asset[] {
+  getAvailableAssets(assets: Asset[]): Asset[] {
     return assets.filter((asset) => asset.chain === ChainTypes.Ethereum)
   }
 
   canTradePair(sellAsset: Asset, buyAsset: Asset): boolean {
-    const availableAssets = this.availableAssets([sellAsset, buyAsset])
+    const availableAssets = this.getAvailableAssets([sellAsset, buyAsset])
     return availableAssets.length === 2
   }
 }

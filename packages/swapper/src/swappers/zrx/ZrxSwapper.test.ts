@@ -88,7 +88,7 @@ describe('ZrxSwapper', () => {
   })
   it('available assets filters out all non-ethereum assets', () => {
     const swapper = new ZrxSwapper()
-    const availableAssets = swapper.availableAssets([BTC, FOX, WETH])
+    const availableAssets = swapper.getAvailableAssets([BTC, FOX, WETH])
     expect(availableAssets).toStrictEqual([FOX, WETH])
   })
   it('canTradePair fails on non-eth chains', () => {

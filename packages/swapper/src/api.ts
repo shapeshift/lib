@@ -98,7 +98,7 @@ export interface Swapper {
    * Get a list of available assets based on the array of assets you send it
    * @param assets
    */
-  availableAssets(assets: Asset[]): Asset[]
+  getAvailableAssets(assets: Asset[]): Asset[]
 
   /**
    * Get a boolean if the trade pair will work
