@@ -8,12 +8,18 @@ import {
   ValidAddressResult,
   ValidAddressResultType,
   GetAddressParams,
-  Params
+  Params,
+  UtxoResponse
 } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
 import { bip32ToAddressNList, BTCInputScriptType } from '@shapeshiftoss/hdwallet-core'
 import BigNumber from 'bignumber.js'
 import { Bitcoin } from '@shapeshiftoss/unchained-client'
+import { Transaction } from '../../../../../hdwallet/node_modules/@bithighlander/bitcoin-cash-js-lib/types'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const coinSelect = require('coinselect')
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const bitcoin = require('bitcoinjs-lib')
 
 export type BitcoinChainAdapterDependencies = {
   provider: Bitcoin.V1Api
@@ -48,55 +54,229 @@ export class BitcoinChainAdapter implements ChainAdapter {
     }
   }
 
-  buildSendTransaction = async (tx: BuildSendTxInput): Promise<any> => {
+  buildSendTransaction = async (tx: any): Promise<any> => {
     //Promise<{ txToSign: BTCSignTx; estimatedFees: FeeData }> => {
     try {
-      const { to, value, fee, wallet } = tx
+      const { recipients, fee: satoshiPerByte, wallet, path } = tx
+
       const { data: utxos } = await this.provider.getUtxos({
         pubkey:
-          'ypub6WwgXWCu9dLC5n12qZXLUJxHPT2itq9UBkVXcTmXH4Nbs5n5mh3asajLnZ4ncv7vm2frTjDqM3rxTWdqZ1GYExzxJWXy1cMZeGSefyTa1kw'
+          'xpub6CDvS4rkJBfqEyBdTo7omDxv3BwDr5XmWeKsU9HAaLSG28GztaywbAsm6SBWPyEsZ6QDubVnXtNEfDZ74RkDVeLUSkjdZDbsLZCqNWqy7wQ'
       })
 
-      const { data: account } = await this.provider.getAccount({
-        pubkey:
-          'ypub6WwgXWCu9dLC5n12qZXLUJxHPT2itq9UBkVXcTmXH4Nbs5n5mh3asajLnZ4ncv7vm2frTjDqM3rxTWdqZ1GYExzxJWXy1cMZeGSefyTa1kw'
+      const accountData = await this.getAccount(
+        'xpub6CDvS4rkJBfqEyBdTo7omDxv3BwDr5XmWeKsU9HAaLSG28GztaywbAsm6SBWPyEsZ6QDubVnXtNEfDZ74RkDVeLUSkjdZDbsLZCqNWqy7wQ'
+      )
+
+      console.log('fuckin accountData damnit: ', accountData)
+
+      const changeAddress = await this.getAddress({
+        wallet,
+        purpose: "44'",
+        account: "0'",
+        isChange: true,
+        scriptType: BTCInputScriptType.SpendAddress
       })
-      console.log('account: ', account)
-      // console.log('utxos: ', utxos)
-      // const { to, erc20ContractAddress, path, wallet, fee, limit } = tx
-      // const value = erc20ContractAddress ? '0' : tx?.value
-      // const destAddress = erc20ContractAddress ?? to
 
-      // const addressNList = bip32ToAddressNList(path)
+      const formattedUtxos = utxos.map((utxo: UtxoResponse) => {
+        let inputTx: any
+        let addressPath: any
+        if (accountData.transactions) {
+          //TODO type this
+          inputTx = accountData.transactions.find(
+            (transaction: any) => transaction.txid === utxo.txid
+          )
+        }
+        if (accountData.addresses) {
+          addressPath = accountData.addresses.find((addr) => addr.pubkey === utxo.address)
+        }
 
-      // const estimatedFees = await this.getFeeData({
-      //   to,
-      //   from,
-      //   value,
-      //   contractAddress: erc20ContractAddress
-      // })
+        for (let i = 0; i < inputTx.vin.length; i++) {
+          inputTx.vin[i] = {
+            vout: inputTx.vin[i].vout,
+            valueSat: parseInt(inputTx.vin[i].value),
+            sequence: inputTx.vin[i].sequence,
+            scriptSig: {
+              hex: '0014459a4d8600bfdaa52708eaae5be1dcf959069efc'
+            },
+            txid: inputTx.vin[i].txid
+          }
+        }
 
-      // const txToSign: BTCSignTx = {
-      //   coin: 'bitcoin',
-      //   inputs,
-      //   outputs
-      // }
-      // return { txToSign, estimatedFees }
-      return 'dope'
+        for (let i = 0; i < inputTx.vout.length; i++) {
+          inputTx.vout[i] = {
+            value: String(parseInt(inputTx.vout[i].value) / 100000000),
+            scriptPubKey: {
+              hex: inputTx.vout[i].hex
+            }
+          }
+        }
+
+        const hex = inputTx.hex
+        delete inputTx.blockHash
+        delete inputTx.blockHeight
+        delete inputTx.confirmations
+        delete inputTx.blockTime
+        delete inputTx.value
+        delete inputTx.valueIn
+        delete inputTx.fees
+        delete inputTx.hex
+        delete inputTx.txid
+        // inputTx.locktime = 0
+
+        return {
+          ...utxo,
+          addressNList: bip32ToAddressNList(addressPath.path),
+          scriptType: BTCInputScriptType.SpendAddress,
+          amount: String(utxo.value),
+          tx: inputTx,
+          hex,
+          // scriptSig: {
+          //   hex: '0014459a4d8600bfdaa52708eaae5be1dcf959069efc'
+          // },
+          value: Number(utxo.value)
+          // nonWitnessUtxo: Buffer.from(inputTx.hex, 'hex')
+        }
+      })
+
+      console.log('formattedUtxos: ', formattedUtxos)
+
+      let { inputs, outputs, fee } = coinSelect(formattedUtxos, recipients, Number(satoshiPerByte))
+
+      console.log('coinSelect inputs: ', inputs)
+      console.log('coinSelect outputs: ', outputs)
+      console.log('coinSelect inpufeets: ', fee)
+
+      //TODO some better error handling
+      if (!inputs || !outputs) return 'Failed to build tx'
+
+      outputs = outputs.map((out: any) => {
+        if (!out.address) {
+          return {
+            ...out,
+            amount: String(out.value),
+            addressType: 'p2pkh',
+            address: changeAddress,
+            scriptPubKey: {
+              hex: out.hex
+            },
+            isChange: true
+          }
+        }
+        return {
+          ...out,
+          amount: String(out.value),
+          addressType: 'p2pkh',
+          scriptPubKey: {
+            hex: out.hex
+          },
+          isChange: false
+        }
+      })
+
+      const txToSign: any = {
+        coin: 'bitcoin',
+        inputs,
+        outputs,
+        fee,
+        // version: 1,
+        // locktime: 0,
+        opReturnData: 'sup fool'
+      }
+      return { txToSign }
     } catch (err) {
       return ErrorHandler(err)
     }
   }
 
-  signTransaction = async (signTxInput: SignTxInput): Promise<string> => {
+  signTransaction = async (signTxInput: any): Promise<string> => {
     try {
-      // const { txToSign, wallet } = signTxInput
-      // const signedTx = await (wallet as BTCWallet).btcSignTx(txToSign)
+      // console.log('signTxInput in signTransaction: ', signTxInput.txToSign.inputs)
 
-      // if (!signedTx) throw new Error('Error signing tx')
+      // const inputs = [
+      //   {
+      //     addressNList: bip32ToAddressNList('m/0'),
+      //     scriptType: BTCInputScriptType.SpendAddress,
+      //     amount: String(390000),
+      //     vout: 0,
+      //     txid: 'd5f65ee80147b4bcc70b75e4bbf2d7382021b871bd8867ef8fa525ef50864882',
+      //     tx: {
+      //       version: 1,
+      //       locktime: 0,
+      //       vin: [
+      //         {
+      //           vout: 1,
+      //           valueSat: 200000,
+      //           sequence: 4294967295,
+      //           scriptSig: {
+      //             hex:
+      //               '483045022072ba61305fe7cb542d142b8f3299a7b10f9ea61f6ffaab5dca8142601869d53c0221009a8027ed79eb3b9bc13577ac2853269323434558528c6b6a7e542be46e7e9a820141047a2d177c0f3626fc68c53610b0270fa6156181f46586c679ba6a88b34c6f4874686390b4d92e5769fbb89c8050b984f4ec0b257a0e5c4ff8bd3b035a51709503'
+      //           },
+      //           txid: 'c16a03f1cf8f99f6b5297ab614586cacec784c2d259af245909dedb0e39eddcf'
+      //         },
+      //         {
+      //           vout: 1,
+      //           valueSat: 200000,
+      //           sequence: 4294967295,
+      //           scriptSig: {
+      //             hex:
+      //               '48304502200fd63adc8f6cb34359dc6cca9e5458d7ea50376cbd0a74514880735e6d1b8a4c0221008b6ead7fe5fbdab7319d6dfede3a0bc8e2a7c5b5a9301636d1de4aa31a3ee9b101410486ad608470d796236b003635718dfc07c0cac0cfc3bfc3079e4f491b0426f0676e6643a39198e8e7bdaffb94f4b49ea21baa107ec2e237368872836073668214'
+      //           },
+      //           txid: '1ae39a2f8d59670c8fc61179148a8e61e039d0d9e8ab08610cb69b4a19453eaf'
+      //         }
+      //       ],
+      //       vout: [
+      //         {
+      //           value: '0.00390000',
+      //           scriptPubKey: {
+      //             hex: '76a91424a56db43cf6f2b02e838ea493f95d8d6047423188ac'
+      //           }
+      //         }
+      //       ]
+      //     },
+      //     hex:
+      //       '0100000002cfdd9ee3b0ed9d9045f29a252d4c78ecac6c5814b67a29b5f6998fcff1036ac1010000008b483045022072ba61305fe7cb542d142b8f3299a7b10f9ea61f6ffaab5dca8142601869d53c0221009a8027ed79eb3b9bc13577ac2853269323434558528c6b6a7e542be46e7e9a820141047a2d177c0f3626fc68c53610b0270fa6156181f46586c679ba6a88b34c6f4874686390b4d92e5769fbb89c8050b984f4ec0b257a0e5c4ff8bd3b035a51709503ffffffffaf3e45194a9bb60c6108abe8d9d039e0618e8a147911c68f0c67598d2f9ae31a010000008b48304502200fd63adc8f6cb34359dc6cca9e5458d7ea50376cbd0a74514880735e6d1b8a4c0221008b6ead7fe5fbdab7319d6dfede3a0bc8e2a7c5b5a9301636d1de4aa31a3ee9b101410486ad608470d796236b003635718dfc07c0cac0cfc3bfc3079e4f491b0426f0676e6643a39198e8e7bdaffb94f4b49ea21baa107ec2e237368872836073668214ffffffff0170f30500000000001976a91424a56db43cf6f2b02e838ea493f95d8d6047423188ac00000000'
+      //   }
+      // ]
 
-      // return signedTx.serialized
-      return 'dope'
+      const { txToSign, wallet } = signTxInput
+
+      // const newOutputs: any = [
+      //   {
+      //     address: '1MJ2tj2ThBE62zXbBYA5ZaN3fdve5CPAz1',
+      //     addressType: 'p2pkh',
+      //     // scriptType: core.BTCOutputScriptType.PayToAddress,
+      //     amount: String(390000 - 10000),
+      //     isChange: false
+      //   }
+      // ]
+
+      for (let i = 0; i < txToSign.inputs.length; i++) {
+        delete txToSign.inputs[i].address
+        delete txToSign.inputs[i].value
+        delete txToSign.inputs[i].confirmations
+      }
+
+      for (let i = 0; i < txToSign.outputs.length; i++) {
+        delete txToSign.outputs[i].scriptPubKey
+        delete txToSign.outputs[i].value
+      }
+
+      console.log('Signing inputs: ', JSON.stringify(txToSign.inputs))
+      console.log(' Signing outputs: ', JSON.stringify(txToSign.outputs))
+
+      const newTxToSign: any = {
+        coin: txToSign.coin,
+        fee: txToSign.fee,
+        inputs: txToSign.inputs,
+        outputs: txToSign.outputs
+      }
+
+      const signedTx = await wallet.btcSignTx(newTxToSign)
+
+      if (!signedTx) throw new Error('Error signing tx')
+
+      return signedTx.serialized
     } catch (err) {
       return ErrorHandler(err)
     }
@@ -143,12 +323,40 @@ export class BitcoinChainAdapter implements ChainAdapter {
     }
   }
 
-  getAddress = async ({ wallet, path }: GetAddressParams): Promise<string> => {
-    const addressNList = bip32ToAddressNList(path)
+  getAddress = async ({
+    wallet,
+    purpose = "84'",
+    account = "0'",
+    isChange = false,
+    index,
+    scriptType = BTCInputScriptType.Bech32
+  }: GetAddressParams): Promise<string> => {
+    let path
+
+    if (index !== 0 && !index && !isChange) {
+      const { receiveIndex } = await this.getAccount(
+        'xpub6CDvS4rkJBfqEyBdTo7omDxv3BwDr5XmWeKsU9HAaLSG28GztaywbAsm6SBWPyEsZ6QDubVnXtNEfDZ74RkDVeLUSkjdZDbsLZCqNWqy7wQ'
+      )
+      path = `m/${purpose}/${account}/0'/0/${receiveIndex}`
+    }
+
+    if (index) {
+      path = `m/${purpose}/${account}/0'/0/${index}`
+    }
+
+    if (isChange) {
+      const { changeIndex } = await this.getAccount(
+        'xpub6CDvS4rkJBfqEyBdTo7omDxv3BwDr5XmWeKsU9HAaLSG28GztaywbAsm6SBWPyEsZ6QDubVnXtNEfDZ74RkDVeLUSkjdZDbsLZCqNWqy7wQ'
+      )
+      path = `m/${purpose}/${account}/0'/1/${changeIndex}`
+    }
+
+    // TODO change the 44' to 84' when we make bech32 default
+    const addressNList = path ? bip32ToAddressNList(path) : bip32ToAddressNList("m/44'/0'/0'/0/0")
     const btcAddress = await wallet.btcGetAddress({
       addressNList,
       coin: 'bitcoin',
-      scriptType: BTCInputScriptType.SpendAddress
+      scriptType
     })
     return btcAddress
   }

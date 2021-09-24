@@ -1,16 +1,16 @@
 import { ChainAdapterManager } from './ChainAdapterManager'
 import { ChainIdentifier } from '.'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { HDWallet, BTCInputScriptType } from '@shapeshiftoss/hdwallet-core'
 import dotenv from 'dotenv'
 dotenv.config()
 
 // const foxContractAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
 const defaultEthPath = `m/44'/60'/0'/0/0`
+// const defaultBtcPath = `m/44'/0'/0'/0/0`
 const defaultBtcPath = `m/44'/0'/0'/0/0`
 
 const getWallet = async (): Promise<NativeHDWallet> => {
-  console.log('process.env.CLI_MNEMONIC: ', process.env.CLI_MNEMONIC)
   const nativeAdapterArgs: NativeAdapterArgs = {
     mnemonic: process.env.CLI_MNEMONIC,
     deviceId: 'test'
@@ -31,20 +31,33 @@ const main = async () => {
     const chainAdapterManager = new ChainAdapterManager(unchainedUrls)
     const wallet = await getWallet()
     const btcChainAdapter = chainAdapterManager.byChain(ChainIdentifier.Bitcoin)
-    const address = await btcChainAdapter.getAddress({ wallet, path: defaultBtcPath })
-    console.log('address: ', address)
+
+    // const address = await btcChainAdapter.getAddress({
+    //   wallet,
+    //   purpose: "44'",
+    //   account: "0'",
+    //   isChange: false,
+    //   scriptType: BTCInputScriptType.SpendAddress
+    // })
+    // console.log('address: ', address)
 
     const txInput = {
       asset: { id: '123', symbol: 'BTC' },
-      to: '1FH6ehAd5ZFXCM1cLGzHxK1s4dGdq1JusM',
-      value: '500',
+      recipients: [{ address: '1FH6ehAd5ZFXCM1cLGzHxK1s4dGdq1JusM', value: 2000 }],
       wallet,
-      // path: string,
-      fee: '5'
+      path: defaultBtcPath,
+      fee: '100'
     }
 
-    const sent = await btcChainAdapter.buildSendTransaction(txInput)
-    console.log('sent: ', sent)
+    const unsignedTx = await btcChainAdapter.buildSendTransaction(txInput)
+    // console.log('unsignedTx: ', JSON.stringify(unsignedTx))
+
+    const signedTx = await btcChainAdapter.signTransaction({
+      wallet,
+      txToSign: unsignedTx?.txToSign
+    })
+
+    console.log('signedTx: ', signedTx)
 
     // const balanceInfo = await btcChainAdapter.getAccount(address)
     // console.log('balanceInfo: ', balanceInfo)

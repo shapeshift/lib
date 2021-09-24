@@ -88,46 +88,49 @@ export class EthereumChainAdapter implements ChainAdapter {
     try {
       const { to, erc20ContractAddress, path, wallet, fee, limit } = tx
       const value = erc20ContractAddress ? '0' : tx?.value
-      const destAddress = erc20ContractAddress ?? to
+      if (to && value) {
+        const destAddress = erc20ContractAddress ?? to
 
-      if (path) {
-        const addressNList = bip32ToAddressNList(path)
+        if (path) {
+          const addressNList = bip32ToAddressNList(path)
 
-        const data = await getErc20Data(to, value, erc20ContractAddress)
-        const from = await this.getAddress({ wallet, path })
-        const {
-          data: { nonce }
-        } = await this.provider.getAccount({ pubkey: from })
+          const data = await getErc20Data(to, value, erc20ContractAddress)
+          const from = await this.getAddress({ wallet, path })
+          const {
+            data: { nonce }
+          } = await this.provider.getAccount({ pubkey: from })
 
-        let gasPrice = fee
-        let gasLimit = limit
-        const estimatedFees = await this.getFeeData({
-          to,
-          from,
-          value,
-          contractAddress: erc20ContractAddress
-        })
+          let gasPrice = fee
+          let gasLimit = limit
+          const estimatedFees = await this.getFeeData({
+            to,
+            from,
+            value,
+            contractAddress: erc20ContractAddress
+          })
 
-        if (!gasPrice || !gasLimit) {
-          // Default to average gas price if fee is not passed
-          !gasPrice && (gasPrice = estimatedFees.average.feeUnitPrice)
-          !gasLimit && (gasLimit = estimatedFees.average.feeUnits)
+          if (!gasPrice || !gasLimit) {
+            // Default to average gas price if fee is not passed
+            !gasPrice && (gasPrice = estimatedFees.average.feeUnitPrice)
+            !gasLimit && (gasLimit = estimatedFees.average.feeUnits)
+          }
+
+          const txToSign: ETHSignTx = {
+            addressNList,
+            value: numberToHex(value),
+            to: destAddress,
+            chainId: 1, // TODO: implement for multiple chains
+            data,
+            nonce: String(nonce),
+            gasPrice: numberToHex(gasPrice),
+            gasLimit: numberToHex(gasLimit)
+          }
+          return { txToSign, estimatedFees }
+        } else {
+          return undefined
         }
-
-        const txToSign: ETHSignTx = {
-          addressNList,
-          value: numberToHex(value),
-          to: destAddress,
-          chainId: 1, // TODO: implement for multiple chains
-          data,
-          nonce: String(nonce),
-          gasPrice: numberToHex(gasPrice),
-          gasLimit: numberToHex(gasLimit)
-        }
-        return { txToSign, estimatedFees }
-      } else {
-        return undefined
       }
+      return undefined
     } catch (err) {
       return ErrorHandler(err)
     }
@@ -188,7 +191,7 @@ export class EthereumChainAdapter implements ChainAdapter {
 
   getAddress = async (input: GetAddressInput): Promise<string> => {
     const { wallet, path } = input
-    const addressNList = bip32ToAddressNList(path)
+    const addressNList = path ? bip32ToAddressNList(path) : bip32ToAddressNList("m/44'/60'/0/0")
     const ethAddress = await (wallet as ETHWallet).ethGetAddress({
       addressNList,
       showDisplay: false

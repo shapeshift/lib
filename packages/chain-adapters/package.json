@@ -27,6 +27,8 @@
     "@shapeshiftoss/unchained-client": "^1.0.1",
     "axios": "^0.21.1",
     "bignumber.js": "^9.0.1",
+    "bitcoinjs-lib": "^5.2.0",
+    "coinselect": "^3.1.12",
     "ethers": "^5.4.4",
     "multicoin-address-validator": "^0.5.2",
     "web3-utils": "^1.5.1"
