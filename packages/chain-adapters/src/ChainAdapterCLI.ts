@@ -50,7 +50,7 @@ const main = async () => {
     }
 
     const unsignedTx = await btcChainAdapter.buildSendTransaction(txInput)
-    // console.log('unsignedTx: ', JSON.stringify(unsignedTx))
+    console.log('unsignedTx: ', JSON.stringify(unsignedTx))
 
     const signedTx = await btcChainAdapter.signTransaction({
       wallet,

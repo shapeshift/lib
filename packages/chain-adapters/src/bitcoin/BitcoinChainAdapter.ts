@@ -70,7 +70,6 @@ export class BitcoinChainAdapter implements ChainAdapter {
       )
 
       console.log('fuckin accountData damnit: ', accountData)
-
       const changeAddress = await this.getAddress({
         wallet,
         purpose: "44'",
@@ -270,14 +269,86 @@ export class BitcoinChainAdapter implements ChainAdapter {
         coin: txToSign.coin,
         fee: txToSign.fee,
         inputs: txToSign.inputs,
-        outputs: txToSign.outputs
+        outputs: txToSign.outputs,
+        version: 1,
+        locktime: 0
       }
 
-      const signedTx = await wallet.btcSignTx(newTxToSign)
+      console.log('newTxToSign: ', newTxToSign)
 
+      //
+      // const newTxToSign: any = {
+      //   opReturnData: '',
+      //   coin: 'Bitcoin',
+      //   inputs: [
+      //     {
+      //       addressNList: [2147483732, 2147483648, 2147483648, 0, 0],
+      //       scriptType: 'p2sh-p2wpkh',
+      //       amount: '104690',
+      //       vout: 1,
+      //       txid: 'cc1433a3812e400b3c08ea465451390a416cdca1fa3a633ba2b1e0808e891cd9',
+      //       segwit: false,
+      //       hex:
+      //         '02000000000101136d62611cd3cfbe1dd8170d927c3a12eac6436425e0cc249d2a818459f81a470000000000ffffffff026d9801000000000016001434fe89df1494b8cdfdd26a36f0c673608f75d471f298010000000000160014329035c39cb274eb9cdaa662a7ab0eaaae15612b02483045022100861ec3561afeefe2cbcc72f34a324e0f1883a03f3003da65925d9dbdc7cc8a8e0220487fa332cb15dd56f033fe44eedda4582f364513413c79e8a1b96cd54b62cf070121022005b067436a140625b7708f18eae2cd62992a8b9157d8033534278aacb3bae300000000',
+      //       tx: {
+      //         txid: 'cc1433a3812e400b3c08ea465451390a416cdca1fa3a633ba2b1e0808e891cd9',
+      //         hash: 'cc1433a3812e400b3c08ea465451390a416cdca1fa3a633ba2b1e0808e891cd9',
+      //         version: 2,
+      //         vin: [
+      //           {
+      //             txid: '471af85984812a9d24cce0256443c6ea123a7c920d17d81dbecfd31c61626d13',
+      //             addr: 'bc1qj6mxv0lqmmm78wwwqzv0ecr89tqmj3enz5sww6',
+      //             scriptSig: {
+      //               hex: '0014459a4d8600bfdaa52708eaae5be1dcf959069efc'
+      //             },
+      //             valueSat: 210234,
+      //             value: 0.00210234
+      //           }
+      //         ],
+      //         vout: [
+      //           {
+      //             value: '104557',
+      //             scriptPubKey: {
+      //               hex: '001434fe89df1494b8cdfdd26a36f0c673608f75d471'
+      //             }
+      //           },
+      //           {
+      //             value: '104690',
+      //             scriptPubKey: {
+      //               hex: '0014329035c39cb274eb9cdaa662a7ab0eaaae15612b'
+      //             }
+      //           }
+      //         ],
+      //         hex:
+      //           '02000000000101136d62611cd3cfbe1dd8170d927c3a12eac6436425e0cc249d2a818459f81a470000000000ffffffff026d9801000000000016001434fe89df1494b8cdfdd26a36f0c673608f75d471f298010000000000160014329035c39cb274eb9cdaa662a7ab0eaaae15612b02483045022100861ec3561afeefe2cbcc72f34a324e0f1883a03f3003da65925d9dbdc7cc8a8e0220487fa332cb15dd56f033fe44eedda4582f364513413c79e8a1b96cd54b62cf070121022005b067436a140625b7708f18eae2cd62992a8b9157d8033534278aacb3bae300000000'
+      //       }
+      //     }
+      //   ],
+      //   outputs: [
+      //     {
+      //       address: 'bc1q0dt53aa0v366zdpsf2ant3pw4maugf50y2ywqy',
+      //       addressType: 'spend',
+      //       scriptType: 'p2wpkh',
+      //       amount: '2800',
+      //       isChange: false
+      //     },
+      //     {
+      //       address: 'bc1qxzsgclsnyerfn2why242em5zd5pjy9yx6qy20n',
+      //       addressType: 'spend',
+      //       scriptType: 'p2pkh',
+      //       amount: '78838',
+      //       isChange: true
+      //     }
+      //   ],
+      //   version: 1,
+      //   locktime: 0
+      // }
+
+      const signedTx = await wallet.btcSignTx(newTxToSign)
+      console.log('signedTx: ', signedTx)
       if (!signedTx) throw new Error('Error signing tx')
 
-      return signedTx.serialized
+      return signedTx.serializedTx
     } catch (err) {
       return ErrorHandler(err)
     }
