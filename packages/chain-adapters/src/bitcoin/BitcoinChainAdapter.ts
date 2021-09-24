@@ -17,7 +17,7 @@ import {
   bip32ToAddressNList,
   BTCInputScriptType,
   BTCSignTx,
-  BTCWallet
+  BitcoinTx
 } from '@shapeshiftoss/hdwallet-core'
 import axios from 'axios'
 import { Bitcoin } from '@shapeshiftoss/unchained-client'
@@ -63,116 +63,120 @@ export class BitcoinChainAdapter implements ChainAdapter {
 
   buildSendTransaction = async (
     tx: BuildSendTxInput
-  ): Promise<{ txToSign: BTCSignTx; estimatedFees?: FeeData }> => {
+  ): Promise<{ txToSign: BTCSignTx; estimatedFees?: FeeData } | undefined> => {
     try {
       const { recipients, fee: satoshiPerByte, wallet, opReturnData } = tx
 
-      const { data: utxos } = await this.provider.getUtxos({
-        pubkey:
-          'xpub6CDvS4rkJBfqEyBdTo7omDxv3BwDr5XmWeKsU9HAaLSG28GztaywbAsm6SBWPyEsZ6QDubVnXtNEfDZ74RkDVeLUSkjdZDbsLZCqNWqy7wQ'
-      })
-
-      const accountData = await this.getAccount(
-        'xpub6CDvS4rkJBfqEyBdTo7omDxv3BwDr5XmWeKsU9HAaLSG28GztaywbAsm6SBWPyEsZ6QDubVnXtNEfDZ74RkDVeLUSkjdZDbsLZCqNWqy7wQ'
-      )
-
-      // TODO generate bech32 address for change
-      const changeAddress = await this.getAddress({
-        wallet,
-        purpose: "44'",
-        account: "0'",
-        isChange: true,
-        scriptType: BTCInputScriptType.SpendAddress
-      })
-
-      const formattedUtxos = utxos.map((utxo: UtxoResponse) => {
-        let inputTx: any
-        let addressPath: any
-        if (accountData.transactions) {
-          //TODO type this
-          inputTx = accountData.transactions.find(
-            (transaction: any) => transaction.txid === utxo.txid
-          )
+      const publicKeys = await wallet.getPublicKeys([
+        {
+          coin: 'Bitcoin',
+          addressNList: bip32ToAddressNList(`m/44'/0'/0'`),
+          curve: 'secp256k1'
         }
-        if (accountData.addresses) {
-          addressPath = accountData.addresses.find((addr) => addr.pubkey === utxo.address)
-        }
+      ])
+      if (publicKeys) {
+        const pubkey = publicKeys[0].xpub
+        const { data: utxos } = await this.provider.getUtxos({
+          pubkey
+        })
+        const accountData = await this.getAccount(pubkey)
 
-        for (let i = 0; i < inputTx.vin.length; i++) {
-          inputTx.vin[i] = {
-            vout: inputTx.vin[i].vout,
-            valueSat: parseInt(inputTx.vin[i].value),
-            sequence: inputTx.vin[i].sequence,
-            scriptSig: {
-              hex: '0014459a4d8600bfdaa52708eaae5be1dcf959069efc'
-            },
-            txid: inputTx.vin[i].txid
+        // TODO generate bech32 address for change
+        const changeAddress = await this.getAddress({
+          wallet,
+          purpose: "44'",
+          account: "0'",
+          isChange: true,
+          scriptType: BTCInputScriptType.SpendAddress
+        })
+
+        const formattedUtxos = utxos.map((utxo: UtxoResponse) => {
+          let inputTx: any
+          let addressPath: any
+          if (accountData.transactions) {
+            inputTx = accountData.transactions.find(
+              (transaction: any) => transaction.txid === utxo.txid
+            )
           }
-        }
+          if (accountData.addresses) {
+            addressPath = accountData.addresses.find((addr) => addr.pubkey === utxo.address)
+          }
 
-        for (let i = 0; i < inputTx.vout.length; i++) {
-          inputTx.vout[i] = {
-            value: String(parseInt(inputTx.vout[i].value) / 100000000),
-            scriptPubKey: {
-              hex: inputTx.vout[i].hex
+          for (let i = 0; i < inputTx.vin.length; i++) {
+            inputTx.vin[i] = {
+              vout: inputTx.vin[i].vout,
+              valueSat: parseInt(inputTx.vin[i].value),
+              sequence: inputTx.vin[i].sequence,
+              txid: inputTx.vin[i].txid
             }
           }
+
+          for (let i = 0; i < inputTx.vout.length; i++) {
+            inputTx.vout[i] = {
+              value: String(parseInt(inputTx.vout[i].value) / 100000000),
+              scriptPubKey: {
+                hex: inputTx.vout[i].hex
+              }
+            }
+          }
+
+          return {
+            ...utxo,
+            addressNList: bip32ToAddressNList(addressPath.path),
+            scriptType: BTCInputScriptType.SpendAddress,
+            amount: String(utxo.value),
+            tx: inputTx,
+            hex: inputTx.hex,
+            value: Number(utxo.value)
+          }
+        })
+
+        const { inputs, outputs, fee } = coinSelect(
+          formattedUtxos,
+          recipients,
+          Number(satoshiPerByte)
+        )
+
+        //TODO some better error handling
+        if (!inputs || !outputs) {
+          throw 'Error selecting inputs/outputs'
         }
 
-        return {
-          ...utxo,
-          addressNList: bip32ToAddressNList(addressPath.path),
-          scriptType: BTCInputScriptType.SpendAddress,
-          amount: String(utxo.value),
-          tx: inputTx,
-          hex: inputTx.hex,
-          value: Number(utxo.value)
-        }
-      })
-
-      const { inputs, outputs, fee } = coinSelect(
-        formattedUtxos,
-        recipients,
-        Number(satoshiPerByte)
-      )
-
-      //TODO some better error handling
-      if (!inputs || !outputs) {
-        throw 'Error selecting inputs/outputs'
-      }
-
-      const formattedOutputs = outputs.map((out: any) => {
-        if (!out.address) {
+        const formattedOutputs = outputs.map((out: any) => {
+          if (!out.address) {
+            return {
+              ...out,
+              amount: String(out.value),
+              addressType: 'p2pkh',
+              address: changeAddress,
+              scriptPubKey: {
+                hex: out.hex
+              },
+              isChange: true
+            }
+          }
           return {
             ...out,
             amount: String(out.value),
             addressType: 'p2pkh',
-            address: changeAddress,
             scriptPubKey: {
               hex: out.hex
             },
-            isChange: true
+            isChange: false
           }
-        }
-        return {
-          ...out,
-          amount: String(out.value),
-          addressType: 'p2pkh',
-          scriptPubKey: {
-            hex: out.hex
-          },
-          isChange: false
-        }
-      })
+        })
 
-      const txToSign: any = {
-        coin: 'bitcoin',
-        inputs,
-        outputs: formattedOutputs,
-        fee,
-        opReturnData
+        const txToSign: any = {
+          coin: 'bitcoin',
+          inputs,
+          outputs: formattedOutputs,
+          fee,
+          opReturnData
+        }
+        return { txToSign }
+      } else {
+        return undefined
       }
-      return { txToSign }
     } catch (err) {
       return ErrorHandler(err)
     }
