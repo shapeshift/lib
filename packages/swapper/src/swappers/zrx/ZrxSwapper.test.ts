@@ -3,6 +3,12 @@ import { ZrxSwapper } from '..'
 import { SwapperType, ZrxError } from '../..'
 import { DEFAULT_SLIPPAGE } from './constants'
 import { getZrxQuote } from './getQuote/getQuote'
+import { zrxService } from './utils'
+
+const axios = jest.createMockFromModule('axios')
+//@ts-ignore
+axios.create = jest.fn(() => axios)
+jest.mock('./utils')
 
 jest.mock('./getQuote/getQuote', () => ({
   getZrxQuote: jest.fn()
@@ -86,7 +92,7 @@ describe('ZrxSwapper', () => {
     const error = new ZrxError(message)
     expect(error.message).toBe(`ZrxError:${message}`)
   })
-  it('available assets filters out all non-ethereum assets', () => {
+  it('getAvailableAssets filters out all non-ethereum assets', () => {
     const swapper = new ZrxSwapper()
     const availableAssets = swapper.getAvailableAssets([BTC, FOX, WETH])
     expect(availableAssets).toStrictEqual([FOX, WETH])
@@ -100,5 +106,25 @@ describe('ZrxSwapper', () => {
     const swapper = new ZrxSwapper()
     const canTradePair = swapper.canTradePair(FOX, WETH)
     expect(canTradePair).toBeTruthy()
+  })
+  it('getUsdRate of USDC returns 1', async () => {
+    const swapper = new ZrxSwapper()
+    const rate = await swapper.getUsdRate({ symbol: 'USDC' })
+    expect(rate).toBe('1')
+  })
+  it('getUsdRate gets the usd rate of the symbol', async () => {
+    const swapper = new ZrxSwapper()
+    ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
+      Promise.resolve({ data: { price: '2' } })
+    )
+    const rate = await swapper.getUsdRate({ symbol: 'FOX' })
+    expect(rate).toBe('0.5')
+  })
+  it('getUsdRate fails', async () => {
+    const swapper = new ZrxSwapper()
+    ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data: {} }))
+    await expect(swapper.getUsdRate({ symbol: 'WETH', tokenId: '0x0001' })).rejects.toThrow(
+      'getUsdRate - Failed to get price data'
+    )
   })
 })
