@@ -1,7 +1,7 @@
 import {
   ChainAdapter,
   BuildSendTxInput,
-  SignTxInput,
+  SignEthTxInput,
   GetAddressInput,
   GetFeeDataInput,
   FeeData,
@@ -11,7 +11,7 @@ import {
   Params
 } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
-import { bip32ToAddressNList, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
+import { bip32ToAddressNList, ETHSignTx, ETHWallet, BTCWallet } from '@shapeshiftoss/hdwallet-core'
 import { numberToHex } from 'web3-utils'
 import { Contract } from '@ethersproject/contracts'
 import erc20Abi from './erc20Abi.json'
@@ -136,10 +136,10 @@ export class EthereumChainAdapter implements ChainAdapter {
     }
   }
 
-  signTransaction = async (signTxInput: SignTxInput): Promise<string> => {
+  signTransaction = async (signTxInput: SignEthTxInput): Promise<string> => {
     try {
       const { txToSign, wallet } = signTxInput
-      const signedTx = await (wallet as ETHWallet).ethSignTx(txToSign)
+      const signedTx = await wallet.ethSignTx(txToSign)
 
       if (!signedTx) throw new Error('Error signing tx')
 

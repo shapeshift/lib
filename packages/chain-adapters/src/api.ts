@@ -1,4 +1,11 @@
-import { ETHSignTx, HDWallet, BTCInputScriptType } from '@shapeshiftoss/hdwallet-core'
+import {
+  BTCSignTx,
+  HDWallet,
+  BTCInputScriptType,
+  ETHSignTx,
+  ETHWallet,
+  BTCSignTxNative
+} from '@shapeshiftoss/hdwallet-core'
 import { NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { Ethereum, Bitcoin } from '@shapeshiftoss/unchained-client'
 
@@ -90,7 +97,7 @@ export type BuildSendTxInput = {
   asset: Asset
   to?: string
   value?: string
-  wallet: HDWallet
+  wallet: NativeHDWallet
   path?: string
   /*** In base units */
   fee?: string
@@ -99,12 +106,19 @@ export type BuildSendTxInput = {
   limit?: string
   memo?: string
   recipients?: Recipient[]
+  opReturnData?: string
 }
 
-export type SignTxInput = {
+export type SignEthTxInput = {
   txToSign: ETHSignTx
-  wallet: HDWallet
+  wallet: NativeHDWallet
 }
+
+export type SignBitcoinTxInput = {
+  txToSign: BTCSignTxNative
+  wallet: NativeHDWallet
+}
+
 export type GetAddressInput = {
   wallet: HDWallet
   path?: string
@@ -192,11 +206,11 @@ export interface ChainAdapter {
 
   buildSendTransaction(
     input: BuildSendTxInput
-  ): Promise<{ txToSign: ETHSignTx; estimatedFees: FeeData } | undefined>
+  ): Promise<{ txToSign: BTCSignTx | ETHSignTx; estimatedFees?: FeeData } | undefined>
 
   getAddress(input: GetAddressInput): Promise<string>
 
-  signTransaction(signTxInput: any): Promise<string>
+  signTransaction(signTxInput: SignBitcoinTxInput | SignEthTxInput): Promise<string>
 
   getFeeData(input: Partial<GetFeeDataInput>): Promise<FeeData>
 

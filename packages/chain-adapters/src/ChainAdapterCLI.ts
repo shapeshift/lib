@@ -45,19 +45,21 @@ const main = async () => {
       asset: { id: '123', symbol: 'BTC' },
       recipients: [{ address: '1FH6ehAd5ZFXCM1cLGzHxK1s4dGdq1JusM', value: 2000 }],
       wallet,
-      path: defaultBtcPath,
-      fee: '100'
+      fee: '100',
+      opReturnData: 'sup fool'
     }
 
-    const unsignedTx = await btcChainAdapter.buildSendTransaction(txInput)
-    console.log('unsignedTx: ', JSON.stringify(unsignedTx))
+    const unsignedTx: any = await btcChainAdapter.buildSendTransaction(txInput)
 
     const signedTx = await btcChainAdapter.signTransaction({
       wallet,
-      txToSign: unsignedTx?.txToSign
+      txToSign: unsignedTx.txToSign
     })
 
     console.log('signedTx: ', signedTx)
+
+    // const txid = await btcChainAdapter.broadcastTransaction(signedTx)
+    // console.log('txid: ', txid)
 
     // const balanceInfo = await btcChainAdapter.getAccount(address)
     // console.log('balanceInfo: ', balanceInfo)
