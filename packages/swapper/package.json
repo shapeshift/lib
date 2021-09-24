@@ -17,10 +17,12 @@
     "type-check": "tsc --project ./tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@shapeshiftoss/asset-service": "^1.0.0",
+    "@shapeshiftoss/hdwallet-core": "^1.16.2-alpha.0",
     "axios": "^0.21.4",
+    "web3": "^1.5.2",
     "bignumber.js": "^9.0.1",
-    "retry-axios": "^2.6.0",
-    "web3": "^1.5.2"
+    "retry-axios": "^2.6.0"
   },
   "devDependencies": {
     "web3-utils": "^1.5.2"
