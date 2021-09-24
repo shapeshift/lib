@@ -1,33 +1,12 @@
+import { Asset } from '@shapeshiftoss/asset-service'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { ChainIdentifier } from '@shapeshiftoss/chain-adapters'
 
 export enum SwapperType {
   Zrx = '0x',
   Thorchain = 'Thorchain'
 }
 
-type AssetType = {
-  tokenId: string
-  symbol: string
-  network: string
-  chain: ChainIdentifier
-}
-
 export class SwapError extends Error {}
-
-export interface GetQuoteInput {
-  sellAsset: AssetType
-  buyAsset: AssetType
-  sellAmount?: string
-  buyAmount?: string
-  sellAssetAccountId?: string
-  buyAssetAccountId?: string
-  slippage?: string
-  priceImpact?: string
-  sendMax?: boolean
-  minimumPrice?: string
-  minimum?: string
-}
 
 export interface FeeData {
   fee?: string
@@ -45,14 +24,32 @@ export type SwapSource = {
   proportion: string
 }
 
+export interface QuoteResponse {
+  price: string
+  guaranteedPrice: string
+  to: string
+  data?: string
+  value?: string
+  gas?: string
+  estimatedGas?: string
+  gasPrice?: string
+  protocolFee?: string
+  minimumProtocolFee?: string
+  buyTokenAddress?: string
+  sellTokenAddress?: string
+  buyAmount?: string
+  sellAmount?: string
+  allowanceTarget?: string
+  sources?: Array<SwapSource>
+}
 export interface Quote {
   success: boolean
   statusCode?: number
   statusReason?: string
   sellAssetAccountId?: string
   buyAssetAccountId?: string
-  sellAsset: AssetType
-  buyAsset: AssetType
+  sellAsset: Asset
+  buyAsset: Asset
   rate?: string
   depositAddress?: string // this is dex contract address for eth swaps
   receiveAddress?: string
@@ -75,6 +72,25 @@ export interface Quote {
   timestamp?: number
 }
 
+export interface GetQuoteInput {
+  sellAsset: Asset
+  buyAsset: Asset
+  sellAmount?: string
+  buyAmount?: string
+  sellAssetAccountId?: string
+  buyAssetAccountId?: string
+  slippage?: string
+  priceImpact?: string
+  sendMax?: boolean
+  minimumPrice?: string
+  minimum?: string
+}
+
+export type BuildQuoteTxArgs = {
+  input: GetQuoteInput
+  wallet: HDWallet
+}
+
 export interface Swapper {
   /** Returns the swapper type */
   getType(): SwapperType
@@ -84,5 +100,5 @@ export interface Swapper {
   * @param input
   * @param wallet
   **/
-  buildQuoteTx?(input: GetQuoteInput, wallet: HDWallet): Promise<Quote>
+  buildQuoteTx?(args: BuildQuoteTxArgs): Promise<Quote>
 }
