@@ -29,8 +29,12 @@ export class ZrxSwapper implements Swapper {
     this.web3 = deps.web3
   }
 
-  private getDeps() {
-    return getDeps.call(this)
+  private getDeps<
+    T extends typeof ZrxSwapper,
+    P = Parameters<typeof getDeps>[],
+    R = ReturnType<typeof getDeps>
+  >(): R {
+    return getDeps.call<T, P[], R>((this as unknown) as T)
   }
 
   getType() {
