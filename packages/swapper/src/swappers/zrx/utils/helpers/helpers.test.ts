@@ -3,7 +3,8 @@ import BigNumber from 'bignumber.js'
 import { setupQuote } from '../test-data/setupSwapQuote'
 import { ChainAdapterManager, ChainIdentifier } from '@shapeshiftoss/chain-adapters'
 import { erc20AllowanceAbi } from '../../utils/abi/erc20-abi'
-import { normalizeAmount, getAllowanceRequired } from '../helpers/helpers'
+import { normalizeAmount, getAllowanceRequired, getDeps } from '../helpers/helpers'
+import { ZrxSwapper } from '../../ZrxSwapper'
 
 jest.mock('web3')
 
@@ -34,7 +35,7 @@ const setup = () => {
 
 describe('utils', () => {
   const { quoteInput, sellAsset } = setupQuote()
-  const { web3Instance } = setup()
+  const { web3Instance, adapterManager } = setup()
 
   describe('normalizeAmount', () => {
     it('should return undefined if not amount is given', () => {
@@ -130,4 +131,13 @@ describe('utils', () => {
       )
     })
   })
+
+  describe('getDeps', () => {
+    it('returns dependency list for binded class', () => {
+      const deps = { web3: web3Instance, adapterManager }
+      const swapper = new ZrxSwapper(deps)
+      expect(getDeps.call(swapper)).toEqual(deps)
+    })
+  })
+
 })

@@ -49,7 +49,9 @@ export const getAllowanceRequired = async ({
   return allowanceRequired.lt(0) ? new BigNumber(0) : allowanceRequired
 }
 
-// TODO: (ryankk) finish implementing this
 export function getDeps(this: Swapper) {
-  return Object.entries(this)
+  return Object.entries(this).reduce((deps: any, args) => {
+    deps[args[0]] = args[1]
+    return deps
+  }, {})
 }

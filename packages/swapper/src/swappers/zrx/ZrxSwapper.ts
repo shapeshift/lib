@@ -29,7 +29,6 @@ export class ZrxSwapper implements Swapper {
     this.web3 = deps.web3
   }
 
-  // TODO: (ryankk) finish implementing this for passing deps to functions
   private getDeps() {
     return getDeps.call(this)
   }
@@ -39,8 +38,9 @@ export class ZrxSwapper implements Swapper {
   }
 
   async buildQuoteTx({ input, wallet }: BuildQuoteTxArgs): Promise<Quote> {
-    return buildQuoteTx({ adapterManager: this.adapterManager, web3: this.web3 }, { input, wallet })
+    return buildQuoteTx(this.getDeps(), { input, wallet })
   }
+
   async getQuote(input: GetQuoteInput): Promise<Quote> {
     return getZrxQuote(input)
   }
