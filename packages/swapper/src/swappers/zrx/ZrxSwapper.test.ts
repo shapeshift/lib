@@ -78,10 +78,10 @@ const setupQuote = () => {
 }
 
 describe('ZrxSwapper', () => {
-  const input = ({} as unknown) as GetQuoteInput
-  const wallet = ({} as unknown) as HDWallet
-  const web3 = ({} as unknown) as Web3
-  const adapterManager = ({} as unknown) as ChainAdapterManager
+  const input = <GetQuoteInput>{}
+  const wallet = <HDWallet>{}
+  const web3 = <Web3>{}
+  const adapterManager = <ChainAdapterManager>{}
   const zrxSwapperDeps = { web3, adapterManager }
 
   it('calls getZrxQuote on getQuote', async () => {

@@ -58,8 +58,8 @@ const setupQuote = () => {
 
 describe('getZrxQuote', () => {
   const zrxSwapperDeps = {
-    web3: ({} as unknown) as Web3,
-    adapterManager: ({} as unknown) as ChainAdapterManager
+    web3: <Web3>{},
+    adapterManager: <ChainAdapterManager>{}
   }
   it('returns quote with fee data', async () => {
     const { quoteInput } = setupQuote()
