@@ -10,7 +10,8 @@ import {
   GetAddressParams,
   Params,
   UtxoResponse,
-  SignBitcoinTxInput
+  SignBitcoinTxInput,
+  Recipient
 } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
 import {
@@ -66,7 +67,6 @@ export class BitcoinChainAdapter implements ChainAdapter {
   ): Promise<{ txToSign: BTCSignTx; estimatedFees?: FeeData } | undefined> => {
     try {
       const { recipients, fee: satoshiPerByte, wallet, opReturnData } = tx
-
       const publicKeys = await wallet.getPublicKeys([
         {
           coin: 'Bitcoin',
@@ -79,7 +79,6 @@ export class BitcoinChainAdapter implements ChainAdapter {
         const { data: utxos } = await this.provider.getUtxos({
           pubkey
         })
-        const accountData = await this.getAccount(pubkey)
 
         // TODO generate bech32 address for change
         const changeAddress = await this.getAddress({
@@ -90,46 +89,23 @@ export class BitcoinChainAdapter implements ChainAdapter {
           scriptType: BTCInputScriptType.SpendAddress
         })
 
-        const formattedUtxos = utxos.map((utxo: UtxoResponse) => {
-          let inputTx: any
-          let addressPath: any
-          if (accountData.transactions) {
-            inputTx = accountData.transactions.find(
-              (transaction: any) => transaction.txid === utxo.txid
-            )
-          }
-          if (accountData.addresses) {
-            addressPath = accountData.addresses.find((addr) => addr.pubkey === utxo.address)
-          }
+        const formattedUtxos = []
+        for (const utxo of utxos) {
+          const getTransactionResponse = await this.provider.getTransaction({
+            txid: utxo.txid
+          })
 
-          for (let i = 0; i < inputTx.vin.length; i++) {
-            inputTx.vin[i] = {
-              vout: inputTx.vin[i].vout,
-              valueSat: parseInt(inputTx.vin[i].value),
-              sequence: inputTx.vin[i].sequence,
-              txid: inputTx.vin[i].txid
-            }
-          }
-
-          for (let i = 0; i < inputTx.vout.length; i++) {
-            inputTx.vout[i] = {
-              value: String(parseInt(inputTx.vout[i].value) / 100000000),
-              scriptPubKey: {
-                hex: inputTx.vout[i].hex
-              }
-            }
-          }
-
-          return {
+          const inputTx = getTransactionResponse.data
+          formattedUtxos.push({
             ...utxo,
-            addressNList: bip32ToAddressNList(addressPath.path),
+            addressNList: bip32ToAddressNList(utxo.path),
             scriptType: BTCInputScriptType.SpendAddress,
             amount: String(utxo.value),
             tx: inputTx,
             hex: inputTx.hex,
             value: Number(utxo.value)
-          }
-        })
+          })
+        }
 
         const { inputs, outputs, fee } = coinSelect(
           formattedUtxos,
@@ -142,16 +118,12 @@ export class BitcoinChainAdapter implements ChainAdapter {
           throw 'Error selecting inputs/outputs'
         }
 
-        const formattedOutputs = outputs.map((out: any) => {
+        const formattedOutputs = outputs.map((out: Recipient) => {
           if (!out.address) {
             return {
-              ...out,
               amount: String(out.value),
               addressType: 'p2pkh',
               address: changeAddress,
-              scriptPubKey: {
-                hex: out.hex
-              },
               isChange: true
             }
           }
@@ -159,14 +131,11 @@ export class BitcoinChainAdapter implements ChainAdapter {
             ...out,
             amount: String(out.value),
             addressType: 'p2pkh',
-            scriptPubKey: {
-              hex: out.hex
-            },
             isChange: false
           }
         })
 
-        const txToSign: any = {
+        const txToSign = {
           coin: 'bitcoin',
           inputs,
           outputs: formattedOutputs,
@@ -255,35 +224,44 @@ export class BitcoinChainAdapter implements ChainAdapter {
     isChange = false,
     index,
     scriptType = BTCInputScriptType.Bech32
-  }: GetAddressParams): Promise<string> => {
+  }: GetAddressParams): Promise<string | undefined> => {
     let path
 
-    if (index !== 0 && !index && !isChange) {
-      const { receiveIndex } = await this.getAccount(
-        'xpub6CDvS4rkJBfqEyBdTo7omDxv3BwDr5XmWeKsU9HAaLSG28GztaywbAsm6SBWPyEsZ6QDubVnXtNEfDZ74RkDVeLUSkjdZDbsLZCqNWqy7wQ'
-      )
-      path = `m/${purpose}/${account}/0'/0/${receiveIndex}`
-    }
+    const publicKeys = await wallet.getPublicKeys([
+      {
+        coin: 'Bitcoin',
+        addressNList: bip32ToAddressNList(`m/44'/0'/0'`),
+        curve: 'secp256k1'
+      }
+    ])
+    if (publicKeys) {
+      const pubkey = publicKeys[0].xpub
 
-    if (index) {
-      path = `m/${purpose}/${account}/0'/0/${index}`
-    }
+      if (index !== 0 && !index && !isChange) {
+        const { receiveIndex } = await this.getAccount(pubkey)
+        path = `m/${purpose}/${account}/0'/0/${receiveIndex}`
+      }
 
-    if (isChange) {
-      const { changeIndex } = await this.getAccount(
-        'xpub6CDvS4rkJBfqEyBdTo7omDxv3BwDr5XmWeKsU9HAaLSG28GztaywbAsm6SBWPyEsZ6QDubVnXtNEfDZ74RkDVeLUSkjdZDbsLZCqNWqy7wQ'
-      )
-      path = `m/${purpose}/${account}/0'/1/${changeIndex}`
-    }
+      if (index) {
+        path = `m/${purpose}/${account}/0'/0/${index}`
+      }
 
-    // TODO change the 44' to 84' when we make bech32 default
-    const addressNList = path ? bip32ToAddressNList(path) : bip32ToAddressNList("m/44'/0'/0'/0/0")
-    const btcAddress = await wallet.btcGetAddress({
-      addressNList,
-      coin: 'bitcoin',
-      scriptType
-    })
-    return btcAddress
+      if (isChange) {
+        const { changeIndex } = await this.getAccount(pubkey)
+        path = `m/${purpose}/${account}/0'/1/${changeIndex}`
+      }
+
+      // TODO change the 44' to 84' when we make bech32 default
+      const addressNList = path ? bip32ToAddressNList(path) : bip32ToAddressNList("m/44'/0'/0'/0/0")
+      const btcAddress = await wallet.btcGetAddress({
+        addressNList,
+        coin: 'bitcoin',
+        scriptType
+      })
+      return btcAddress
+    } else {
+      return undefined
+    }
   }
 
   async validateAddress(address: string): Promise<ValidAddressResult> {

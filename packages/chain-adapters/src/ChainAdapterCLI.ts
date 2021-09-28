@@ -1,7 +1,7 @@
 import { ChainAdapterManager } from './ChainAdapterManager'
 import { ChainIdentifier } from '.'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { HDWallet, BTCInputScriptType } from '@shapeshiftoss/hdwallet-core'
+import { HDWallet, BTCInputScriptType, kavaDescribePath } from '@shapeshiftoss/hdwallet-core'
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -50,6 +50,8 @@ const main = async () => {
     }
 
     const unsignedTx: any = await btcChainAdapter.buildSendTransaction(txInput)
+
+    // console.log('unsignedTx: ', JSON.stringify(unsignedTx))
 
     const signedTx = await btcChainAdapter.signTransaction({
       wallet,

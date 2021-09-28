@@ -3,7 +3,6 @@ import {
   HDWallet,
   BTCInputScriptType,
   ETHSignTx,
-  ETHWallet,
   BTCSignTxNative
 } from '@shapeshiftoss/hdwallet-core'
 import { NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
@@ -62,7 +61,7 @@ export type UtxoResponse = {
   height?: number
   confirmations: number
   address?: string
-  path?: string
+  path: string
   locktime?: number
   coinbase?: boolean
   nonWitnessUtxo?: string
@@ -88,9 +87,8 @@ export type Asset = {
 }
 
 export type Recipient = {
-  address: string
   value: number
-  // sendMax?: boolean
+  address?: string
 }
 
 export type BuildSendTxInput = {
@@ -208,7 +206,7 @@ export interface ChainAdapter {
     input: BuildSendTxInput
   ): Promise<{ txToSign: BTCSignTx | ETHSignTx; estimatedFees?: FeeData } | undefined>
 
-  getAddress(input: GetAddressInput): Promise<string>
+  getAddress(input: GetAddressInput): Promise<string | undefined>
 
   signTransaction(signTxInput: SignBitcoinTxInput | SignEthTxInput): Promise<string>
 
