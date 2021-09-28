@@ -1,30 +1,22 @@
 import {
   ChainAdapter,
   BuildSendTxInput,
-  // SignTxInput,
-  GetFeeDataInput,
   FeeData,
   ChainIdentifier,
   ValidAddressResult,
   ValidAddressResultType,
   GetAddressParams,
   Params,
-  UtxoResponse,
   SignBitcoinTxInput,
   Recipient
 } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
-import {
-  bip32ToAddressNList,
-  BTCInputScriptType,
-  BTCSignTx,
-  BitcoinTx
-} from '@shapeshiftoss/hdwallet-core'
+import { bip32ToAddressNList, BTCInputScriptType, BTCSignTx } from '@shapeshiftoss/hdwallet-core'
 import axios from 'axios'
 import { Bitcoin } from '@shapeshiftoss/unchained-client'
+import WAValidator from 'multicoin-address-validator'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const coinSelect = require('coinselect')
-import WAValidator from 'multicoin-address-validator'
 
 const MIN_RELAY_FEE = 3000 // sats/kbyte
 const DEFAULT_FEE = undefined
@@ -96,15 +88,17 @@ export class BitcoinChainAdapter implements ChainAdapter {
           })
 
           const inputTx = getTransactionResponse.data
-          formattedUtxos.push({
-            ...utxo,
-            addressNList: bip32ToAddressNList(utxo.path),
-            scriptType: BTCInputScriptType.SpendAddress,
-            amount: String(utxo.value),
-            tx: inputTx,
-            hex: inputTx.hex,
-            value: Number(utxo.value)
-          })
+          if (utxo.path) {
+            formattedUtxos.push({
+              ...utxo,
+              addressNList: bip32ToAddressNList(utxo.path),
+              scriptType: BTCInputScriptType.SpendAddress,
+              amount: String(utxo.value),
+              tx: inputTx,
+              hex: inputTx.hex,
+              value: Number(utxo.value)
+            })
+          }
         }
 
         const { inputs, outputs, fee } = coinSelect(
