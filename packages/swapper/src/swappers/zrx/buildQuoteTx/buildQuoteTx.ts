@@ -176,16 +176,18 @@ export async function buildQuoteTx(
     }
     return quote
   } catch (e) {
-    if (e.status === 400 || e.status === 500) {
-      return {
-        sellAsset,
-        buyAsset,
-        success: false,
-        statusCode: e.body?.code || -1,
-        statusReason: e.body?.reason || 'Unknown Client Failure'
-      }
+    const statusCode =
+      e?.response?.data?.validationErrors?.[0]?.code || e?.response?.data?.code || -1
+    const statusReason =
+      e?.response?.data?.validationErrors?.[0]?.reason ||
+      e?.response?.data?.reason ||
+      'Unknown Error'
+    return {
+      sellAsset,
+      buyAsset,
+      success: false,
+      statusCode,
+      statusReason
     }
-
-    throw new SwapError(`ZrxSwapper:buildQuoteTx Error getting quote: ${e}`)
   }
 }

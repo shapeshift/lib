@@ -100,7 +100,7 @@ export interface Swapper {
    * @param input
    * @param wallet
    **/
-  buildQuoteTx?(args: BuildQuoteTxArgs): Promise<Quote>
+  buildQuoteTx(args: BuildQuoteTxArgs): Promise<Quote | undefined>
 
   /**
    * Get a basic quote (rate) for a trading pair

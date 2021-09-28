@@ -251,13 +251,13 @@ describe('buildQuoteTx', () => {
 
   it('should throw on api call status of 400', async () => {
     ;(zrxService.get as jest.Mock<unknown>).mockImplementation(() =>
-      Promise.reject({ status: 400 })
+      Promise.reject({ response: { data: { code: 400 } } })
     )
 
     expect(await buildQuoteTx(deps, { input: quoteInput, wallet })).toEqual({
       success: false,
-      statusCode: -1,
-      statusReason: 'Unknown Client Failure',
+      statusCode: 400,
+      statusReason: 'Unknown Error',
       buyAsset: { ...mockQuoteResponse.buyAsset },
       sellAsset: { ...mockQuoteResponse.sellAsset }
     })
@@ -265,13 +265,13 @@ describe('buildQuoteTx', () => {
 
   it('should throw on api call status of 500', async () => {
     ;(zrxService.get as jest.Mock<unknown>).mockImplementation(() =>
-      Promise.reject({ status: 500 })
+      Promise.reject({ response: { data: { code: 500 } } })
     )
 
     expect(await buildQuoteTx(deps, { input: quoteInput, wallet })).toEqual({
       success: false,
-      statusCode: -1,
-      statusReason: 'Unknown Client Failure',
+      statusCode: 500,
+      statusReason: 'Unknown Error',
       buyAsset: { ...mockQuoteResponse.buyAsset },
       sellAsset: { ...mockQuoteResponse.sellAsset }
     })
