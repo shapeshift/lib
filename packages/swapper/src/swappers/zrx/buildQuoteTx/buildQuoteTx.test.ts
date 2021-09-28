@@ -262,4 +262,18 @@ describe('buildQuoteTx', () => {
       sellAsset: { ...mockQuoteResponse.sellAsset }
     })
   })
+
+  it('should throw on api call status of 500', async () => {
+    ;(zrxService.get as jest.Mock<unknown>).mockImplementation(() =>
+      Promise.reject({ status: 500 })
+    )
+
+    expect(await buildQuoteTx(deps, { input: quoteInput, wallet })).toEqual({
+      success: false,
+      statusCode: -1,
+      statusReason: 'Unknown Client Failure',
+      buyAsset: { ...mockQuoteResponse.buyAsset },
+      sellAsset: { ...mockQuoteResponse.sellAsset }
+    })
+  })
 })

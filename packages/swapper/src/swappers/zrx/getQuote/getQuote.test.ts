@@ -1,4 +1,4 @@
-import { ChainTypes, ContractTypes, NetworkTypes } from '@shapeshiftoss/asset-service'
+import { ChainTypes, ContractTypes, NetworkTypes, Asset } from '@shapeshiftoss/asset-service'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import Web3 from 'web3'
 import BigNumber from 'bignumber.js'
@@ -29,7 +29,7 @@ const setupQuote = () => {
     sendSupport: true,
     receiveSupport: true,
     symbol: 'FOX'
-  }
+  } as unknown as Asset
   const buyAsset = {
     name: 'WETH',
     chain: ChainTypes.Ethereum,
@@ -45,7 +45,7 @@ const setupQuote = () => {
     sendSupport: true,
     receiveSupport: true,
     symbol: 'WETH'
-  }
+  } as unknown as Asset
 
   const quoteInput = {
     sellAsset,

@@ -176,7 +176,7 @@ export async function buildQuoteTx(
     }
     return quote
   } catch (e) {
-    if (e.status === 400) {
+    if (e.status === 400 || e.status === 500) {
       return {
         sellAsset,
         buyAsset,
@@ -184,8 +184,6 @@ export async function buildQuoteTx(
         statusCode: e.body?.code || -1,
         statusReason: e.body?.reason || 'Unknown Client Failure'
       }
-    } else if (e.status === 500) {
-      // TODO: Handle error
     }
 
     throw new SwapError(`ZrxSwapper:buildQuoteTx Error getting quote: ${e}`)

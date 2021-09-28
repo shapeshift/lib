@@ -1,7 +1,7 @@
 import Web3 from 'web3'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import { ChainTypes, NetworkTypes, ContractTypes } from '@shapeshiftoss/asset-service'
+import { ChainTypes, NetworkTypes, ContractTypes, Asset } from '@shapeshiftoss/asset-service'
 import { ZrxSwapper } from '..'
 import { GetQuoteInput, SwapperType, ZrxError } from '../..'
 import { DEFAULT_SLIPPAGE } from './utils/constants'
@@ -16,7 +16,7 @@ jest.mock('./getQuote/getQuote', () => ({
   getZrxQuote: jest.fn()
 }))
 
-const BTC = {
+const BTC = ({
   name: 'bitcoin',
   chain: ChainTypes.Bitcoin,
   network: NetworkTypes.MAINNET,
@@ -31,8 +31,8 @@ const BTC = {
   sendSupport: false,
   receiveSupport: false,
   symbol: 'BTC'
-}
-const WETH = {
+} as unknown) as Asset
+const WETH = ({
   name: 'WETH',
   chain: ChainTypes.Ethereum,
   network: NetworkTypes.MAINNET,
@@ -47,8 +47,8 @@ const WETH = {
   sendSupport: true,
   receiveSupport: true,
   symbol: 'WETH'
-}
-const FOX = {
+} as unknown) as Asset
+const FOX = ({
   name: 'Fox',
   chain: ChainTypes.Ethereum,
   network: NetworkTypes.MAINNET,
@@ -61,7 +61,7 @@ const FOX = {
   sendSupport: true,
   receiveSupport: true,
   symbol: 'FOX'
-}
+} as unknown) as Asset
 
 const setupQuote = () => {
   const sellAmount = '1000000000000000000'

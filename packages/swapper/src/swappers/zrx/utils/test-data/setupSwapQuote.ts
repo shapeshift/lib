@@ -1,4 +1,4 @@
-import { ContractTypes, NetworkTypes, ChainTypes } from '@shapeshiftoss/asset-service'
+import { ContractTypes, NetworkTypes, ChainTypes, Asset } from '@shapeshiftoss/asset-service'
 import { DEFAULT_SLIPPAGE } from '../constants'
 
 export const setupQuote = () => {
@@ -15,7 +15,7 @@ export const setupQuote = () => {
     sendSupport: true,
     receiveSupport: true,
     symbol: 'FOX'
-  }
+  } as unknown as Asset
   const buyAsset = {
     name: 'WETH',
     chain: ChainTypes.Ethereum,
@@ -31,7 +31,7 @@ export const setupQuote = () => {
     sendSupport: true,
     receiveSupport: true,
     symbol: 'WETH'
-  }
+  } as unknown as Asset
 
   const quoteInput = {
     sellAsset,
