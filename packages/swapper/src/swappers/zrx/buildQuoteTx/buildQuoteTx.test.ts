@@ -6,6 +6,7 @@ import { buildQuoteTx } from './buildQuoteTx'
 import { setupQuote } from '../utils/test-data/setupSwapQuote'
 import { GetQuoteInput } from '../../../api'
 import { zrxService } from '../utils/zrxService'
+import { APPROVAL_GAS_LIMIT, MAX_SLIPPAGE } from '../utils/constants'
 
 jest.mock('web3')
 
@@ -142,6 +143,15 @@ describe('buildQuoteTx', () => {
     )
   })
 
+  it.only(`should throw error if slippage is higher than ${MAX_SLIPPAGE}%`, async () => {
+    const slippage = '31.0'
+    const input = { ...quoteInput, slippage }
+
+    await expect(buildQuoteTx(deps, { input, wallet })).rejects.toThrow(
+      `ZrxSwapper:buildQuoteTx slippage value of ${slippage} is greater than max slippage value of ${MAX_SLIPPAGE}`
+    )
+  })
+
   it('should throw error if tokenId, symbol and network are not provided for buyAsset', async () => {
     const input = ({
       ...quoteInput,
@@ -213,7 +223,7 @@ describe('buildQuoteTx', () => {
     })
   })
 
-  it('should return a quote response with gasPrice times estimatedGas', async () => {
+  it('should return a quote response with gasPrice multiplied by estimatedGas', async () => {
     const gasPrice = '10000'
     const estimatedGas = '100'
     const data = {
@@ -227,7 +237,7 @@ describe('buildQuoteTx', () => {
       ...mockQuoteResponse,
       feeData: {
         ...mockQuoteResponse.feeData,
-        approvalFee: '1000000000',
+        approvalFee: new BigNumber(APPROVAL_GAS_LIMIT).multipliedBy(gasPrice).toString(),
         gasPrice,
         estimatedGas,
         fee: new BigNumber(gasPrice).multipliedBy(estimatedGas).toString()
@@ -249,7 +259,7 @@ describe('buildQuoteTx', () => {
     })
   })
 
-  it('should throw on api call status of 400', async () => {
+  it('should throw on api error status of 400', async () => {
     ;(zrxService.get as jest.Mock<unknown>).mockImplementation(() =>
       Promise.reject({ response: { data: { code: 400 } } })
     )
@@ -263,7 +273,7 @@ describe('buildQuoteTx', () => {
     })
   })
 
-  it('should throw on api call status of 500', async () => {
+  it('should throw on api error status of 500', async () => {
     ;(zrxService.get as jest.Mock<unknown>).mockImplementation(() =>
       Promise.reject({ response: { data: { code: 500 } } })
     )

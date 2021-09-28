@@ -16,7 +16,7 @@ jest.mock('../utils/zrxService')
 const setupQuote = () => {
   const sellAmount = '1000000000000000000'
   ;(normalizeAmount as jest.Mock<unknown>).mockReturnValue(sellAmount)
-  const sellAsset = {
+  const sellAsset = ({
     name: 'Fox',
     chain: ChainTypes.Ethereum,
     network: NetworkTypes.MAINNET,
@@ -29,8 +29,9 @@ const setupQuote = () => {
     sendSupport: true,
     receiveSupport: true,
     symbol: 'FOX'
-  } as unknown as Asset
-  const buyAsset = {
+    // TODO: remove the type casts from test files when we unify `ChainTypes` and `ChainIdentifier`
+  } as unknown) as Asset
+  const buyAsset = ({
     name: 'WETH',
     chain: ChainTypes.Ethereum,
     network: NetworkTypes.MAINNET,
@@ -45,7 +46,7 @@ const setupQuote = () => {
     sendSupport: true,
     receiveSupport: true,
     symbol: 'WETH'
-  } as unknown as Asset
+  } as unknown) as Asset
 
   const quoteInput = {
     sellAsset,

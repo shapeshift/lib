@@ -31,6 +31,7 @@ const BTC = ({
   sendSupport: false,
   receiveSupport: false,
   symbol: 'BTC'
+  // TODO: remove the type casts from test files when we unify `ChainTypes` and `ChainIdentifier`
 } as unknown) as Asset
 const WETH = ({
   name: 'WETH',

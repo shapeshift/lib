@@ -5,7 +5,6 @@ import { BuildQuoteTxArgs, GetQuoteInput, Quote, Swapper, SwapperType } from '..
 
 import { buildQuoteTx } from './buildQuoteTx/buildQuoteTx'
 import { getZrxQuote } from './getQuote/getQuote'
-import { getDeps } from '../zrx/utils/helpers/helpers'
 
 export type ZrxSwapperDeps = {
   adapterManager: ChainAdapterManager
@@ -21,20 +20,10 @@ export class ZrxError extends Error {
 
 export class ZrxSwapper implements Swapper {
   public static swapperName = 'ZrxSwapper'
-  adapterManager: ChainAdapterManager
-  web3: Web3
+  deps: ZrxSwapperDeps
 
   constructor(deps: ZrxSwapperDeps) {
-    this.adapterManager = deps.adapterManager
-    this.web3 = deps.web3
-  }
-
-  private getDeps<
-    T extends typeof ZrxSwapper,
-    P = Parameters<typeof getDeps>[],
-    R = ReturnType<typeof getDeps>
-  >(): R {
-    return getDeps.call<T, P[], R>((this as unknown) as T)
+    this.deps = deps
   }
 
   getType() {
@@ -42,7 +31,7 @@ export class ZrxSwapper implements Swapper {
   }
 
   async buildQuoteTx({ input, wallet }: BuildQuoteTxArgs): Promise<Quote> {
-    return buildQuoteTx(this.getDeps(), { input, wallet })
+    return buildQuoteTx(this.deps, { input, wallet })
   }
 
   async getQuote(input: GetQuoteInput): Promise<Quote> {

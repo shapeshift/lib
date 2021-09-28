@@ -1,7 +1,6 @@
 import { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { attach, RetryConfig } from 'retry-axios'
 
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 type PartialRaxConfig = { raxConfig?: RetryConfig } & AxiosRequestConfig
 
 export function applyAxiosRetry(

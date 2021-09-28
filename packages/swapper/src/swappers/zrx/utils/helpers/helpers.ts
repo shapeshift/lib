@@ -2,9 +2,6 @@ import BigNumber from 'bignumber.js'
 import { AbiItem } from 'web3-utils'
 import Web3 from 'web3'
 import { Quote, SwapError } from '../../../../api'
-import { ThorchainSwapper } from '../../..'
-import { ZrxSwapper } from '../../ZrxSwapper'
-import { Swapper } from '../../../..'
 
 export type GetAllowanceRequiredArgs = {
   quote: Quote
@@ -50,17 +47,4 @@ export const getAllowanceRequired = async ({
   }
   const allowanceRequired = new BigNumber(quote.sellAmount || 0).minus(allowanceOnChain)
   return allowanceRequired.lt(0) ? new BigNumber(0) : allowanceRequired
-}
-
-export function getDeps<
-  T extends typeof ZrxSwapper | typeof ThorchainSwapper,
-  D = ConstructorParameters<T>[0]
->(this: T): D {
-  const initial = <D>{}
-  type K = keyof D
-  type Entry = [K, D[K]]
-  return (Object.entries(this) as Entry[]).reduce((deps, args) => {
-    deps[args[0]] = args[1]
-    return deps
-  }, initial)
 }

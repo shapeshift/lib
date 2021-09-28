@@ -13,7 +13,8 @@ import {
   DEFAULT_SOURCE,
   DEFAULT_ETH_PATH,
   AFFILIATE_ADDRESS,
-  APPROVAL_GAS_LIMIT
+  APPROVAL_GAS_LIMIT,
+  MAX_SLIPPAGE
 } from '../utils/constants'
 
 type LiquiditySource = {
@@ -85,6 +86,12 @@ export async function buildQuoteTx(
     (buyAsset.chain as unknown) as ChainIdentifier
   )
   const receiveAddress = await adapter.getAddress({ wallet, path: DEFAULT_ETH_PATH })
+
+  if (new BigNumber(slippage || 0).gt(MAX_SLIPPAGE)) {
+    throw new SwapError(
+      `ZrxSwapper:buildQuoteTx slippage value of ${slippage} is greater than max slippage value of ${MAX_SLIPPAGE}`
+    )
+  }
 
   const slippagePercentage = slippage
     ? new BigNumber(slippage).div(100).toString()
