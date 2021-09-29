@@ -27,4 +27,8 @@ export class ThorchainSwapper implements Swapper {
     console.info(sellAsset, buyAsset)
     throw new Error('Method not implemented.')
   }
+
+  async executeQuote() {
+    return undefined
+  }
 }

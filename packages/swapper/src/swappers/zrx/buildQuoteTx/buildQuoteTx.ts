@@ -44,7 +44,7 @@ type QuoteResponse = {
 
 export async function buildQuoteTx(
   { adapterManager, web3 }: ZrxSwapperDeps,
-  { input, wallet }: BuildQuoteTxArgs
+  { input, wallet }: BuildQuoteTxInput
 ): Promise<Quote> {
   const {
     sellAsset,

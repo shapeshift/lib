@@ -41,7 +41,7 @@ export class ZrxSwapper implements Swapper {
     return SwapperType.Zrx
   }
 
-  async buildQuoteTx({ input, wallet }: BuildQuoteTxArgs): Promise<Quote> {
+  async buildQuoteTx({ input, wallet }: BuildQuoteTxInput): Promise<Quote> {
     return buildQuoteTx(this.deps, { input, wallet })
   }
 
@@ -73,5 +73,9 @@ export class ZrxSwapper implements Swapper {
   canTradePair(sellAsset: Asset, buyAsset: Asset): boolean {
     const availableAssets = this.getAvailableAssets([sellAsset, buyAsset])
     return availableAssets.length === 2
+  }
+
+  async executeQuote({ input, wallet }: ExecQuoteInput): Promise<ExecQuoteOutput> {
+    return undefined
   }
 }
