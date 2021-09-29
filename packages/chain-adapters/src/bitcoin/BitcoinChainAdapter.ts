@@ -232,8 +232,8 @@ export class BitcoinChainAdapter implements ChainAdapter {
       const pubkey = publicKeys[0].xpub
 
       if (index !== 0 && !index && !isChange) {
-        const { receiveIndex } = await this.getAccount(pubkey)
-        path = `m/${purpose}/${account}/0'/0/${receiveIndex}`
+        const { nextReceiveAddressIndex } = await this.getAccount(pubkey)
+        path = `m/${purpose}/${account}/0'/0/${nextReceiveAddressIndex}`
       }
 
       if (index) {
@@ -241,8 +241,8 @@ export class BitcoinChainAdapter implements ChainAdapter {
       }
 
       if (isChange) {
-        const { changeIndex } = await this.getAccount(pubkey)
-        path = `m/${purpose}/${account}/0'/1/${changeIndex}`
+        const { nextChangeAddressIndex } = await this.getAccount(pubkey)
+        path = `m/${purpose}/${account}/0'/1/${nextChangeAddressIndex}`
       }
 
       // TODO change the 44' to 84' when we make bech32 default
