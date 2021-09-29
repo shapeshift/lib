@@ -2132,9 +2132,9 @@
     typescript "^3.9.5"
 
 "@pioneer-platform/pioneer-coins@^8.1.19":
-  version "8.1.31"
-  resolved "https://registry.yarnpkg.com/@pioneer-platform/pioneer-coins/-/pioneer-coins-8.1.31.tgz#ecfcaf64d8045286244a35ca0175fa041835fa5f"
-  integrity sha512-XJPj+bC8QxdL+OXrrNB1z367+nIy3wJOb5X31xhLJLG5pG0fm1XPEkfu8k5wToDqEnSWHTz21ilAYzMrrixinQ==
+  version "8.1.34"
+  resolved "https://registry.yarnpkg.com/@pioneer-platform/pioneer-coins/-/pioneer-coins-8.1.34.tgz#9658999492b455c7868cf8ab3ddbec709456087c"
+  integrity sha512-GLe8mJB2sgnTCyTDr1x42ZP5XQbxYnclTI/PscjcFsLKTldKrtkow9Fus+YZdqJOWVNoP5Xx2ECH2nlUxsocyg==
   dependencies:
     "@pioneer-platform/loggerdog" "^8.1.14"
     bech32 "^1.1.4"
@@ -2472,9 +2472,9 @@
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
 
 "@types/lodash@^4.14.172":
-  version "4.14.172"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.172.tgz#aad774c28e7bfd7a67de25408e03ee5a8c3d028a"
-  integrity sha512-/BHF5HAx3em7/KkzVKm3LrsD6HZAXuXO1AJZQ3cRRBZj4oHZDviWPYu0aEplAqDFNHZPW6d3G7KN+ONcCCC7pw==
+  version "4.14.175"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.175.tgz#b78dfa959192b01fae0ad90e166478769b215f45"
+  integrity sha512-XmdEOrKQ8a1Y/yxQFOMbC47G/V2VDO1GvMRnl4O75M4GW/abC5tnfzadQYkqEveqRM1dEJGFFegfPNA2vvx2iw==
 
 "@types/minimatch@^3.0.3":
   version "3.0.5"
@@ -4781,9 +4781,9 @@ es-abstract@^1.18.0-next.1, es-abstract@^1.18.0-next.2, es-abstract@^1.18.2:
     unbox-primitive "^1.0.1"
 
 es-abstract@^1.18.5:
-  version "1.18.6"
-  resolved "https://registry.yarnpkg.com/es-abstract/-/es-abstract-1.18.6.tgz#2c44e3ea7a6255039164d26559777a6d978cb456"
-  integrity sha512-kAeIT4cku5eNLNuUKhlmtuk1/TRZvQoYccn6TO0cSVdf1kzB0T7+dYuVK9MWM7l+/53W2Q8M7N2c6MQvhXFcUQ==
+  version "1.18.7"
+  resolved "https://registry.yarnpkg.com/es-abstract/-/es-abstract-1.18.7.tgz#122daaa523d0a10b0f1be8ed4ce1ee68330c5bb2"
+  integrity sha512-uFG1gyVX91tZIiDWNmPsL8XNpiCk/6tkB7MZphoSJflS4w+KgWyQ2gjCVDnsPxFAo9WjRXG3eqONNYdfbJjAtw==
   dependencies:
     call-bind "^1.0.2"
     es-to-primitive "^1.2.1"
@@ -5585,9 +5585,9 @@ flatted@^3.1.0:
   integrity sha512-JaTY/wtrcSyvXJl4IMFHPKyFur1sE9AUqc0QnhOaJ0CxHtAoIV8pYDzeEfAaNEtGkOfq4gr3LBFmdXW5mOQFnA==
 
 follow-redirects@^1.10.0, follow-redirects@^1.14.0:
-  version "1.14.3"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.3.tgz#6ada78118d8d24caee595595accdc0ac6abd022e"
-  integrity sha512-3MkHxknWMUtb23apkgz/83fDoe+y+qr0TdgacGIA7bew+QLBo3vdgEN2xEsuXNivpFy4CyDhBBZnNZOtalmenw==
+  version "1.14.4"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.4.tgz#838fdf48a8bbdd79e52ee51fb1c94e3ed98b9379"
+  integrity sha512-zwGkiSXC1MUJG/qmeIFH2HBJx9u0V46QGUe3YR1fXG8bXQxq7fLj0RjLZQ5nubr9qNJUZrH+xUcwXEoXNpfS+g==
 
 foreach@^2.0.5:
   version "2.0.5"
@@ -9918,9 +9918,9 @@ semver-diff@^3.1.1:
     semver "^6.3.0"
 
 semver-regex@^3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/semver-regex/-/semver-regex-3.1.2.tgz#34b4c0d361eef262e07199dbef316d0f2ab11807"
-  integrity sha512-bXWyL6EAKOJa81XG1OZ/Yyuq+oT0b2YLlxx7c+mrdYPaPbnj6WgVULXhinMIeZGufuUBu/eVRqXEhiv4imfwxA==
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/semver-regex/-/semver-regex-3.1.3.tgz#b2bcc6f97f63269f286994e297e229b6245d0dc3"
+  integrity sha512-Aqi54Mk9uYTjVexLnR67rTyBusmwd04cLkHy9hNvk3+G3nT2Oyg7E0l4XVbOaNwIvQ3hHeYxGcyEy+mKreyBFQ==
 
 "semver@2 || 3 || 4 || 5", semver@^5.6.0, semver@^5.7.1:
   version "5.7.1"
@@ -10146,7 +10146,7 @@ sort-keys@^4.0.0:
   dependencies:
     is-plain-obj "^2.0.0"
 
-source-map-support@^0.5.17, source-map-support@~0.5.12, source-map-support@~0.5.19:
+source-map-support@^0.5.17, source-map-support@~0.5.12, source-map-support@~0.5.20:
   version "0.5.20"
   resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.20.tgz#12166089f8f5e5e8c56926b377633392dd2cb6c9"
   integrity sha512-n1lZZ8Ve4ksRqizaBQgxXDgKwttHDhyfQjA6YZZn8+AroHbsIz+JjwxQDxbp+7y5OYCI8t1Yk7etjD9CRd2hIw==
@@ -10604,13 +10604,13 @@ terser@^4.6.3:
     source-map-support "~0.5.12"
 
 terser@^5.3.2:
-  version "5.7.2"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.7.2.tgz#d4d95ed4f8bf735cb933e802f2a1829abf545e3f"
-  integrity sha512-0Omye+RD4X7X69O0eql3lC4Heh/5iLj3ggxR/B5ketZLOtLiOqukUgjw3q4PDnNQbsrkKr3UMypqStQG3XKRvw==
+  version "5.9.0"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.9.0.tgz#47d6e629a522963240f2b55fcaa3c99083d2c351"
+  integrity sha512-h5hxa23sCdpzcye/7b8YqbE5OwKca/ni0RQz1uRX3tGh8haaGHqcuSqbGRybuAKNdntZ0mDgFNXPJ48xQ2RXKQ==
   dependencies:
     commander "^2.20.0"
     source-map "~0.7.2"
-    source-map-support "~0.5.19"
+    source-map-support "~0.5.20"
 
 test-exclude@^6.0.0:
   version "6.0.0"
@@ -10698,9 +10698,9 @@ tmp@^0.0.33:
     os-tmpdir "~1.0.2"
 
 tmpl@1.0.x:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/tmpl/-/tmpl-1.0.4.tgz#23640dd7b42d00433911140820e5cf440e521dd1"
-  integrity sha1-I2QN17QtAEM5ERQIIOXPRA5SHdE=
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/tmpl/-/tmpl-1.0.5.tgz#8683e0b902bb9c20c4f726e3c0b69f36518c07cc"
+  integrity sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==
 
 to-fast-properties@^2.0.0:
   version "2.0.0"

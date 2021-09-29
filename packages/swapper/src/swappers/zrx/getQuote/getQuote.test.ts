@@ -26,6 +26,9 @@ const setupQuote = () => {
     color: '#FFFFFF',
     secondaryColor: '#FFFFFF',
     icon: 'https://assets.coincap.io/assets/icons/fox@2x.png',
+    slip44: 60,
+    explorer: 'https://etherscan.io',
+    explorerTxLink: 'https://etherscan.io/tx/',
     sendSupport: true,
     receiveSupport: true,
     symbol: 'FOX'
@@ -41,6 +44,7 @@ const setupQuote = () => {
     color: '#FFFFFF',
     secondaryColor: '#FFFFFF',
     icon: 'https://assets.coingecko.com/coins/images/2518/thumb/weth.png?1628852295',
+    slip44: 60,
     explorer: 'https://etherscan.io',
     explorerTxLink: 'https://etherscan.io/tx/',
     sendSupport: true,
