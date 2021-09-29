@@ -143,7 +143,7 @@ describe('buildQuoteTx', () => {
     )
   })
 
-  it.only(`should throw error if slippage is higher than ${MAX_SLIPPAGE}%`, async () => {
+  it('should throw error if slippage is higher than MAX_SLIPPAGE', async () => {
     const slippage = '31.0'
     const input = { ...quoteInput, slippage }
 
