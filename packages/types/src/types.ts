@@ -1,4 +1,4 @@
-import { ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { ETHSignTx, BTCSignTx, HDWallet, ThorchainSignTx } from '@shapeshiftoss/hdwallet-core'
 
 // asset-service
 
@@ -132,6 +132,23 @@ export type QuoteResponse = {
   allowanceTarget?: string
   sources?: Array<SwapSource>
 }
+
+export type ThorVaultInfo = {
+  routerContractAddress?: string
+  vaultAddress: string
+  timestamp: string
+}
+
+export type SignTx = ETHSignTx | BTCSignTx
+
+type ChainTxTypeInner = {
+  [ChainTypes.Ethereum]: ETHSignTx
+  [ChainTypes.Bitcoin]: BTCSignTx
+}
+export type ChainTxType<T> = T extends keyof ChainTxTypeInner ? ChainTxTypeInner[T] : never
+
+export type BuildThorTradeOutput = SignTxInput<unknown> & ThorVaultInfo
+
 export type Quote = {
   success: boolean
   statusCode?: number
@@ -149,8 +166,7 @@ export type Quote = {
   maximum?: string | null
   guaranteedPrice?: string
   slipScore?: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  txData?: any // unsigned tx if available at quote time
+  txData?: string | BuildThorTradeOutput | SignTxInput<ThorchainSignTx> // unsigned tx if available at quote time
   value?: string
   feeData?: FeeData
   allowanceContract?: string
@@ -203,8 +219,8 @@ export type ApprovalNeededOutput = {
 
 // chain-adapters
 
-export type Transaction = {
-  network: string
+export type Transaction<T extends ChainTypes> = {
+  network: T
   symbol: string
   txid: string
   status: string
@@ -218,11 +234,11 @@ export type Transaction = {
   fee: string
 }
 
-export type TxHistoryResponse = {
+export type TxHistoryResponse<T extends ChainTypes> = {
   page: number
   totalPages: number
   txs: number
-  transactions: Transaction[]
+  transactions: Transaction<T>[]
 }
 
 export type Token = {
@@ -238,8 +254,8 @@ export type Token = {
   totalSent?: string
 }
 
-export type BalanceResponse = {
-  network: string
+export type BalanceResponse<T> = {
+  network: T
   symbol: string
   address: string
   balance: string
@@ -266,10 +282,11 @@ export type BuildSendTxInput = {
   limit?: string
 }
 
-export type SignTxInput = {
-  txToSign: ETHSignTx
+export type SignTxInput<TxType> = {
+  txToSign: TxType
   wallet: HDWallet
 }
+
 export type GetAddressInput = {
   wallet: HDWallet
   path: string
