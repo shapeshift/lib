@@ -11,7 +11,9 @@ import {
   Params,
   UtxoResponse,
   SignBitcoinTxInput,
-  Recipient
+  Recipient,
+  ConfTimeOptions,
+  BTCFeeDataKey
 } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
 import {
@@ -45,6 +47,10 @@ export class BitcoinChainAdapter implements ChainAdapter {
   }
 
   getAccount = async (address: string): Promise<Bitcoin.BitcoinAccount> => {
+    if (!address) {
+      throw('Address parameter is not defined')
+      // return ErrorHandler('Address parameter is not defined')
+    }
     try {
       const { data } = await this.provider.getAccount({ pubkey: address })
       return data
@@ -54,6 +60,9 @@ export class BitcoinChainAdapter implements ChainAdapter {
   }
 
   getTxHistory = async (address: string, params?: Params): Promise<Bitcoin.TxHistory> => {
+    if (!address) {
+      return ErrorHandler('Address parameter is not defined')
+    }
     try {
       const { data } = await this.provider.getTxHistory({ pubkey: address, ...params })
       return data
@@ -168,49 +177,55 @@ export class BitcoinChainAdapter implements ChainAdapter {
     return broadcastedTx.data
   }
 
-  getFeeData = async (): Promise<any> => {
+  getFeeData = async (): Promise<FeeData> => {
     const responseData: any = (await axios.get('https://bitcoinfees.earn.com/api/v1/fees/list'))[
       'data'
     ]
-    const confTimes: any = {
-      fastest: {
+    let confTimes: FeeData = {
+      [BTCFeeDataKey.Fastest]: {
+        minMinutes: 0,
         maxMinutes: 36,
         effort: 5,
         fee: DEFAULT_FEE
       },
-      halfHour: {
+      [BTCFeeDataKey.HalfHour]: {
+        minMinutes: 0,
         maxMinutes: 36,
         effort: 4,
         fee: DEFAULT_FEE
       },
-      '1hour': {
+      [BTCFeeDataKey.OneHour]: {
+        minMinutes: 0,
         maxMinutes: 60,
         effort: 3,
         fee: DEFAULT_FEE
       },
-      '6hour': {
+      [BTCFeeDataKey.SixHour]: {
+        minMinutes: 36,
         maxMinutes: 360,
         effort: 2,
         fee: DEFAULT_FEE
       },
-      '24hour': {
+      [BTCFeeDataKey.TwentyFourHour]: {
+        minMinutes: 36,
         maxMinutes: 1440,
         effort: 1,
         fee: DEFAULT_FEE
       }
     }
 
-    for (const time of Object.keys(confTimes)) {
+    for (let time of Object.keys(confTimes)) {
+      const confTime = confTimes[time as BTCFeeDataKey]
       for (const fee of responseData['fees']) {
-        if (fee['maxMinutes'] < confTimes[time]['maxMinutes']) {
-          confTimes[time]['fee'] = Math.max(fee['minFee'] * 1024, MIN_RELAY_FEE)
-          confTimes[time]['minMinutes'] = fee['minMinutes']
-          confTimes[time]['maxMinutes'] = fee['maxMinutes']
+        if (fee['maxMinutes'] < confTime['maxMinutes']) {
+          confTime['fee'] = Math.max(fee['minFee'] * 1024, MIN_RELAY_FEE)
+          confTime['minMinutes'] = fee['minMinutes']
+          confTime['maxMinutes'] = fee['maxMinutes']
           break
         }
       }
-      if (confTimes[time]['fee'] === undefined) {
-        confTimes[time]['fee'] = Math.max(responseData.length[-1]['minFee'] * 1024, MIN_RELAY_FEE)
+      if (confTime['fee'] === undefined) {
+        confTime['fee'] = Math.max(responseData.length[-1]['minFee'] * 1024, MIN_RELAY_FEE)
       }
     }
 

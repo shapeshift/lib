@@ -8,7 +8,8 @@ import {
   ChainIdentifier,
   ValidAddressResult,
   ValidAddressResultType,
-  Params
+  Params,
+  ETHFeeData
 } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
 import { bip32ToAddressNList, ETHSignTx, ETHWallet, BTCWallet } from '@shapeshiftoss/hdwallet-core'
@@ -107,7 +108,7 @@ export class EthereumChainAdapter implements ChainAdapter {
             from,
             value,
             contractAddress: erc20ContractAddress
-          })
+          }) as ETHFeeData
 
           if (!gasPrice || !gasLimit) {
             // Default to average gas price if fee is not passed

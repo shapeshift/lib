@@ -134,23 +134,48 @@ export type GetFeeDataInput = {
   value: string
 }
 
-export enum FeeDataKey {
+export enum ETHFeeDataKey {
   Slow = 'slow',
   Average = 'average',
   Fast = 'fast'
 }
 
-export type FeeDataType = {
+export type ETHFeeDataType = {
   feeUnitPrice: string
   networkFee: string
   feeUnits: string
 }
 
-export type FeeData = {
-  [FeeDataKey.Slow]: FeeDataType
-  [FeeDataKey.Average]: FeeDataType
-  [FeeDataKey.Fast]: FeeDataType
+export type ETHFeeData = {
+  [ETHFeeDataKey.Slow]: ETHFeeDataType
+  [ETHFeeDataKey.Average]: ETHFeeDataType
+  [ETHFeeDataKey.Fast]: ETHFeeDataType
 }
+
+export enum BTCFeeDataKey {
+  Fastest = 'fastest',
+  HalfHour = 'halfHour',
+  OneHour = '1hour',
+  SixHour = '6hour',
+  TwentyFourHour = '24hour'
+}
+
+export type BTCFeeDataType = {
+  minMinutes: number
+  maxMinutes: number
+  effort: number
+  fee?: number
+}
+
+export type BTCFeeData = {
+  [BTCFeeDataKey.Fastest]: BTCFeeDataType
+  [BTCFeeDataKey.HalfHour]: BTCFeeDataType
+  [BTCFeeDataKey.OneHour]: BTCFeeDataType
+  [BTCFeeDataKey.SixHour]: BTCFeeDataType
+  [BTCFeeDataKey.TwentyFourHour]: BTCFeeDataType
+}
+
+export type FeeData = ETHFeeData | BTCFeeData
 
 export enum ChainIdentifier {
   'Ethereum' = 'ethereum',
@@ -186,6 +211,16 @@ export type Params = {
   contract?: string
 }
 
+type ConfTimeOption = {
+  minMinutes: number
+  maxMinutes: number
+  effort: number
+  fee?: number
+}
+
+export interface ConfTimeOptions {
+  [index: string]: ConfTimeOption
+}
 export interface ChainAdapter {
   /**
    * Get type of adapter
