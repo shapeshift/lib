@@ -40,7 +40,8 @@ export class BitcoinChainAdapter implements ChainAdapter {
 
   getAccount = async (address: string): Promise<Bitcoin.BitcoinAccount> => {
     if (!address) {
-      return ErrorHandler(new Error('Address parameter is not defined'))
+      // return ErrorHandler(new Error('Address parameter is not defined'))
+      return ErrorHandler('Address parameter is not defined')
     }
     try {
       const { data } = await this.provider.getAccount({ pubkey: address })
@@ -52,7 +53,8 @@ export class BitcoinChainAdapter implements ChainAdapter {
 
   getTxHistory = async (address: string, params?: Params): Promise<Bitcoin.TxHistory> => {
     if (!address) {
-      return ErrorHandler(new Error('Address parameter is not defined'))
+      // return ErrorHandler(new Error('Address parameter is not defined'))
+      return ErrorHandler('Address parameter is not defined')
     }
     try {
       const { data } = await this.provider.getTxHistory({ pubkey: address, ...params })
@@ -117,7 +119,7 @@ export class BitcoinChainAdapter implements ChainAdapter {
 
         //TODO some better error handling
         if (!inputs || !outputs) {
-          throw 'Error selecting inputs/outputs'
+          ErrorHandler('Error selecting inputs/outputs')
         }
 
         const formattedOutputs = outputs.map((out: Recipient) => {
@@ -157,7 +159,7 @@ export class BitcoinChainAdapter implements ChainAdapter {
     try {
       const { txToSign, wallet } = signTxInput
       const signedTx = await wallet.btcSignTx(txToSign)
-      if (!signedTx) throw new Error('Error signing tx')
+      if (!signedTx) ErrorHandler('Error signing tx')
 
       return signedTx.serializedTx
     } catch (err) {
@@ -246,8 +248,8 @@ export class BitcoinChainAdapter implements ChainAdapter {
       const pubkey = publicKeys[0].xpub
 
       if (index !== 0 && !index && !isChange) {
-        const { nextReceiveAddressIndex } = await this.getAccount(pubkey)
-        path = `m/${purpose}/${account}/0'/0/${nextReceiveAddressIndex}`
+        const { receiveIndex } = await this.getAccount(pubkey)
+        path = `m/${purpose}/${account}/0'/0/${receiveIndex}`
       }
 
       if (index) {
@@ -255,8 +257,8 @@ export class BitcoinChainAdapter implements ChainAdapter {
       }
 
       if (isChange) {
-        const { nextChangeAddressIndex } = await this.getAccount(pubkey)
-        path = `m/${purpose}/${account}/0'/1/${nextChangeAddressIndex}`
+        const { changeIndex } = await this.getAccount(pubkey)
+        path = `m/${purpose}/${account}/0'/1/${changeIndex}`
       }
 
       // TODO change the 44' to 84' when we make bech32 default
