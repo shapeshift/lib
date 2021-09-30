@@ -28,7 +28,7 @@ const main = async () => {
     const chainAdapterManager = new ChainAdapterManager(unchainedUrls)
     const wallet = await getWallet()
     const ethChainAdapter = chainAdapterManager.byChain(ChainTypes.Ethereum)
-    const address = await ethChainAdapter.getAddress({ wallet, path: defaultEthPath })
+    const { address } = await ethChainAdapter.getAddress({ wallet, path: defaultEthPath })
 
     const balanceInfo = await ethChainAdapter.getBalance(address)
     // const txHistory = await ethChainAdapter.getTxHistory(address)

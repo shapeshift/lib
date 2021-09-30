@@ -244,9 +244,15 @@ export type SignTxInput = {
   txToSign: ETHSignTx
   wallet: HDWallet
 }
+
 export type GetAddressInput = {
   wallet: HDWallet
   path: string
+}
+
+export interface GetAddressOutput {
+  address: string
+  addressNList: number[]
 }
 
 export type GetFeeDataInput = {

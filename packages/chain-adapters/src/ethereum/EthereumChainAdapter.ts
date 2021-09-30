@@ -9,6 +9,7 @@ import {
   BuildSendTxInput,
   SignTxInput,
   GetAddressInput,
+  GetAddressOutput,
   GetFeeDataInput,
   BalanceResponse,
   ChainTypes,
@@ -95,7 +96,7 @@ export class EthereumChainAdapter implements ChainAdapter {
       const addressNList = bip32ToAddressNList(path)
 
       const data = await getErc20Data(to, tx?.value, erc20ContractAddress)
-      const from = await this.getAddress({ wallet, path })
+      const { address: from } = await this.getAddress({ wallet, path })
       const nonce = await this.provider.getNonce(from)
 
       let gasPrice = fee
@@ -187,14 +188,18 @@ export class EthereumChainAdapter implements ChainAdapter {
     }
   }
 
-  getAddress = async (input: GetAddressInput): Promise<string> => {
+  getAddress = async (input: GetAddressInput): Promise<GetAddressOutput> => {
     const { wallet, path } = input
     const addressNList = bip32ToAddressNList(path)
     const ethAddress = await (wallet as ETHWallet).ethGetAddress({
       addressNList,
       showDisplay: false
     })
-    return ethAddress as string
+
+    return {
+      address: ethAddress as string,
+      addressNList
+    }
   }
 
   async validateAddress(address: string): Promise<ValidAddressResult> {

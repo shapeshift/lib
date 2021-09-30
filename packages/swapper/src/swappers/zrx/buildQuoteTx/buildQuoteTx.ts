@@ -83,7 +83,7 @@ export async function buildQuoteTx(
   }
 
   const adapter: ChainAdapter = adapterManager.byChain(buyAsset.chain)
-  const receiveAddress = await adapter.getAddress({ wallet, path: DEFAULT_ETH_PATH })
+  const { address: receiveAddress } = await adapter.getAddress({ wallet, path: DEFAULT_ETH_PATH })
 
   if (new BigNumber(slippage || 0).gt(MAX_SLIPPAGE)) {
     throw new SwapError(

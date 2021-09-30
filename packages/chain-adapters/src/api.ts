@@ -6,6 +6,7 @@ import {
   ChainTypes,
   FeeDataEstimate,
   GetAddressInput,
+  GetAddressOutput,
   GetFeeDataInput,
   SignTxInput,
   TxHistoryResponse,
@@ -32,7 +33,7 @@ export interface ChainAdapter {
     input: BuildSendTxInput
   ): Promise<{ txToSign: ETHSignTx; estimatedFees: FeeDataEstimate }>
 
-  getAddress(input: GetAddressInput): Promise<string>
+  getAddress(input: GetAddressInput): Promise<GetAddressOutput>
 
   signTransaction(signTxInput: SignTxInput): Promise<string>
 
