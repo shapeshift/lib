@@ -49,7 +49,6 @@ export class ZrxSwapper implements Swapper {
 
   async getUsdRate(input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<any> {
     const { symbol, tokenId } = input
-    if (symbol === 'USDC') return '1'
     const rateResponse: AxiosResponse<QuoteResponse> = await zrxService.get<QuoteResponse>(
       '/swap/v1/price',
       {
