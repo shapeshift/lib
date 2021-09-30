@@ -12,8 +12,8 @@ import { zrxService } from './utils/zrxService'
 const axios = jest.createMockFromModule('axios')
 //@ts-ignore
 axios.create = jest.fn(() => axios)
-jest.mock('./utils')
-
+jest.mock('./utils/helpers/helpers')
+jest.mock('./utils/zrxService')
 jest.mock('../zrx/buildQuoteTx/buildQuoteTx', () => ({
   buildQuoteTx: jest.fn()
 }))

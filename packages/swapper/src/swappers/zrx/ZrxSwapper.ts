@@ -4,7 +4,14 @@ import { AxiosResponse } from 'axios'
 import BigNumber from 'bignumber.js'
 import { zrxService } from './utils/zrxService'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import { BuildQuoteTxArgs, GetQuoteInput, QuoteResponse, Quote, Swapper, SwapperType } from '../../api'
+import {
+  BuildQuoteTxArgs,
+  GetQuoteInput,
+  QuoteResponse,
+  Quote,
+  Swapper,
+  SwapperType
+} from '../../api'
 import { buildQuoteTx } from './buildQuoteTx/buildQuoteTx'
 import { getZrxQuote } from './getQuote/getQuote'
 
