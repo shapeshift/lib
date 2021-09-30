@@ -1,17 +1,19 @@
 import Web3 from 'web3'
-import { Asset, ChainTypes } from '@shapeshiftoss/asset-service'
 import { AxiosResponse } from 'axios'
 import BigNumber from 'bignumber.js'
 import { zrxService } from './utils/zrxService'
-import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import {
+  Asset,
   BuildQuoteTxArgs,
+  ChainTypes,
   GetQuoteInput,
-  QuoteResponse,
   Quote,
-  Swapper,
-  SwapperType
-} from '../../api'
+  SwapperType,
+  QuoteResponse
+} from '@shapeshiftoss/types'
+import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+import { Swapper } from '../../api'
+
 import { buildQuoteTx } from './buildQuoteTx/buildQuoteTx'
 import { getZrxQuote } from './getQuote/getQuote'
 
@@ -47,7 +49,7 @@ export class ZrxSwapper implements Swapper {
     return getZrxQuote(input)
   }
 
-  async getUsdRate(input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<any> {
+  async getUsdRate(input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string> {
     const { symbol, tokenId } = input
     const rateResponse: AxiosResponse<QuoteResponse> = await zrxService.get<QuoteResponse>(
       '/swap/v1/price',

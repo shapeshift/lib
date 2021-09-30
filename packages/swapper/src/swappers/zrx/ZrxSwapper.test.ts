@@ -1,9 +1,15 @@
 import Web3 from 'web3'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import { ChainTypes, NetworkTypes, ContractTypes, Asset } from '@shapeshiftoss/asset-service'
+import {
+  ChainTypes,
+  NetworkTypes,
+  ContractTypes,
+  GetQuoteInput,
+  SwapperType
+} from '@shapeshiftoss/types'
 import { ZrxSwapper } from '..'
-import { GetQuoteInput, SwapperType, ZrxError } from '../..'
+import { ZrxError } from '../..'
 import { DEFAULT_SLIPPAGE } from './utils/constants'
 import { buildQuoteTx } from '../zrx/buildQuoteTx/buildQuoteTx'
 import { getZrxQuote } from './getQuote/getQuote'
@@ -22,7 +28,7 @@ jest.mock('./getQuote/getQuote', () => ({
   getZrxQuote: jest.fn()
 }))
 
-const BTC = ({
+const BTC = {
   name: 'bitcoin',
   chain: ChainTypes.Bitcoin,
   network: NetworkTypes.MAINNET,
@@ -37,9 +43,8 @@ const BTC = ({
   sendSupport: false,
   receiveSupport: false,
   symbol: 'BTC'
-  // TODO: remove the type casts from test files when we unify `ChainTypes` and `ChainIdentifier`
-} as unknown) as Asset
-const WETH = ({
+}
+const WETH = {
   name: 'WETH',
   chain: ChainTypes.Ethereum,
   network: NetworkTypes.MAINNET,
@@ -55,8 +60,8 @@ const WETH = ({
   sendSupport: true,
   receiveSupport: true,
   symbol: 'WETH'
-} as unknown) as Asset
-const FOX = ({
+}
+const FOX = {
   name: 'Fox',
   chain: ChainTypes.Ethereum,
   network: NetworkTypes.MAINNET,
@@ -72,7 +77,7 @@ const FOX = ({
   explorerTxLink: 'https://etherscan.io/tx/',
   receiveSupport: true,
   symbol: 'FOX'
-} as unknown) as Asset
+}
 
 const setupQuote = () => {
   const sellAmount = '1000000000000000000'
@@ -126,30 +131,27 @@ describe('ZrxSwapper', () => {
     const canTradePair = swapper.canTradePair(FOX, WETH)
     expect(canTradePair).toBeTruthy()
   })
-  it('getUsdRate of USDC returns 1', async () => {
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
-    const rate = await swapper.getUsdRate({ symbol: 'USDC' })
-    expect(rate).toBe('1')
-  })
-  it('getUsdRate gets the usd rate of the symbol', async () => {
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
-    ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
-      Promise.resolve({ data: { price: '2' } })
-    )
-    const rate = await swapper.getUsdRate({ symbol: 'FOX' })
-    expect(rate).toBe('0.5')
-  })
-  it('getUsdRate fails', async () => {
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
-    ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data: {} }))
-    await expect(swapper.getUsdRate({ symbol: 'WETH', tokenId: '0x0001' })).rejects.toThrow(
-      'getUsdRate - Failed to get price data'
-    )
-  })
   it('calls buildQuoteTx on swapper.buildQuoteTx', async () => {
     const swapper = new ZrxSwapper(zrxSwapperDeps)
     const args = { input, wallet }
     await swapper.buildQuoteTx(args)
     expect(buildQuoteTx).toHaveBeenCalled()
+  })
+  describe('getUsdRate', () => {
+    it('getUsdRate gets the usd rate of the symbol', async () => {
+      const swapper = new ZrxSwapper(zrxSwapperDeps)
+      ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
+        Promise.resolve({ data: { price: '2' } })
+      )
+      const rate = await swapper.getUsdRate({ symbol: 'FOX' })
+      expect(rate).toBe('0.5')
+    })
+    it('getUsdRate fails', async () => {
+      const swapper = new ZrxSwapper(zrxSwapperDeps)
+      ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data: {} }))
+      await expect(swapper.getUsdRate({ symbol: 'WETH', tokenId: '0x0001' })).rejects.toThrow(
+        'getUsdRate - Failed to get price data'
+      )
+    })
   })
 })
