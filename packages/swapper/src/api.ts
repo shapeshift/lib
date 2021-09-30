@@ -44,5 +44,5 @@ export interface Swapper {
    * @param input
    * @param wallet
    */
-  executeQuote(input: ExecQuoteInput, wallet: HDWallet): Promise<ExecQuoteOutput | undefined>
+  executeQuote(args: ExecQuoteInput): Promise<ExecQuoteOutput | undefined>
 }

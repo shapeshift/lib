@@ -16,6 +16,7 @@ import { Swapper } from '../../api'
 
 import { buildQuoteTx } from './buildQuoteTx/buildQuoteTx'
 import { getZrxQuote } from './getQuote/getQuote'
+import { executeQuote } from './executeQuote/executeQuote'
 
 export type ZrxSwapperDeps = {
   adapterManager: ChainAdapterManager
@@ -41,8 +42,8 @@ export class ZrxSwapper implements Swapper {
     return SwapperType.Zrx
   }
 
-  async buildQuoteTx({ input, wallet }: BuildQuoteTxInput): Promise<Quote> {
-    return buildQuoteTx(this.deps, { input, wallet })
+  async buildQuoteTx(args: BuildQuoteTxInput): Promise<Quote> {
+    return buildQuoteTx(this.deps, args)
   }
 
   async getQuote(input: GetQuoteInput): Promise<Quote> {
@@ -75,7 +76,7 @@ export class ZrxSwapper implements Swapper {
     return availableAssets.length === 2
   }
 
-  async executeQuote({ input, wallet }: ExecQuoteInput): Promise<ExecQuoteOutput> {
-    return undefined
+  async executeQuote(args: ExecQuoteInput): Promise<ExecQuoteOutput> {
+    return executeQuote(this.deps, args)
   }
 }
