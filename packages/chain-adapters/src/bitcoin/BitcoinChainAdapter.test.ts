@@ -36,7 +36,7 @@ const getWallet = async (): Promise<NativeHDWallet> => {
     mnemonic: process.env.CLI_MNEMONIC,
     deviceId: 'test'
   }
-  const wallet = new NativeHDWallet(nativeAdapterArgs)
+  wallet = new NativeHDWallet(nativeAdapterArgs)
   await wallet.initialize()
 
   return wallet
@@ -75,18 +75,16 @@ describe('BitcoinChainAdapter', () => {
     it('should return account info for a specified address', async () => {
       const exampleResponse: Bitcoin.BitcoinAccount = {
         pubkey: '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx',
-        balance: '0',
-        receiveIndex: null,
-        changeIndex: null
+        balance: '0'
       }
       const data = await btcChainAdapter.getAccount(address)
       expect(data).toMatchObject(exampleResponse)
     })
 
-    it.only('should throw for an unspecified address', async () => {
-      expect(async () => {
-        await btcChainAdapter.getAccount('')
-      }).rejects.toThrow('Address parameter is not defined')
+    it('should throw for an unspecified address', async () => {
+      await expect(btcChainAdapter.getAccount('')).rejects.toThrow(
+        'Address parameter is not defined'
+      )
     })
   })
 

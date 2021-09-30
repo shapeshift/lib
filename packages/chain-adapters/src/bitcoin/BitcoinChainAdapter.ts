@@ -40,8 +40,7 @@ export class BitcoinChainAdapter implements ChainAdapter {
 
   getAccount = async (address: string): Promise<Bitcoin.BitcoinAccount> => {
     if (!address) {
-      throw('Address parameter is not defined')
-      // return ErrorHandler('Address parameter is not defined')
+      return ErrorHandler(new Error('Address parameter is not defined'))
     }
     try {
       const { data } = await this.provider.getAccount({ pubkey: address })
@@ -53,7 +52,7 @@ export class BitcoinChainAdapter implements ChainAdapter {
 
   getTxHistory = async (address: string, params?: Params): Promise<Bitcoin.TxHistory> => {
     if (!address) {
-      return ErrorHandler('Address parameter is not defined')
+      return ErrorHandler(new Error('Address parameter is not defined'))
     }
     try {
       const { data } = await this.provider.getTxHistory({ pubkey: address, ...params })
@@ -175,7 +174,7 @@ export class BitcoinChainAdapter implements ChainAdapter {
     const responseData: any = (await axios.get('https://bitcoinfees.earn.com/api/v1/fees/list'))[
       'data'
     ]
-    let confTimes: FeeData = {
+    const confTimes: FeeData = {
       [BTCFeeDataKey.Fastest]: {
         minMinutes: 0,
         maxMinutes: 36,
@@ -208,7 +207,7 @@ export class BitcoinChainAdapter implements ChainAdapter {
       }
     }
 
-    for (let time of Object.keys(confTimes)) {
+    for (const time of Object.keys(confTimes)) {
       const confTime = confTimes[time as BTCFeeDataKey]
       for (const fee of responseData['fees']) {
         if (fee['maxMinutes'] < confTime['maxMinutes']) {
@@ -269,7 +268,7 @@ export class BitcoinChainAdapter implements ChainAdapter {
       })
       return btcAddress
     } else {
-      return undefined
+      return ErrorHandler(new Error("Unable to get wallet's pubkeys"))
     }
   }
 
