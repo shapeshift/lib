@@ -173,9 +173,7 @@ export class BitcoinChainAdapter implements ChainAdapter {
   }
 
   getFeeData = async (): Promise<FeeData> => {
-    const responseData: any = (await axios.get('https://bitcoinfees.earn.com/api/v1/fees/list'))[
-      'data'
-    ]
+    const responseData = (await axios.get('https://bitcoinfees.earn.com/api/v1/fees/list'))['data']
     const confTimes: FeeData = {
       [BTCFeeDataKey.Fastest]: {
         minMinutes: 0,
