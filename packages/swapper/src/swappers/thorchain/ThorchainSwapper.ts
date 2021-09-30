@@ -10,6 +10,10 @@ export class ThorchainSwapper implements Swapper {
     return undefined
   }
 
+  async buildQuoteTx() {
+    return undefined
+  }
+
   getUsdRate(input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string> {
     console.info(input)
     throw new Error('Method not implemented.')
