@@ -7,6 +7,7 @@ import { MAX_ZRX_TRADE } from '../utils/constants'
 const axios = jest.createMockFromModule('axios')
 //@ts-ignore
 axios.create = jest.fn(() => axios)
+
 jest.mock('../utils/helpers/helpers')
 jest.mock('../utils/zrxService')
 jest.mock('../getQuote/getQuote', () => ({

@@ -11,11 +11,7 @@ import { FOX, WETH, BTC } from './utils/test-data/assets'
 import { getUsdRate } from './utils/helpers/helpers'
 import { getMinMax } from './getMinMax/getMinMax'
 
-const axios = jest.createMockFromModule('axios')
-//@ts-ignore
-axios.create = jest.fn(() => axios)
 jest.mock('./utils/helpers/helpers')
-jest.mock('./utils/zrxService')
 jest.mock('../zrx/buildQuoteTx/buildQuoteTx', () => ({
   buildQuoteTx: jest.fn()
 }))
