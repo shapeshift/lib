@@ -182,7 +182,6 @@ export type ExecQuoteInput = {
 
 export type ExecQuoteOutput = {
   txid: string
-  approvalTxid?: string
 }
 
 // chain-adapters
