@@ -233,47 +233,35 @@ export class BitcoinChainAdapter implements ChainAdapter {
     index,
     scriptType = BTCInputScriptType.Bech32
   }: GetAddressParams): Promise<string | undefined> => {
-    let path
+    const change = isChange ? '1' : '0'
 
-    const publicKeys = await wallet.getPublicKeys([
-      {
-        coin: 'Bitcoin',
-        addressNList: bip32ToAddressNList(`m/44'/0'/0'`),
-        curve: 'secp256k1'
+    // If an index is not passed in, we want to use the newest unused change/receive indices
+    if (index === undefined) {
+      const publicKeys = await wallet.getPublicKeys([
+        {
+          coin: 'Bitcoin',
+          addressNList: bip32ToAddressNList(`m/44'/0'/0'`),
+          curve: 'secp256k1'
+        }
+      ])
+      if (publicKeys) {
+        const pubkey = publicKeys[0].xpub
+        const accountData = await this.getAccount(pubkey)
+        index = isChange ? accountData.nextChangeAddressIndex : accountData.nextReceiveAddressIndex
+      } else {
+        return ErrorHandler(new Error("Unable to get wallet's pubkeys"))
       }
-    ])
-    if (publicKeys) {
-      const pubkey = publicKeys[0].xpub
-
-      if (index !== 0 && !index && !isChange) {
-        const { nextReceiveAddressIndex } = await this.getAccount(pubkey)
-        path = `m/${purpose}/${account}/0'/0/${nextReceiveAddressIndex}`
-      }
-
-      if (index && !isChange) {
-        path = `m/${purpose}/${account}/0'/0/${index}`
-      }
-
-      if ((index === 0 || index) && isChange) {
-        path = `m/${purpose}/${account}/0'/1/${index}`
-      }
-
-      if (index !== 0 && !index && isChange) {
-        const { nextChangeAddressIndex } = await this.getAccount(pubkey)
-        path = `m/${purpose}/${account}/0'/1/${nextChangeAddressIndex}`
-      }
-
-      // TODO change the 44' to 84' when we make bech32 default
-      const addressNList = path ? bip32ToAddressNList(path) : bip32ToAddressNList("m/44'/0'/0'/0/0")
-      const btcAddress = await wallet.btcGetAddress({
-        addressNList,
-        coin: 'bitcoin',
-        scriptType
-      })
-      return btcAddress
-    } else {
-      return ErrorHandler(new Error("Unable to get wallet's pubkeys"))
     }
+
+    const path = `m/${purpose}/0'/${account}/${change}/${index}`
+
+    const addressNList = path ? bip32ToAddressNList(path) : bip32ToAddressNList("m/84'/0'/0'/0/0")
+    const btcAddress = await wallet.btcGetAddress({
+      addressNList,
+      coin: 'bitcoin',
+      scriptType
+    })
+    return btcAddress
   }
 
   async validateAddress(address: string): Promise<ValidAddressResult> {

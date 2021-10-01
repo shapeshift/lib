@@ -7,7 +7,6 @@ dotenv.config()
 
 // const foxContractAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
 const defaultEthPath = `m/44'/60'/0'/0/0`
-// const defaultBtcPath = `m/44'/0'/0'/0/0`
 const defaultBtcPath = `m/44'/0'/0'/0/0`
 
 const getWallet = async (): Promise<NativeHDWallet> => {
@@ -32,14 +31,15 @@ const main = async () => {
     const wallet = await getWallet()
     const btcChainAdapter = chainAdapterManager.byChain(ChainIdentifier.Bitcoin)
 
-    // const address = await btcChainAdapter.getAddress({
-    //   wallet,
-    //   purpose: "44'",
-    //   account: "0'",
-    //   isChange: false,
-    //   scriptType: BTCInputScriptType.SpendAddress
-    // })
-    // console.log('address: ', address)
+    const address = await btcChainAdapter.getAddress({
+      wallet,
+      purpose: "84'",
+      account: "0'",
+      isChange: false,
+      scriptType: BTCInputScriptType.SpendWitness
+      // index: 10
+    })
+    console.log('address: ', address)
 
     const txInput = {
       asset: { id: '123', symbol: 'BTC' },

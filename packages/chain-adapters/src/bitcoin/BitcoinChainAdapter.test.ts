@@ -182,7 +182,7 @@ describe('BitcoinChainAdapter', () => {
   })
 
   describe('getAddress', () => {
-    it("should return a spend address for valid derivation root path parameters (m/44'/0'/0'/0/0)", async () => {
+    it("should return a p2pkh address for valid derivation root path parameters (m/44'/0'/0'/0/0)", async () => {
       const getAddressParams: GetAddressParams = {
         wallet,
         purpose: "44'",
@@ -195,7 +195,7 @@ describe('BitcoinChainAdapter', () => {
       expect(addr).toStrictEqual('1FH6ehAd5ZFXCM1cLGzHxK1s4dGdq1JusM')
     })
 
-    it("should return a valid spend address for the first receive index path (m/44'/0'/0'/0/1)", async () => {
+    it("should return a valid p2pkh address for the first receive index path (m/44'/0'/0'/0/1)", async () => {
       const getAddressParams: GetAddressParams = {
         wallet,
         purpose: "44'",
@@ -208,7 +208,7 @@ describe('BitcoinChainAdapter', () => {
       expect(addr).toStrictEqual('1Jxtem176sCXHnK7QCShoafF5VtWvMa7eq')
     })
 
-    it("should return a valid change address for the first receive index path (m/44'/0'/0'/1/0)", async () => {
+    it("should return a valid p2pkh change address for the first receive index path (m/44'/0'/0'/1/0)", async () => {
       const getAddressParams: GetAddressParams = {
         wallet,
         purpose: "44'",
@@ -219,6 +219,71 @@ describe('BitcoinChainAdapter', () => {
       }
       const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
       expect(addr).toStrictEqual('13ZD8S4qR6h4GvkAZ2ht7rpr15TFXYxGCx')
+    })
+
+    it("should return a valid p2pkh address at the 2nd account root path (m/44'/0'/1'/0/0)", async () => {
+      const getAddressParams: GetAddressParams = {
+        wallet,
+        purpose: "44'",
+        account: "1'",
+        index: 0,
+        isChange: false,
+        scriptType: BTCInputScriptType.SpendAddress
+      }
+      const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
+      expect(addr).toStrictEqual('1K2oFer6nGoXSPspeB5Qvt4htJvw3y31XW')
+    })
+
+    it("should return a p2wpkh address for valid derivation root path parameters (m/84'/0'/0'/0/0)", async () => {
+      const getAddressParams: GetAddressParams = {
+        wallet,
+        purpose: "84'",
+        account: "0'",
+        isChange: false,
+        index: 0,
+        scriptType: BTCInputScriptType.SpendWitness
+      }
+      const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
+      expect(addr).toStrictEqual('bc1qkkr2uvry034tsj4p52za2pg42ug4pxg5qfxyfa')
+    })
+
+    it("should return a valid p2wpkh address for the first receive index path (m/84'/0'/0'/0/1)", async () => {
+      const getAddressParams: GetAddressParams = {
+        wallet,
+        purpose: "84'",
+        account: "0'",
+        index: 1,
+        isChange: false,
+        scriptType: BTCInputScriptType.SpendWitness
+      }
+      const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
+      expect(addr).toStrictEqual('bc1qpszctuml70ulzf7f0zy5r4sg9nm65qfpgcw0uy')
+    })
+
+    it("should return a valid p2wpkh change address for the first receive index path (m/44'/0'/0'/1/0)", async () => {
+      const getAddressParams: GetAddressParams = {
+        wallet,
+        purpose: "84'",
+        account: "0'",
+        index: 0,
+        isChange: true,
+        scriptType: BTCInputScriptType.SpendWitness
+      }
+      const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
+      expect(addr).toStrictEqual('bc1qhazdhyg6ukkvnnlucxamjc3dmkj2zyfte0lqa9')
+    })
+
+    it("should return a valid p2wpkh address at the 2nd account root path (m/84'/0'/1'/0/0)", async () => {
+      const getAddressParams: GetAddressParams = {
+        wallet,
+        purpose: "84'",
+        account: "1'",
+        index: 0,
+        isChange: false,
+        scriptType: BTCInputScriptType.SpendWitness
+      }
+      const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
+      expect(addr).toStrictEqual('bc1qgawuludfvrdxfq0x55k26ydtg2hrx64jp3u6am')
     })
   })
 
