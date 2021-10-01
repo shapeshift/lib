@@ -8,7 +8,7 @@ const axios = jest.createMockFromModule('axios')
 //@ts-ignore
 axios.create = jest.fn(() => axios)
 
-jest.mock('../utils/helpers/helpers')
+jest.mock('../utils/helpers/helpers', () => ({ getUsdRate: jest.fn(), normalizeAmount: jest.fn() }))
 jest.mock('../utils/zrxService')
 jest.mock('../getQuote/getQuote', () => ({
   getZrxQuote: jest.fn()
