@@ -1,5 +1,5 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { Asset, BuildQuoteTxArgs, GetQuoteInput, Quote, SwapperType } from '@shapeshiftoss/types'
+import { Asset, BuildQuoteTxArgs, GetQuoteInput, MinMaxOutput, Quote, SwapperType } from '@shapeshiftoss/types'
 
 export class SwapError extends Error {}
 
@@ -38,4 +38,10 @@ export interface Swapper {
    * @param input
    */
   getUsdRate(input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string>
+
+  /**
+   * Get the minimum and maximum trade value of the sellAsset and buyAsset
+   * @param input
+   */
+  getMinMax(input: GetQuoteInput): Promise<MinMaxOutput> 
 }
