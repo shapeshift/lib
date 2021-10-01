@@ -16,20 +16,20 @@ jest.mock('../getQuote/getQuote', () => ({
 
 describe('getMinMax', () => {
   it('returns minimum, maximum, and minimumPrice', async () => {
+    ;(getUsdRate as jest.Mock<unknown>).mockReturnValue(1)
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: { price: '100' } })
     )
-    ;(getUsdRate as jest.Mock<unknown>).mockReturnValue(1)
     const minMax = await getMinMax({ sellAsset: FOX, buyAsset: WETH })
     expect(minMax.minimum).toBe('1')
     expect(minMax.maximum).toBe(MAX_ZRX_TRADE)
     expect(minMax.minimumPrice).toBe('100')
   })
   it('fails on non eth asset', async () => {
+    ;(getUsdRate as jest.Mock<unknown>).mockReturnValue(1)
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: { price: '100' } })
     )
-    ;(getUsdRate as jest.Mock<unknown>).mockReturnValue(1)
     await expect(getMinMax({ sellAsset: BTC, buyAsset: WETH })).rejects.toThrow(
       'ZrxError:getMinMax - must be eth assets'
     )
