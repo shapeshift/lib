@@ -1,7 +1,11 @@
-import { ExecQuoteInput, ExecQuoteOutput, SwapError } from '../../../api'
+import { ExecQuoteInput, ExecQuoteOutput } from '@shapeshiftoss/types'
+import { SwapError } from '../../../api'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 
-export async function executeQuote({ adapterManager }: ZrxSwapperDeps, { quote, wallet }: ExecQuoteInput): Promise<ExecQuoteOutput> {
+export async function executeQuote(
+  { adapterManager }: ZrxSwapperDeps,
+  { quote, wallet }: ExecQuoteInput
+): Promise<ExecQuoteOutput> {
   const { sellAsset } = quote
 
   if (!quote.success) {

@@ -4,12 +4,14 @@ import BigNumber from 'bignumber.js'
 import { zrxService } from './utils/zrxService'
 import {
   Asset,
-  BuildQuoteTxArgs,
+  BuildQuoteTxInput,
   ChainTypes,
   GetQuoteInput,
   Quote,
   SwapperType,
-  QuoteResponse
+  QuoteResponse,
+  ExecQuoteInput,
+  ExecQuoteOutput
 } from '@shapeshiftoss/types'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { Swapper } from '../../api'

@@ -1,8 +1,8 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+import { ExecQuoteInput } from '@shapeshiftoss/types'
 import { executeQuote } from './executeQuote'
 import { setupQuote } from '../utils/test-data/setupSwapQuote'
-import { ExecQuoteInput } from '../../../api'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 describe('executeQuote', () => {
