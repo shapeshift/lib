@@ -38,4 +38,9 @@ export interface Swapper {
    * @param input
    */
   getUsdRate(input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string>
+
+  /**
+   * Get the default pair of the swapper
+   */
+  getDefaultPair(): Partial<Asset>[]
 }

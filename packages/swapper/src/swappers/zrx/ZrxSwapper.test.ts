@@ -137,6 +137,11 @@ describe('ZrxSwapper', () => {
     await swapper.buildQuoteTx(args)
     expect(buildQuoteTx).toHaveBeenCalled()
   })
+  it('gets default pair', () => {
+    const swapper = new ZrxSwapper(zrxSwapperDeps)
+    const pair = swapper.getDefaultPair()
+    expect(pair).toHaveLength(2)
+  })
   describe('getUsdRate', () => {
     it('getUsdRate gets the usd rate of the symbol', async () => {
       const swapper = new ZrxSwapper(zrxSwapperDeps)

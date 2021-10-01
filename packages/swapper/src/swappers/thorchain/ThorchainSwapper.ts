@@ -27,4 +27,7 @@ export class ThorchainSwapper implements Swapper {
     console.info(sellAsset, buyAsset)
     throw new Error('Method not implemented.')
   }
+  getDefaultPair(): Partial<Asset>[] {
+    throw new Error('Method not implemented.')
+  }
 }

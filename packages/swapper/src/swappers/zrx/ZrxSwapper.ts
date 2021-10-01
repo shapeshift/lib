@@ -74,4 +74,10 @@ export class ZrxSwapper implements Swapper {
     const availableAssets = this.getAvailableAssets([sellAsset, buyAsset])
     return availableAssets.length === 2
   }
+
+  getDefaultPair(): Partial<Asset>[] {
+    const ETH = { name: 'Ethereum', chain: ChainTypes.Ethereum, symbol: 'ETH' }
+    const USDC = { name: 'USDC', chain: ChainTypes.Ethereum, symbol: 'USDC' }
+    return [ETH, USDC]
+  }
 }
