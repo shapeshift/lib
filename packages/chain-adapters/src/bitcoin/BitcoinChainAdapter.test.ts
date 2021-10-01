@@ -182,17 +182,43 @@ describe('BitcoinChainAdapter', () => {
   })
 
   describe('getAddress', () => {
-    it('should return a spend address for valid derivation path parameters', async () => {
+    it("should return a spend address for valid derivation root path parameters (m/44'/0'/0'/0/0)", async () => {
       const getAddressParams: GetAddressParams = {
         wallet,
         purpose: "44'",
         account: "0'",
         isChange: false,
+        index: 0,
         scriptType: BTCInputScriptType.SpendAddress
       }
-      const address: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
+      const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
+      expect(addr).toStrictEqual('1FH6ehAd5ZFXCM1cLGzHxK1s4dGdq1JusM')
+    })
 
-      expect(address).toStrictEqual('1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx')
+    it("should return a valid spend address for the first receive index path (m/44'/0'/0'/0/1)", async () => {
+      const getAddressParams: GetAddressParams = {
+        wallet,
+        purpose: "44'",
+        account: "0'",
+        index: 1,
+        isChange: false,
+        scriptType: BTCInputScriptType.SpendAddress
+      }
+      const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
+      expect(addr).toStrictEqual('1Jxtem176sCXHnK7QCShoafF5VtWvMa7eq')
+    })
+
+    it("should return a valid change address for the first receive index path (m/44'/0'/0'/1/0)", async () => {
+      const getAddressParams: GetAddressParams = {
+        wallet,
+        purpose: "44'",
+        account: "0'",
+        index: 0,
+        isChange: true,
+        scriptType: BTCInputScriptType.SpendAddress
+      }
+      const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
+      expect(addr).toStrictEqual('13ZD8S4qR6h4GvkAZ2ht7rpr15TFXYxGCx')
     })
   })
 

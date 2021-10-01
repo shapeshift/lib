@@ -248,11 +248,15 @@ export class BitcoinChainAdapter implements ChainAdapter {
         path = `m/${purpose}/${account}/0'/0/${nextReceiveAddressIndex}`
       }
 
-      if (index) {
+      if (index && !isChange) {
         path = `m/${purpose}/${account}/0'/0/${index}`
       }
 
-      if (isChange) {
+      if ((index === 0 || index) && isChange) {
+        path = `m/${purpose}/${account}/0'/1/${index}`
+      }
+
+      if (index !== 0 && !index && isChange) {
         const { nextChangeAddressIndex } = await this.getAccount(pubkey)
         path = `m/${purpose}/${account}/0'/1/${nextChangeAddressIndex}`
       }
