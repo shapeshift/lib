@@ -141,6 +141,9 @@ describe('ZrxSwapper', () => {
     const swapper = new ZrxSwapper(zrxSwapperDeps)
     const pair = swapper.getDefaultPair()
     expect(pair).toHaveLength(2)
+    pair.forEach((asset) => {
+      expect(asset.chain).toBe(ChainTypes.Ethereum)
+    })
   })
   describe('getUsdRate', () => {
     it('getUsdRate gets the usd rate of the symbol', async () => {
