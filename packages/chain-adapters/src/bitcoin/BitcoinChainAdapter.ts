@@ -230,10 +230,12 @@ export class BitcoinChainAdapter implements ChainAdapter {
     purpose = "84'",
     account = "0'",
     isChange = false,
+    changeOverride,
     index,
     scriptType = BTCInputScriptType.Bech32
   }: GetAddressParams): Promise<string | undefined> => {
-    const change = isChange ? '1' : '0'
+    let change = isChange ? '1' : '0'
+    change = changeOverride ? changeOverride : change
 
     // If an index is not passed in, we want to use the newest unused change/receive indices
     if (index === undefined) {

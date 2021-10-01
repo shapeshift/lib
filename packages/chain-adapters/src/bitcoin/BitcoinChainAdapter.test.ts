@@ -285,6 +285,34 @@ describe('BitcoinChainAdapter', () => {
       const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
       expect(addr).toStrictEqual('bc1qgawuludfvrdxfq0x55k26ydtg2hrx64jp3u6am')
     })
+
+    it("should return a valid p2wpkh address with overridden change path (m/84'/0'/0'/7/0)", async () => {
+      const getAddressParams: GetAddressParams = {
+        wallet,
+        purpose: "84'",
+        account: "0'",
+        index: 0,
+        isChange: true,
+        changeOverride: '7',
+        scriptType: BTCInputScriptType.SpendWitness
+      }
+      const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
+      expect(addr).toStrictEqual('bc1qe7jd0l96570mxf7gwkadnsv6a599jrtjzz9y3p')
+    })
+
+    it("should return a valid p2wpkh address with a crazy path (m/84'/0'/3'/7/13)", async () => {
+      const getAddressParams: GetAddressParams = {
+        wallet,
+        purpose: "84'",
+        account: "3'",
+        index: 13,
+        isChange: true,
+        changeOverride: '7',
+        scriptType: BTCInputScriptType.SpendWitness
+      }
+      const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
+      expect(addr).toStrictEqual('bc1q7l8l6thynft7un6nx0j8p3vzfag7vl80e5asls')
+    })
   })
 
   describe('validateAddress', () => {

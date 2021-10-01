@@ -72,6 +72,7 @@ export type GetAddressParams = {
   purpose: string
   account: string
   isChange?: boolean
+  changeOverride?: string
   index?: number
   scriptType?: BTCInputScriptType
 }
