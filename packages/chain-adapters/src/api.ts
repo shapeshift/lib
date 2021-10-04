@@ -69,8 +69,8 @@ export type UtxoResponse = {
 
 export type GetAddressParams = {
   wallet: NativeHDWallet
-  purpose: string
-  account: string
+  purpose: number
+  account: number
   isChange?: boolean
   changeOverride?: string
   index?: number
@@ -106,6 +106,9 @@ export type BuildSendTxInput = {
   memo?: string
   recipients?: Recipient[]
   opReturnData?: string
+  purpose?: number
+  scriptType?: BTCInputScriptType
+  account?: number
 }
 
 export type SignEthTxInput = {
@@ -121,8 +124,8 @@ export type SignBitcoinTxInput = {
 export type GetAddressInput = {
   wallet: HDWallet
   path?: string
-  purpose?: string
-  account?: string
+  purpose?: number
+  account?: number
   isChange?: boolean
   index?: number
   scriptType?: BTCInputScriptType

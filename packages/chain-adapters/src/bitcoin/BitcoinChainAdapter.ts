@@ -9,7 +9,6 @@ import {
   Params,
   SignBitcoinTxInput,
   Recipient,
-  ConfTimeOptions,
   BTCFeeDataKey
 } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
@@ -68,12 +67,21 @@ export class BitcoinChainAdapter implements ChainAdapter {
     tx: BuildSendTxInput
   ): Promise<{ txToSign: BTCSignTx; estimatedFees?: FeeData } | undefined> => {
     try {
-      const { recipients, fee: satoshiPerByte, wallet, opReturnData } = tx
+      const {
+        recipients,
+        fee: satoshiPerByte,
+        wallet,
+        opReturnData,
+        purpose = 84,
+        scriptType = BTCInputScriptType.SpendWitness,
+        account = 0
+      } = tx
       const publicKeys = await wallet.getPublicKeys([
         {
           coin: 'Bitcoin',
-          addressNList: bip32ToAddressNList(`m/44'/0'/0'`),
-          curve: 'secp256k1'
+          addressNList: bip32ToAddressNList(`m/${String(purpose)}'/0'/${String(account)}'`),
+          curve: 'secp256k1',
+          scriptType: scriptType ? scriptType : BTCInputScriptType.SpendWitness
         }
       ])
       if (publicKeys) {
@@ -82,13 +90,12 @@ export class BitcoinChainAdapter implements ChainAdapter {
           pubkey
         })
 
-        // TODO generate bech32 address for change
         const changeAddress = await this.getAddress({
           wallet,
-          purpose: "44'",
-          account: "0'",
+          purpose,
+          account,
           isChange: true,
-          scriptType: BTCInputScriptType.SpendAddress
+          scriptType: BTCInputScriptType.SpendWitness
         })
 
         const formattedUtxos = []
@@ -126,7 +133,7 @@ export class BitcoinChainAdapter implements ChainAdapter {
           if (!out.address) {
             return {
               amount: String(out.value),
-              addressType: 'p2pkh',
+              addressType: BTCInputScriptType.SpendWitness,
               address: changeAddress,
               isChange: true
             }
@@ -134,7 +141,7 @@ export class BitcoinChainAdapter implements ChainAdapter {
           return {
             ...out,
             amount: String(out.value),
-            addressType: 'p2pkh',
+            addressType: BTCInputScriptType.SpendWitness,
             isChange: false
           }
         })
@@ -227,23 +234,22 @@ export class BitcoinChainAdapter implements ChainAdapter {
 
   getAddress = async ({
     wallet,
-    purpose = "84'",
-    account = "0'",
+    purpose = 84,
+    account = 0,
     isChange = false,
-    changeOverride,
     index,
-    scriptType = BTCInputScriptType.Bech32
+    scriptType = BTCInputScriptType.SpendWitness
   }: GetAddressParams): Promise<string | undefined> => {
-    let change = isChange ? '1' : '0'
-    change = changeOverride ? changeOverride : change
+    const change = isChange ? '1' : '0'
 
     // If an index is not passed in, we want to use the newest unused change/receive indices
     if (index === undefined) {
       const publicKeys = await wallet.getPublicKeys([
         {
           coin: 'Bitcoin',
-          addressNList: bip32ToAddressNList(`m/44'/0'/0'`),
-          curve: 'secp256k1'
+          addressNList: bip32ToAddressNList(`m/${String(purpose)}'/0'/0'`),
+          curve: 'secp256k1',
+          scriptType
         }
       ])
       if (publicKeys) {
@@ -255,8 +261,7 @@ export class BitcoinChainAdapter implements ChainAdapter {
       }
     }
 
-    const path = `m/${purpose}/0'/${account}/${change}/${index}`
-
+    const path = `m/${String(purpose)}'/0'/${String(account)}'/${change}/${index}`
     const addressNList = path ? bip32ToAddressNList(path) : bip32ToAddressNList("m/84'/0'/0'/0/0")
     const btcAddress = await wallet.btcGetAddress({
       addressNList,

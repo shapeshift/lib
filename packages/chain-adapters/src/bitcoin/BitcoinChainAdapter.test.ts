@@ -5,14 +5,11 @@
  * @group unit
  */
 import { ChainAdapterManager } from '../ChainAdapterManager'
-import { BitcoinChainAdapter } from './BitcoinChainAdapter'
 import { BTCInputScriptType, BTCSignTx } from '@shapeshiftoss/hdwallet-core'
 import { BuildSendTxInput, FeeData, GetAddressParams, SignBitcoinTxInput } from '../api'
 import { ChainAdapter, ChainIdentifier } from '../'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { Bitcoin } from '@shapeshiftoss/unchained-client'
-import { ErrorHandler } from '../error/ErrorHandler'
 import dotenv from 'dotenv'
 dotenv.config({
   path: __dirname + '/../../.env'
@@ -56,8 +53,8 @@ describe('BitcoinChainAdapter', () => {
     btcChainAdapter = chainAdapterManager.byChain(ChainIdentifier.Bitcoin)
     const getAddressParams: GetAddressParams = {
       wallet,
-      purpose: "44'",
-      account: "0'",
+      purpose: 44,
+      account: 0,
       isChange: false,
       scriptType: BTCInputScriptType.SpendAddress
     }
@@ -185,8 +182,8 @@ describe('BitcoinChainAdapter', () => {
     it("should return a p2pkh address for valid derivation root path parameters (m/44'/0'/0'/0/0)", async () => {
       const getAddressParams: GetAddressParams = {
         wallet,
-        purpose: "44'",
-        account: "0'",
+        purpose: 44,
+        account: 0,
         isChange: false,
         index: 0,
         scriptType: BTCInputScriptType.SpendAddress
@@ -198,8 +195,8 @@ describe('BitcoinChainAdapter', () => {
     it("should return a valid p2pkh address for the first receive index path (m/44'/0'/0'/0/1)", async () => {
       const getAddressParams: GetAddressParams = {
         wallet,
-        purpose: "44'",
-        account: "0'",
+        purpose: 44,
+        account: 0,
         index: 1,
         isChange: false,
         scriptType: BTCInputScriptType.SpendAddress
@@ -211,8 +208,8 @@ describe('BitcoinChainAdapter', () => {
     it("should return a valid p2pkh change address for the first receive index path (m/44'/0'/0'/1/0)", async () => {
       const getAddressParams: GetAddressParams = {
         wallet,
-        purpose: "44'",
-        account: "0'",
+        purpose: 44,
+        account: 0,
         index: 0,
         isChange: true,
         scriptType: BTCInputScriptType.SpendAddress
@@ -224,8 +221,8 @@ describe('BitcoinChainAdapter', () => {
     it("should return a valid p2pkh address at the 2nd account root path (m/44'/0'/1'/0/0)", async () => {
       const getAddressParams: GetAddressParams = {
         wallet,
-        purpose: "44'",
-        account: "1'",
+        purpose: 44,
+        account: 1,
         index: 0,
         isChange: false,
         scriptType: BTCInputScriptType.SpendAddress
@@ -237,8 +234,8 @@ describe('BitcoinChainAdapter', () => {
     it("should return a p2wpkh address for valid derivation root path parameters (m/84'/0'/0'/0/0)", async () => {
       const getAddressParams: GetAddressParams = {
         wallet,
-        purpose: "84'",
-        account: "0'",
+        purpose: 84,
+        account: 0,
         isChange: false,
         index: 0,
         scriptType: BTCInputScriptType.SpendWitness
@@ -250,8 +247,8 @@ describe('BitcoinChainAdapter', () => {
     it("should return a valid p2wpkh address for the first receive index path (m/84'/0'/0'/0/1)", async () => {
       const getAddressParams: GetAddressParams = {
         wallet,
-        purpose: "84'",
-        account: "0'",
+        purpose: 84,
+        account: 0,
         index: 1,
         isChange: false,
         scriptType: BTCInputScriptType.SpendWitness
@@ -263,8 +260,8 @@ describe('BitcoinChainAdapter', () => {
     it("should return a valid p2wpkh change address for the first receive index path (m/44'/0'/0'/1/0)", async () => {
       const getAddressParams: GetAddressParams = {
         wallet,
-        purpose: "84'",
-        account: "0'",
+        purpose: 84,
+        account: 0,
         index: 0,
         isChange: true,
         scriptType: BTCInputScriptType.SpendWitness
@@ -276,42 +273,14 @@ describe('BitcoinChainAdapter', () => {
     it("should return a valid p2wpkh address at the 2nd account root path (m/84'/0'/1'/0/0)", async () => {
       const getAddressParams: GetAddressParams = {
         wallet,
-        purpose: "84'",
-        account: "1'",
+        purpose: 84,
+        account: 1,
         index: 0,
         isChange: false,
         scriptType: BTCInputScriptType.SpendWitness
       }
       const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
       expect(addr).toStrictEqual('bc1qgawuludfvrdxfq0x55k26ydtg2hrx64jp3u6am')
-    })
-
-    it("should return a valid p2wpkh address with overridden change path (m/84'/0'/0'/7/0)", async () => {
-      const getAddressParams: GetAddressParams = {
-        wallet,
-        purpose: "84'",
-        account: "0'",
-        index: 0,
-        isChange: true,
-        changeOverride: '7',
-        scriptType: BTCInputScriptType.SpendWitness
-      }
-      const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
-      expect(addr).toStrictEqual('bc1qe7jd0l96570mxf7gwkadnsv6a599jrtjzz9y3p')
-    })
-
-    it("should return a valid p2wpkh address with a crazy path (m/84'/0'/3'/7/13)", async () => {
-      const getAddressParams: GetAddressParams = {
-        wallet,
-        purpose: "84'",
-        account: "3'",
-        index: 13,
-        isChange: true,
-        changeOverride: '7',
-        scriptType: BTCInputScriptType.SpendWitness
-      }
-      const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
-      expect(addr).toStrictEqual('bc1q7l8l6thynft7un6nx0j8p3vzfag7vl80e5asls')
     })
   })
 

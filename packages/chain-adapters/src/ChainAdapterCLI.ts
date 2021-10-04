@@ -33,8 +33,8 @@ const main = async () => {
 
     const address = await btcChainAdapter.getAddress({
       wallet,
-      purpose: "84'",
-      account: "0'",
+      purpose: 84,
+      account: 0,
       isChange: false,
       scriptType: BTCInputScriptType.SpendWitness
       // index: 10
@@ -43,15 +43,13 @@ const main = async () => {
 
     const txInput = {
       asset: { id: '123', symbol: 'BTC' },
-      recipients: [{ address: '1FH6ehAd5ZFXCM1cLGzHxK1s4dGdq1JusM', value: 2000 }],
+      recipients: [{ address: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4', value: 400 }],
       wallet,
-      fee: '100',
+      fee: '60',
       opReturnData: 'sup fool'
     }
 
     const unsignedTx: any = await btcChainAdapter.buildSendTransaction(txInput)
-
-    // console.log('unsignedTx: ', JSON.stringify(unsignedTx))
 
     const signedTx = await btcChainAdapter.signTransaction({
       wallet,
