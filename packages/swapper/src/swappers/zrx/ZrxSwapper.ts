@@ -1,21 +1,22 @@
 import Web3 from 'web3'
-import { AxiosResponse } from 'axios'
-import BigNumber from 'bignumber.js'
-import { zrxService } from './utils/zrxService'
 import {
   Asset,
-  BuildQuoteTxArgs,
+  BuildQuoteTxInput,
   ChainTypes,
   GetQuoteInput,
   Quote,
   SwapperType,
-  QuoteResponse
+  MinMaxOutput,
+  ExecQuoteInput,
+  ExecQuoteOutput
 } from '@shapeshiftoss/types'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { Swapper } from '../../api'
-
 import { buildQuoteTx } from './buildQuoteTx/buildQuoteTx'
 import { getZrxQuote } from './getQuote/getQuote'
+import { getUsdRate } from './utils/helpers/helpers'
+import { getMinMax } from './getMinMax/getMinMax'
+import { executeQuote } from './executeQuote/executeQuote'
 
 export type ZrxSwapperDeps = {
   adapterManager: ChainAdapterManager
@@ -41,8 +42,8 @@ export class ZrxSwapper implements Swapper {
     return SwapperType.Zrx
   }
 
-  async buildQuoteTx({ input, wallet }: BuildQuoteTxArgs): Promise<Quote> {
-    return buildQuoteTx(this.deps, { input, wallet })
+  async buildQuoteTx(args: BuildQuoteTxInput): Promise<Quote> {
+    return buildQuoteTx(this.deps, args)
   }
 
   async getQuote(input: GetQuoteInput): Promise<Quote> {
@@ -50,20 +51,11 @@ export class ZrxSwapper implements Swapper {
   }
 
   async getUsdRate(input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string> {
-    const { symbol, tokenId } = input
-    const rateResponse: AxiosResponse<QuoteResponse> = await zrxService.get<QuoteResponse>(
-      '/swap/v1/price',
-      {
-        params: {
-          buyToken: 'USDC',
-          buyAmount: '1000000', // $1
-          sellToken: tokenId || symbol
-        }
-      }
-    )
-    if (!rateResponse.data.price) throw new ZrxError('getUsdRate - Failed to get price data')
+    return getUsdRate(input)
+  }
 
-    return new BigNumber(1).dividedBy(rateResponse.data.price).toString()
+  async getMinMax(input: GetQuoteInput): Promise<MinMaxOutput> {
+    return getMinMax(input)
   }
 
   getAvailableAssets(assets: Asset[]): Asset[] {
@@ -79,5 +71,9 @@ export class ZrxSwapper implements Swapper {
     const ETH = { name: 'Ethereum', chain: ChainTypes.Ethereum, symbol: 'ETH' }
     const USDC = { name: 'USDC', chain: ChainTypes.Ethereum, symbol: 'USDC' }
     return [ETH, USDC]
+  }
+
+  async executeQuote(args: ExecQuoteInput): Promise<ExecQuoteOutput> {
+    return executeQuote(this.deps, args)
   }
 }

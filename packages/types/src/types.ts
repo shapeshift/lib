@@ -108,6 +108,12 @@ export type SwapSource = {
   proportion: string
 }
 
+export interface MinMaxOutput {
+  minimum: string
+  maximum: string
+  minimumPrice?: string
+}
+
 export type QuoteResponse = {
   price: string
   guaranteedPrice: string
@@ -170,9 +176,18 @@ export type GetQuoteInput = {
   minimum?: string
 }
 
-export type BuildQuoteTxArgs = {
+export type BuildQuoteTxInput = {
   input: GetQuoteInput
   wallet: HDWallet
+}
+
+export type ExecQuoteInput = {
+  quote: Quote
+  wallet: HDWallet
+}
+
+export type ExecQuoteOutput = {
+  txid: string
 }
 
 // chain-adapters
