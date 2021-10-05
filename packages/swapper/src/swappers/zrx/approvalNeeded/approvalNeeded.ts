@@ -15,6 +15,7 @@ import {
   DEFAULT_SLIPPAGE
 } from '../utils/constants'
 
+import { SwapError } from '../../../api'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 import { zrxService } from '../utils/zrxService'
 import { getERC20Allowance } from '../utils/helpers/helpers'
@@ -26,8 +27,12 @@ export async function approvalNeeded(
 ): Promise<ApprovalNeededOutput> {
   const { sellAsset } = quote
 
-  if (sellAsset.symbol === 'ETH' || sellAsset.chain !== ChainTypes.Ethereum) {
+  if (sellAsset.symbol === 'ETH') {
     return { approvalNeeded: false }
+  }
+
+  if (sellAsset.chain !== ChainTypes.Ethereum) {
+    throw new SwapError('ZrxSwapper:approvalNeeded only Ethereum chain type is supported')
   }
 
   const adapter: ChainAdapter = adapterManager.byChain(sellAsset.chain)

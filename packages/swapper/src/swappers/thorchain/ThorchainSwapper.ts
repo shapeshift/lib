@@ -29,7 +29,7 @@ export class ThorchainSwapper implements Swapper {
 
   getMinMax(input: GetQuoteInput): Promise<MinMaxOutput> {
     console.info(input)
-    throw new Error('Method not implemented.')
+    throw new Error('ThorchainSwapper: getMinMax unimplemented')
   }
 
   getAvailableAssets(assets: Asset[]): Asset[] {
@@ -47,10 +47,10 @@ export class ThorchainSwapper implements Swapper {
   }
 
   getDefaultPair(): Partial<Asset>[] {
-    throw new Error('Method not implemented.')
+    throw new Error('ThorchainSwapper: getDefaultPair unimplemented')
   }
 
   async approvalNeeded(): Promise<ApprovalNeededOutput> {
-    throw new Error('ThorchainSwapper: executeQuote unimplemented')
+    throw new Error('ThorchainSwapper: approvalNeeded unimplemented')
   }
 }
