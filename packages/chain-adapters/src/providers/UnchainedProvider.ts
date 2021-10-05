@@ -19,10 +19,10 @@ const axiosClient = (baseURL: string) =>
     })
   })
 
-export const isUnchainedProviderOfType = <U extends ChainTypes>(
+export function isUnchainedProviderOfType<U extends ChainTypes>(
   chainType: U,
   x: UnchainedProvider<ChainTypes>
-): x is UnchainedProvider<U> => {
+): x is UnchainedProvider<U> {
   return x.getType() === chainType
 }
 
@@ -48,8 +48,8 @@ export class UnchainedProvider<T extends ChainTypes> implements BlockchainProvid
     return this.type
   }
 
-  async getBalance(address: string): Promise<BalanceResponse<T> | undefined> {
-    const { data } = await this.axios.get<BalanceResponse<T>>(`/balance/${address}`)
+  async getBalance(address: string): Promise<BalanceResponse> {
+    const { data } = await this.axios.get<BalanceResponse>(`/balance/${address}`)
     return data
   }
 

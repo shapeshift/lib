@@ -67,7 +67,7 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
     return ChainTypes.Ethereum
   }
 
-  async getBalance(address: string): Promise<BalanceResponse<ChainTypes.Ethereum> | undefined> {
+  async getBalance(address: string): Promise<BalanceResponse> {
     try {
       const balanceData = await this.provider.getBalance(address)
       return balanceData

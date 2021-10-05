@@ -1,4 +1,5 @@
 import { ETHSignTx, BTCSignTx, HDWallet, ThorchainSignTx } from '@shapeshiftoss/hdwallet-core'
+import * as ta from 'type-assertions'
 
 // asset-service
 
@@ -219,8 +220,14 @@ export type ApprovalNeededOutput = {
 
 // chain-adapters
 
-export type Transaction<T extends ChainTypes> = {
-  network: T
+type DistributiveKeyOf<T> = T extends unknown ? keyof T : never
+type WithoutAnyOtherSpecificFields<T> = T extends unknown
+  ? T & Record<Exclude<DistributiveKeyOf<ChainFieldMap[keyof ChainFieldMap]>, keyof T>, undefined>
+  : never
+
+type TransactionBase<T extends ChainTypes> = {
+  network: NetworkTypes
+  chain: T
   symbol: string
   txid: string
   status: string
@@ -233,6 +240,43 @@ export type Transaction<T extends ChainTypes> = {
   value: string
   fee: string
 }
+
+type EthereumSpecificFields = {
+  nonce: string
+}
+
+type BitcoinSpecificFields = {
+  opReturn: string
+}
+
+type ChainFieldMap = {
+  [ChainTypes.Ethereum]: EthereumSpecificFields
+  [ChainTypes.Bitcoin]: BitcoinSpecificFields
+}
+
+export type Transaction<T extends ChainTypes = ChainTypes> = TransactionBase<T> & {
+  details: T extends keyof ChainFieldMap ? WithoutAnyOtherSpecificFields<ChainFieldMap[T]> : never
+}
+
+// unit tests for types
+
+// a generic transaction should have details.nonce of string | undefined
+ta.assert<ta.Equal<Transaction['details']['nonce'], string | undefined>>()
+
+// a generic transaction should have details.opReturn of string | undefined
+ta.assert<ta.Equal<Transaction['details']['opReturn'], string | undefined>>()
+
+// an ethereum transaction should have details.nonce of string
+ta.assert<ta.Equal<Transaction<ChainTypes.Ethereum>['details']['nonce'], string>>()
+
+// an ethereum transaction should have details.opReturn of undefined
+ta.assert<ta.Equal<Transaction<ChainTypes.Ethereum>['details']['opReturn'], undefined>>()
+
+// a bitcoin transaction should have details.nonce of undefined
+ta.assert<ta.Equal<Transaction<ChainTypes.Bitcoin>['details']['nonce'], undefined>>()
+
+// a bitcoin transaction should have details.opReturn of string
+ta.assert<ta.Equal<Transaction<ChainTypes.Bitcoin>['details']['opReturn'], string>>()
 
 export type TxHistoryResponse<T extends ChainTypes> = {
   page: number
@@ -254,8 +298,8 @@ export type Token = {
   totalSent?: string
 }
 
-export type BalanceResponse<T> = {
-  network: T
+export type BalanceResponse = {
+  network: NetworkTypes
   symbol: string
   address: string
   balance: string
@@ -266,7 +310,7 @@ export type BalanceResponse<T> = {
 }
 
 export type BroadcastTxResponse = {
-  network: string
+  network: NetworkTypes
   txid: string
 }
 

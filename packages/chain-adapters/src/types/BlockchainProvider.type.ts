@@ -7,7 +7,7 @@ import {
 } from '@shapeshiftoss/types'
 
 export interface BlockchainProvider<T extends ChainTypes> {
-  getBalance: (address: string) => Promise<BalanceResponse<T> | undefined>
+  getBalance: (address: string) => Promise<BalanceResponse>
   getTxHistory: (address: string, params?: Params) => Promise<TxHistoryResponse<T>>
   getNonce: (address: string) => Promise<number>
   broadcastTx: (hex: string) => Promise<string>
