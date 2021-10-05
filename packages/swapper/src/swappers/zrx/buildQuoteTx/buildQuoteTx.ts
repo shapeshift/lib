@@ -6,7 +6,7 @@ import { SwapError } from '../../..'
 import { Quote, QuoteResponse, BuildQuoteTxInput } from '@shapeshiftoss/types'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
-import { erc20AllowanceAbi } from '../utils/abi/erc20-abi'
+import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { normalizeAmount, getAllowanceRequired } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
 import {
