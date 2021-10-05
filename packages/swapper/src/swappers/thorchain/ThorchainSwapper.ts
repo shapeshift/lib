@@ -1,5 +1,6 @@
 import {
   Asset,
+  ApprovalNeededOutput,
   SwapperType,
   Quote,
   ExecQuoteOutput,
@@ -35,6 +36,7 @@ export class ThorchainSwapper implements Swapper {
     console.info(assets)
     throw new Error('ThorchainSwapper: getAvailableAssets unimplemented')
   }
+
   canTradePair(sellAsset: Asset, buyAsset: Asset): boolean {
     console.info(sellAsset, buyAsset)
     throw new Error('ThorchainSwapper: canTradePair unimplemented')
@@ -46,5 +48,9 @@ export class ThorchainSwapper implements Swapper {
 
   getDefaultPair(): Partial<Asset>[] {
     throw new Error('Method not implemented.')
+  }
+
+  async approvalNeeded(): Promise<ApprovalNeededOutput> {
+    throw new Error('ThorchainSwapper: executeQuote unimplemented')
   }
 }

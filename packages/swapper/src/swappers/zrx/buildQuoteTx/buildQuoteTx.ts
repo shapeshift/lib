@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { SwapError } from '../../..'
-import { Quote, BuildQuoteTxInput } from '@shapeshiftoss/types'
+import { Quote, QuoteResponse, BuildQuoteTxInput } from '@shapeshiftoss/types'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
 import { erc20AllowanceAbi } from '../utils/abi/erc20-abi'
@@ -17,30 +17,6 @@ import {
   APPROVAL_GAS_LIMIT,
   MAX_SLIPPAGE
 } from '../utils/constants'
-
-type LiquiditySource = {
-  name: string
-  proportion: string
-}
-
-type QuoteResponse = {
-  price: string
-  guaranteedPrice: string
-  to: string
-  data?: string
-  value?: string
-  gas?: string
-  estimatedGas?: string
-  gasPrice?: string
-  protocolFee?: string
-  minimumProtocolFee?: string
-  buyTokenAddress?: string
-  sellTokenAddress?: string
-  buyAmount?: string
-  sellAmount?: string
-  allowanceTarget?: string
-  sources?: Array<LiquiditySource>
-}
 
 export async function buildQuoteTx(
   { adapterManager, web3 }: ZrxSwapperDeps,
