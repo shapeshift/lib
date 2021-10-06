@@ -12,19 +12,19 @@ export async function getZrxQuote(input: GetQuoteInput): Promise<Quote> {
     sellAsset,
     buyAsset,
     sellAmount,
+    buyAmount,
     minimumPrice,
     minimum: minQuoteSellAmount,
     slippage
   } = input
-  if (!sellAmount) {
-    throw new ZrxError('getQuote - sellAmount is required')
-  }
-
   if (buyAsset.chain !== ChainTypes.Ethereum) {
     throw new ZrxError('getQuote - Both assets need to be on the Ethereum chain to use Zrx')
   }
   if (sellAsset.chain !== ChainTypes.Ethereum) {
     throw new ZrxError('getQuote - Both assets need to be on the Ethereum chain to use Zrx')
+  }
+  if (!sellAmount && !buyAmount) {
+    throw new ZrxError('getQuote - sellAmount or buyAmount is required')
   }
 
   const buyToken = buyAsset.tokenId || buyAsset.symbol
@@ -37,11 +37,14 @@ export async function getZrxQuote(input: GetQuoteInput): Promise<Quote> {
     )
   }
 
-  const normalizedSellAmount =
-    !normalizeAmount(sellAmount) || normalizeAmount(sellAmount) === '0'
+  let amount = sellAmount ? { sellAmount } : { buyAmount }
+  const amountValue = Object.keys(amount)[0]
+  const normalizedAmount =
+    !normalizeAmount(amountValue) || normalizeAmount(amountValue) === '0'
       ? normalizeAmount(minQuoteSellAmountWei?.toString())
-      : normalizeAmount(sellAmount)
-  if (!normalizedSellAmount || normalizedSellAmount === '0') {
+      : normalizeAmount(amountValue)
+
+  if (!normalizedAmount || normalizedAmount === '0') {
     throw new ZrxError('getQuote - Must have valid sellAmount or minimum amount')
   }
 
@@ -63,8 +66,8 @@ export async function getZrxQuote(input: GetQuoteInput): Promise<Quote> {
         params: {
           sellToken,
           buyToken,
-          sellAmount: normalizedSellAmount,
-          slippagePercentage
+          slippagePercentage,
+          ...amount
         }
       }
     )
