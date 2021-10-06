@@ -3,6 +3,7 @@ import {
   Asset,
   ApprovalNeededInput,
   ApprovalNeededOutput,
+  ApproveInfiniteInput,
   BuildQuoteTxInput,
   ChainTypes,
   GetQuoteInput,
@@ -20,6 +21,7 @@ import { getUsdRate } from './utils/helpers/helpers'
 import { getMinMax } from './getMinMax/getMinMax'
 import { executeQuote } from './executeQuote/executeQuote'
 import { approvalNeeded } from './approvalNeeded/approvalNeeded'
+import { approveInfinite } from './approveInfinite/approveInfinite'
 
 export type ZrxSwapperDeps = {
   adapterManager: ChainAdapterManager
@@ -82,5 +84,9 @@ export class ZrxSwapper implements Swapper {
 
   async approvalNeeded(args: ApprovalNeededInput): Promise<ApprovalNeededOutput> {
     return approvalNeeded(this.deps, args)
+  }
+
+  async approveInfinite(args: ApproveInfiniteInput): Promise<string> {
+    return approveInfinite(this.deps, args)
   }
 }

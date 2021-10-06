@@ -53,4 +53,8 @@ export class ThorchainSwapper implements Swapper {
   async approvalNeeded(): Promise<ApprovalNeededOutput> {
     throw new Error('ThorchainSwapper: approvalNeeded unimplemented')
   }
+
+  async approveInfinite(): Promise<string> {
+    throw new Error('ThorchainSwapper: approveInfinite unimplemented')
+  }
 }

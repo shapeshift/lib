@@ -217,6 +217,11 @@ export type ApprovalNeededOutput = {
   gasPrice?: string
 }
 
+export type ApproveInfiniteInput = {
+  quote: Quote
+  wallet: HDWallet
+}
+
 // chain-adapters
 
 type TransactionBase<T extends ChainTypes> = {
