@@ -3,6 +3,7 @@ import {
   Asset,
   ApprovalNeededInput,
   ApprovalNeededOutput,
+  ApproveInfiniteInput,
   BuildQuoteTxInput,
   GetQuoteInput,
   Quote,
@@ -71,7 +72,13 @@ export interface Swapper {
 
   /**
    * Get a boolean if a quote needs approval
+   * @param quote
+   * @param wallet
    */
+  approvalNeeded(args: ApprovalNeededInput): Promise<ApprovalNeededOutput>
 
-  approvalNeeded(args: ApprovalNeededInput<ChainTypes, SwapperType>): Promise<ApprovalNeededOutput>
+  /**
+   * Get the txid of an approve infinite transaction
+   */
+  approveInfinite(args: ApproveInfiniteInput): Promise<string>
 }
