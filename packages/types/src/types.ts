@@ -37,8 +37,7 @@ export enum ContractTypes {
 
 export enum ChainTypes {
   Ethereum = 'ethereum',
-  Bitcoin = 'bitcoin',
-  Litecoin = 'litecoin'
+  Bitcoin = 'bitcoin'
 }
 
 export enum NetworkTypes {
@@ -220,11 +219,6 @@ export type ApprovalNeededOutput = {
 
 // chain-adapters
 
-type DistributiveKeyOf<T> = T extends unknown ? keyof T : never
-type WithoutAnyOtherSpecificFields<T> = T extends unknown
-  ? T & Record<Exclude<DistributiveKeyOf<ChainFieldMap[keyof ChainFieldMap]>, keyof T>, undefined>
-  : never
-
 type TransactionBase<T extends ChainTypes> = {
   network: NetworkTypes
   chain: T
@@ -254,8 +248,11 @@ type ChainFieldMap = {
   [ChainTypes.Bitcoin]: BitcoinSpecificFields
 }
 
+// black magic
+type PartialIntersection<T extends ChainTypes> = Partial<Omit<never, keyof ChainFieldMap[T]>>
+type ChainDetails<T extends ChainTypes> = ChainFieldMap[T] & PartialIntersection<T>
 export type Transaction<T extends ChainTypes = ChainTypes> = TransactionBase<T> & {
-  details: T extends keyof ChainFieldMap ? WithoutAnyOtherSpecificFields<ChainFieldMap[T]> : never
+  details: ChainDetails<T>
 }
 
 // unit tests for types
