@@ -249,8 +249,12 @@ type ChainFieldMap = {
   [ChainTypes.Bitcoin]: BitcoinSpecificFields
 }
 
+type ChainSpecificFields<T extends ChainTypes> = T extends keyof ChainFieldMap
+  ? ChainFieldMap[T]
+  : never
+
 export type Transaction<T extends ChainTypes = ChainTypes> = TransactionBase<T> & {
-  details: ChainFieldMap[T] & Record<string, undefined>
+  details: ChainSpecificFields<T> & Record<string, undefined>
 }
 
 // unit tests for types
