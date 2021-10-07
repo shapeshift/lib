@@ -248,11 +248,8 @@ type ChainFieldMap = {
   [ChainTypes.Bitcoin]: BitcoinSpecificFields
 }
 
-// black magic
-type PartialIntersection<T extends ChainTypes> = Partial<Omit<never, keyof ChainFieldMap[T]>>
-type ChainDetails<T extends ChainTypes> = ChainFieldMap[T] & PartialIntersection<T>
 export type Transaction<T extends ChainTypes = ChainTypes> = TransactionBase<T> & {
-  details: ChainDetails<T>
+  details: ChainFieldMap[T] & Record<string, undefined>
 }
 
 // unit tests for types
