@@ -5,7 +5,7 @@ export const BTC = {
   chain: ChainTypes.Bitcoin,
   network: NetworkTypes.MAINNET,
   precision: 8,
-  slip44: 0,
+  slip44: 44,
   contractType: ContractTypes.ERC20,
   color: '#FFFFFF',
   secondaryColor: '#FFFFFF',
@@ -26,7 +26,7 @@ export const WETH = {
   color: '#FFFFFF',
   secondaryColor: '#FFFFFF',
   icon: 'https://assets.coingecko.com/coins/images/2518/thumb/weth.png?1628852295',
-  slip44: 0,
+  slip44: 60,
   explorer: 'https://etherscan.io',
   explorerTxLink: 'https://etherscan.io/tx/',
   sendSupport: true,
@@ -34,7 +34,7 @@ export const WETH = {
   symbol: 'WETH'
 }
 export const FOX = {
-  name: 'Fox',
+  name: 'FOX',
   chain: ChainTypes.Ethereum,
   network: NetworkTypes.MAINNET,
   precision: 18,
@@ -44,7 +44,7 @@ export const FOX = {
   secondaryColor: '#FFFFFF',
   icon: 'https://assets.coincap.io/assets/icons/fox@2x.png',
   sendSupport: true,
-  slip44: 0,
+  slip44: 60,
   explorer: 'https://etherscan.io',
   explorerTxLink: 'https://etherscan.io/tx/',
   receiveSupport: true,
