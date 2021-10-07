@@ -1,5 +1,4 @@
 import { ETHSignTx, BTCSignTx, HDWallet, ThorchainSignTx } from '@shapeshiftoss/hdwallet-core'
-import * as ta from 'type-assertions'
 
 // asset-service
 
@@ -249,28 +248,10 @@ type ChainFieldMap = {
 }
 
 export type Transaction<T extends ChainTypes = ChainTypes> = TransactionBase<T> & {
+  // this intersection looks redundant, but is actually required
+  // see the types.assert.ts file for the desired behaviour
   details: ChainFieldMap[T] & Record<string, undefined>
 }
-
-// unit tests for types
-
-// a generic transaction should have details.nonce of string | undefined
-ta.assert<ta.Equal<Transaction['details']['nonce'], string | undefined>>()
-
-// a generic transaction should have details.opReturn of string | undefined
-ta.assert<ta.Equal<Transaction['details']['opReturn'], string | undefined>>()
-
-// an ethereum transaction should have details.nonce of string
-ta.assert<ta.Equal<Transaction<ChainTypes.Ethereum>['details']['nonce'], string>>()
-
-// an ethereum transaction should have details.opReturn of undefined
-ta.assert<ta.Equal<Transaction<ChainTypes.Ethereum>['details']['opReturn'], undefined>>()
-
-// a bitcoin transaction should have details.nonce of undefined
-ta.assert<ta.Equal<Transaction<ChainTypes.Bitcoin>['details']['nonce'], undefined>>()
-
-// a bitcoin transaction should have details.opReturn of string
-ta.assert<ta.Equal<Transaction<ChainTypes.Bitcoin>['details']['opReturn'], string>>()
 
 export type TxHistoryResponse<T extends ChainTypes> = {
   page: number
