@@ -213,13 +213,6 @@ describe('utils', () => {
         }
       }))
 
-      // Start here
-      ;(adapter as jest.Mock<unknown>).mockImplementation(() => ({
-        buildSendTransaction: jest.fn(() => Promise.resolve({ txToSign: {} })),
-        signTransaction: jest.fn(() => Promise.resolve('000000000000000')),
-        broadcastTransaction: jest.fn(() => Promise.resolve('000000000000000'))
-      }))
-
       expect(
         await grantAllowance({ quote, wallet, adapter, erc20Abi, web3: web3Instance })
       ).toEqual('000000000000000')
