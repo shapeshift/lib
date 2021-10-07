@@ -1,23 +1,18 @@
 import {
-  ChainAdapter,
   BuildSendTxInput,
   FeeData,
-  ChainIdentifier,
+  ChainTypes,
   ValidAddressResult,
-  ValidAddressResultType,
-  GetAddressParams,
-  Params,
-  SignBitcoinTxInput,
-  Recipient,
-  BTCFeeDataKey
-} from '../api'
+  ValidAddressResultType
+} from '@shapeshiftoss/types'
 import { ErrorHandler } from '../error/ErrorHandler'
 import { bip32ToAddressNList, BTCInputScriptType, BTCSignTx } from '@shapeshiftoss/hdwallet-core'
 import axios from 'axios'
 import { Bitcoin } from '@shapeshiftoss/unchained-client'
 import WAValidator from 'multicoin-address-validator'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const coinSelect = require('coinselect')
+import { ChainAdapter } from '..'
+import coinSelect from 'coinselect'
+import { Params } from '../types/Params.type'
 
 const MIN_RELAY_FEE = 3000 // sats/kbyte
 const DEFAULT_FEE = undefined
@@ -26,15 +21,15 @@ export type BitcoinChainAdapterDependencies = {
   provider: Bitcoin.V1Api
 }
 
-export class BitcoinChainAdapter implements ChainAdapter {
+export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
   private readonly provider: Bitcoin.V1Api
 
   constructor(deps: BitcoinChainAdapterDependencies) {
     this.provider = deps.provider
   }
 
-  getType = (): ChainIdentifier => {
-    return ChainIdentifier.Bitcoin
+  getType(): ChainTypes.Bitcoin {
+    return ChainTypes.Bitcoin
   }
 
   getAccount = async (address: string): Promise<Bitcoin.BitcoinAccount> => {
@@ -50,7 +45,7 @@ export class BitcoinChainAdapter implements ChainAdapter {
     }
   }
 
-  getTxHistory = async (address: string, params?: Params): Promise<Bitcoin.TxHistory> => {
+  async getTxHistory(address: string, params?: Params): Promise<Bitcoin.TxHistory> {
     if (!address) {
       // return ErrorHandler(new Error('Address parameter is not defined'))
       return ErrorHandler('Address parameter is not defined')
@@ -63,9 +58,9 @@ export class BitcoinChainAdapter implements ChainAdapter {
     }
   }
 
-  buildSendTransaction = async (
+  async buildSendTransaction(
     tx: BuildSendTxInput
-  ): Promise<{ txToSign: BTCSignTx; estimatedFees?: FeeData } | undefined> => {
+  ): Promise<{ txToSign: BTCSignTx; estimatedFees?: FeeData }> {
     try {
       const {
         recipients,
@@ -179,7 +174,7 @@ export class BitcoinChainAdapter implements ChainAdapter {
     return broadcastedTx.data
   }
 
-  getFeeData = async (): Promise<FeeData> => {
+  async getFeeData(): Promise<FeeData> {
     const responseData = (await axios.get('https://bitcoinfees.earn.com/api/v1/fees/list'))['data']
     const confTimes: FeeData = {
       [BTCFeeDataKey.Fastest]: {
@@ -232,14 +227,14 @@ export class BitcoinChainAdapter implements ChainAdapter {
     return confTimes
   }
 
-  getAddress = async ({
+  async getAddress({
     wallet,
     purpose = 84,
     account = 0,
     isChange = false,
     index,
     scriptType = BTCInputScriptType.SpendWitness
-  }: GetAddressParams): Promise<string | undefined> => {
+  }: GetAddressParams): Promise<string> {
     const change = isChange ? '1' : '0'
 
     // If an index is not passed in, we want to use the newest unused change/receive indices

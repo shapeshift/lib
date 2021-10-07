@@ -1,36 +1,29 @@
-import { ChainAdapter, ChainIdentifier } from './api'
-import { BitcoinChainAdapter } from './bitcoin'
+import { ChainAdapter, isChainAdapterOfType } from './api'
+import { ChainTypes } from '@shapeshiftoss/types'
 import { EthereumChainAdapter } from './ethereum'
-import { Ethereum, Bitcoin } from '@shapeshiftoss/unchained-client'
+import { UnchainedProvider } from './providers/UnchainedProvider'
 
-export type UnchainedUrls = Record<ChainIdentifier.Ethereum | ChainIdentifier.Bitcoin, string>
-
-const chainAdapters = {
-  [ChainIdentifier.Bitcoin]: (url: string): BitcoinChainAdapter => {
-    const provider = new Bitcoin.V1Api(new Bitcoin.Configuration({ basePath: url }))
-    return new BitcoinChainAdapter({ provider })
-  },
-  [ChainIdentifier.Ethereum]: (url: string): EthereumChainAdapter => {
-    const provider = new Ethereum.V1Api(new Ethereum.Configuration({ basePath: url }))
-    return new EthereumChainAdapter({ provider })
-  }
-} as const
-
-type ChainAdapterKeys = keyof typeof chainAdapters
+export type UnchainedUrls = Partial<Record<ChainTypes, string>>
 
 export class ChainAdapterManager {
-  private supported: Map<ChainAdapterKeys, () => ChainAdapter> = new Map()
-  private instances: Map<string, ChainAdapter> = new Map()
+  private supported: Map<ChainTypes, () => ChainAdapter<ChainTypes>> = new Map()
+  private instances: Map<ChainTypes, ChainAdapter<ChainTypes>> = new Map()
 
   constructor(unchainedUrls: UnchainedUrls) {
     if (!unchainedUrls) {
       throw new Error('Blockchain urls required')
     }
-    ;(Object.keys(unchainedUrls) as Array<ChainAdapterKeys>).forEach((key) => {
-      const Adapter = chainAdapters[key]
-      if (!Adapter) throw new Error(`No chain adapter for ${key}`)
-      this.addChain(key, () => Adapter(unchainedUrls[key]))
-    })
+    ;(Object.entries(unchainedUrls) as Array<[keyof UnchainedUrls, string]>).forEach(
+      ([type, baseURL]) => {
+        switch (type) {
+          case ChainTypes.Ethereum: {
+            const provider = new UnchainedProvider({ baseURL, type })
+            return this.addChain(type, () => new EthereumChainAdapter({ provider }))
+          }
+        }
+        throw new Error(`ChainAdapterManager: cannot instantiate ${type} chain adapter`)
+      }
+    )
   }
 
   /**
@@ -39,35 +32,40 @@ export class ChainAdapterManager {
    * @example
    * import { ChainAdapterManager, UtxoChainAdapter } from 'chain-adapters'
    * const manager = new ChainAdapterManager(client)
-   * manager.addChain('BTG', () => new UtxoChainAdapter('BTG', client))
-   * @param {ChainAdapterKeys} network - Coin/network symbol from Asset query
+   * manager.addChain('bitcoin', () => new UtxoChainAdapter('BTG', client))
+   * @param {ChainTypes} network - Coin/network symbol from Asset query
    * @param {Function} factory - A function that returns a ChainAdapter instance
    */
-  addChain(chain: ChainAdapterKeys, factory: () => ChainAdapter): void {
+  addChain<T extends ChainTypes>(chain: T, factory: () => ChainAdapter<T>): void {
     if (typeof chain !== 'string' || typeof factory !== 'function') {
       throw new Error('Parameter validation error')
     }
     this.supported.set(chain, factory)
   }
 
-  getSupportedChains(): Array<ChainAdapterKeys> {
+  getSupportedChains(): Array<ChainTypes> {
     return Array.from(this.supported.keys())
   }
 
-  getSupportedAdapters(): Array<() => ChainAdapter> {
+  getSupportedAdapters(): Array<() => ChainAdapter<ChainTypes>> {
     return Array.from(this.supported.values())
   }
 
-  /**
-   * Get a ChainAdapter instance for a network
-   */
-  byChain(chain: ChainAdapterKeys): ChainAdapter {
+  /*** Get a ChainAdapter instance for a network */
+  byChain<T extends ChainTypes>(chain: T): ChainAdapter<T> {
     let adapter = this.instances.get(chain)
     if (!adapter) {
       const factory = this.supported.get(chain)
       if (factory) {
-        this.instances.set(chain, factory())
-        adapter = this.instances.get(chain)
+        adapter = factory()
+        if (!adapter || !isChainAdapterOfType(chain, adapter)) {
+          throw new Error(
+            `Adapter type [${
+              adapter ? adapter.getType() : typeof adapter
+            }] does not match requested type [${chain}]`
+          )
+        }
+        this.instances.set(chain, adapter)
       }
     }
 
@@ -75,6 +73,6 @@ export class ChainAdapterManager {
       throw new Error(`Network [${chain}] is not supported`)
     }
 
-    return adapter
+    return adapter as ChainAdapter<T>
   }
 }

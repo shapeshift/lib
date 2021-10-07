@@ -1,6 +1,6 @@
 {
   "name": "lib",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "workspaces": {
     "packages": [
@@ -10,12 +10,13 @@
   },
   "scripts": {
     "build": "lerna run build --include-dependencies",
-    "clean": "lerna run clean && rm -rf node_modules",
+    "clean": "rimraf node_modules dist packages/**/dist",
     "dev": "lerna run dev --stream --parallel",
     "lint": "eslint --cache .",
     "test": "jest",
     "test:dev": "jest --watch",
     "type-check": "lerna run type-check",
+    "release": "lerna exec --concurrency 1 -- npx --no-install semantic-release -e semantic-release-monorepo",
     "publish:lerna": "lerna publish from-package --no-private --yes",
     "version:patch": "lerna version patch --yes --no-git-tag-version --no-push",
     "version:minor": "lerna version minor --yes --no-git-tag-version --no-push",
@@ -40,11 +41,12 @@
     "jest-mock-extended": "^1.0.9",
     "lerna": "^4.0.0",
     "prettier": "1.19.1",
+    "rimraf": "^3.0.2",
     "semantic-release": "^17.4.7",
     "semantic-release-monorepo": "^7.0.5",
     "ts-jest": "^27.0.5",
     "ts-node": "^10.2.1",
+    "type-assertions": "^1.1.0",
     "typescript": "^4.2.4"
-  },
-  "dependencies": {}
+  }
 }

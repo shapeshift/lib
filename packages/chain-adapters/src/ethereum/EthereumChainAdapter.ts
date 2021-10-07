@@ -1,28 +1,30 @@
-import {
-  ChainAdapter,
-  BuildSendTxInput,
-  SignEthTxInput,
-  GetAddressInput,
-  GetFeeDataInput,
-  FeeData,
-  ChainIdentifier,
-  ValidAddressResult,
-  ValidAddressResultType,
-  Params,
-  ETHFeeData
-} from '../api'
-import { ErrorHandler } from '../error/ErrorHandler'
-import { bip32ToAddressNList, ETHSignTx, ETHWallet, BTCWallet } from '@shapeshiftoss/hdwallet-core'
-import { numberToHex } from 'web3-utils'
-import { Contract } from '@ethersproject/contracts'
-import erc20Abi from './erc20Abi.json'
 import WAValidator from 'multicoin-address-validator'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
-import { Ethereum } from '@shapeshiftoss/unchained-client'
+import { bip32ToAddressNList, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
+import { numberToHex } from 'web3-utils'
+import { Contract } from '@ethersproject/contracts'
+import {
+  TxHistoryResponse,
+  BuildSendTxInput,
+  SignTxInput,
+  GetAddressInput,
+  GetFeeDataInput,
+  BalanceResponse,
+  ChainTypes,
+  ValidAddressResult,
+  ValidAddressResultType,
+  FeeDataEstimate
+} from '@shapeshiftoss/types'
+
+import { BlockchainProvider } from '../types/BlockchainProvider.type'
+import { Params } from '../types/Params.type'
+import { ErrorHandler } from '../error/ErrorHandler'
+import erc20Abi from './erc20Abi.json'
+import { ChainAdapter } from '..'
 
 export type EthereumChainAdapterDependencies = {
-  provider: Ethereum.V1Api
+  provider: BlockchainProvider<ChainTypes.Ethereum>
 }
 
 type ZrxFeeResult = {
@@ -54,93 +56,86 @@ async function getErc20Data(to: string, value: string, contractAddress?: string)
   return callData || ''
 }
 
-export class EthereumChainAdapter implements ChainAdapter {
-  private readonly provider: Ethereum.V1Api
+export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
+  private readonly provider: BlockchainProvider<ChainTypes.Ethereum>
 
   constructor(deps: EthereumChainAdapterDependencies) {
     this.provider = deps.provider
   }
 
-  getType = (): ChainIdentifier => {
-    return ChainIdentifier.Ethereum
+  getType(): ChainTypes.Ethereum {
+    return ChainTypes.Ethereum
   }
 
-  getAccount = async (address: string): Promise<Ethereum.EthereumAccount> => {
+  async getBalance(address: string): Promise<BalanceResponse> {
     try {
-      const { data } = await this.provider.getAccount({ pubkey: address })
-      return data
+      const balanceData = await this.provider.getBalance(address)
+      return balanceData
     } catch (err) {
       return ErrorHandler(err)
     }
   }
 
-  getTxHistory = async (address: string, params?: Params): Promise<Ethereum.TxHistory> => {
+  async getTxHistory(
+    address: string,
+    params?: Params
+  ): Promise<TxHistoryResponse<ChainTypes.Ethereum>> {
     try {
-      const { data } = await this.provider.getTxHistory({ pubkey: address, ...params })
-      return data
+      return this.provider.getTxHistory(address, params)
     } catch (err) {
       return ErrorHandler(err)
     }
   }
 
-  buildSendTransaction = async (
+  async buildSendTransaction(
     tx: BuildSendTxInput
-  ): Promise<{ txToSign: ETHSignTx; estimatedFees: FeeData } | undefined> => {
+  ): Promise<{ txToSign: ETHSignTx; estimatedFees: FeeDataEstimate }> {
     try {
       const { to, erc20ContractAddress, path, wallet, fee, limit } = tx
       const value = erc20ContractAddress ? '0' : tx?.value
-      if (to && value) {
-        const destAddress = erc20ContractAddress ?? to
+      const destAddress = erc20ContractAddress ?? to
 
-        if (path) {
-          const addressNList = bip32ToAddressNList(path)
+      const addressNList = bip32ToAddressNList(path)
 
-          const data = await getErc20Data(to, value, erc20ContractAddress)
-          const from = await this.getAddress({ wallet, path })
-          const {
-            data: { nonce }
-          } = await this.provider.getAccount({ pubkey: from })
+      const data = await getErc20Data(to, tx?.value, erc20ContractAddress)
+      const from = await this.getAddress({ wallet, path })
+      const nonce = await this.provider.getNonce(from)
 
-          let gasPrice = fee
-          let gasLimit = limit
-          const estimatedFees = await this.getFeeData({
-            to,
-            from,
-            value,
-            contractAddress: erc20ContractAddress
-          }) as ETHFeeData
+      let gasPrice = fee
+      let gasLimit = limit
+      const estimatedFees = await this.getFeeData({
+        to,
+        from,
+        value,
+        contractAddress: erc20ContractAddress
+      })
 
-          if (!gasPrice || !gasLimit) {
-            // Default to average gas price if fee is not passed
-            !gasPrice && (gasPrice = estimatedFees.average.feeUnitPrice)
-            !gasLimit && (gasLimit = estimatedFees.average.feeUnits)
-          }
-
-          const txToSign: ETHSignTx = {
-            addressNList,
-            value: numberToHex(value),
-            to: destAddress,
-            chainId: 1, // TODO: implement for multiple chains
-            data,
-            nonce: String(nonce),
-            gasPrice: numberToHex(gasPrice),
-            gasLimit: numberToHex(gasLimit)
-          }
-          return { txToSign, estimatedFees }
-        } else {
-          return undefined
-        }
+      if (!gasPrice || !gasLimit) {
+        // Default to average gas price if fee is not passed
+        !gasPrice && (gasPrice = estimatedFees.average.feeUnitPrice)
+        !gasLimit && (gasLimit = estimatedFees.average.feeUnits)
       }
-      return undefined
+
+      const txToSign: ETHSignTx = {
+        addressNList,
+        value: numberToHex(value),
+        to: destAddress,
+        chainId: 1, // TODO: implement for multiple chains
+        data,
+        nonce: String(nonce),
+        gasPrice: numberToHex(gasPrice),
+        gasLimit: numberToHex(gasLimit)
+      }
+      return { txToSign, estimatedFees }
     } catch (err) {
       return ErrorHandler(err)
     }
   }
 
-  signTransaction = async (signTxInput: SignEthTxInput): Promise<string> => {
+  async signTransaction(signTxInput: SignTxInput<ETHSignTx>): Promise<string> {
     try {
       const { txToSign, wallet } = signTxInput
-      const signedTx = await wallet.ethSignTx(txToSign)
+      const signedTx = await (wallet as ETHWallet).ethSignTx(txToSign)
 
       if (!signedTx) throw new Error('Error signing tx')
 
@@ -150,26 +145,31 @@ export class EthereumChainAdapter implements ChainAdapter {
     }
   }
 
-  broadcastTransaction = async (hex: string) => {
-    const { data } = await this.provider.sendTx({ sendTxBody: { hex } })
-    return data
+  async broadcastTransaction(hex: string) {
+    return this.provider.broadcastTx(hex)
   }
 
-  getFeeData = async ({ to, contractAddress, value }: GetFeeDataInput): Promise<FeeData> => {
+  async getFeeData({
+    to,
+    from,
+    contractAddress,
+    value
+  }: GetFeeDataInput): Promise<FeeDataEstimate> {
     const { data: responseData } = await axios.get<ZrxGasApiResponse>('https://gas.api.0x.org/')
     const fees = responseData.result.find((result) => result.source === 'MEDIAN')
 
     if (!fees) throw new TypeError('ETH Gas Fees should always exist')
 
     const data = await getErc20Data(to, value, contractAddress)
-    const { data: gasPrice } = await this.provider.getGasPrice({
+    const feeUnits = await this.provider.getFeeUnits({
+      from,
       to,
       value,
       data
     })
 
     // PAD LIMIT
-    const gasLimit = new BigNumber(gasPrice).times(2).toString()
+    const gasLimit = new BigNumber(feeUnits).times(2).toString()
 
     return {
       fast: {
@@ -190,9 +190,9 @@ export class EthereumChainAdapter implements ChainAdapter {
     }
   }
 
-  getAddress = async (input: GetAddressInput): Promise<string> => {
+  async getAddress(input: GetAddressInput): Promise<string> {
     const { wallet, path } = input
-    const addressNList = path ? bip32ToAddressNList(path) : bip32ToAddressNList("m/44'/60'/0/0")
+    const addressNList = bip32ToAddressNList(path)
     const ethAddress = await (wallet as ETHWallet).ethGetAddress({
       addressNList,
       showDisplay: false

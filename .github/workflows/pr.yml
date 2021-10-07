@@ -1,4 +1,4 @@
-name: commitlint/lint/test/build
+name: Commitlint Lint Test & Build
 
 on:
   pull_request:
@@ -14,8 +14,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Commit lint
-        uses: wagoid/commitlint-github-action@v4
       - name: Cache dependencies
         uses: actions/cache@v2
         with:
@@ -23,11 +21,14 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: Install
         run: yarn install --frozen-lockfile
-      - name: Type check
-        run: yarn type-check
+      # needs to run after install
+      - name: Commitlint PR title
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: printf '%s' "$TITLE" | npx commitlint
+      - name: Build
+        run: yarn build
       - name: Lint
         run: yarn lint
       - name: Test
         run: yarn test
-      - name: Build
-        run: yarn build

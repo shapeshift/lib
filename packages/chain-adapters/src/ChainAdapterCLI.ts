@@ -1,13 +1,13 @@
 import { ChainAdapterManager } from './ChainAdapterManager'
-import { ChainIdentifier } from '.'
+import { ChainTypes } from '@shapeshiftoss/types'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { HDWallet, BTCInputScriptType, kavaDescribePath } from '@shapeshiftoss/hdwallet-core'
+import { BTCInputScriptType } from '@shapeshiftoss/hdwallet-core'
 import dotenv from 'dotenv'
 dotenv.config()
 
 // const foxContractAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
-const defaultEthPath = `m/44'/60'/0'/0/0`
-const defaultBtcPath = `m/44'/0'/0'/0/0`
+// const defaultEthPath = `m/44'/60'/0'/0/0`
+// const defaultBtcPath = `m/44'/0'/0'/0/0`
 
 const getWallet = async (): Promise<NativeHDWallet> => {
   const nativeAdapterArgs: NativeAdapterArgs = {
@@ -21,15 +21,15 @@ const getWallet = async (): Promise<NativeHDWallet> => {
 }
 
 const unchainedUrls = {
-  [ChainIdentifier.Bitcoin]: 'http://localhost:31300',
-  [ChainIdentifier.Ethereum]: 'http://localhost:31300'
+  [ChainTypes.Bitcoin]: 'http://localhost:31300',
+  [ChainTypes.Ethereum]: 'http://localhost:31300'
 }
 
 const main = async () => {
   try {
     const chainAdapterManager = new ChainAdapterManager(unchainedUrls)
     const wallet = await getWallet()
-    const btcChainAdapter = chainAdapterManager.byChain(ChainIdentifier.Bitcoin)
+    const btcChainAdapter = chainAdapterManager.byChain(ChainTypes.Bitcoin)
 
     const address = await btcChainAdapter.getAddress({
       wallet,

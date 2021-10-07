@@ -1,7 +1,15 @@
 import axios from 'axios'
 import dayjs from 'dayjs'
-import { MarketService, MarketData, HistoryData, HistoryTimeframe } from '../api'
-import { ChainTypes } from '../api'
+import {
+  ChainTypes,
+  MarketData,
+  HistoryData,
+  HistoryTimeframe,
+  PriceHistoryArgs,
+  MarketDataArgs
+} from '@shapeshiftoss/types'
+
+import { MarketService } from '../api'
 
 // tons more parms here: https://www.coingecko.com/en/api/documentation
 type CoinGeckoAssetData = {
@@ -18,20 +26,26 @@ type CoinGeckoAssetData = {
   }
 }
 
+type CoinGeckoIDMap = {
+  [k in ChainTypes]: string
+}
+
+const coingeckoIDMap: CoinGeckoIDMap = Object.freeze({
+  [ChainTypes.Ethereum]: 'ethereum',
+  [ChainTypes.Bitcoin]: 'bitcoin'
+})
+
 export class CoinGeckoMarketService implements MarketService {
   baseUrl = 'https://api.coingecko.com/api/v3'
 
-  getMarketData = async (chain: ChainTypes, tokenId?: string): Promise<MarketData | null> => {
-    let coingecko_id
-    if (chain === ChainTypes.ETH) coingecko_id = 'ethereum'
-    else throw new Error('Unsuppored chain type')
-
+  getMarketData = async ({ chain, tokenId }: MarketDataArgs): Promise<MarketData | null> => {
+    const id = coingeckoIDMap[chain]
     try {
       const isToken = !!tokenId
-      const contractUrl = isToken ? `contract/${tokenId}` : ''
+      const contractUrl = isToken ? `/contract/${tokenId}` : ''
 
       const { data }: { data: CoinGeckoAssetData } = await axios.get(
-        `${this.baseUrl}/coins/${coingecko_id}/${contractUrl}`
+        `${this.baseUrl}/coins/${id}${contractUrl}`
       )
 
       // TODO: get correct localizations
@@ -49,11 +63,13 @@ export class CoinGeckoMarketService implements MarketService {
     }
   }
 
-  getPriceHistory = async (
-    network: string,
-    timeframe: HistoryTimeframe,
-    contractAddress?: string
-  ): Promise<HistoryData[]> => {
+  getPriceHistory = async ({
+    chain,
+    timeframe,
+    tokenId
+  }: PriceHistoryArgs): Promise<HistoryData[] | null> => {
+    const id = coingeckoIDMap[chain]
+
     const end = dayjs().startOf('minute')
     let start
     switch (timeframe) {
@@ -72,19 +88,22 @@ export class CoinGeckoMarketService implements MarketService {
       case HistoryTimeframe.YEAR:
         start = end.subtract(1, 'year')
         break
-      default:
+      case HistoryTimeframe.ALL:
         start = end.subtract(20, 'years')
+        break
+      default:
+        start = end
     }
 
     try {
       const from = start.valueOf() / 1000
       const to = end.valueOf() / 1000
-      const contract = contractAddress ? `contract/${contractAddress}` : ''
-      const url = `${this.baseUrl}/coins/${network}/${contract}`
+      const contract = tokenId ? `/contract/${tokenId}` : ''
+      const url = `${this.baseUrl}/coins/${id}${contract}`
       // TODO: change vs_currency to localized currency
       const currency = 'usd'
       const { data: historyData } = await axios.get(
-        `${url}/market_chart/range?id=${network}&vs_currency=${currency}&from=${from}&to=${to}`
+        `${url}/market_chart/range?id=${id}&vs_currency=${currency}&from=${from}&to=${to}`
       )
       return historyData?.prices?.map((data: [string, number]) => {
         return {
@@ -94,7 +113,7 @@ export class CoinGeckoMarketService implements MarketService {
       })
     } catch (e) {
       console.warn(e)
-      return []
+      return null
     }
   }
 }
