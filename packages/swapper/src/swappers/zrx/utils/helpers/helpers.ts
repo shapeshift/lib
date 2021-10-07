@@ -1,11 +1,14 @@
 import BigNumber from 'bignumber.js'
-import { AbiItem } from 'web3-utils'
-import Web3 from 'web3'
-import { SwapError } from '../../../../api'
-import { Asset, Quote, QuoteResponse } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
+import { numberToHex, AbiItem } from 'web3-utils'
+import Web3 from 'web3'
+import { Asset, Quote, QuoteResponse } from '@shapeshiftoss/types'
+import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { zrxService } from '../zrxService'
+import { SwapError } from '../../../../api'
 import { ZrxError } from '../../ZrxSwapper'
+import { DEFAULT_ETH_PATH } from '../constants'
 
 export type GetAllowanceRequiredArgs = {
   quote: Quote
@@ -22,6 +25,14 @@ export type GetERC20AllowanceArgs = {
   tokenId: string
   ownerAddress: string
   spenderAddress: string
+}
+
+type GrantAllowanceArgs = {
+  quote: Quote
+  wallet: HDWallet
+  adapter: ChainAdapter
+  erc20Abi: AbiItem[]
+  web3: Web3
 }
 
 /**
@@ -91,3 +102,40 @@ export const getUsdRate = async (input: Pick<Asset, 'symbol' | 'tokenId'>): Prom
 
   return new BigNumber(1).dividedBy(rateResponse.data.price).toString()
 }
+
+export const grantAllowance = async ({
+  quote,
+  wallet,
+  adapter,
+  erc20Abi,
+  web3
+}: GrantAllowanceArgs): Promise<string> => {
+  if (!quote.sellAsset.tokenId) {
+    throw new Error( 'sellAsset.tokenId is required')
+  }
+
+  const erc20Contract = new web3.eth.Contract(erc20Abi, quote.sellAsset.tokenId)
+  const approveTx = erc20Contract.methods
+    .approve(quote.allowanceContract, quote.sellAmount)
+    .encodeABI()
+
+  const value = quote.sellAsset.symbol === 'ETH' ? numberToHex(quote.sellAmount || 0) : '0x0'
+  const { txToSign } = await adapter.buildSendTransaction({
+    value,
+    wallet,
+    to: quote.sellAsset.tokenId,
+    path: DEFAULT_ETH_PATH,
+    fee: numberToHex(quote.feeData?.gasPrice || 0),
+    limit: numberToHex(quote.feeData?.estimatedGas || 0)
+  })
+
+  const grantAllowanceTxToSign = {
+    ...txToSign,
+    data: approveTx
+  }
+
+  const signedTx = await adapter.signTransaction({ txToSign: grantAllowanceTxToSign, wallet })
+
+  return await adapter.broadcastTransaction(signedTx)
+}
+

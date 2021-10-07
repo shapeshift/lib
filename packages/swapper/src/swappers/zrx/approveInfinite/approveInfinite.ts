@@ -1,37 +1,11 @@
 import { AxiosResponse } from 'axios'
 import { ApproveInfiniteInput, QuoteResponse } from '@shapeshiftoss/types'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
-import { DEFAULT_ETH_PATH, DEFAULT_SLIPPAGE, AFFILIATE_ADDRESS } from '../utils/constants'
+import { DEFAULT_ETH_PATH, DEFAULT_SLIPPAGE, AFFILIATE_ADDRESS, MAX_ALLOWANCE } from '../utils/constants'
 import { zrxService } from '../utils/zrxService'
+import { grantAllowance } from '../utils/helpers/helpers'
+import { erc20Abi } from '../utils/abi/erc20-abi'
 
-type GrantAllowanceArgs = {
-  quote: Quote
-  wallet: HDWallet
-  adapter: ChainAdapter
-  erc20abi: AbiItem[]
-  web3: Web3
-}
-
-const grantAllowance = async ({ quote, wallet, adapter, erc20abi, web3 }: GrantAllowanceArgs) => {
-  const erc20Contract = new web3.eth.Contract(erc20abi, quote.sellAsset.contractAddress)
-  const approveTx = erc20Contract.methods
-    .approve(quote.allowanceContract, quote.sellAmount)
-    .encodeABI()
-
-  const value = quote.sellAsset.symbol === 'ETH' ? numberToHex(quote.sellAmount || 0) : '0x0'
-  const { txToSign } = await adapter.buildSendTransaction({
-    value,
-    wallet,
-    to: quote.depositAddress,
-    path: DEFAULT_ETH_PATH,
-    fee: numberToHex(quote.feeData?.gasPrice || 0),
-    limit: numberToHex(quote.feeData?.estimatedGas || 0)
-  })
-
-  const signedTx = await adapter.signTransaction({ txToSign, wallet })
-
-  const txid = await adapter.broadcastTransaction(signedTx)
-}
 
 export async function approveInfinite(
   { adapterManager, web3 }: ZrxSwapperDeps,
@@ -64,4 +38,16 @@ export async function approveInfinite(
     }
   )
   const { data } = quoteResponse
+
+  return grantAllowance({
+    quote: {
+      ...quote,
+      allowanceContract: data.allowanceTarget as string,
+      sellAmount: MAX_ALLOWANCE
+    },
+    wallet,
+    adapter,
+    erc20Abi,
+    web3
+  })
 }
