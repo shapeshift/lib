@@ -38,7 +38,7 @@ export enum ContractTypes {
 export enum ChainTypes {
   Ethereum = 'ethereum',
   Bitcoin = 'bitcoin',
-  Litecoin = 'litecoin
+  Litecoin = 'litecoin'
 }
 
 export enum NetworkTypes {
