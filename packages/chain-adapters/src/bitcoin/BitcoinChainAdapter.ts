@@ -32,9 +32,8 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
     return ChainTypes.Bitcoin
   }
 
-  getAccount = async (address: string): Promise<Bitcoin.BitcoinAccount> => {
+  async getAccount(address: string): Promise<Bitcoin.BitcoinAccount> {
     if (!address) {
-      // return ErrorHandler(new Error('Address parameter is not defined'))
       return ErrorHandler('Address parameter is not defined')
     }
     try {
@@ -157,7 +156,7 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
     }
   }
 
-  signTransaction = async (signTxInput: SignBitcoinTxInput): Promise<string> => {
+  async signTransaction(signTxInput: SignBitcoinTxInput): Promise<string> {
     try {
       const { txToSign, wallet } = signTxInput
       const signedTx = await wallet.btcSignTx(txToSign)
@@ -169,7 +168,7 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
     }
   }
 
-  broadcastTransaction = async (hex: string): Promise<string> => {
+  async broadcastTransaction(hex: string): Promise<string> {
     const broadcastedTx = await this.provider.sendTx({ sendTxBody: { hex } })
     return broadcastedTx.data
   }

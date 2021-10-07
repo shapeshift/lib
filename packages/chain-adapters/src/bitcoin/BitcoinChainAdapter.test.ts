@@ -7,24 +7,25 @@
 import { ChainAdapterManager } from '../ChainAdapterManager'
 import { BTCInputScriptType, BTCSignTx } from '@shapeshiftoss/hdwallet-core'
 import { BuildSendTxInput, FeeData, GetAddressParams, SignBitcoinTxInput } from '../api'
-import { ChainAdapter, ChainIdentifier } from '../'
+import { ChainAdapter } from '../'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { Bitcoin } from '@shapeshiftoss/unchained-client'
 import dotenv from 'dotenv'
+import { ChainTypes } from '@shapeshiftoss/types'
 dotenv.config({
   path: __dirname + '/../../.env'
 })
 
-const defaultEthPath = `m/44'/60'/0'/0/0`
-const defaultBtcPath = `m/44'/0'/0'/0/0`
+// const defaultEthPath = `m/44'/60'/0'/0/0`
+// const defaultBtcPath = `m/44'/0'/0'/0/0`
 const unchainedUrls = {
-  [ChainIdentifier.Bitcoin]: 'http://localhost:31300',
-  [ChainIdentifier.Ethereum]: 'http://localhost:31300'
+  [ChainTypes.Bitcoin]: 'http://localhost:31300',
+  [ChainTypes.Ethereum]: 'http://localhost:31300'
 }
 
 let chainAdapterManager: ChainAdapterManager
 let wallet: NativeHDWallet
-let btcChainAdapter: ChainAdapter
+let btcChainAdapter: ChainAdapter<ChainTypes.Bitcoin>
 let address: string
 
 const getWallet = async (): Promise<NativeHDWallet> => {
@@ -50,7 +51,7 @@ describe('BitcoinChainAdapter', () => {
       )
     }
     wallet = await getWallet()
-    btcChainAdapter = chainAdapterManager.byChain(ChainIdentifier.Bitcoin)
+    btcChainAdapter = chainAdapterManager.byChain(ChainTypes.Bitcoin)
     const getAddressParams: GetAddressParams = {
       wallet,
       purpose: 44,
@@ -62,9 +63,9 @@ describe('BitcoinChainAdapter', () => {
   })
 
   describe('getType', () => {
-    it('should return ChainIdentifier.Bitcoin', async () => {
+    it('should return ChainTypes.Bitcoin', async () => {
       const type = btcChainAdapter.getType()
-      expect(type).toEqual(ChainIdentifier.Bitcoin)
+      expect(type).toEqual(ChainTypes.Bitcoin)
     })
   })
 
