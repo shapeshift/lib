@@ -32,7 +32,7 @@ export type GetERC20AllowanceArgs = {
 type GrantAllowanceArgs = {
   quote: Quote
   wallet: HDWallet
-  adapter: ChainAdapter
+  adapter: ChainAdapter<ChainTypes>
   erc20Abi: AbiItem[]
   web3: Web3
 }
@@ -114,7 +114,7 @@ export const grantAllowance = async ({
   web3
 }: GrantAllowanceArgs): Promise<string> => {
   if (!quote.sellAsset.tokenId) {
-    throw new Error( 'sellAsset.tokenId is required')
+    throw new Error('sellAsset.tokenId is required')
   }
 
   const erc20Contract = new web3.eth.Contract(erc20Abi, quote.sellAsset.tokenId)
@@ -141,4 +141,3 @@ export const grantAllowance = async ({
 
   return await adapter.broadcastTransaction(signedTx)
 }
-
