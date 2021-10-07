@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js'
 import { AxiosResponse } from 'axios'
 import { numberToHex, AbiItem } from 'web3-utils'
 import Web3 from 'web3'
-import { Asset, Quote, QuoteResponse } from '@shapeshiftoss/types'
+import { Asset, Quote, QuoteResponse, ChainTypes } from '@shapeshiftoss/types'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { zrxService } from '../zrxService'
@@ -30,7 +30,7 @@ export type GetERC20AllowanceArgs = {
 type GrantAllowanceArgs = {
   quote: Quote
   wallet: HDWallet
-  adapter: ChainAdapter
+  adapter: ChainAdapter<ChainTypes>
   erc20Abi: AbiItem[]
   web3: Web3
 }
@@ -111,7 +111,7 @@ export const grantAllowance = async ({
   web3
 }: GrantAllowanceArgs): Promise<string> => {
   if (!quote.sellAsset.tokenId) {
-    throw new Error( 'sellAsset.tokenId is required')
+    throw new Error('sellAsset.tokenId is required')
   }
 
   const erc20Contract = new web3.eth.Contract(erc20Abi, quote.sellAsset.tokenId)
@@ -138,4 +138,3 @@ export const grantAllowance = async ({
 
   return await adapter.broadcastTransaction(signedTx)
 }
-

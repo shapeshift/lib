@@ -39,8 +39,8 @@ Web3.mockImplementation(() => ({
 ChainAdapterManager.mockImplementation(() => ({
   byChain: jest.fn(() => ({
     buildSendTransaction: jest.fn(() => Promise.resolve({ txToSign: {} })),
-    signTransaction: jest.fn(() => Promise.resolve('000000000000000')),
-    broadcastTransaction: jest.fn(() => Promise.resolve('000000000000000'))
+    signTransaction: jest.fn(() => Promise.resolve('0000000000')),
+    broadcastTransaction: jest.fn(() => Promise.resolve('0000000000'))
   }))
 }))
 
@@ -215,7 +215,7 @@ describe('utils', () => {
 
       expect(
         await grantAllowance({ quote, wallet, adapter, erc20Abi, web3: web3Instance })
-      ).toEqual('000000000000000')
+      ).toEqual('0000000000')
     })
   })
 })

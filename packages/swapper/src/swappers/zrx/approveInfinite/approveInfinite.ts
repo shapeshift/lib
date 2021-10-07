@@ -1,11 +1,15 @@
 import { AxiosResponse } from 'axios'
 import { ApproveInfiniteInput, QuoteResponse } from '@shapeshiftoss/types'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
-import { DEFAULT_ETH_PATH, DEFAULT_SLIPPAGE, AFFILIATE_ADDRESS, MAX_ALLOWANCE } from '../utils/constants'
+import {
+  DEFAULT_ETH_PATH,
+  DEFAULT_SLIPPAGE,
+  AFFILIATE_ADDRESS,
+  MAX_ALLOWANCE
+} from '../utils/constants'
 import { zrxService } from '../utils/zrxService'
 import { grantAllowance } from '../utils/helpers/helpers'
 import { erc20Abi } from '../utils/abi/erc20-abi'
-
 
 export async function approveInfinite(
   { adapterManager, web3 }: ZrxSwapperDeps,
