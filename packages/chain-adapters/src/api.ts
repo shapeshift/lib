@@ -1,5 +1,5 @@
 import {
-  BalanceResponse,
+  BIP32Params,
   BuildSendTxInput,
   ChainTxType,
   ChainTypes,
@@ -10,8 +10,7 @@ import {
   TxHistoryResponse,
   ValidAddressResult
 } from '@shapeshiftoss/types'
-import { BlockchainProvider } from './types/BlockchainProvider.type'
-import { Params } from './types/Params.type'
+import { Account } from '@shapeshiftoss/types/src/types'
 
 export const isChainAdapterOfType = <U extends ChainTypes>(
   chainType: U,
@@ -20,8 +19,50 @@ export const isChainAdapterOfType = <U extends ChainTypes>(
   return x.getType() === chainType
 }
 
-export interface ChainAdapterFactory<T extends ChainTypes> {
-  new ({ provider }: { provider: BlockchainProvider<T> }): ChainAdapter<T>
+export const toPath = (bip32Params: BIP32Params): string => {
+  const { purpose, coinType, accountNumber, isChange, index } = bip32Params
+
+  return `m/${String(purpose)}'/${String(coinType)}'/${String(accountNumber)}/${Number(
+    isChange
+  )}/${String(index)}'`
+}
+
+export const fromPath = (path: string): BIP32Params => {
+  const parts = path.split('/')
+  const [_m, ...rest] = parts
+  const partsWithoutPrimes = rest.map((part) => part.replace("'", ''))
+  const [purpose, coinType, accountNumber, isChangeNumber, index] = partsWithoutPrimes.map(Number)
+  const isChange = Boolean(isChangeNumber)
+
+  const result = { purpose, coinType, accountNumber, isChange, index }
+  return result
+}
+
+export interface TxHistoryInput {
+  /**
+   * account address
+   * @type {string}
+   * @memberof V1ApiGetTxHistory
+   */
+  readonly pubkey: string
+  /**
+   * page number
+   * @type {number}
+   * @memberof V1ApiGetTxHistory
+   */
+  readonly page?: number
+  /**
+   * page size
+   * @type {number}
+   * @memberof V1ApiGetTxHistory
+   */
+  readonly pageSize?: number
+  /**
+   * filter by contract address (only supported by coins which support contracts)
+   * @type {string}
+   * @memberof V1ApiGetTxHistory
+   */
+  readonly contract?: string
 }
 
 export interface ChainAdapter<T extends ChainTypes> {
@@ -33,8 +74,8 @@ export interface ChainAdapter<T extends ChainTypes> {
   /**
    * Get the balance of an address
    */
-  getBalance(address: string): Promise<BalanceResponse>
-  getTxHistory(address: string, params?: Params): Promise<TxHistoryResponse<T>>
+  getAccount(pubkey: string): Promise<Account>
+  getTxHistory(input: TxHistoryInput): Promise<TxHistoryResponse<T>>
 
   buildSendTransaction(
     input: BuildSendTxInput

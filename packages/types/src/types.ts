@@ -1,4 +1,10 @@
-import { ETHSignTx, BTCSignTx, HDWallet, ThorchainSignTx } from '@shapeshiftoss/hdwallet-core'
+import {
+  ETHSignTx,
+  BTCSignTx,
+  HDWallet,
+  ThorchainSignTx,
+  BTCInputScriptType
+} from '@shapeshiftoss/hdwallet-core'
 
 // asset-service
 
@@ -91,7 +97,7 @@ export enum SwapperType {
   Thorchain = 'Thorchain'
 }
 
-export type FeeData = {
+export type ETHFeeData = {
   fee?: string
   gas?: string
   estimatedGas?: string
@@ -167,7 +173,7 @@ export type Quote = {
   slipScore?: string
   txData?: string | BuildThorTradeOutput | SignTxInput<ThorchainSignTx> // unsigned tx if available at quote time
   value?: string
-  feeData?: FeeData
+  feeData?: FeeDataEstimate
   allowanceContract?: string
   allowanceGrantRequired?: boolean
   slippage?: string
@@ -239,7 +245,7 @@ type EthereumSpecificFields = {
 }
 
 type BitcoinSpecificFields = {
-  opReturn: string
+  opReturnData?: string
 }
 
 type ChainFieldMap = {
@@ -277,7 +283,9 @@ export type Token = {
   totalSent?: string
 }
 
-export type BalanceResponse = {
+export type Account = EthereumAccount | BitcoinAccount
+
+export type EthereumAccount = {
   network: NetworkTypes
   symbol: string
   address: string
@@ -288,21 +296,61 @@ export type BalanceResponse = {
   tokens: Token[]
 }
 
+export interface BitcoinAccount {
+  /**
+   *
+   * @type {string}
+   * @memberof BitcoinAccount
+   */
+  balance: string
+  /**
+   *
+   * @type {string}
+   * @memberof BitcoinAccount
+   */
+  pubkey: string
+  /**
+   * List of associated addresses for an xpub
+   * @type {Array<Account>}
+   * @memberof BitcoinAccount
+   */
+  addresses?: Array<Account>
+  /**
+   * The next unused receive address index for an xpub (change index 0)
+   * @type {number}
+   * @memberof BitcoinAccount
+   */
+  nextReceiveAddressIndex?: number
+  /**
+   * The next unused change address index for an xpub (change index 1)
+   * @type {number}
+   * @memberof BitcoinAccount
+   */
+  nextChangeAddressIndex?: number
+}
+
 export type BroadcastTxResponse = {
   network: NetworkTypes
   txid: string
+}
+
+export type BTCRecipient = {
+  value: number
+  address?: string
 }
 
 export type BuildSendTxInput = {
   to: string
   value: string
   wallet: HDWallet
-  path: string
   /*** In base units */
   fee?: string
   /*** Optional param for eth txs indicating what ERC20 is being sent */
   erc20ContractAddress?: string
-  limit?: string
+  recipients?: BTCRecipient[]
+  opReturnData?: string
+  scriptType?: BTCInputScriptType
+  bip32Params?: BIP32Params
 }
 
 export type SignTxInput<TxType> = {
@@ -310,10 +358,35 @@ export type SignTxInput<TxType> = {
   wallet: HDWallet
 }
 
-export type GetAddressInput = {
+export type BIP32Params = {
+  purpose: number
+  coinType: number
+  accountNumber: number
+  isChange?: boolean
+  index?: number
+}
+
+export type GetBitcoinAddressParams = BIP32Params & {
+  wallet: HDWallet
+  scriptType?: BTCInputScriptType
+}
+
+export type GetAddressInputBase = {
   wallet: HDWallet
   path: string
 }
+
+export type GetBitcoinAddressInput = GetAddressInputBase & {
+  purpose: number
+  account: number
+  isChange: boolean
+  index?: number
+  scriptType: BTCInputScriptType.SpendWitness
+}
+
+export type GetEthereumAddressInput = GetAddressInputBase
+
+export type GetAddressInput = GetBitcoinAddressInput | GetEthereumAddressInput
 
 export type GetFeeDataInput = {
   contractAddress?: string
@@ -322,22 +395,52 @@ export type GetFeeDataInput = {
   value: string
 }
 
-export enum FeeDataKey {
+export type BTCFeeDataType = {
+  minMinutes: number
+  maxMinutes: number
+  effort: number
+  fee?: number
+}
+
+export enum BTCFeeDataKey {
+  Fastest = 'fastest',
+  HalfHour = 'halfHour',
+  OneHour = '1hour',
+  SixHour = '6hour',
+  TwentyFourHour = '24hour'
+}
+
+export type SignBitcoinTxInput = {
+  txToSign: BTCSignTx
+  wallet: HDWallet
+}
+
+export type BTCFeeDataEstimate = {
+  [BTCFeeDataKey.Fastest]: BTCFeeDataType
+  [BTCFeeDataKey.HalfHour]: BTCFeeDataType
+  [BTCFeeDataKey.OneHour]: BTCFeeDataType
+  [BTCFeeDataKey.SixHour]: BTCFeeDataType
+  [BTCFeeDataKey.TwentyFourHour]: BTCFeeDataType
+}
+
+export type FeeDataEstimate = ETHFeeDataEstimate | BTCFeeDataEstimate
+
+export enum ETHFeeDataKey {
   Slow = 'slow',
   Average = 'average',
   Fast = 'fast'
 }
 
-export type FeeDataType = {
+export type ETHFeeDataType = {
   feeUnitPrice: string
   networkFee: string
   feeUnits: string
 }
 
-export type FeeDataEstimate = {
-  [FeeDataKey.Slow]: FeeDataType
-  [FeeDataKey.Average]: FeeDataType
-  [FeeDataKey.Fast]: FeeDataType
+export type ETHFeeDataEstimate = {
+  [ETHFeeDataKey.Slow]: ETHFeeDataType
+  [ETHFeeDataKey.Average]: ETHFeeDataType
+  [ETHFeeDataKey.Fast]: ETHFeeDataType
 }
 
 export enum ValidAddressResultType {

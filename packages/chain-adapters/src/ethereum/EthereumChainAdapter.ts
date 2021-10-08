@@ -17,15 +17,18 @@ import {
   FeeDataEstimate
 } from '@shapeshiftoss/types'
 
-import { BlockchainProvider } from '../types/BlockchainProvider.type'
 import { Params } from '../types/Params.type'
 import { ErrorHandler } from '../error/ErrorHandler'
 import erc20Abi from './erc20Abi.json'
 import { ChainAdapter } from '..'
+import { Ethereum } from '@shapeshiftoss/unchained-client'
+import { V1ApiGetTxHistoryRequest } from '@shapeshiftoss/unchained-client/dist/generated/ethereum'
 
 export type EthereumChainAdapterDependencies = {
-  provider: BlockchainProvider<ChainTypes.Ethereum>
+  provider: Ethereum.V1Api
 }
+
+type GetTxHistoryInput = V1ApiGetTxHistoryRequest
 
 type ZrxFeeResult = {
   fast: number
@@ -57,7 +60,7 @@ async function getErc20Data(to: string, value: string, contractAddress?: string)
 }
 
 export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
-  private readonly provider: BlockchainProvider<ChainTypes.Ethereum>
+  private readonly provider: Ethereum.V1Api
 
   constructor(deps: EthereumChainAdapterDependencies) {
     this.provider = deps.provider
@@ -67,21 +70,20 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
     return ChainTypes.Ethereum
   }
 
-  async getBalance(address: string): Promise<BalanceResponse> {
+  async getBalance(pubkey: string): Promise<BalanceResponse> {
     try {
-      const balanceData = await this.provider.getBalance(address)
+      const balanceData = await this.provider.getAccount({ pubkey })
       return balanceData
     } catch (err) {
       return ErrorHandler(err)
     }
   }
 
-  async getTxHistory(
-    address: string,
-    params?: Params
-  ): Promise<TxHistoryResponse<ChainTypes.Ethereum>> {
+  async getTxHistory({
+    pubkey
+  }: V1ApiGetTxHistoryRequest): Promise<TxHistoryResponse<ChainTypes.Ethereum>> {
     try {
-      return this.provider.getTxHistory(address, params)
+      return this.provider.getTxHistory({ pubkey })
     } catch (err) {
       return ErrorHandler(err)
     }
