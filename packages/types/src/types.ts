@@ -350,7 +350,7 @@ export type BuildSendTxInput = {
   recipients?: BTCRecipient[]
   opReturnData?: string
   scriptType?: BTCInputScriptType
-  bip32Params?: BIP32Params
+  bip32Params: BIP32Params
 }
 
 export type SignTxInput<TxType> = {
@@ -377,10 +377,7 @@ export type GetAddressInputBase = {
 }
 
 export type GetBitcoinAddressInput = GetAddressInputBase & {
-  purpose: number
-  account: number
-  isChange: boolean
-  index?: number
+  bip32Params: BIP32Params
   scriptType: BTCInputScriptType.SpendWitness
 }
 

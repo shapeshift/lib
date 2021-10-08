@@ -25,7 +25,7 @@ import {
 import axios from 'axios'
 import { Bitcoin } from '@shapeshiftoss/unchained-client'
 import WAValidator from 'multicoin-address-validator'
-import { ChainAdapter, TxHistoryInput } from '..'
+import { ChainAdapter, toPath, TxHistoryInput } from '..'
 import coinSelect from 'coinselect'
 
 const MIN_RELAY_FEE = 3000 // sats/kbyte
@@ -95,9 +95,15 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
     }
   }
 
-  async nextReceiveAddress() {}
+  // TODO(0xdef1cafe): implement
+  async nextReceiveAddress(): Promise<string> {
+    return ''
+  }
 
-  async nextReceiveAddress() {}
+  // TODO(0xdef1cafe): implement
+  async nextChangeAddress(): Promise<string> {
+    return ''
+  }
 
   async buildSendTransaction(
     tx: BuildSendTxInput
@@ -112,12 +118,10 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
         bip32Params
       } = tx
 
-      const { purpose, accountNumber } = bip32Params
-
       const publicKeys = await wallet.getPublicKeys([
         {
           coin: this.coinName,
-          addressNList: bip32ToAddressNList(`m/${String(purpose)}'/0'/${String(account)}'`),
+          addressNList: bip32ToAddressNList(toPath(bip32Params)),
           curve: 'secp256k1',
           scriptType: scriptType ? scriptType : BTCInputScriptType.SpendWitness
         }
@@ -137,8 +141,7 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
         purpose,
         account,
         isChange: true,
-        scriptType: BTCInputScriptType.SpendWitness,
-        path
+        scriptType: BTCInputScriptType.SpendWitness
       })
 
       const formattedUtxos = []
@@ -278,33 +281,18 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
 
   async getAddress({
     wallet,
-    purpose = 84,
-    account = 0,
-    isChange = false,
-    index,
+    bip32Params,
     scriptType = BTCInputScriptType.SpendWitness
   }: GetBitcoinAddressInput): Promise<string> {
     if (!supportsBTC(wallet)) {
       throw new Error('BitcoinChainAdapter: wallet does not support btc')
     }
-    const change = isChange ? '1' : '0'
+
+    const path = toPath(bip32Params)
+    const { isChange } = bip32Params
 
     // If an index is not passed in, we want to use the newest unused change/receive indices
     if (!index) {
-      const publicKeys = await wallet.getPublicKeys([
-        {
-          coin: this.coinName,
-          addressNList: bip32ToAddressNList(`m/${String(purpose)}'/0'/0'`),
-          curve: 'secp256k1',
-          scriptType
-        }
-      ])
-      if (publicKeys?.length) {
-        throw new Error('BitcoinChainAdapter: no pubkeys available from wallet')
-      }
-      const pubkey = publicKeys?.[0]?.xpub
-      if (!pubkey) throw new Error('BitcoinChainAdapter: no pubkey available from wallet')
-      const accountData = await this.getAccount(pubkey)
       // TODO(0xdef1cafe): check w/ kevman if these types coming back from unchained should
       // always be defined
       index = isChange
@@ -312,7 +300,6 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
         : accountData?.nextReceiveAddressIndex ?? 0
     }
 
-    const path = `m/${String(purpose)}'/0'/${String(account)}'/${change}/${index}`
     const addressNList = path ? bip32ToAddressNList(path) : bip32ToAddressNList("m/84'/0'/0'/0/0")
     const btcAddress = await wallet.btcGetAddress({
       addressNList,

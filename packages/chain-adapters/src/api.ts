@@ -19,23 +19,20 @@ export const isChainAdapterOfType = <U extends ChainTypes>(
   return x.getType() === chainType
 }
 
+//TODO(0xdef1cafe): write tests
 export const toPath = (bip32Params: BIP32Params): string => {
   const { purpose, coinType, accountNumber, isChange, index } = bip32Params
-
-  return `m/${String(purpose)}'/${String(coinType)}'/${String(accountNumber)}/${Number(
-    isChange
-  )}/${String(index)}'`
+  return `m/${purpose}'/${coinType}'/${accountNumber}'/${Number(isChange)}/${index}`
 }
 
+//TODO(0xdef1cafe): write tests
 export const fromPath = (path: string): BIP32Params => {
   const parts = path.split('/')
-  const [_m, ...rest] = parts
-  const partsWithoutPrimes = rest.map((part) => part.replace("'", ''))
+  parts.slice(1, parts.length - 1) // discard the m/
+  const partsWithoutPrimes = parts.map((part) => part.replace("'", '')) // discard harderning
   const [purpose, coinType, accountNumber, isChangeNumber, index] = partsWithoutPrimes.map(Number)
   const isChange = Boolean(isChangeNumber)
-
-  const result = { purpose, coinType, accountNumber, isChange, index }
-  return result
+  return { purpose, coinType, accountNumber, isChange, index }
 }
 
 export interface TxHistoryInput {
