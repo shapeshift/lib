@@ -6,7 +6,8 @@ import {
   HistoryData,
   HistoryTimeframe,
   PriceHistoryArgs,
-  MarketDataArgs
+  MarketDataArgs,
+  CoinGeckoMarketCap
 } from '@shapeshiftoss/types'
 
 import { MarketService } from '../api'
@@ -36,7 +37,29 @@ const coingeckoIDMap: CoinGeckoIDMap = Object.freeze({
 })
 
 export class CoinGeckoMarketService implements MarketService {
-  baseUrl = 'https://api.coingecko.com/api/v3'
+  private baseUrl = 'https://api.coingecko.com/api/v3'
+  private cache = new Map()
+  private cacheTimeout = 60 // seconds
+
+  // TODO(0xdef1cafe): default args
+  async getByMarketCap() {
+    // TODO(0xdef1cafe): caching
+    const urlAtPage = (page: number) =>
+      `${this.baseUrl}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=${page}&sparkline=false`
+    const pages = Array(10)
+      .fill(0)
+      .map((_v, i) => i + 1)
+    const combined = (
+      await Promise.all(pages.map(async (page) => axios.get<CoinGeckoMarketCap>(urlAtPage(page))))
+    ).flat()
+    const isRateLimited = combined.reduce((acc, { status }) => acc || status === 429, false)
+    // TODO(0xdef1cafe): return from static data
+    if (isRateLimited) return []
+    return combined
+      .map(({ data }) => data)
+      .flat()
+      .sort((a, b) => (a.market_cap_rank > b.market_cap_rank ? 1 : -1))
+  }
 
   getMarketData = async ({ chain, tokenId }: MarketDataArgs): Promise<MarketData | null> => {
     const id = coingeckoIDMap[chain]

@@ -1,6 +1,7 @@
 import { CoinGeckoMarketService } from './coingecko/coingecko'
 import { MarketService } from './api'
 import {
+  GetByMarketCapType,
   HistoryData,
   MarketDataArgs,
   MarketDataType,
@@ -15,6 +16,9 @@ export const getDefaultMarketService = (): MarketService => {
 export const getMarketData: MarketDataType = async ({ chain, tokenId }: MarketDataArgs) => {
   return getDefaultMarketService().getMarketData({ chain, tokenId })
 }
+
+export const getByMarketCap: GetByMarketCapType = async () =>
+  getDefaultMarketService().getByMarketCap()
 
 export const getPriceHistory: PriceHistoryType = ({
   chain,
