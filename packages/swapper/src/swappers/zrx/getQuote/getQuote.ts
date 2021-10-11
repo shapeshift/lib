@@ -29,7 +29,7 @@ export async function getZrxQuote(input: GetQuoteInput): Promise<Quote> {
     throw new ZrxError('getQuote - sellAmount or buyAmount amount is required')
   }
 
-  const useSellAmount = sellAmount
+  const useSellAmount = !!sellAmount
   const buyToken = buyAsset.tokenId || buyAsset.symbol
   const sellToken = sellAsset.tokenId || sellAsset.symbol
 
