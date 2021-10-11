@@ -45,7 +45,7 @@ const fromBaseUnit = (amount: BigNumber | string, precision: number): string => 
 
 const main = async (): Promise<void> => {
   const [sellSymbol, buySymbol, sellAmount] = process.argv
-  console.log(`sellSymbol: sell ${sellAmount} of ${sellSymbol} to ${buySymbol}`)
+  console.info(`sellSymbol: sell ${sellAmount} of ${sellSymbol} to ${buySymbol}`)
   if (!sellAmount || !sellSymbol || !buySymbol) {
     console.error(`
       Usage:
@@ -101,7 +101,7 @@ const main = async (): Promise<void> => {
     sellAmount: sellAmountBase
   })
 
-  console.log('quote = ', JSON.stringify(quote))
+  console.info('quote = ', JSON.stringify(quote))
 
   if (!quote.success) {
     console.error('Obtaining the quote failed: ', quote.statusReason)
@@ -117,8 +117,8 @@ const main = async (): Promise<void> => {
   )
   if (answer === 'y') {
     const txid = await swapper.executeQuote({ quote, wallet })
-    console.log('broadcast tx with id: ', txid)
+    console.info('broadcast tx with id: ', txid)
   }
 }
 
-main().then(() => console.log('Done'))
+main().then(() => console.info('Done'))
