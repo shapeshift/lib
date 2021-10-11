@@ -10,9 +10,9 @@ import {
   Account,
   BitcoinAccount,
   BTCFeeDataEstimate,
-  BTCRecipient,
   SignBitcoinTxInput,
-  BTCFeeDataKey
+  BTCFeeDataKey,
+  FormattedUTXO
 } from '@shapeshiftoss/types'
 import { ErrorHandler } from '../error/ErrorHandler'
 import {
@@ -21,6 +21,7 @@ import {
   BTCSignTx,
   BTCSignTxInput,
   BTCSignTxOutput,
+  BTCSignTxOutputMemo,
   supportsBTC
 } from '@shapeshiftoss/hdwallet-core'
 import axios from 'axios'
@@ -28,7 +29,6 @@ import { Bitcoin } from '@shapeshiftoss/unchained-client'
 import WAValidator from 'multicoin-address-validator'
 import { ChainAdapter, toPath, TxHistoryInput } from '..'
 import coinSelect from 'coinselect'
-import { FormattedUTXO } from '@shapeshiftoss/types'
 import { BTCOutputAddressType } from '@shapeshiftoss/hdwallet-core'
 
 const MIN_RELAY_FEE = 3000 // sats/kbyte
@@ -176,9 +176,11 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
         }
       }
 
+      type FixedBTCSignTxOutput = Exclude<BTCSignTxOutput, BTCSignTxOutputMemo>
+
       type CoinSelectResult = {
         inputs: Array<BTCSignTxInput>
-        outputs: Array<BTCSignTxOutput>
+        outputs: Array<FixedBTCSignTxOutput>
         fee: number
       }
 
@@ -191,13 +193,13 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
 
       //TODO some better error handling
       if (!inputs || !outputs) {
-        ErrorHandler('BitcoinChainAdapater: error selecting inputs/outputs')
+        ErrorHandler('BitcoinChainAdapter: error selecting inputs/outputs')
       }
 
-      const formattedOutputs: Array<BTCSignTxOutput> = outputs.map((out: BTCRecipient) => {
+      const formattedOutputs = outputs.map((out: FixedBTCSignTxOutput) => {
         if (!out.address) {
           return {
-            amount: String(out.value),
+            amount: String(out.amount),
             addressType: BTCOutputAddressType.Spend,
             address: changeAddress,
             isChange: true,
@@ -206,7 +208,7 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
         }
         return {
           ...out,
-          amount: String(out.value),
+          amount: String(out.amount),
           addressType: BTCOutputAddressType.Spend,
           isChange: false,
           opReturnData
