@@ -50,10 +50,11 @@ const main = async () => {
       recipients: [{ address: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4', value: 400 }],
       wallet,
       fee: '60',
-      opReturnData: 'sup fool'
+      opReturnData: 'sup fool',
+      bip32Params
     }
 
-    const unsignedTx: any = await btcChainAdapter.buildSendTransaction(txInput)
+    const unsignedTx = await btcChainAdapter.buildSendTransaction(txInput)
 
     const signedTx = await btcChainAdapter.signTransaction({
       wallet,

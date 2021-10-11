@@ -307,8 +307,8 @@ export type BTCRecipient = {
 }
 
 export type BuildSendTxInput = {
-  to: string
-  value: string
+  to?: string
+  value?: string
   wallet: HDWallet
   /*** In base units */
   fee?: string
@@ -341,11 +341,10 @@ export type GetBitcoinAddressParams = BIP32Params & {
 
 export type GetAddressInputBase = {
   wallet: HDWallet
-  path: string
+  bip32Params: BIP32Params
 }
 
 export type GetBitcoinAddressInput = GetAddressInputBase & {
-  bip32Params: BIP32Params
   scriptType: BTCInputScriptType.SpendWitness
 }
 

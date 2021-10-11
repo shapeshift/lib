@@ -119,6 +119,8 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
   ): Promise<{ txToSign: ETHSignTx; estimatedFees: ETHFeeDataEstimate }> {
     try {
       const { to, erc20ContractAddress, bip32Params, wallet, fee } = tx
+      if (!to) throw new Error('EthereumChainAdapter: to is required')
+      if (!tx?.value) throw new Error('EthereumChainAdapter: value is required')
       const value = erc20ContractAddress ? '0' : tx?.value
       const destAddress = erc20ContractAddress ?? to
 
@@ -126,7 +128,7 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
       const addressNList = bip32ToAddressNList(path)
 
       const data = await getErc20Data(to, tx?.value, erc20ContractAddress)
-      const from = await this.getAddress({ wallet, path })
+      const from = await this.getAddress({ bip32Params, wallet })
       const { nonce } = await this.getAccount(from)
 
       let gasPrice = fee
@@ -220,7 +222,8 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
   }
 
   async getAddress(input: GetAddressInput): Promise<string> {
-    const { wallet, path } = input
+    const { bip32Params, wallet } = input
+    const path = toPath(bip32Params)
     const addressNList = bip32ToAddressNList(path)
     const ethAddress = await (wallet as ETHWallet).ethGetAddress({
       addressNList,

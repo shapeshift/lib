@@ -147,7 +147,6 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
 
       const changeAddress = await this.getAddress({
         bip32Params,
-        path,
         wallet,
         scriptType: BTCInputScriptType.SpendWitness
       })
@@ -180,7 +179,7 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
 
       //TODO some better error handling
       if (!inputs || !outputs) {
-        ErrorHandler('Error selecting inputs/outputs')
+        ErrorHandler('BitcoinChainAdapater: error selecting inputs/outputs')
       }
 
       const formattedOutputs = outputs.map((out: BTCRecipient) => {
