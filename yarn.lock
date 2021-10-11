@@ -2324,11 +2324,6 @@
     tiny-secp256k1 "^1.1.6"
     web-encoding "^1.1.0"
 
-"@shapeshiftoss/types@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@shapeshiftoss/types/-/types-1.0.1.tgz#ab2de8f07e01d7801f0eb8c9d9bd3551076c8147"
-  integrity sha512-cTO9nAvaGTR9PZqqLeLyQtz5M+MEkUEERAVjepNvC/WpAVenidl5DWNViITX1cIB9ihU0+2NHIHm0XgoyD6Emw==
-
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
@@ -3018,7 +3013,7 @@ axios@0.21.1:
   dependencies:
     follow-redirects "^1.10.0"
 
-axios@^0.21.1, axios@^0.21.2, axios@^0.21.4:
+axios@^0.21.2, axios@^0.21.4:
   version "0.21.4"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.4.tgz#c67b90dc0568e5c1cf2b0b858c43ba28e2eda575"
   integrity sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==
