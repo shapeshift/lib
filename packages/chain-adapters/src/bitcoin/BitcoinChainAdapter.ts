@@ -1,10 +1,4 @@
 import {
-  BTCFeeDataEstimate,
-  BTCFeeDataKey,
-  BTCRecipient,
-  SignBitcoinTxInput
-} from './../../../types/src/types'
-import {
   BuildSendTxInput,
   ChainTypes,
   ValidAddressResult,
@@ -14,13 +8,19 @@ import {
   Transaction,
   GetBitcoinAddressInput,
   Account,
-  BitcoinAccount
+  BitcoinAccount,
+  BTCFeeDataEstimate,
+  BTCRecipient,
+  SignBitcoinTxInput,
+  BTCFeeDataKey
 } from '@shapeshiftoss/types'
 import { ErrorHandler } from '../error/ErrorHandler'
 import {
   bip32ToAddressNList,
   BTCInputScriptType,
   BTCSignTx,
+  BTCSignTxInput,
+  BTCSignTxOutput,
   supportsBTC
 } from '@shapeshiftoss/hdwallet-core'
 import axios from 'axios'
@@ -28,6 +28,7 @@ import { Bitcoin } from '@shapeshiftoss/unchained-client'
 import WAValidator from 'multicoin-address-validator'
 import { ChainAdapter, toPath, TxHistoryInput } from '..'
 import coinSelect from 'coinselect'
+import { FormattedUTXO } from '@shapeshiftoss/types'
 
 const MIN_RELAY_FEE = 3000 // sats/kbyte
 const DEFAULT_FEE = undefined
@@ -125,6 +126,9 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
         bip32Params
       } = tx
 
+      if (!recipients || !recipients.length)
+        throw new Error('BitcoinChainAdapter: recipients is required')
+
       const path = toPath(bip32Params)
 
       const publicKeys = await wallet.getPublicKeys([
@@ -151,7 +155,7 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
         scriptType: BTCInputScriptType.SpendWitness
       })
 
-      const formattedUtxos = []
+      const formattedUtxos: FormattedUTXO[] = []
       for (const utxo of utxos) {
         const getTransactionResponse = await this.provider.getTransaction({
           txid: utxo.txid
@@ -171,11 +175,18 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
         }
       }
 
-      const { inputs, outputs, fee } = coinSelect(
+      type CoinSelectResult = {
+        inputs: Array<BTCSignTxInput>
+        outputs: Array<BTCSignTxOutput>
+        fee: number
+      }
+
+      const coinSelectResult: CoinSelectResult = coinSelect(
         formattedUtxos,
         recipients,
         Number(satoshiPerByte)
       )
+      const { inputs, outputs, fee } = coinSelectResult
 
       //TODO some better error handling
       if (!inputs || !outputs) {

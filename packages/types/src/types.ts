@@ -260,7 +260,7 @@ type ChainSpecificFields<T extends ChainTypes> = T extends keyof ChainFieldMap
 export type Transaction<T extends ChainTypes = ChainTypes> = TransactionBase<T> & {
   // this intersection looks redundant, but is actually required
   // see the types.assert.ts file for the desired behaviour
-  details: ChainSpecificFields<T> & Record<string, undefined>
+  details: ChainSpecificFields<T> & Record<string, string | undefined>
 }
 
 export type TxHistoryResponse<T extends ChainTypes> = {
@@ -304,6 +304,60 @@ export type BroadcastTxResponse = {
 export type BTCRecipient = {
   value: number
   address?: string
+}
+
+export type BitcoinTxSpecificScriptSig = {
+  hex: string
+  asm: string
+}
+
+export type BitcoinTxSpecificVin = {
+  txinwitness?: string
+  scriptSig?: BitcoinTxSpecificScriptSig
+  coinbase?: string
+  sequence?: number
+  vout?: number
+  txid?: string
+}
+
+export type BitcoinTxSpecificVout = {
+  scriptPubKey?: BitcoinTxSpecificScriptPubKey
+  n?: number
+  value?: string | number
+}
+
+export type BitcoinTxSpecificScriptPubKey = {
+  addresses: Array<string>
+  type: string
+  reqSigs: number
+  hex: string
+  asm: string
+}
+
+export type BitcoinTxSpecific = {
+  txid: string
+  hash: string
+  version: number
+  size: number
+  vsize: number
+  weight: number
+  locktime: number
+  vin: Array<BitcoinTxSpecificVin>
+  vout: Array<BitcoinTxSpecificVout>
+  hex: string
+  blockhash: string
+  confirmations: number
+  time: number
+  blocktime: number
+}
+
+export type FormattedUTXO = {
+  addressNList: number[]
+  scriptType: BTCInputScriptType
+  amount: string
+  tx: BitcoinTxSpecific
+  hex: string
+  value: number
 }
 
 export type BuildSendTxInput = {
