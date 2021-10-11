@@ -29,6 +29,7 @@ import WAValidator from 'multicoin-address-validator'
 import { ChainAdapter, toPath, TxHistoryInput } from '..'
 import coinSelect from 'coinselect'
 import { FormattedUTXO } from '@shapeshiftoss/types'
+import { BTCOutputAddressType } from '@shapeshiftoss/hdwallet-core'
 
 const MIN_RELAY_FEE = 3000 // sats/kbyte
 const DEFAULT_FEE = undefined
@@ -135,8 +136,8 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
         {
           coin: this.coinName,
           addressNList: bip32ToAddressNList(path),
-          curve: 'secp256k1',
-          scriptType: scriptType ? scriptType : BTCInputScriptType.SpendWitness
+          curve: 'secp256k1', // TODO(0xdef1cafe): from constant?
+          scriptType
         }
       ])
 
@@ -193,20 +194,22 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
         ErrorHandler('BitcoinChainAdapater: error selecting inputs/outputs')
       }
 
-      const formattedOutputs = outputs.map((out: BTCRecipient) => {
+      const formattedOutputs: Array<BTCSignTxOutput> = outputs.map((out: BTCRecipient) => {
         if (!out.address) {
           return {
             amount: String(out.value),
-            addressType: BTCInputScriptType.SpendWitness,
+            addressType: BTCOutputAddressType.Spend,
             address: changeAddress,
-            isChange: true
+            isChange: true,
+            opReturnData
           }
         }
         return {
           ...out,
           amount: String(out.value),
-          addressType: BTCInputScriptType.SpendWitness,
-          isChange: false
+          addressType: BTCOutputAddressType.Spend,
+          isChange: false,
+          opReturnData
         }
       })
       const estimatedFees = await this.getFeeData()
