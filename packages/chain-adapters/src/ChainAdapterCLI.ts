@@ -1,5 +1,5 @@
 import { ChainAdapterManager } from './ChainAdapterManager'
-import { ChainTypes } from '@shapeshiftoss/types'
+import { BIP32Params, ChainTypes } from '@shapeshiftoss/types'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { BTCInputScriptType } from '@shapeshiftoss/hdwallet-core'
 import dotenv from 'dotenv'
@@ -30,14 +30,18 @@ const main = async () => {
     const chainAdapterManager = new ChainAdapterManager(unchainedUrls)
     const wallet = await getWallet()
     const btcChainAdapter = chainAdapterManager.byChain(ChainTypes.Bitcoin)
+    const bip32Params: BIP32Params = {
+      purpose: 84,
+      coinType: 0,
+      accountNumber: 0,
+      isChange: false,
+      index: 10
+    }
 
     const address = await btcChainAdapter.getAddress({
       wallet,
-      purpose: 84,
-      account: 0,
-      isChange: false,
+      bip32Params,
       scriptType: BTCInputScriptType.SpendWitness
-      // index: 10
     })
     console.log('address: ', address)
 

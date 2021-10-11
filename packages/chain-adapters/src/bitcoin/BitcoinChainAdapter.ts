@@ -13,7 +13,8 @@ import {
   NetworkTypes,
   Transaction,
   GetBitcoinAddressInput,
-  Account
+  Account,
+  BitcoinAccount
 } from '@shapeshiftoss/types'
 import { ErrorHandler } from '../error/ErrorHandler'
 import {
@@ -58,8 +59,14 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
       return ErrorHandler('BitcoinChainAdapter: address parameter is not defined')
     }
     try {
-      const { data } = await this.provider.getAccount({ pubkey: address })
-      return data
+      const { data: unchainedAccount } = await this.provider.getAccount({ pubkey: address })
+      const result: BitcoinAccount = {
+        symbol: 'BTC', // TODO(0xdef1cafe): this is fucked
+        chain: ChainTypes.Bitcoin,
+        network: NetworkTypes.MAINNET,
+        ...unchainedAccount
+      }
+      return result
     } catch (err) {
       return ErrorHandler(err)
     }

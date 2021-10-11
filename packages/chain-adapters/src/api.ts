@@ -19,13 +19,13 @@ export const isChainAdapterOfType = <U extends ChainTypes>(
   return x.getType() === chainType
 }
 
-//TODO(0xdef1cafe): write tests
+//TODO(0xdef1cafe): write tests and abstract to utils package
 export const toPath = (bip32Params: BIP32Params): string => {
   const { purpose, coinType, accountNumber, isChange, index } = bip32Params
   return `m/${purpose}'/${coinType}'/${accountNumber}'/${Number(isChange)}/${index}`
 }
 
-//TODO(0xdef1cafe): write tests
+//TODO(0xdef1cafe): write tests and abstract to utils package
 export const fromPath = (path: string): BIP32Params => {
   const parts = path.split('/')
   parts.slice(1, parts.length - 1) // discard the m/
