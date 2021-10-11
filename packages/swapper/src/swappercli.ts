@@ -19,6 +19,16 @@ const {
   MNEMONIC = 'salon adapt foil saddle orient make page zero cheese marble test catalog'
 } = process.env
 
+const toBaseUnit = (amount: BigNumber | string, precision: number): string => {
+  return new BigNumber(amount)
+    .multipliedBy(new BigNumber(10).exponentiatedBy(new BigNumber(precision)))
+    .toString()
+}
+
+const fromBaseUnit = (amount: BigNumber | string, precision: number): string => {
+  return new BigNumber(amount).times(new BigNumber(10).exponentiatedBy(precision * -1)).toString()
+}
+
 const getWallet = async (): Promise<NativeHDWallet> => {
   if (!MNEMONIC) {
     throw new Error('Cannot init native wallet without mnemonic')
@@ -33,18 +43,9 @@ const getWallet = async (): Promise<NativeHDWallet> => {
   return wallet
 }
 
-const toBaseUnit = (amount: BigNumber | string, precision: number): string => {
-  return new BigNumber(amount)
-    .multipliedBy(new BigNumber(10).exponentiatedBy(new BigNumber(precision)))
-    .toString()
-}
-
-const fromBaseUnit = (amount: BigNumber | string, precision: number): string => {
-  return new BigNumber(amount).times(new BigNumber(10).exponentiatedBy(precision * -1)).toString()
-}
-
 const main = async (): Promise<void> => {
-  const [sellSymbol, buySymbol, sellAmount] = process.argv
+  const [_, __, ...args] = process.argv
+  const [sellSymbol, buySymbol, sellAmount] = args
   console.info(`sellSymbol: sell ${sellAmount} of ${sellSymbol} to ${buySymbol}`)
   if (!sellAmount || !sellSymbol || !buySymbol) {
     console.error(`

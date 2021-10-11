@@ -18,7 +18,7 @@
     "clean": "rm -rf dist",
     "test": "jest test",
     "type-check": "tsc --project ./tsconfig.json --noEmit",
-    "swapper": "yarn build && node ./dist/swappercli.js"
+    "swapcli": "yarn build && node ./dist/swappercli.js"
   },
   "dependencies": {
     "@shapeshiftoss/chain-adapters": "^1.2.2",
