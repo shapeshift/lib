@@ -96,13 +96,13 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
   }
 
   // TODO(0xdef1cafe): implement
-  async nextReceiveAddress(): Promise<string> {
-    return ''
+  async nextReceiveAddressIndex(): Promise<number> {
+    return 0
   }
 
   // TODO(0xdef1cafe): implement
-  async nextChangeAddress(): Promise<string> {
-    return ''
+  async nextChangeAddressIndex(): Promise<number> {
+    return 0
   }
 
   async buildSendTransaction(
@@ -118,10 +118,12 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
         bip32Params
       } = tx
 
+      const path = toPath(bip32Params)
+
       const publicKeys = await wallet.getPublicKeys([
         {
           coin: this.coinName,
-          addressNList: bip32ToAddressNList(toPath(bip32Params)),
+          addressNList: bip32ToAddressNList(path),
           curve: 'secp256k1',
           scriptType: scriptType ? scriptType : BTCInputScriptType.SpendWitness
         }
@@ -137,10 +139,9 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
       })
 
       const changeAddress = await this.getAddress({
+        bip32Params,
+        path,
         wallet,
-        purpose,
-        account,
-        isChange: true,
         scriptType: BTCInputScriptType.SpendWitness
       })
 
@@ -290,14 +291,11 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
 
     const path = toPath(bip32Params)
     const { isChange } = bip32Params
+    let { index } = bip32Params
 
     // If an index is not passed in, we want to use the newest unused change/receive indices
     if (!index) {
-      // TODO(0xdef1cafe): check w/ kevman if these types coming back from unchained should
-      // always be defined
-      index = isChange
-        ? accountData?.nextChangeAddressIndex ?? 0
-        : accountData?.nextReceiveAddressIndex ?? 0
+      index = isChange ? await this.nextChangeAddressIndex() : await this.nextReceiveAddressIndex()
     }
 
     const addressNList = path ? bip32ToAddressNList(path) : bip32ToAddressNList("m/84'/0'/0'/0/0")
