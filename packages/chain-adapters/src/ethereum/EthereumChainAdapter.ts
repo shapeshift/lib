@@ -10,25 +10,23 @@ import {
   SignTxInput,
   GetAddressInput,
   GetFeeDataInput,
-  BalanceResponse,
   ChainTypes,
   ValidAddressResult,
   ValidAddressResultType,
-  FeeDataEstimate
+  EthereumAccount,
+  ContractTypes,
+  NetworkTypes,
+  ETHFeeDataEstimate
 } from '@shapeshiftoss/types'
 
-import { Params } from '../types/Params.type'
 import { ErrorHandler } from '../error/ErrorHandler'
 import erc20Abi from './erc20Abi.json'
-import { ChainAdapter } from '..'
+import { ChainAdapter, toPath } from '..'
 import { Ethereum } from '@shapeshiftoss/unchained-client'
-import { V1ApiGetTxHistoryRequest } from '@shapeshiftoss/unchained-client/dist/generated/ethereum'
 
 export type EthereumChainAdapterDependencies = {
   provider: Ethereum.V1Api
 }
-
-type GetTxHistoryInput = V1ApiGetTxHistoryRequest
 
 type ZrxFeeResult = {
   fast: number
@@ -70,10 +68,25 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
     return ChainTypes.Ethereum
   }
 
-  async getBalance(pubkey: string): Promise<BalanceResponse> {
+  async getAccount(pubkey: string): Promise<EthereumAccount> {
     try {
-      const balanceData = await this.provider.getAccount({ pubkey })
-      return balanceData
+      const { data: unchainedAccount } = await this.provider.getAccount({ pubkey })
+      const chainAdaptersAccount: EthereumAccount = {
+        ...unchainedAccount,
+        symbol: 'ETH', // TODO(0xdef1cafe): this is real dirty
+        chain: ChainTypes.Ethereum,
+        // TODO(0xdef1cafe): need to reflect this from the provider
+        network: NetworkTypes.MAINNET,
+        tokens: unchainedAccount.tokens.map((token) => ({
+          ...token,
+          precision: token.decimals,
+          // note: unchained gets token types from blockbook
+          // blockbook only has one definition of a TokenType for ethereum
+          // https://github1s.com/trezor/blockbook/blob/master/api/types.go#L140
+          contractType: ContractTypes.ERC20
+        }))
+      }
+      return chainAdaptersAccount
     } catch (err) {
       return ErrorHandler(err)
     }
@@ -81,9 +94,21 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
 
   async getTxHistory({
     pubkey
-  }: V1ApiGetTxHistoryRequest): Promise<TxHistoryResponse<ChainTypes.Ethereum>> {
+  }: Ethereum.V1ApiGetTxHistoryRequest): Promise<TxHistoryResponse<ChainTypes.Ethereum>> {
     try {
-      return this.provider.getTxHistory({ pubkey })
+      const { data: unchainedTxHistory } = await this.provider.getTxHistory({ pubkey })
+      const result: TxHistoryResponse<ChainTypes.Ethereum> = {
+        ...unchainedTxHistory,
+        transactions: unchainedTxHistory.transactions.map((tx) => ({
+          ...tx,
+          symbol: 'ETH', // TODO(0xdef1cafe): this is real dirty
+          chain: ChainTypes.Ethereum,
+          // TODO(0xdef1cafe): need to reflect this from the provider
+          network: NetworkTypes.MAINNET,
+          details: {}
+        }))
+      }
+      return result
     } catch (err) {
       return ErrorHandler(err)
     }
@@ -91,20 +116,20 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
 
   async buildSendTransaction(
     tx: BuildSendTxInput
-  ): Promise<{ txToSign: ETHSignTx; estimatedFees: FeeDataEstimate }> {
+  ): Promise<{ txToSign: ETHSignTx; estimatedFees: ETHFeeDataEstimate }> {
     try {
-      const { to, erc20ContractAddress, path, wallet, fee, limit } = tx
+      const { to, erc20ContractAddress, bip32Params, wallet, fee } = tx
       const value = erc20ContractAddress ? '0' : tx?.value
       const destAddress = erc20ContractAddress ?? to
 
+      const path = toPath(bip32Params)
       const addressNList = bip32ToAddressNList(path)
 
       const data = await getErc20Data(to, tx?.value, erc20ContractAddress)
       const from = await this.getAddress({ wallet, path })
-      const nonce = await this.provider.getNonce(from)
+      const { nonce } = await this.getAccount(from)
 
       let gasPrice = fee
-      let gasLimit = limit
       const estimatedFees = await this.getFeeData({
         to,
         from,
@@ -112,6 +137,7 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
         contractAddress: erc20ContractAddress
       })
 
+      let { gasLimit } = tx
       if (!gasPrice || !gasLimit) {
         // Default to average gas price if fee is not passed
         !gasPrice && (gasPrice = estimatedFees.average.feeUnitPrice)
@@ -148,7 +174,8 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
   }
 
   async broadcastTransaction(hex: string) {
-    return this.provider.broadcastTx(hex)
+    const { data } = await this.provider.sendTx({ sendTxBody: { hex } })
+    return data
   }
 
   async getFeeData({
@@ -156,15 +183,15 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
     from,
     contractAddress,
     value
-  }: GetFeeDataInput): Promise<FeeDataEstimate> {
+  }: GetFeeDataInput): Promise<ETHFeeDataEstimate> {
     const { data: responseData } = await axios.get<ZrxGasApiResponse>('https://gas.api.0x.org/')
     const fees = responseData.result.find((result) => result.source === 'MEDIAN')
 
     if (!fees) throw new TypeError('ETH Gas Fees should always exist')
 
     const data = await getErc20Data(to, value, contractAddress)
-    const feeUnits = await this.provider.getFeeUnits({
-      from,
+    const { data: feeUnits } = await this.provider.estimateGas({
+      from, // TODO(0xdef1cafe): unchained-client needs updating to require a from address
       to,
       value,
       data

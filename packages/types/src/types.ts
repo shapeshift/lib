@@ -231,17 +231,17 @@ type TransactionBase<T extends ChainTypes> = {
   txid: string
   status: string
   from: string
-  to: string
-  blockHash: string
-  blockHeight: number
-  confirmations: number
-  timestamp: number
+  to?: string
+  blockHash?: string
+  blockHeight?: number
+  confirmations?: number
+  timestamp?: number
   value: string
   fee: string
 }
 
 type EthereumSpecificFields = {
-  nonce: string
+  // nonce: string
 }
 
 type BitcoinSpecificFields = {
@@ -270,63 +270,30 @@ export type TxHistoryResponse<T extends ChainTypes> = {
   transactions: Transaction<T>[]
 }
 
-export type Token = {
-  type: string
-  name: string
-  path?: string
-  contract?: string
-  transfers: number
-  symbol?: string
-  decimals?: number
-  balance?: string
-  totalReceived?: string
-  totalSent?: string
+export type BaseAccount = {
+  balance: string
+  pubkey: string
+  symbol: string
+  chain: ChainTypes
+  network: NetworkTypes
 }
+
+export type BitcoinAccount = BaseAccount & Record<string, unknown>
 
 export type Account = EthereumAccount | BitcoinAccount
 
-export type EthereumAccount = {
-  network: NetworkTypes
-  symbol: string
-  address: string
+export type EthereumToken = {
   balance: string
-  unconfirmedBalance: string
-  unconfirmedTxs: number
-  txs: number
-  tokens: Token[]
+  contract: string
+  precision: number
+  name: string
+  symbol: string
+  contractType: ContractTypes
 }
 
-export interface BitcoinAccount {
-  /**
-   *
-   * @type {string}
-   * @memberof BitcoinAccount
-   */
-  balance: string
-  /**
-   *
-   * @type {string}
-   * @memberof BitcoinAccount
-   */
-  pubkey: string
-  /**
-   * List of associated addresses for an xpub
-   * @type {Array<Account>}
-   * @memberof BitcoinAccount
-   */
-  addresses?: Array<Account>
-  /**
-   * The next unused receive address index for an xpub (change index 0)
-   * @type {number}
-   * @memberof BitcoinAccount
-   */
-  nextReceiveAddressIndex?: number
-  /**
-   * The next unused change address index for an xpub (change index 1)
-   * @type {number}
-   * @memberof BitcoinAccount
-   */
-  nextChangeAddressIndex?: number
+export type EthereumAccount = BaseAccount & {
+  nonce: number
+  tokens: EthereumToken[]
 }
 
 export type BroadcastTxResponse = {
@@ -350,6 +317,7 @@ export type BuildSendTxInput = {
   recipients?: BTCRecipient[]
   opReturnData?: string
   scriptType?: BTCInputScriptType
+  gasLimit?: string
   bip32Params: BIP32Params
 }
 
