@@ -10,7 +10,7 @@ import { ChainAdapter } from '../'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { BitcoinAPI } from '@shapeshiftoss/unchained-client'
 import dotenv from 'dotenv'
-import { BIP32Params, BTCFeeDataEstimate, BTCFeeDataType, ChainTypes } from '@shapeshiftoss/types'
+import { BIP32Params, BuildSendTxInput, ChainTypes } from '@shapeshiftoss/types'
 dotenv.config({
   path: __dirname + '/../../.env'
 })
@@ -85,21 +85,31 @@ describe('BitcoinChainAdapter', () => {
 
   describe('getTxHistory', () => {
     it('should return tx history for a specified address', async () => {
-      const data = await btcChainAdapter.getTxHistory('1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx')
+      const pubkey = '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx'
+      const data = await btcChainAdapter.getTxHistory({ pubkey })
       console.log(data)
+      expect(true).toEqual('unimplemented')
     })
 
-    it.skip('should fail for an unspecified address', async () => {
-      expect(await btcChainAdapter.getTxHistory('')).rejects.toThrow(
+    it('should fail for an unspecified address', async () => {
+      const pubkey = ''
+      await expect(btcChainAdapter.getTxHistory({ pubkey })).rejects.toThrow(
         "Parameter 'address' is not defined"
       )
+      expect(true).toEqual('unimplemented')
     })
   })
 
   describe('buildSendTransaction', () => {
-    it.skip('should return a formatted BTCSignTx object for a valid BuildSendTxInput parameter', async () => {
+    it('should return a formatted BTCSignTx object for a valid BuildSendTxInput parameter', async () => {
+      const bip32Params: BIP32Params = {
+        coinType: 0, // TODO(0xdef1cafe): i don't know what i'm doing here i'm trying to make it type check
+        purpose: 44,
+        accountNumber: 0,
+        isChange: false
+      }
       const txInput: BuildSendTxInput = {
-        asset: { id: '123', symbol: 'BTC' },
+        bip32Params,
         recipients: [
           {
             address: '1FH6ehAd5ZFXCM1cLGzHxK1s4dGdq1JusM',
@@ -117,9 +127,16 @@ describe('BitcoinChainAdapter', () => {
       expect(unsignedTx).toBeDefined()
     })
 
-    it.skip('should return estimated fees for a valid BuildSendTxInput parameter', async () => {
+    it('should return estimated fees for a valid BuildSendTxInput parameter', async () => {
+      const bip32Params: BIP32Params = {
+        coinType: 0, // TODO(0xdef1cafe): i don't know what i'm doing here i'm trying to make it type check
+        purpose: 44,
+        accountNumber: 0,
+        isChange: false,
+        index: 0
+      }
       const txInput: BuildSendTxInput = {
-        asset: { id: '123', symbol: 'BTC' },
+        bip32Params,
         recipients: [
           {
             address: '1FH6ehAd5ZFXCM1cLGzHxK1s4dGdq1JusM',
@@ -130,17 +147,23 @@ describe('BitcoinChainAdapter', () => {
         fee: '100',
         opReturnData: 'nm, u?'
       }
-      const fees: FeeData = (await btcChainAdapter.buildSendTransaction(txInput))
-        ?.estimatedFees as FeeData
-      console.log(fees)
-      expect(fees).toBeDefined()
+      const { estimatedFees } = await btcChainAdapter.buildSendTransaction(txInput)
+      console.log(estimatedFees)
+      expect(estimatedFees).toBeDefined()
     })
   })
 
   describe('signTransaction', () => {
-    it.skip('should sign a properly formatted signTxInput object', async () => {
+    it('should sign a properly formatted signTxInput object', async () => {
+      const bip32Params: BIP32Params = {
+        coinType: 0, // TODO(0xdef1cafe): i don't know what i'm doing here i'm trying to make it type check
+        purpose: 44,
+        accountNumber: 0,
+        isChange: false,
+        index: 0
+      }
       const txInput = {
-        asset: { id: '123', symbol: 'BTC' },
+        bip32Params,
         recipients: [{ address: '1FH6ehAd5ZFXCM1cLGzHxK1s4dGdq1JusM', value: 2000 }],
         wallet,
         fee: '100',
@@ -152,18 +175,22 @@ describe('BitcoinChainAdapter', () => {
       const signedTx = await btcChainAdapter.signTransaction({
         wallet,
         txToSign: unsignedTx?.txToSign
-      } as SignBitcoinTxInput)
+      })
 
       console.log(JSON.stringify(signedTx))
+      expect(true).toEqual('unimplemented')
     })
   })
 
-  // TODO: MockMe
-  // describe('broadcastTransaction', () => {})
+  describe('broadcastTransaction', () => {
+    it('is unimplemented', () => {
+      expect(true).toEqual('unimplemented')
+    })
+  })
 
   describe('getFeeData', () => {
     it('should return current BTC network fees', async () => {
-      const data: BTCFeeDataEstimate = await btcChainAdapter.getFeeData({})
+      const data = await btcChainAdapter.getFeeData({})
       expect(data).toEqual(
         expect.objectContaining({
           fastest: { minMinutes: 0, maxMinutes: 35, effort: 5, fee: expect.any(Number) },
