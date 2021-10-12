@@ -173,7 +173,7 @@ export type Quote = {
   slipScore?: string
   txData?: string | BuildThorTradeOutput | SignTxInput<ThorchainSignTx> // unsigned tx if available at quote time
   value?: string
-  feeData?: FeeDataEstimate
+  feeData?: ETHFeeData
   allowanceContract?: string
   allowanceGrantRequired?: boolean
   slippage?: string
