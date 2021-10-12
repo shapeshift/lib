@@ -20,6 +20,7 @@ import {
   bip32ToAddressNList,
   BTCInputScriptType,
   BTCOutputScriptType,
+  BTCSignTx,
   BTCSignTxInput,
   BTCSignTxOutput,
   HDWallet,
@@ -222,13 +223,11 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
         }
       })
 
-      const castedOutputs = signTxOutputs as BTCSignTxOutput[]
-
-      const txToSign = {
+      const txToSign: BTCSignTx = {
         coin: this.coinName,
         inputs: signTxInputs,
-        outputs: castedOutputs
-      } as any // TODO(0xdef1cafe): fix upstream issue in hdwallet with opReturn GuardedUnion typed as literal "0"
+        outputs: signTxOutputs
+      }
 
       return { txToSign, estimatedFees }
     } catch (err) {

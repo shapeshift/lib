@@ -387,18 +387,13 @@ export type BIP32Params = {
   index?: number
 }
 
-export type GetBitcoinAddressParams = BIP32Params & {
-  wallet: HDWallet
-  scriptType?: BTCInputScriptType
-}
-
 export type GetAddressInputBase = {
   wallet: HDWallet
   bip32Params: BIP32Params
 }
 
 export type GetBitcoinAddressInput = GetAddressInputBase & {
-  scriptType: BTCInputScriptType.SpendWitness
+  scriptType: BTCInputScriptType
 }
 
 export type GetEthereumAddressInput = GetAddressInputBase

@@ -6,18 +6,15 @@
  */
 import { ChainAdapterManager } from '../ChainAdapterManager'
 import { BTCInputScriptType, BTCSignTx } from '@shapeshiftoss/hdwallet-core'
-import { BuildSendTxInput, FeeData, GetAddressParams, SignBitcoinTxInput } from '../api'
 import { ChainAdapter } from '../'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { Bitcoin } from '@shapeshiftoss/unchained-client'
+import { BitcoinAPI } from '@shapeshiftoss/unchained-client'
 import dotenv from 'dotenv'
-import { ChainTypes } from '@shapeshiftoss/types'
+import { BIP32Params, BTCFeeDataEstimate, BTCFeeDataType, ChainTypes } from '@shapeshiftoss/types'
 dotenv.config({
   path: __dirname + '/../../.env'
 })
 
-// const defaultEthPath = `m/44'/60'/0'/0/0`
-// const defaultBtcPath = `m/44'/0'/0'/0/0`
 const unchainedUrls = {
   [ChainTypes.Bitcoin]: 'http://localhost:31300',
   [ChainTypes.Ethereum]: 'http://localhost:31300'
@@ -52,14 +49,14 @@ describe('BitcoinChainAdapter', () => {
     }
     wallet = await getWallet()
     btcChainAdapter = chainAdapterManager.byChain(ChainTypes.Bitcoin)
-    const getAddressParams: GetAddressParams = {
-      wallet,
+    const bip32Params: BIP32Params = {
+      coinType: 0, // TODO(0xdef1cafe): i don't know what i'm doing here i'm trying to make it type check
       purpose: 44,
-      account: 0,
-      isChange: false,
-      scriptType: BTCInputScriptType.SpendAddress
+      accountNumber: 0,
+      isChange: false
     }
-    address = (await btcChainAdapter.getAddress(getAddressParams)) || ''
+    const scriptType = BTCInputScriptType.SpendAddress
+    address = (await btcChainAdapter.getAddress({ bip32Params, scriptType, wallet })) || ''
   })
 
   describe('getType', () => {
@@ -71,7 +68,7 @@ describe('BitcoinChainAdapter', () => {
 
   describe('getAccount', () => {
     it('should return account info for a specified address', async () => {
-      const exampleResponse: Bitcoin.BitcoinAccount = {
+      const exampleResponse: BitcoinAPI.BitcoinAccount = {
         pubkey: '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx',
         balance: '0'
       }
@@ -166,7 +163,7 @@ describe('BitcoinChainAdapter', () => {
 
   describe('getFeeData', () => {
     it('should return current BTC network fees', async () => {
-      const data: FeeData = await btcChainAdapter.getFeeData({})
+      const data: BTCFeeDataEstimate = await btcChainAdapter.getFeeData({})
       expect(data).toEqual(
         expect.objectContaining({
           fastest: { minMinutes: 0, maxMinutes: 35, effort: 5, fee: expect.any(Number) },
@@ -181,106 +178,138 @@ describe('BitcoinChainAdapter', () => {
 
   describe('getAddress', () => {
     it("should return a p2pkh address for valid derivation root path parameters (m/44'/0'/0'/0/0)", async () => {
-      const getAddressParams: GetAddressParams = {
-        wallet,
+      const bip32Params: BIP32Params = {
+        coinType: 0, // TODO(0xdef1cafe): i don't know what i'm doing here i'm trying to make it type check
         purpose: 44,
-        account: 0,
+        accountNumber: 0,
         isChange: false,
-        index: 0,
-        scriptType: BTCInputScriptType.SpendAddress
+        index: 0
       }
-      const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
+      const scriptType = BTCInputScriptType.SpendAddress
+      const addr: string | undefined = await btcChainAdapter.getAddress({
+        bip32Params,
+        wallet,
+        scriptType
+      })
       expect(addr).toStrictEqual('1FH6ehAd5ZFXCM1cLGzHxK1s4dGdq1JusM')
     })
 
     it("should return a valid p2pkh address for the first receive index path (m/44'/0'/0'/0/1)", async () => {
-      const getAddressParams: GetAddressParams = {
-        wallet,
+      const bip32Params: BIP32Params = {
+        coinType: 0, // TODO(0xdef1cafe): i don't know what i'm doing here i'm trying to make it type check
         purpose: 44,
-        account: 0,
+        accountNumber: 0,
         index: 1,
-        isChange: false,
-        scriptType: BTCInputScriptType.SpendAddress
+        isChange: false
       }
-      const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
+      const scriptType = BTCInputScriptType.SpendAddress
+      const addr: string | undefined = await btcChainAdapter.getAddress({
+        bip32Params,
+        wallet,
+        scriptType
+      })
       expect(addr).toStrictEqual('1Jxtem176sCXHnK7QCShoafF5VtWvMa7eq')
     })
 
     it("should return a valid p2pkh change address for the first receive index path (m/44'/0'/0'/1/0)", async () => {
-      const getAddressParams: GetAddressParams = {
-        wallet,
+      const bip32Params: BIP32Params = {
+        coinType: 0, // TODO(0xdef1cafe): i don't know what i'm doing here i'm trying to make it type check
         purpose: 44,
-        account: 0,
+        accountNumber: 0,
         index: 0,
-        isChange: true,
-        scriptType: BTCInputScriptType.SpendAddress
+        isChange: true
       }
-      const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
+      const scriptType = BTCInputScriptType.SpendAddress
+      const addr: string | undefined = await btcChainAdapter.getAddress({
+        bip32Params,
+        wallet,
+        scriptType
+      })
       expect(addr).toStrictEqual('13ZD8S4qR6h4GvkAZ2ht7rpr15TFXYxGCx')
     })
 
     it("should return a valid p2pkh address at the 2nd account root path (m/44'/0'/1'/0/0)", async () => {
-      const getAddressParams: GetAddressParams = {
-        wallet,
+      const bip32Params: BIP32Params = {
+        coinType: 0, // TODO(0xdef1cafe): i don't know what i'm doing here i'm trying to make it type check
         purpose: 44,
-        account: 1,
+        accountNumber: 1,
         index: 0,
-        isChange: false,
-        scriptType: BTCInputScriptType.SpendAddress
+        isChange: false
       }
-      const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
+      const scriptType = BTCInputScriptType.SpendAddress
+      const addr: string | undefined = await btcChainAdapter.getAddress({
+        bip32Params,
+        wallet,
+        scriptType
+      })
       expect(addr).toStrictEqual('1K2oFer6nGoXSPspeB5Qvt4htJvw3y31XW')
     })
 
     it("should return a p2wpkh address for valid derivation root path parameters (m/84'/0'/0'/0/0)", async () => {
-      const getAddressParams: GetAddressParams = {
-        wallet,
+      const bip32Params: BIP32Params = {
+        coinType: 0, // TODO(0xdef1cafe): i don't know what i'm doing here i'm trying to make it type check
         purpose: 84,
-        account: 0,
+        accountNumber: 0,
         isChange: false,
-        index: 0,
-        scriptType: BTCInputScriptType.SpendWitness
+        index: 0
       }
-      const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
+      const scriptType = BTCInputScriptType.SpendWitness
+      const addr: string | undefined = await btcChainAdapter.getAddress({
+        bip32Params,
+        wallet,
+        scriptType
+      })
       expect(addr).toStrictEqual('bc1qkkr2uvry034tsj4p52za2pg42ug4pxg5qfxyfa')
     })
 
     it("should return a valid p2wpkh address for the first receive index path (m/84'/0'/0'/0/1)", async () => {
-      const getAddressParams: GetAddressParams = {
-        wallet,
+      const bip32Params: BIP32Params = {
+        coinType: 0, // TODO(0xdef1cafe): i don't know what i'm doing here i'm trying to make it type check
         purpose: 84,
-        account: 0,
+        accountNumber: 0,
         index: 1,
-        isChange: false,
-        scriptType: BTCInputScriptType.SpendWitness
+        isChange: false
       }
-      const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
+      const scriptType = BTCInputScriptType.SpendWitness
+      const addr: string | undefined = await btcChainAdapter.getAddress({
+        bip32Params,
+        wallet,
+        scriptType
+      })
       expect(addr).toStrictEqual('bc1qpszctuml70ulzf7f0zy5r4sg9nm65qfpgcw0uy')
     })
 
     it("should return a valid p2wpkh change address for the first receive index path (m/44'/0'/0'/1/0)", async () => {
-      const getAddressParams: GetAddressParams = {
-        wallet,
+      const bip32Params: BIP32Params = {
+        coinType: 0, // TODO(0xdef1cafe): i don't know what i'm doing here i'm trying to make it type check
         purpose: 84,
-        account: 0,
+        accountNumber: 0,
         index: 0,
-        isChange: true,
-        scriptType: BTCInputScriptType.SpendWitness
+        isChange: true
       }
-      const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
+      const scriptType = BTCInputScriptType.SpendWitness
+      const addr: string | undefined = await btcChainAdapter.getAddress({
+        bip32Params,
+        wallet,
+        scriptType
+      })
       expect(addr).toStrictEqual('bc1qhazdhyg6ukkvnnlucxamjc3dmkj2zyfte0lqa9')
     })
 
     it("should return a valid p2wpkh address at the 2nd account root path (m/84'/0'/1'/0/0)", async () => {
-      const getAddressParams: GetAddressParams = {
-        wallet,
+      const bip32Params: BIP32Params = {
+        coinType: 0, // TODO(0xdef1cafe): i don't know what i'm doing here i'm trying to make it type check
         purpose: 84,
-        account: 1,
+        accountNumber: 1,
         index: 0,
-        isChange: false,
-        scriptType: BTCInputScriptType.SpendWitness
+        isChange: false
       }
-      const addr: string | undefined = await btcChainAdapter.getAddress(getAddressParams)
+      const scriptType = BTCInputScriptType.SpendWitness
+      const addr: string | undefined = await btcChainAdapter.getAddress({
+        bip32Params,
+        wallet,
+        scriptType
+      })
       expect(addr).toStrictEqual('bc1qgawuludfvrdxfq0x55k26ydtg2hrx64jp3u6am')
     })
   })
