@@ -1,4 +1,4 @@
-export const ErrorHandler = (err: string | Error | unknown) => {
+export const ErrorHandler = (err: string | Error | unknown): never => {
   // TODO: handle error
   if (err instanceof Error) {
     throw err

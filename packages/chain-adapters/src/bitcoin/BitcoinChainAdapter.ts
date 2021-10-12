@@ -11,17 +11,18 @@ import {
   BitcoinAccount,
   BTCFeeDataEstimate,
   SignBitcoinTxInput,
-  BTCFeeDataKey,
-  FormattedUTXO
+  BTCFeeDataKey
 } from '@shapeshiftoss/types'
 import { ErrorHandler } from '../error/ErrorHandler'
 import {
   bip32ToAddressNList,
   BTCInputScriptType,
+  BTCOutputScriptType,
   BTCSignTx,
   BTCSignTxInput,
   BTCSignTxOutput,
-  BTCSignTxOutputMemo,
+  HDWallet,
+  PublicKey,
   supportsBTC
 } from '@shapeshiftoss/hdwallet-core'
 import axios from 'axios'
@@ -56,12 +57,25 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
     return ChainTypes.Bitcoin
   }
 
-  async getAccount(address: string): Promise<Account> {
-    if (!address) {
-      return ErrorHandler('BitcoinChainAdapter: address parameter is not defined')
+  async getPubKey(wallet: HDWallet, path: string): Promise<PublicKey> {
+    const publicKeys = await wallet.getPublicKeys([
+      {
+        coin: this.coinName,
+        addressNList: bip32ToAddressNList(path),
+        curve: 'secp256k1', // TODO(0xdef1cafe): from constant?
+        scriptType: BTCInputScriptType.SpendWitness
+      }
+    ])
+    if (!publicKeys?.[0]) throw new Error("couldn't get public key")
+    return publicKeys[0]
+  }
+
+  async getAccount(pubkey: string): Promise<Account> {
+    if (!pubkey) {
+      return ErrorHandler('BitcoinChainAdapter: pubkey parameter is not defined')
     }
     try {
-      const { data: unchainedAccount } = await this.provider.getAccount({ pubkey: address })
+      const { data: unchainedAccount } = await this.provider.getAccount({ pubkey: pubkey })
       const result: BitcoinAccount = {
         symbol: 'BTC', // TODO(0xdef1cafe): this is fucked
         chain: ChainTypes.Bitcoin,
@@ -111,24 +125,26 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
 
   // TODO(0xdef1cafe): implement
   async nextChangeAddressIndex(): Promise<number> {
+    // const foo = await this.getAccount(pubkey)
     return 0
   }
 
-  async buildSendTransaction(
-    tx: BuildSendTxInput
-  ): Promise<{ txToSign: BTCSignTx; estimatedFees: BTCFeeDataEstimate }> {
+  async buildSendTransaction(tx: BuildSendTxInput): Promise<{ txToSign: BTCSignTx; fee: number }> {
     try {
+      // TODO(0xdef1cafe): move this to the bottom and implement per tx
+      const estimatedFees = await this.getFeeData()
+
       const {
         recipients,
         fee: satoshiPerByte,
         wallet,
-        opReturnData,
         scriptType = BTCInputScriptType.SpendWitness,
         bip32Params
       } = tx
 
-      if (!recipients || !recipients.length)
+      if (!recipients || !recipients.length) {
         throw new Error('BitcoinChainAdapter: recipients is required')
+      }
 
       const path = toPath(bip32Params)
 
@@ -150,80 +166,59 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
         pubkey
       })
 
-      const changeAddress = await this.getAddress({
-        bip32Params,
-        wallet,
-        scriptType: BTCInputScriptType.SpendWitness
-      })
-
-      const formattedUtxos: FormattedUTXO[] = []
-      for (const utxo of utxos) {
-        const getTransactionResponse = await this.provider.getTransaction({
-          txid: utxo.txid
-        })
-
-        const inputTx = getTransactionResponse.data
-        if (utxo.path) {
-          formattedUtxos.push({
-            ...utxo,
-            addressNList: bip32ToAddressNList(utxo.path),
-            scriptType: BTCInputScriptType.SpendAddress,
-            amount: String(utxo.value),
-            tx: inputTx,
-            hex: inputTx.hex,
-            value: Number(utxo.value)
-          })
-        }
-      }
-
-      type FixedBTCSignTxOutput = Exclude<BTCSignTxOutput, BTCSignTxOutputMemo>
-
-      type CoinSelectResult = {
-        inputs: Array<BTCSignTxInput>
-        outputs: Array<FixedBTCSignTxOutput>
-        fee: number
-      }
-
-      const coinSelectResult: CoinSelectResult = coinSelect(
-        formattedUtxos,
+      const coinSelectResult = coinSelect(
+        utxos.map((x) => ({ ...x, value: Number(x.value) })),
         recipients,
+        //TODO: compute from estimatedFees
         Number(satoshiPerByte)
       )
+      if (!coinSelectResult.inputs) {
+        throw new Error("BitcoinChainAdapter: coinSelect didn't select coins")
+      }
       const { inputs, outputs, fee } = coinSelectResult
 
-      //TODO some better error handling
-      if (!inputs || !outputs) {
-        ErrorHandler('BitcoinChainAdapter: error selecting inputs/outputs')
+      const signTxInputs: BTCSignTxInput[] = []
+      for (const input of inputs) {
+        if (!input.path) continue
+        const getTransactionResponse = await this.provider.getTransaction({
+          txid: input.txid
+        })
+        const inputTx = getTransactionResponse.data
+
+        signTxInputs.push({
+          addressNList: bip32ToAddressNList(input.path),
+          scriptType: BTCInputScriptType.SpendWitness,
+          amount: String(input.value),
+          vout: input.vout,
+          txid: input.txid,
+          hex: inputTx.hex
+        })
       }
 
-      const formattedOutputs = outputs.map((out: FixedBTCSignTxOutput) => {
+      const signTxOutputs: BTCSignTxOutput[] = outputs.map((out) => {
         if (!out.address) {
           return {
-            amount: String(out.amount),
-            addressType: BTCOutputAddressType.Spend,
-            address: changeAddress,
-            isChange: true,
-            opReturnData
+            addressType: BTCOutputAddressType.Change,
+            amount: String(out.value),
+            addressNList: bip32ToAddressNList(`${path}/1/${this.nextChangeAddressIndex()}`),
+            scriptType: BTCOutputScriptType.PayToWitness,
+            isChange: true
           }
         }
         return {
-          ...out,
-          amount: String(out.amount),
           addressType: BTCOutputAddressType.Spend,
-          isChange: false,
-          opReturnData
+          amount: String(out.value),
+          address: out.address,
+          scriptType: BTCOutputScriptType.PayToWitness
         }
       })
-      const estimatedFees = await this.getFeeData()
 
-      const txToSign = {
-        coin: this.coinName,
-        inputs,
-        outputs: formattedOutputs,
-        fee,
-        opReturnData
+      const txToSign: BTCSignTx = {
+        coin: this.coinName, // TODO(0xdef1cafe): i yolo'd this in a merge conflict and have no idea if it's correct
+        inputs: signTxInputs,
+        outputs: signTxOutputs
       }
-      return { txToSign, estimatedFees }
+      return { txToSign, fee }
     } catch (err) {
       return ErrorHandler(err)
     }

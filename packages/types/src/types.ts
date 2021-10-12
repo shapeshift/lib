@@ -357,7 +357,6 @@ export type FormattedUTXO = {
   amount: string
   tx: BitcoinTxSpecific
   hex: string
-  value: number
 }
 
 export type BuildSendTxInput = {
