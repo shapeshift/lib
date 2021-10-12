@@ -26,17 +26,18 @@ import {
   supportsBTC
 } from '@shapeshiftoss/hdwallet-core'
 import axios from 'axios'
-import { Bitcoin } from '@shapeshiftoss/unchained-client'
+import { BitcoinAPI } from '@shapeshiftoss/unchained-client'
 import WAValidator from 'multicoin-address-validator'
 import { ChainAdapter, toPath, TxHistoryInput } from '..'
 import coinSelect from 'coinselect'
 import { BTCOutputAddressType } from '@shapeshiftoss/hdwallet-core'
+import { BTCRecipient } from '@shapeshiftoss/types/src/types'
 
 const MIN_RELAY_FEE = 3000 // sats/kbyte
 const DEFAULT_FEE = undefined
 
 export type BitcoinChainAdapterDependencies = {
-  provider: Bitcoin.V1Api
+  provider: BitcoinAPI.V1Api
 }
 
 type UtxoCoinName = {
@@ -44,7 +45,7 @@ type UtxoCoinName = {
 }
 
 export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
-  private readonly provider: Bitcoin.V1Api
+  private readonly provider: BitcoinAPI.V1Api
   // TODO(0xdef1cafe): constraint this to utxo coins and refactor this to be a UTXOChainAdapter
   coinName: string
 
@@ -129,14 +130,13 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
     return 0
   }
 
-  async buildSendTransaction(tx: BuildSendTxInput): Promise<{ txToSign: BTCSignTx; fee: number }> {
+  async buildSendTransaction(
+    tx: BuildSendTxInput
+  ): Promise<{ txToSign: BTCSignTx; estimatedFees: BTCFeeDataEstimate }> {
     try {
-      // TODO(0xdef1cafe): move this to the bottom and implement per tx
-      const estimatedFees = await this.getFeeData()
-
       const {
         recipients,
-        fee: satoshiPerByte,
+        // fee: satoshiPerByte,
         wallet,
         scriptType = BTCInputScriptType.SpendWitness,
         bip32Params
@@ -166,16 +166,24 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
         pubkey
       })
 
-      const coinSelectResult = coinSelect(
-        utxos.map((x) => ({ ...x, value: Number(x.value) })),
+      const estimatedFees = await this.getFeeData()
+      const satoshiPerByte = estimatedFees[BTCFeeDataKey.Fastest]
+
+      type MappedUtxos = Omit<BitcoinAPI.Utxo, 'value'> & { value: number }
+      const mappedUtxos: MappedUtxos[] = utxos.map((x) => ({ ...x, value: Number(x.value) }))
+
+      // TODO(0xdef1cafe): call coinSelect with each fee data estimate?
+      const coinSelectResult = coinSelect<MappedUtxos, BTCRecipient>(
+        mappedUtxos,
         recipients,
-        //TODO: compute from estimatedFees
         Number(satoshiPerByte)
       )
       if (!coinSelectResult.inputs) {
         throw new Error("BitcoinChainAdapter: coinSelect didn't select coins")
       }
-      const { inputs, outputs, fee } = coinSelectResult
+
+      // TODO(0xdef1cafe): not sure what to do with this fee here?
+      const { inputs, outputs /*, fee */ } = coinSelectResult
 
       const signTxInputs: BTCSignTxInput[] = []
       for (const input of inputs) {
@@ -203,22 +211,25 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
             addressNList: bip32ToAddressNList(`${path}/1/${this.nextChangeAddressIndex()}`),
             scriptType: BTCOutputScriptType.PayToWitness,
             isChange: true
-          }
+          } as BTCSignTxOutput
         }
         return {
           addressType: BTCOutputAddressType.Spend,
           amount: String(out.value),
           address: out.address,
           scriptType: BTCOutputScriptType.PayToWitness
-        }
+        } as BTCSignTxOutput
       })
 
+      const castedOutputs = signTxOutputs as BTCSignTxOutput[]
+
       const txToSign: BTCSignTx = {
-        coin: this.coinName, // TODO(0xdef1cafe): i yolo'd this in a merge conflict and have no idea if it's correct
+        coin: this.coinName,
         inputs: signTxInputs,
-        outputs: signTxOutputs
+        outputs: castedOutputs
       }
-      return { txToSign, fee }
+
+      return { txToSign, estimatedFees }
     } catch (err) {
       return ErrorHandler(err)
     }

@@ -22,10 +22,10 @@ import {
 import { ErrorHandler } from '../error/ErrorHandler'
 import erc20Abi from './erc20Abi.json'
 import { ChainAdapter, toPath } from '..'
-import { Ethereum } from '@shapeshiftoss/unchained-client'
+import { EthereumAPI } from '@shapeshiftoss/unchained-client'
 
 export type EthereumChainAdapterDependencies = {
-  provider: Ethereum.V1Api
+  provider: EthereumAPI.V1Api
 }
 
 type ZrxFeeResult = {
@@ -58,7 +58,7 @@ async function getErc20Data(to: string, value: string, contractAddress?: string)
 }
 
 export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
-  private readonly provider: Ethereum.V1Api
+  private readonly provider: EthereumAPI.V1Api
 
   constructor(deps: EthereumChainAdapterDependencies) {
     this.provider = deps.provider
@@ -94,7 +94,7 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
 
   async getTxHistory({
     pubkey
-  }: Ethereum.V1ApiGetTxHistoryRequest): Promise<TxHistoryResponse<ChainTypes.Ethereum>> {
+  }: EthereumAPI.V1ApiGetTxHistoryRequest): Promise<TxHistoryResponse<ChainTypes.Ethereum>> {
     try {
       const { data: unchainedTxHistory } = await this.provider.getTxHistory({ pubkey })
       const result: TxHistoryResponse<ChainTypes.Ethereum> = {
@@ -192,8 +192,9 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
     if (!fees) throw new TypeError('ETH Gas Fees should always exist')
 
     const data = await getErc20Data(to, value, contractAddress)
+
     const { data: feeUnits } = await this.provider.estimateGas({
-      from, // TODO(0xdef1cafe): unchained-client needs updating to require a from address
+      from,
       to,
       value,
       data

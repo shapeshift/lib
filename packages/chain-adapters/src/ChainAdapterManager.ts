@@ -1,7 +1,7 @@
 import { ChainAdapter, isChainAdapterOfType } from './api'
 import { ChainTypes } from '@shapeshiftoss/types'
 import { EthereumChainAdapter } from './ethereum'
-import { Ethereum } from '@shapeshiftoss/unchained-client'
+import { EthereumAPI } from '@shapeshiftoss/unchained-client'
 
 export type UnchainedUrls = Partial<Record<ChainTypes, string>>
 
@@ -17,7 +17,9 @@ export class ChainAdapterManager {
       ([type, baseURL]) => {
         switch (type) {
           case ChainTypes.Ethereum: {
-            const provider = new Ethereum.V1Api(new Ethereum.Configuration({ basePath: baseURL }))
+            const provider = new EthereumAPI.V1Api(
+              new EthereumAPI.Configuration({ basePath: baseURL })
+            )
             return this.addChain(type, () => new EthereumChainAdapter({ provider }))
           }
         }
