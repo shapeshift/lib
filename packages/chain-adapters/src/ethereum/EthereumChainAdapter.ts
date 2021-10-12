@@ -21,8 +21,9 @@ import {
 
 import { ErrorHandler } from '../error/ErrorHandler'
 import erc20Abi from './erc20Abi.json'
-import { ChainAdapter, toPath } from '..'
+import { ChainAdapter } from '..'
 import { EthereumAPI } from '@shapeshiftoss/unchained-client'
+import { toPath } from '../bip32'
 
 export type EthereumChainAdapterDependencies = {
   provider: EthereumAPI.V1Api

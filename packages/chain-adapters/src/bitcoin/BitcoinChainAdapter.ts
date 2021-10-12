@@ -30,9 +30,10 @@ import {
 import axios from 'axios'
 import { BitcoinAPI } from '@shapeshiftoss/unchained-client'
 import WAValidator from 'multicoin-address-validator'
-import { ChainAdapter, toPath, TxHistoryInput } from '..'
+import { ChainAdapter, TxHistoryInput } from '..'
 import coinSelect from 'coinselect'
 import { BTCOutputAddressType } from '@shapeshiftoss/hdwallet-core'
+import { toPath } from '../bip32'
 
 const MIN_RELAY_FEE = 3000 // sats/kbyte
 const DEFAULT_FEE = undefined
