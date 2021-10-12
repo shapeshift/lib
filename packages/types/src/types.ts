@@ -427,10 +427,10 @@ export enum BTCFeeDataKey {
   TwentyFourHour = '24hour'
 }
 
-export type SignBitcoinTxInput = {
-  txToSign: BTCSignTx
-  wallet: HDWallet
-}
+// export type SignBitcoinTxInput = {
+//   txToSign: BTCSignTx
+//   wallet: HDWallet
+// }
 
 export type BTCFeeDataEstimate = {
   [BTCFeeDataKey.Fastest]: BTCFeeDataType

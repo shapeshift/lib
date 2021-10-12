@@ -10,15 +10,16 @@ import {
   Account,
   BitcoinAccount,
   BTCFeeDataEstimate,
-  SignBitcoinTxInput,
-  BTCFeeDataKey
+  BTCFeeDataKey,
+  ChainTxType,
+  BTCRecipient,
+  SignTxInput
 } from '@shapeshiftoss/types'
 import { ErrorHandler } from '../error/ErrorHandler'
 import {
   bip32ToAddressNList,
   BTCInputScriptType,
   BTCOutputScriptType,
-  BTCSignTx,
   BTCSignTxInput,
   BTCSignTxOutput,
   HDWallet,
@@ -31,7 +32,6 @@ import WAValidator from 'multicoin-address-validator'
 import { ChainAdapter, toPath, TxHistoryInput } from '..'
 import coinSelect from 'coinselect'
 import { BTCOutputAddressType } from '@shapeshiftoss/hdwallet-core'
-import { BTCRecipient } from '@shapeshiftoss/types/src/types'
 
 const MIN_RELAY_FEE = 3000 // sats/kbyte
 const DEFAULT_FEE = undefined
@@ -132,7 +132,7 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
 
   async buildSendTransaction(
     tx: BuildSendTxInput
-  ): Promise<{ txToSign: BTCSignTx; estimatedFees: BTCFeeDataEstimate }> {
+  ): Promise<{ txToSign: ChainTxType<ChainTypes.Bitcoin>; estimatedFees: BTCFeeDataEstimate }> {
     try {
       const {
         recipients,
@@ -204,30 +204,31 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
       }
 
       const signTxOutputs: BTCSignTxOutput[] = outputs.map((out) => {
+        const amount = String(out.value)
         if (!out.address) {
           return {
             addressType: BTCOutputAddressType.Change,
-            amount: String(out.value),
+            amount,
             addressNList: bip32ToAddressNList(`${path}/1/${this.nextChangeAddressIndex()}`),
             scriptType: BTCOutputScriptType.PayToWitness,
             isChange: true
-          } as BTCSignTxOutput
+          }
         }
         return {
           addressType: BTCOutputAddressType.Spend,
-          amount: String(out.value),
+          amount,
           address: out.address,
           scriptType: BTCOutputScriptType.PayToWitness
-        } as BTCSignTxOutput
+        }
       })
 
       const castedOutputs = signTxOutputs as BTCSignTxOutput[]
 
-      const txToSign: BTCSignTx = {
+      const txToSign = {
         coin: this.coinName,
         inputs: signTxInputs,
         outputs: castedOutputs
-      }
+      } as any // TODO(0xdef1cafe): fix upstream issue in hdwallet with opReturn GuardedUnion typed as literal "0"
 
       return { txToSign, estimatedFees }
     } catch (err) {
@@ -235,7 +236,9 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
     }
   }
 
-  async signTransaction(signTxInput: SignBitcoinTxInput): Promise<string> {
+  async signTransaction(
+    signTxInput: SignTxInput<ChainTxType<ChainTypes.Bitcoin>>
+  ): Promise<string> {
     try {
       const { txToSign, wallet } = signTxInput
       if (!supportsBTC(wallet))
