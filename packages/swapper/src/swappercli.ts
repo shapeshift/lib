@@ -46,7 +46,9 @@ const getWallet = async (): Promise<NativeHDWallet> => {
 const main = async (): Promise<void> => {
   const [_, __, ...args] = process.argv
   const [sellSymbol, buySymbol, sellAmount] = args
+
   console.info(`sellSymbol: sell ${sellAmount} of ${sellSymbol} to ${buySymbol}`)
+
   if (!sellAmount || !sellSymbol || !buySymbol) {
     console.error(`
       Usage:
@@ -82,6 +84,7 @@ const main = async (): Promise<void> => {
     console.error(`No asset ${buySymbol} found in portfolio`)
   }
 
+  // Swapper Deps
   const wallet = await getWallet()
   const adapterManager = new ChainAdapterManager({ ethereum: UNCHAINED_API })
   const web3Provider = new Web3.providers.HttpProvider(ETH_NODE_URL)
@@ -89,17 +92,16 @@ const main = async (): Promise<void> => {
 
   const zrxSwapperDeps = { wallet, adapterManager, web3 }
 
-  const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
   const manager = new SwapperManager()
-
+  const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
   manager.addSwapper(SwapperType.Zrx, zrxSwapper)
   const swapper = manager.getSwapper(SwapperType.Zrx)
+
   const sellAmountBase = toBaseUnit(sellAmount, sellAsset.precision)
 
-  const quote = await swapper.getQuote({
-    sellAsset,
-    buyAsset,
-    sellAmount: sellAmountBase
+  const quote = await swapper.buildQuoteTx({
+    input: { sellAsset, buyAsset, sellAmount: sellAmountBase },
+    wallet
   })
 
   console.info('quote = ', JSON.stringify(quote))

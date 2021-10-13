@@ -29,24 +29,39 @@ export async function executeQuote(
   const value = sellAsset.symbol === 'ETH' ? numberToHex(quote.sellAmount || 0) : '0x0'
   const adapter = adapterManager.byChain(sellAsset.chain)
 
-  // TODO(0xdef1cafe): populate this
-  const bip32Params: BIP32Params = {
-    purpose: 0,
-    coinType: 0,
-    accountNumber: 0
+  let buildTxResponse, signedTx, txid
+  try {
+    // TODO(0xdef1cafe): populate this
+    const bip32Params: BIP32Params = {
+      purpose: 0,
+      coinType: 0,
+      accountNumber: 0
+    }
+    buildTxResponse = await adapter.buildSendTransaction({
+      value,
+      wallet,
+      to: quote.depositAddress,
+      fee: numberToHex(quote.feeData?.gasPrice || 0),
+      gasLimit: numberToHex(quote.feeData?.estimatedGas || 0),
+      bip32Params
+    })
+  } catch (error) {
+    throw new SwapError(`executeQuote - buildSendTransaction error: ${error}`)
   }
-  const { txToSign } = await adapter.buildSendTransaction({
-    value,
-    wallet,
-    to: quote.depositAddress,
-    fee: numberToHex(quote.feeData?.gasPrice || 0),
-    gasLimit: numberToHex(quote.feeData?.estimatedGas || 0),
-    bip32Params
-  })
 
-  const signedTx = await adapter.signTransaction({ txToSign, wallet })
+  const { txToSign } = buildTxResponse
 
-  const txid = await adapter.broadcastTransaction(signedTx)
+  try {
+    signedTx = await adapter.signTransaction({ txToSign, wallet })
+  } catch (error) {
+    throw new SwapError(`executeQuote - signTransaction error: ${error}`)
+  }
+
+  try {
+    txid = await adapter.broadcastTransaction(signedTx)
+  } catch (error) {
+    throw new SwapError(`executeQuote - broadcastTransaction error: ${error}`)
+  }
 
   return { txid }
 }
