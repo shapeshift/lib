@@ -5,7 +5,7 @@ import Web3 from 'web3'
 import { buildQuoteTx } from './buildQuoteTx'
 import { setupQuote } from '../utils/test-data/setupSwapQuote'
 import { zrxService } from '../utils/zrxService'
-import { APPROVAL_GAS_LIMIT, MAX_SLIPPAGE } from '../utils/constants'
+import { APPROVAL_GAS_LIMIT, MAX_SLIPPAGE, DEFAULT_SLIPPAGE } from '../utils/constants'
 import { ChainTypes, GetQuoteInput } from '@shapeshiftoss/types'
 
 jest.mock('web3')
@@ -84,7 +84,7 @@ const mockQuoteResponse = {
     tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
   },
   sellAssetAccountId: 'sellAccountId',
-  slippage: '3.0',
+  slippage: DEFAULT_SLIPPAGE,
   sources: [{ name: '0x', proportion: '1' }],
   statusCode: 0,
   success: true,
