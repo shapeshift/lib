@@ -28,7 +28,7 @@ export interface ChainAdapter<T extends ChainTypes> {
   /**
    * Get the balance of an address
    */
-  getAccount(pubkey: string): Promise<Account>
+  getAccount(pubkey: string): Promise<Account<T>>
   getTxHistory(input: TxHistoryInput): Promise<TxHistoryResponse<T>>
 
   buildSendTransaction(

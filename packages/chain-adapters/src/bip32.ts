@@ -1,5 +1,14 @@
 import { BIP32Params } from '@shapeshiftoss/types'
 
+export const toRootDerivationPath = (bip32Params: BIP32Params): string => {
+  const { purpose, coinType, accountNumber, isChange = false, index = 0 } = bip32Params
+  if (typeof purpose === 'undefined') throw new Error('toPath: bip32Params.purpose is required')
+  if (typeof coinType === 'undefined') throw new Error('toPath: bip32Params.coinType is required')
+  if (typeof accountNumber === 'undefined')
+    throw new Error('toPath: bip32Params.accountNumber is required')
+  return `m/${purpose}'/${coinType}'/${accountNumber}'`
+}
+
 export const toPath = (bip32Params: BIP32Params): string => {
   const { purpose, coinType, accountNumber, isChange = false, index = 0 } = bip32Params
   if (typeof purpose === 'undefined') throw new Error('toPath: bip32Params.purpose is required')

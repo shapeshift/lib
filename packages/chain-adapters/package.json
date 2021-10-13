@@ -39,6 +39,7 @@
   "gitHead": "0004bdf69eb56b7ce358bb8e1f995ddd5cbb87ee",
   "devDependencies": {
     "@shapeshiftoss/hdwallet-native": "^1.16.6",
+    "@shapeshiftoss/types": "^1.0.2",
     "@types/multicoin-address-validator": "^0.5.0"
   }
 }

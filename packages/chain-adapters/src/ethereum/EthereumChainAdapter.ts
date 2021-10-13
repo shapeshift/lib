@@ -13,7 +13,7 @@ import {
   ChainTypes,
   ValidAddressResult,
   ValidAddressResultType,
-  EthereumAccount,
+  Account,
   ContractTypes,
   NetworkTypes,
   ETHFeeDataEstimate,
@@ -75,25 +75,29 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
     return ChainTypes.Ethereum
   }
 
-  async getAccount(pubkey: string): Promise<EthereumAccount> {
+  async getAccount(pubkey: string): Promise<Account<ChainTypes.Ethereum>> {
     try {
-      const { data: unchainedAccount } = await this.provider.getAccount({ pubkey })
-      const chainAdaptersAccount: EthereumAccount = {
-        ...unchainedAccount,
-        symbol: 'ETH', // TODO(0xdef1cafe): this is real dirty
+      const { data } = await this.provider.getAccount({ pubkey })
+
+      return {
+        balance: data.balance,
         chain: ChainTypes.Ethereum,
-        // TODO(0xdef1cafe): need to reflect this from the provider
-        network: NetworkTypes.MAINNET,
-        tokens: unchainedAccount.tokens.map((token) => ({
-          ...token,
-          precision: token.decimals,
+        network: NetworkTypes.MAINNET, // TODO(0xdef1cafe): need to reflect this from the provider
+        nonce: data.nonce,
+        pubkey: data.pubkey,
+        symbol: 'ETH', // TODO(0xdef1cafe): this is real dirty
+        tokens: data.tokens.map((token) => ({
+          balance: token.balance,
+          contract: token.contract,
           // note: unchained gets token types from blockbook
           // blockbook only has one definition of a TokenType for ethereum
           // https://github1s.com/trezor/blockbook/blob/master/api/types.go#L140
-          contractType: ContractTypes.ERC20
+          contractType: ContractTypes.ERC20,
+          name: token.name,
+          precision: token.decimals,
+          symbol: token.symbol
         }))
       }
-      return chainAdaptersAccount
     } catch (err) {
       return ErrorHandler(err)
     }

@@ -8,7 +8,6 @@ import {
   Transaction,
   GetBitcoinAddressInput,
   Account,
-  BitcoinAccount,
   BTCFeeDataEstimate,
   ChainTxType,
   BTCRecipient,
@@ -34,7 +33,7 @@ import { BitcoinAPI } from '@shapeshiftoss/unchained-client'
 import WAValidator from 'multicoin-address-validator'
 import { ChainAdapter } from '..'
 import coinSelect from 'coinselect'
-import { toPath } from '../bip32'
+import { toPath, toRootDerivationPath } from '../bip32'
 import { TxHistoryInput } from '@shapeshiftoss/types'
 
 const MIN_RELAY_FEE = 3000 // sats/kbyte
@@ -82,19 +81,21 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
     return publicKeys[0]
   }
 
-  async getAccount(pubkey: string): Promise<Account> {
+  async getAccount(pubkey: string): Promise<Account<ChainTypes.Bitcoin>> {
     if (!pubkey) {
       return ErrorHandler('BitcoinChainAdapter: pubkey parameter is not defined')
     }
     try {
-      const { data: unchainedAccount } = await this.provider.getAccount({ pubkey: pubkey })
-      const result: BitcoinAccount = {
-        symbol: 'BTC', // TODO(0xdef1cafe): this is fucked
+      const { data } = await this.provider.getAccount({ pubkey: pubkey })
+      return {
+        balance: data.balance,
         chain: ChainTypes.Bitcoin,
+        nextChangeAddressIndex: data.nextChangeAddressIndex,
+        nextReceiveAddressIndex: data.nextReceiveAddressIndex,
         network: NetworkTypes.MAINNET,
-        ...unchainedAccount
+        pubkey: data.pubkey,
+        symbol: 'BTC'
       }
-      return result
     } catch (err) {
       return ErrorHandler(err)
     }
@@ -130,23 +131,13 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
     }
   }
 
-  // TODO(0xdef1cafe): implement
-  async nextReceiveAddressIndex(): Promise<number> {
-    return 0
-  }
-
-  // TODO(0xdef1cafe): implement
-  async nextChangeAddressIndex(): Promise<number> {
-    // const foo = await this.getAccount(pubkey)
-    return 0
-  }
-
   async buildSendTransaction(
     tx: BuildSendTxInput
   ): Promise<{ txToSign: ChainTxType<ChainTypes.Bitcoin>; estimatedFees: BTCFeeDataEstimate }> {
     try {
       const {
         recipients,
+        fee: satoshiPerByte,
         wallet,
         scriptType = BTCInputScriptType.SpendWitness,
         bip32Params = this.defaultBIP32Params
@@ -156,8 +147,7 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
         throw new Error('BitcoinChainAdapter: recipients is required')
       }
 
-      const path = toPath(bip32Params)
-
+      const path = toRootDerivationPath(bip32Params)
       const publicKeys = await wallet.getPublicKeys([
         {
           coin: this.coinName,
@@ -176,8 +166,8 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
         pubkey
       })
 
+      const account = await this.getAccount(pubkey)
       const estimatedFees = await this.getFeeData()
-      const satoshiPerByte = estimatedFees[FeeDataKey.Fast]
 
       type MappedUtxos = Omit<BitcoinAPI.Utxo, 'value'> & { value: number }
       const mappedUtxos: MappedUtxos[] = utxos.map((x) => ({ ...x, value: Number(x.value) }))
@@ -188,12 +178,13 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
         recipients,
         Number(satoshiPerByte)
       )
+
       if (!coinSelectResult.inputs) {
         throw new Error("BitcoinChainAdapter: coinSelect didn't select coins")
       }
 
       // TODO(0xdef1cafe): not sure what to do with this fee here?
-      const { inputs, outputs /*, fee */ } = coinSelectResult
+      const { inputs, outputs, fee } = coinSelectResult
 
       const signTxInputs: BTCSignTxInput[] = []
       for (const input of inputs) {
@@ -219,7 +210,9 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
           return {
             addressType: BTCOutputAddressType.Change,
             amount,
-            addressNList: bip32ToAddressNList(`${path}/1/${this.nextChangeAddressIndex()}`),
+            addressNList: bip32ToAddressNList(
+              `${path}/1/${String(account.nextChangeAddressIndex)}`
+            ),
             scriptType: BTCOutputScriptType.PayToWitness,
             isChange: true
           }
@@ -232,10 +225,11 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
         }
       })
 
-      const txToSign: BTCSignTx = {
+      const txToSign: BTCSignTx & { fee: number } = {
         coin: this.coinName,
         inputs: signTxInputs,
-        outputs: signTxOutputs
+        outputs: signTxOutputs,
+        fee
       }
 
       return { txToSign, estimatedFees }
@@ -316,15 +310,17 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
       throw new Error('BitcoinChainAdapter: wallet does not support btc')
     }
 
-    const path = toPath(bip32Params)
     const { isChange } = bip32Params
     let { index } = bip32Params
 
     // If an index is not passed in, we want to use the newest unused change/receive indices
-    if (!index) {
-      index = isChange ? await this.nextChangeAddressIndex() : await this.nextReceiveAddressIndex()
+    if (index === undefined) {
+      const pubkey = await this.getPubKey(wallet, toRootDerivationPath(bip32Params))
+      const account: any = await this.getAccount(pubkey.xpub)
+      index = isChange ? account.nextChangeAddressIndex : account.nextReceiveAddressIndex
     }
 
+    const path = toPath({ ...bip32Params, index })
     const addressNList = path ? bip32ToAddressNList(path) : bip32ToAddressNList("m/84'/0'/0'/0/0")
     const btcAddress = await wallet.btcGetAddress({
       addressNList,
