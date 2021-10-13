@@ -1,4 +1,5 @@
 import {
+  Bitcoin,
   BuildSendTxInput,
   ChainTypes,
   ValidAddressResult,
@@ -6,13 +7,10 @@ import {
   TxHistoryResponse,
   NetworkTypes,
   Transaction,
-  GetBitcoinAddressInput,
   Account,
-  BitcoinAccount,
   BTCFeeDataEstimate,
   BTCFeeDataKey,
   ChainTxType,
-  BTCRecipient,
   SignTxInput
 } from '@shapeshiftoss/types'
 import { ErrorHandler } from '../error/ErrorHandler'
@@ -73,19 +71,21 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
     return publicKeys[0]
   }
 
-  async getAccount(pubkey: string): Promise<Account> {
+  async getAccount(pubkey: string): Promise<Account<ChainTypes.Bitcoin>> {
     if (!pubkey) {
       return ErrorHandler('BitcoinChainAdapter: pubkey parameter is not defined')
     }
     try {
-      const { data: unchainedAccount } = await this.provider.getAccount({ pubkey: pubkey })
-      const result: BitcoinAccount = {
-        symbol: 'BTC', // TODO(0xdef1cafe): this is fucked
+      const { data } = await this.provider.getAccount({ pubkey: pubkey })
+      return {
+        balance: data.balance,
         chain: ChainTypes.Bitcoin,
+        nextChangeAddressIndex: data.nextChangeAddressIndex,
+        nextReceiveAddressIndex: data.nextReceiveAddressIndex,
         network: NetworkTypes.MAINNET,
-        ...unchainedAccount
+        pubkey: data.pubkey,
+        symbol: 'BTC'
       }
-      return result
     } catch (err) {
       return ErrorHandler(err)
     }
@@ -175,7 +175,7 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
       const mappedUtxos: MappedUtxos[] = utxos.map((x) => ({ ...x, value: Number(x.value) }))
 
       // TODO(0xdef1cafe): call coinSelect with each fee data estimate?
-      const coinSelectResult = coinSelect<MappedUtxos, BTCRecipient>(
+      const coinSelectResult = coinSelect<MappedUtxos, Bitcoin.Recipient>(
         mappedUtxos,
         recipients,
         Number(satoshiPerByte)
@@ -315,7 +315,7 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
     wallet,
     bip32Params,
     scriptType = BTCInputScriptType.SpendWitness
-  }: GetBitcoinAddressInput): Promise<string> {
+  }: Bitcoin.GetAddressInput): Promise<string> {
     if (!supportsBTC(wallet)) {
       throw new Error('BitcoinChainAdapter: wallet does not support btc')
     }

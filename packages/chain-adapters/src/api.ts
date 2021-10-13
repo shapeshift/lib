@@ -9,7 +9,7 @@ import {
   TxHistoryResponse,
   ValidAddressResult
 } from '@shapeshiftoss/types'
-import { Account } from '@shapeshiftoss/types/src/types'
+import { Account } from '@shapeshiftoss/types/src/base'
 
 export const isChainAdapterOfType = <U extends ChainTypes>(
   chainType: U,
@@ -54,7 +54,7 @@ export interface ChainAdapter<T extends ChainTypes> {
   /**
    * Get the balance of an address
    */
-  getAccount(pubkey: string): Promise<Account>
+  getAccount(pubkey: string): Promise<Account<T>>
   getTxHistory(input: TxHistoryInput): Promise<TxHistoryResponse<T>>
 
   buildSendTransaction(
