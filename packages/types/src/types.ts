@@ -150,6 +150,7 @@ type ChainTxTypeInner = {
   [ChainTypes.Ethereum]: ETHSignTx
   [ChainTypes.Bitcoin]: BTCSignTx
 }
+
 export type ChainTxType<T> = T extends keyof ChainTxTypeInner ? ChainTxTypeInner[T] : never
 
 export type BuildThorTradeOutput = SignTxInput<unknown> & ThorVaultInfo
@@ -270,17 +271,26 @@ export type TxHistoryResponse<T extends ChainTypes> = {
   transactions: Transaction<T>[]
 }
 
-export type BaseAccount = {
+type BaseAccount<T extends ChainTypes> = {
   balance: string
   pubkey: string
   symbol: string
-  chain: ChainTypes
+  chain: T
   network: NetworkTypes
 }
 
-export type BitcoinAccount = BaseAccount & Record<string, unknown>
+export type BitcoinAccount = {
+  nextChangeAddressIndex?: number
+  nextReceiveAddressIndex?: number
+}
 
-export type Account = EthereumAccount | BitcoinAccount
+type AccountInnerMap = {
+  [ChainTypes.Ethereum]: EthereumAccount
+  [ChainTypes.Bitcoin]: BitcoinAccount
+}
+
+export type Account<T extends ChainTypes = ChainTypes> = BaseAccount<T> &
+  (AccountInnerMap[T] & Record<string, any>)
 
 export type EthereumToken = {
   balance: string
@@ -291,9 +301,8 @@ export type EthereumToken = {
   contractType: ContractTypes
 }
 
-export type EthereumAccount = BaseAccount & {
+export type EthereumAccount = {
   nonce: number
-  tokens: EthereumToken[]
 }
 
 export type BroadcastTxResponse = {
