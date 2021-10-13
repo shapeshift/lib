@@ -171,7 +171,7 @@ export type Quote = {
   maximum?: string | null
   guaranteedPrice?: string
   slipScore?: string
-  txData?: string | BuildThorTradeOutput | SignTxInput<ThorchainSignTx> // unsigned tx if available at quote time
+  txData?: string
   value?: string
   feeData?: ETHFeeData
   allowanceContract?: string

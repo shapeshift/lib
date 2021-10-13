@@ -1,3 +1,24 @@
+# [@shapeshiftoss/chain-adapters-v1.1.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.1.0...@shapeshiftoss/chain-adapters-v1.1.1) (2021-10-12)
+
+
+### Bug Fixes
+
+* update types ([#115](https://github.com/shapeshift/lib/issues/115)) ([ea989ff](https://github.com/shapeshift/lib/commit/ea989ff67b86ae420b3cd4251401cd5882c791d1))
+
+# [@shapeshiftoss/chain-adapters-v1.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.0.1...@shapeshiftoss/chain-adapters-v1.1.0) (2021-10-11)
+
+
+### Features
+
+* be more descriptive with getDefaultPair ([#111](https://github.com/shapeshift/lib/issues/111)) ([13448c2](https://github.com/shapeshift/lib/commit/13448c234c21269c0592ea8dded827dd36f20a60))
+
+# [@shapeshiftoss/chain-adapters-v1.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.0.0...@shapeshiftoss/chain-adapters-v1.0.1) (2021-10-11)
+
+
+### Bug Fixes
+
+* update vulnerable axios version ([#102](https://github.com/shapeshift/lib/issues/102)) ([04f132d](https://github.com/shapeshift/lib/commit/04f132d75a5f3f19068857bc32e77830a7f86f6e))
+
 # @shapeshiftoss/chain-adapters-v1.0.0 (2021-10-07)
 
 
