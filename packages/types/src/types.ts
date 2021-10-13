@@ -371,7 +371,7 @@ export type BuildSendTxInput = {
   opReturnData?: string
   scriptType?: BTCInputScriptType
   gasLimit?: string
-  bip32Params: BIP32Params
+  bip32Params?: BIP32Params
 }
 
 export type SignTxInput<TxType> = {
@@ -387,9 +387,16 @@ export type BIP32Params = {
   index?: number
 }
 
+export interface TxHistoryInput {
+  readonly pubkey: string
+  readonly page?: number
+  readonly pageSize?: number
+  readonly contract?: string
+}
+
 export type GetAddressInputBase = {
   wallet: HDWallet
-  bip32Params: BIP32Params
+  bip32Params?: BIP32Params
 }
 
 export type GetBitcoinAddressInput = GetAddressInputBase & {

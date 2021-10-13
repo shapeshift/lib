@@ -16,7 +16,8 @@ import {
   EthereumAccount,
   ContractTypes,
   NetworkTypes,
-  ETHFeeDataEstimate
+  ETHFeeDataEstimate,
+  BIP32Params
 } from '@shapeshiftoss/types'
 
 import { ErrorHandler } from '../error/ErrorHandler'
@@ -60,6 +61,11 @@ async function getErc20Data(to: string, value: string, contractAddress?: string)
 
 export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
   private readonly provider: EthereumAPI.V1Api
+  private readonly defaultBIP32Params: BIP32Params = {
+    purpose: 44,
+    coinType: 60,
+    accountNumber: 0
+  }
 
   constructor(deps: EthereumChainAdapterDependencies) {
     this.provider = deps.provider
@@ -119,7 +125,7 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
     tx: BuildSendTxInput
   ): Promise<{ txToSign: ETHSignTx; estimatedFees: ETHFeeDataEstimate }> {
     try {
-      const { to, erc20ContractAddress, bip32Params, wallet, fee } = tx
+      const { to, erc20ContractAddress, wallet, fee, bip32Params = this.defaultBIP32Params } = tx
       if (!to) throw new Error('EthereumChainAdapter: to is required')
       if (!tx?.value) throw new Error('EthereumChainAdapter: value is required')
       const value = erc20ContractAddress ? '0' : tx?.value
@@ -224,7 +230,7 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
   }
 
   async getAddress(input: GetAddressInput): Promise<string> {
-    const { bip32Params, wallet } = input
+    const { wallet, bip32Params = this.defaultBIP32Params } = input
     const path = toPath(bip32Params)
     const addressNList = bip32ToAddressNList(path)
     const ethAddress = await (wallet as ETHWallet).ethGetAddress({

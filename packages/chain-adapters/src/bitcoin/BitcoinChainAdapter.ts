@@ -13,7 +13,8 @@ import {
   BTCFeeDataKey,
   ChainTxType,
   BTCRecipient,
-  SignTxInput
+  SignTxInput,
+  BIP32Params
 } from '@shapeshiftoss/types'
 import { ErrorHandler } from '../error/ErrorHandler'
 import {
@@ -25,15 +26,16 @@ import {
   BTCSignTxOutput,
   HDWallet,
   PublicKey,
-  supportsBTC
+  supportsBTC,
+  BTCOutputAddressType
 } from '@shapeshiftoss/hdwallet-core'
 import axios from 'axios'
 import { BitcoinAPI } from '@shapeshiftoss/unchained-client'
 import WAValidator from 'multicoin-address-validator'
-import { ChainAdapter, TxHistoryInput } from '..'
+import { ChainAdapter } from '..'
 import coinSelect from 'coinselect'
-import { BTCOutputAddressType } from '@shapeshiftoss/hdwallet-core'
 import { toPath } from '../bip32'
+import { TxHistoryInput } from '@shapeshiftoss/types'
 
 const MIN_RELAY_FEE = 3000 // sats/kbyte
 const DEFAULT_FEE = undefined
@@ -48,6 +50,12 @@ type UtxoCoinName = {
 
 export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
   private readonly provider: BitcoinAPI.V1Api
+  private readonly defaultBIP32Params: BIP32Params = {
+    purpose: 84, // segwit native
+    coinType: 0,
+    accountNumber: 0
+  }
+
   // TODO(0xdef1cafe): constraint this to utxo coins and refactor this to be a UTXOChainAdapter
   coinName: string
 
@@ -60,6 +68,7 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
     return ChainTypes.Bitcoin
   }
 
+  // TODO(0xdef1cafe): change this path to bip32Params
   async getPubKey(wallet: HDWallet, path: string): Promise<PublicKey> {
     const publicKeys = await wallet.getPublicKeys([
       {
@@ -138,10 +147,9 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
     try {
       const {
         recipients,
-        // fee: satoshiPerByte,
         wallet,
         scriptType = BTCInputScriptType.SpendWitness,
-        bip32Params
+        bip32Params = this.defaultBIP32Params
       } = tx
 
       if (!recipients || !recipients.length) {
@@ -313,7 +321,7 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
 
   async getAddress({
     wallet,
-    bip32Params,
+    bip32Params = this.defaultBIP32Params,
     scriptType = BTCInputScriptType.SpendWitness
   }: GetBitcoinAddressInput): Promise<string> {
     if (!supportsBTC(wallet)) {
