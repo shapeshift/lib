@@ -1,5 +1,5 @@
 import { ChainAdapterManager } from './ChainAdapterManager'
-import { BIP32Params, ChainTypes } from '@shapeshiftoss/types'
+import { BIP32Params, ChainTypes, FeeDataKey } from '@shapeshiftoss/types'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { BTCInputScriptType } from '@shapeshiftoss/hdwallet-core'
 import dotenv from 'dotenv'
@@ -49,9 +49,9 @@ const main = async () => {
       asset: { id: '123', symbol: 'BTC' },
       recipients: [{ address: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4', value: 400 }],
       wallet,
-      fee: '60',
       opReturnData: 'sup fool',
-      bip32Params
+      bip32Params,
+      feeSpeed: FeeDataKey.Slow
     }
 
     const unsignedTx = await btcChainAdapter.buildSendTransaction(txInput)

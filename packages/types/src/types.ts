@@ -375,6 +375,7 @@ export type BuildSendTxInput = {
   scriptType?: BTCInputScriptType
   gasLimit?: string
   bip32Params?: BIP32Params
+  feeSpeed?: FeeDataKey
 }
 
 export type SignTxInput<TxType> = {

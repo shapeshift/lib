@@ -36,7 +36,7 @@ import coinSelect from 'coinselect'
 import { toPath, toRootDerivationPath } from '../bip32'
 import { TxHistoryInput } from '@shapeshiftoss/types'
 
-const MIN_RELAY_FEE = 3000 // sats/kbyte
+const MIN_RELAY_FEE = 60 // sats/byte
 const DEFAULT_FEE = undefined
 
 export type BitcoinChainAdapterDependencies = {
@@ -137,10 +137,10 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
     try {
       const {
         recipients,
-        fee: satoshiPerByte,
         wallet,
         scriptType = BTCInputScriptType.SpendWitness,
-        bip32Params = this.defaultBIP32Params
+        bip32Params = this.defaultBIP32Params,
+        feeSpeed
       } = tx
 
       if (!recipients || !recipients.length) {
@@ -168,11 +168,11 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
 
       const account = await this.getAccount(pubkey)
       const estimatedFees = await this.getFeeData()
+      const satoshiPerByte = estimatedFees[feeSpeed ?? FeeDataKey.Average].fee
 
       type MappedUtxos = Omit<BitcoinAPI.Utxo, 'value'> & { value: number }
       const mappedUtxos: MappedUtxos[] = utxos.map((x) => ({ ...x, value: Number(x.value) }))
 
-      // TODO(0xdef1cafe): call coinSelect with each fee data estimate?
       const coinSelectResult = coinSelect<MappedUtxos, BTCRecipient>(
         mappedUtxos,
         recipients,
@@ -183,7 +183,6 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
         throw new Error("BitcoinChainAdapter: coinSelect didn't select coins")
       }
 
-      // TODO(0xdef1cafe): not sure what to do with this fee here?
       const { inputs, outputs, fee } = coinSelectResult
 
       const signTxInputs: BTCSignTxInput[] = []
@@ -287,14 +286,14 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
       const confTime = confTimes[time as FeeDataKey]
       for (const fee of data['fees']) {
         if (fee['maxMinutes'] < confTime['maxMinutes']) {
-          confTime['fee'] = Math.max(fee['minFee'] * 1024, MIN_RELAY_FEE)
+          confTime['fee'] = Math.max(fee['minFee'], MIN_RELAY_FEE)
           confTime['minMinutes'] = fee['minMinutes']
           confTime['maxMinutes'] = fee['maxMinutes']
           break
         }
       }
       if (confTime['fee'] === undefined) {
-        confTime['fee'] = Math.max(data.length[-1]['minFee'] * 1024, MIN_RELAY_FEE)
+        confTime['fee'] = Math.max(data.length[-1]['minFee'], MIN_RELAY_FEE)
       }
     }
 
@@ -316,7 +315,7 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
     // If an index is not passed in, we want to use the newest unused change/receive indices
     if (index === undefined) {
       const pubkey = await this.getPubKey(wallet, toRootDerivationPath(bip32Params))
-      const account: any = await this.getAccount(pubkey.xpub)
+      const account = await this.getAccount(pubkey.xpub)
       index = isChange ? account.nextChangeAddressIndex : account.nextReceiveAddressIndex
     }
 
