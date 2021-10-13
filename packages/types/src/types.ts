@@ -1,10 +1,4 @@
-import {
-  ETHSignTx,
-  BTCSignTx,
-  HDWallet,
-  ThorchainSignTx,
-  BTCInputScriptType
-} from '@shapeshiftoss/hdwallet-core'
+import { ETHSignTx, BTCSignTx, HDWallet, BTCInputScriptType } from '@shapeshiftoss/hdwallet-core'
 
 // asset-service
 
@@ -421,29 +415,19 @@ export type BTCFeeDataType = {
   fee?: number
 }
 
-export enum BTCFeeDataKey {
-  Fastest = 'fastest',
-  HalfHour = 'halfHour',
-  OneHour = '1hour',
-  SixHour = '6hour',
-  TwentyFourHour = '24hour'
-}
-
-export type BTCFeeDataEstimate = {
-  [BTCFeeDataKey.Fastest]: BTCFeeDataType
-  [BTCFeeDataKey.HalfHour]: BTCFeeDataType
-  [BTCFeeDataKey.OneHour]: BTCFeeDataType
-  [BTCFeeDataKey.SixHour]: BTCFeeDataType
-  [BTCFeeDataKey.TwentyFourHour]: BTCFeeDataType
-}
-
-export type FeeDataEstimate = ETHFeeDataEstimate | BTCFeeDataEstimate
-
-export enum ETHFeeDataKey {
+export enum FeeDataKey {
   Slow = 'slow',
   Average = 'average',
   Fast = 'fast'
 }
+
+export type BTCFeeDataEstimate = {
+  [FeeDataKey.Slow]: BTCFeeDataType
+  [FeeDataKey.Average]: BTCFeeDataType
+  [FeeDataKey.Fast]: BTCFeeDataType
+}
+
+export type FeeDataEstimate = ETHFeeDataEstimate | BTCFeeDataEstimate
 
 export type ETHFeeDataType = {
   feeUnitPrice: string
@@ -452,9 +436,9 @@ export type ETHFeeDataType = {
 }
 
 export type ETHFeeDataEstimate = {
-  [ETHFeeDataKey.Slow]: ETHFeeDataType
-  [ETHFeeDataKey.Average]: ETHFeeDataType
-  [ETHFeeDataKey.Fast]: ETHFeeDataType
+  [FeeDataKey.Slow]: ETHFeeDataType
+  [FeeDataKey.Average]: ETHFeeDataType
+  [FeeDataKey.Fast]: ETHFeeDataType
 }
 
 export enum ValidAddressResultType {

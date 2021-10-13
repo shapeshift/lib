@@ -10,11 +10,11 @@ import {
   Account,
   BitcoinAccount,
   BTCFeeDataEstimate,
-  BTCFeeDataKey,
   ChainTxType,
   BTCRecipient,
   SignTxInput,
-  BIP32Params
+  BIP32Params,
+  FeeDataKey
 } from '@shapeshiftoss/types'
 import { ErrorHandler } from '../error/ErrorHandler'
 import {
@@ -177,7 +177,7 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
       })
 
       const estimatedFees = await this.getFeeData()
-      const satoshiPerByte = estimatedFees[BTCFeeDataKey.Fastest]
+      const satoshiPerByte = estimatedFees[FeeDataKey.Fast]
 
       type MappedUtxos = Omit<BitcoinAPI.Utxo, 'value'> & { value: number }
       const mappedUtxos: MappedUtxos[] = utxos.map((x) => ({ ...x, value: Number(x.value) }))
@@ -269,40 +269,28 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
   async getFeeData(): Promise<BTCFeeDataEstimate> {
     const { data } = await axios.get('https://bitcoinfees.earn.com/api/v1/fees/list')
     const confTimes: BTCFeeDataEstimate = {
-      [BTCFeeDataKey.Fastest]: {
+      [FeeDataKey.Fast]: {
         minMinutes: 0,
         maxMinutes: 36,
         effort: 5,
         fee: DEFAULT_FEE
       },
-      [BTCFeeDataKey.HalfHour]: {
+      [FeeDataKey.Average]: {
         minMinutes: 0,
         maxMinutes: 36,
         effort: 4,
         fee: DEFAULT_FEE
       },
-      [BTCFeeDataKey.OneHour]: {
+      [FeeDataKey.Slow]: {
         minMinutes: 0,
         maxMinutes: 60,
         effort: 3,
-        fee: DEFAULT_FEE
-      },
-      [BTCFeeDataKey.SixHour]: {
-        minMinutes: 36,
-        maxMinutes: 360,
-        effort: 2,
-        fee: DEFAULT_FEE
-      },
-      [BTCFeeDataKey.TwentyFourHour]: {
-        minMinutes: 36,
-        maxMinutes: 1440,
-        effort: 1,
         fee: DEFAULT_FEE
       }
     }
 
     for (const time of Object.keys(confTimes)) {
-      const confTime = confTimes[time as BTCFeeDataKey]
+      const confTime = confTimes[time as FeeDataKey]
       for (const fee of data['fees']) {
         if (fee['maxMinutes'] < confTime['maxMinutes']) {
           confTime['fee'] = Math.max(fee['minFee'] * 1024, MIN_RELAY_FEE)
