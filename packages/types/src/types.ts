@@ -1,10 +1,4 @@
-import {
-  ETHSignTx,
-  BTCSignTx,
-  HDWallet,
-  ThorchainSignTx,
-  BTCInputScriptType
-} from '@shapeshiftoss/hdwallet-core'
+import { ETHSignTx, BTCSignTx, HDWallet, BTCInputScriptType } from '@shapeshiftoss/hdwallet-core'
 
 // asset-service
 
@@ -172,7 +166,7 @@ export type Quote = {
   maximum?: string | null
   guaranteedPrice?: string
   slipScore?: string
-  txData?: string | BuildThorTradeOutput | SignTxInput<ThorchainSignTx> // unsigned tx if available at quote time
+  txData?: string
   value?: string
   feeData?: ETHFeeData
   allowanceContract?: string
@@ -380,7 +374,7 @@ export type BuildSendTxInput = {
   opReturnData?: string
   scriptType?: BTCInputScriptType
   gasLimit?: string
-  bip32Params: BIP32Params
+  bip32Params?: BIP32Params
 }
 
 export type SignTxInput<TxType> = {
@@ -396,9 +390,16 @@ export type BIP32Params = {
   index?: number
 }
 
+export interface TxHistoryInput {
+  readonly pubkey: string
+  readonly page?: number
+  readonly pageSize?: number
+  readonly contract?: string
+}
+
 export type GetAddressInputBase = {
   wallet: HDWallet
-  bip32Params: BIP32Params
+  bip32Params?: BIP32Params
 }
 
 export type GetBitcoinAddressInput = GetAddressInputBase & {
@@ -423,29 +424,19 @@ export type BTCFeeDataType = {
   fee?: number
 }
 
-export enum BTCFeeDataKey {
-  Fastest = 'fastest',
-  HalfHour = 'halfHour',
-  OneHour = '1hour',
-  SixHour = '6hour',
-  TwentyFourHour = '24hour'
-}
-
-export type BTCFeeDataEstimate = {
-  [BTCFeeDataKey.Fastest]: BTCFeeDataType
-  [BTCFeeDataKey.HalfHour]: BTCFeeDataType
-  [BTCFeeDataKey.OneHour]: BTCFeeDataType
-  [BTCFeeDataKey.SixHour]: BTCFeeDataType
-  [BTCFeeDataKey.TwentyFourHour]: BTCFeeDataType
-}
-
-export type FeeDataEstimate = ETHFeeDataEstimate | BTCFeeDataEstimate
-
-export enum ETHFeeDataKey {
+export enum FeeDataKey {
   Slow = 'slow',
   Average = 'average',
   Fast = 'fast'
 }
+
+export type BTCFeeDataEstimate = {
+  [FeeDataKey.Slow]: BTCFeeDataType
+  [FeeDataKey.Average]: BTCFeeDataType
+  [FeeDataKey.Fast]: BTCFeeDataType
+}
+
+export type FeeDataEstimate = ETHFeeDataEstimate | BTCFeeDataEstimate
 
 export type ETHFeeDataType = {
   feeUnitPrice: string
@@ -454,9 +445,9 @@ export type ETHFeeDataType = {
 }
 
 export type ETHFeeDataEstimate = {
-  [ETHFeeDataKey.Slow]: ETHFeeDataType
-  [ETHFeeDataKey.Average]: ETHFeeDataType
-  [ETHFeeDataKey.Fast]: ETHFeeDataType
+  [FeeDataKey.Slow]: ETHFeeDataType
+  [FeeDataKey.Average]: ETHFeeDataType
+  [FeeDataKey.Fast]: ETHFeeDataType
 }
 
 export enum ValidAddressResultType {

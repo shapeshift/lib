@@ -1,3 +1,38 @@
+# [@shapeshiftoss/swapper-v1.2.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.2.2...@shapeshiftoss/swapper-v1.2.3) (2021-10-12)
+
+
+### Bug Fixes
+
+* update chain adapters in swapper ([#118](https://github.com/shapeshift/lib/issues/118)) ([709c018](https://github.com/shapeshift/lib/commit/709c018a0a5dffab9c01b8f6cd569ed6489ce136))
+
+# [@shapeshiftoss/swapper-v1.2.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.2.1...@shapeshiftoss/swapper-v1.2.2) (2021-10-12)
+
+
+### Bug Fixes
+
+* update types ([#115](https://github.com/shapeshift/lib/issues/115)) ([ea989ff](https://github.com/shapeshift/lib/commit/ea989ff67b86ae420b3cd4251401cd5882c791d1))
+
+# [@shapeshiftoss/swapper-v1.2.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.2.0...@shapeshiftoss/swapper-v1.2.1) (2021-10-12)
+
+
+### Bug Fixes
+
+* upgrade to latest version of web3 in swapper ([#112](https://github.com/shapeshift/lib/issues/112)) ([150b4fe](https://github.com/shapeshift/lib/commit/150b4fe79e3ae006cdabbb93c0aeaed8980ac2ac))
+
+# [@shapeshiftoss/swapper-v1.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.1.0...@shapeshiftoss/swapper-v1.2.0) (2021-10-11)
+
+
+### Features
+
+* be more descriptive with getDefaultPair ([#111](https://github.com/shapeshift/lib/issues/111)) ([13448c2](https://github.com/shapeshift/lib/commit/13448c234c21269c0592ea8dded827dd36f20a60))
+
+# [@shapeshiftoss/swapper-v1.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.0.0...@shapeshiftoss/swapper-v1.1.0) (2021-10-11)
+
+
+### Features
+
+* add buy amount ([#108](https://github.com/shapeshift/lib/issues/108)) ([c7037df](https://github.com/shapeshift/lib/commit/c7037dfb64c599106ba7d10e8073bb60a556cf4f))
+
 # @shapeshiftoss/swapper-v1.0.0 (2021-10-07)
 
 
