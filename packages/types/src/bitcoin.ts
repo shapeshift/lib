@@ -1,5 +1,5 @@
 import { BTCInputScriptType } from '@shapeshiftoss/hdwallet-core'
-import { GetAddressInputBase } from './base'
+import { FeeDataKey, GetAddressInputBase } from './base'
 
 export type Account = {
   nextChangeAddressIndex?: number
@@ -22,6 +22,19 @@ export type Recipient = {
 export type ScriptSig = {
   hex: string
   asm: string
+}
+
+export type FeeDataType = {
+  minMinutes: number
+  maxMinutes: number
+  effort: number
+  fee?: number
+}
+
+export type FeeDataEstimate = {
+  [FeeDataKey.Slow]: FeeDataType
+  [FeeDataKey.Average]: FeeDataType
+  [FeeDataKey.Fast]: FeeDataType
 }
 
 export type Vin = {

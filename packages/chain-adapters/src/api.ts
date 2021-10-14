@@ -7,42 +7,16 @@ import {
   GetFeeDataInput,
   SignTxInput,
   TxHistoryResponse,
-  ValidAddressResult
+  ValidAddressResult,
+  Account,
+  TxHistoryInput
 } from '@shapeshiftoss/types'
-import { Account } from '@shapeshiftoss/types/src/base'
 
 export const isChainAdapterOfType = <U extends ChainTypes>(
   chainType: U,
   x: ChainAdapter<ChainTypes>
 ): x is ChainAdapter<U> => {
   return x.getType() === chainType
-}
-
-export interface TxHistoryInput {
-  /**
-   * account address
-   * @type {string}
-   * @memberof V1ApiGetTxHistory
-   */
-  readonly pubkey: string
-  /**
-   * page number
-   * @type {number}
-   * @memberof V1ApiGetTxHistory
-   */
-  readonly page?: number
-  /**
-   * page size
-   * @type {number}
-   * @memberof V1ApiGetTxHistory
-   */
-  readonly pageSize?: number
-  /**
-   * filter by contract address (only supported by coins which support contracts)
-   * @type {string}
-   * @memberof V1ApiGetTxHistory
-   */
-  readonly contract?: string
 }
 
 export interface ChainAdapter<T extends ChainTypes> {

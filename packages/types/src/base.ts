@@ -142,6 +142,7 @@ type ChainTxTypeInner = {
   [ChainTypes.Ethereum]: ETHSignTx
   [ChainTypes.Bitcoin]: BTCSignTx
 }
+
 export type ChainTxType<T> = T extends keyof ChainTxTypeInner ? ChainTxTypeInner[T] : never
 
 export type BuildThorTradeOutput = SignTxInput<unknown> & ThorVaultInfo
@@ -296,6 +297,7 @@ export type BuildSendTxInput = {
   scriptType?: BTCInputScriptType
   gasLimit?: string
   bip32Params: BIP32Params
+  feeSpeed?: FeeDataKey
 }
 
 export type SignTxInput<TxType> = {
@@ -311,9 +313,16 @@ export type BIP32Params = {
   index?: number
 }
 
+export interface TxHistoryInput {
+  readonly pubkey: string
+  readonly page?: number
+  readonly pageSize?: number
+  readonly contract?: string
+}
+
 export type GetAddressInputBase = {
   wallet: HDWallet
-  bip32Params: BIP32Params
+  bip32Params?: BIP32Params
 }
 
 export type GetAddressInput = GetAddressInputBase | Bitcoin.GetAddressInput
@@ -325,30 +334,13 @@ export type GetFeeDataInput = {
   value: string
 }
 
-export type BTCFeeDataType = {
-  minMinutes: number
-  maxMinutes: number
-  effort: number
-  fee?: number
+export enum FeeDataKey {
+  Slow = 'slow',
+  Average = 'average',
+  Fast = 'fast'
 }
 
-export enum BTCFeeDataKey {
-  Fastest = 'fastest',
-  HalfHour = 'halfHour',
-  OneHour = '1hour',
-  SixHour = '6hour',
-  TwentyFourHour = '24hour'
-}
-
-export type BTCFeeDataEstimate = {
-  [BTCFeeDataKey.Fastest]: BTCFeeDataType
-  [BTCFeeDataKey.HalfHour]: BTCFeeDataType
-  [BTCFeeDataKey.OneHour]: BTCFeeDataType
-  [BTCFeeDataKey.SixHour]: BTCFeeDataType
-  [BTCFeeDataKey.TwentyFourHour]: BTCFeeDataType
-}
-
-export type FeeDataEstimate = Ethereum.FeeDataEstimate | BTCFeeDataEstimate
+export type FeeDataEstimate = Ethereum.FeeDataEstimate | Bitcoin.FeeDataEstimate
 
 export enum ValidAddressResultType {
   Valid = 'valid',
