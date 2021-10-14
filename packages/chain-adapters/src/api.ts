@@ -1,4 +1,4 @@
-import { ChainAdapters, ChainTxType, ChainTypes } from '@shapeshiftoss/types'
+import { ChainAdapters, ChainTypes } from '@shapeshiftoss/types'
 
 export const isChainAdapterOfType = <U extends ChainTypes>(
   chainType: U,
@@ -21,11 +21,16 @@ export interface ChainAdapter<T extends ChainTypes> {
 
   buildSendTransaction(
     input: ChainAdapters.BuildSendTxInput
-  ): Promise<{ txToSign: ChainTxType<T>; estimatedFees: ChainAdapters.FeeDataEstimate }>
+  ): Promise<{
+    txToSign: ChainAdapters.ChainTxType<T>
+    estimatedFees: ChainAdapters.FeeDataEstimate
+  }>
 
   getAddress(input: ChainAdapters.GetAddressInput): Promise<string>
 
-  signTransaction(signTxInput: ChainAdapters.SignTxInput<ChainTxType<T>>): Promise<string>
+  signTransaction(
+    signTxInput: ChainAdapters.SignTxInput<ChainAdapters.ChainTxType<T>>
+  ): Promise<string>
 
   getFeeData(input: Partial<ChainAdapters.GetFeeDataInput>): Promise<ChainAdapters.FeeDataEstimate>
 

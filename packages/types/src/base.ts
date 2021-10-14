@@ -1,4 +1,4 @@
-import { ETHSignTx, BTCSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { Ethereum, SignTxInput } from './chain-adapters'
 
 /** Common */
@@ -137,15 +137,6 @@ export type ThorVaultInfo = {
   vaultAddress: string
   timestamp: string
 }
-
-export type SignTx = ETHSignTx | BTCSignTx
-
-type ChainTxTypeInner = {
-  [ChainTypes.Ethereum]: ETHSignTx
-  [ChainTypes.Bitcoin]: BTCSignTx
-}
-
-export type ChainTxType<T> = T extends keyof ChainTxTypeInner ? ChainTxTypeInner[T] : never
 
 export type BuildThorTradeOutput = SignTxInput<unknown> & ThorVaultInfo
 

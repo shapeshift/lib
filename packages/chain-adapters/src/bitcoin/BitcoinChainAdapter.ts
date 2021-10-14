@@ -13,13 +13,7 @@ import {
   bip32ToAddressNList,
   supportsBTC
 } from '@shapeshiftoss/hdwallet-core'
-import {
-  BIP32Params,
-  ChainAdapters,
-  ChainTxType,
-  ChainTypes,
-  NetworkTypes
-} from '@shapeshiftoss/types'
+import { BIP32Params, ChainAdapters, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import { BitcoinAPI } from '@shapeshiftoss/unchained-client'
 import { ChainAdapter } from '../api'
 import { toPath, toRootDerivationPath } from '../bip32'
@@ -121,7 +115,7 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
   async buildSendTransaction(
     tx: ChainAdapters.BuildSendTxInput
   ): Promise<{
-    txToSign: ChainTxType<ChainTypes.Bitcoin>
+    txToSign: ChainAdapters.ChainTxType<ChainTypes.Bitcoin>
     estimatedFees: ChainAdapters.Bitcoin.FeeDataEstimate
   }> {
     try {
@@ -227,7 +221,7 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
   }
 
   async signTransaction(
-    signTxInput: ChainAdapters.SignTxInput<ChainTxType<ChainTypes.Bitcoin>>
+    signTxInput: ChainAdapters.SignTxInput<ChainAdapters.ChainTxType<ChainTypes.Bitcoin>>
   ): Promise<string> {
     try {
       const { txToSign, wallet } = signTxInput

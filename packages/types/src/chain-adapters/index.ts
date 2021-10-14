@@ -1,4 +1,4 @@
-import { HDWallet, BTCInputScriptType } from '@shapeshiftoss/hdwallet-core'
+import { HDWallet, BTCInputScriptType, BTCSignTx, ETHSignTx } from '@shapeshiftoss/hdwallet-core'
 import { BIP32Params, ChainTypes, NetworkTypes } from '../base'
 import { ChainSpecificFlat, ChainSpecificNested } from '../utils'
 import * as Ethereum from './ethereum'
@@ -51,6 +51,13 @@ export type TxHistoryResponse<T extends ChainTypes> = {
   txs: number
   transactions: Array<Transaction<T>>
 }
+
+type ChainTxTypeInner = {
+  [ChainTypes.Ethereum]: ETHSignTx
+  [ChainTypes.Bitcoin]: BTCSignTx
+}
+
+export type ChainTxType<T> = T extends keyof ChainTxTypeInner ? ChainTxTypeInner[T] : never
 
 export type BuildSendTxInput = {
   to?: string
