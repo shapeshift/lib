@@ -1,8 +1,8 @@
-import { ChainAdapter, isChainAdapterOfType } from './api'
 import { ChainTypes } from '@shapeshiftoss/types'
-import { EthereumChainAdapter } from './ethereum'
 import { BitcoinAPI, EthereumAPI } from '@shapeshiftoss/unchained-client'
+import { ChainAdapter, isChainAdapterOfType } from './api'
 import { BitcoinChainAdapter } from './bitcoin'
+import { EthereumChainAdapter } from './ethereum'
 
 export type UnchainedUrls = Partial<Record<ChainTypes, string>>
 

@@ -1,9 +1,9 @@
-import WAValidator from 'multicoin-address-validator'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
-import { bip32ToAddressNList, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
+import WAValidator from 'multicoin-address-validator'
 import { numberToHex } from 'web3-utils'
 import { Contract } from '@ethersproject/contracts'
+import { bip32ToAddressNList, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
 import {
   Account,
   Ethereum,
@@ -19,12 +19,11 @@ import {
   NetworkTypes,
   BIP32Params
 } from '@shapeshiftoss/types'
-
+import { EthereumAPI } from '@shapeshiftoss/unchained-client'
+import { ChainAdapter } from '../api'
+import { toPath } from '../bip32'
 import { ErrorHandler } from '../error/ErrorHandler'
 import erc20Abi from './erc20Abi.json'
-import { ChainAdapter } from '..'
-import { EthereumAPI } from '@shapeshiftoss/unchained-client'
-import { toPath } from '../bip32'
 
 export type EthereumChainAdapterDependencies = {
   provider: EthereumAPI.V1Api
@@ -115,6 +114,7 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
         transactions: data.transactions.map((tx) => ({
           ...tx,
           chain: ChainTypes.Ethereum,
+          details: {},
           network: NetworkTypes.MAINNET,
           symbol: 'ETH'
         })),

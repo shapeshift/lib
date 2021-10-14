@@ -1,21 +1,6 @@
-import {
-  Bitcoin,
-  BuildSendTxInput,
-  ChainTypes,
-  ValidAddressResult,
-  ValidAddressResultType,
-  TxHistoryResponse,
-  NetworkTypes,
-  Transaction,
-  Account,
-  BTCFeeDataEstimate,
-  ChainTxType,
-  SignTxInput,
-  BIP32Params,
-  FeeDataKey,
-  TxHistoryInput
-} from '@shapeshiftoss/types'
-import { ErrorHandler } from '../error/ErrorHandler'
+import axios from 'axios'
+import coinSelect from 'coinselect'
+import WAValidator from 'multicoin-address-validator'
 import {
   bip32ToAddressNList,
   BTCInputScriptType,
@@ -28,12 +13,26 @@ import {
   supportsBTC,
   BTCOutputAddressType
 } from '@shapeshiftoss/hdwallet-core'
-import axios from 'axios'
+import {
+  Bitcoin,
+  BuildSendTxInput,
+  ChainTypes,
+  ValidAddressResult,
+  ValidAddressResultType,
+  TxHistoryResponse,
+  NetworkTypes,
+  Transaction,
+  Account,
+  ChainTxType,
+  SignTxInput,
+  BIP32Params,
+  FeeDataKey,
+  TxHistoryInput
+} from '@shapeshiftoss/types'
 import { BitcoinAPI } from '@shapeshiftoss/unchained-client'
-import WAValidator from 'multicoin-address-validator'
-import { ChainAdapter } from '..'
-import coinSelect from 'coinselect'
+import { ChainAdapter } from '../api'
 import { toPath, toRootDerivationPath } from '../bip32'
+import { ErrorHandler } from '../error/ErrorHandler'
 
 const MIN_RELAY_FEE = 60 // sats/byte
 const DEFAULT_FEE = undefined
@@ -132,7 +131,10 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
 
   async buildSendTransaction(
     tx: BuildSendTxInput
-  ): Promise<{ txToSign: ChainTxType<ChainTypes.Bitcoin>; estimatedFees: BTCFeeDataEstimate }> {
+  ): Promise<{
+    txToSign: ChainTxType<ChainTypes.Bitcoin>
+    estimatedFees: Bitcoin.FeeDataEstimate
+  }> {
     try {
       const {
         recipients,
@@ -257,9 +259,9 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
     return broadcastedTx.data
   }
 
-  async getFeeData(): Promise<BTCFeeDataEstimate> {
+  async getFeeData(): Promise<Bitcoin.FeeDataEstimate> {
     const { data } = await axios.get('https://bitcoinfees.earn.com/api/v1/fees/list')
-    const confTimes: BTCFeeDataEstimate = {
+    const confTimes: Bitcoin.FeeDataEstimate = {
       [FeeDataKey.Fast]: {
         minMinutes: 0,
         maxMinutes: 36,
