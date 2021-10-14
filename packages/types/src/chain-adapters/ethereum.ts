@@ -1,4 +1,5 @@
-import { ContractTypes } from './base'
+import { ContractTypes } from '../base'
+import { FeeDataKey } from '.'
 
 export type Account = {
   nonce: number
@@ -12,12 +13,6 @@ export type Token = {
   name: string
   symbol: string
   contractType: ContractTypes
-}
-
-export enum FeeDataKey {
-  Slow = 'slow',
-  Average = 'average',
-  Fast = 'fast'
 }
 
 export type FeeDataType = {

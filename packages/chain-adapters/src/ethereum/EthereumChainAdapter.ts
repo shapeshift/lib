@@ -5,19 +5,11 @@ import { numberToHex } from 'web3-utils'
 import { Contract } from '@ethersproject/contracts'
 import { bip32ToAddressNList, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
 import {
-  Account,
-  Ethereum,
-  TxHistoryResponse,
-  BuildSendTxInput,
-  SignTxInput,
-  GetAddressInput,
-  GetFeeDataInput,
+  BIP32Params,
+  ChainAdapters,
   ChainTypes,
-  ValidAddressResult,
-  ValidAddressResultType,
   ContractTypes,
-  NetworkTypes,
-  BIP32Params
+  NetworkTypes
 } from '@shapeshiftoss/types'
 import { EthereumAPI } from '@shapeshiftoss/unchained-client'
 import { ChainAdapter } from '../api'
@@ -74,7 +66,7 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
     return ChainTypes.Ethereum
   }
 
-  async getAccount(pubkey: string): Promise<Account<ChainTypes.Ethereum>> {
+  async getAccount(pubkey: string): Promise<ChainAdapters.Account<ChainTypes.Ethereum>> {
     try {
       const { data } = await this.provider.getAccount({ pubkey })
 
@@ -104,7 +96,9 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
 
   async getTxHistory({
     pubkey
-  }: EthereumAPI.V1ApiGetTxHistoryRequest): Promise<TxHistoryResponse<ChainTypes.Ethereum>> {
+  }: EthereumAPI.V1ApiGetTxHistoryRequest): Promise<
+    ChainAdapters.TxHistoryResponse<ChainTypes.Ethereum>
+  > {
     try {
       const { data } = await this.provider.getTxHistory({ pubkey })
 
@@ -114,7 +108,6 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
         transactions: data.transactions.map((tx) => ({
           ...tx,
           chain: ChainTypes.Ethereum,
-          details: {},
           network: NetworkTypes.MAINNET,
           symbol: 'ETH'
         })),
@@ -126,8 +119,8 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
   }
 
   async buildSendTransaction(
-    tx: BuildSendTxInput
-  ): Promise<{ txToSign: ETHSignTx; estimatedFees: Ethereum.FeeDataEstimate }> {
+    tx: ChainAdapters.BuildSendTxInput
+  ): Promise<{ txToSign: ETHSignTx; estimatedFees: ChainAdapters.Ethereum.FeeDataEstimate }> {
     try {
       const { to, erc20ContractAddress, wallet, fee, bip32Params = this.defaultBIP32Params } = tx
 
@@ -175,7 +168,7 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
     }
   }
 
-  async signTransaction(signTxInput: SignTxInput<ETHSignTx>): Promise<string> {
+  async signTransaction(signTxInput: ChainAdapters.SignTxInput<ETHSignTx>): Promise<string> {
     try {
       const { txToSign, wallet } = signTxInput
       const signedTx = await (wallet as ETHWallet).ethSignTx(txToSign)
@@ -198,7 +191,7 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
     from,
     contractAddress,
     value
-  }: GetFeeDataInput): Promise<Ethereum.FeeDataEstimate> {
+  }: ChainAdapters.GetFeeDataInput): Promise<ChainAdapters.Ethereum.FeeDataEstimate> {
     const { data: responseData } = await axios.get<ZrxGasApiResponse>('https://gas.api.0x.org/')
     const fees = responseData.result.find((result) => result.source === 'MEDIAN')
 
@@ -235,7 +228,7 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
     }
   }
 
-  async getAddress(input: GetAddressInput): Promise<string> {
+  async getAddress(input: ChainAdapters.GetAddressInput): Promise<string> {
     const { wallet, bip32Params = this.defaultBIP32Params } = input
     const path = toPath(bip32Params)
     const addressNList = bip32ToAddressNList(path)
@@ -246,9 +239,9 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
     return ethAddress as string
   }
 
-  async validateAddress(address: string): Promise<ValidAddressResult> {
+  async validateAddress(address: string): Promise<ChainAdapters.ValidAddressResult> {
     const isValidAddress = WAValidator.validate(address, this.getType())
-    if (isValidAddress) return { valid: true, result: ValidAddressResultType.Valid }
-    return { valid: false, result: ValidAddressResultType.Invalid }
+    if (isValidAddress) return { valid: true, result: ChainAdapters.ValidAddressResultType.Valid }
+    return { valid: false, result: ChainAdapters.ValidAddressResultType.Invalid }
   }
 }

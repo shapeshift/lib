@@ -1,5 +1,5 @@
-import * as Bitcoin from './bitcoin'
-import * as Ethereum from './ethereum'
+import * as ChainAdapters from './chain-adapters'
+
+export { ChainAdapters }
 
 export * from './base'
-export { Bitcoin, Ethereum }

@@ -1,13 +1,34 @@
-import { ETHSignTx, BTCSignTx, HDWallet, BTCInputScriptType } from '@shapeshiftoss/hdwallet-core'
-import * as Ethereum from './ethereum'
-import * as Bitcoin from './bitcoin'
+import { ETHSignTx, BTCSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { Ethereum, SignTxInput } from './chain-adapters'
 
-// special type that does what it says (don't think too much on it...)
-type UnionToIntersection<U> = (U extends unknown
-? (k: U) => void
-: never) extends (k: infer I) => void
-  ? I
-  : never
+/** Common */
+
+export type BIP32Params = {
+  purpose: number
+  coinType: number
+  accountNumber: number
+  isChange?: boolean
+  index?: number
+}
+
+export enum ContractTypes {
+  ERC20 = 'ERC20',
+  ERC721 = 'ERC721',
+  OTHER = 'OTHER',
+  NONE = 'NONE'
+}
+
+export enum ChainTypes {
+  'Ethereum' = 'ethereum',
+  'Bitcoin' = 'bitcoin'
+}
+
+export enum NetworkTypes {
+  MAINNET = 'MAINNET',
+  TESTNET = 'TESTNET', // BTC, LTC, etc...
+  ETH_ROPSTEN = 'ETH_ROPSTEN',
+  ETH_RINKEBY = 'ETH_RINKEBY'
+}
 
 // asset-service
 
@@ -35,25 +56,6 @@ type TokenAssetFields = {
 export type TokenAsset = Omit<AbstractAsset, OmittedTokenAssetFields> & TokenAssetFields
 export type BaseAsset = AbstractAsset & { tokens?: TokenAsset[] }
 export type Asset = AbstractAsset & Partial<TokenAssetFields>
-
-export enum ContractTypes {
-  ERC20 = 'ERC20',
-  ERC721 = 'ERC721',
-  OTHER = 'OTHER',
-  NONE = 'NONE'
-}
-
-export enum ChainTypes {
-  'Ethereum' = 'ethereum',
-  'Bitcoin' = 'bitcoin'
-}
-
-export enum NetworkTypes {
-  MAINNET = 'MAINNET',
-  TESTNET = 'TESTNET', // BTC, LTC, etc...
-  ETH_ROPSTEN = 'ETH_ROPSTEN',
-  ETH_RINKEBY = 'ETH_RINKEBY'
-}
 
 // market-service
 
@@ -213,154 +215,4 @@ export type ApprovalNeededOutput = {
   approvalNeeded: boolean
   gas?: string
   gasPrice?: string
-}
-
-// chain-adapters
-
-type TransactionBase<T extends ChainTypes> = {
-  network: NetworkTypes
-  chain: T
-  symbol: string
-  txid: string
-  status: string
-  from: string
-  to?: string
-  blockHash?: string
-  blockHeight?: number
-  confirmations?: number
-  timestamp?: number
-  value: string
-  fee: string
-}
-
-type TransactionSpecificMap = {
-  [ChainTypes.Bitcoin]: Bitcoin.TransactionSpecifc
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  [ChainTypes.Ethereum]: object
-}
-
-type TransactionSpecifc<T extends ChainTypes> = TransactionSpecificMap[T] &
-  Partial<Omit<UnionToIntersection<TransactionSpecificMap[T]>, keyof TransactionSpecificMap[T]>>
-
-export type Transaction<T extends ChainTypes = ChainTypes> = TransactionBase<T> & {
-  details: TransactionSpecifc<T>
-}
-
-export type TxHistoryResponse<T extends ChainTypes> = {
-  page: number
-  totalPages: number
-  txs: number
-  transactions: Array<Transaction<T>>
-}
-
-type BaseAccount<T extends ChainTypes> = {
-  balance: string
-  pubkey: string
-  symbol: string
-  chain: T
-  network: NetworkTypes
-}
-
-type AccountSpecificMap = {
-  [ChainTypes.Ethereum]: Ethereum.Account
-  [ChainTypes.Bitcoin]: Bitcoin.Account
-}
-
-type AccountSpecific<T extends ChainTypes> = AccountSpecificMap[T] &
-  Partial<Omit<UnionToIntersection<AccountSpecificMap[T]>, keyof AccountSpecificMap[T]>>
-
-export type Account<T extends ChainTypes = ChainTypes> = BaseAccount<T> & AccountSpecific<T>
-
-export type BroadcastTxResponse = {
-  network: NetworkTypes
-  txid: string
-}
-
-export type FormattedUTXO = {
-  addressNList: number[]
-  scriptType: BTCInputScriptType
-  amount: string
-  tx: Bitcoin.TransactionSpecifc
-  hex: string
-}
-
-export type BuildSendTxInput = {
-  to?: string
-  value?: string
-  wallet: HDWallet
-  /*** In base units */
-  fee?: string
-  /*** Optional param for eth txs indicating what ERC20 is being sent */
-  erc20ContractAddress?: string
-  recipients?: Array<Bitcoin.Recipient>
-  opReturnData?: string
-  scriptType?: BTCInputScriptType
-  gasLimit?: string
-  bip32Params: BIP32Params
-  feeSpeed?: FeeDataKey
-}
-
-export type SignTxInput<TxType> = {
-  txToSign: TxType
-  wallet: HDWallet
-}
-
-export type BIP32Params = {
-  purpose: number
-  coinType: number
-  accountNumber: number
-  isChange?: boolean
-  index?: number
-}
-
-export interface TxHistoryInput {
-  readonly pubkey: string
-  readonly page?: number
-  readonly pageSize?: number
-  readonly contract?: string
-}
-
-export type GetAddressInputBase = {
-  wallet: HDWallet
-  bip32Params?: BIP32Params
-}
-
-export type GetAddressInput = GetAddressInputBase | Bitcoin.GetAddressInput
-
-export type GetFeeDataInput = {
-  contractAddress?: string
-  from: string
-  to: string
-  value: string
-}
-
-export enum FeeDataKey {
-  Slow = 'slow',
-  Average = 'average',
-  Fast = 'fast'
-}
-
-export type FeeDataEstimate = Ethereum.FeeDataEstimate | Bitcoin.FeeDataEstimate
-
-export enum ValidAddressResultType {
-  Valid = 'valid',
-  Invalid = 'invalid'
-}
-
-export type ValidAddressResult = {
-  /**
-   * Is this Address valid
-   */
-  valid: boolean
-  /**
-   * Result type of valid address
-   */
-  result: ValidAddressResultType
-}
-
-export type FeeEstimateInput = {
-  to: string
-  from: string
-  data: string
-  value: string
 }
