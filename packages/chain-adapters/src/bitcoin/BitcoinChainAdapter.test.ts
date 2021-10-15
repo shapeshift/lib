@@ -4,13 +4,14 @@
  * Test BitcoinChainAdapter
  * @group unit
  */
-import { ChainAdapterManager } from '../ChainAdapterManager'
-import { BTCInputScriptType, BTCSignTx } from '@shapeshiftoss/hdwallet-core'
-import { ChainAdapter } from '../'
-import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { BitcoinAPI } from '@shapeshiftoss/unchained-client'
 import dotenv from 'dotenv'
-import { BIP32Params, BuildSendTxInput, ChainTypes } from '@shapeshiftoss/types'
+import { BTCInputScriptType, BTCSignTx } from '@shapeshiftoss/hdwallet-core'
+import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
+import { bitcoin } from '@shapeshiftoss/unchained-client'
+import { BIP32Params, ChainTypes, chainAdapters } from '@shapeshiftoss/types'
+import { ChainAdapter } from '../api'
+import { ChainAdapterManager } from '../ChainAdapterManager'
+
 dotenv.config({
   path: __dirname + '/../../.env'
 })
@@ -70,7 +71,7 @@ describe('BitcoinChainAdapter', () => {
 
   describe('getAccount', () => {
     it('should return account info for a specified address', async () => {
-      const exampleResponse: BitcoinAPI.BitcoinAccount = {
+      const exampleResponse: bitcoin.api.BitcoinAccount = {
         pubkey: '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx',
         balance: '0'
       }
@@ -109,7 +110,7 @@ describe('BitcoinChainAdapter', () => {
         accountNumber: 0,
         isChange: false
       }
-      const txInput: BuildSendTxInput = {
+      const txInput: chainAdapters.BuildSendTxInput = {
         bip32Params,
         recipients: [
           {
@@ -134,7 +135,7 @@ describe('BitcoinChainAdapter', () => {
         isChange: false,
         index: 0
       }
-      const txInput: BuildSendTxInput = {
+      const txInput: chainAdapters.BuildSendTxInput = {
         bip32Params,
         recipients: [
           {

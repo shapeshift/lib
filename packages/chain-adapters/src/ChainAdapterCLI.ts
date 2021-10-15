@@ -1,8 +1,9 @@
-import { ChainAdapterManager } from './ChainAdapterManager'
-import { BIP32Params, ChainTypes, ChainAdapters } from '@shapeshiftoss/types'
-import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { BTCInputScriptType } from '@shapeshiftoss/hdwallet-core'
 import dotenv from 'dotenv'
+import { BTCInputScriptType } from '@shapeshiftoss/hdwallet-core'
+import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
+import { BIP32Params, ChainTypes, chainAdapters } from '@shapeshiftoss/types'
+import { ChainAdapterManager } from './ChainAdapterManager'
+
 dotenv.config()
 
 // const foxContractAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
@@ -19,8 +20,8 @@ const getWallet = async (): Promise<NativeHDWallet> => {
 }
 
 const unchainedUrls = {
-  [ChainTypes.Bitcoin]: 'http://api.bitcoin.shapeshift.com',
-  [ChainTypes.Ethereum]: 'http://api.ethereum.shapeshift.com'
+  [ChainTypes.Bitcoin]: 'https://api.bitcoin.shapeshift.com',
+  [ChainTypes.Ethereum]: 'https://api.ethereum.shapeshift.com'
 }
 
 const main = async () => {
@@ -54,7 +55,7 @@ const main = async () => {
     //  wallet,
     //  opReturnData: 'sup fool',
     //  bip32Params: btcBip32Params,
-    //  feeSpeed: ChainAdapters.FeeDataKey.Slow
+    //  feeSpeed: chainAdapters.FeeDataKey.Slow
     //}
 
     //const unsignedTx = await btcChainAdapter.buildSendTransaction(txInput)
@@ -74,6 +75,11 @@ const main = async () => {
     console.log('ethAddress:', ethAddress)
     const ethAccount = await ethChainAdapter.getAccount(ethAddress)
     console.log('ethAccount:', ethAccount)
+    await ethChainAdapter.subscribeTxs(
+      { addresses: [ethAddress] },
+      (msg) => console.log(msg),
+      (err) => console.log(err)
+    )
 
     // send eth example
     // const unsignedTx = await ethChainAdapter.buildSendTransaction({
