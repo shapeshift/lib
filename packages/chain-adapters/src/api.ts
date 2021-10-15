@@ -23,7 +23,7 @@ export interface ChainAdapter<T extends ChainTypes> {
     input: ChainAdapters.BuildSendTxInput
   ): Promise<{
     txToSign: ChainAdapters.ChainTxType<T>
-    estimatedFees: ChainAdapters.FeeDataEstimate
+    estimatedFees: ChainAdapters.FeeDataEstimate<T>
   }>
 
   getAddress(input: ChainAdapters.GetAddressInput): Promise<string>
@@ -32,7 +32,9 @@ export interface ChainAdapter<T extends ChainTypes> {
     signTxInput: ChainAdapters.SignTxInput<ChainAdapters.ChainTxType<T>>
   ): Promise<string>
 
-  getFeeData(input: Partial<ChainAdapters.GetFeeDataInput>): Promise<ChainAdapters.FeeDataEstimate>
+  getFeeData(
+    input: Partial<ChainAdapters.GetFeeDataInput>
+  ): Promise<ChainAdapters.FeeDataEstimate<T>>
 
   broadcastTransaction(hex: string): Promise<string>
 

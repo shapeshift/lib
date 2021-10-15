@@ -159,7 +159,7 @@ export type Quote = {
   slipScore?: string
   txData?: string
   value?: string
-  feeData?: Ethereum.FeeData
+  feeData?: Ethereum.QuoteFeeData
   allowanceContract?: string
   allowanceGrantRequired?: boolean
   slippage?: string

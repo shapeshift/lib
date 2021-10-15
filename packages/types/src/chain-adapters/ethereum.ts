@@ -15,19 +15,12 @@ export type Token = {
   contractType: ContractTypes
 }
 
-export type FeeDataType = {
-  feeUnitPrice: string
-  networkFee: string
-  feeUnits: string
-}
-
-export type FeeDataEstimate = {
-  [FeeDataKey.Slow]: FeeDataType
-  [FeeDataKey.Average]: FeeDataType
-  [FeeDataKey.Fast]: FeeDataType
-}
-
 export type FeeData = {
+  feePerTx: string
+  feeLimit: string
+}
+
+export type QuoteFeeData = {
   fee?: string
   gas?: string
   estimatedGas?: string

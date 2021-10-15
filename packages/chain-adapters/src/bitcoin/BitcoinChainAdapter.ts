@@ -73,8 +73,10 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
       return {
         balance: data.balance,
         chain: ChainTypes.Bitcoin,
-        nextChangeAddressIndex: data.nextChangeAddressIndex,
-        nextReceiveAddressIndex: data.nextReceiveAddressIndex,
+        chainSpecific: {
+          nextChangeAddressIndex: data.nextChangeAddressIndex,
+          nextReceiveAddressIndex: data.nextReceiveAddressIndex
+        },
         network: NetworkTypes.MAINNET,
         pubkey: data.pubkey,
         symbol: 'BTC'
@@ -116,7 +118,7 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
     tx: ChainAdapters.BuildSendTxInput
   ): Promise<{
     txToSign: ChainAdapters.ChainTxType<ChainTypes.Bitcoin>
-    estimatedFees: ChainAdapters.Bitcoin.FeeDataEstimate
+    estimatedFees: ChainAdapters.FeeDataEstimate<ChainTypes.Bitcoin>
   }> {
     try {
       const {
@@ -152,7 +154,7 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
 
       const account = await this.getAccount(pubkey)
       const estimatedFees = await this.getFeeData()
-      const satoshiPerByte = estimatedFees[feeSpeed ?? ChainAdapters.FeeDataKey.Average].fee
+      const satoshiPerByte = estimatedFees[feeSpeed ?? ChainAdapters.FeeDataKey.Average].feePerUnit
 
       type MappedUtxos = Omit<BitcoinAPI.Utxo, 'value'> & { value: number }
       const mappedUtxos: MappedUtxos[] = utxos.map((x) => ({ ...x, value: Number(x.value) }))
@@ -193,7 +195,7 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
             addressType: BTCOutputAddressType.Change,
             amount,
             addressNList: bip32ToAddressNList(
-              `${path}/1/${String(account.nextChangeAddressIndex)}`
+              `${path}/1/${String(account.chainSpecific.nextChangeAddressIndex)}`
             ),
             scriptType: BTCOutputScriptType.PayToWitness,
             isChange: true
@@ -242,41 +244,17 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
     return broadcastedTx.data
   }
 
-  async getFeeData(): Promise<ChainAdapters.Bitcoin.FeeDataEstimate> {
+  async getFeeData(): Promise<ChainAdapters.FeeDataEstimate<ChainTypes.Bitcoin>> {
     const { data } = await axios.get('https://bitcoinfees.earn.com/api/v1/fees/list')
-    const confTimes: ChainAdapters.Bitcoin.FeeDataEstimate = {
+    const confTimes: ChainAdapters.FeeDataEstimate<ChainTypes.Bitcoin> = {
       [ChainAdapters.FeeDataKey.Fast]: {
-        minMinutes: 0,
-        maxMinutes: 36,
-        effort: 5,
-        fee: DEFAULT_FEE
+        feePerUnit: '1'
       },
       [ChainAdapters.FeeDataKey.Average]: {
-        minMinutes: 0,
-        maxMinutes: 36,
-        effort: 4,
-        fee: DEFAULT_FEE
+        feePerUnit: '1'
       },
       [ChainAdapters.FeeDataKey.Slow]: {
-        minMinutes: 0,
-        maxMinutes: 60,
-        effort: 3,
-        fee: DEFAULT_FEE
-      }
-    }
-
-    for (const time of Object.keys(confTimes)) {
-      const confTime = confTimes[time as ChainAdapters.FeeDataKey]
-      for (const fee of data['fees']) {
-        if (fee['maxMinutes'] < confTime['maxMinutes']) {
-          confTime['fee'] = Math.max(fee['minFee'], MIN_RELAY_FEE)
-          confTime['minMinutes'] = fee['minMinutes']
-          confTime['maxMinutes'] = fee['maxMinutes']
-          break
-        }
-      }
-      if (confTime['fee'] === undefined) {
-        confTime['fee'] = Math.max(data.length[-1]['minFee'], MIN_RELAY_FEE)
+        feePerUnit: '1'
       }
     }
 
@@ -299,7 +277,9 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
     if (index === undefined) {
       const pubkey = await this.getPubKey(wallet, toRootDerivationPath(bip32Params))
       const account = await this.getAccount(pubkey.xpub)
-      index = isChange ? account.nextChangeAddressIndex : account.nextReceiveAddressIndex
+      index = isChange
+        ? account.chainSpecific.nextChangeAddressIndex
+        : account.chainSpecific.nextReceiveAddressIndex
     }
 
     const path = toPath({ ...bip32Params, index })

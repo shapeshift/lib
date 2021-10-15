@@ -24,19 +24,6 @@ export type ScriptSig = {
   asm: string
 }
 
-export type FeeDataType = {
-  minMinutes: number
-  maxMinutes: number
-  effort: number
-  fee?: number
-}
-
-export type FeeDataEstimate = {
-  [FeeDataKey.Slow]: FeeDataType
-  [FeeDataKey.Average]: FeeDataType
-  [FeeDataKey.Fast]: FeeDataType
-}
-
 export type Vin = {
   txinwitness?: string
   scriptSig?: ScriptSig

@@ -73,21 +73,23 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
       return {
         balance: data.balance,
         chain: ChainTypes.Ethereum,
+        chainSpecific: {
+          nonce: data.nonce,
+          tokens: data.tokens.map((token) => ({
+            balance: token.balance,
+            contract: token.contract,
+            // note: unchained gets token types from blockbook
+            // blockbook only has one definition of a TokenType for ethereum
+            // https://github1s.com/trezor/blockbook/blob/master/api/types.go#L140
+            contractType: ContractTypes.ERC20,
+            name: token.name,
+            precision: token.decimals,
+            symbol: token.symbol
+          }))
+        },
         network: NetworkTypes.MAINNET, // TODO(0xdef1cafe): need to reflect this from the provider
-        nonce: data.nonce,
         pubkey: data.pubkey,
-        symbol: 'ETH', // TODO(0xdef1cafe): this is real dirty
-        tokens: data.tokens.map((token) => ({
-          balance: token.balance,
-          contract: token.contract,
-          // note: unchained gets token types from blockbook
-          // blockbook only has one definition of a TokenType for ethereum
-          // https://github1s.com/trezor/blockbook/blob/master/api/types.go#L140
-          contractType: ContractTypes.ERC20,
-          name: token.name,
-          precision: token.decimals,
-          symbol: token.symbol
-        }))
+        symbol: 'ETH' // TODO(0xdef1cafe): this is real dirty
       }
     } catch (err) {
       return ErrorHandler(err)
@@ -120,7 +122,10 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
 
   async buildSendTransaction(
     tx: ChainAdapters.BuildSendTxInput
-  ): Promise<{ txToSign: ETHSignTx; estimatedFees: ChainAdapters.Ethereum.FeeDataEstimate }> {
+  ): Promise<{
+    txToSign: ETHSignTx
+    estimatedFees: ChainAdapters.FeeDataEstimate<ChainTypes.Ethereum>
+  }> {
     try {
       const { to, erc20ContractAddress, wallet, fee, bip32Params = this.defaultBIP32Params } = tx
 
@@ -135,7 +140,7 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
 
       const data = await getErc20Data(to, tx?.value, erc20ContractAddress)
       const from = await this.getAddress({ bip32Params, wallet })
-      const { nonce } = await this.getAccount(from)
+      const { chainSpecific } = await this.getAccount(from)
 
       let gasPrice = fee
       const estimatedFees = await this.getFeeData({
@@ -148,8 +153,8 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
       let { gasLimit } = tx
       if (!gasPrice || !gasLimit) {
         // Default to average gas price if fee is not passed
-        !gasPrice && (gasPrice = estimatedFees.average.feeUnitPrice)
-        !gasLimit && (gasLimit = estimatedFees.average.feeUnits)
+        !gasPrice && (gasPrice = estimatedFees.average.feePerUnit)
+        !gasLimit && (gasLimit = estimatedFees.average.chainSpecific.feeLimit)
       }
 
       const txToSign: ETHSignTx = {
@@ -158,7 +163,7 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
         to: destAddress,
         chainId: 1, // TODO: implement for multiple chains
         data,
-        nonce: String(nonce),
+        nonce: String(chainSpecific.nonce),
         gasPrice: numberToHex(gasPrice),
         gasLimit: numberToHex(gasLimit)
       }
@@ -191,7 +196,7 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
     from,
     contractAddress,
     value
-  }: ChainAdapters.GetFeeDataInput): Promise<ChainAdapters.Ethereum.FeeDataEstimate> {
+  }: ChainAdapters.GetFeeDataInput): Promise<ChainAdapters.FeeDataEstimate<ChainTypes.Ethereum>> {
     const { data: responseData } = await axios.get<ZrxGasApiResponse>('https://gas.api.0x.org/')
     const fees = responseData.result.find((result) => result.source === 'MEDIAN')
 
@@ -211,19 +216,25 @@ export class EthereumChainAdapter implements ChainAdapter<ChainTypes.Ethereum> {
 
     return {
       fast: {
-        feeUnits: gasLimit,
-        feeUnitPrice: String(fees.instant),
-        networkFee: new BigNumber(fees.instant).times(gasLimit).toPrecision()
+        feePerUnit: String(fees.instant),
+        chainSpecific: {
+          feeLimit: gasLimit,
+          feePerTx: new BigNumber(fees.instant).times(gasLimit).toPrecision()
+        }
       },
       average: {
-        feeUnits: gasLimit,
-        feeUnitPrice: String(fees.fast),
-        networkFee: new BigNumber(fees.fast).times(gasLimit).toPrecision()
+        feePerUnit: String(fees.fast),
+        chainSpecific: {
+          feeLimit: gasLimit,
+          feePerTx: new BigNumber(fees.fast).times(gasLimit).toPrecision()
+        }
       },
       slow: {
-        feeUnits: gasLimit,
-        feeUnitPrice: String(fees.low),
-        networkFee: new BigNumber(fees.low).times(gasLimit).toPrecision()
+        feePerUnit: String(fees.low),
+        chainSpecific: {
+          feeLimit: gasLimit,
+          feePerTx: new BigNumber(fees.low).times(gasLimit).toPrecision()
+        }
       }
     }
   }

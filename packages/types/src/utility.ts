@@ -1,4 +1,3 @@
-import { ChainTypes } from './base'
 /** Get specific type for key(K) in union(T) */
 type ValueOfUnion<T, K> = T extends unknown ? (K extends keyof T ? T[K] : undefined) : never
 
@@ -18,11 +17,6 @@ type UnionMapping<T> = {
 type UnionMerge<T> = Pick<UnionMapping<T>, keyof T> & Partial<UnionMapping<T>>
 
 /** Adds all possible values of union(T) as a nested object under a `chainSpecific` key */
-export type ChainSpecificNested<T, M> = UnionMerge<
+export type ChainSpecific<T, M> = UnionMerge<
   T extends unknown ? (T extends keyof M ? { chainSpecific: M[T] } : undefined) : never
->
-
-/** Adds all possible values of union(T) as a single flat object */
-export type ChainSpecificFlat<T, M> = UnionMerge<
-  T extends unknown ? (T extends keyof M ? M[T] : undefined) : never
 >

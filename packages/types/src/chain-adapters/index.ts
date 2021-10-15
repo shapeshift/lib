@@ -1,12 +1,12 @@
 import { HDWallet, BTCInputScriptType, BTCSignTx, ETHSignTx } from '@shapeshiftoss/hdwallet-core'
 import { BIP32Params, ChainTypes, NetworkTypes } from '../base'
-import { ChainSpecificFlat, ChainSpecificNested } from '../utility'
+import { ChainSpecific } from '../utility'
 import * as Ethereum from './ethereum'
 import * as Bitcoin from './bitcoin'
 
 export { Bitcoin, Ethereum }
 
-type ChainSpecificAccount<T> = ChainSpecificFlat<
+type ChainSpecificAccount<T> = ChainSpecific<
   T,
   {
     [ChainTypes.Ethereum]: Ethereum.Account
@@ -22,7 +22,7 @@ export type Account<T extends ChainTypes> = {
   network: NetworkTypes
 } & ChainSpecificAccount<T>
 
-type ChainSpecificTransaction<T> = ChainSpecificNested<
+type ChainSpecificTransaction<T> = ChainSpecific<
   T,
   {
     [ChainTypes.Bitcoin]: Bitcoin.TransactionSpecific
@@ -44,6 +44,29 @@ type Transaction<T extends ChainTypes> = {
   value: string
   fee: string
 } & ChainSpecificTransaction<T>
+
+export enum FeeDataKey {
+  Slow = 'slow',
+  Average = 'average',
+  Fast = 'fast'
+}
+
+type ChainSpecificFeeData<T> = ChainSpecific<
+  T,
+  {
+    [ChainTypes.Ethereum]: Ethereum.FeeData
+  }
+>
+
+export type FeeData<T extends ChainTypes> = {
+  feePerUnit: string
+} & ChainSpecificFeeData<T>
+
+export type FeeDataEstimate<T extends ChainTypes> = {
+  [FeeDataKey.Slow]: FeeData<T>
+  [FeeDataKey.Average]: FeeData<T>
+  [FeeDataKey.Fast]: FeeData<T>
+}
 
 export type TxHistoryResponse<T extends ChainTypes> = {
   page: number
@@ -100,14 +123,6 @@ export type GetFeeDataInput = {
   to: string
   value: string
 }
-
-export enum FeeDataKey {
-  Slow = 'slow',
-  Average = 'average',
-  Fast = 'fast'
-}
-
-export type FeeDataEstimate = Ethereum.FeeDataEstimate | Bitcoin.FeeDataEstimate
 
 export enum ValidAddressResultType {
   Valid = 'valid',
