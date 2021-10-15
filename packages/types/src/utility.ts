@@ -1,3 +1,9 @@
+/**
+ * Further reading on ideas behind these utility types
+ *
+ * See: https://stackoverflow.com/questions/55904032/how-to-get-optional-property-from-union
+ */
+
 /** Get specific type for key(K) in union(T) */
 type ValueOfUnion<T, K> = T extends unknown ? (K extends keyof T ? T[K] : undefined) : never
 
