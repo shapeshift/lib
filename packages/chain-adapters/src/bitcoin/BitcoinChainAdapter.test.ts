@@ -69,22 +69,22 @@ describe('BitcoinChainAdapter', () => {
     })
   })
 
-  describe('getAccount', () => {
-    it('should return account info for a specified address', async () => {
-      const exampleResponse: bitcoin.api.BitcoinAccount = {
-        pubkey: '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx',
-        balance: '0'
-      }
-      const data = await btcChainAdapter.getAccount(address)
-      expect(data).toMatchObject(exampleResponse)
-    })
+  //describe('getAccount', () => {
+  //  it('should return account info for a specified address', async () => {
+  //    const exampleResponse: bitcoin.api.BitcoinAccount = {
+  //      pubkey: '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx',
+  //      balance: '0'
+  //    }
+  //    const data = await btcChainAdapter.getAccount(address)
+  //    expect(data).toMatchObject(exampleResponse)
+  //  })
 
-    it('should throw for an unspecified address', async () => {
-      await expect(btcChainAdapter.getAccount('')).rejects.toThrow(
-        'BitcoinChainAdapter: pubkey parameter is not defined'
-      )
-    })
-  })
+  //  it('should throw for an unspecified address', async () => {
+  //    await expect(btcChainAdapter.getAccount('')).rejects.toThrow(
+  //      'BitcoinChainAdapter: pubkey parameter is not defined'
+  //    )
+  //  })
+  //})
 
   // describe('getTxHistory', () => {
   //   it('should return tx history for a specified address', async () => {
@@ -102,55 +102,55 @@ describe('BitcoinChainAdapter', () => {
   //   })
   // })
 
-  describe('buildSendTransaction', () => {
-    it('should return a formatted BTCSignTx object for a valid BuildSendTxInput parameter', async () => {
-      const bip32Params: BIP32Params = {
-        coinType: 0, // TODO(0xdef1cafe): i don't know what i'm doing here i'm trying to make it type check
-        purpose: 44,
-        accountNumber: 0,
-        isChange: false
-      }
-      const txInput: chainAdapters.BuildSendTxInput = {
-        bip32Params,
-        recipients: [
-          {
-            address: '1FH6ehAd5ZFXCM1cLGzHxK1s4dGdq1JusM',
-            value: 2000
-          }
-        ],
-        wallet,
-        fee: '100',
-        opReturnData: 'nm, u?'
-      }
-      const unsignedTx: BTCSignTx = (await btcChainAdapter.buildSendTransaction(txInput))
-        ?.txToSign as BTCSignTx
-      expect(unsignedTx).toBeDefined()
-    })
+  //describe('buildSendTransaction', () => {
+  //  it('should return a formatted BTCSignTx object for a valid BuildSendTxInput parameter', async () => {
+  //    const bip32Params: BIP32Params = {
+  //      coinType: 0, // TODO(0xdef1cafe): i don't know what i'm doing here i'm trying to make it type check
+  //      purpose: 44,
+  //      accountNumber: 0,
+  //      isChange: false
+  //    }
+  //    const txInput: chainAdapters.BuildSendTxInput = {
+  //      bip32Params,
+  //      recipients: [
+  //        {
+  //          address: '1FH6ehAd5ZFXCM1cLGzHxK1s4dGdq1JusM',
+  //          value: 2000
+  //        }
+  //      ],
+  //      wallet,
+  //      fee: '100',
+  //      opReturnData: 'nm, u?'
+  //    }
+  //    const unsignedTx: BTCSignTx = (await btcChainAdapter.buildSendTransaction(txInput))
+  //      ?.txToSign as BTCSignTx
+  //    expect(unsignedTx).toBeDefined()
+  //  })
 
-    it('should return estimated fees for a valid BuildSendTxInput parameter', async () => {
-      const bip32Params: BIP32Params = {
-        coinType: 0, // TODO(0xdef1cafe): i don't know what i'm doing here i'm trying to make it type check
-        purpose: 44,
-        accountNumber: 0,
-        isChange: false,
-        index: 0
-      }
-      const txInput: chainAdapters.BuildSendTxInput = {
-        bip32Params,
-        recipients: [
-          {
-            address: '1FH6ehAd5ZFXCM1cLGzHxK1s4dGdq1JusM',
-            value: 2000
-          }
-        ],
-        wallet,
-        fee: '100',
-        opReturnData: 'nm, u?'
-      }
-      const { estimatedFees } = await btcChainAdapter.buildSendTransaction(txInput)
-      expect(estimatedFees).toBeDefined()
-    })
-  })
+  //  it('should return estimated fees for a valid BuildSendTxInput parameter', async () => {
+  //    const bip32Params: BIP32Params = {
+  //      coinType: 0, // TODO(0xdef1cafe): i don't know what i'm doing here i'm trying to make it type check
+  //      purpose: 44,
+  //      accountNumber: 0,
+  //      isChange: false,
+  //      index: 0
+  //    }
+  //    const txInput: chainAdapters.BuildSendTxInput = {
+  //      bip32Params,
+  //      recipients: [
+  //        {
+  //          address: '1FH6ehAd5ZFXCM1cLGzHxK1s4dGdq1JusM',
+  //          value: 2000
+  //        }
+  //      ],
+  //      wallet,
+  //      fee: '100',
+  //      opReturnData: 'nm, u?'
+  //    }
+  //    const { estimatedFees } = await btcChainAdapter.buildSendTransaction(txInput)
+  //    expect(estimatedFees).toBeDefined()
+  //  })
+  //})
 
   // describe('signTransaction', () => {
   //   it('should sign a properly formatted signTxInput object', async () => {
@@ -186,18 +186,18 @@ describe('BitcoinChainAdapter', () => {
   //   })
   // })
 
-  describe('getFeeData', () => {
-    it('should return current BTC network fees', async () => {
-      const data = await btcChainAdapter.getFeeData({})
-      expect(data).toEqual(
-        expect.objectContaining({
-          fast: { minMinutes: 0, maxMinutes: 35, effort: 5, fee: expect.any(Number) },
-          average: { minMinutes: 0, maxMinutes: 35, effort: 4, fee: expect.any(Number) },
-          slow: { minMinutes: 0, maxMinutes: 50, effort: 3, fee: expect.any(Number) }
-        })
-      )
-    })
-  })
+  //describe('getFeeData', () => {
+  //  it('should return current BTC network fees', async () => {
+  //    const data = await btcChainAdapter.getFeeData({})
+  //    expect(data).toEqual(
+  //      expect.objectContaining({
+  //        fast: { minMinutes: 0, maxMinutes: 35, effort: 5, fee: expect.any(Number) },
+  //        average: { minMinutes: 0, maxMinutes: 35, effort: 4, fee: expect.any(Number) },
+  //        slow: { minMinutes: 0, maxMinutes: 50, effort: 3, fee: expect.any(Number) }
+  //      })
+  //    )
+  //  })
+  //})
 
   describe('getAddress', () => {
     it("should return a p2pkh address for valid derivation root path parameters (m/44'/0'/0'/0/0)", async () => {
