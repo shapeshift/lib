@@ -4,14 +4,11 @@
  * Test BitcoinChainAdapter
  * @group unit
  */
-import { BTCInputScriptType, BTCSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { BTCInputScriptType, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { BitcoinAPI } from '@shapeshiftoss/unchained-client'
 import { BIP32Params, ChainTypes, ChainAdapters } from '@shapeshiftoss/types'
-import { BIP32 } from '@shapeshiftoss/hdwallet-native/dist/crypto/isolation/core'
+import { BitcoinAPI } from '@shapeshiftoss/unchained-client'
 import axios from 'axios'
-import { ChainAdapter } from '../'
-import { ChainAdapterManager } from '../ChainAdapterManager'
 import { BitcoinChainAdapter } from '.'
 
 jest.mock('axios')
@@ -29,38 +26,6 @@ const getWallet = async (): Promise<HDWallet> => {
 
   return wallet
 }
-
-// const getUtxosMockResponse = {
-//   data: [
-//     {
-//       txid: '72b465c1877b2164ae3b238c697fa6ae2a8156bd7fe5da56d5d93d8f1e7a5903',
-//       vout: 1,
-//       value: '49428',
-//       height: 704862,
-//       confirmations: 741,
-//       address: 'bc1qrrc5jmpzl6xw5y93yqtprz6npn9u7s7tpq90aq',
-//       path: "m/84'/0'/0'/1/5"
-//     },
-//     {
-//       txid: '72b465c1877b2164ae3b238c697fa6ae2a8156bd7fe5da56d5d93d8f1e7a5903',
-//       vout: 0,
-//       value: '400',
-//       height: 704862,
-//       confirmations: 741,
-//       address: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4',
-//       path: "m/84'/0'/0'/0/6"
-//     },
-//     {
-//       txid: '2887f90de12429bd3541018899d146daa99e41d701037cf1f7f1179e752d1a8d',
-//       vout: 0,
-//       value: '2000',
-//       height: 703085,
-//       confirmations: 2518,
-//       address: 'bc1qany09g56zssh84zjtqw7pv9mme837fr6yvqn75',
-//       path: "m/84'/0'/0'/0/5"
-//     }
-//   ]
-// }
 
 const getUtxosMockResponse = {
   data: [
@@ -85,16 +50,6 @@ const getUtxosMockResponse = {
   ]
 }
 
-// const getAccountMockResponse = {
-//   data: {
-//     pubkey:
-//       'zpub6sCNvrpEX1jwt2oXAKF1EktoKxk6xLYuhWUBTTo6XrqtKHCrx3nMbEN7X74imLE5mWZzZmEzeioos5Eix5j2NvXPnPnPH2p2KdrHKfgqKUQ',
-//     balance: '51828',
-// nextReceiveAddressIndex: 7,
-// nextChangeAddressIndex: 6
-//   }
-// }
-
 const getAccountMockResponse = {
   data: {
     balance: '33559',
@@ -105,49 +60,8 @@ const getAccountMockResponse = {
     pubkey:
       'zpub6qSSRL9wLd6LNee7qjDEuULWccP5Vbm5nuX4geBu8zMCQBWsF5Jo5UswLVxFzcbCMr2yQPG27ZhDs1cUGKVH1RmqkG1PFHkEXyHG7EV3ogY',
     symbol: 'BTC'
-    // nextReceiveAddressIndex: 7,
-    // nextChangeAddressIndex: 6
   }
 }
-
-// const getTransactionMockResponse = {
-//   data: {
-//     txid: '72b465c1877b2164ae3b238c697fa6ae2a8156bd7fe5da56d5d93d8f1e7a5903',
-//     hash: '644ff5cdc0a24127cd10183abbad93214df8b2d6239b3e065f72c53d520aad7f',
-//     version: 1,
-//     size: 221,
-//     vsize: 140,
-//     weight: 560,
-//     locktime: 0,
-//     vin: [
-//       {
-//         txid: '8f5675627210e74ad26e27badba48c81490d3f271efa1eda72ff171065c6bd4a',
-//         vout: 1,
-//         scriptSig: [Object],
-//         txinwitness: [Array],
-//         sequence: 4294967295
-//       }
-//     ],
-//     vout: [
-//       { value: 0.000004, n: 0, scriptPubKey: [Object] },
-//       { value: 0.00049428, n: 1, scriptPubKey: [Object] }
-//     ],
-//     hex:
-//       '010000000001014abdc6651017ff72da1efa1e273f0d49818ca4dbba276ed24ae710726275568f0100000000ffffffff02900100000000000016001408450440a15ea38314c52d5c9ae6201857d7cf7a14c100000000000016001418f1496c22fe8cea10b12016118b530ccbcf43cb024630430220376c3bc42607cd007191e7c5718d6491d7a1f3fe7e4fc548ba1e6154914af94e021f484be5543cc5f525c8b0363b6c0a52a19498300f64447cfb3825d2727a4319012103c9ce4f322e692315d32941589c26a6d22f30a9fb15c5b1b502dcea7abbd4340f00000000',
-//     blockhash: '0000000000000000000a66d78c98f364bc5901ebf3959abd93dd33021761619f',
-//     confirmations: 742,
-//     time: 1634153984,
-//     blocktime: 1634153984
-//   }
-// }
-
-const getBip32Params = (): BIP32Params => ({
-  coinType: 0,
-  purpose: 44,
-  accountNumber: 0,
-  isChange: false,
-  index: 0
-})
 
 const getTransactionMockResponse = {
   data: {
@@ -416,7 +330,7 @@ describe('BitcoinChainAdapter', () => {
         bip32Params,
         recipients: [{ address: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4', value: 400 }],
         wallet,
-        opReturnData: 'nm, u',
+        opReturnData: 'sup fool',
         feeSpeed: ChainAdapters.FeeDataKey.Slow
       }
 
@@ -428,7 +342,7 @@ describe('BitcoinChainAdapter', () => {
       })
 
       expect(signedTx).toEqual(
-        '0100000000010103597a1e8f3dd9d556dae57fbd56812aaea67f698c233bae64217b87c165b4720100000000ffffffff02900100000000000016001408450440a15ea38314c52d5c9ae6201857d7cf7aa2be000000000000160014c88109cb0d32d085414c4a5884fa0513b0bf96640248304502210087ffbf4124bf1fcfa0054ef6612e27d5c494f9542157293fb36ddb37d1d178c402201b3f987a1df9a2c3805f3ae5a31c0bea70766bcae71a8025125e536a42a68736012102b9227eb836a83bd39813f00064738086c8cb952399edbf05ecbcb0a975e3576c00000000'
+        '0100000000010105abd41ac558c186429b77a2344106bdd978955fc407e3363239864cb479b9ad0000000000ffffffff02900100000000000016001408450440a15ea38314c52d5c9ae6201857d7cf7a677a000000000000160014bf44db911ae5acc9cffcc1bbb9622ddda4a1112b024730440220106d6510888c70719b98069ccfa9dc92db248c1f5b7572d5cf86f3db1d371bf40220118ca57a08ed36f94772a5fbd2491a713fcb250a5ccb5e498ba70de8653763ff0121029dc27a53da073b1fea5601cf370d02d3b33cf572156c3a6df9d5c03c5dbcdcd700000000'
       )
     })
   })
