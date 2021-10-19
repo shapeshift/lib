@@ -20,7 +20,7 @@ export const toPath = (bip32Params: BIP32Params): string => {
 
 export const fromPath = (path: string): BIP32Params => {
   const parts = path.split('/')
-  const sliced = parts.slice(1, parts.length - 1) // discard the m/
+  const sliced = parts.slice(1) // discard the m/
   if (sliced.length != 5) throw new Error(`fromPath: path only has ${sliced.length} parts`)
   const partsWithoutPrimes = sliced.map((part) => part.replace("'", '')) // discard harderning
   const [purpose, coinType, accountNumber, isChangeNumber, index] = partsWithoutPrimes.map(Number)
