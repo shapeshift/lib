@@ -8,7 +8,7 @@ import { BuildSendTxInput } from './../../../types/src/chain-adapters/index'
 import { BTCInputScriptType, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { BIP32Params, ChainTypes, ChainAdapters } from '@shapeshiftoss/types'
-import { BitcoinAPI } from '@shapeshiftoss/unchained-client'
+import { bitcoin } from '@shapeshiftoss/unchained-client'
 import axios from 'axios'
 import { BitcoinChainAdapter } from '.'
 
@@ -142,7 +142,7 @@ describe('BitcoinChainAdapter', () => {
       }
       const btcChainAdapter = new BitcoinChainAdapter({ provider, coinName: 'Bitcoin' })
 
-      const exampleResponse: BitcoinAPI.BitcoinAccount = {
+      const exampleResponse: bitcoin.api.BitcoinAccount = {
         pubkey: '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx',
         balance: '0'
       }
