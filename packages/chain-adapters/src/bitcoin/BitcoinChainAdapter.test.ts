@@ -130,12 +130,12 @@ describe('BitcoinChainAdapter', () => {
     })
   })
 
-  describe.skip('getAccount', () => {
+  describe('getAccount', () => {
     it('should return account info for a specified address', async () => {
       const provider: any = {
         getAccount: jest.fn().mockResolvedValue({
           data: {
-            pubkey: 'SomeFakeAddress',
+            pubkey: '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx',
             balance: '0'
           }
         })
@@ -143,7 +143,7 @@ describe('BitcoinChainAdapter', () => {
       const btcChainAdapter = new BitcoinChainAdapter({ provider, coinName: 'Bitcoin' })
 
       const exampleResponse: BitcoinAPI.BitcoinAccount = {
-        pubkey: 'SomeFakeAddress',
+        pubkey: '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx',
         balance: '0'
       }
       const data = await btcChainAdapter.getAccount('SomeFakeAddress')
