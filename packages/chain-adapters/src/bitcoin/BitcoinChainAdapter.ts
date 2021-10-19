@@ -147,12 +147,16 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
         throw new Error('BitcoinChainAdapter: no public keys available from wallet')
       }
       const pubkey = publicKeys?.[0]?.xpub
+      // console.log('fuckin pubkey: ', pubkey)
       if (!pubkey) throw new Error('BitcoinChainAdapter: no pubkey available from wallet')
       const { data: utxos } = await this.provider.getUtxos({
         pubkey
       })
 
+      // console.log('fuckin utxos: ', JSON.stringify(utxos))
+
       const account = await this.getAccount(pubkey)
+      // console.log('fuckin account: ', JSON.stringify(account))
       const estimatedFees = await this.getFeeData()
       const satoshiPerByte = estimatedFees[feeSpeed ?? ChainAdapters.FeeDataKey.Average].feePerUnit
 
@@ -177,6 +181,8 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
           txid: input.txid
         })
         const inputTx = getTransactionResponse.data
+
+        // console.log('fuckin inputTx: ', JSON.stringify(inputTx))
 
         signTxInputs.push({
           addressNList: bip32ToAddressNList(input.path),
