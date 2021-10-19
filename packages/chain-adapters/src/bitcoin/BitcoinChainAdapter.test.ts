@@ -230,7 +230,7 @@ describe('BitcoinChainAdapter', () => {
     })
   })
 
-  describe.skip('buildSendTransaction', () => {
+  describe('buildSendTransaction', () => {
     it('should return a formatted BTCSignTx object for a valid BuildSendTxInput parameter', async () => {
       const mockFeeData = {
         fast: { feePerUnit: '1' },
