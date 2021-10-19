@@ -30,78 +30,116 @@ const getWallet = async (): Promise<HDWallet> => {
   return wallet
 }
 
+// const getUtxosMockResponse = {
+//   data: [
+//     {
+//       txid: '72b465c1877b2164ae3b238c697fa6ae2a8156bd7fe5da56d5d93d8f1e7a5903',
+//       vout: 1,
+//       value: '49428',
+//       height: 704862,
+//       confirmations: 741,
+//       address: 'bc1qrrc5jmpzl6xw5y93yqtprz6npn9u7s7tpq90aq',
+//       path: "m/84'/0'/0'/1/5"
+//     },
+//     {
+//       txid: '72b465c1877b2164ae3b238c697fa6ae2a8156bd7fe5da56d5d93d8f1e7a5903',
+//       vout: 0,
+//       value: '400',
+//       height: 704862,
+//       confirmations: 741,
+//       address: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4',
+//       path: "m/84'/0'/0'/0/6"
+//     },
+//     {
+//       txid: '2887f90de12429bd3541018899d146daa99e41d701037cf1f7f1179e752d1a8d',
+//       vout: 0,
+//       value: '2000',
+//       height: 703085,
+//       confirmations: 2518,
+//       address: 'bc1qany09g56zssh84zjtqw7pv9mme837fr6yvqn75',
+//       path: "m/84'/0'/0'/0/5"
+//     }
+//   ]
+// }
+
 const getUtxosMockResponse = {
   data: [
     {
-      txid: '72b465c1877b2164ae3b238c697fa6ae2a8156bd7fe5da56d5d93d8f1e7a5903',
-      vout: 1,
-      value: '49428',
-      height: 704862,
-      confirmations: 741,
-      address: 'bc1qrrc5jmpzl6xw5y93yqtprz6npn9u7s7tpq90aq',
-      path: "m/84'/0'/0'/1/5"
+      txid: 'ef935d850e7d596f98c6e24d5f25faa770f6e6d8e5eab94dea3e2154c3643986',
+      vout: 0,
+      value: '1598',
+      height: 705718,
+      confirmations: 2,
+      address: 'bc1qpszctuml70ulzf7f0zy5r4sg9nm65qfpgcw0uy',
+      path: "m/84'/0'/0'/0/1"
     },
     {
-      txid: '72b465c1877b2164ae3b238c697fa6ae2a8156bd7fe5da56d5d93d8f1e7a5903',
+      txid: 'adb979b44c86393236e307c45f9578d9bd064134a2779b4286c158c51ad4ab05',
       vout: 0,
-      value: '400',
-      height: 704862,
-      confirmations: 741,
-      address: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4',
-      path: "m/84'/0'/0'/0/6"
-    },
-    {
-      txid: '2887f90de12429bd3541018899d146daa99e41d701037cf1f7f1179e752d1a8d',
-      vout: 0,
-      value: '2000',
-      height: 703085,
-      confirmations: 2518,
-      address: 'bc1qany09g56zssh84zjtqw7pv9mme837fr6yvqn75',
-      path: "m/84'/0'/0'/0/5"
+      value: '31961',
+      height: 705718,
+      confirmations: 2,
+      address: 'bc1qpszctuml70ulzf7f0zy5r4sg9nm65qfpgcw0uy',
+      path: "m/84'/0'/0'/0/1"
     }
   ]
 }
 
+// const getAccountMockResponse = {
+//   data: {
+//     pubkey:
+//       'zpub6sCNvrpEX1jwt2oXAKF1EktoKxk6xLYuhWUBTTo6XrqtKHCrx3nMbEN7X74imLE5mWZzZmEzeioos5Eix5j2NvXPnPnPH2p2KdrHKfgqKUQ',
+//     balance: '51828',
+// nextReceiveAddressIndex: 7,
+// nextChangeAddressIndex: 6
+//   }
+// }
+
 const getAccountMockResponse = {
   data: {
+    balance: '33559',
+    chain: 'bitcoin',
+    nextChangeAddressIndex: 0,
+    nextReceiveAddressIndex: 2,
+    network: 'MAINNET',
     pubkey:
-      'zpub6sCNvrpEX1jwt2oXAKF1EktoKxk6xLYuhWUBTTo6XrqtKHCrx3nMbEN7X74imLE5mWZzZmEzeioos5Eix5j2NvXPnPnPH2p2KdrHKfgqKUQ',
-    balance: '51828',
-    nextReceiveAddressIndex: 7,
-    nextChangeAddressIndex: 6
+      'zpub6qSSRL9wLd6LNee7qjDEuULWccP5Vbm5nuX4geBu8zMCQBWsF5Jo5UswLVxFzcbCMr2yQPG27ZhDs1cUGKVH1RmqkG1PFHkEXyHG7EV3ogY',
+    symbol: 'BTC'
+    // nextReceiveAddressIndex: 7,
+    // nextChangeAddressIndex: 6
   }
 }
 
-const getTransactionMockResponse = {
-  data: {
-    txid: '72b465c1877b2164ae3b238c697fa6ae2a8156bd7fe5da56d5d93d8f1e7a5903',
-    hash: '644ff5cdc0a24127cd10183abbad93214df8b2d6239b3e065f72c53d520aad7f',
-    version: 1,
-    size: 221,
-    vsize: 140,
-    weight: 560,
-    locktime: 0,
-    vin: [
-      {
-        txid: '8f5675627210e74ad26e27badba48c81490d3f271efa1eda72ff171065c6bd4a',
-        vout: 1,
-        scriptSig: [Object],
-        txinwitness: [Array],
-        sequence: 4294967295
-      }
-    ],
-    vout: [
-      { value: 0.000004, n: 0, scriptPubKey: [Object] },
-      { value: 0.00049428, n: 1, scriptPubKey: [Object] }
-    ],
-    hex:
-      '010000000001014abdc6651017ff72da1efa1e273f0d49818ca4dbba276ed24ae710726275568f0100000000ffffffff02900100000000000016001408450440a15ea38314c52d5c9ae6201857d7cf7a14c100000000000016001418f1496c22fe8cea10b12016118b530ccbcf43cb024630430220376c3bc42607cd007191e7c5718d6491d7a1f3fe7e4fc548ba1e6154914af94e021f484be5543cc5f525c8b0363b6c0a52a19498300f64447cfb3825d2727a4319012103c9ce4f322e692315d32941589c26a6d22f30a9fb15c5b1b502dcea7abbd4340f00000000',
-    blockhash: '0000000000000000000a66d78c98f364bc5901ebf3959abd93dd33021761619f',
-    confirmations: 742,
-    time: 1634153984,
-    blocktime: 1634153984
-  }
-}
+// const getTransactionMockResponse = {
+//   data: {
+//     txid: '72b465c1877b2164ae3b238c697fa6ae2a8156bd7fe5da56d5d93d8f1e7a5903',
+//     hash: '644ff5cdc0a24127cd10183abbad93214df8b2d6239b3e065f72c53d520aad7f',
+//     version: 1,
+//     size: 221,
+//     vsize: 140,
+//     weight: 560,
+//     locktime: 0,
+//     vin: [
+//       {
+//         txid: '8f5675627210e74ad26e27badba48c81490d3f271efa1eda72ff171065c6bd4a',
+//         vout: 1,
+//         scriptSig: [Object],
+//         txinwitness: [Array],
+//         sequence: 4294967295
+//       }
+//     ],
+//     vout: [
+//       { value: 0.000004, n: 0, scriptPubKey: [Object] },
+//       { value: 0.00049428, n: 1, scriptPubKey: [Object] }
+//     ],
+//     hex:
+//       '010000000001014abdc6651017ff72da1efa1e273f0d49818ca4dbba276ed24ae710726275568f0100000000ffffffff02900100000000000016001408450440a15ea38314c52d5c9ae6201857d7cf7a14c100000000000016001418f1496c22fe8cea10b12016118b530ccbcf43cb024630430220376c3bc42607cd007191e7c5718d6491d7a1f3fe7e4fc548ba1e6154914af94e021f484be5543cc5f525c8b0363b6c0a52a19498300f64447cfb3825d2727a4319012103c9ce4f322e692315d32941589c26a6d22f30a9fb15c5b1b502dcea7abbd4340f00000000',
+//     blockhash: '0000000000000000000a66d78c98f364bc5901ebf3959abd93dd33021761619f',
+//     confirmations: 742,
+//     time: 1634153984,
+//     blocktime: 1634153984
+//   }
+// }
 
 const getBip32Params = (): BIP32Params => ({
   coinType: 0,
@@ -110,6 +148,62 @@ const getBip32Params = (): BIP32Params => ({
   isChange: false,
   index: 0
 })
+
+const getTransactionMockResponse = {
+  data: {
+    txid: 'adb979b44c86393236e307c45f9578d9bd064134a2779b4286c158c51ad4ab05',
+    hash: 'adb979b44c86393236e307c45f9578d9bd064134a2779b4286c158c51ad4ab05',
+    version: 1,
+    size: 223,
+    vsize: 223,
+    weight: 892,
+    locktime: 0,
+    vin: [
+      {
+        txid: 'feab0ffe497740fcc8bcab9c5b12872c4302e629ee8ccc35ed4f6057fc7a4580',
+        vout: 1,
+        scriptSig: {
+          asm:
+            '3045022100cd627a0577d35454ced7f0a6ef8a3d3cf11c0f8696bda18062025478e0fc866002206c8ac559dc6bd851bdf00e33c1602fcaeee9d16b35d21b548529825f12dfe5ad[ALL] 027751a74f251ba2657ec2a2f374ce7d5ba1548359749823a59314c54a0670c126',
+          hex:
+            '483045022100cd627a0577d35454ced7f0a6ef8a3d3cf11c0f8696bda18062025478e0fc866002206c8ac559dc6bd851bdf00e33c1602fcaeee9d16b35d21b548529825f12dfe5ad0121027751a74f251ba2657ec2a2f374ce7d5ba1548359749823a59314c54a0670c126'
+        },
+        sequence: 4294967295
+      }
+    ],
+    vout: [
+      {
+        value: 0.00031961,
+        n: 0,
+        scriptPubKey: {
+          asm: '0 0c0585f37ff3f9f127c9788941d6082cf7aa0121',
+          hex: '00140c0585f37ff3f9f127c9788941d6082cf7aa0121',
+          reqSigs: 1,
+          type: 'witness_v0_keyhash',
+          addresses: ['bc1qpszctuml70ulzf7f0zy5r4sg9nm65qfpgcw0uy']
+        }
+      },
+      {
+        value: 0.00057203,
+        n: 1,
+        scriptPubKey: {
+          asm:
+            'OP_DUP OP_HASH160 b22138dfe140e4611b98bdb728eed04beed754c4 OP_EQUALVERIFY OP_CHECKSIG',
+          hex: '76a914b22138dfe140e4611b98bdb728eed04beed754c488ac',
+          reqSigs: 1,
+          type: 'pubkeyhash',
+          addresses: ['1HEs5TpTvrWHDFqLqfZnXFLFc4hqHjHe5M']
+        }
+      }
+    ],
+    hex:
+      '010000000180457afc57604fed35cc8cee29e602432c87125b9cabbcc8fc407749fe0fabfe010000006b483045022100cd627a0577d35454ced7f0a6ef8a3d3cf11c0f8696bda18062025478e0fc866002206c8ac559dc6bd851bdf00e33c1602fcaeee9d16b35d21b548529825f12dfe5ad0121027751a74f251ba2657ec2a2f374ce7d5ba1548359749823a59314c54a0670c126ffffffff02d97c0000000000001600140c0585f37ff3f9f127c9788941d6082cf7aa012173df0000000000001976a914b22138dfe140e4611b98bdb728eed04beed754c488ac00000000',
+    blockhash: '000000000000000000033c8ec44721d844aa63f4312d65261eb4c4d0cd4e0379',
+    confirmations: 2,
+    time: 1634662208,
+    blocktime: 1634662208
+  }
+}
 
 describe('BitcoinChainAdapter', () => {
   describe('getType', () => {
@@ -257,13 +351,13 @@ describe('BitcoinChainAdapter', () => {
           coin: 'Bitcoin',
           inputs: [
             {
-              addressNList: [2147483732, 2147483648, 2147483648, 1, 5],
+              addressNList: [2147483732, 2147483648, 2147483648, 0, 1],
               scriptType: 'p2wpkh',
-              amount: '49428',
-              vout: 1,
-              txid: '72b465c1877b2164ae3b238c697fa6ae2a8156bd7fe5da56d5d93d8f1e7a5903',
+              amount: '31961',
+              vout: 0,
+              txid: 'adb979b44c86393236e307c45f9578d9bd064134a2779b4286c158c51ad4ab05',
               hex:
-                '010000000001014abdc6651017ff72da1efa1e273f0d49818ca4dbba276ed24ae710726275568f0100000000ffffffff02900100000000000016001408450440a15ea38314c52d5c9ae6201857d7cf7a14c100000000000016001418f1496c22fe8cea10b12016118b530ccbcf43cb024630430220376c3bc42607cd007191e7c5718d6491d7a1f3fe7e4fc548ba1e6154914af94e021f484be5543cc5f525c8b0363b6c0a52a19498300f64447cfb3825d2727a4319012103c9ce4f322e692315d32941589c26a6d22f30a9fb15c5b1b502dcea7abbd4340f00000000'
+                '010000000180457afc57604fed35cc8cee29e602432c87125b9cabbcc8fc407749fe0fabfe010000006b483045022100cd627a0577d35454ced7f0a6ef8a3d3cf11c0f8696bda18062025478e0fc866002206c8ac559dc6bd851bdf00e33c1602fcaeee9d16b35d21b548529825f12dfe5ad0121027751a74f251ba2657ec2a2f374ce7d5ba1548359749823a59314c54a0670c126ffffffff02d97c0000000000001600140c0585f37ff3f9f127c9788941d6082cf7aa012173df0000000000001976a914b22138dfe140e4611b98bdb728eed04beed754c488ac00000000'
             }
           ],
           outputs: [
@@ -275,8 +369,8 @@ describe('BitcoinChainAdapter', () => {
             },
             {
               addressType: 'change',
-              amount: '48802',
-              addressNList: [2147483732, 2147483648, 2147483648, 1, 6],
+              amount: '31335',
+              addressNList: [2147483732, 2147483648, 2147483648, 1, 0],
               scriptType: 'p2wpkh',
               isChange: true
             }
@@ -295,47 +389,49 @@ describe('BitcoinChainAdapter', () => {
     })
   })
 
-  // describe('signTransaction', () => {
-  //   it('should sign a properly formatted signTxInput object', async () => {
-  //     const wallet: any = await getWallet()
-  //     const provider: any = {
-  //       getUtxos: jest.fn<any, any>().mockResolvedValue(getUtxosMockResponse),
-  //       getTransaction: jest.fn<any, any>().mockResolvedValue(getTransactionMockResponse),
-  //       getAccount: jest.fn().mockResolvedValue(getAccountMockResponse)
-  //     }
-  //     const btcChainAdapter = new BitcoinChainAdapter({ provider, coinName: 'Bitcoin' })
+  describe('signTransaction', () => {
+    it('should sign a properly formatted signTxInput object', async () => {
+      const mockFeeData = {
+        fast: { feePerUnit: '1' },
+        average: { feePerUnit: '1' },
+        slow: { feePerUnit: '1' }
+      }
+      mockedAxios.get.mockResolvedValueOnce(mockFeeData)
+      const wallet: any = await getWallet()
+      const provider: any = {
+        getUtxos: jest.fn<any, any>().mockResolvedValue(getUtxosMockResponse),
+        getTransaction: jest.fn<any, any>().mockResolvedValue(getTransactionMockResponse),
+        getAccount: jest.fn().mockResolvedValue(getAccountMockResponse)
+      }
+      const btcChainAdapter = new BitcoinChainAdapter({ provider, coinName: 'Bitcoin' })
 
-  //     const bip32Params: BIP32Params = {
-  //       coinType: 0,
-  //       purpose: 84,
-  //       accountNumber: 0,
-  //       isChange: false
-  //     }
-  //     const txInput: ChainAdapters.BuildSendTxInput = {
-  //       bip32Params,
-  //       recipients: [
-  //         {
-  //           address: '1FH6ehAd5ZFXCM1cLGzHxK1s4dGdq1JusM',
-  //           value: 2000
-  //         }
-  //       ],
-  //       wallet,
-  //       fee: '100',
-  //       opReturnData: 'nm, u?'
-  //     }
+      const bip32Params: BIP32Params = {
+        purpose: 84,
+        coinType: 0,
+        accountNumber: 0,
+        isChange: false
+      }
 
-  //     const unsignedTx = await btcChainAdapter.buildSendTransaction(txInput)
+      const txInput: ChainAdapters.BuildSendTxInput = {
+        bip32Params,
+        recipients: [{ address: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4', value: 400 }],
+        wallet,
+        opReturnData: 'nm, u',
+        feeSpeed: ChainAdapters.FeeDataKey.Slow
+      }
 
-  //     const signedTx = await btcChainAdapter.signTransaction({
-  //       wallet,
-  //       txToSign: unsignedTx?.txToSign
-  //     })
+      const unsignedTx = await btcChainAdapter.buildSendTransaction(txInput)
 
-  //     expect(signedTx).toEqual(
-  //       '0100000000010103597a1e8f3dd9d556dae57fbd56812aaea67f698c233bae64217b87c165b4720100000000ffffffff02900100000000000016001408450440a15ea38314c52d5c9ae6201857d7cf7aa2be000000000000160014c88109cb0d32d085414c4a5884fa0513b0bf96640248304502210087ffbf4124bf1fcfa0054ef6612e27d5c494f9542157293fb36ddb37d1d178c402201b3f987a1df9a2c3805f3ae5a31c0bea70766bcae71a8025125e536a42a68736012102b9227eb836a83bd39813f00064738086c8cb952399edbf05ecbcb0a975e3576c00000000'
-  //     )
-  //   })
-  // })
+      const signedTx = await btcChainAdapter.signTransaction({
+        wallet,
+        txToSign: unsignedTx?.txToSign
+      })
+
+      expect(signedTx).toEqual(
+        '0100000000010103597a1e8f3dd9d556dae57fbd56812aaea67f698c233bae64217b87c165b4720100000000ffffffff02900100000000000016001408450440a15ea38314c52d5c9ae6201857d7cf7aa2be000000000000160014c88109cb0d32d085414c4a5884fa0513b0bf96640248304502210087ffbf4124bf1fcfa0054ef6612e27d5c494f9542157293fb36ddb37d1d178c402201b3f987a1df9a2c3805f3ae5a31c0bea70766bcae71a8025125e536a42a68736012102b9227eb836a83bd39813f00064738086c8cb952399edbf05ecbcb0a975e3576c00000000'
+      )
+    })
+  })
 
   // describe('broadcastTransaction', () => {
   //   it('is unimplemented', () => {
