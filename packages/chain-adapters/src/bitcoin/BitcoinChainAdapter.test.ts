@@ -433,24 +433,35 @@ describe('BitcoinChainAdapter', () => {
     })
   })
 
-  // describe('broadcastTransaction', () => {
-  //   it('is unimplemented', () => {
-  //     expect(true).toEqual('unimplemented')
-  //   })
-  // })
+  describe('broadcastTransaction', () => {
+    it('is should correctly call broadcastTransaction', async () => {
+      const sendDataResult = 'success'
+      const provider: any = {
+        sendTx: jest.fn().mockResolvedValue({ data: sendDataResult })
+      }
+      const btcChainAdapter = new BitcoinChainAdapter({ provider, coinName: 'Bitcoin' })
+      const mockTx = '0x123'
+      const result = await btcChainAdapter.broadcastTransaction(mockTx)
+      expect(provider.sendTx).toHaveBeenCalledWith<any>({ sendTxBody: { hex: mockTx } })
+      expect(result).toEqual(sendDataResult)
+    })
+  })
 
-  // describe('getFeeData', () => {
-  //   it('should return current BTC network fees', async () => {
-  //     const data = await btcChainAdapter.getFeeData({})
-  //     expect(data).toEqual(
-  //       expect.objectContaining({
-  //         fast: { minMinutes: 0, maxMinutes: 35, effort: 5, fee: expect.any(Number) },
-  //         average: { minMinutes: 0, maxMinutes: 35, effort: 4, fee: expect.any(Number) },
-  //         slow: { minMinutes: 0, maxMinutes: 50, effort: 3, fee: expect.any(Number) }
-  //       })
-  //     )
-  //   })
-  // })
+  describe('getFeeData', () => {
+    it('should return current BTC network fees', async () => {
+      const provider: any = {}
+      const btcChainAdapter = new BitcoinChainAdapter({ provider, coinName: 'Bitcoin' })
+
+      const data = await btcChainAdapter.getFeeData()
+      expect(data).toEqual(
+        expect.objectContaining({
+          fast: { feePerUnit: expect.any(String) },
+          average: { feePerUnit: expect.any(String) },
+          slow: { feePerUnit: expect.any(String) }
+        })
+      )
+    })
+  })
 
   describe('getAddress', () => {
     it("should return a p2pkh address for valid derivation root path parameters (m/44'/0'/0'/0/0)", async () => {

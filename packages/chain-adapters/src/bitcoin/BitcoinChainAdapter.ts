@@ -251,7 +251,7 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
   }
 
   async getFeeData(): Promise<ChainAdapters.FeeDataEstimate<ChainTypes.Bitcoin>> {
-    const { data } = await axios.get('https://bitcoinfees.earn.com/api/v1/fees/list')
+    // const { data } = await axios.get('https://bitcoinfees.earn.com/api/v1/fees/list')
     const confTimes: ChainAdapters.FeeDataEstimate<ChainTypes.Bitcoin> = {
       [ChainAdapters.FeeDataKey.Fast]: {
         feePerUnit: '1'
