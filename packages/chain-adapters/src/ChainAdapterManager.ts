@@ -1,5 +1,5 @@
 import { ChainTypes } from '@shapeshiftoss/types'
-import { BitcoinAPI, EthereumAPI } from '@shapeshiftoss/unchained-client'
+import { bitcoin, ethereum } from '@shapeshiftoss/unchained-client'
 import { ChainAdapter, isChainAdapterOfType } from './api'
 import { BitcoinChainAdapter } from './bitcoin'
 import { EthereumChainAdapter } from './ethereum'
@@ -18,12 +18,12 @@ export class ChainAdapterManager {
       ([type, basePath]) => {
         switch (type) {
           case ChainTypes.Ethereum: {
-            const provider = new EthereumAPI.V1Api(new EthereumAPI.Configuration({ basePath }))
+            const provider = new ethereum.api.V1Api(new ethereum.api.Configuration({ basePath }))
             return this.addChain(type, () => new EthereumChainAdapter({ provider }))
           }
           case ChainTypes.Bitcoin: {
             const coinName = 'Bitcoin'
-            const provider = new BitcoinAPI.V1Api(new BitcoinAPI.Configuration({ basePath }))
+            const provider = new bitcoin.api.V1Api(new bitcoin.api.Configuration({ basePath }))
             return this.addChain(type, () => new BitcoinChainAdapter({ provider, coinName }))
           }
           default:
