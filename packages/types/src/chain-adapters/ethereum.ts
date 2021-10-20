@@ -20,12 +20,16 @@ export type FeeData = {
 }
 
 export type QuoteFeeData = {
-  fee?: string
-  gas?: string
+  /**
+   * estimated gas units in gwei
+   */
   estimatedGas?: string
+  /**
+   * gas price per gwei
+   */
   gasPrice?: string
+  /**
+   * total approval fee in eth
+   */
   approvalFee?: string
-  protocolFee?: string
-  minimumProtocolFee?: string
-  receiveNetworkFee?: string
 }
