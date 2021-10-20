@@ -125,7 +125,6 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
 
       const path = toRootDerivationPath(bip32Params)
       const pubkey = await this.getPubKey(wallet, bip32Params)
-      if (!pubkey) throw new Error('BitcoinChainAdapter: no pubkey available from wallet')
       const { data: utxos } = await this.provider.getUtxos({
         pubkey: pubkey.xpub
       })
