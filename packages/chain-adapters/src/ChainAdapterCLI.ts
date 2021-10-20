@@ -20,8 +20,14 @@ const getWallet = async (): Promise<NativeHDWallet> => {
 }
 
 const unchainedUrls = {
-  [ChainTypes.Bitcoin]: 'https://api.bitcoin.shapeshift.com',
-  [ChainTypes.Ethereum]: 'https://api.ethereum.shapeshift.com'
+  [ChainTypes.Bitcoin]: {
+    httpUrl: 'https://api.bitcoin.shapeshift.com',
+    wsUrl: 'wss://api.bitcoin.shapeshift.com'
+  },
+  [ChainTypes.Ethereum]: {
+    httpUrl: 'https://api.ethereum.shapeshift.com',
+    wsUrl: 'wss://api.ethereum.shapeshift.com'
+  }
 }
 
 const main = async () => {

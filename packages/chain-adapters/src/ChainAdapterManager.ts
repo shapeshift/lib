@@ -4,7 +4,11 @@ import { ChainAdapter, isChainAdapterOfType } from './api'
 import * as bitcoin from './bitcoin'
 import * as ethereum from './ethereum'
 
-export type UnchainedUrls = Partial<Record<ChainTypes, string>>
+export type UnchainedUrl = {
+  httpUrl: string
+  wsUrl: string
+}
+export type UnchainedUrls = Partial<Record<ChainTypes, UnchainedUrl>>
 
 export class ChainAdapterManager {
   private supported: Map<ChainTypes, () => ChainAdapter<ChainTypes>> = new Map()
@@ -14,14 +18,14 @@ export class ChainAdapterManager {
     if (!unchainedUrls) {
       throw new Error('Blockchain urls required')
     }
-    ;(Object.entries(unchainedUrls) as Array<[keyof UnchainedUrls, string]>).forEach(
-      ([type, basePath]) => {
+    ;(Object.entries(unchainedUrls) as Array<[keyof UnchainedUrls, UnchainedUrl]>).forEach(
+      ([type, { httpUrl: basePath, wsUrl }]) => {
         switch (type) {
           case ChainTypes.Ethereum: {
             const http = new unchained.ethereum.api.V1Api(
               new unchained.ethereum.api.Configuration({ basePath })
             )
-            const ws = new unchained.ethereum.ws.Client(basePath, {
+            const ws = new unchained.ethereum.ws.Client(wsUrl, {
               handshakeTimeout: 5000
             })
             return this.addChain(type, () => new ethereum.ChainAdapter({ providers: { http, ws } }))
