@@ -1,14 +1,14 @@
 import fs from 'fs'
 import { baseAssets } from './baseAssets'
 import { getTokens } from './ethTokens'
-import { BaseAsset, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
+import { assetService, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 
 const generateAssetData = async () => {
   const generatedAssetData = await Promise.all(
     baseAssets.map(async (baseAsset) => {
       if (baseAsset.chain === ChainTypes.Ethereum && baseAsset.network === NetworkTypes.MAINNET) {
         const ethTokens = await getTokens()
-        const baseAssetWithTokens: BaseAsset = { ...baseAsset, tokens: ethTokens }
+        const baseAssetWithTokens: assetService.AssetList = { ...baseAsset, tokens: ethTokens }
         return baseAssetWithTokens
       } else {
         return baseAsset

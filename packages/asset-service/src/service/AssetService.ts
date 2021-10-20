@@ -1,9 +1,11 @@
-import { BaseAsset, Asset, NetworkTypes, ChainTypes } from '@shapeshiftoss/types'
 import axios from 'axios'
+import { assetService, NetworkTypes, ChainTypes } from '@shapeshiftoss/types'
 import localAssetData from './generatedAssetData.json'
 
-export const flattenAssetData = (assetData: BaseAsset[]): Asset[] => {
-  const flatAssetData: Asset[] = []
+export const flattenAssetData = (
+  assetData: Array<assetService.AssetList>
+): assetService.Asset[] => {
+  const flatAssetData: assetService.Asset[] = []
   for (const baseAsset of assetData) {
     const newAsset = { ...baseAsset }
     delete newAsset.tokens
@@ -28,14 +30,14 @@ const getDataIndexKey = (chain: ChainTypes, network: NetworkTypes, tokenId?: str
   return chain + '_' + network + (tokenId ? '_' + tokenId : '')
 }
 
-export const indexAssetData = (flatAssetData: Asset[]): IndexedAssetData => {
+export const indexAssetData = (flatAssetData: assetService.Asset[]): IndexedAssetData => {
   return flatAssetData.reduce((acc, val) => {
     return { ...acc, [getDataIndexKey(val.chain, val.network, val.tokenId)]: val }
   }, {})
 }
 
 export type IndexedAssetData = {
-  [k: string]: Asset
+  [k: string]: assetService.Asset
 }
 
 type ByTokenIdArgs = {
@@ -47,8 +49,8 @@ type ByTokenIdArgs = {
 export class AssetService {
   private assetFileUrl: string
 
-  private assetData: BaseAsset[]
-  private flatAssetData: Asset[]
+  private assetData: Array<assetService.AssetList>
+  private flatAssetData: assetService.Asset[]
   private indexedAssetData: IndexedAssetData
 
   constructor(assetFileUrl: string) {
@@ -68,10 +70,10 @@ export class AssetService {
    */
   async initialize() {
     try {
-      const { data } = await axios.get<BaseAsset[]>(this.assetFileUrl)
+      const { data } = await axios.get<Array<assetService.AssetList>>(this.assetFileUrl)
       this.assetData = data
     } catch (err) {
-      this.assetData = localAssetData as BaseAsset[]
+      this.assetData = localAssetData as Array<assetService.AssetList>
     }
 
     this.flatAssetData = flattenAssetData(this.assetData)
@@ -83,7 +85,7 @@ export class AssetService {
    * @param network mainnet, testnet, eth ropsten, etc
    * @returns base coins (ETH, BNB, etc...) along with their supported tokens in a flattened list
    */
-  byNetwork(network?: NetworkTypes): Asset[] {
+  byNetwork(network?: NetworkTypes): assetService.Asset[] {
     this.checkInitialized()
     return network
       ? this.flatAssetData.filter((asset) => asset.network == network)
@@ -97,7 +99,7 @@ export class AssetService {
    * @param tokenId token identifier (contract address on eth)
    * @returns First asset found
    */
-  byTokenId({ chain, network, tokenId }: ByTokenIdArgs): Asset {
+  byTokenId({ chain, network, tokenId }: ByTokenIdArgs): assetService.Asset {
     this.checkInitialized()
     const index = getDataIndexKey(chain, network ?? NetworkTypes.MAINNET, tokenId)
     const result = this.indexedAssetData[index]

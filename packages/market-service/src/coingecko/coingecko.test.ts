@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { getMarketData, getPriceHistory } from '..'
-import { ChainTypes, HistoryTimeframe } from '@shapeshiftoss/types'
+import { ChainTypes, marketService } from '@shapeshiftoss/types'
 
 jest.mock('axios')
 
@@ -48,7 +48,7 @@ describe('coingecko market service', () => {
   describe('getPriceHistory', () => {
     const args = {
       chain: ChainTypes.Ethereum,
-      timeframe: HistoryTimeframe.HOUR
+      timeframe: marketService.HistoryTimeframe.HOUR
     }
 
     it('should return market data for ETH', async () => {

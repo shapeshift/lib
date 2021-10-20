@@ -1,15 +1,8 @@
 import axios from 'axios'
 import dayjs from 'dayjs'
-import {
-  ChainTypes,
-  MarketData,
-  HistoryData,
-  HistoryTimeframe,
-  PriceHistoryArgs,
-  MarketDataArgs
-} from '@shapeshiftoss/types'
+import { ChainTypes, marketService } from '@shapeshiftoss/types'
 
-import { MarketService } from '../api'
+import { MarketService } from '../index'
 
 // tons more parms here: https://www.coingecko.com/en/api/documentation
 type CoinGeckoAssetData = {
@@ -38,7 +31,10 @@ const coingeckoIDMap: CoinGeckoIDMap = Object.freeze({
 export class CoinGeckoMarketService implements MarketService {
   baseUrl = 'https://api.coingecko.com/api/v3'
 
-  getMarketData = async ({ chain, tokenId }: MarketDataArgs): Promise<MarketData> => {
+  getMarketData = async ({
+    chain,
+    tokenId
+  }: marketService.DataArgs): Promise<marketService.Data> => {
     const id = coingeckoIDMap[chain]
     try {
       const isToken = !!tokenId
@@ -67,28 +63,28 @@ export class CoinGeckoMarketService implements MarketService {
     chain,
     timeframe,
     tokenId
-  }: PriceHistoryArgs): Promise<HistoryData[]> => {
+  }: marketService.PriceHistoryArgs): Promise<marketService.HistoryData[]> => {
     const id = coingeckoIDMap[chain]
 
     const end = dayjs().startOf('minute')
     let start
     switch (timeframe) {
-      case HistoryTimeframe.HOUR:
+      case marketService.HistoryTimeframe.HOUR:
         start = end.subtract(1, 'hour')
         break
-      case HistoryTimeframe.DAY:
+      case marketService.HistoryTimeframe.DAY:
         start = end.subtract(1, 'day')
         break
-      case HistoryTimeframe.WEEK:
+      case marketService.HistoryTimeframe.WEEK:
         start = end.subtract(1, 'week')
         break
-      case HistoryTimeframe.MONTH:
+      case marketService.HistoryTimeframe.MONTH:
         start = end.subtract(1, 'month')
         break
-      case HistoryTimeframe.YEAR:
+      case marketService.HistoryTimeframe.YEAR:
         start = end.subtract(1, 'year')
         break
-      case HistoryTimeframe.ALL:
+      case marketService.HistoryTimeframe.ALL:
         start = end.subtract(20, 'years')
         break
       default:

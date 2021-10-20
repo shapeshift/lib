@@ -1,5 +1,5 @@
 import { HDWallet, BTCInputScriptType, BTCSignTx, ETHSignTx } from '@shapeshiftoss/hdwallet-core'
-import { BIP32Params, ChainTypes, NetworkTypes } from '../base'
+import { BIP32Params, ChainTypes, NetworkTypes } from '../common'
 import { ChainSpecific } from '../utility'
 import * as ethereum from './ethereum'
 import * as bitcoin from './bitcoin'

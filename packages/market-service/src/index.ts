@@ -1,25 +1,27 @@
 import { CoinGeckoMarketService } from './coingecko/coingecko'
-import { MarketService } from './api'
-import {
-  HistoryData,
-  MarketDataArgs,
-  MarketDataType,
-  PriceHistoryArgs,
-  PriceHistoryType
-} from '@shapeshiftoss/types'
+import { marketService } from '@shapeshiftoss/types'
+
+export interface MarketService {
+  baseUrl: string
+  getMarketData: marketService.DataType
+  getPriceHistory: marketService.PriceHistoryType
+}
 
 export const getDefaultMarketService = (): MarketService => {
   return new CoinGeckoMarketService()
 }
 
-export const getMarketData: MarketDataType = async ({ chain, tokenId }: MarketDataArgs) => {
+export const getMarketData: marketService.DataType = async ({
+  chain,
+  tokenId
+}: marketService.DataArgs) => {
   return getDefaultMarketService().getMarketData({ chain, tokenId })
 }
 
-export const getPriceHistory: PriceHistoryType = ({
+export const getPriceHistory: marketService.PriceHistoryType = ({
   chain,
   timeframe,
   tokenId
-}: PriceHistoryArgs): Promise<HistoryData[]> => {
+}: marketService.PriceHistoryArgs): Promise<marketService.HistoryData[]> => {
   return getDefaultMarketService().getPriceHistory({ chain, timeframe, tokenId })
 }

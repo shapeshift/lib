@@ -1,4 +1,4 @@
-import { ContractTypes } from '../base'
+import { ContractTypes } from '../common'
 
 export type Account = {
   nonce: number

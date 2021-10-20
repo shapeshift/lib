@@ -1,6 +1,6 @@
-import { TokenAsset, ContractTypes } from '@shapeshiftoss/types'
+import { assetService, ContractTypes } from '@shapeshiftoss/types'
 
-export const tokensToOverride: Array<TokenAsset> = [
+export const tokensToOverride: Array<assetService.Token> = [
   // example overriding FOX token with custom values instead of goingecko
   {
     name: 'Fox',

@@ -1,7 +1,7 @@
 import axios from 'axios'
-import { Asset, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
+import { assetService, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import { AssetService, flattenAssetData, indexAssetData } from './AssetService'
-import { mockBaseAssets, mockAssets, mockIndexedAssetData } from './AssetServiceTestData'
+import { mockAssetData, mockAssets, mockIndexedAssetData } from './AssetServiceTestData'
 
 jest.mock('axios')
 
@@ -12,38 +12,40 @@ describe('AssetService', () => {
   describe('utilities', () => {
     describe('flattenAssetData', () => {
       it('should flatten data correctly', () => {
-        expect(flattenAssetData(mockBaseAssets)).toEqual(mockAssets)
+        expect(flattenAssetData(mockAssetData)).toEqual(mockAssets)
       })
     })
     describe('indexAssetData', () => {
       it('should index data correctly', () => {
-        expect(indexAssetData(flattenAssetData(mockBaseAssets))).toEqual(mockIndexedAssetData)
+        expect(indexAssetData(flattenAssetData(mockAssetData))).toEqual(mockIndexedAssetData)
       })
     })
   })
 
   describe('byNetwork', () => {
     it('should throw if not initialized', () => {
-      const assetService = new AssetService(assetFileUrl)
-      mockedAxios.get.mockResolvedValue({ data: mockBaseAssets })
-      expect(() => assetService.byNetwork(NetworkTypes.MAINNET)).toThrow(Error)
+      const service = new AssetService(assetFileUrl)
+      mockedAxios.get.mockResolvedValue({ data: mockAssetData })
+      expect(() => service.byNetwork(NetworkTypes.MAINNET)).toThrow(Error)
     })
 
     it('should return assets by network', async () => {
-      const assetService = new AssetService(assetFileUrl)
-      mockedAxios.get.mockResolvedValue({ data: mockBaseAssets })
-      await assetService.initialize()
-      const ethAssets = assetService.byNetwork(NetworkTypes.MAINNET)
+      const service = new AssetService(assetFileUrl)
+      mockedAxios.get.mockResolvedValue({ data: mockAssetData })
+      await service.initialize()
+      const ethAssets = service.byNetwork(NetworkTypes.MAINNET)
       expect(ethAssets).toEqual(
-        Object.values(mockIndexedAssetData).filter((a: Asset) => a.network === NetworkTypes.MAINNET)
+        Object.values(mockIndexedAssetData).filter(
+          (a: assetService.Asset) => a.network === NetworkTypes.MAINNET
+        )
       )
     })
 
     it('should return assets from all networks', async () => {
-      const assetService = new AssetService(assetFileUrl)
-      mockedAxios.get.mockResolvedValue({ data: mockBaseAssets })
-      await assetService.initialize()
-      const ethAssets = assetService.byNetwork()
+      const service = new AssetService(assetFileUrl)
+      mockedAxios.get.mockResolvedValue({ data: mockAssetData })
+      await service.initialize()
+      const ethAssets = service.byNetwork()
       expect(ethAssets).toEqual(Object.values(mockIndexedAssetData))
     })
   })
@@ -51,54 +53,54 @@ describe('AssetService', () => {
   describe('byTokenId', () => {
     const tokenId = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
     it('should throw if not initialized', () => {
-      const assetService = new AssetService(assetFileUrl)
-      mockedAxios.get.mockResolvedValue({ data: mockBaseAssets })
+      const service = new AssetService(assetFileUrl)
+      mockedAxios.get.mockResolvedValue({ data: mockAssetData })
       const chain = ChainTypes.Ethereum
       const network = NetworkTypes.MAINNET
       const args = { chain, network, tokenId }
-      expect(() => assetService.byTokenId(args)).toThrow(Error)
+      expect(() => service.byTokenId(args)).toThrow(Error)
     })
 
     it('should return base asset for chain given no tokenId', async () => {
-      const assetService = new AssetService(assetFileUrl)
-      mockedAxios.get.mockResolvedValue({ data: mockBaseAssets })
-      await assetService.initialize()
+      const service = new AssetService(assetFileUrl)
+      mockedAxios.get.mockResolvedValue({ data: mockAssetData })
+      await service.initialize()
       const chain = ChainTypes.Ethereum
       const network = NetworkTypes.MAINNET
       const args = { chain, network }
-      expect(assetService.byTokenId(args)).toEqual(
+      expect(service.byTokenId(args)).toEqual(
         Object.values(mockIndexedAssetData).find(
-          ({ name, network: assetNetwork }: Asset) =>
+          ({ name, network: assetNetwork }: assetService.Asset) =>
             name === 'Ethereum' && assetNetwork === NetworkTypes.MAINNET
         )
       )
     })
 
     it(`should return FOX on ${NetworkTypes.TESTNET} when specified`, async () => {
-      const assetService = new AssetService(assetFileUrl)
-      mockedAxios.get.mockResolvedValue({ data: mockBaseAssets })
-      await assetService.initialize()
+      const service = new AssetService(assetFileUrl)
+      mockedAxios.get.mockResolvedValue({ data: mockAssetData })
+      await service.initialize()
       const chain = ChainTypes.Ethereum
       const network = NetworkTypes.TESTNET
       const args = { chain, network, tokenId }
-      expect(assetService.byTokenId(args)).toEqual(
+      expect(service.byTokenId(args)).toEqual(
         Object.values(mockIndexedAssetData).find(
-          ({ tokenId: assetTokenId, network: assetNetwork }: Asset) =>
+          ({ tokenId: assetTokenId, network: assetNetwork }: assetService.Asset) =>
             assetTokenId === tokenId && assetNetwork === NetworkTypes.TESTNET
         )
       )
     })
 
     it(`should return FOX on ${NetworkTypes.MAINNET} when specified`, async () => {
-      const assetService = new AssetService(assetFileUrl)
-      mockedAxios.get.mockResolvedValue({ data: mockBaseAssets })
-      await assetService.initialize()
+      const service = new AssetService(assetFileUrl)
+      mockedAxios.get.mockResolvedValue({ data: mockAssetData })
+      await service.initialize()
       const chain = ChainTypes.Ethereum
       const network = NetworkTypes.MAINNET
       const args = { chain, network, tokenId }
-      expect(assetService.byTokenId(args)).toEqual(
+      expect(service.byTokenId(args)).toEqual(
         Object.values(mockIndexedAssetData).find(
-          ({ tokenId: assetTokenId, network: assetNetwork }: Asset) =>
+          ({ tokenId: assetTokenId, network: assetNetwork }: assetService.Asset) =>
             assetTokenId === tokenId && assetNetwork === NetworkTypes.MAINNET
         )
       )
@@ -107,21 +109,19 @@ describe('AssetService', () => {
 
   describe('description', () => {
     it('should return a string if found', async () => {
-      const assetService = new AssetService(assetFileUrl)
+      const service = new AssetService(assetFileUrl)
       const description = { en: 'a blue fox' }
       mockedAxios.get.mockResolvedValue({ data: { description } })
-      await expect(assetService.description(ChainTypes.Ethereum, '')).resolves.toEqual(
-        description.en
-      )
+      await expect(service.description(ChainTypes.Ethereum, '')).resolves.toEqual(description.en)
     })
 
     it('should throw if not found', async () => {
-      const assetService = new AssetService(assetFileUrl)
+      const service = new AssetService(assetFileUrl)
       mockedAxios.get.mockRejectedValue({ data: null })
       const chain = ChainTypes.Ethereum
       const tokenId = 'fooo'
       const expectedErrorMessage = `AssetService:description: no description availble for ${tokenId} on chain ${chain}`
-      await expect(assetService.description(chain, tokenId)).rejects.toEqual(
+      await expect(service.description(chain, tokenId)).rejects.toEqual(
         new Error(expectedErrorMessage)
       )
     })
