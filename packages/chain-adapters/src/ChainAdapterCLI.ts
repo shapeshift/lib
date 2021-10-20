@@ -6,7 +6,7 @@ import { ChainAdapterManager } from './ChainAdapterManager'
 
 dotenv.config()
 
-// const foxContractAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
+const foxContractAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
 
 const getWallet = async (): Promise<NativeHDWallet> => {
   const nativeAdapterArgs: NativeAdapterArgs = {
@@ -50,37 +50,40 @@ const main = async () => {
       bip32Params: btcBip32Params,
       scriptType: BTCInputScriptType.SpendWitness
     })
-    console.log('btcAddress: ', btcAddress)
+    console.log('btcAddress:', btcAddress)
 
     const btcAccount = await btcChainAdapter.getAccount(btcAddress)
-    console.log('btcAccount: ', btcAccount)
+    console.log('btcAccount:', btcAccount)
 
-    //const txInput = {
-    //  asset: { id: '123', symbol: 'BTC' },
-    //  recipients: [{ address: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4', value: 400 }],
-    //  wallet,
-    //  opReturnData: 'sup fool',
-    //  bip32Params: btcBip32Params,
-    //  feeSpeed: chainAdapters.FeeDataKey.Slow
-    //}
+    const txInput = {
+      asset: { id: '123', symbol: 'BTC' },
+      recipients: [{ address: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4', value: 400 }],
+      wallet,
+      opReturnData: 'sup fool',
+      bip32Params: btcBip32Params,
+      feeSpeed: chainAdapters.FeeDataKey.Slow
+    }
 
-    //const unsignedTx = await btcChainAdapter.buildSendTransaction(txInput)
-    //const signedTx = await btcChainAdapter.signTransaction({
-    //  wallet,
-    //  txToSign: unsignedTx.txToSign
-    //})
-    //console.log('btcSignedTx: ', signedTx)
+    const btcUnsignedTx = await btcChainAdapter.buildSendTransaction(txInput)
+    const btcSignedTx = await btcChainAdapter.signTransaction({
+      wallet,
+      txToSign: btcUnsignedTx.txToSign
+    })
+    console.log('btcSignedTx:', btcSignedTx)
 
-    // const txid = await btcChainAdapter.broadcastTransaction(signedTx)
-    // console.log('txid: ', txid)
+    // const btcTxID = await btcChainAdapter.broadcastTransaction(btcSignedTx)
+    // console.log('btcTxID: ', txid)
 
     /** ETHEREUM CLI */
     const ethChainAdapter = chainAdapterManager.byChain(ChainTypes.Ethereum)
     const ethBip32Params: BIP32Params = { purpose: 44, coinType: 60, accountNumber: 0 }
+
     const ethAddress = await ethChainAdapter.getAddress({ wallet, bip32Params: ethBip32Params })
     console.log('ethAddress:', ethAddress)
+
     const ethAccount = await ethChainAdapter.getAccount(ethAddress)
     console.log('ethAccount:', ethAccount)
+
     await ethChainAdapter.subscribeTxs(
       { addresses: [ethAddress] },
       (msg) => console.log(msg),
@@ -88,28 +91,37 @@ const main = async () => {
     )
 
     // send eth example
-    // const unsignedTx = await ethChainAdapter.buildSendTransaction({
-    //   to: `0x47CB53752e5dc0A972440dA127DCA9FBA6C2Ab6F`,
-    //   value: '1',
-    //   wallet,
-    //   path: defaultEthPath
-    // })
+    const ethUnsignedTx = await ethChainAdapter.buildSendTransaction({
+      to: `0x47CB53752e5dc0A972440dA127DCA9FBA6C2Ab6F`,
+      value: '1',
+      wallet,
+      bip32Params: ethBip32Params
+    })
+    const ethSignedTx = await ethChainAdapter.signTransaction({
+      wallet,
+      txToSign: ethUnsignedTx.txToSign
+    })
+    console.log('ethSignedTx:', ethSignedTx)
+
+    // const ethTxID = await ethChainAdapter.broadcastTransaction(ethSignedTx)
+    // console.log('ethTxID:', ethTxID)
 
     // send fox example (erc20)
-    // const tx = await ethChainAdapter.buildSendTransaction({
-    //   to: `0x47CB53752e5dc0A972440dA127DCA9FBA6C2Ab6F`,
-    //   value: '1',
-    //   wallet,
-    //   path: defaultEthPath,
-    //   erc20ContractAddress: foxContractAddress
-    // })
+    const erc20UnsignedTx = await ethChainAdapter.buildSendTransaction({
+      to: `0x47CB53752e5dc0A972440dA127DCA9FBA6C2Ab6F`,
+      value: '1',
+      wallet,
+      bip32Params: ethBip32Params,
+      erc20ContractAddress: foxContractAddress
+    })
+    const erc20SignedTx = await ethChainAdapter.signTransaction({
+      wallet,
+      txToSign: erc20UnsignedTx.txToSign
+    })
+    console.log('erc20SignedTx:', erc20SignedTx)
 
-    // console.log({ unsignedTx })
-
-    // const signedTx = await ethChainAdapter.signTransaction({ wallet, txToSign: unsignedTx })
-
-    // await ethChainAdapter.broadcastTransaction(signedTx)
-    // console.log({ signedTx })
+    // const erc20TxID = await ethChainAdapter.broadcastTransaction(erc20SignedTx)
+    // console.log('erc20TxID:', erc20TxID)
   } catch (err) {
     console.error(err)
   }

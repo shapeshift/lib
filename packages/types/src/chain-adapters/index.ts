@@ -29,7 +29,7 @@ type ChainSpecificTransaction<T> = ChainSpecific<
   }
 >
 
-type Transaction<T extends ChainTypes> = {
+export type Transaction<T extends ChainTypes> = {
   network: NetworkTypes
   chain: T
   symbol: string
@@ -58,6 +58,13 @@ type ChainSpecificFeeData<T> = ChainSpecific<
   }
 >
 
+// ChainTypes.Ethereum:
+// feePerUnit = gasPrice
+// feePerTx = estimateGas (estimated transaction cost)
+// feeLimit = gasLimit (max gas willing to pay)
+
+// ChainTypes.Bitcoin:
+// feePerUnit = sats/kbyte
 export type FeeData<T extends ChainTypes> = {
   feePerUnit: string
 } & ChainSpecificFeeData<T>
@@ -126,7 +133,7 @@ export type BuildSendTxInput = {
   opReturnData?: string
   scriptType?: BTCInputScriptType
   gasLimit?: string
-  bip32Params: BIP32Params
+  bip32Params?: BIP32Params
   feeSpeed?: FeeDataKey
 }
 

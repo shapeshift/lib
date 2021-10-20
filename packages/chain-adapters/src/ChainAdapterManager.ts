@@ -1,6 +1,6 @@
 import { ChainTypes } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
-import { ChainAdapter, isChainAdapterOfType } from './api'
+import { ChainAdapter } from './api'
 import * as bitcoin from './bitcoin'
 import * as ethereum from './ethereum'
 
@@ -56,7 +56,7 @@ export class ChainAdapterManager {
    * @param {ChainTypes} network - Coin/network symbol from Asset query
    * @param {Function} factory - A function that returns a ChainAdapter instance
    */
-  addChain<T extends ChainTypes>(chain: T, factory: () => ChainAdapter<T>): void {
+  addChain<T extends ChainTypes>(chain: T, factory: () => ChainAdapter<ChainTypes>): void {
     if (typeof chain !== 'string' || typeof factory !== 'function') {
       throw new Error('Parameter validation error')
     }
@@ -78,12 +78,8 @@ export class ChainAdapterManager {
       const factory = this.supported.get(chain)
       if (factory) {
         adapter = factory()
-        if (!adapter || !isChainAdapterOfType(chain, adapter)) {
-          throw new Error(
-            `Adapter type [${
-              adapter ? adapter.getType() : typeof adapter
-            }] does not match requested type [${chain}]`
-          )
+        if (!adapter) {
+          throw new Error(`Adapter not available for [${chain}]`)
         }
         this.instances.set(chain, adapter)
       }
