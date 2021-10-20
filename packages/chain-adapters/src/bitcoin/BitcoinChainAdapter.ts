@@ -46,8 +46,8 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
     return ChainTypes.Bitcoin
   }
 
-  // TODO(0xdef1cafe): change this path to bip32Params
-  async getPubKey(wallet: HDWallet, path: string): Promise<PublicKey> {
+  async getPubKey(wallet: HDWallet, bip32Params: BIP32Params): Promise<PublicKey> {
+    const path = toRootDerivationPath(bip32Params)
     const publicKeys = await wallet.getPublicKeys([
       {
         coin: this.coinName,
@@ -270,7 +270,7 @@ export class BitcoinChainAdapter implements ChainAdapter<ChainTypes.Bitcoin> {
 
     // If an index is not passed in, we want to use the newest unused change/receive indices
     if (index === undefined) {
-      const pubkey = await this.getPubKey(wallet, toRootDerivationPath(bip32Params))
+      const pubkey = await this.getPubKey(wallet, bip32Params)
       const account = await this.getAccount(pubkey.xpub)
       index = isChange
         ? account.chainSpecific.nextChangeAddressIndex
