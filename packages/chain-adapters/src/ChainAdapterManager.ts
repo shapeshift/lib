@@ -19,11 +19,11 @@ export class ChainAdapterManager {
       throw new Error('Blockchain urls required')
     }
     ;(Object.entries(unchainedUrls) as Array<[keyof UnchainedUrls, UnchainedUrl]>).forEach(
-      ([type, { httpUrl: basePath, wsUrl }]) => {
+      ([type, { httpUrl, wsUrl }]) => {
         switch (type) {
           case ChainTypes.Ethereum: {
             const http = new unchained.ethereum.api.V1Api(
-              new unchained.ethereum.api.Configuration({ basePath })
+              new unchained.ethereum.api.Configuration({ basePath: httpUrl })
             )
             const ws = new unchained.ethereum.ws.Client(wsUrl, {
               handshakeTimeout: 5000
@@ -32,7 +32,7 @@ export class ChainAdapterManager {
           }
           case ChainTypes.Bitcoin: {
             const http = new unchained.bitcoin.api.V1Api(
-              new unchained.bitcoin.api.Configuration({ basePath })
+              new unchained.bitcoin.api.Configuration({ basePath: httpUrl })
             )
             return this.addChain(
               type,

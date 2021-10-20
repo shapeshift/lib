@@ -69,7 +69,7 @@ export async function buildQuoteTx(
   }
 
   const adapter = adapterManager.byChain(buyAsset.chain)
-  adapter.buildSendTransaction
+
   // TODO(0xdef1cafe): populate this
   const bip32Params: BIP32Params = {
     purpose: 0,
