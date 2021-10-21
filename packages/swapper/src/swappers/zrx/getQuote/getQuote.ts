@@ -113,11 +113,13 @@ export async function getZrxQuote(
         fee: new BigNumber(estimatedGas || 0)
           .multipliedBy(new BigNumber(data.gasPrice || 0))
           .toString(),
-        estimatedGas: estimatedGas.toString(),
-        gasPrice: data.gasPrice,
-        approvalFee:
-          sellAsset.tokenId &&
-          new BigNumber(APPROVAL_GAS_LIMIT).multipliedBy(data.gasPrice || 0).toString()
+        chainSpecific: {
+          estimatedGas: estimatedGas.toString(),
+          gasPrice: data.gasPrice,
+          approvalFee:
+            sellAsset.tokenId &&
+            new BigNumber(APPROVAL_GAS_LIMIT).multipliedBy(data.gasPrice || 0).toString()
+        }
       },
       sellAmount: data.sellAmount,
       buyAmount: data.buyAmount,

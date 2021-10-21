@@ -134,7 +134,7 @@ export async function buildQuoteTx(
     const { data } = quoteResponse
 
     const estimatedGas = new BigNumber(data.gas || 0)
-    const quote: Quote = {
+    const quote: Quote<ChainTypes.Ethereum, SwapperType> = {
       sellAsset,
       buyAsset,
       sellAssetAccountId,
@@ -149,8 +149,10 @@ export async function buildQuoteTx(
         fee: new BigNumber(estimatedGas || 0)
           .multipliedBy(new BigNumber(data.gasPrice || 0))
           .toString(),
-        estimatedGas: estimatedGas.toString(),
-        gasPrice: data.gasPrice
+        chainSpecific: {
+          estimatedGas: estimatedGas.toString(),
+          gasPrice: data.gasPrice
+        }
       },
       txData: data.data,
       sellAmount: data.sellAmount,
@@ -167,10 +169,14 @@ export async function buildQuoteTx(
       erc20AllowanceAbi
     })
     quote.allowanceGrantRequired = allowanceRequired.gt(0)
+
     if (quote.allowanceGrantRequired) {
       quote.feeData = {
-        ...quote.feeData,
-        approvalFee: new BigNumber(APPROVAL_GAS_LIMIT).multipliedBy(data.gasPrice || 0).toString()
+        fee: quote.feeData?.fee || '0',
+        chainSpecific: {
+          ...quote.feeData?.chainSpecific,
+          approvalFee: new BigNumber(APPROVAL_GAS_LIMIT).multipliedBy(data.gasPrice || 0).toString()
+        }
       }
     }
     return quote

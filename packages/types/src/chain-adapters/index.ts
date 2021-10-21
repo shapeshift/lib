@@ -73,7 +73,6 @@ type ChainSpecificFeeData<T> = ChainSpecific<
 
 export type QuoteFeeData<T1 extends ChainTypes, T2 extends SwapperType> = {
   fee: string
-  totalFee: string
 } & ChainSpecificQuoteFeeData<T1, T2>
 
 // ChainTypes.Ethereum:

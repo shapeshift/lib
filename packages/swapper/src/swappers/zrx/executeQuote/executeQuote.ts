@@ -1,11 +1,17 @@
 import { numberToHex } from 'web3-utils'
-import { BIP32Params, ExecQuoteInput, ExecQuoteOutput } from '@shapeshiftoss/types'
+import {
+  BIP32Params,
+  ChainTypes,
+  ExecQuoteInput,
+  ExecQuoteOutput,
+  SwapperType
+} from '@shapeshiftoss/types'
 import { SwapError } from '../../../api'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function executeQuote(
   { adapterManager }: ZrxSwapperDeps,
-  { quote, wallet }: ExecQuoteInput
+  { quote, wallet }: ExecQuoteInput<ChainTypes.Ethereum, SwapperType>
 ): Promise<ExecQuoteOutput> {
   const { sellAsset } = quote
 
@@ -43,8 +49,8 @@ export async function executeQuote(
     value,
     wallet,
     to: quote.depositAddress,
-    fee: numberToHex(quote.feeData?.gasPrice || 0),
-    gasLimit: numberToHex(quote.feeData?.estimatedGas || 0),
+    fee: numberToHex(quote.feeData?.chainSpecific.gasPrice || 0),
+    gasLimit: numberToHex(quote.feeData?.chainSpecific.estimatedGas || 0),
     bip32Params
   })
 
