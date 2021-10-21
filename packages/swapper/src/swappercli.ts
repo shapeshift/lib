@@ -13,8 +13,8 @@ import { ZrxSwapper } from './swappers/zrx/ZrxSwapper'
 dotenv.config()
 
 const {
-  UNCHAINED_API = 'http://localhost:31300/api/v1',
-  ETH_NODE_URL = 'http://localhost',
+  UNCHAINED_API = 'http://localhost:31300',
+  ETH_NODE_URL = 'http://localhost:3000',
   DEVICE_ID = 'device123',
   MNEMONIC = 'salon adapt foil saddle orient make page zero cheese marble test catalog'
 } = process.env

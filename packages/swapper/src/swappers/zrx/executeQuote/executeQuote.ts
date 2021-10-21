@@ -17,6 +17,11 @@ export async function executeQuote(
     throw new SwapError('ZrxSwapper:executeQuote sellAssetNetwork and sellAssetSymbol are required')
   }
 
+  // TODO: (ryankk) uncomment out when we implement multiple accounts for ethereum
+  // if (!quote.sellAssetAccountId) {
+  //   throw new SwapError('ZrxSwapper:executeQuote sellAssetAccountId is required')
+  // }
+
   if (!quote.sellAmount) {
     throw new SwapError('ZrxSwapper:executeQuote sellAmount is required')
   }
@@ -26,24 +31,25 @@ export async function executeQuote(
   }
 
   // value is 0 for erc20s
-  const value = sellAsset.symbol === 'ETH' ? numberToHex(quote.sellAmount || 0) : '0x0'
+  const value = sellAsset.symbol === 'ETH' ? quote.sellAmount : '0'
   const adapter = adapterManager.byChain(sellAsset.chain)
 
   let buildTxResponse, signedTx, txid
   try {
-    // TODO(0xdef1cafe): populate this
-    const bip32Params: BIP32Params = {
-      purpose: 0,
-      coinType: 0,
-      accountNumber: 0
-    }
+    // TODO(ryankk): populate this when we implement multiple accounts for ethereum
+    //
+    // const bip32Params: BIP32Params = {
+    //   purpose: 0,
+    //   coinType: 0,
+    //   accountNumber: 0
+    // }
     buildTxResponse = await adapter.buildSendTransaction({
       value,
       wallet,
       to: quote.depositAddress,
       fee: numberToHex(quote.feeData?.gasPrice || 0),
-      gasLimit: numberToHex(quote.feeData?.estimatedGas || 0),
-      bip32Params
+      gasLimit: numberToHex(quote.feeData?.estimatedGas || 0)
+      // bip32Params
     })
   } catch (error) {
     throw new SwapError(`executeQuote - buildSendTransaction error: ${error}`)
@@ -51,8 +57,11 @@ export async function executeQuote(
 
   const { txToSign } = buildTxResponse
 
+  // TODO:(ryankk) add txData type instead of string when merged into main
+  const txWithQuoteData = { ...txToSign, data: quote.txData as string }
+
   try {
-    signedTx = await adapter.signTransaction({ txToSign, wallet })
+    signedTx = await adapter.signTransaction({ txToSign: txWithQuoteData, wallet })
   } catch (error) {
     throw new SwapError(`executeQuote - signTransaction error: ${error}`)
   }

@@ -134,7 +134,8 @@ describe('buildQuoteTx', () => {
     )
   })
 
-  it('should throw error if sellAssetAccountId is NOT provided', async () => {
+  // TODO: (ryankk) unskip this when we implement multiple accounts for ethereum
+  it.skip('should throw error if sellAssetAccountId is NOT provided', async () => {
     const input = { ...quoteInput, sellAssetAccountId: '' }
 
     await expect(buildQuoteTx(deps, { input, wallet })).rejects.toThrow(
@@ -142,7 +143,8 @@ describe('buildQuoteTx', () => {
     )
   })
 
-  it('should throw error if buyAssetAccountId is NOT provided', async () => {
+  // TODO: (ryankk) unskip this when we implement multiple accounts for ethereum
+  it.skip('should throw error if buyAssetAccountId is NOT provided', async () => {
     const input = { ...quoteInput, buyAssetAccountId: '' }
 
     await expect(buildQuoteTx(deps, { input, wallet })).rejects.toThrow(
