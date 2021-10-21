@@ -1,7 +1,7 @@
 import { IndexedAssetData } from '..'
 import { assetService, ChainTypes, ContractTypes, NetworkTypes } from '@shapeshiftoss/types'
 
-export const mockAssetData: Array<assetService.AssetList> = [
+export const mockAssetData: assetService.AssetData[] = [
   {
     chain: ChainTypes.Ethereum,
     network: NetworkTypes.MAINNET,

@@ -1,6 +1,6 @@
 import { assetService, ContractTypes, NetworkTypes, ChainTypes } from '@shapeshiftoss/types'
 
-export const baseAssets: Array<assetService.AssetList> = [
+export const baseAssets: Array<assetService.AssetData> = [
   {
     chain: ChainTypes.Ethereum,
     network: NetworkTypes.MAINNET,

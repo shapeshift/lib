@@ -8,8 +8,7 @@ const generateAssetData = async () => {
     baseAssets.map(async (baseAsset) => {
       if (baseAsset.chain === ChainTypes.Ethereum && baseAsset.network === NetworkTypes.MAINNET) {
         const ethTokens = await getTokens()
-        const baseAssetWithTokens: assetService.AssetList = { ...baseAsset, tokens: ethTokens }
-        return baseAssetWithTokens
+        return { ...baseAsset, tokens: ethTokens } as assetService.AssetData
       } else {
         return baseAsset
       }

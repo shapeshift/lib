@@ -2,9 +2,7 @@ import axios from 'axios'
 import { assetService, NetworkTypes, ChainTypes } from '@shapeshiftoss/types'
 import localAssetData from './generatedAssetData.json'
 
-export const flattenAssetData = (
-  assetData: Array<assetService.AssetList>
-): assetService.Asset[] => {
+export const flattenAssetData = (assetData: assetService.AssetData[]): assetService.Asset[] => {
   const flatAssetData: assetService.Asset[] = []
   for (const baseAsset of assetData) {
     const newAsset = { ...baseAsset }
@@ -49,7 +47,7 @@ type ByTokenIdArgs = {
 export class AssetService {
   private assetFileUrl: string
 
-  private assetData: Array<assetService.AssetList>
+  private assetData: assetService.AssetData[]
   private flatAssetData: assetService.Asset[]
   private indexedAssetData: IndexedAssetData
 
@@ -70,10 +68,10 @@ export class AssetService {
    */
   async initialize() {
     try {
-      const { data } = await axios.get<Array<assetService.AssetList>>(this.assetFileUrl)
+      const { data } = await axios.get<assetService.AssetData[]>(this.assetFileUrl)
       this.assetData = data
     } catch (err) {
-      this.assetData = localAssetData as Array<assetService.AssetList>
+      this.assetData = localAssetData as assetService.AssetData[]
     }
 
     this.flatAssetData = flattenAssetData(this.assetData)

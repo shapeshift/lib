@@ -25,5 +25,5 @@ type TokenDetails = {
 }
 
 export type Token = AssetDetails & TokenDetails
-export type AssetList = AssetDetails & NetworkDetails & { tokens?: Array<Token> }
+export type AssetData = AssetDetails & NetworkDetails & { tokens?: Array<Token> }
 export type Asset = AssetDetails & NetworkDetails & Partial<TokenDetails>
