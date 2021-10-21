@@ -148,7 +148,7 @@ export type Quote<T1 extends ChainTypes, T2 extends SwapperType> = {
   buyAssetAccountId?: string
   sellAsset: Asset
   buyAsset: Asset
-  feeData: QuoteFeeData<T1, T2>
+  feeData?: QuoteFeeData<T1, T2>
   rate?: string
   depositAddress?: string // this is dex contract address for eth swaps
   receiveAddress?: string
