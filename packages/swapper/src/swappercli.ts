@@ -58,7 +58,7 @@ const main = async (): Promise<void> => {
     return
   }
 
-  const assetService = new AssetService()
+  const assetService = new AssetService('')
   await assetService.initialize()
   const assets = assetService.byNetwork(NetworkTypes.MAINNET)
 
@@ -72,7 +72,7 @@ const main = async (): Promise<void> => {
       acc[val.symbol] = val
     }
     return acc
-  }, {} as Record<string, unknown>)
+  }, {} as Record<string, Asset>)
 
   const sellAsset = assetMap[sellSymbol] as Asset
   const buyAsset = assetMap[buySymbol] as Asset

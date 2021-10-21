@@ -45,13 +45,13 @@ type ByTokenIdArgs = {
 }
 
 export class AssetService {
-  private assetFileUrl: string | undefined
+  private assetFileUrl: string
 
   private assetData: BaseAsset[]
   private flatAssetData: Asset[]
   private indexedAssetData: IndexedAssetData
 
-  constructor(assetFileUrl?: string) {
+  constructor(assetFileUrl: string) {
     this.assetFileUrl = assetFileUrl
   }
 
@@ -68,6 +68,9 @@ export class AssetService {
    */
   async initialize() {
     try {
+      if (!this.assetFileUrl) {
+        throw new Error('Invalid assetFileUrl')
+      }
       const { data } = await axios.get<BaseAsset[]>(this.assetFileUrl as string)
       this.assetData = data
     } catch (err) {
