@@ -1,3 +1,24 @@
+# [@shapeshiftoss/chain-adapters-v1.3.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.3.0...@shapeshiftoss/chain-adapters-v1.3.1) (2021-10-20)
+
+
+### Bug Fixes
+
+* get pubkey params ([#140](https://github.com/shapeshift/lib/issues/140)) ([2d48c71](https://github.com/shapeshift/lib/commit/2d48c719c8708303f24766b2a5dc1660f365692f))
+
+# [@shapeshiftoss/chain-adapters-v1.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.2.2...@shapeshiftoss/chain-adapters-v1.3.0) (2021-10-20)
+
+
+### Features
+
+* implement websockets for ethereum and improve type naming consistency ([#133](https://github.com/shapeshift/lib/issues/133)) ([d0c7f82](https://github.com/shapeshift/lib/commit/d0c7f82175e3655ea3cf85f040123b68daff47a0))
+
+# [@shapeshiftoss/chain-adapters-v1.2.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.2.1...@shapeshiftoss/chain-adapters-v1.2.2) (2021-10-19)
+
+
+### Bug Fixes
+
+* bitcoin chain adapter tests ([#136](https://github.com/shapeshift/lib/issues/136)) ([594ff8f](https://github.com/shapeshift/lib/commit/594ff8f9ccf554407a7e3975f79cde996d1bf48d))
+
 # [@shapeshiftoss/chain-adapters-v1.2.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.2.0...@shapeshiftoss/chain-adapters-v1.2.1) (2021-10-19)
 
 # [@shapeshiftoss/chain-adapters-v1.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.1.1...@shapeshiftoss/chain-adapters-v1.2.0) (2021-10-19)

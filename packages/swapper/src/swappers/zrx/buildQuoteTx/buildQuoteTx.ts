@@ -1,14 +1,14 @@
 import BigNumber from 'bignumber.js'
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
-import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { SwapError } from '../../..'
 import {
   ChainTypes,
   Quote,
   QuoteResponse,
   BuildQuoteTxInput,
-  BIP32Params
+  BIP32Params,
+  SwapperType
 } from '@shapeshiftoss/types'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
@@ -26,7 +26,7 @@ import {
 export async function buildQuoteTx(
   { adapterManager, web3 }: ZrxSwapperDeps,
   { input, wallet }: BuildQuoteTxInput
-): Promise<Quote> {
+): Promise<Quote<ChainTypes, SwapperType>> {
   const {
     sellAsset,
     buyAsset,
@@ -69,7 +69,8 @@ export async function buildQuoteTx(
     )
   }
 
-  const adapter: ChainAdapter<ChainTypes.Ethereum> = adapterManager.byChain(buyAsset.chain)
+  const adapter = adapterManager.byChain(buyAsset.chain)
+
   // TODO(0xdef1cafe): populate this
   const bip32Params: BIP32Params = {
     purpose: 0,
