@@ -3,7 +3,7 @@ import readline from 'readline-sync'
 import Web3 from 'web3'
 import BigNumber from 'bignumber.js'
 
-import { Asset, NetworkTypes, SwapperType } from '@shapeshiftoss/types'
+import { Asset, NetworkTypes, SwapperType, ChainTypes } from '@shapeshiftoss/types'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { AssetService } from '@shapeshiftoss/asset-service'
@@ -13,7 +13,8 @@ import { ZrxSwapper } from './swappers/zrx/ZrxSwapper'
 dotenv.config()
 
 const {
-  UNCHAINED_API = 'http://localhost:31300',
+  UNCHAINED_HTTP_API = 'http://localhost:31300',
+  UNCHAINED_WS_API = 'wss://localhost:31300',
   ETH_NODE_URL = 'http://localhost:3000',
   DEVICE_ID = 'device123',
   MNEMONIC = 'salon adapt foil saddle orient make page zero cheese marble test catalog'
@@ -52,7 +53,7 @@ const main = async (): Promise<void> => {
   if (!sellAmount || !sellSymbol || !buySymbol) {
     console.error(`
       Usage:
-      swapcli [sellSymbol] [buySymbol] [sellAmount]
+      swapcli [sellSymbol] [buySymbol] [sellAmount](denominated in sell asset, not wei)
     `)
     return
   }
@@ -86,7 +87,13 @@ const main = async (): Promise<void> => {
 
   // Swapper Deps
   const wallet = await getWallet()
-  const adapterManager = new ChainAdapterManager({ ethereum: UNCHAINED_API })
+  const unchainedUrls = {
+    [ChainTypes.Ethereum]: {
+      httpUrl: UNCHAINED_HTTP_API,
+      wsUrl: UNCHAINED_WS_API
+    }
+  }
+  const adapterManager = new ChainAdapterManager(unchainedUrls)
   const web3Provider = new Web3.providers.HttpProvider(ETH_NODE_URL)
   const web3 = new Web3(web3Provider)
 

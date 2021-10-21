@@ -16,7 +16,7 @@ cp sample.env .env
 
 - Useage:
 ```
-$ swapcli [sellSymbol] [buySymbol] [sellAmount]
+$ swapcli [sellSymbol] [buySymbol] [sellAmount](denominated in sell asset, not wei)
 ```
 ie:
 ```
