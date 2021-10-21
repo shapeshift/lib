@@ -1,17 +1,5 @@
 import Web3 from 'web3'
-import {
-  Asset,
-  ApprovalNeededInput,
-  ApprovalNeededOutput,
-  BuildQuoteTxInput,
-  ChainTypes,
-  GetQuoteInput,
-  Quote,
-  SwapperType,
-  MinMaxOutput,
-  ExecQuoteInput,
-  ExecQuoteOutput
-} from '@shapeshiftoss/types'
+import { assetService, ChainTypes, swapper } from '@shapeshiftoss/types'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { Swapper } from '../../api'
 import { buildQuoteTx } from './buildQuoteTx/buildQuoteTx'
@@ -42,45 +30,45 @@ export class ZrxSwapper implements Swapper {
   }
 
   getType() {
-    return SwapperType.Zrx
+    return swapper.Type.Zrx
   }
 
-  async buildQuoteTx(args: BuildQuoteTxInput): Promise<Quote> {
+  async buildQuoteTx(args: swapper.BuildQuoteTxInput): Promise<swapper.Quote> {
     return buildQuoteTx(this.deps, args)
   }
 
-  async getQuote(input: GetQuoteInput): Promise<Quote> {
+  async getQuote(input: swapper.GetQuoteInput): Promise<swapper.Quote> {
     return getZrxQuote(input)
   }
 
-  async getUsdRate(input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string> {
+  async getUsdRate(input: Pick<assetService.Asset, 'symbol' | 'tokenId'>): Promise<string> {
     return getUsdRate(input)
   }
 
-  async getMinMax(input: GetQuoteInput): Promise<MinMaxOutput> {
+  async getMinMax(input: swapper.GetQuoteInput): Promise<swapper.MinMaxOutput> {
     return getMinMax(input)
   }
 
-  getAvailableAssets(assets: Asset[]): Asset[] {
+  getAvailableAssets(assets: assetService.Asset[]): assetService.Asset[] {
     return assets.filter((asset) => asset.chain === ChainTypes.Ethereum)
   }
 
-  canTradePair(sellAsset: Asset, buyAsset: Asset): boolean {
+  canTradePair(sellAsset: assetService.Asset, buyAsset: assetService.Asset): boolean {
     const availableAssets = this.getAvailableAssets([sellAsset, buyAsset])
     return availableAssets.length === 2
   }
 
-  getDefaultPair(): Pick<Asset, 'chain' | 'symbol' | 'name'>[] {
+  getDefaultPair(): Pick<assetService.Asset, 'chain' | 'symbol' | 'name'>[] {
     const ETH = { name: 'Ethereum', chain: ChainTypes.Ethereum, symbol: 'ETH' }
     const USDC = { name: 'USD Coin', chain: ChainTypes.Ethereum, symbol: 'USDC' }
     return [ETH, USDC]
   }
 
-  async executeQuote(args: ExecQuoteInput): Promise<ExecQuoteOutput> {
+  async executeQuote(args: swapper.ExecQuoteInput): Promise<swapper.ExecQuoteOutput> {
     return executeQuote(this.deps, args)
   }
 
-  async approvalNeeded(args: ApprovalNeededInput): Promise<ApprovalNeededOutput> {
+  async approvalNeeded(args: swapper.ApprovalNeededInput): Promise<swapper.ApprovalNeededOutput> {
     return approvalNeeded(this.deps, args)
   }
 }

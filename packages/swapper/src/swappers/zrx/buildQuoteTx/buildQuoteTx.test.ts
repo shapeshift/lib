@@ -6,7 +6,7 @@ import { buildQuoteTx } from './buildQuoteTx'
 import { setupQuote } from '../utils/test-data/setupSwapQuote'
 import { zrxService } from '../utils/zrxService'
 import { APPROVAL_GAS_LIMIT, MAX_SLIPPAGE } from '../utils/constants'
-import { ChainTypes, GetQuoteInput } from '@shapeshiftoss/types'
+import { ChainTypes, swapper } from '@shapeshiftoss/types'
 
 jest.mock('web3')
 
@@ -168,7 +168,7 @@ describe('buildQuoteTx', () => {
         symbol: '',
         network: ''
       }
-    } as unknown) as GetQuoteInput
+    } as unknown) as swapper.GetQuoteInput
 
     await expect(buildQuoteTx(deps, { input, wallet })).rejects.toThrow(
       'ZrxSwapper:buildQuoteTx One of buyAssetContract or buyAssetSymbol or buyAssetNetwork are required'
@@ -184,7 +184,7 @@ describe('buildQuoteTx', () => {
         symbol: '',
         network: ''
       }
-    } as unknown) as GetQuoteInput
+    } as unknown) as swapper.GetQuoteInput
 
     await expect(buildQuoteTx(deps, { input, wallet })).rejects.toThrow(
       'ZrxSwapper:buildQuoteTx One of sellAssetContract or sellAssetSymbol or sellAssetNetwork are required'

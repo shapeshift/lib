@@ -2,13 +2,7 @@ import BigNumber from 'bignumber.js'
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 import { SwapError } from '../../..'
-import {
-  ChainTypes,
-  Quote,
-  QuoteResponse,
-  BuildQuoteTxInput,
-  BIP32Params
-} from '@shapeshiftoss/types'
+import { BIP32Params, ChainTypes, swapper } from '@shapeshiftoss/types'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
@@ -24,8 +18,8 @@ import {
 
 export async function buildQuoteTx(
   { adapterManager, web3 }: ZrxSwapperDeps,
-  { input, wallet }: BuildQuoteTxInput
-): Promise<Quote> {
+  { input, wallet }: swapper.BuildQuoteTxInput
+): Promise<swapper.Quote> {
   const {
     sellAsset,
     buyAsset,
@@ -114,26 +108,25 @@ export async function buildQuoteTx(
         return rax.shouldRetryRequest(err)
       }
     })
-    const quoteResponse: AxiosResponse<QuoteResponse> = await zrxRetry.get<QuoteResponse>(
-      '/swap/v1/quote',
-      {
-        params: {
-          buyToken,
-          sellToken,
-          sellAmount: normalizeAmount(sellAmount?.toString()),
-          buyAmount: normalizeAmount(buyAmount?.toString()),
-          takerAddress: receiveAddress,
-          slippagePercentage,
-          skipValidation: false,
-          affiliateAddress: AFFILIATE_ADDRESS
-        }
+    const quoteResponse: AxiosResponse<swapper.QuoteResponse> = await zrxRetry.get<
+      swapper.QuoteResponse
+    >('/swap/v1/quote', {
+      params: {
+        buyToken,
+        sellToken,
+        sellAmount: normalizeAmount(sellAmount?.toString()),
+        buyAmount: normalizeAmount(buyAmount?.toString()),
+        takerAddress: receiveAddress,
+        slippagePercentage,
+        skipValidation: false,
+        affiliateAddress: AFFILIATE_ADDRESS
       }
-    )
+    })
 
     const { data } = quoteResponse
 
     const estimatedGas = new BigNumber(data.gas || 0)
-    const quote: Quote = {
+    const quote: swapper.Quote = {
       sellAsset,
       buyAsset,
       sellAssetAccountId,

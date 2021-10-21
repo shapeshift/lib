@@ -1,5 +1,5 @@
 import { Swapper } from '..'
-import { GetQuoteInput, SwapperType } from '@shapeshiftoss/types'
+import { swapper } from '@shapeshiftoss/types'
 
 export class SwapperError extends Error {
   constructor(message: string) {
@@ -8,57 +8,57 @@ export class SwapperError extends Error {
   }
 }
 
-function validateSwapper(swapper: Swapper) {
-  if (!(typeof swapper === 'object' && typeof swapper.getType === 'function'))
+function validateSwapper(swapperInstance: Swapper) {
+  if (!(typeof swapperInstance === 'object' && typeof swapperInstance.getType === 'function'))
     throw new SwapperError('validateSwapper - invalid swapper instance')
 }
 
 export class SwapperManager {
-  public swappers: Map<SwapperType, Swapper>
+  public swappers: Map<swapper.Type, Swapper>
 
   constructor() {
-    this.swappers = new Map<SwapperType, Swapper>()
+    this.swappers = new Map<swapper.Type, Swapper>()
   }
 
   /**
    *
-   * @param swapperType swapper type {SwapperType|string}
+   * @param type swapper type {swapper.Type|string}
    * @param swapperInstance swapper instance {Swapper}
    * @returns {SwapperManager}
    */
-  addSwapper(swapperType: SwapperType, swapperInstance: Swapper): this {
-    const swapper = this.swappers.get(swapperType)
-    if (swapper) throw new SwapperError(`addSwapper - ${swapperType} already exists`)
+  addSwapper(type: swapper.Type, swapperInstance: Swapper): this {
+    const currentSwapper = this.swappers.get(type)
+    if (currentSwapper) throw new SwapperError(`addSwapper - ${type} already exists`)
     validateSwapper(swapperInstance)
-    this.swappers.set(swapperType, swapperInstance)
+    this.swappers.set(type, swapperInstance)
     return this
   }
 
   /**
    *
-   * @param swapperType swapper type {SwapperType|string}
+   * @param type swapper type {swapper.Type|string}
    * @returns {Swapper}
    */
-  getSwapper(swapperType: SwapperType): Swapper {
-    const swapper = this.swappers.get(swapperType)
-    if (!swapper) throw new SwapperError(`getSwapper - ${swapperType} doesn't exist`)
-    return swapper
+  getSwapper(type: swapper.Type): Swapper {
+    const currentSwapper = this.swappers.get(type)
+    if (!currentSwapper) throw new SwapperError(`getSwapper - ${type} doesn't exist`)
+    return currentSwapper
   }
 
   /**
    *
-   * @param swapperType swapper type {SwapperType|string}
+   * @param type swapper type {swapper.Type|string}
    * @returns {SwapperManager}
    */
-  removeSwapper(swapperType: SwapperType): this {
-    const swapper = this.swappers.get(swapperType)
-    if (!swapper) throw new SwapperError(`removeSwapper - ${swapperType} doesn't exist`)
-    this.swappers.delete(swapperType)
+  removeSwapper(type: swapper.Type): this {
+    const currentSwapper = this.swappers.get(type)
+    if (!currentSwapper) throw new SwapperError(`removeSwapper - ${type} doesn't exist`)
+    this.swappers.delete(type)
     return this
   }
 
-  async getBestSwapper(quoteParams: GetQuoteInput): Promise<SwapperType> {
+  async getBestSwapper(quoteParams: swapper.GetQuoteInput): Promise<swapper.Type> {
     console.info('quote', quoteParams)
-    return SwapperType.Zrx // TODO: implement getBestSwapper
+    return swapper.Type.Zrx // TODO: implement getBestSwapper
   }
 }

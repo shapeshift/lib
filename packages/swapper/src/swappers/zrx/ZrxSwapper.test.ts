@@ -1,7 +1,7 @@
 import Web3 from 'web3'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import { ChainTypes, GetQuoteInput, SwapperType, Quote } from '@shapeshiftoss/types'
+import { ChainTypes, swapper } from '@shapeshiftoss/types'
 import { ZrxSwapper } from '..'
 import { ZrxError } from '../..'
 import { DEFAULT_SLIPPAGE } from './utils/constants'
@@ -44,8 +44,8 @@ const setupQuote = () => {
 }
 
 describe('ZrxSwapper', () => {
-  const input = <GetQuoteInput>{}
-  const quote = <Quote>{}
+  const input = <swapper.GetQuoteInput>{}
+  const quote = <swapper.Quote>{}
   const wallet = <HDWallet>{}
   const web3 = <Web3>{}
   const adapterManager = <ChainAdapterManager>{}
@@ -53,14 +53,14 @@ describe('ZrxSwapper', () => {
 
   it('calls getZrxQuote on getQuote', async () => {
     const { quoteInput } = setupQuote()
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
-    await swapper.getQuote(quoteInput)
+    const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
+    await zrxSwapper.getQuote(quoteInput)
     expect(getZrxQuote).toHaveBeenCalled()
   })
   it('returns Zrx type', () => {
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
-    const type = swapper.getType()
-    expect(type).toBe(SwapperType.Zrx)
+    const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
+    const type = zrxSwapper.getType()
+    expect(type).toBe(swapper.Type.Zrx)
   })
   it('handles ZrxError message', () => {
     const message = 'test error'
@@ -68,49 +68,49 @@ describe('ZrxSwapper', () => {
     expect(error.message).toBe(`ZrxError:${message}`)
   })
   it('getAvailableAssets filters out all non-ethereum assets', () => {
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
-    const availableAssets = swapper.getAvailableAssets([BTC, FOX, WETH])
+    const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
+    const availableAssets = zrxSwapper.getAvailableAssets([BTC, FOX, WETH])
     expect(availableAssets).toStrictEqual([FOX, WETH])
   })
   it('canTradePair fails on non-eth chains', () => {
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
-    const canTradePair = swapper.canTradePair(BTC, WETH)
+    const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
+    const canTradePair = zrxSwapper.canTradePair(BTC, WETH)
     expect(canTradePair).toBeFalsy()
   })
   it('canTradePair succeeds on eth chains', () => {
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
-    const canTradePair = swapper.canTradePair(FOX, WETH)
+    const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
+    const canTradePair = zrxSwapper.canTradePair(FOX, WETH)
     expect(canTradePair).toBeTruthy()
   })
   it('calls buildQuoteTx on swapper.buildQuoteTx', async () => {
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
+    const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
     const args = { input, wallet }
-    await swapper.buildQuoteTx(args)
+    await zrxSwapper.buildQuoteTx(args)
     expect(buildQuoteTx).toHaveBeenCalled()
   })
   it('calls executeQuote on swapper.executeQuote', async () => {
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
+    const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
     const args = { quote, wallet }
-    await swapper.executeQuote(args)
+    await zrxSwapper.executeQuote(args)
     expect(executeQuote).toHaveBeenCalled()
   })
   it('gets default pair', () => {
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
-    const pair = swapper.getDefaultPair()
+    const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
+    const pair = zrxSwapper.getDefaultPair()
     expect(pair).toHaveLength(2)
     pair.forEach((asset) => {
       expect(asset.chain).toBe(ChainTypes.Ethereum)
     })
   })
   it('calls getUsdRate on swapper.getUsdRate', async () => {
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
-    await swapper.getUsdRate(FOX)
+    const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
+    await zrxSwapper.getUsdRate(FOX)
     expect(getUsdRate).toHaveBeenCalled()
   })
   it('calls getMinMax on swapper.getMinMax', async () => {
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
+    const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
     const { quoteInput } = setupQuote()
-    await swapper.getMinMax(quoteInput)
+    await zrxSwapper.getMinMax(quoteInput)
     expect(getMinMax).toHaveBeenCalled()
   })
 })

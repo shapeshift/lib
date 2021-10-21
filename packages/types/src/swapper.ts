@@ -2,12 +2,12 @@ import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { Asset } from './asset-service'
 import { ethereum, SignTxInput } from './chain-adapters'
 
-export enum SwapperType {
+export enum Type {
   Zrx = '0x',
   Thorchain = 'Thorchain'
 }
 
-export type SwapSource = {
+export type Source = {
   name: string
   proportion: string
 }
@@ -34,7 +34,7 @@ export type QuoteResponse = {
   buyAmount?: string
   sellAmount?: string
   allowanceTarget?: string
-  sources?: Array<SwapSource>
+  sources?: Array<Source>
 }
 
 export type ThorVaultInfo = {
@@ -70,7 +70,7 @@ export type Quote = {
   slippage?: string
   priceImpact?: string
   orderId?: string
-  sources?: Array<SwapSource>
+  sources?: Array<Source>
   timestamp?: number
 }
 

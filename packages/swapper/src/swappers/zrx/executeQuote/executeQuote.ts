@@ -1,12 +1,12 @@
 import { numberToHex } from 'web3-utils'
-import { BIP32Params, ExecQuoteInput, ExecQuoteOutput } from '@shapeshiftoss/types'
+import { BIP32Params, swapper } from '@shapeshiftoss/types'
 import { SwapError } from '../../../api'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function executeQuote(
   { adapterManager }: ZrxSwapperDeps,
-  { quote, wallet }: ExecQuoteInput
-): Promise<ExecQuoteOutput> {
+  { quote, wallet }: swapper.ExecQuoteInput
+): Promise<swapper.ExecQuoteOutput> {
   const { sellAsset } = quote
 
   if (!quote.success) {

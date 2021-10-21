@@ -1,12 +1,12 @@
 import { AxiosResponse } from 'axios'
 import BigNumber from 'bignumber.js'
-import { ChainTypes, GetQuoteInput, Quote, QuoteResponse, SwapSource } from '@shapeshiftoss/types'
+import { ChainTypes, swapper } from '@shapeshiftoss/types'
 import { MAX_ZRX_TRADE, APPROVAL_GAS_LIMIT, DEFAULT_SOURCE } from '../utils/constants'
 import { zrxService } from '../utils/zrxService'
 import { normalizeAmount } from '../utils/helpers/helpers'
 import { ZrxError } from '../ZrxSwapper'
 
-export async function getZrxQuote(input: GetQuoteInput): Promise<Quote> {
+export async function getZrxQuote(input: swapper.GetQuoteInput): Promise<swapper.Quote> {
   const {
     sellAsset,
     buyAsset,
@@ -65,17 +65,16 @@ export async function getZrxQuote(input: GetQuoteInput): Promise<Quote> {
      *   buyAmount?: integer string value of the smallest incremtent of the buy token
      * }
      */
-    const quoteResponse: AxiosResponse<QuoteResponse> = await zrxService.get<QuoteResponse>(
-      '/swap/v1/price',
-      {
-        params: {
-          sellToken,
-          buyToken,
-          slippagePercentage,
-          [amountKey]: normalizedAmount
-        }
+    const quoteResponse: AxiosResponse<swapper.QuoteResponse> = await zrxService.get<
+      swapper.QuoteResponse
+    >('/swap/v1/price', {
+      params: {
+        sellToken,
+        buyToken,
+        slippagePercentage,
+        [amountKey]: normalizedAmount
       }
-    )
+    })
 
     const { data } = quoteResponse
     const quotePrice = new BigNumber(data.price)
@@ -114,7 +113,7 @@ export async function getZrxQuote(input: GetQuoteInput): Promise<Quote> {
       buyAmount: data.buyAmount,
       guaranteedPrice: data.guaranteedPrice,
       sources:
-        data.sources?.filter((s: SwapSource) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE
+        data.sources?.filter((s: swapper.Source) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE
     }
   } catch (e) {
     const statusCode =

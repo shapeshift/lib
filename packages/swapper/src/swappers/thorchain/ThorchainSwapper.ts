@@ -1,56 +1,48 @@
-import {
-  Asset,
-  ApprovalNeededOutput,
-  SwapperType,
-  Quote,
-  ExecQuoteOutput,
-  MinMaxOutput,
-  GetQuoteInput
-} from '@shapeshiftoss/types'
+import { assetService, swapper } from '@shapeshiftoss/types'
 import { Swapper } from '../../api'
 
 export class ThorchainSwapper implements Swapper {
   getType() {
-    return SwapperType.Thorchain
+    return swapper.Type.Thorchain
   }
 
-  async getQuote(): Promise<Quote> {
+  async getQuote(): Promise<swapper.Quote> {
     throw new Error('ThorchainSwapper: getQuote unimplemented')
   }
 
-  async buildQuoteTx(): Promise<Quote> {
+  async buildQuoteTx(): Promise<swapper.Quote> {
     throw new Error('ThorchainSwapper: getQuote unimplemented')
   }
 
-  getUsdRate(input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string> {
+  getUsdRate(input: Pick<assetService.Asset, 'symbol' | 'tokenId'>): Promise<string> {
     console.info(input)
     throw new Error('ThorchainSwapper: getUsdRate unimplemented')
   }
 
-  getMinMax(input: GetQuoteInput): Promise<MinMaxOutput> {
+  getMinMax(input: swapper.GetQuoteInput): Promise<swapper.MinMaxOutput> {
     console.info(input)
     throw new Error('ThorchainSwapper: getMinMax unimplemented')
   }
 
-  getAvailableAssets(assets: Asset[]): Asset[] {
+  getAvailableAssets(assets: assetService.Asset[]): assetService.Asset[] {
     console.info(assets)
     throw new Error('ThorchainSwapper: getAvailableAssets unimplemented')
   }
 
-  canTradePair(sellAsset: Asset, buyAsset: Asset): boolean {
+  canTradePair(sellAsset: assetService.Asset, buyAsset: assetService.Asset): boolean {
     console.info(sellAsset, buyAsset)
     throw new Error('ThorchainSwapper: canTradePair unimplemented')
   }
 
-  async executeQuote(): Promise<ExecQuoteOutput> {
+  async executeQuote(): Promise<swapper.ExecQuoteOutput> {
     throw new Error('ThorchainSwapper: executeQuote unimplemented')
   }
 
-  getDefaultPair(): Pick<Asset, 'chain' | 'symbol' | 'name'>[] {
+  getDefaultPair(): Pick<assetService.Asset, 'chain' | 'symbol' | 'name'>[] {
     throw new Error('ThorchainSwapper: getDefaultPair unimplemented')
   }
 
-  async approvalNeeded(): Promise<ApprovalNeededOutput> {
+  async approvalNeeded(): Promise<swapper.ApprovalNeededOutput> {
     throw new Error('ThorchainSwapper: approvalNeeded unimplemented')
   }
 }

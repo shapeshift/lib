@@ -3,7 +3,7 @@ import Web3 from 'web3'
 import { ThorchainSwapper, ZrxSwapper } from '../swappers'
 import { SwapperManager } from './SwapperManager'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import { SwapperType } from '@shapeshiftoss/types'
+import { swapper } from '@shapeshiftoss/types'
 
 describe('SwapperManager', () => {
   const zrxSwapperDeps = {
@@ -21,48 +21,48 @@ describe('SwapperManager', () => {
   describe('addSwapper', () => {
     it('should add swapper', () => {
       const manager = new SwapperManager()
-      manager.addSwapper(SwapperType.Thorchain, new ThorchainSwapper())
-      expect(manager.getSwapper(SwapperType.Thorchain)).toBeInstanceOf(ThorchainSwapper)
+      manager.addSwapper(swapper.Type.Thorchain, new ThorchainSwapper())
+      expect(manager.getSwapper(swapper.Type.Thorchain)).toBeInstanceOf(ThorchainSwapper)
     })
 
     it('should be chainable', async () => {
       const manager = new SwapperManager()
       manager
-        .addSwapper(SwapperType.Thorchain, new ThorchainSwapper())
-        .addSwapper(SwapperType.Zrx, new ZrxSwapper(zrxSwapperDeps))
-      expect(manager.getSwapper(SwapperType.Zrx)).toBeInstanceOf(ZrxSwapper)
+        .addSwapper(swapper.Type.Thorchain, new ThorchainSwapper())
+        .addSwapper(swapper.Type.Zrx, new ZrxSwapper(zrxSwapperDeps))
+      expect(manager.getSwapper(swapper.Type.Zrx)).toBeInstanceOf(ZrxSwapper)
     })
 
     it('should throw an error if adding an existing chain', () => {
-      const swapper = new SwapperManager()
+      const manager = new SwapperManager()
       expect(() => {
-        swapper
-          .addSwapper(SwapperType.Thorchain, new ThorchainSwapper())
-          .addSwapper(SwapperType.Thorchain, new ZrxSwapper(zrxSwapperDeps))
+        manager
+          .addSwapper(swapper.Type.Thorchain, new ThorchainSwapper())
+          .addSwapper(swapper.Type.Thorchain, new ZrxSwapper(zrxSwapperDeps))
       }).toThrow('already exists')
     })
   })
 
   describe('getSwapper', () => {
     it('should return a swapper that has been added', () => {
-      const swapper = new SwapperManager()
-      swapper.addSwapper(SwapperType.Thorchain, new ThorchainSwapper())
-      expect(swapper.getSwapper(SwapperType.Thorchain)).toBeInstanceOf(ThorchainSwapper)
+      const manager = new SwapperManager()
+      manager.addSwapper(swapper.Type.Thorchain, new ThorchainSwapper())
+      expect(manager.getSwapper(swapper.Type.Thorchain)).toBeInstanceOf(ThorchainSwapper)
     })
 
     it('should return the correct swapper', () => {
-      const swapper = new SwapperManager()
-      swapper
-        .addSwapper(SwapperType.Thorchain, new ThorchainSwapper())
-        .addSwapper(SwapperType.Zrx, new ZrxSwapper(zrxSwapperDeps))
+      const manager = new SwapperManager()
+      manager
+        .addSwapper(swapper.Type.Thorchain, new ThorchainSwapper())
+        .addSwapper(swapper.Type.Zrx, new ZrxSwapper(zrxSwapperDeps))
 
-      expect(swapper.getSwapper(SwapperType.Thorchain)).toBeInstanceOf(ThorchainSwapper)
-      expect(swapper.getSwapper(SwapperType.Zrx)).toBeInstanceOf(ZrxSwapper)
+      expect(manager.getSwapper(swapper.Type.Thorchain)).toBeInstanceOf(ThorchainSwapper)
+      expect(manager.getSwapper(swapper.Type.Zrx)).toBeInstanceOf(ZrxSwapper)
     })
 
     it('should throw an error if swapper is not set', () => {
-      const swapper = new SwapperManager()
-      expect(() => swapper.getSwapper(SwapperType.Thorchain)).toThrow(
+      const manager = new SwapperManager()
+      expect(() => manager.getSwapper(swapper.Type.Thorchain)).toThrow(
         "SwapperError:getSwapper - Thorchain doesn't exist"
       )
     })
@@ -70,7 +70,7 @@ describe('SwapperManager', () => {
     it('should throw an error if an invalid Swapper instance is passed', () => {
       const manager = new SwapperManager()
       // @ts-ignore
-      expect(() => manager.addSwapper(SwapperType.Thorchain, {})).toThrow(
+      expect(() => manager.addSwapper(swapper.Type.Thorchain, {})).toThrow(
         'SwapperError:validateSwapper - invalid swapper instance'
       )
     })
@@ -78,19 +78,19 @@ describe('SwapperManager', () => {
 
   describe('removeSwapper', () => {
     it('should remove swapper and return this', () => {
-      const swapper = new SwapperManager()
-      swapper
-        .addSwapper(SwapperType.Thorchain, new ThorchainSwapper())
-        .removeSwapper(SwapperType.Thorchain)
-      expect(() => swapper.getSwapper(SwapperType.Thorchain)).toThrow(
-        `SwapperError:getSwapper - ${SwapperType.Thorchain} doesn't exist`
+      const manager = new SwapperManager()
+      manager
+        .addSwapper(swapper.Type.Thorchain, new ThorchainSwapper())
+        .removeSwapper(swapper.Type.Thorchain)
+      expect(() => manager.getSwapper(swapper.Type.Thorchain)).toThrow(
+        `SwapperError:getSwapper - ${swapper.Type.Thorchain} doesn't exist`
       )
     })
 
     it("should throw an error if swapper isn't set", () => {
-      const swapper = new SwapperManager()
-      expect(() => swapper.removeSwapper(SwapperType.Thorchain)).toThrow(
-        `SwapperError:removeSwapper - ${SwapperType.Thorchain} doesn't exist`
+      const manager = new SwapperManager()
+      expect(() => manager.removeSwapper(swapper.Type.Thorchain)).toThrow(
+        `SwapperError:removeSwapper - ${swapper.Type.Thorchain} doesn't exist`
       )
     })
   })

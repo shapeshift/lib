@@ -1,4 +1,4 @@
-import { ChainTypes, GetQuoteInput, QuoteResponse, MinMaxOutput } from '@shapeshiftoss/types'
+import { ChainTypes, swapper } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 import { MAX_ZRX_TRADE } from '../utils/constants'
 import { getUsdRate, normalizeAmount } from '../utils/helpers/helpers'
@@ -6,8 +6,8 @@ import { zrxService } from '../utils/zrxService'
 import { ZrxError } from '../ZrxSwapper'
 
 export const getMinMax = async (
-  input: Pick<GetQuoteInput, 'sellAsset' | 'buyAsset'>
-): Promise<MinMaxOutput> => {
+  input: Pick<swapper.GetQuoteInput, 'sellAsset' | 'buyAsset'>
+): Promise<swapper.MinMaxOutput> => {
   const { sellAsset, buyAsset } = input
 
   if (sellAsset.chain !== ChainTypes.Ethereum || buyAsset.chain !== ChainTypes.Ethereum) {
@@ -26,7 +26,7 @@ export const getMinMax = async (
     .times(new BigNumber(10).exponentiatedBy(sellAsset.precision))
 
   const minimum = new BigNumber(1).dividedBy(new BigNumber(usdRate)).toString()
-  const minimumPriceResult = await zrxService.get<QuoteResponse>('/swap/v1/price', {
+  const minimumPriceResult = await zrxService.get<swapper.QuoteResponse>('/swap/v1/price', {
     params: {
       sellToken,
       buyToken,

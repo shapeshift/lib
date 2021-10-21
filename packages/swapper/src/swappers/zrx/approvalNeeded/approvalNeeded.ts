@@ -1,12 +1,6 @@
 import { BigNumber } from 'bignumber.js'
 import { AxiosResponse } from 'axios'
-import {
-  ApprovalNeededInput,
-  ApprovalNeededOutput,
-  BIP32Params,
-  ChainTypes,
-  QuoteResponse
-} from '@shapeshiftoss/types'
+import { BIP32Params, ChainTypes, swapper } from '@shapeshiftoss/types'
 import {
   AFFILIATE_ADDRESS,
   APPROVAL_BUY_AMOUNT,
@@ -22,8 +16,8 @@ import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 
 export async function approvalNeeded(
   { adapterManager, web3 }: ZrxSwapperDeps,
-  { quote, wallet }: ApprovalNeededInput
-): Promise<ApprovalNeededOutput> {
+  { quote, wallet }: swapper.ApprovalNeededInput
+): Promise<swapper.ApprovalNeededOutput> {
   const { sellAsset } = quote
 
   if (sellAsset.symbol === 'ETH') {
@@ -52,20 +46,19 @@ export async function approvalNeeded(
    *   buyAmount?: integer string value of the smallest incremtent of the buy token
    * }
    */
-  const quoteResponse: AxiosResponse<QuoteResponse> = await zrxService.get<QuoteResponse>(
-    '/swap/v1/quote',
-    {
-      params: {
-        buyToken: 'ETH',
-        sellToken: quote.sellAsset.tokenId || quote.sellAsset.symbol || quote.sellAsset.chain,
-        buyAmount: APPROVAL_BUY_AMOUNT,
-        takerAddress: receiveAddress,
-        slippagePercentage: DEFAULT_SLIPPAGE,
-        skipValidation: true,
-        affiliateAddress: AFFILIATE_ADDRESS
-      }
+  const quoteResponse: AxiosResponse<swapper.QuoteResponse> = await zrxService.get<
+    swapper.QuoteResponse
+  >('/swap/v1/quote', {
+    params: {
+      buyToken: 'ETH',
+      sellToken: quote.sellAsset.tokenId || quote.sellAsset.symbol || quote.sellAsset.chain,
+      buyAmount: APPROVAL_BUY_AMOUNT,
+      takerAddress: receiveAddress,
+      slippagePercentage: DEFAULT_SLIPPAGE,
+      skipValidation: true,
+      affiliateAddress: AFFILIATE_ADDRESS
     }
-  )
+  })
   const { data } = quoteResponse
 
   const allowanceResult = getERC20Allowance(

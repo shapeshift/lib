@@ -2,13 +2,13 @@ import BigNumber from 'bignumber.js'
 import { AbiItem } from 'web3-utils'
 import Web3 from 'web3'
 import { SwapError } from '../../../../api'
-import { Asset, Quote, QuoteResponse } from '@shapeshiftoss/types'
+import { assetService, swapper } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import { zrxService } from '../zrxService'
 import { ZrxError } from '../../ZrxSwapper'
 
 export type GetAllowanceRequiredArgs = {
-  quote: Quote
+  quote: swapper.Quote
   web3: Web3
   erc20AllowanceAbi: AbiItem[]
 }
@@ -75,19 +75,20 @@ export const getAllowanceRequired = async ({
   return allowanceRequired.lt(0) ? new BigNumber(0) : allowanceRequired
 }
 
-export const getUsdRate = async (input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string> => {
+export const getUsdRate = async (
+  input: Pick<assetService.Asset, 'symbol' | 'tokenId'>
+): Promise<string> => {
   const { symbol, tokenId } = input
   if (symbol === 'USDC') return '1' // Will break if comparing against usdc
-  const rateResponse: AxiosResponse<QuoteResponse> = await zrxService.get<QuoteResponse>(
-    '/swap/v1/price',
-    {
-      params: {
-        buyToken: 'USDC',
-        buyAmount: '1000000', // $1
-        sellToken: tokenId || symbol
-      }
+  const rateResponse: AxiosResponse<swapper.QuoteResponse> = await zrxService.get<
+    swapper.QuoteResponse
+  >('/swap/v1/price', {
+    params: {
+      buyToken: 'USDC',
+      buyAmount: '1000000', // $1
+      sellToken: tokenId || symbol
     }
-  )
+  })
   if (!rateResponse.data.price) throw new ZrxError('getUsdRate - Failed to get price data')
 
   return new BigNumber(1).dividedBy(rateResponse.data.price).toString()

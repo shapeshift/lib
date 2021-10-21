@@ -1,4 +1,4 @@
-import { ChainTypes, ContractTypes, NetworkTypes, Asset } from '@shapeshiftoss/types'
+import { assetService, ChainTypes, ContractTypes, NetworkTypes } from '@shapeshiftoss/types'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import Web3 from 'web3'
 import BigNumber from 'bignumber.js'
@@ -33,7 +33,7 @@ const setupQuote = () => {
     receiveSupport: true,
     symbol: 'FOX'
     // TODO: remove the type casts from test files when we unify `ChainTypes` and `ChainTypes`
-  } as unknown) as Asset
+  } as unknown) as assetService.Asset
   const buyAsset = ({
     name: 'WETH',
     chain: ChainTypes.Ethereum,
@@ -50,7 +50,7 @@ const setupQuote = () => {
     sendSupport: true,
     receiveSupport: true,
     symbol: 'WETH'
-  } as unknown) as Asset
+  } as unknown) as assetService.Asset
 
   const quoteInput = {
     sellAsset,
