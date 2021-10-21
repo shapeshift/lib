@@ -1,9 +1,5 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-<<<<<<< HEAD
 import { QuoteFeeData, SignTxInput } from './chain-adapters'
-=======
-import { ethereum, SignTxInput } from './chain-adapters'
->>>>>>> main
 
 /** Common */
 
@@ -163,11 +159,7 @@ export type Quote<T1 extends ChainTypes, T2 extends SwapperType> = {
   slipScore?: string
   txData?: string
   value?: string
-<<<<<<< HEAD
   feeData?: QuoteFeeData<T1, T2>
-=======
-  feeData?: ethereum.QuoteFeeData
->>>>>>> main
   allowanceContract?: string
   allowanceGrantRequired?: boolean
   slippage?: string
