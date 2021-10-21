@@ -8,6 +8,21 @@ yarn add @shapeshiftoss/swapper
 
 ## Usage
 
+### Swapper CLI
+- Copy the `sample.env` to `.env`
+```
+cp sample.env .env
+```
+
+- Useage:
+```
+$ swapcli [sellSymbol] [buySymbol] [sellAmount]
+```
+ie:
+```
+$ swapcli ETH USDC 0.001
+```
+
 ### Setup
 
 ```ts
@@ -55,3 +70,5 @@ const tx = await swapper.execute(signedTx)
 // or
 const tx = await adapter.broadcastTransaction(...args)
 ```
+
+
