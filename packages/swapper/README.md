@@ -70,5 +70,3 @@ const tx = await swapper.execute(signedTx)
 // or
 const tx = await adapter.broadcastTransaction(...args)
 ```
-
-
