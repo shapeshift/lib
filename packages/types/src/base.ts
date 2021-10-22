@@ -140,7 +140,7 @@ export type ThorVaultInfo = {
 
 export type BuildThorTradeOutput = SignTxInput<unknown> & ThorVaultInfo
 
-export type Quote<T1 extends ChainTypes, T2 extends SwapperType> = {
+export type Quote<C extends ChainTypes, S extends SwapperType> = {
   success: boolean
   statusCode?: number
   statusReason?: string
@@ -148,7 +148,7 @@ export type Quote<T1 extends ChainTypes, T2 extends SwapperType> = {
   buyAssetAccountId?: string
   sellAsset: Asset
   buyAsset: Asset
-  feeData?: QuoteFeeData<T1, T2>
+  feeData?: QuoteFeeData<C, S>
   rate?: string
   depositAddress?: string // this is dex contract address for eth swaps
   receiveAddress?: string
@@ -188,8 +188,8 @@ export type BuildQuoteTxInput = {
   wallet: HDWallet
 }
 
-export type ExecQuoteInput<T1 extends ChainTypes, T2 extends SwapperType> = {
-  quote: Quote<T1, T2>
+export type ExecQuoteInput<C extends ChainTypes, S extends SwapperType> = {
+  quote: Quote<C, S>
   wallet: HDWallet
 }
 
@@ -197,8 +197,8 @@ export type ExecQuoteOutput = {
   txid: string
 }
 
-export type ApprovalNeededInput<T1 extends ChainTypes, T2 extends SwapperType> = {
-  quote: Quote<T1, T2>
+export type ApprovalNeededInput<C extends ChainTypes, S extends SwapperType> = {
+  quote: Quote<C, S>
   wallet: HDWallet
 }
 

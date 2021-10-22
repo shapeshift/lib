@@ -63,7 +63,6 @@ export async function getZrxQuote(
   }
 
   const slippagePercentage = slippage ? new BigNumber(slippage).div(100).toString() : undefined
-
   try {
     /**
      * /swap/v1/price
