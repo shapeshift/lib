@@ -63,7 +63,7 @@ const main = async (): Promise<void> => {
   const assets = assetService.byNetwork(NetworkTypes.MAINNET)
 
   if (!assets) {
-    console.error('No portfolio assets found')
+    console.error('No assets found in asset service')
     return
   }
 
@@ -78,11 +78,11 @@ const main = async (): Promise<void> => {
   const buyAsset = assetMap[buySymbol] as Asset
 
   if (!sellAsset) {
-    console.error(`No asset ${sellSymbol} found in portfolio`)
+    console.error(`No asset ${sellSymbol} found in asset service`)
     return
   }
   if (!buyAsset) {
-    console.error(`No asset ${buySymbol} found in portfolio`)
+    console.error(`No asset ${buySymbol} found in asset service`)
   }
 
   // Swapper Deps
