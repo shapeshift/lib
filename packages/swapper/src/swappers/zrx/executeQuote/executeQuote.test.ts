@@ -10,6 +10,7 @@ describe('executeQuote', () => {
   const wallet = <HDWallet>{}
   const adapterManager = {
     byChain: jest.fn(() => ({
+      buildBIP32Params: jest.fn(() => ({ purpose: 44, coinType: 60, accountNumber: 0 })),
       buildSendTransaction: jest.fn(() => Promise.resolve({ txToSign: '0000000000000000' })),
       signTransaction: jest.fn(() => Promise.resolve('0000000000000000000')),
       broadcastTransaction: jest.fn(() => Promise.resolve(txid))
@@ -47,8 +48,7 @@ describe('executeQuote', () => {
     )
   })
 
-  // TODO: (ryankk) unskip this when we implement multiple accounts for ethereum
-  it.skip('throws an error if quote.sellAssetAccountId is not provided', async () => {
+  it('throws an error if quote.sellAssetAccountId is not provided', async () => {
     const args = {
       quote: { ...quoteInput, sellAssetAccountId: '' },
       wallet

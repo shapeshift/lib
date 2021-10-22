@@ -2,13 +2,7 @@ import BigNumber from 'bignumber.js'
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 import { SwapError } from '../../..'
-import {
-  ChainTypes,
-  Quote,
-  QuoteResponse,
-  BuildQuoteTxInput,
-  BIP32Params
-} from '@shapeshiftoss/types'
+import { ChainTypes, Quote, QuoteResponse, BuildQuoteTxInput } from '@shapeshiftoss/types'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
@@ -43,12 +37,11 @@ export async function buildQuoteTx(
     )
   }
 
-  // TODO: (ryankk) uncomment out when we implement multiple accounts for ethereum
-  // if (!sellAssetAccountId || !buyAssetAccountId) {
-  //   throw new SwapError(
-  //     'ZrxSwapper:buildQuoteTx Both sellAssetAccountId and buyAssetAccountId are required'
-  //   )
-  // }
+  if (!sellAssetAccountId || !buyAssetAccountId) {
+    throw new SwapError(
+      'ZrxSwapper:buildQuoteTx Both sellAssetAccountId and buyAssetAccountId are required'
+    )
+  }
 
   const buyToken = buyAsset.tokenId || buyAsset.symbol || buyAsset.network
   const sellToken = sellAsset.tokenId || sellAsset.symbol || sellAsset.network
@@ -69,14 +62,9 @@ export async function buildQuoteTx(
     )
   }
 
-  // TODO(ryankk): populate this when we implement multiple accounts for ethereum
-  // const bip32Params: BIP32Params = {
-  //   purpose: 0,
-  //   coinType: 0,
-  //   accountNumber: 0
-  // }
   const adapter = adapterManager.byChain(buyAsset.chain)
-  const receiveAddress = await adapter.getAddress({ wallet })
+  const bip32Params = adapter.buildBIP32Params({ accountNumber: Number(buyAssetAccountId) })
+  const receiveAddress = await adapter.getAddress({ wallet, bip32Params })
 
   if (new BigNumber(slippage || 0).gt(MAX_SLIPPAGE)) {
     throw new SwapError(

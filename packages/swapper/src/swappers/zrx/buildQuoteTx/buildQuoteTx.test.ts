@@ -58,7 +58,7 @@ const mockQuoteResponse = {
     symbol: 'WETH',
     tokenId: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
   },
-  buyAssetAccountId: 'buyAccountId',
+  buyAssetAccountId: '0',
   depositAddress: undefined,
   feeData: { approvalFee: '0', estimatedGas: '0', fee: '0', gasPrice: undefined },
   guaranteedPrice: undefined,
@@ -83,7 +83,7 @@ const mockQuoteResponse = {
     symbol: 'FOX',
     tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
   },
-  sellAssetAccountId: 'sellAccountId',
+  sellAssetAccountId: '0',
   slippage: DEFAULT_SLIPPAGE,
   sources: [{ name: '0x', proportion: '1' }],
   statusCode: 0,
@@ -134,8 +134,7 @@ describe('buildQuoteTx', () => {
     )
   })
 
-  // TODO: (ryankk) unskip this when we implement multiple accounts for ethereum
-  it.skip('should throw error if sellAssetAccountId is NOT provided', async () => {
+  it('should throw error if sellAssetAccountId is NOT provided', async () => {
     const input = { ...quoteInput, sellAssetAccountId: '' }
 
     await expect(buildQuoteTx(deps, { input, wallet })).rejects.toThrow(
@@ -143,8 +142,7 @@ describe('buildQuoteTx', () => {
     )
   })
 
-  // TODO: (ryankk) unskip this when we implement multiple accounts for ethereum
-  it.skip('should throw error if buyAssetAccountId is NOT provided', async () => {
+  it('should throw error if buyAssetAccountId is NOT provided', async () => {
     const input = { ...quoteInput, buyAssetAccountId: '' }
 
     await expect(buildQuoteTx(deps, { input, wallet })).rejects.toThrow(
