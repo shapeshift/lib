@@ -60,6 +60,8 @@ export async function executeQuote(
     throw new SwapError(`executeQuote - signTransaction error: ${error}`)
   }
 
+  if (!signedTx) throw new SwapError(`executeQuote - Signed transaction is required: ${signedTx}`)
+
   try {
     txid = await adapter.broadcastTransaction(signedTx)
   } catch (error) {
