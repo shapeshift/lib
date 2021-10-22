@@ -68,10 +68,10 @@ export class AssetService {
    */
   async initialize() {
     try {
-      if (!this.assetFileUrl) {
-        throw new Error('Invalid assetFileUrl')
-      }
       const { data } = await axios.get<BaseAsset[]>(this.assetFileUrl)
+      if (!Array.isArray(data)) {
+        throw new Error(`Asset Initialize: Return value ${data} is not valid`)
+      }
       this.assetData = data
     } catch (err) {
       this.assetData = localAssetData as BaseAsset[]
