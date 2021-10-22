@@ -1,6 +1,6 @@
 import { HDWallet, BTCInputScriptType, BTCSignTx, ETHSignTx } from '@shapeshiftoss/hdwallet-core'
 import { BIP32Params, ChainTypes, NetworkTypes, SwapperType } from '../base'
-import { ChainAndPlatformSpecific, ChainSpecific } from '../utility'
+import { ChainAndSwapperSpecific, ChainSpecific } from '../utility'
 import * as ethereum from './ethereum'
 import * as bitcoin from './bitcoin'
 
@@ -51,7 +51,7 @@ export enum FeeDataKey {
   Fast = 'fast'
 }
 
-type ChainSpecificQuoteFeeData<T1, T2> = ChainAndPlatformSpecific<
+type ChainSpecificQuoteFeeData<T1, T2> = ChainAndSwapperSpecific<
   T1,
   {
     [ChainTypes.Ethereum]: ethereum.QuoteFeeData
