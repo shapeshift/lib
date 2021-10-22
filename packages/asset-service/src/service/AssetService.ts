@@ -71,7 +71,7 @@ export class AssetService {
       if (!this.assetFileUrl) {
         throw new Error('Invalid assetFileUrl')
       }
-      const { data } = await axios.get<BaseAsset[]>(this.assetFileUrl as string)
+      const { data } = await axios.get<BaseAsset[]>(this.assetFileUrl)
       this.assetData = data
     } catch (err) {
       this.assetData = localAssetData as BaseAsset[]
