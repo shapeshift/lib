@@ -6,10 +6,13 @@ import { setupQuote } from '../utils/test-data/setupSwapQuote'
 import { zrxService } from '../utils/zrxService'
 
 jest.mock('web3')
+jest.mock('../utils/helpers/helpers', () => ({
+  grantAllowance: jest.fn(() => 'grantAllowanceTxId')
+}))
 jest.mock('axios', () => ({
   create: () => ({
     get: jest.fn(() => Promise.resolve({ data: {} })),
-    post: jest.fn(() => Promise.resolve({ data: { txid: '0000000000' } }))
+    post: jest.fn(() => Promise.resolve({ data: { txid: 'txid' } }))
   }),
   get: jest.fn(() => Promise.resolve({ data: { result: [{ source: 'MEDIAN' }] } }))
 }))
@@ -41,6 +44,6 @@ describe('approveInfinite', () => {
     const quote = { ...quoteInput }
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data }))
 
-    expect(await approveInfinite(deps, { quote, wallet })).toEqual('0000000000')
+    expect(await approveInfinite(deps, { quote, wallet })).toEqual('grantAllowanceTxId')
   })
 })

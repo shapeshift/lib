@@ -2,15 +2,12 @@ import BigNumber from 'bignumber.js'
 import { AxiosResponse } from 'axios'
 import { numberToHex, AbiItem } from 'web3-utils'
 import Web3 from 'web3'
-import { SwapError } from '../../../../api'
 import { Asset, ChainTypes, Quote, QuoteResponse, SwapperType } from '@shapeshiftoss/types'
-import { AxiosResponse } from 'axios'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { zrxService } from '../zrxService'
 import { SwapError } from '../../../../api'
 import { ZrxError } from '../../ZrxSwapper'
-import { DEFAULT_ETH_PATH } from '../constants'
 
 export type GetAllowanceRequiredArgs = {
   quote: Quote<ChainTypes, SwapperType>
@@ -30,7 +27,7 @@ export type GetERC20AllowanceArgs = {
 }
 
 type GrantAllowanceArgs = {
-  quote: Quote
+  quote: Quote<ChainTypes, SwapperType>
   wallet: HDWallet
   adapter: ChainAdapter<ChainTypes>
   erc20Abi: AbiItem[]
@@ -122,14 +119,17 @@ export const grantAllowance = async ({
     .approve(quote.allowanceContract, quote.sellAmount)
     .encodeABI()
 
-  const value = quote.sellAsset.symbol === 'ETH' ? numberToHex(quote.sellAmount || 0) : '0x0'
+  const value = quote.sellAsset.symbol === 'ETH' ? quote.sellAmount : '0x0'
+  const bip32Params = adapter.buildBIP32Params({
+    accountNumber: Number(quote.sellAssetAccountId || 0)
+  })
   const { txToSign } = await adapter.buildSendTransaction({
     value,
     wallet,
     to: quote.sellAsset.tokenId,
-    path: DEFAULT_ETH_PATH,
-    fee: numberToHex(quote.feeData?.gasPrice || 0),
-    limit: numberToHex(quote.feeData?.estimatedGas || 0)
+    fee: numberToHex(quote.feeData?.chainSpecific?.gasPrice || 0),
+    gasLimit: numberToHex(quote.feeData?.chainSpecific?.estimatedGas || 0),
+    bip32Params
   })
 
   const grantAllowanceTxToSign = {

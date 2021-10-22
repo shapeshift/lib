@@ -63,10 +63,10 @@ export interface Swapper {
   /**
    * Get a boolean if a quote needs approval
    */
-  approvalNeeded(args: ApprovalNeededInput): Promise<ApprovalNeededOutput>
+  approvalNeeded(args: ApprovalNeededInput<ChainTypes, SwapperType>): Promise<ApprovalNeededOutput>
 
   /**
    * Get the txid of an approve infinite transaction
    */
-  approveInfinite(args: ApproveInfiniteInput): Promise<string>
+  approveInfinite(args: ApproveInfiniteInput<ChainTypes, SwapperType>): Promise<string>
 }

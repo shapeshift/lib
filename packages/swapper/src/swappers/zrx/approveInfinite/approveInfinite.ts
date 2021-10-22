@@ -1,22 +1,18 @@
 import { AxiosResponse } from 'axios'
-import { ApproveInfiniteInput, QuoteResponse } from '@shapeshiftoss/types'
+import { ApproveInfiniteInput, QuoteResponse, ChainTypes, SwapperType } from '@shapeshiftoss/types'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
-import {
-  DEFAULT_ETH_PATH,
-  DEFAULT_SLIPPAGE,
-  AFFILIATE_ADDRESS,
-  MAX_ALLOWANCE
-} from '../utils/constants'
+import { DEFAULT_SLIPPAGE, AFFILIATE_ADDRESS, MAX_ALLOWANCE } from '../utils/constants'
 import { zrxService } from '../utils/zrxService'
 import { grantAllowance } from '../utils/helpers/helpers'
 import { erc20Abi } from '../utils/abi/erc20-abi'
 
 export async function approveInfinite(
   { adapterManager, web3 }: ZrxSwapperDeps,
-  { quote, wallet }: ApproveInfiniteInput
+  { quote, wallet }: ApproveInfiniteInput<ChainTypes, SwapperType>
 ) {
   const adapter = adapterManager.byChain(quote.buyAsset.chain)
-  const receiveAddress = await adapter.getAddress({ wallet, path: DEFAULT_ETH_PATH })
+  const bip32Params = adapter.buildBIP32Params({ accountNumber: Number(quote.sellAssetAccountId) })
+  const receiveAddress = await adapter.getAddress({ wallet, bip32Params })
 
   /**
    * /swap/v1/quote
@@ -43,7 +39,7 @@ export async function approveInfinite(
   )
   const { data } = quoteResponse
 
-  return grantAllowance({
+  const allowanceGrantRequired = await grantAllowance({
     quote: {
       ...quote,
       allowanceContract: data.allowanceTarget as string,
@@ -54,4 +50,6 @@ export async function approveInfinite(
     erc20Abi,
     web3
   })
+
+  return allowanceGrantRequired
 }

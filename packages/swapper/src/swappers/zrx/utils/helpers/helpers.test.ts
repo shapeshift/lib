@@ -38,15 +38,19 @@ Web3.mockImplementation(() => ({
 // @ts-ignore
 ChainAdapterManager.mockImplementation(() => ({
   byChain: jest.fn(() => ({
+    buildBIP32Params: jest.fn(() => ({ purpose: 44, coinType: 60, accountNumber: 0 })),
     buildSendTransaction: jest.fn(() => Promise.resolve({ txToSign: {} })),
-    signTransaction: jest.fn(() => Promise.resolve('0000000000')),
-    broadcastTransaction: jest.fn(() => Promise.resolve('0000000000'))
+    signTransaction: jest.fn(() => Promise.resolve('signedTx')),
+    broadcastTransaction: jest.fn(() => Promise.resolve('broadcastedTx'))
   }))
 }))
 
 const setup = () => {
   const unchainedUrls = {
-    [ChainTypes.Ethereum]: 'http://localhost:31300/api/v1'
+    [ChainTypes.Ethereum]: {
+      httpUrl: 'http://localhost:31300',
+      wsUrl: 'ws://localhost:31300'
+    }
   }
   const adapterManager = new ChainAdapterManager(unchainedUrls)
   const adapter = adapterManager.byChain(ChainTypes.Ethereum)
@@ -215,7 +219,7 @@ describe('utils', () => {
 
       expect(
         await grantAllowance({ quote, wallet, adapter, erc20Abi, web3: web3Instance })
-      ).toEqual('0000000000')
+      ).toEqual('broadcastedTx')
     })
   })
 })

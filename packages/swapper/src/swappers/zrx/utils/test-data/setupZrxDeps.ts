@@ -4,7 +4,14 @@ import Web3 from 'web3'
 
 export const setupZrxDeps = () => {
   const unchainedUrls = {
-    [ChainTypes.Ethereum]: 'http://localhost:31300/api/v1'
+    [ChainTypes.Bitcoin]: {
+      httpUrl: 'https://api.bitcoin.shapeshift.com',
+      wsUrl: 'wss://api.bitcoin.shapeshift.com'
+    },
+    [ChainTypes.Ethereum]: {
+      httpUrl: 'https://api.ethereum.shapeshift.com',
+      wsUrl: 'wss://api.ethereum.shapeshift.com'
+    }
   }
   const ethNodeUrl = 'http://localhost:1000'
   const adapterManager = new ChainAdapterManager(unchainedUrls)

@@ -88,7 +88,7 @@ export class ZrxSwapper implements Swapper {
     return approvalNeeded(this.deps, args)
   }
 
-  async approveInfinite(args: ApproveInfiniteInput): Promise<string> {
+  async approveInfinite(args: ApproveInfiniteInput<ChainTypes, SwapperType>): Promise<string> {
     return approveInfinite(this.deps, args)
   }
 }

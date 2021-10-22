@@ -1,4 +1,4 @@
-import { ChainTypes, ContractTypes, NetworkTypes } from '@shapeshiftoss/types'
+import { ChainTypes, ContractTypes, NetworkTypes, Asset } from '@shapeshiftoss/types'
 
 export const BTC = {
   name: 'bitcoin',
@@ -15,7 +15,7 @@ export const BTC = {
   sendSupport: false,
   receiveSupport: false,
   symbol: 'BTC'
-}
+} as Asset
 export const WETH = {
   name: 'WETH',
   chain: ChainTypes.Ethereum,
@@ -32,7 +32,7 @@ export const WETH = {
   sendSupport: true,
   receiveSupport: true,
   symbol: 'WETH'
-}
+} as Asset
 export const FOX = {
   name: 'FOX',
   chain: ChainTypes.Ethereum,
@@ -49,4 +49,4 @@ export const FOX = {
   explorerTxLink: 'https://etherscan.io/tx/',
   receiveSupport: true,
   symbol: 'FOX'
-}
+} as Asset
