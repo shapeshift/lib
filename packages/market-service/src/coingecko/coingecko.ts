@@ -40,13 +40,14 @@ const coingeckoIDMap: CoinGeckoIDMap = Object.freeze({
 export class CoinGeckoMarketService implements MarketService {
   baseUrl = 'https://api.coingecko.com/api/v3'
 
-  public readonly defaultGetByMarketCapArgs: GetByMarketCapArgs = {
+  private readonly defaultGetByMarketCapArgs: GetByMarketCapArgs = {
     pages: 10,
     perPage: 250
   }
 
-  async getByMarketCap(args: GetByMarketCapArgs = this.defaultGetByMarketCapArgs) {
-    const { pages, perPage } = args
+  async getByMarketCap(args?: GetByMarketCapArgs) {
+    const argsToUse = args ?? this.defaultGetByMarketCapArgs
+    const { pages, perPage } = argsToUse
     const urlAtPage = (page: number) =>
       `${this.baseUrl}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=${page}&sparkline=false`
     const pageCount = Array(pages)

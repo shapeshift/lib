@@ -96,8 +96,15 @@ describe('coingecko market service', () => {
       expect(mockedAxios.get).toHaveBeenCalledTimes(10)
     })
 
-    it('can use override args', () => {
-      expect(false).toBeTruthy()
+    it('can use override args', async () => {
+      mockedAxios.get.mockResolvedValue({ data: [btc] })
+      const pages = 1
+      const perPage = 10
+      await getByMarketCap({ pages, perPage })
+      expect(mockedAxios.get).toHaveBeenCalledTimes(1)
+      const url =
+        'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false'
+      expect(mockedAxios.get).toBeCalledWith(url)
     })
   })
 
