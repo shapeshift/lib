@@ -89,6 +89,14 @@ describe('coingecko market service', () => {
       const result = await getByMarketCap()
       expect(result.length).toEqual(0)
     })
+
+    it('can use default args', () => {
+      expect(false).toBeTruthy()
+    })
+
+    it('can use override args', () => {
+      expect(false).toBeTruthy()
+    })
   })
 
   describe('getMarketData', () => {

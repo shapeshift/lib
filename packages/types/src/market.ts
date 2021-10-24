@@ -1,4 +1,3 @@
-import { GetByMarketCapArgs } from './market'
 import { ChainTypes } from '.'
 
 export type MarketData = {
