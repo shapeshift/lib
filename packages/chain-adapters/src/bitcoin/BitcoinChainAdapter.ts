@@ -132,7 +132,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
         feeSpeed
       } = tx
 
-      if (!recipients && !(value && to)) {
+      if (!recipients && (!value || !to)) {
         throw new Error('BitcoinChainAdapter: recipients or (to and value) are required')
       }
 
