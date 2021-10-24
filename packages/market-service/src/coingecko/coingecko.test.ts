@@ -90,8 +90,10 @@ describe('coingecko market service', () => {
       expect(result.length).toEqual(0)
     })
 
-    it('can use default args', () => {
-      expect(false).toBeTruthy()
+    it('can use default args', async () => {
+      mockedAxios.get.mockResolvedValue({ data: [btc] })
+      await getByMarketCap()
+      expect(mockedAxios.get).toHaveBeenCalledTimes(10)
     })
 
     it('can use override args', () => {
