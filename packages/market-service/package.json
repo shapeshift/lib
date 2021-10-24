@@ -20,6 +20,7 @@
     "build": "yarn clean && tsc --project tsconfig.build.json",
     "clean": "rm -rf dist",
     "dev": "tsc --watch",
+    "generate": "node ./dist/market-service/src/coingecko/generateMarketCapData.js",
     "test": "jest test",
     "type-check": "tsc --project ./tsconfig.json --noEmit"
   },
