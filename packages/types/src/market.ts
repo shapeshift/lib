@@ -1,3 +1,4 @@
+import { GetByMarketCapArgs } from './market'
 import { ChainTypes } from '.'
 
 export type MarketData = {
@@ -36,7 +37,12 @@ export type MarketDataType = (args: MarketDataArgs) => Promise<MarketData>
 
 export type PriceHistoryType = (args: PriceHistoryArgs) => Promise<HistoryData[]>
 
-export type GetByMarketCapType = () => Promise<CoinGeckoMarketCap[]>
+export type GetByMarketCapArgs = {
+  pages: number
+  perPage: number
+}
+
+export type GetByMarketCapType = (args?: GetByMarketCapArgs) => Promise<CoinGeckoMarketCap[]>
 
 export type CoinGeckoMarketCap = {
   id: string

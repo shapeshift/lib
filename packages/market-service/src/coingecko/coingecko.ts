@@ -11,6 +11,7 @@ import axios from 'axios'
 import dayjs from 'dayjs'
 
 import { MarketService } from '../api'
+import { GetByMarketCapArgs } from './../../../types/src/market'
 
 // tons more params here: https://www.coingecko.com/en/api/documentation
 type CoinGeckoAssetData = {
@@ -39,15 +40,22 @@ const coingeckoIDMap: CoinGeckoIDMap = Object.freeze({
 export class CoinGeckoMarketService implements MarketService {
   baseUrl = 'https://api.coingecko.com/api/v3'
 
-  // TODO(0xdef1cafe): default args
-  async getByMarketCap() {
+  public readonly defaultGetByMarketCapArgs: GetByMarketCapArgs = {
+    pages: 10,
+    perPage: 250
+  }
+
+  async getByMarketCap(args: GetByMarketCapArgs = this.defaultGetByMarketCapArgs) {
+    const { pages, perPage } = args
     const urlAtPage = (page: number) =>
-      `${this.baseUrl}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=${page}&sparkline=false`
-    const pages = Array(10)
+      `${this.baseUrl}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=${page}&sparkline=false`
+    const pageCount = Array(pages)
       .fill(0)
       .map((_v, i) => i + 1)
     const combined = (
-      await Promise.all(pages.map(async (page) => axios.get<CoinGeckoMarketCap>(urlAtPage(page))))
+      await Promise.all(
+        pageCount.map(async (page) => axios.get<CoinGeckoMarketCap>(urlAtPage(page)))
+      )
     ).flat()
     const isRateLimited = combined.reduce((acc, { status }) => acc || status === 429, false)
     // TODO(0xdef1cafe): return from static data
