@@ -258,7 +258,6 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     onError: (err: chainAdapters.SubscribeError) => void
   ): Promise<void> {
     // TODO: option to use sequence data for order and data validation
-    console.info('In subscribeTxs !!!!!!!!!!', this.providers.ws)
     await this.providers.ws.subscribeTxs(
       { addresses: input.addresses },
       (msg: {
