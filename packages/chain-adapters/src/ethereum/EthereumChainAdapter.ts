@@ -258,10 +258,43 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     onError: (err: chainAdapters.SubscribeError) => void
   ): Promise<void> {
     // TODO: option to use sequence data for order and data validation
-
+    console.info('In subscribeTxs !!!!!!!!!!', this.providers.ws)
     await this.providers.ws.subscribeTxs(
       { addresses: input.addresses },
-      (msg) => {
+      (msg: {
+        ethereumSpecific: { status: number }
+        confirmations: number
+        address: string
+        blockHash: string
+        blockHeight: number
+        blockTime: number
+        txid: string
+        fee: chainAdapters.TxFee
+        send: {
+          [s: string]: {
+            totalValue: string
+            components: { value: string }[]
+            token: { contract: string; decimals: number; name: string }
+          }
+        }
+        vout: { addresses: string[] }[]
+        receive: {
+          [s: string]: {
+            totalValue: string
+            components: { value: string }[]
+            token: { contract: string; decimals: number; name: string }
+          }
+        }
+        vin: { addresses: string[] }[]
+      }) => {
+        const getStatus = () => {
+          const msgStatus = msg?.ethereumSpecific?.status
+          let status = chainAdapters.TxStatus.pending
+          if (msgStatus === 1 && msg.confirmations > 0) status = chainAdapters.TxStatus.confirmed
+          if (msgStatus <= 0) status = chainAdapters.TxStatus.failed
+          return status
+        }
+
         const baseTx = {
           address: msg.address,
           blockHash: msg.blockHash,
@@ -271,8 +304,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           confirmations: msg.confirmations,
           network: NetworkTypes.MAINNET,
           txid: msg.txid,
-          fee: msg.fees,
-          status: msg?.ethereumSpecific?.status
+          fee: msg.fee,
+          status: getStatus()
         }
 
         const specificTx = (symbol: string, value: string, token?: unchained.Token) => ({
@@ -295,7 +328,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           onMessage({
             ...baseTx,
             ...specificTx(symbol, totalValue, token),
-            type: 'send',
+            type: chainAdapters.TxType.send,
             to: msg?.vout?.[0]?.addresses?.[0]
           })
         })
@@ -304,21 +337,12 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           onMessage({
             ...baseTx,
             ...specificTx(symbol, totalValue, token),
-            type: 'receive',
+            type: chainAdapters.TxType.receive,
             from: msg?.vin?.[0]?.addresses?.[0]
           })
         })
-
-        if (msg.fee) {
-          onMessage({
-            ...baseTx,
-            ...specificTx(msg.fee.symbol, msg.fee.value, undefined),
-            type: 'fee',
-            to: msg?.vout?.[0]?.addresses?.[0]
-          })
-        }
       },
-      (err) => onError({ message: err.message })
+      (err: chainAdapters.SubscribeError) => onError({ message: err.message })
     )
   }
 }
