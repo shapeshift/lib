@@ -1,0 +1,5 @@
+coverage
+test-report
+jest.unit.js
+*.test.js
+*.test.d.ts
