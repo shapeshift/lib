@@ -64,9 +64,15 @@ export const getAllowanceRequired = async ({
     return new BigNumber(0)
   }
 
-  const ownerAddress = quote.receiveAddress as string
-  const spenderAddress = quote.allowanceContract as string
-  const tokenId = quote.sellAsset.tokenId as string
+  const ownerAddress = quote.receiveAddress
+  const spenderAddress = quote.allowanceContract
+  const tokenId = quote.sellAsset.tokenId
+
+  if (!ownerAddress || !spenderAddress || !tokenId) {
+    throw new SwapError(
+      'getAllowanceRequired - receiveAddress, allowanceContract and tokenId are required'
+    )
+  }
 
   const allowanceOnChain = getERC20Allowance({
     web3,

@@ -5,6 +5,7 @@ import { DEFAULT_SLIPPAGE, AFFILIATE_ADDRESS, MAX_ALLOWANCE } from '../utils/con
 import { zrxService } from '../utils/zrxService'
 import { grantAllowance } from '../utils/helpers/helpers'
 import { erc20Abi } from '../utils/abi/erc20-abi'
+import { SwapError } from '../../../api'
 
 export async function approveInfinite(
   { adapterManager, web3 }: ZrxSwapperDeps,
@@ -39,10 +40,14 @@ export async function approveInfinite(
   )
   const { data } = quoteResponse
 
+  if (!data.allowanceTarget) {
+    throw new SwapError('approveInfinite - allowanceTarget is required')
+  }
+
   const allowanceGrantRequired = await grantAllowance({
     quote: {
       ...quote,
-      allowanceContract: data.allowanceTarget as string,
+      allowanceContract: data.allowanceTarget,
       sellAmount: MAX_ALLOWANCE
     },
     wallet,
