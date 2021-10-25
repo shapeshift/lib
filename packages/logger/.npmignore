@@ -1,5 +1,5 @@
 coverage
-test-report
-jest.unit.js
+jest.config.js
+tsconfig.json
 *.test.js
 *.test.d.ts
