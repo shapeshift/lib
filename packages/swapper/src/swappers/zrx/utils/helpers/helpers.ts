@@ -26,7 +26,7 @@ export type GetERC20AllowanceArgs = {
 type GrantAllowanceArgs = {
   quote: Quote<ChainTypes, SwapperType>
   wallet: HDWallet
-  adapter: ChainAdapter<ChainTypes>
+  adapter: ChainAdapter<ChainTypes.Ethereum>
   erc20Abi: AbiItem[]
   web3: Web3
 }

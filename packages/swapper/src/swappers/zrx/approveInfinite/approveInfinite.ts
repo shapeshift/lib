@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios'
 import { ApproveInfiniteInput, QuoteResponse, ChainTypes, SwapperType } from '@shapeshiftoss/types'
+import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 import { DEFAULT_SLIPPAGE, AFFILIATE_ADDRESS, MAX_ALLOWANCE } from '../utils/constants'
 import { zrxService } from '../utils/zrxService'
