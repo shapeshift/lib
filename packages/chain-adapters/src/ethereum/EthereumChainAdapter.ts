@@ -266,6 +266,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           if (!msgStatus || msg.confirmations <= 0) return chainAdapters.TxStatus.pending
           if (msgStatus === 1 && msg.confirmations > 0) return chainAdapters.TxStatus.confirmed
           if (msgStatus <= 0) return chainAdapters.TxStatus.failed
+          return chainAdapters.TxStatus.pending
         }
 
         const baseTx = {
