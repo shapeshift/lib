@@ -1,25 +1,26 @@
-import Web3 from 'web3'
+import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import {
-  Asset,
   ApprovalNeededInput,
   ApprovalNeededOutput,
+  Asset,
   BuildQuoteTxInput,
   ChainTypes,
-  GetQuoteInput,
-  Quote,
-  SwapperType,
-  MinMaxOutput,
   ExecQuoteInput,
-  ExecQuoteOutput
+  ExecQuoteOutput,
+  GetQuoteInput,
+  MinMaxOutput,
+  Quote,
+  SwapperType
 } from '@shapeshiftoss/types'
-import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+import Web3 from 'web3'
+
 import { Swapper } from '../../api'
+import { approvalNeeded } from './approvalNeeded/approvalNeeded'
 import { buildQuoteTx } from './buildQuoteTx/buildQuoteTx'
+import { executeQuote } from './executeQuote/executeQuote'
+import { getMinMax } from './getMinMax/getMinMax'
 import { getZrxQuote } from './getQuote/getQuote'
 import { getUsdRate } from './utils/helpers/helpers'
-import { getMinMax } from './getMinMax/getMinMax'
-import { executeQuote } from './executeQuote/executeQuote'
-import { approvalNeeded } from './approvalNeeded/approvalNeeded'
 
 export type ZrxSwapperDeps = {
   adapterManager: ChainAdapterManager

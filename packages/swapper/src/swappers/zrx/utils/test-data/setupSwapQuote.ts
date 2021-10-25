@@ -1,4 +1,5 @@
-import { ContractTypes, NetworkTypes, ChainTypes } from '@shapeshiftoss/types'
+import { ChainTypes, ContractTypes, NetworkTypes } from '@shapeshiftoss/types'
+
 import { DEFAULT_SLIPPAGE } from '../constants'
 
 export const setupQuote = () => {

@@ -1,11 +1,12 @@
-import BigNumber from 'bignumber.js'
-import { AbiItem } from 'web3-utils'
-import Web3 from 'web3'
-import { SwapError } from '../../../../api'
 import { Asset, ChainTypes, Quote, QuoteResponse, SwapperType } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
-import { zrxService } from '../zrxService'
+import BigNumber from 'bignumber.js'
+import Web3 from 'web3'
+import { AbiItem } from 'web3-utils'
+
+import { SwapError } from '../../../../api'
 import { ZrxError } from '../../ZrxSwapper'
+import { zrxService } from '../zrxService'
 
 export type GetAllowanceRequiredArgs = {
   quote: Quote<ChainTypes, SwapperType>

@@ -1,8 +1,9 @@
-import Web3 from 'web3'
 import BigNumber from 'bignumber.js'
-import { setupQuote } from '../test-data/setupSwapQuote'
+import Web3 from 'web3'
+
 import { erc20AllowanceAbi } from '../abi/erc20Allowance-abi'
-import { normalizeAmount, getAllowanceRequired, getUsdRate } from '../helpers/helpers'
+import { getAllowanceRequired, getUsdRate, normalizeAmount } from '../helpers/helpers'
+import { setupQuote } from '../test-data/setupSwapQuote'
 import { zrxService } from '../zrxService'
 
 jest.mock('web3')
