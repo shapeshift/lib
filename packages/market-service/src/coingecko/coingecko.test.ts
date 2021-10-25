@@ -90,6 +90,12 @@ describe('coingecko market service', () => {
       expect(result.length).toEqual(0)
     })
 
+    it('can return some results if partially rate limited', async () => {
+      mockedAxios.get.mockResolvedValueOnce({ status: 429 }).mockResolvedValue({ data: [eth] })
+      const result = await getByMarketCap()
+      expect(result.length).toEqual(9)
+    })
+
     it('can use default args', async () => {
       mockedAxios.get.mockResolvedValue({ data: [btc] })
       await getByMarketCap()

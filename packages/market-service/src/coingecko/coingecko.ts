@@ -58,10 +58,8 @@ export class CoinGeckoMarketService implements MarketService {
         pageCount.map(async (page) => axios.get<CoinGeckoMarketCap>(urlAtPage(page)))
       )
     ).flat()
-    const isRateLimited = combined.reduce((acc, { status }) => acc || status === 429, false)
-    if (isRateLimited) return [] // frontend consumer should return from static cached data
     return combined
-      .map(({ data }) => data)
+      .map(({ data }) => data ?? []) // filter out rate limited results
       .flat()
       .sort((a, b) => (a.market_cap_rank > b.market_cap_rank ? 1 : -1))
   }
