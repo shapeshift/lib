@@ -260,32 +260,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     // TODO: option to use sequence data for order and data validation
     await this.providers.ws.subscribeTxs(
       { topic: 'txs', addresses: input.addresses },
-      (msg: {
-        ethereumSpecific?: { status: number }
-        confirmations: number
-        address: string
-        blockHash?: string
-        blockHeight: number
-        blockTime: number
-        txid: string
-        fee?: chainAdapters.TxFee
-        send: {
-          [s: string]: {
-            totalValue: string
-            components: { value: string }[]
-            token: { contract: string; decimals: number; name: string }
-          }
-        }
-        vout: { addresses: string[] }[]
-        receive: {
-          [s: string]: {
-            totalValue: string
-            components: { value: string }[]
-            token: { contract: string; decimals: number; name: string }
-          }
-        }
-        vin: { addresses: string[] }[]
-      }) => {
+      (msg) => {
         const getStatus = () => {
           const msgStatus = msg?.ethereumSpecific?.status
           let status = chainAdapters.TxStatus.pending
