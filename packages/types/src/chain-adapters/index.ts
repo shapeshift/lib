@@ -106,6 +106,8 @@ export type SubscribeTxsMessage<T extends ChainTypes> = {
   confirmations: number
   network: NetworkTypes
   txid: string
+  to?: string
+  from?: string
 } & TxTransfer<T>
 
 type ChainSpecificTxTransfer<T> = ChainSpecific<
