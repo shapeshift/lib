@@ -1,3 +1,24 @@
+# [@shapeshiftoss/chain-adapters-v1.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.5.2...@shapeshiftoss/chain-adapters-v1.6.0) (2021-10-25)
+
+
+### Features
+
+* fix testing deps ([#101](https://github.com/shapeshift/lib/issues/101)) ([d75f48f](https://github.com/shapeshift/lib/commit/d75f48fec6947eb16eeb112d1b85f2e1840a52d3))
+
+# [@shapeshiftoss/chain-adapters-v1.5.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.5.1...@shapeshiftoss/chain-adapters-v1.5.2) (2021-10-25)
+
+
+### Bug Fixes
+
+* unchained client update ([#155](https://github.com/shapeshift/lib/issues/155)) ([8cec392](https://github.com/shapeshift/lib/commit/8cec3926cc445c747346f60eb17ea8affc486754))
+
+# [@shapeshiftoss/chain-adapters-v1.5.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.5.0...@shapeshiftoss/chain-adapters-v1.5.1) (2021-10-24)
+
+
+### Bug Fixes
+
+* get btc sends working by allowing optional to+value to be used instead of recipients ([#150](https://github.com/shapeshift/lib/issues/150)) ([32cc80c](https://github.com/shapeshift/lib/commit/32cc80cf16984753aa130b596682bbb59f58cf32))
+
 # [@shapeshiftoss/chain-adapters-v1.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.4.0...@shapeshiftoss/chain-adapters-v1.5.0) (2021-10-22)
 
 
