@@ -289,9 +289,9 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
         const getStatus = () => {
           const msgStatus = msg?.ethereumSpecific?.status
           let status = chainAdapters.TxStatus.pending
-          if (msgStatus === 1 && msg.confirmations > 0) {
+          if (msgStatus && msgStatus === 1 && msg.confirmations > 0) {
             status = chainAdapters.TxStatus.confirmed
-          } else if (msgStatus <= 0) {
+          } else if (msgStatus && msgStatus <= 0) {
             status = chainAdapters.TxStatus.failed
           }
           return status
