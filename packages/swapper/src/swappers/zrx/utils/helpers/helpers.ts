@@ -15,12 +15,9 @@ export type GetAllowanceRequiredArgs = {
   erc20AllowanceAbi: AbiItem[]
 }
 
-export type GetERC20AllowanceDeps = {
+export type GetERC20AllowanceArgs = {
   erc20AllowanceAbi: AbiItem[]
   web3: Web3
-}
-
-export type GetERC20AllowanceArgs = {
   tokenId: string
   ownerAddress: string
   spenderAddress: string
@@ -47,10 +44,13 @@ export const normalizeAmount = (amount: string | undefined): string | undefined 
   return new BigNumber(amount).toNumber().toLocaleString('fullwide', { useGrouping: false })
 }
 
-export const getERC20Allowance = (
-  { erc20AllowanceAbi, web3 }: GetERC20AllowanceDeps,
-  { tokenId, ownerAddress, spenderAddress }: GetERC20AllowanceArgs
-) => {
+export const getERC20Allowance = ({
+  erc20AllowanceAbi,
+  web3,
+  tokenId,
+  ownerAddress,
+  spenderAddress
+}: GetERC20AllowanceArgs) => {
   const erc20Contract = new web3.eth.Contract(erc20AllowanceAbi, tokenId)
   return erc20Contract.methods.allowance(ownerAddress, spenderAddress).call()
 }
@@ -68,10 +68,13 @@ export const getAllowanceRequired = async ({
   const spenderAddress = quote.allowanceContract as string
   const tokenId = quote.sellAsset.tokenId as string
 
-  const allowanceOnChain = getERC20Allowance(
-    { web3, erc20AllowanceAbi },
-    { ownerAddress, spenderAddress, tokenId }
-  )
+  const allowanceOnChain = getERC20Allowance({
+    web3,
+    erc20AllowanceAbi,
+    ownerAddress,
+    spenderAddress,
+    tokenId
+  })
 
   if (allowanceOnChain === '0') {
     return new BigNumber(quote.sellAmount || 0)
@@ -123,21 +126,38 @@ export const grantAllowance = async ({
   const bip32Params = adapter.buildBIP32Params({
     accountNumber: Number(quote.sellAssetAccountId || 0)
   })
-  const { txToSign } = await adapter.buildSendTransaction({
-    value,
-    wallet,
-    to: quote.sellAsset.tokenId,
-    fee: numberToHex(quote.feeData?.chainSpecific?.gasPrice || 0),
-    gasLimit: numberToHex(quote.feeData?.chainSpecific?.estimatedGas || 0),
-    bip32Params
-  })
 
-  const grantAllowanceTxToSign = {
-    ...txToSign,
-    data: approveTx
+  let grantAllowanceTxToSign, signedTx, broadcastedTxId
+
+  try {
+    const { txToSign } = await adapter.buildSendTransaction({
+      value,
+      wallet,
+      to: quote.sellAsset.tokenId,
+      fee: numberToHex(quote.feeData?.chainSpecific?.gasPrice || 0),
+      gasLimit: numberToHex(quote.feeData?.chainSpecific?.estimatedGas || 0),
+      bip32Params
+    })
+
+    grantAllowanceTxToSign = {
+      ...txToSign,
+      data: approveTx
+    }
+  } catch (error) {
+    throw new Error(`grantAllowance - buildSendTransaction: ${error}`)
   }
 
-  const signedTx = await adapter.signTransaction({ txToSign: grantAllowanceTxToSign, wallet })
+  try {
+    signedTx = await adapter.signTransaction({ txToSign: grantAllowanceTxToSign, wallet })
+  } catch (error) {
+    throw new Error(`grantAllowance - signTransaction: ${error}`)
+  }
 
-  return await adapter.broadcastTransaction(signedTx)
+  try {
+    broadcastedTxId = await adapter.broadcastTransaction(signedTx)
+  } catch (error) {
+    throw new Error(`grantAllowance - broadcastTransaction: ${error}`)
+  }
+
+  return broadcastedTxId
 }

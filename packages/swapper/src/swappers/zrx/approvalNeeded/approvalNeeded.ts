@@ -69,14 +69,13 @@ export async function approvalNeeded(
   )
   const { data } = quoteResponse
 
-  const allowanceResult = getERC20Allowance(
-    { web3, erc20AllowanceAbi },
-    {
-      tokenId: quote.sellAsset.tokenId as string,
-      spenderAddress: data.allowanceTarget as string,
-      ownerAddress: receiveAddress
-    }
-  )
+  const allowanceResult = getERC20Allowance({
+    web3,
+    erc20AllowanceAbi,
+    tokenId: quote.sellAsset.tokenId as string,
+    spenderAddress: data.allowanceTarget as string,
+    ownerAddress: receiveAddress
+  })
 
   const allowanceOnChain = new BigNumber(allowanceResult || '0')
 
