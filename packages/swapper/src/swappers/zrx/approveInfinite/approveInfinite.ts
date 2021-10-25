@@ -11,7 +11,7 @@ export async function approveInfinite(
   { adapterManager, web3 }: ZrxSwapperDeps,
   { quote, wallet }: ApproveInfiniteInput<ChainTypes, SwapperType>
 ) {
-  const adapter = adapterManager.byChain(quote.buyAsset.chain)
+  const adapter: ChainAdapter<ChainTypes.Ethereum> = adapterManager.byChain(ChainTypes.Ethereum)
   const bip32Params = adapter.buildBIP32Params({ accountNumber: Number(quote.sellAssetAccountId) })
   const receiveAddress = await adapter.getAddress({ wallet, bip32Params })
 
