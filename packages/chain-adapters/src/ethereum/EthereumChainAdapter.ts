@@ -319,7 +319,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           })
         })
       },
-      (err: chainAdapters.SubscribeError) => onError({ message: err.message })
+      (err) => onError({ message: err.message })
     )
   }
 }
