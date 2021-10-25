@@ -312,10 +312,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
         if (msg.fee) {
           onMessage({
             ...baseTx,
-            asset: '',
+            ...specificTx(msg.fee.symbol, msg.fee.value, undefined),
             type: 'fee',
-            value: msg.fee.value,
-            chainSpecific: {},
             to: msg?.vout?.[0]?.addresses?.[0]
           })
         }
