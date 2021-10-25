@@ -59,8 +59,7 @@ export class CoinGeckoMarketService implements MarketService {
       )
     ).flat()
     const isRateLimited = combined.reduce((acc, { status }) => acc || status === 429, false)
-    // TODO(0xdef1cafe): return from static data
-    if (isRateLimited) return []
+    if (isRateLimited) return [] // frontend consumer should return from static cached data
     return combined
       .map(({ data }) => data)
       .flat()
