@@ -296,7 +296,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
             ...baseTx,
             ...specificTx(symbol, totalValue, token),
             type: 'send',
-            to: msg.vout[0].addresses[0]
+            to: msg?.vout?.[0]?.addresses?.[0]
           })
         })
 
@@ -305,7 +305,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
             ...baseTx,
             ...specificTx(symbol, totalValue, token),
             type: 'receive',
-            from: msg.vin[0].addresses[0]
+            from: msg?.vin?.[0]?.addresses?.[0]
           })
         })
 
@@ -316,7 +316,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
             type: 'fee',
             value: msg.fee.value,
             chainSpecific: {},
-            to: msg.vout[0].addresses[0]
+            to: msg?.vout?.[0]?.addresses?.[0]
           })
         }
       },
