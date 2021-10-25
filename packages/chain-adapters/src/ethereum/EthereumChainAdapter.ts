@@ -261,7 +261,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     await this.providers.ws.subscribeTxs(
       { addresses: input.addresses },
       (msg: {
-        ethereumSpecific: { status: number }
+        ethereumSpecific?: { status: number }
         confirmations: number
         address: string
         blockHash: string
