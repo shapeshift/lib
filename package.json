@@ -13,6 +13,7 @@
     "clean": "rimraf node_modules dist packages/**/dist",
     "dev": "lerna run dev --stream --parallel",
     "lint": "eslint --cache .",
+    "lint:fix": "yarn lint --fix",
     "link-packages": "node scripts/linkPackages.js link",
     "unlink-packages": "node scripts/linkPackages.js unlink",
     "test": "jest",
