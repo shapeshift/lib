@@ -264,11 +264,11 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
         ethereumSpecific?: { status: number }
         confirmations: number
         address: string
-        blockHash: string
+        blockHash?: string
         blockHeight: number
         blockTime: number
         txid: string
-        fee: chainAdapters.TxFee
+        fee?: chainAdapters.TxFee
         send: {
           [s: string]: {
             totalValue: string
@@ -289,8 +289,11 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
         const getStatus = () => {
           const msgStatus = msg?.ethereumSpecific?.status
           let status = chainAdapters.TxStatus.pending
-          if (msgStatus === 1 && msg.confirmations > 0) status = chainAdapters.TxStatus.confirmed
-          if (msgStatus <= 0) status = chainAdapters.TxStatus.failed
+          if (msgStatus === 1 && msg.confirmations > 0) {
+            status = chainAdapters.TxStatus.confirmed
+          } else if (msgStatus <= 0) {
+            status = chainAdapters.TxStatus.failed
+          }
           return status
         }
 
