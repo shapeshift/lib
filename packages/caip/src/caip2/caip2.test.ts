@@ -34,11 +34,33 @@ describe('caip2', () => {
       expect(network).toEqual(NetworkTypes.TESTNET)
     })
 
+    it('throws with invalid btc namespace caip', () => {
+      const badBtcCaip2 = 'bip999:000000000933ea01ad0ee984209779ba'
+      expect(() => fromCAIP2(badBtcCaip2)).toThrow('fromCAIP19: unsupported chain: bip999')
+    })
+
+    it('throws with invalid btc reference caip', () => {
+      const badBtcCaip2 = 'bip122:000000000xxxxxxxxxxxxxxxxxxxxxxx'
+      expect(() => fromCAIP2(badBtcCaip2)).toThrow(
+        'fromCAIP19: unsupported bip122 network: 000000000xxxxxxxxxxxxxxxxxxxxxxx'
+      )
+    })
+
     it('can turn eth mainnet to chain and network', () => {
       const ethCaip2 = 'eip155:1'
       const { chain, network } = fromCAIP2(ethCaip2)
       expect(chain).toEqual(ChainTypes.Ethereum)
       expect(network).toEqual(NetworkTypes.MAINNET)
+    })
+
+    it('throws with invalid eth namespace caip', () => {
+      const badEthCaip2 = 'eip123:1'
+      expect(() => fromCAIP2(badEthCaip2)).toThrow('fromCAIP19: unsupported chain: eip123')
+    })
+
+    it('throws with invalid eth reference caip', () => {
+      const badEthCaip2 = 'eip155:999'
+      expect(() => fromCAIP2(badEthCaip2)).toThrow('fromCAIP19: unsupported eip155 network: 999')
     })
 
     it('can turn eth ropsten to chain and network', () => {
