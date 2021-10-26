@@ -1,25 +1,81 @@
 # CAIPs
 
-This package is ShapeShift's partial implementation of [CAIPS](https://github.com/ChainAgnostic/CAIPs) - Chain Agnostic Improvement Protocols.
+This package is ShapeShift's partial implementation of [CAIPs](https://github.com/ChainAgnostic/CAIPs) - Chain Agnostic Improvement Protocols.
 
 It is not exhaustive and is currently only used internally.
 
-## CAIP-2
+## CAIP-2 - Blockchain ID Specification
 
 https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-2.md
 
-We currently support the following methods
+Usage
 
-`toCAIP2`
+### `toCAIP2`
 
-`fromCAIP2`
+```ts
+const chain = ChainTypes.Ethereum
+const network = NetworkTypes.MAINNET
+const result = toCAIP2({ chain, network })
+expect(result).toEqual('eip155:1')
+```
 
-## CAIP-19
+### `fromCAIP2`
+
+```ts
+const ethCaip2 = 'eip155:1'
+const { chain, network } = fromCAIP2(ethCaip2)
+expect(chain).toEqual(ChainTypes.Ethereum)
+expect(network).toEqual(NetworkTypes.MAINNET)
+```
+
+## CAIP-19 - Asset Type and Asset ID Specification
 
 https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-19.md
 
-We currently support the following methods
+Usage
 
-`toCAIP19`
+### `toCAIP19`
 
-`fromCAIP19`
+Ether
+
+```ts
+const chain = ChainTypes.Ethereum
+const network = NetworkTypes.MAINNET
+const result = toCAIP19({ chain, network })
+expect(result).toEqual('eip155:1/slip44:60')
+```
+
+ERC20 token
+
+```ts
+const chain = ChainTypes.Ethereum
+const network = NetworkTypes.MAINNET
+const contractType = ContractTypes.ERC20
+const tokenId = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
+const result = toCAIP19({ chain, network, contractType, tokenId })
+expect(result).toEqual('eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d')
+```
+
+### `fromCAIP19`
+
+Ether
+
+```ts
+const caip19 = 'eip155:1/slip44:60'
+const { chain, network, contractType, tokenId } = fromCAIP19(caip19)
+expect(chain).toEqual(ChainTypes.Ethereum)
+expect(network).toEqual(NetworkTypes.MAINNET)
+expect(contractType).toBeUndefined()
+expect(tokenId).toBeUndefined()
+```
+
+ERC20 token
+
+```ts
+const caip19 = 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
+const { chain, network, contractType, tokenId } = fromCAIP19(caip19)
+expect(chain).toEqual(ChainTypes.Ethereum)
+expect(network).toEqual(NetworkTypes.MAINNET)
+expect(contractType).toEqual(ContractTypes.ERC20)
+expect(tokenId).toEqual('0xc770eefad204b5180df6a14ee197d99d808ee52d')
+```
