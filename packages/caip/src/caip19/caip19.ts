@@ -21,7 +21,9 @@ type ToCAIP19Args = {
   tokenId?: string
 }
 
-export const toCAIP19 = ({ chain, network, contractType, tokenId }: ToCAIP19Args): string => {
+type ToCAIP19 = (args: ToCAIP19Args) => string
+
+export const toCAIP19: ToCAIP19 = ({ chain, network, contractType, tokenId }) => {
   const caip2 = toCAIP2({ chain, network })
 
   switch (chain) {
@@ -60,7 +62,9 @@ type FromCAIP19Return = {
   tokenId?: string
 }
 
-export const fromCAIP19 = (caip19: string): FromCAIP19Return => {
+type FromCAIP19 = (caip19: string) => FromCAIP19Return
+
+export const fromCAIP19: FromCAIP19 = (caip19) => {
   const [caip2, namespaceAndReference] = caip19.split('/')
   if (!(caip2 && namespaceAndReference)) {
     throw new Error(

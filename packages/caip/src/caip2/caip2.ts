@@ -23,7 +23,9 @@ type ToCAIP2Args = {
   network: NetworkTypes
 }
 
-export const toCAIP2 = ({ chain, network }: ToCAIP2Args): string => {
+type ToCAIP2 = (args: ToCAIP2Args) => string
+
+export const toCAIP2: ToCAIP2 = ({ chain, network }): string => {
   const shapeShiftToCAIP2 = {
     [ChainTypes.Ethereum]: {
       namespace: Namespace.Ethereum,
@@ -75,12 +77,14 @@ export const toCAIP2 = ({ chain, network }: ToCAIP2Args): string => {
   throw new Error(`toCAIP2: unsupported ${chain} network: ${network}`)
 }
 
-type FromCAIP19Return = {
+type FromCAIP2Return = {
   chain: ChainTypes
   network: NetworkTypes
 }
 
-export const fromCAIP2 = (caip2: string): FromCAIP19Return => {
+type FromCAIP2 = (caip2: string) => FromCAIP2Return
+
+export const fromCAIP2: FromCAIP2 = (caip2) => {
   const [c, n] = caip2.split(':')
   if (!(c && n)) {
     throw new Error(`fromCAIP19: error parsing caip19, chain: ${c}, network: ${n}`)
