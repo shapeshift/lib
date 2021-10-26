@@ -2,12 +2,12 @@
 
 import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 
-export enum Namespace {
+export enum ChainNamespace {
   Ethereum = 'eip155',
   Bitcoin = 'bip122'
 }
 
-export enum Reference {
+export enum ChainReference {
   EthereumMainnet = '1',
   EthereumRopsten = '3',
   EthereumRinkeby = '4',
@@ -28,23 +28,23 @@ type ToCAIP2 = (args: ToCAIP2Args) => string
 export const toCAIP2: ToCAIP2 = ({ chain, network }): string => {
   const shapeShiftToCAIP2 = {
     [ChainTypes.Ethereum]: {
-      namespace: Namespace.Ethereum,
+      namespace: ChainNamespace.Ethereum,
       reference: {
-        [NetworkTypes.MAINNET]: Reference.EthereumMainnet,
-        [NetworkTypes.ETH_ROPSTEN]: Reference.EthereumRopsten,
-        [NetworkTypes.ETH_RINKEBY]: Reference.EthereumRinkeby
+        [NetworkTypes.MAINNET]: ChainReference.EthereumMainnet,
+        [NetworkTypes.ETH_ROPSTEN]: ChainReference.EthereumRopsten,
+        [NetworkTypes.ETH_RINKEBY]: ChainReference.EthereumRinkeby
       }
     },
     [ChainTypes.Bitcoin]: {
-      namespace: Namespace.Bitcoin,
+      namespace: ChainNamespace.Bitcoin,
       reference: {
-        [NetworkTypes.MAINNET]: Reference.BitcoinMainnet,
-        [NetworkTypes.TESTNET]: Reference.BitcoinTestnet
+        [NetworkTypes.MAINNET]: ChainReference.BitcoinMainnet,
+        [NetworkTypes.TESTNET]: ChainReference.BitcoinTestnet
       }
     }
   } as const
 
-  const namespace: Namespace = shapeShiftToCAIP2[chain].namespace
+  const namespace: ChainNamespace = shapeShiftToCAIP2[chain].namespace
 
   switch (chain) {
     case ChainTypes.Ethereum: {
@@ -53,7 +53,7 @@ export const toCAIP2: ToCAIP2 = ({ chain, network }): string => {
         case NetworkTypes.MAINNET:
         case NetworkTypes.ETH_ROPSTEN:
         case NetworkTypes.ETH_RINKEBY: {
-          const reference: Reference = referenceMap[network]
+          const reference: ChainReference = referenceMap[network]
           const caip2 = `${namespace}:${reference}`
           return caip2
         }
@@ -66,7 +66,7 @@ export const toCAIP2: ToCAIP2 = ({ chain, network }): string => {
       switch (network) {
         case NetworkTypes.MAINNET:
         case NetworkTypes.TESTNET: {
-          const reference: Reference = referenceMap[network]
+          const reference: ChainReference = referenceMap[network]
           const caip2 = `${namespace}:${reference}`
           return caip2
         }
@@ -93,15 +93,15 @@ export const fromCAIP2: FromCAIP2 = (caip2) => {
     case 'eip155': {
       const chain = ChainTypes.Ethereum
       switch (n) {
-        case Reference.EthereumMainnet: {
+        case ChainReference.EthereumMainnet: {
           const network = NetworkTypes.MAINNET
           return { chain, network }
         }
-        case Reference.EthereumRopsten: {
+        case ChainReference.EthereumRopsten: {
           const network = NetworkTypes.ETH_ROPSTEN
           return { chain, network }
         }
-        case Reference.EthereumRinkeby: {
+        case ChainReference.EthereumRinkeby: {
           const network = NetworkTypes.ETH_RINKEBY
           return { chain, network }
         }
@@ -113,11 +113,11 @@ export const fromCAIP2: FromCAIP2 = (caip2) => {
     case 'bip122': {
       const chain = ChainTypes.Bitcoin
       switch (n) {
-        case Reference.BitcoinMainnet: {
+        case ChainReference.BitcoinMainnet: {
           const network = NetworkTypes.MAINNET
           return { chain, network }
         }
-        case Reference.BitcoinTestnet: {
+        case ChainReference.BitcoinTestnet: {
           const network = NetworkTypes.TESTNET
           return { chain, network }
         }
