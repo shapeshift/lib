@@ -254,7 +254,6 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
         feePerUnit: '1'
       }
     }
-
     return confTimes
   }
 
