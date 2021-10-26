@@ -33,6 +33,7 @@ export enum NetworkTypes {
 // asset-service
 
 type AbstractAsset = {
+  caip19: string
   chain: ChainTypes
   network: NetworkTypes
   symbol: string
