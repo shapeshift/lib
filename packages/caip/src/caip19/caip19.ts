@@ -28,7 +28,10 @@ export const toCAIP19: ToCAIP19 = ({ chain, network, contractType, tokenId }) =>
 
   switch (chain) {
     case ChainTypes.Ethereum: {
-      if (tokenId) {
+      if (contractType) {
+        if (!tokenId) {
+          throw new Error(`toCAIP19: no tokenId provided with contract type ${contractType}`)
+        }
         const shapeShiftToCAIP19Namespace = {
           [ChainTypes.Ethereum]: {
             [ContractTypes.ERC20]: AssetNamespace.ERC20,
@@ -39,13 +42,22 @@ export const toCAIP19: ToCAIP19 = ({ chain, network, contractType, tokenId }) =>
           case ContractTypes.ERC20:
           case ContractTypes.ERC721: {
             const namespace = shapeShiftToCAIP19Namespace[chain][contractType]
+            if (!tokenId.startsWith('0x')) {
+              throw new Error(`toCAIP19: tokenId must start with 0x: ${tokenId}`)
+            }
+            if (tokenId.length !== 42) {
+              throw new Error(`toCAIP19: tokenId length must be 42, length: ${tokenId.length}`)
+            }
             return `${caip2}/${namespace}:${tokenId}`
           }
           default: {
-            throw new Error(`unsupported contractType ${contractType} on chain ${chain}`)
+            throw new Error(`toCAIP19: unsupported contractType ${contractType} on chain ${chain}`)
           }
         }
       } else {
+        if (tokenId) {
+          throw new Error(`toCAIP19: tokenId provided without contract type`)
+        }
         return `${caip2}/${AssetNamespace.Slip44}:${AssetReference.Ethereum}`
       }
     }

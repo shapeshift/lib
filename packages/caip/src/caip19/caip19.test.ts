@@ -3,18 +3,34 @@ import { fromCAIP19, toCAIP19 } from './caip19'
 
 describe('caip19', () => {
   describe('toCAIP19', () => {
-    it('can make ether caip19 identifier on mainnet', () => {
+    it('can make eth caip19 identifier on mainnet', () => {
       const chain = ChainTypes.Ethereum
       const network = NetworkTypes.MAINNET
       const result = toCAIP19({ chain, network })
       expect(result).toEqual('eip155:1/slip44:60')
     })
 
-    it('can make ether caip19 identifier on ropsten', () => {
+    it('can make eth caip19 identifier on ropsten', () => {
       const chain = ChainTypes.Ethereum
       const network = NetworkTypes.ETH_ROPSTEN
       const result = toCAIP19({ chain, network })
       expect(result).toEqual('eip155:3/slip44:60')
+    })
+
+    it('throws with invalid eth network', () => {
+      const chain = ChainTypes.Ethereum
+      const network = NetworkTypes.TESTNET
+      expect(() => toCAIP19({ chain, network })).toThrow(
+        'toCAIP2: unsupported ethereum network: TESTNET'
+      )
+    })
+
+    it('throws with invalid btc network', () => {
+      const chain = ChainTypes.Bitcoin
+      const network = NetworkTypes.ETH_ROPSTEN
+      expect(() => toCAIP19({ chain, network })).toThrow(
+        'toCAIP2: unsupported bitcoin network: ETH_ROPSTEN'
+      )
     })
 
     it('can make FOX caip19 identifier on mainnet', () => {
@@ -33,6 +49,45 @@ describe('caip19', () => {
       const tokenId = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
       const result = toCAIP19({ chain, network, contractType, tokenId })
       expect(result).toEqual('eip155:3/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d')
+    })
+
+    it('throws with invalid tokenId length', () => {
+      const chain = ChainTypes.Ethereum
+      const network = NetworkTypes.MAINNET
+      const contractType = ContractTypes.ERC20
+      const tokenId = '0xfoo'
+      expect(() => toCAIP19({ chain, network, contractType, tokenId })).toThrow(
+        'toCAIP19: tokenId length must be 42, length: 5'
+      )
+    })
+
+    it('throws with no tokenId string', () => {
+      const chain = ChainTypes.Ethereum
+      const network = NetworkTypes.MAINNET
+      const contractType = ContractTypes.ERC20
+      const tokenId = ''
+      expect(() => toCAIP19({ chain, network, contractType, tokenId })).toThrow(
+        'toCAIP19: no tokenId provided with contract type ERC20'
+      )
+    })
+
+    it('throws with invalid tokenId string', () => {
+      const chain = ChainTypes.Ethereum
+      const network = NetworkTypes.MAINNET
+      const contractType = ContractTypes.ERC20
+      const tokenId = 'gm'
+      expect(() => toCAIP19({ chain, network, contractType, tokenId })).toThrow(
+        'toCAIP19: tokenId must start with 0x: gm'
+      )
+    })
+
+    it('throws if tokenId provided without contract type', () => {
+      const chain = ChainTypes.Ethereum
+      const network = NetworkTypes.MAINNET
+      const tokenId = 'gm'
+      expect(() => toCAIP19({ chain, network, tokenId })).toThrow(
+        'toCAIP19: tokenId provided without contract type'
+      )
     })
 
     it('can make bitcoin caip19 on mainnet', () => {
