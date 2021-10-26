@@ -11,7 +11,7 @@ export enum Reference {
   EthereumMainnet = '1',
   EthereumRopsten = '3',
   EthereumRinkeby = '4',
-  EthereumKovan = '42',
+  // EthereumKovan = '42', // currently unsupported by shapeshift
   // https://github.com/bitcoin/bips/blob/master/bip-0122.mediawiki#definition-of-chain-id
   // caip2 uses max length of 32 chars of the genesis block
   BitcoinMainnet = '000000000019d6689c085ae165831e93',
@@ -23,7 +23,6 @@ type ToCAIP2Args = {
   network: NetworkTypes
 }
 
-// for shapeshift backwards compatibility
 export const toCAIP2 = ({ chain, network }: ToCAIP2Args): string => {
   const shapeShiftToCAIP2 = {
     [ChainTypes.Ethereum]: {
@@ -74,4 +73,56 @@ export const toCAIP2 = ({ chain, network }: ToCAIP2Args): string => {
   }
 
   throw new Error(`toCAIP2: unsupported ${chain} network: ${network}`)
+}
+
+type FromCAIP19Return = {
+  chain: ChainTypes
+  network: NetworkTypes
+}
+
+export const fromCAIP2 = (caip2: string): FromCAIP19Return => {
+  const [c, n] = caip2.split(':')
+  if (!(c && n)) {
+    throw new Error(`fromCAIP19: error parsing caip19, chain: ${c}, network: ${n}`)
+  }
+  switch (c) {
+    case 'eip155': {
+      const chain = ChainTypes.Ethereum
+      switch (n) {
+        case Reference.EthereumMainnet: {
+          const network = NetworkTypes.MAINNET
+          return { chain, network }
+        }
+        case Reference.EthereumRopsten: {
+          const network = NetworkTypes.ETH_ROPSTEN
+          return { chain, network }
+        }
+        case Reference.EthereumRinkeby: {
+          const network = NetworkTypes.ETH_RINKEBY
+          return { chain, network }
+        }
+        default: {
+          throw new Error(`fromCAIP19: unsupported ${c} network: ${n}`)
+        }
+      }
+    }
+    case 'bip122': {
+      const chain = ChainTypes.Bitcoin
+      switch (n) {
+        case Reference.BitcoinMainnet: {
+          const network = NetworkTypes.MAINNET
+          return { chain, network }
+        }
+        case Reference.BitcoinTestnet: {
+          const network = NetworkTypes.TESTNET
+          return { chain, network }
+        }
+        default: {
+          throw new Error(`fromCAIP19: unsupported ${c} network: ${n}`)
+        }
+      }
+    }
+  }
+
+  throw new Error(`fromCAIP19: unsupported chain: ${c}`)
 }
