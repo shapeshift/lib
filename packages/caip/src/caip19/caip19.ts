@@ -133,5 +133,3 @@ export const fromCAIP19: FromCAIP19 = (caip19) => {
 
   throw new Error(`fromCAIP19: error parsing caip19: ${caip19}`)
 }
-
-export const CAIP19 = { AssetNamespace }
