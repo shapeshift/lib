@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/chain-adapters",
-  "version": "1.5.0",
+  "version": "1.7.1",
   "description": "> TODO: description",
   "homepage": "",
   "license": "MIT",
@@ -26,8 +26,8 @@
   },
   "dependencies": {
     "@shapeshiftoss/hdwallet-core": "^1.17.0",
-    "@shapeshiftoss/types": "^1.1.0",
-    "@shapeshiftoss/unchained-client": "^2.1.0",
+    "@shapeshiftoss/types": "^1.4.0",
+    "@shapeshiftoss/unchained-client": "^3.0.0",
     "axios": "^0.21.2",
     "bignumber.js": "^9.0.1",
     "bitcoinjs-lib": "^5.2.0",
