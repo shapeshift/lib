@@ -178,6 +178,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
         signTxInputs.push({
           addressNList: bip32ToAddressNList(input.path),
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // https://github.com/shapeshift/hdwallet/issues/362
           scriptType: scriptType as any,
           amount: String(input.value),
           vout: input.vout,
