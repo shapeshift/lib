@@ -1,3 +1,26 @@
+# [@shapeshiftoss/chain-adapters-v1.7.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.7.0...@shapeshiftoss/chain-adapters-v1.7.1) (2021-10-25)
+
+# [@shapeshiftoss/chain-adapters-v1.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.6.0...@shapeshiftoss/chain-adapters-v1.7.0) (2021-10-25)
+
+
+### Features
+
+* tx history data ([#149](https://github.com/shapeshift/lib/issues/149)) ([3405a0a](https://github.com/shapeshift/lib/commit/3405a0aa600363afc1778bd6f07af123591c4e11))
+
+# [@shapeshiftoss/chain-adapters-v1.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.5.2...@shapeshiftoss/chain-adapters-v1.6.0) (2021-10-25)
+
+
+### Features
+
+* fix testing deps ([#101](https://github.com/shapeshift/lib/issues/101)) ([d75f48f](https://github.com/shapeshift/lib/commit/d75f48fec6947eb16eeb112d1b85f2e1840a52d3))
+
+# [@shapeshiftoss/chain-adapters-v1.5.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.5.1...@shapeshiftoss/chain-adapters-v1.5.2) (2021-10-25)
+
+
+### Bug Fixes
+
+* unchained client update ([#155](https://github.com/shapeshift/lib/issues/155)) ([8cec392](https://github.com/shapeshift/lib/commit/8cec3926cc445c747346f60eb17ea8affc486754))
+
 # [@shapeshiftoss/chain-adapters-v1.5.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.5.0...@shapeshiftoss/chain-adapters-v1.5.1) (2021-10-24)
 
 

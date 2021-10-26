@@ -98,6 +98,22 @@ export type SubscribeTxsInput = {
   addresses: Array<string>
 }
 
+export type TxFee = {
+  symbol: string
+  value: string
+}
+
+export enum TxType {
+  send = 'send',
+  receive = 'receive'
+}
+
+export enum TxStatus {
+  confirmed = 'confirmed',
+  pending = 'pending',
+  failed = 'failed'
+}
+
 export type SubscribeTxsMessage<T extends ChainTypes> = {
   address: string
   blockHash?: string
@@ -107,6 +123,10 @@ export type SubscribeTxsMessage<T extends ChainTypes> = {
   confirmations: number
   network: NetworkTypes
   txid: string
+  to?: string
+  from?: string
+  fee?: TxFee
+  status: TxStatus
 } & TxTransfer<T>
 
 type ChainSpecificTxTransfer<T> = ChainSpecific<
@@ -118,7 +138,7 @@ type ChainSpecificTxTransfer<T> = ChainSpecific<
 
 export type TxTransfer<T extends ChainTypes> = {
   asset: string
-  type: 'send' | 'receive' | 'fee'
+  type: TxType
   value: string
 } & ChainSpecificTxTransfer<T>
 

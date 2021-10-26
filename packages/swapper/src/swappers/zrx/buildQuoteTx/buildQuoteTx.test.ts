@@ -39,7 +39,7 @@ Web3.mockImplementation(() => ({
 }))
 
 const mockQuoteResponse = {
-  allowanceContract: undefined,
+  allowanceContract: 'allowanceTargetAddress',
   allowanceGrantRequired: true,
   buyAmount: undefined,
   buyAsset: {

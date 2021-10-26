@@ -2,6 +2,7 @@ import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import {
   ApprovalNeededInput,
   ApprovalNeededOutput,
+  ApproveInfiniteInput,
   Asset,
   BuildQuoteTxInput,
   ChainTypes,
@@ -16,6 +17,7 @@ import Web3 from 'web3'
 
 import { Swapper } from '../../api'
 import { approvalNeeded } from './approvalNeeded/approvalNeeded'
+import { approveInfinite } from './approveInfinite/approveInfinite'
 import { buildQuoteTx } from './buildQuoteTx/buildQuoteTx'
 import { executeQuote } from './executeQuote/executeQuote'
 import { getMinMax } from './getMinMax/getMinMax'
@@ -85,5 +87,9 @@ export class ZrxSwapper implements Swapper {
     args: ApprovalNeededInput<ChainTypes, SwapperType>
   ): Promise<ApprovalNeededOutput> {
     return approvalNeeded(this.deps, args)
+  }
+
+  async approveInfinite(args: ApproveInfiniteInput<ChainTypes, SwapperType>): Promise<string> {
+    return approveInfinite(this.deps, args)
   }
 }
