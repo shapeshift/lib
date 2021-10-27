@@ -2,6 +2,7 @@ import { ChainTypes, ContractTypes, NetworkTypes } from '@shapeshiftoss/types'
 import axios from 'axios'
 import fs from 'fs'
 
+import { toCAIP2 } from './../../caip2/caip2'
 import { toCAIP19 } from './../../caip19/caip19'
 
 type CoingeckoCoin = {
@@ -13,9 +14,13 @@ type CoingeckoCoin = {
   }
 }
 
-const main = async () => {
+const fetchData = async () => {
   const coingeckoCoinsURL = 'https://api.coingecko.com/api/v3/coins/list?include_platform=true'
   const { data } = await axios.get<CoingeckoCoin[]>(coingeckoCoinsURL)
+  return data
+}
+
+const parseEthData = (data: CoingeckoCoin[]) => {
   const ethCoins = data.filter(
     ({ id, platforms }) => Boolean(platforms?.ethereum) || id === 'ethereum'
   )
@@ -24,55 +29,33 @@ const main = async () => {
   const network = NetworkTypes.MAINNET
   const contractType = ContractTypes.ERC20
 
-  const [coingeckoEthereumToCAIP19, CAIP19toCoingeckoEthereum] = ethCoins.reduce(
-    ([frogToCape, capeToFrog], coin) => {
-      const { id, platforms } = coin
-      const tokenId = platforms?.ethereum
-      let caip19
-      if (tokenId) {
-        caip19 = toCAIP19({ chain, network, contractType, tokenId })
-      } else {
-        caip19 = toCAIP19({ chain, network })
-      }
-      frogToCape[id] = caip19
-      capeToFrog[caip19] = id
-      return [frogToCape, capeToFrog]
-    },
-    [{}, {}] as Array<Record<string, string>>
-  )
+  const result = ethCoins.reduce((acc, { id, platforms }) => {
+    const tokenId = platforms?.ethereum
+    const caip19 = toCAIP19({ chain, network, ...(tokenId ? { contractType, tokenId } : {}) })
+    acc[caip19] = id
+    return acc
+  }, {} as Record<string, string>)
 
-  console.info(coingeckoEthereumToCAIP19)
-  console.info(CAIP19toCoingeckoEthereum)
-
-  const btcMainnet = 'bip122:000000000019d6689c085ae165831e93/slip44:0'
-
-  const CAIP19toCoingeckoBitcoin = {
-    [btcMainnet]: 'bitcoin' // we can pretttty safely hardcode this one
-  }
-
-  const coingeckoBitcoinToCAIP19 = {
-    bitcoin: btcMainnet
-  }
-
-  await fs.promises.writeFile(
-    `./src/adapters/coingecko/generated/eip155:1/coingeckoToCAIP19Map.json`,
-    JSON.stringify(coingeckoEthereumToCAIP19)
-  )
-
-  await fs.promises.writeFile(
-    `./src/adapters/coingecko/generated/eip155:1/CAIP19ToCoingeckoMap.json`,
-    JSON.stringify(CAIP19toCoingeckoEthereum)
-  )
-
-  await fs.promises.writeFile(
-    `./src/adapters/coingecko/generated/bip122:000000000019d6689c085ae165831e93/coingeckoToCAIP19Map.json`,
-    JSON.stringify(coingeckoBitcoinToCAIP19)
-  )
-
-  await fs.promises.writeFile(
-    `./src/adapters/coingecko/generated/bip122:000000000019d6689c085ae165831e93/CAIP19ToCoingeckoMap.json`,
-    JSON.stringify(CAIP19toCoingeckoBitcoin)
-  )
+  return JSON.stringify(result)
 }
 
-main().then(() => console.info('Generated Coingecko CAIP19 adapter data.'))
+const parseBtcData = (data: CoingeckoCoin[]) =>
+  JSON.stringify(data.find(({ id }) => id === 'bitcoin'))
+
+const writeFiles = async (data: Record<string, string>) => {
+  const path = './src/adapters/coingecko/generated/'
+  const file = '/adapter.json'
+  const writeFile = async ([k, v]: string[]) => await fs.promises.writeFile(`${path}${k}${file}`, v)
+  await Promise.all(Object.entries(data).map(writeFile))
+  console.info('Generated CoinGecko CAIP19 adapter data.')
+}
+
+const main = async () => {
+  const data = await fetchData()
+  const ethMainnet = toCAIP2({ chain: ChainTypes.Ethereum, network: NetworkTypes.MAINNET })
+  const btcMainnet = toCAIP2({ chain: ChainTypes.Bitcoin, network: NetworkTypes.MAINNET })
+  const output = { [ethMainnet]: parseEthData(data), [btcMainnet]: parseBtcData(data) }
+  await writeFiles(output)
+}
+
+main()
