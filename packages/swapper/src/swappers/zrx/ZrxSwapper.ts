@@ -11,7 +11,8 @@ import {
   GetQuoteInput,
   MinMaxOutput,
   Quote,
-  SwapperType
+  SwapperType,
+  chainAdapters
 } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
@@ -23,6 +24,16 @@ import { executeQuote } from './executeQuote/executeQuote'
 import { getMinMax } from './getMinMax/getMinMax'
 import { getZrxQuote } from './getQuote/getQuote'
 import { getUsdRate } from './utils/helpers/helpers'
+import { getSendMaxAmount } from './getSendMaxAmount/getSendMaxAmount'
+
+// TODO:(ryankk) move HDWallet import and SendMaxAmountInput into '@shapeshiftoss/types'
+import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+export type SendMaxAmountInput = {
+  wallet: HDWallet
+  quote: Quote<ChainTypes, SwapperType>
+  sellAssetAccountId: string
+  feeEstimateKey: chainAdapters.FeeDataKey
+}
 
 export type ZrxSwapperDeps = {
   adapterManager: ChainAdapterManager
@@ -91,5 +102,9 @@ export class ZrxSwapper implements Swapper {
 
   async approveInfinite(args: ApproveInfiniteInput<ChainTypes, SwapperType>): Promise<string> {
     return approveInfinite(this.deps, args)
+  }
+
+  getSendMaxAmount(args: SendMaxAmountInput): Promise<string> {
+    return getSendMaxAmount(this.deps, args)
   }
 }

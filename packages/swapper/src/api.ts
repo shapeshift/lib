@@ -14,6 +14,10 @@ import {
   SwapperType
 } from '@shapeshiftoss/types'
 
+// TODO:(ryankk) import from types packages
+import { SendMaxAmountInput } from './swappers/zrx/ZrxSwapper'
+
+
 export class SwapError extends Error {}
 
 export interface Swapper {
@@ -69,4 +73,9 @@ export interface Swapper {
    * Get the txid of an approve infinite transaction
    */
   approveInfinite(args: ApproveInfiniteInput<ChainTypes, SwapperType>): Promise<string>
+
+  /**
+   * Get max swap balance (minus fees) for sell asset
+   */
+  getSendMaxAmount(args: SendMaxAmountInput): Promise<string>
 }
