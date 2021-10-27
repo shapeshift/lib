@@ -1,5 +1,6 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { QuoteFeeData, SignTxInput } from './chain-adapters'
+import { NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 
 /** Common */
 
@@ -185,12 +186,12 @@ export type GetQuoteInput = {
 
 export type BuildQuoteTxInput = {
   input: GetQuoteInput
-  wallet: HDWallet
+  wallet: HDWallet | NativeHDWallet
 }
 
 export type ExecQuoteInput<C extends ChainTypes, S extends SwapperType> = {
   quote: Quote<C, S>
-  wallet: HDWallet
+  wallet: HDWallet | NativeHDWallet
 }
 
 export type ExecQuoteOutput = {
@@ -199,7 +200,7 @@ export type ExecQuoteOutput = {
 
 export type ApprovalNeededInput<C extends ChainTypes, S extends SwapperType> = {
   quote: Quote<C, S>
-  wallet: HDWallet
+  wallet: HDWallet | NativeHDWallet
 }
 
 export type ApprovalNeededOutput = {
@@ -210,5 +211,5 @@ export type ApprovalNeededOutput = {
 
 export type ApproveInfiniteInput<C extends ChainTypes, S extends SwapperType> = {
   quote: Quote<C, S>
-  wallet: HDWallet
+  wallet: HDWallet | NativeHDWallet
 }

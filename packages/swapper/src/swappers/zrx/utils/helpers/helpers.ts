@@ -44,7 +44,7 @@ export const normalizeAmount = (amount: string | undefined): string | undefined 
   return new BigNumber(amount).toNumber().toLocaleString('fullwide', { useGrouping: false })
 }
 
-export const getERC20Allowance = ({
+export const getERC20Allowance = async ({
   erc20AllowanceAbi,
   web3,
   tokenId,
@@ -74,14 +74,13 @@ export const getAllowanceRequired = async ({
     )
   }
 
-  const allowanceOnChain = getERC20Allowance({
+  const allowanceOnChain = await getERC20Allowance({
     web3,
     erc20AllowanceAbi,
     ownerAddress,
     spenderAddress,
     tokenId
   })
-
   if (allowanceOnChain === '0') {
     return new BigNumber(quote.sellAmount || 0)
   }
