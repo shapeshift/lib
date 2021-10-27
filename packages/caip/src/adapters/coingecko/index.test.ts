@@ -19,7 +19,7 @@ describe('coingecko adapter', () => {
       expect(coingeckoToCAIP19('ethereum')).toEqual(caip19)
     })
 
-    it('can get coingecko id for FOX', () => {
+    it('can get CAIP19 id for FOX', () => {
       const chain = ChainTypes.Ethereum
       const network = NetworkTypes.MAINNET
       const contractType = ContractTypes.ERC20
