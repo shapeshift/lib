@@ -25,7 +25,7 @@
     "type-check": "tsc --project ./tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@shapeshiftoss/hdwallet-core": "^1.17.0",
+    "@shapeshiftoss/hdwallet-core": "^1.17.1-alpha.0",
     "@shapeshiftoss/types": "^1.4.0",
     "@shapeshiftoss/unchained-client": "^3.0.0",
     "axios": "^0.21.2",
@@ -37,7 +37,7 @@
     "web3-utils": "^1.6.0"
   },
   "devDependencies": {
-    "@shapeshiftoss/hdwallet-native": "^1.17.0",
+    "@shapeshiftoss/hdwallet-native": "^1.17.1-alpha.0",
     "@types/multicoin-address-validator": "^0.5.0"
   }
 }
