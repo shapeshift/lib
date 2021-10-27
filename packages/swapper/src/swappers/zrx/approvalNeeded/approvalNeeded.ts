@@ -1,7 +1,6 @@
 import {
   ApprovalNeededInput,
   ApprovalNeededOutput,
-  BIP32Params,
   ChainTypes,
   QuoteResponse,
   SwapperType
