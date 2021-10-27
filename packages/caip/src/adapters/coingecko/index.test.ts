@@ -1,7 +1,7 @@
 import { ChainTypes, ContractTypes, NetworkTypes } from '@shapeshiftoss/types'
 
 import { toCAIP19 } from './../../caip19/caip19'
-import { CAIP19toCoingecko, coingeckoToCAIP19 } from '.'
+import { CAIP19ToCoingecko, coingeckoToCAIP19 } from '.'
 
 describe('coingecko adapter', () => {
   describe('coingeckoToCAIP19', () => {
@@ -34,14 +34,14 @@ describe('coingecko adapter', () => {
       const chain = ChainTypes.Bitcoin
       const network = NetworkTypes.MAINNET
       const caip19 = toCAIP19({ chain, network })
-      expect(CAIP19toCoingecko(caip19)).toEqual('bitcoin')
+      expect(CAIP19ToCoingecko(caip19)).toEqual('bitcoin')
     })
 
     it('can get coingecko id for ethereum CAIP19', () => {
       const chain = ChainTypes.Ethereum
       const network = NetworkTypes.MAINNET
       const caip19 = toCAIP19({ chain, network })
-      expect(CAIP19toCoingecko(caip19)).toEqual('ethereum')
+      expect(CAIP19ToCoingecko(caip19)).toEqual('ethereum')
     })
 
     it('can get coingecko id for FOX', () => {
@@ -50,7 +50,7 @@ describe('coingecko adapter', () => {
       const contractType = ContractTypes.ERC20
       const tokenId = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
       const caip19 = toCAIP19({ chain, network, contractType, tokenId })
-      expect(CAIP19toCoingecko(caip19)).toEqual('shapeshift-fox-token')
+      expect(CAIP19ToCoingecko(caip19)).toEqual('shapeshift-fox-token')
     })
   })
 })

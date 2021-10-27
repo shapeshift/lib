@@ -39,8 +39,14 @@ const parseEthData = (data: CoingeckoCoin[]) => {
   return JSON.stringify(result)
 }
 
-const parseBtcData = (data: CoingeckoCoin[]) =>
-  JSON.stringify(data.find(({ id }) => id === 'bitcoin'))
+const parseBtcData = (data: CoingeckoCoin[]) => {
+  const chain = ChainTypes.Bitcoin
+  const network = NetworkTypes.MAINNET
+  const caip19 = toCAIP19({ chain, network })
+  const btc = data.find(({ id }) => id === 'bitcoin')
+  const result = JSON.stringify({ [caip19]: btc?.id })
+  return result
+}
 
 const writeFiles = async (data: Record<string, string>) => {
   const path = './src/adapters/coingecko/generated/'
