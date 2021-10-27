@@ -1,6 +1,7 @@
 import { ChainTypes, ContractTypes, NetworkTypes } from '@shapeshiftoss/types'
+
 import { toCAIP19 } from './../../caip19/caip19'
-import { coingeckoToCAIP19, CAIP19toCoingecko } from '.'
+import { CAIP19toCoingecko, coingeckoToCAIP19 } from '.'
 
 describe('coingecko adapter', () => {
   describe('coingeckoToCAIP19', () => {

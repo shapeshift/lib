@@ -1,7 +1,7 @@
+import { ChainTypes, ContractTypes, NetworkTypes } from '@shapeshiftoss/types'
 import axios from 'axios'
 import fs from 'fs'
 
-import { ChainTypes, ContractTypes, NetworkTypes } from '@shapeshiftoss/types'
 import { toCAIP19 } from './../../caip19/caip19'
 
 type CoingeckoCoin = {
