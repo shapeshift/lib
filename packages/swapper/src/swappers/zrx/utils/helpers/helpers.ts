@@ -127,7 +127,6 @@ export const grantAllowance = async ({
     .approve(quote.allowanceContract, quote.sellAmount)
     .encodeABI()
 
-  const value = quote.sellAsset.symbol === 'ETH' ? quote.sellAmount : '0x0'
   const bip32Params = adapter.buildBIP32Params({
     accountNumber: Number(quote.sellAssetAccountId || 0)
   })
@@ -136,12 +135,13 @@ export const grantAllowance = async ({
 
   try {
     const { txToSign } = await adapter.buildSendTransaction({
-      value,
       wallet,
+      erc20ContractAddress: quote.sellAsset.tokenId,
       to: quote.sellAsset.tokenId,
       fee: numberToHex(quote.feeData?.chainSpecific?.gasPrice || 0),
       gasLimit: numberToHex(quote.feeData?.chainSpecific?.estimatedGas || 0),
-      bip32Params
+      bip32Params,
+      value: '0'
     })
 
     grantAllowanceTxToSign = {
