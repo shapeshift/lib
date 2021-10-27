@@ -16,7 +16,9 @@ type CoingeckoCoin = {
 const main = async () => {
   const coingeckoCoinsURL = 'https://api.coingecko.com/api/v3/coins/list?include_platform=true'
   const { data } = await axios.get<CoingeckoCoin[]>(coingeckoCoinsURL)
-  const ethCoins = data.filter(({ platforms }) => Boolean(platforms?.ethereum))
+  const ethCoins = data.filter(
+    ({ id, platforms }) => Boolean(platforms?.ethereum) || id === 'ethereum'
+  )
 
   const chain = ChainTypes.Ethereum
   const network = NetworkTypes.MAINNET
@@ -26,7 +28,12 @@ const main = async () => {
     ([frogToCape, capeToFrog], coin) => {
       const { id, platforms } = coin
       const tokenId = platforms?.ethereum
-      const caip19 = toCAIP19({ chain, network, contractType, tokenId })
+      let caip19
+      if (tokenId) {
+        caip19 = toCAIP19({ chain, network, contractType, tokenId })
+      } else {
+        caip19 = toCAIP19({ chain, network })
+      }
       frogToCape[id] = caip19
       capeToFrog[caip19] = id
       return [frogToCape, capeToFrog]
@@ -37,8 +44,7 @@ const main = async () => {
   console.info(coingeckoEthereumToCAIP19)
   console.info(CAIP19toCoingeckoEthereum)
 
-  const btcMainnet = 'bip122:000000000019d6689c085ae165831e93'
-  const ethMainnet = 'eip155:1'
+  const btcMainnet = 'bip122:000000000019d6689c085ae165831e93/slip44:0'
 
   const CAIP19toCoingeckoBitcoin = {
     [btcMainnet]: 'bitcoin' // we can pretttty safely hardcode this one
@@ -49,22 +55,22 @@ const main = async () => {
   }
 
   await fs.promises.writeFile(
-    `./src/adapters/coingecko/generated/${ethMainnet}/coingeckoToCAIP19Map.json`,
+    `./src/adapters/coingecko/generated/eip155:1/coingeckoToCAIP19Map.json`,
     JSON.stringify(coingeckoEthereumToCAIP19)
   )
 
   await fs.promises.writeFile(
-    `./src/adapters/coingecko/generated/${ethMainnet}/CAIP19ToCoingeckoMap.json`,
+    `./src/adapters/coingecko/generated/eip155:1/CAIP19ToCoingeckoMap.json`,
     JSON.stringify(CAIP19toCoingeckoEthereum)
   )
 
   await fs.promises.writeFile(
-    `./src/adapters/coingecko/generated/${btcMainnet}/coingeckoToCAIP19Map.json`,
+    `./src/adapters/coingecko/generated/bip122:000000000019d6689c085ae165831e93/coingeckoToCAIP19Map.json`,
     JSON.stringify(coingeckoBitcoinToCAIP19)
   )
 
   await fs.promises.writeFile(
-    `./src/adapters/coingecko/generated/${btcMainnet}/CAIP19ToCoingeckoMap.json`,
+    `./src/adapters/coingecko/generated/bip122:000000000019d6689c085ae165831e93/CAIP19ToCoingeckoMap.json`,
     JSON.stringify(CAIP19toCoingeckoBitcoin)
   )
 }
