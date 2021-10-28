@@ -1,5 +1,6 @@
 import { ChainTypes, ContractTypes, NetworkTypes } from '@shapeshiftoss/types'
 import axios from 'axios'
+import fs from 'fs'
 
 import { toCAIP2 } from '../../caip2/caip2'
 import { toCAIP19 } from './../../caip19/caip19'
@@ -11,6 +12,15 @@ export type CoingeckoCoin = {
   platforms: {
     [k: string]: string
   }
+}
+
+export const writeFiles = async (data: Record<string, Record<string, string>>) => {
+  const path = './src/adapters/coingecko/generated/'
+  const file = '/adapter.json'
+  const writeFile = async ([k, v]: [string, unknown]) =>
+    await fs.promises.writeFile(`${path}${k}${file}`, JSON.stringify(v))
+  await Promise.all(Object.entries(data).map(writeFile))
+  console.info('Generated CoinGecko CAIP19 adapter data.')
 }
 
 export const fetchData = async (URL: string) => (await axios.get<CoingeckoCoin[]>(URL)).data

@@ -1,4 +1,6 @@
-import { makeBtcData, parseData, parseEthData } from './utils'
+import realFs from 'fs'
+
+import { makeBtcData, parseData, parseEthData, writeFiles } from './utils'
 
 const eth = {
   id: 'ethereum',
@@ -32,6 +34,12 @@ const btc = {
   platforms: {}
 }
 
+jest.mock('fs', () => ({
+  promises: {
+    writeFile: jest.fn(async () => undefined)
+  }
+}))
+
 describe('parseEthData', () => {
   it('can parse eth data', async () => {
     const result = parseEthData([eth, fox])
@@ -62,5 +70,33 @@ describe('parseData', () => {
       }
     }
     expect(result).toEqual(expected)
+  })
+})
+
+describe('writeFiles', () => {
+  it('can writeFiles', async () => {
+    const data = {
+      foo: {
+        caip19abc: 'bitcorn',
+        caip19def: 'efferium'
+      },
+      bar: {
+        caip19ghi: 'fox',
+        caip19jkl: 'shib'
+      }
+    }
+    const fooCaips = JSON.stringify(data.foo)
+    const barCaips = JSON.stringify(data.bar)
+    console.info = jest.fn()
+    await writeFiles(data)
+    expect(realFs.promises.writeFile).toBeCalledWith(
+      './src/adapters/coingecko/generated/foo/adapter.json',
+      fooCaips
+    )
+    expect(realFs.promises.writeFile).toBeCalledWith(
+      './src/adapters/coingecko/generated/bar/adapter.json',
+      barCaips
+    )
+    expect(console.info).toBeCalledWith('Generated CoinGecko CAIP19 adapter data.')
   })
 })
