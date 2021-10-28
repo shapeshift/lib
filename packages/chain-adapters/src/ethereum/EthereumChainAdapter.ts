@@ -185,7 +185,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       const { txToSign, wallet } = signTxInput
       const ethHash = await (wallet as ETHWallet)?.ethSendTx?.(txToSign)
       
-      if (!ethHash) throw new Error('Error signing tx')
+      if (!ethHash) throw new Error('Error signing & broadcasting tx')
       return ethHash.hash
     } catch (err) {
       return ErrorHandler(err)
