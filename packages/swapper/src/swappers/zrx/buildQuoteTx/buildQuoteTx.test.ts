@@ -1,12 +1,13 @@
-import BigNumber from 'bignumber.js'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { ChainTypes, GetQuoteInput } from '@shapeshiftoss/types'
+import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
-import { buildQuoteTx } from './buildQuoteTx'
+
+import { APPROVAL_GAS_LIMIT, DEFAULT_SLIPPAGE, MAX_SLIPPAGE } from '../utils/constants'
 import { setupQuote } from '../utils/test-data/setupSwapQuote'
 import { zrxService } from '../utils/zrxService'
-import { APPROVAL_GAS_LIMIT, MAX_SLIPPAGE, DEFAULT_SLIPPAGE } from '../utils/constants'
-import { ChainTypes, GetQuoteInput } from '@shapeshiftoss/types'
+import { buildQuoteTx } from './buildQuoteTx'
 
 jest.mock('web3')
 
@@ -42,6 +43,7 @@ const mockQuoteResponse = {
   allowanceGrantRequired: true,
   buyAmount: undefined,
   buyAsset: {
+    caip19: 'eip155:1/erc20:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
     chain: 'ethereum',
     color: '#FFFFFF',
     contractType: 'ERC20',
@@ -74,6 +76,7 @@ const mockQuoteResponse = {
   receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
   sellAmount: '1000000000000000000',
   sellAsset: {
+    caip19: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
     chain: 'ethereum',
     color: '#FFFFFF',
     contractType: 'ERC20',

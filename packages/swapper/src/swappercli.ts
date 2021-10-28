@@ -1,12 +1,12 @@
+import { AssetService } from '@shapeshiftoss/asset-service'
+import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
+import { Asset, ChainTypes, NetworkTypes, SwapperType } from '@shapeshiftoss/types'
+import BigNumber from 'bignumber.js'
 import dotenv from 'dotenv'
 import readline from 'readline-sync'
 import Web3 from 'web3'
-import BigNumber from 'bignumber.js'
 
-import { Asset, NetworkTypes, SwapperType, ChainTypes } from '@shapeshiftoss/types'
-import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import { AssetService } from '@shapeshiftoss/asset-service'
 import { SwapperManager } from './manager/SwapperManager'
 import { ZrxSwapper } from './swappers/zrx/ZrxSwapper'
 
@@ -45,7 +45,7 @@ const getWallet = async (): Promise<NativeHDWallet> => {
 }
 
 const main = async (): Promise<void> => {
-  const [_, __, ...args] = process.argv
+  const [, , ...args] = process.argv
   const [sellSymbol, buySymbol, sellAmount] = args
 
   console.info(`sellSymbol: sell ${sellAmount} of ${sellSymbol} to ${buySymbol}`)
