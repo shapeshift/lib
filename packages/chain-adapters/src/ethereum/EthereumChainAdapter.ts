@@ -25,10 +25,10 @@ export interface ChainAdapterArgs {
 }
 
 async function getErc20Data(to: string, value: string, contractAddress?: string) {
-  if (!contractAddress) return '0x'
+  if (!contractAddress) return ''
   const erc20Contract = new Contract(contractAddress, erc20Abi)
   const { data: callData } = await erc20Contract.populateTransaction.transfer(to, value)
-  return callData || '0x'
+  return callData || ''
 }
 
 export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
