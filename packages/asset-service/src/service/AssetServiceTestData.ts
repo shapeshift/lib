@@ -1,8 +1,10 @@
-import { IndexedAssetData } from '..'
 import { Asset, BaseAsset, ChainTypes, ContractTypes, NetworkTypes } from '@shapeshiftoss/types'
+
+import { IndexedAssetData } from '..'
 
 export const mockBaseAssets: BaseAsset[] = [
   {
+    caip19: 'eip155:1/slip44:60',
     chain: ChainTypes.Ethereum,
     network: NetworkTypes.MAINNET,
     symbol: 'ETH',
@@ -18,6 +20,7 @@ export const mockBaseAssets: BaseAsset[] = [
     receiveSupport: true,
     tokens: [
       {
+        caip19: 'eip155:1/erc20:0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
         name: 'Aave',
         precision: 18,
         tokenId: '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
@@ -30,6 +33,7 @@ export const mockBaseAssets: BaseAsset[] = [
         symbol: 'AAVE'
       },
       {
+        caip19: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
         name: 'Fox',
         precision: 18,
         tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
@@ -44,8 +48,9 @@ export const mockBaseAssets: BaseAsset[] = [
     ]
   },
   {
+    caip19: 'eip155:3/slip44:60',
     chain: ChainTypes.Ethereum,
-    network: NetworkTypes.TESTNET,
+    network: NetworkTypes.ETH_ROPSTEN,
     symbol: 'ETH',
     name: 'Ethereum',
     precision: 18,
@@ -59,6 +64,7 @@ export const mockBaseAssets: BaseAsset[] = [
     receiveSupport: true,
     tokens: [
       {
+        caip19: 'eip155:3/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
         name: 'Fox',
         precision: 18,
         tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
@@ -73,6 +79,7 @@ export const mockBaseAssets: BaseAsset[] = [
     ]
   },
   {
+    caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
     chain: ChainTypes.Bitcoin,
     network: NetworkTypes.MAINNET,
     symbol: 'BTC',
@@ -88,6 +95,7 @@ export const mockBaseAssets: BaseAsset[] = [
     receiveSupport: false
   },
   {
+    caip19: 'bip122:000000000933ea01ad0ee984209779ba/slip44:0',
     chain: ChainTypes.Bitcoin,
     network: NetworkTypes.TESTNET,
     symbol: 'BTC',
@@ -106,6 +114,7 @@ export const mockBaseAssets: BaseAsset[] = [
 
 export const mockAssets: Asset[] = [
   {
+    caip19: 'eip155:1/slip44:60',
     chain: ChainTypes.Ethereum,
     network: NetworkTypes.MAINNET,
     symbol: 'ETH',
@@ -121,6 +130,7 @@ export const mockAssets: Asset[] = [
     receiveSupport: true
   },
   {
+    caip19: 'eip155:1/erc20:0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
     name: 'Aave',
     precision: 18,
     tokenId: '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
@@ -138,6 +148,7 @@ export const mockAssets: Asset[] = [
     explorerTxLink: 'https://etherscan.io/tx/'
   },
   {
+    caip19: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
     name: 'Fox',
     precision: 18,
     tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
@@ -155,8 +166,9 @@ export const mockAssets: Asset[] = [
     explorerTxLink: 'https://etherscan.io/tx/'
   },
   {
+    caip19: 'eip155:3/slip44:60',
     chain: ChainTypes.Ethereum,
-    network: NetworkTypes.TESTNET,
+    network: NetworkTypes.ETH_ROPSTEN,
     symbol: 'ETH',
     name: 'Ethereum',
     precision: 18,
@@ -170,6 +182,7 @@ export const mockAssets: Asset[] = [
     receiveSupport: true
   },
   {
+    caip19: 'eip155:3/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
     name: 'Fox',
     precision: 18,
     tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
@@ -181,12 +194,13 @@ export const mockAssets: Asset[] = [
     receiveSupport: true,
     symbol: 'FOX',
     chain: ChainTypes.Ethereum,
-    network: NetworkTypes.TESTNET,
+    network: NetworkTypes.ETH_ROPSTEN,
     slip44: 60,
     explorer: 'https://etherscan.io',
     explorerTxLink: 'https://etherscan.io/tx/'
   },
   {
+    caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
     chain: ChainTypes.Bitcoin,
     network: NetworkTypes.MAINNET,
     symbol: 'BTC',
@@ -202,6 +216,7 @@ export const mockAssets: Asset[] = [
     receiveSupport: false
   },
   {
+    caip19: 'bip122:000000000933ea01ad0ee984209779ba/slip44:0',
     chain: ChainTypes.Bitcoin,
     network: NetworkTypes.TESTNET,
     symbol: 'BTC',
@@ -220,6 +235,7 @@ export const mockAssets: Asset[] = [
 
 export const mockIndexedAssetData: IndexedAssetData = {
   ethereum_MAINNET: {
+    caip19: 'eip155:1/slip44:60',
     chain: ChainTypes.Ethereum,
     network: NetworkTypes.MAINNET,
     symbol: 'ETH',
@@ -235,6 +251,7 @@ export const mockIndexedAssetData: IndexedAssetData = {
     receiveSupport: true
   },
   ethereum_MAINNET_0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9: {
+    caip19: 'eip155:1/erc20:0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
     name: 'Aave',
     precision: 18,
     tokenId: '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
@@ -252,6 +269,7 @@ export const mockIndexedAssetData: IndexedAssetData = {
     explorerTxLink: 'https://etherscan.io/tx/'
   },
   ethereum_MAINNET_0xc770eefad204b5180df6a14ee197d99d808ee52d: {
+    caip19: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
     name: 'Fox',
     precision: 18,
     tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
@@ -268,9 +286,10 @@ export const mockIndexedAssetData: IndexedAssetData = {
     explorer: 'https://etherscan.io',
     explorerTxLink: 'https://etherscan.io/tx/'
   },
-  ethereum_TESTNET: {
+  ethereum_ETH_ROPSTEN: {
+    caip19: 'eip155:3/slip44:60',
     chain: ChainTypes.Ethereum,
-    network: NetworkTypes.TESTNET,
+    network: NetworkTypes.ETH_ROPSTEN,
     symbol: 'ETH',
     name: 'Ethereum',
     precision: 18,
@@ -283,7 +302,8 @@ export const mockIndexedAssetData: IndexedAssetData = {
     sendSupport: true,
     receiveSupport: true
   },
-  ethereum_TESTNET_0xc770eefad204b5180df6a14ee197d99d808ee52d: {
+  ethereum_ETH_ROPSTEN_0xc770eefad204b5180df6a14ee197d99d808ee52d: {
+    caip19: 'eip155:3/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
     name: 'Fox',
     precision: 18,
     tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
@@ -295,12 +315,13 @@ export const mockIndexedAssetData: IndexedAssetData = {
     receiveSupport: true,
     symbol: 'FOX',
     chain: ChainTypes.Ethereum,
-    network: NetworkTypes.TESTNET,
+    network: NetworkTypes.ETH_ROPSTEN,
     slip44: 60,
     explorer: 'https://etherscan.io',
     explorerTxLink: 'https://etherscan.io/tx/'
   },
   bitcoin_MAINNET: {
+    caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
     chain: ChainTypes.Bitcoin,
     network: NetworkTypes.MAINNET,
     symbol: 'BTC',
@@ -316,6 +337,7 @@ export const mockIndexedAssetData: IndexedAssetData = {
     receiveSupport: false
   },
   bitcoin_TESTNET: {
+    caip19: 'bip122:000000000933ea01ad0ee984209779ba/slip44:0',
     chain: ChainTypes.Bitcoin,
     network: NetworkTypes.TESTNET,
     symbol: 'BTC',

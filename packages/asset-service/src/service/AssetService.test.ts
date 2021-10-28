@@ -1,7 +1,8 @@
-import axios from 'axios'
 import { Asset, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
+import axios from 'axios'
+
 import { AssetService, flattenAssetData, indexAssetData } from './AssetService'
-import { mockBaseAssets, mockAssets, mockIndexedAssetData } from './AssetServiceTestData'
+import { mockAssets, mockBaseAssets, mockIndexedAssetData } from './AssetServiceTestData'
 
 jest.mock('axios')
 
@@ -74,17 +75,17 @@ describe('AssetService', () => {
       )
     })
 
-    it(`should return FOX on ${NetworkTypes.TESTNET} when specified`, async () => {
+    it(`should return FOX on ${NetworkTypes.ETH_ROPSTEN} when specified`, async () => {
       const assetService = new AssetService(assetFileUrl)
       mockedAxios.get.mockResolvedValue({ data: mockBaseAssets })
       await assetService.initialize()
       const chain = ChainTypes.Ethereum
-      const network = NetworkTypes.TESTNET
+      const network = NetworkTypes.ETH_ROPSTEN
       const args = { chain, network, tokenId }
       expect(assetService.byTokenId(args)).toEqual(
         Object.values(mockIndexedAssetData).find(
           ({ tokenId: assetTokenId, network: assetNetwork }: Asset) =>
-            assetTokenId === tokenId && assetNetwork === NetworkTypes.TESTNET
+            assetTokenId === tokenId && assetNetwork === NetworkTypes.ETH_ROPSTEN
         )
       )
     })
