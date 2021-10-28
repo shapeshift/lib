@@ -92,7 +92,7 @@ To generate new static adapter data, run the following
 
 ```zsh
 cd packages/caip
-yarn build && yarn generate
+yarn generate
 ```
 
 and commit the generated `adapter.json` files.
