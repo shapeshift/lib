@@ -31,20 +31,18 @@ export const parseEthData = (data: CoingeckoCoin[]) => {
     return acc
   }, {} as Record<string, string>)
 
-  return JSON.stringify(result)
+  return result
 }
 
-export const parseBtcData = (data: CoingeckoCoin[]) => {
+export const makeBtcData = () => {
   const chain = ChainTypes.Bitcoin
   const network = NetworkTypes.MAINNET
   const caip19 = toCAIP19({ chain, network })
-  const btc = data.find(({ id }) => id === 'bitcoin')
-  const result = JSON.stringify({ [caip19]: btc?.id })
-  return result
+  return { [caip19]: 'bitcoin' }
 }
 
 export const parseData = (d: CoingeckoCoin[]) => {
   const ethMainnet = toCAIP2({ chain: ChainTypes.Ethereum, network: NetworkTypes.MAINNET })
   const btcMainnet = toCAIP2({ chain: ChainTypes.Bitcoin, network: NetworkTypes.MAINNET })
-  return { [ethMainnet]: parseEthData(d), [btcMainnet]: parseBtcData(d) }
+  return { [ethMainnet]: parseEthData(d), [btcMainnet]: makeBtcData() }
 }

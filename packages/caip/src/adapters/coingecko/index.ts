@@ -1,4 +1,6 @@
 import invert from 'lodash/invert'
+import merge from 'lodash/merge'
+import values from 'lodash/values'
 
 import * as adapters from './generated'
 import { fetchData, parseData } from './utils'
@@ -9,6 +11,7 @@ const generatedCAIP19ToCoingeckoMap = Object.values(adapters).reduce((acc, cur) 
   ...acc,
   ...cur
 })) as Record<string, string>
+
 const generatedCoingeckoToCAIP19Map = invert(generatedCAIP19ToCoingeckoMap)
 
 let currentCAIP19ToCoingeckoMap: Record<string, string> = {}
@@ -19,7 +22,8 @@ const fetchAndCacheCurrentData = async () => {
   if (fetched) return
   try {
     const data = await fetchData(url)
-    const CAIP19ToCoingeckoMap = parseData(data)
+    const parsed = parseData(data)
+    const CAIP19ToCoingeckoMap = merge(values(parsed))
     const coingeckoToCAIP19Map = invert(CAIP19ToCoingeckoMap)
     currentCAIP19ToCoingeckoMap = CAIP19ToCoingeckoMap
     currentCoingeckoToCAIP19Map = coingeckoToCAIP19Map
@@ -30,7 +34,7 @@ const fetchAndCacheCurrentData = async () => {
 }
 
 export const coingeckoToCAIP19 = async (id: string): Promise<string> => {
-  await fetchAndCacheCurrentData()
+  // await fetchAndCacheCurrentData()
   const live = currentCoingeckoToCAIP19Map[id]
   const generated = generatedCoingeckoToCAIP19Map[id]
   if (live && !generated) {
@@ -41,8 +45,10 @@ export const coingeckoToCAIP19 = async (id: string): Promise<string> => {
   return (live || generated) ?? ''
 }
 
-export const CAIP19ToCoingecko = async (caip19: string): Promise<string> => {
-  await fetchAndCacheCurrentData()
+export const CAIP19ToCoingecko = async (
+  caip19: keyof typeof generatedCoingeckoToCAIP19Map
+): Promise<string> => {
+  // await fetchAndCacheCurrentData()
   const live = currentCAIP19ToCoingeckoMap[caip19]
   const generated = generatedCAIP19ToCoingeckoMap[caip19]
 
