@@ -28,7 +28,6 @@
     "@shapeshiftoss/types": "^1.4.0"
   },
   "devDependencies": {
-    "axios": "^0.24.0",
-    "lodash": "^4.17.21"
+    "axios": "^0.24.0"
   }
 }

@@ -1,5 +1,3 @@
-import invert from 'lodash/invert'
-
 import * as adapters from './generated'
 
 export const url = 'https://api.coingecko.com/api/v3/coins/list?include_platform=true'
@@ -9,7 +7,10 @@ const generatedCAIP19ToCoingeckoMap = Object.values(adapters).reduce((acc, cur) 
   ...cur
 })) as Record<string, string>
 
-const generatedCoingeckoToCAIP19Map = invert(generatedCAIP19ToCoingeckoMap)
+const invert = <T extends Record<string, string>>(data: T) =>
+  Object.entries(data).reduce((acc, [k, v]) => ({ ...acc, [v]: k }), {})
+
+const generatedCoingeckoToCAIP19Map: Record<string, string> = invert(generatedCAIP19ToCoingeckoMap)
 
 export const coingeckoToCAIP19 = (id: string): string => {
   const generated = generatedCoingeckoToCAIP19Map[id]
