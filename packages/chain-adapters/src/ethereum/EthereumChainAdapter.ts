@@ -179,12 +179,14 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       return ErrorHandler(err)
     }
   }
-  
-  async signAndBroadcastTransaction(signTxInput: chainAdapters.SignTxInput<ETHSignTx>): Promise<string> {
+
+  async signAndBroadcastTransaction(
+    signTxInput: chainAdapters.SignTxInput<ETHSignTx>
+  ): Promise<string> {
     try {
       const { txToSign, wallet } = signTxInput
       const ethHash = await (wallet as ETHWallet)?.ethSendTx?.(txToSign)
-      
+
       if (!ethHash) throw new Error('Error signing & broadcasting tx')
       return ethHash.hash
     } catch (err) {
