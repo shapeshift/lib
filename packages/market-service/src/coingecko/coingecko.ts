@@ -2,6 +2,7 @@ import { adapters } from '@shapeshiftoss/caip'
 import {
   ChainTypes,
   CoinGeckoMarketCap,
+  GetByMarketCapArgs,
   HistoryData,
   HistoryTimeframe,
   MarketData,
@@ -12,7 +13,6 @@ import axios from 'axios'
 import dayjs from 'dayjs'
 
 import { MarketService } from '../api'
-import { GetByMarketCapArgs } from './../../../types/src/market'
 
 // tons more params here: https://www.coingecko.com/en/api/documentation
 type CoinGeckoAssetData = {
@@ -63,21 +63,16 @@ export class CoinGeckoMarketService implements MarketService {
       .map(({ data }) => data ?? []) // filter out rate limited results
       .flat()
       .sort((a, b) => (a.market_cap_rank > b.market_cap_rank ? 1 : -1))
-      .map((value) => {
-        const { id } = value
+      .reduce((acc, cur) => {
+        const { id } = cur
         try {
           const caip19 = adapters.coingeckoToCAIP19(id)
-          const result = {
-            // don't mutate args
-            ...value,
-            id: caip19
-          }
-          return result
+          acc[caip19] = cur
+          return acc
         } catch {
-          return // no caip found, we don't support this asset
+          return acc // no caip found, we don't support this asset
         }
-      })
-      .filter((value): value is CoinGeckoMarketCap => Boolean(value))
+      }, {} as Record<string, CoinGeckoMarketCap>)
   }
 
   getMarketData = async ({ chain, tokenId }: MarketDataArgs): Promise<MarketData> => {

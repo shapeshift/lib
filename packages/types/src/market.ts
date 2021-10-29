@@ -40,8 +40,10 @@ export type GetByMarketCapArgs = {
   pages: number
   perPage: number
 }
-
-export type GetByMarketCapType = (args?: GetByMarketCapArgs) => Promise<CoinGeckoMarketCap[]>
+export type CoinGeckoMarketCapResult = {
+  [k: string]: Omit<CoinGeckoMarketCap, 'id'>
+}
+export type GetByMarketCapType = (args?: GetByMarketCapArgs) => Promise<CoinGeckoMarketCapResult>
 
 export type CoinGeckoMarketCap = {
   id: string

@@ -73,28 +73,27 @@ describe('coingecko market service', () => {
     }
 
     it('can flatten multiple responses', async () => {
-      // first response eth, the rest btc
       mockedAxios.get.mockResolvedValueOnce({ data: [eth] }).mockResolvedValue({ data: [btc] })
       const result = await getByMarketCap()
-      expect(result.length).toEqual(10)
+      expect(Object.keys(result).length).toEqual(2)
     })
 
     it('can sort by market cap', async () => {
       mockedAxios.get.mockResolvedValueOnce({ data: [btc] }).mockResolvedValue({ data: [eth] })
       const result = await getByMarketCap()
-      expect(result[0].id).toEqual(adapters.coingeckoToCAIP19(btc.id))
+      expect(Object.keys(result)[0]).toEqual(adapters.coingeckoToCAIP19(btc.id))
     })
 
     it('can handle rate limiting', async () => {
       mockedAxios.get.mockResolvedValue({ status: 429 })
       const result = await getByMarketCap()
-      expect(result.length).toEqual(0)
+      expect(Object.keys(result).length).toEqual(0)
     })
 
     it('can return some results if partially rate limited', async () => {
       mockedAxios.get.mockResolvedValueOnce({ status: 429 }).mockResolvedValue({ data: [eth] })
       const result = await getByMarketCap()
-      expect(result.length).toEqual(9)
+      expect(Object.keys(result).length).toEqual(1)
     })
 
     it('can use default args', async () => {
@@ -112,6 +111,16 @@ describe('coingecko market service', () => {
       const url =
         'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false'
       expect(mockedAxios.get).toBeCalledWith(url)
+    })
+
+    it('can map coingecko to caip ids', async () => {
+      mockedAxios.get.mockResolvedValueOnce({ data: [btc] }).mockResolvedValue({ data: [eth] })
+      const result = await getByMarketCap()
+      const btcCaip19 = adapters.coingeckoToCAIP19('bitcoin')
+      const ethCaip19 = adapters.coingeckoToCAIP19('ethereum')
+      const [btcKey, ethKey] = Object.keys(result)
+      expect(btcKey).toEqual(btcCaip19)
+      expect(ethKey).toEqual(ethCaip19)
     })
   })
 
