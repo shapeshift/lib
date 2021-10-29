@@ -1,3 +1,4 @@
+import { adapters } from '@shapeshiftoss/caip'
 import {
   ChainTypes,
   CoinGeckoMarketCap,
@@ -62,6 +63,17 @@ export class CoinGeckoMarketService implements MarketService {
       .map(({ data }) => data ?? []) // filter out rate limited results
       .flat()
       .sort((a, b) => (a.market_cap_rank > b.market_cap_rank ? 1 : -1))
+      .map((value) => {
+        const { id } = value
+        try {
+          const caip19 = adapters.coingeckoToCAIP19(id)
+          value.id = caip19
+          return value
+        } catch {
+          return // no caip found, we don't support this asset
+        }
+      })
+      .filter((value): value is CoinGeckoMarketCap => Boolean(value))
   }
 
   getMarketData = async ({ chain, tokenId }: MarketDataArgs): Promise<MarketData> => {
