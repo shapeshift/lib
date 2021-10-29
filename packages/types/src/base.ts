@@ -31,33 +31,53 @@ export enum NetworkTypes {
   ETH_RINKEBY = 'ETH_RINKEBY'
 }
 
+export type NetworkTypesForChainType<T extends ChainTypes> =
+  | NetworkTypes.MAINNET
+  | {
+      [ChainTypes.Ethereum]: NetworkTypes.ETH_ROPSTEN | NetworkTypes.ETH_RINKEBY
+      [ChainTypes.Bitcoin]: NetworkTypes.TESTNET
+    }[T]
+
 // asset-service
 
-type AbstractAsset = {
-  caip19: string
-  chain: ChainTypes
-  network: NetworkTypes
-  symbol: string
-  name: string
-  precision: number
-  slip44: number
-  color: string
-  secondaryColor: string
-  icon: string
-  explorer: string
-  explorerTxLink: string
-  sendSupport: boolean
-  receiveSupport: boolean
-}
+type AbstractAsset<C extends ChainTypes> = C extends ChainTypes
+  ? {
+      caip19: string
+      chain: C
+      network: NetworkTypesForChainType<C>
+      symbol: string
+      name: string
+      precision: number
+      slip44: number
+      color: string
+      secondaryColor: string
+      icon: string
+      explorer: string
+      explorerTxLink: string
+      sendSupport: boolean
+      receiveSupport: boolean
+    }
+  : never
 
 type OmittedTokenAssetFields = 'chain' | 'network' | 'slip44' | 'explorer' | 'explorerTxLink'
 type TokenAssetFields = {
   tokenId: string
   contractType: ContractTypes
 }
-export type TokenAsset = Omit<AbstractAsset, OmittedTokenAssetFields> & TokenAssetFields
-export type BaseAsset = AbstractAsset & { tokens?: TokenAsset[] }
-export type Asset = AbstractAsset & Partial<TokenAssetFields>
+type ChainsWithTokenAssets = ChainTypes.Ethereum
+export type TokenAsset<C extends ChainsWithTokenAssets = ChainsWithTokenAssets> =
+  C extends ChainsWithTokenAssets
+    ? Omit<AbstractAsset<C>, OmittedTokenAssetFields> & TokenAssetFields
+    : never
+export type BaseAsset<C extends ChainTypes = ChainTypes> = C extends ChainsWithTokenAssets
+  ? AbstractAsset<C> & { tokens?: TokenAsset<C>[] }
+  : AbstractAsset<C> & { tokens?: never }
+// export type BaseAsset<C extends ChainTypes = ChainTypes> = AbstractAsset<C> & {
+//   tokens?: C extends ChainsWithTokenAssets ? TokenAsset<C> : never
+// }
+export type Asset<C extends ChainTypes = ChainTypes> = C extends ChainTypes
+  ? AbstractAsset<C> & Partial<TokenAssetFields>
+  : never
 
 // market-service
 

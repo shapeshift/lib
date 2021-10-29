@@ -1,5 +1,4 @@
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import { ChainTypes } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 
@@ -95,32 +94,6 @@ describe('getZrxQuote', () => {
     )
     const quote = await swapper.getQuote({ ...quoteInput, slippage: undefined })
     expect(quote?.slippage).toBeFalsy()
-  })
-  it('fails on non ethereum chain for buyAsset', async () => {
-    const { quoteInput, buyAsset } = setupQuote()
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
-    ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
-      Promise.resolve({ data: { success: false } })
-    )
-    await expect(
-      swapper.getQuote({
-        ...quoteInput,
-        buyAsset: { ...buyAsset, chain: ChainTypes.Bitcoin }
-      })
-    ).rejects.toThrow('ZrxError:getQuote - Both assets need to be on the Ethereum chain to use Zrx')
-  })
-  it('fails on non ethereum chain for sellAsset', async () => {
-    const { quoteInput, sellAsset } = setupQuote()
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
-    ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
-      Promise.resolve({ data: { success: false } })
-    )
-    await expect(
-      swapper.getQuote({
-        ...quoteInput,
-        sellAsset: { ...sellAsset, chain: ChainTypes.Bitcoin }
-      })
-    ).rejects.toThrow('ZrxError:getQuote - Both assets need to be on the Ethereum chain to use Zrx')
   })
   it('uses symbol when weth tokenId is undefined', async () => {
     const { quoteInput, buyAsset } = setupQuote()

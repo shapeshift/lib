@@ -62,17 +62,6 @@ describe('approvalNeeded', () => {
     expect(await approvalNeeded(args, input)).toEqual({ approvalNeeded: false })
   })
 
-  it('throws an error if sellAsset chain is not ETH', async () => {
-    const input = {
-      quote: { ...quoteInput, sellAsset: { ...sellAsset, chain: ChainTypes.Bitcoin } },
-      wallet
-    }
-
-    await expect(approvalNeeded(args, input)).rejects.toThrow(
-      'ZrxSwapper:approvalNeeded only Ethereum chain type is supported'
-    )
-  })
-
   it('returns false if allowanceOnChain is greater than quote.sellAmount', async () => {
     const allowanceOnChain = '50'
     const data = { gasPrice: '1000', allowanceTarget: '10' }

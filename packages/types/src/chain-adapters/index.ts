@@ -1,6 +1,6 @@
 import { BTCInputScriptType, BTCSignTx, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 
-import { BIP32Params, ChainTypes, NetworkTypes, SwapperType } from '../base'
+import { BIP32Params, ChainTypes, NetworkTypesForChainType, SwapperType } from '../base'
 import { ChainAndSwapperSpecific, ChainSpecific } from '../utility'
 import * as bitcoin from './bitcoin'
 import * as ethereum from './ethereum'
@@ -20,7 +20,7 @@ export type Account<T extends ChainTypes> = {
   pubkey: string
   symbol: string
   chain: T
-  network: NetworkTypes
+  network: NetworkTypesForChainType<T>
 } & ChainSpecificAccount<T>
 
 type ChainSpecificTransaction<T extends ChainTypes> = ChainSpecific<
@@ -31,7 +31,7 @@ type ChainSpecificTransaction<T extends ChainTypes> = ChainSpecific<
 >
 
 export type Transaction<T extends ChainTypes> = {
-  network: NetworkTypes
+  network: NetworkTypesForChainType<T>
   chain: T
   symbol: string
   txid: string
@@ -124,7 +124,7 @@ export type SubscribeTxsMessage<T extends ChainTypes> = {
   blockTime: number
   chain: T
   confirmations: number
-  network: NetworkTypes
+  network: NetworkTypesForChainType<T>
   txid: string
   to?: string
   from?: string

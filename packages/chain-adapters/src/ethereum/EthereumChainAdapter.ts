@@ -273,13 +273,13 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           blockHash: msg.blockHash,
           blockHeight: msg.blockHeight,
           blockTime: msg.blockTime,
-          chain: ChainTypes.Ethereum as ChainTypes.Ethereum,
+          chain: ChainTypes.Ethereum,
           confirmations: msg.confirmations,
           network: NetworkTypes.MAINNET,
           txid: msg.txid,
           fee: msg.fee,
           status: getStatus()
-        }
+        } as const
 
         const specificTx = (symbol: string, value: string, token?: unchained.Token) => ({
           asset: token?.contract || ChainTypes.Ethereum,
