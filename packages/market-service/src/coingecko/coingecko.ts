@@ -67,8 +67,12 @@ export class CoinGeckoMarketService implements MarketService {
         const { id } = value
         try {
           const caip19 = adapters.coingeckoToCAIP19(id)
-          value.id = caip19
-          return value
+          const result = {
+            // don't mutate args
+            ...value,
+            id: caip19
+          }
+          return result
         } catch {
           return // no caip found, we don't support this asset
         }

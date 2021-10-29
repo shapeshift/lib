@@ -1,3 +1,4 @@
+import { adapters } from '@shapeshiftoss/caip'
 import { ChainTypes, HistoryTimeframe } from '@shapeshiftoss/types'
 import axios from 'axios'
 
@@ -81,7 +82,7 @@ describe('coingecko market service', () => {
     it('can sort by market cap', async () => {
       mockedAxios.get.mockResolvedValueOnce({ data: [btc] }).mockResolvedValue({ data: [eth] })
       const result = await getByMarketCap()
-      expect(result[0].id).toEqual(btc.id)
+      expect(result[0].id).toEqual(adapters.coingeckoToCAIP19(btc.id))
     })
 
     it('can handle rate limiting', async () => {
