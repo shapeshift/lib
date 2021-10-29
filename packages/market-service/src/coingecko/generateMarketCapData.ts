@@ -1,4 +1,5 @@
 import fs from 'fs'
+
 import { getByMarketCap } from '..'
 
 const generateMarketCapData = async () => {
