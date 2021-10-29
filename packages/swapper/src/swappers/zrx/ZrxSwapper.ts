@@ -104,7 +104,7 @@ export class ZrxSwapper implements Swapper {
     return approveInfinite(this.deps, args)
   }
 
-  getSendMaxAmount(args: SendMaxAmountInput): Promise<string> {
+  async getSendMaxAmount(args: SendMaxAmountInput): Promise<string> {
     return getSendMaxAmount(this.deps, args)
   }
 }

@@ -17,22 +17,39 @@ export async function getSendMaxAmount(
   const bip32Params = adapter.buildBIP32Params({ accountNumber: Number(sellAssetAccountId) })
   const ethAddress = await adapter.getAddress({ wallet, bip32Params })
 
-  const { balance } = await adapter.getAccount(ethAddress)
+  const account = await adapter.getAccount(ethAddress)
+  const tokenId = quote.sellAsset?.tokenId
 
-  // TODO:(ryankk) make sure these values passed into 'getFeeData' are correct
-  const feeEstimates = await adapter.getFeeData({
-    to: quote.depositAddress,
-    from: ethAddress,
-    value: balance,
-    contractAddress: quote.sellAsset.tokenId
-  })
+  let balance: string | undefined
+  if (quote.sellAsset.tokenId) {
+    balance = account.chainSpecific.tokens?.find(
+      (token) => token.contract.toLowerCase() === tokenId?.toLowerCase()
+    )?.balance
+  } else {
+    balance = account.balance
+  }
+
+  if (!balance) {
+    throw new Error(`No balance found for ${quote.sellAsset.symbol}`)
+  }
+
+  let feeEstimates
+  try {
+    feeEstimates = await adapter.getFeeData({
+      to: quote.depositAddress,
+      from: ethAddress,
+      value: balance,
+      contractAddress: tokenId
+    })
+  } catch (err) {
+    throw new Error(`getSendMaxAmount:getFeeData - ${err}`)
+  }
 
   const estimatedFee = feeEstimates[feeEstimateKey].chainSpecific.feePerTx
-
   const sendMaxAmount = new BigNumber(balance).minus(estimatedFee)
 
   if (!sendMaxAmount.gt(0)) {
-    throw new SwapError('ETH balance is less than estimated fee')
+    throw new Error('ETH balance is less than estimated fee')
   }
 
   return sendMaxAmount.toString()
