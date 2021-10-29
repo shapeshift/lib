@@ -128,7 +128,7 @@ export const grantAllowance = async ({
     .encodeABI()
 
   const bip32Params = adapter.buildBIP32Params({
-    accountNumber: Number(quote.sellAssetAccountId || 0)
+    accountNumber: Number(quote.sellAssetAccountId) || 0
   })
 
   let grantAllowanceTxToSign, signedTx, broadcastedTxId
