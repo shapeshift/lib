@@ -1,4 +1,4 @@
-import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { BTCWallet, ETHWallet, HDWallet } from '@shapeshiftoss/hdwallet-core'
 
 import { QuoteFeeData, SignTxInput } from './chain-adapters'
 
@@ -104,6 +104,11 @@ export enum SwapperType {
   Thorchain = 'Thorchain'
 }
 
+export type ChainTypesSupportedBySwapperType<S extends SwapperType> = {
+  [SwapperType.Zrx]: ChainTypes.Ethereum
+  [SwapperType.Thorchain]: ChainTypes
+}[S]
+
 export type SwapSource = {
   name: string
   proportion: string
@@ -142,7 +147,10 @@ export type ThorVaultInfo = {
 
 export type BuildThorTradeOutput = SignTxInput<unknown> & ThorVaultInfo
 
-export type Quote<C extends ChainTypes, S extends SwapperType> = {
+export type Quote<
+  S extends SwapperType,
+  C extends ChainTypesSupportedBySwapperType<S> = ChainTypesSupportedBySwapperType<S>
+> = {
   success: boolean
   statusCode?: number
   statusReason?: string
@@ -150,7 +158,7 @@ export type Quote<C extends ChainTypes, S extends SwapperType> = {
   buyAssetAccountId?: string
   sellAsset: Asset
   buyAsset: Asset
-  feeData?: QuoteFeeData<C, S>
+  feeData?: QuoteFeeData<S, C>
   rate?: string
   depositAddress?: string // this is dex contract address for eth swaps
   receiveAddress?: string
@@ -190,19 +198,30 @@ export type BuildQuoteTxInput = {
   wallet: HDWallet
 }
 
-export type ExecQuoteInput<C extends ChainTypes, S extends SwapperType> = {
-  quote: Quote<C, S>
-  wallet: HDWallet
-}
+type WalletByChainType<C extends ChainTypes> = {
+  [ChainTypes.Bitcoin]: BTCWallet
+  [ChainTypes.Ethereum]: ETHWallet
+}[C]
 
+export type ExecQuoteInput<
+  S extends SwapperType,
+  C extends ChainTypesSupportedBySwapperType<S> = ChainTypesSupportedBySwapperType<S>
+> = S extends SwapperType
+  ? C extends ChainTypesSupportedBySwapperType<S>
+    ? {
+        quote: Quote<S, C>
+        wallet: WalletByChainType<C>
+      }
+    : never
+  : never
 export type ExecQuoteOutput = {
   txid: string
 }
 
-export type ApprovalNeededInput<C extends ChainTypes, S extends SwapperType> = {
-  quote: Quote<C, S>
-  wallet: HDWallet
-}
+export type ApprovalNeededInput<
+  S extends SwapperType,
+  C extends ChainTypesSupportedBySwapperType<S> = ChainTypesSupportedBySwapperType<S>
+> = ExecQuoteInput<S, C>
 
 export type ApprovalNeededOutput = {
   approvalNeeded: boolean
@@ -210,7 +229,7 @@ export type ApprovalNeededOutput = {
   gasPrice?: string
 }
 
-export type ApproveInfiniteInput<C extends ChainTypes, S extends SwapperType> = {
-  quote: Quote<C, S>
-  wallet: HDWallet
-}
+export type ApproveInfiniteInput<
+  S extends SwapperType,
+  C extends ChainTypesSupportedBySwapperType<S> = ChainTypesSupportedBySwapperType<S>
+> = ExecQuoteInput<S, C>

@@ -22,7 +22,7 @@ import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function approvalNeeded(
   { adapterManager, web3 }: ZrxSwapperDeps,
-  { quote, wallet }: ApprovalNeededInput<ChainTypes, SwapperType>
+  { quote, wallet }: ApprovalNeededInput<SwapperType.Zrx>
 ): Promise<ApprovalNeededOutput> {
   const { sellAsset } = quote
 

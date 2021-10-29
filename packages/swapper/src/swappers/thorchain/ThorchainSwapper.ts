@@ -1,7 +1,6 @@
 import {
   ApprovalNeededOutput,
   Asset,
-  ChainTypes,
   ExecQuoteOutput,
   GetQuoteInput,
   MinMaxOutput,
@@ -11,16 +10,16 @@ import {
 
 import { Swapper } from '../../api'
 
-export class ThorchainSwapper implements Swapper {
-  getType() {
+export class ThorchainSwapper implements Swapper<SwapperType.Thorchain> {
+  getType(): SwapperType.Thorchain {
     return SwapperType.Thorchain
   }
 
-  async getQuote(): Promise<Quote<ChainTypes, SwapperType>> {
+  async getQuote(): Promise<Quote<SwapperType.Thorchain>> {
     throw new Error('ThorchainSwapper: getQuote unimplemented')
   }
 
-  async buildQuoteTx(): Promise<Quote<ChainTypes, SwapperType>> {
+  async buildQuoteTx(): Promise<Quote<SwapperType.Thorchain>> {
     throw new Error('ThorchainSwapper: getQuote unimplemented')
   }
 

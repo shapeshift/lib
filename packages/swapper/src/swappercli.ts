@@ -102,7 +102,7 @@ const main = async (): Promise<void> => {
 
   const manager = new SwapperManager()
   const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
-  manager.addSwapper(SwapperType.Zrx, zrxSwapper)
+  manager.addSwapper<SwapperType.Zrx>(SwapperType.Zrx, zrxSwapper)
   const swapper = manager.getSwapper(SwapperType.Zrx)
   const sellAmountBase = toBaseUnit(sellAmount, sellAsset.precision)
 

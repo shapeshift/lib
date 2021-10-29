@@ -7,7 +7,7 @@ import * as ethereum from './ethereum'
 
 export { bitcoin, ethereum }
 
-type ChainSpecificAccount<T> = ChainSpecific<
+type ChainSpecificAccount<T extends ChainTypes> = ChainSpecific<
   T,
   {
     [ChainTypes.Ethereum]: ethereum.Account
@@ -23,7 +23,7 @@ export type Account<T extends ChainTypes> = {
   network: NetworkTypes
 } & ChainSpecificAccount<T>
 
-type ChainSpecificTransaction<T> = ChainSpecific<
+type ChainSpecificTransaction<T extends ChainTypes> = ChainSpecific<
   T,
   {
     [ChainTypes.Bitcoin]: bitcoin.TransactionSpecific
@@ -52,12 +52,15 @@ export enum FeeDataKey {
   Fast = 'fast'
 }
 
-type ChainSpecificQuoteFeeData<T1, T2> = ChainAndSwapperSpecific<
-  T1,
+type ChainSpecificQuoteFeeData<
+  C extends ChainTypes,
+  S extends SwapperType
+> = ChainAndSwapperSpecific<
+  C,
   {
     [ChainTypes.Ethereum]: ethereum.QuoteFeeData
   },
-  T2,
+  S,
   {
     [SwapperType.Thorchain]: {
       receiveFee: string
@@ -65,16 +68,16 @@ type ChainSpecificQuoteFeeData<T1, T2> = ChainAndSwapperSpecific<
   }
 >
 
-type ChainSpecificFeeData<T> = ChainSpecific<
+type ChainSpecificFeeData<T extends ChainTypes> = ChainSpecific<
   T,
   {
     [ChainTypes.Ethereum]: ethereum.FeeData
   }
 >
 
-export type QuoteFeeData<T1 extends ChainTypes, T2 extends SwapperType> = {
+export type QuoteFeeData<S extends SwapperType, C extends ChainTypes> = {
   fee: string
-} & ChainSpecificQuoteFeeData<T1, T2>
+} & ChainSpecificQuoteFeeData<C, S>
 
 // ChainTypes.Ethereum:
 // feePerUnit = gasPrice
@@ -129,7 +132,7 @@ export type SubscribeTxsMessage<T extends ChainTypes> = {
   status: TxStatus
 } & TxTransfer<T>
 
-type ChainSpecificTxTransfer<T> = ChainSpecific<
+type ChainSpecificTxTransfer<T extends ChainTypes> = ChainSpecific<
   T,
   {
     [ChainTypes.Ethereum]: ethereum.TxTransfer
@@ -158,7 +161,9 @@ type ChainTxTypeInner = {
   [ChainTypes.Bitcoin]: BTCSignTx
 }
 
-export type ChainTxType<T> = T extends keyof ChainTxTypeInner ? ChainTxTypeInner[T] : never
+export type ChainTxType<T extends ChainTypes> = T extends keyof ChainTxTypeInner
+  ? ChainTxTypeInner[T]
+  : never
 
 export type BuildSendTxInput = {
   to?: string

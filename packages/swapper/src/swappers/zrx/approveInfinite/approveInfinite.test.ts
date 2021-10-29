@@ -1,4 +1,4 @@
-import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { ETHWallet } from '@shapeshiftoss/hdwallet-core'
 import Web3 from 'web3'
 
 import { setupQuote } from '../utils/test-data/setupSwapQuote'
@@ -37,7 +37,7 @@ describe('approveInfinite', () => {
   const wallet = {
     ethGetAddress: jest.fn(() => Promise.resolve('0xc770eefad204b5180df6a14ee197d99d808ee52d')),
     ethSignTx: jest.fn(() => Promise.resolve({}))
-  } as unknown as HDWallet
+  } as unknown as ETHWallet
 
   it('should return a txid', async () => {
     const deps = { web3: web3Instance, adapterManager }

@@ -14,9 +14,7 @@ import { normalizeAmount } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
 import { ZrxError } from '../ZrxSwapper'
 
-export async function getZrxQuote(
-  input: GetQuoteInput
-): Promise<Quote<ChainTypes.Ethereum, SwapperType>> {
+export async function getZrxQuote(input: GetQuoteInput): Promise<Quote<SwapperType>> {
   const {
     sellAsset,
     buyAsset,

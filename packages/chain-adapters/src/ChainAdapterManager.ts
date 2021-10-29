@@ -12,8 +12,8 @@ export type UnchainedUrl = {
 export type UnchainedUrls = Partial<Record<ChainTypes, UnchainedUrl>>
 
 export class ChainAdapterManager {
-  private supported: Map<ChainTypes, () => ChainAdapter<ChainTypes>> = new Map()
-  private instances: Map<ChainTypes, ChainAdapter<ChainTypes>> = new Map()
+  private supported: Map<ChainTypes, () => ChainAdapter> = new Map()
+  private instances: Map<ChainTypes, ChainAdapter> = new Map()
 
   constructor(unchainedUrls: UnchainedUrls) {
     if (!unchainedUrls) {
@@ -55,7 +55,7 @@ export class ChainAdapterManager {
    * @param {ChainTypes} network - Coin/network symbol from Asset query
    * @param {Function} factory - A function that returns a ChainAdapter instance
    */
-  addChain<T extends ChainTypes>(chain: T, factory: () => ChainAdapter<ChainTypes>): void {
+  addChain<T extends ChainTypes>(chain: T, factory: () => ChainAdapter): void {
     if (typeof chain !== 'string' || typeof factory !== 'function') {
       throw new Error('Parameter validation error')
     }
@@ -66,7 +66,7 @@ export class ChainAdapterManager {
     return Array.from(this.supported.keys())
   }
 
-  getSupportedAdapters(): Array<() => ChainAdapter<ChainTypes>> {
+  getSupportedAdapters(): Array<() => ChainAdapter> {
     return Array.from(this.supported.values())
   }
 

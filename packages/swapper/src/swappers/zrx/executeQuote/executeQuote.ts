@@ -6,7 +6,7 @@ import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function executeQuote(
   { adapterManager }: ZrxSwapperDeps,
-  { quote, wallet }: ExecQuoteInput<ChainTypes.Ethereum, SwapperType>
+  { quote, wallet }: ExecQuoteInput<SwapperType.Zrx>
 ): Promise<ExecQuoteOutput> {
   const { sellAsset } = quote
 
@@ -16,6 +16,10 @@ export async function executeQuote(
 
   if (!sellAsset.network || !sellAsset.symbol) {
     throw new SwapError('ZrxSwapper:executeQuote sellAssetNetwork and sellAssetSymbol are required')
+  }
+
+  if (sellAsset.chain !== ChainTypes.Ethereum) {
+    throw new Error('ZrxSwapper:executeQuote only ethereum sellAssets are supported')
   }
 
   if (!quote.sellAssetAccountId) {
@@ -37,37 +41,24 @@ export async function executeQuote(
     accountNumber: Number(quote.sellAssetAccountId)
   })
 
-  let buildTxResponse, signedTx, txid
-  try {
-    buildTxResponse = await adapter.buildSendTransaction({
-      value,
-      wallet,
-      to: quote.depositAddress,
-      fee: numberToHex(quote.feeData?.chainSpecific?.gasPrice || 0),
-      gasLimit: numberToHex(quote.feeData?.chainSpecific?.estimatedGas || 0),
-      bip32Params
-    })
-  } catch (error) {
-    throw new SwapError(`executeQuote - buildSendTransaction error: ${error}`)
-  }
+  const buildTxResponse = await adapter.buildSendTransaction({
+    value,
+    wallet,
+    to: quote.depositAddress,
+    fee: numberToHex(quote.feeData?.chainSpecific?.gasPrice || 0),
+    gasLimit: numberToHex(quote.feeData?.chainSpecific?.estimatedGas || 0),
+    bip32Params
+  })
 
   const { txToSign } = buildTxResponse
 
   const txWithQuoteData = { ...txToSign, data: quote.txData ?? '' }
 
-  try {
-    signedTx = await adapter.signTransaction({ txToSign: txWithQuoteData, wallet })
-  } catch (error) {
-    throw new SwapError(`executeQuote - signTransaction error: ${error}`)
-  }
+  const signedTx = await adapter.signTransaction({ txToSign: txWithQuoteData, wallet })
 
   if (!signedTx) throw new SwapError(`executeQuote - Signed transaction is required: ${signedTx}`)
 
-  try {
-    txid = await adapter.broadcastTransaction(signedTx)
-  } catch (error) {
-    throw new SwapError(`executeQuote - broadcastTransaction error: ${error}`)
-  }
+  const txid = await adapter.broadcastTransaction(signedTx)
 
   return { txid }
 }

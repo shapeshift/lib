@@ -26,7 +26,7 @@ import { ZrxSwapperDeps } from '../ZrxSwapper'
 export async function buildQuoteTx(
   { adapterManager, web3 }: ZrxSwapperDeps,
   { input, wallet }: BuildQuoteTxInput
-): Promise<Quote<ChainTypes, SwapperType>> {
+): Promise<Quote<SwapperType.Zrx>> {
   const {
     sellAsset,
     buyAsset,
@@ -128,7 +128,7 @@ export async function buildQuoteTx(
     const { data } = quoteResponse
 
     const estimatedGas = new BigNumber(data.gas || 0)
-    const quote: Quote<ChainTypes.Ethereum, SwapperType> = {
+    const quote: Quote<SwapperType.Zrx> = {
       sellAsset,
       buyAsset,
       sellAssetAccountId,

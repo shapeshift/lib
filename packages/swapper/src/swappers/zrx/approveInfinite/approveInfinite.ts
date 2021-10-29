@@ -11,7 +11,7 @@ import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function approveInfinite(
   { adapterManager, web3 }: ZrxSwapperDeps,
-  { quote, wallet }: ApproveInfiniteInput<ChainTypes, SwapperType>
+  { quote, wallet }: ApproveInfiniteInput<SwapperType.Zrx>
 ) {
   const adapter: ChainAdapter<ChainTypes.Ethereum> = adapterManager.byChain(ChainTypes.Ethereum)
   const bip32Params = adapter.buildBIP32Params({

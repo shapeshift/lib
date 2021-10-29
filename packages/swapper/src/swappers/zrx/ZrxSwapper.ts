@@ -36,7 +36,7 @@ export class ZrxError extends Error {
   }
 }
 
-export class ZrxSwapper implements Swapper {
+export class ZrxSwapper implements Swapper<SwapperType.Zrx> {
   public static swapperName = 'ZrxSwapper'
   deps: ZrxSwapperDeps
 
@@ -44,15 +44,15 @@ export class ZrxSwapper implements Swapper {
     this.deps = deps
   }
 
-  getType() {
+  getType(): SwapperType.Zrx {
     return SwapperType.Zrx
   }
 
-  async buildQuoteTx(args: BuildQuoteTxInput): Promise<Quote<ChainTypes, SwapperType>> {
+  async buildQuoteTx(args: BuildQuoteTxInput): Promise<Quote<SwapperType>> {
     return buildQuoteTx(this.deps, args)
   }
 
-  async getQuote(input: GetQuoteInput): Promise<Quote<ChainTypes, SwapperType>> {
+  async getQuote(input: GetQuoteInput): Promise<Quote<SwapperType>> {
     return getZrxQuote(input)
   }
 
@@ -79,17 +79,15 @@ export class ZrxSwapper implements Swapper {
     return [ETH, USDC]
   }
 
-  async executeQuote(args: ExecQuoteInput<ChainTypes, SwapperType>): Promise<ExecQuoteOutput> {
+  async executeQuote(args: ExecQuoteInput<SwapperType.Zrx>): Promise<ExecQuoteOutput> {
     return executeQuote(this.deps, args)
   }
 
-  async approvalNeeded(
-    args: ApprovalNeededInput<ChainTypes, SwapperType>
-  ): Promise<ApprovalNeededOutput> {
+  async approvalNeeded(args: ApprovalNeededInput<SwapperType.Zrx>): Promise<ApprovalNeededOutput> {
     return approvalNeeded(this.deps, args)
   }
 
-  async approveInfinite(args: ApproveInfiniteInput<ChainTypes, SwapperType>): Promise<string> {
+  async approveInfinite(args: ApproveInfiniteInput<SwapperType.Zrx>): Promise<string> {
     return approveInfinite(this.deps, args)
   }
 }

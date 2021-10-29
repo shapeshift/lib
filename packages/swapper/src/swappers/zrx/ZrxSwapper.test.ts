@@ -1,5 +1,5 @@
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { ETHWallet } from '@shapeshiftoss/hdwallet-core'
 import { ChainTypes, GetQuoteInput, Quote, SwapperType } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
@@ -42,8 +42,8 @@ jest.mock('./approveInfinite/approveInfinite', () => ({
 
 describe('ZrxSwapper', () => {
   const input = <GetQuoteInput>{}
-  const quote = <Quote<ChainTypes, SwapperType>>{}
-  const wallet = <HDWallet>{}
+  const quote = <Quote<SwapperType.Zrx>>{}
+  const wallet = <ETHWallet>{}
   const web3 = <Web3>{}
   const adapterManager = <ChainAdapterManager>{}
   const zrxSwapperDeps = { web3, adapterManager }

@@ -1,5 +1,5 @@
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { ETHWallet } from '@shapeshiftoss/hdwallet-core'
 import { ChainTypes } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -182,7 +182,7 @@ describe('utils', () => {
     const walletAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
     const wallet = {
       ethGetAddress: jest.fn(() => Promise.resolve(walletAddress))
-    } as unknown as HDWallet
+    } as unknown as ETHWallet
 
     it('should throw if sellAsset.tokenId is not provided', async () => {
       const quote = {

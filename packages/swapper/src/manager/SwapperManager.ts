@@ -9,9 +9,14 @@ export class SwapperError extends Error {
   }
 }
 
-function validateSwapper(swapper: Swapper) {
+function validateSwapper<T extends SwapperType>(
+  swapperType: T,
+  swapper: Swapper
+): asserts swapper is Swapper<T> {
   if (!(typeof swapper === 'object' && typeof swapper.getType === 'function'))
     throw new SwapperError('validateSwapper - invalid swapper instance')
+  if (swapper.getType() !== swapperType)
+    throw new SwapperError('validateSwapper - wrong swapper type')
 }
 
 export class SwapperManager {
@@ -27,10 +32,10 @@ export class SwapperManager {
    * @param swapperInstance swapper instance {Swapper}
    * @returns {SwapperManager}
    */
-  addSwapper(swapperType: SwapperType, swapperInstance: Swapper): this {
+  addSwapper<T extends SwapperType>(swapperType: T, swapperInstance: Swapper<T>): this {
     const swapper = this.swappers.get(swapperType)
     if (swapper) throw new SwapperError(`addSwapper - ${swapperType} already exists`)
-    validateSwapper(swapperInstance)
+    validateSwapper(swapperType, swapperInstance)
     this.swappers.set(swapperType, swapperInstance)
     return this
   }
@@ -40,9 +45,10 @@ export class SwapperManager {
    * @param swapperType swapper type {SwapperType|string}
    * @returns {Swapper}
    */
-  getSwapper(swapperType: SwapperType): Swapper {
+  getSwapper<T extends SwapperType>(swapperType: T): Swapper<T> {
     const swapper = this.swappers.get(swapperType)
     if (!swapper) throw new SwapperError(`getSwapper - ${swapperType} doesn't exist`)
+    validateSwapper(swapperType, swapper)
     return swapper
   }
 

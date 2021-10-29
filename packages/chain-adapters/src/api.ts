@@ -1,6 +1,6 @@
 import { BIP32Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 
-export interface ChainAdapter<T extends ChainTypes> {
+interface IChainAdapter<T extends ChainTypes> {
   /**
    * Get type of adapter
    */
@@ -38,3 +38,7 @@ export interface ChainAdapter<T extends ChainTypes> {
     onError?: (err: chainAdapters.SubscribeError) => void
   ): Promise<void>
 }
+
+export type ChainAdapter<T extends ChainTypes = ChainTypes> = T extends ChainTypes
+  ? IChainAdapter<T>
+  : never

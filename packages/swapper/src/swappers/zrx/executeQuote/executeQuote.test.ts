@@ -1,5 +1,5 @@
-import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { ChainTypes, ExecQuoteInput, SwapperType } from '@shapeshiftoss/types'
+import { ETHWallet } from '@shapeshiftoss/hdwallet-core'
+import { ExecQuoteInput, SwapperType } from '@shapeshiftoss/types'
 
 import { setupQuote } from '../utils/test-data/setupSwapQuote'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
@@ -8,7 +8,7 @@ import { executeQuote } from './executeQuote'
 describe('executeQuote', () => {
   const { quoteInput, sellAsset } = setupQuote()
   const txid = '0xffaac3dd529171e8a9a2adaf36b0344877c4894720d65dfd86e4b3a56c5a857e'
-  const wallet = <HDWallet>{}
+  const wallet = <ETHWallet>{}
   const adapterManager = {
     byChain: jest.fn(() => ({
       buildBIP32Params: jest.fn(() => ({ purpose: 44, coinType: 60, accountNumber: 0 })),
@@ -33,7 +33,7 @@ describe('executeQuote', () => {
     const args = {
       quote: { ...quoteInput, sellAsset: { ...sellAsset, network: '' } },
       wallet
-    } as unknown as ExecQuoteInput<ChainTypes, SwapperType>
+    } as unknown as ExecQuoteInput<SwapperType.Zrx>
     await expect(executeQuote(deps, args)).rejects.toThrow(
       'ZrxSwapper:executeQuote sellAssetNetwork and sellAssetSymbol are required'
     )
