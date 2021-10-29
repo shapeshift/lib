@@ -9,6 +9,7 @@ We use Conventional Commits for our PR titles. This allows automated tools like 
 Please ensure your PR is named in accordance with the [@commitlint/config-conventional](https://github.com/conventional-changelog/commitlint/tree/master/@commitlint/config-conventional#type-enum) standard.
 
 Prefixes can be one of the following
+
 ```
 ['build', 'chore', 'ci', 'docs', 'feat', 'fix', 'perf', 'refactor', 'revert', 'style', 'test']
 ```

@@ -21,7 +21,7 @@ const logger = new Logger({
   level: 'debug',
   // extra fields to include on each message
   defaultFields: {
-      fn: 'defaultFn'
+    fn: 'defaultFn'
   }
 })
 ```
@@ -30,13 +30,14 @@ const logger = new Logger({
 
 ### Functions
 
-* trace
-* debug
-* info
-* warn
-* error
+- trace
+- debug
+- info
+- warn
+- error
 
 ### Examples
+
 ```javascript
 // (string)
 logger.info('my message')
@@ -55,9 +56,9 @@ logger.error(new Error('something went wrong'))
 
 // (error, object, string)
 logger.error(
-    new Error('something went wrong'),
-    { data: { orderId: '123-aef-33' }},
-    'error occured while fetching order'
+  new Error('something went wrong'),
+  { data: { orderId: '123-aef-33' } },
+  'error occured while fetching order'
 )
 /*
 {"fn":"defaultFn",
@@ -71,12 +72,11 @@ logger.error(
  */
 ```
 
-
 ## Child loggers
 
 ```javascript
 const child = logger.child({ foo: 'bar' })
-child.info({ biz: 'baz' }, 'hello!') 
+child.info({ biz: 'baz' }, 'hello!')
 // {"fn":"defaultFn","foo":"bar","biz":"baz","message":"hello!",
 //   "timestamp":"2021-10-25T17:52:29.111Z","namespace":"Parent","status":"info"}
 ```
@@ -88,8 +88,8 @@ The `namespace` configuration property can be used to keep track of the depth/ca
 When including `namespace` in a child, it APPENDS the values to the existing namespace making it easy to see in the output the chain that leads to the output.
 
 ```javascript
-const child2 = child.child({ namespace: ['MyModule', 'myFunction']})
-child.info({ biz: 'baz' }, 'hello!') 
+const child2 = child.child({ namespace: ['MyModule', 'myFunction'] })
+child.info({ biz: 'baz' }, 'hello!')
 // {"fn":"defaultFn","biz":"baz","message":"hello!",
 //   "timestamp":"2021-10-25T17:53:55.909Z","namespace":"Parent:MyModule:myFunction","status":"info"}
 ```

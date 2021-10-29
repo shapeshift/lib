@@ -9,16 +9,21 @@ yarn add @shapeshiftoss/swapper
 ## Usage
 
 ### Swapper CLI
+
 - Copy the `sample.env` to `.env`
+
 ```
 cp sample.env .env
 ```
 
 - Usage:
+
 ```
 $ swapcli [sellSymbol] [buySymbol] [sellAmount](denominated in sell asset, not wei)
 ```
+
 ie:
+
 ```
 $ swapcli ETH USDC 0.001
 ```

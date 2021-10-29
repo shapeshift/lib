@@ -17,7 +17,7 @@ describe('executeQuote', () => {
       broadcastTransaction: jest.fn(() => Promise.resolve(txid))
     }))
   }
-  const deps = ({ adapterManager } as unknown) as ZrxSwapperDeps
+  const deps = { adapterManager } as unknown as ZrxSwapperDeps
 
   it('throws an error if quote.success is false', async () => {
     const args = {
@@ -30,10 +30,10 @@ describe('executeQuote', () => {
   })
 
   it('throws an error if sellAsset.network is not provided', async () => {
-    const args = ({
+    const args = {
       quote: { ...quoteInput, sellAsset: { ...sellAsset, network: '' } },
       wallet
-    } as unknown) as ExecQuoteInput<ChainTypes, SwapperType>
+    } as unknown as ExecQuoteInput<ChainTypes, SwapperType>
     await expect(executeQuote(deps, args)).rejects.toThrow(
       'ZrxSwapper:executeQuote sellAssetNetwork and sellAssetSymbol are required'
     )

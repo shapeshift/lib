@@ -4,10 +4,7 @@
   "command": {
     "publish": {
       "message": "lib(release): release new package versions",
-      "ignoreChanges": [
-        "**/*.md",
-        "**/lib/**"
-      ]
+      "ignoreChanges": ["**/*.md", "**/lib/**"]
     }
   },
   "version": "independent"

@@ -9,12 +9,7 @@
     "plugin:jsx-a11y/recommended",
     "plugin:jest/recommended"
   ],
-  "plugins": [
-    "@typescript-eslint",
-    "prettier",
-    "jest",
-    "simple-import-sort"
-  ],
+  "plugins": ["@typescript-eslint", "prettier", "jest", "simple-import-sort"],
   "env": {
     "node": true,
     "browser": true,
@@ -31,32 +26,19 @@
     "no-console": [
       "error",
       {
-        "allow": [
-          "warn",
-          "error",
-          "info",
-          "group",
-          "groupEnd"
-        ]
+        "allow": ["warn", "error", "info", "group", "groupEnd"]
       }
     ],
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-use-before-define": "error",
     "@typescript-eslint/member-delimiter-style": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-shadow": [
-      "error"
-    ],
-    "simple-import-sort/imports": [
-      "error"
-    ]
+    "@typescript-eslint/no-shadow": ["error"],
+    "simple-import-sort/imports": ["error"]
   },
   "overrides": [
     {
-      "files": [
-        "**/*.test.{j,t}s",
-        "**/*CLI.ts"
-      ],
+      "files": ["**/*.test.{j,t}s", "**/*CLI.ts"],
       "rules": {
         "no-console": "off",
         "@typescript-eslint/no-non-null-assertion": "off"

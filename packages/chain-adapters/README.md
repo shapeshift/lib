@@ -17,17 +17,20 @@ To enable hot reloading, you need to have [WML](https://github.com/wix/wml) and 
 - Once WML is installed, add link(s) from packages to corresponding node_modules in project, ie:
 
 // TODO: update package name once lib is published
+
 ```
 wml add lib/packages/chain-adapters web/node_modules/@shapeshift/chain-adapters
 ```
 
 - Check packages are linked correctly by running `wml list`, you should see a resopnse similar to this:
+
 ```
 Links:
 enabled (0) /Users/userName/projectFolder/lib/packages/chain-adapters -> /Users/userName/projectFolder/web/node_modules/@shapeshift/chain-adapters
 ```
 
 - Start `WML`
+
 ```
 wml start
 ```

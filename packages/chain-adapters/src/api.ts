@@ -13,9 +13,7 @@ export interface ChainAdapter<T extends ChainTypes> {
   buildBIP32Params(params: Partial<BIP32Params>): BIP32Params
   getTxHistory(input: chainAdapters.TxHistoryInput): Promise<chainAdapters.TxHistoryResponse<T>>
 
-  buildSendTransaction(
-    input: chainAdapters.BuildSendTxInput
-  ): Promise<{
+  buildSendTransaction(input: chainAdapters.BuildSendTxInput): Promise<{
     txToSign: chainAdapters.ChainTxType<T>
     estimatedFees: chainAdapters.FeeDataEstimate<T>
   }>

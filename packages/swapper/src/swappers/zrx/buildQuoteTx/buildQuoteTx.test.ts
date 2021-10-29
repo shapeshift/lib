@@ -120,9 +120,9 @@ describe('buildQuoteTx', () => {
   const { quoteInput, sellAsset, buyAsset } = setupQuote()
   const { web3Instance, adapterManager } = setup()
   const walletAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
-  const wallet = ({
+  const wallet = {
     ethGetAddress: jest.fn(() => Promise.resolve(walletAddress))
-  } as unknown) as HDWallet
+  } as unknown as HDWallet
   const deps = {
     adapterManager,
     web3: web3Instance
@@ -170,7 +170,7 @@ describe('buildQuoteTx', () => {
   })
 
   it('should throw error if tokenId, symbol and network are not provided for buyAsset', async () => {
-    const input = ({
+    const input = {
       ...quoteInput,
       buyAsset: {
         ...buyAsset,
@@ -178,7 +178,7 @@ describe('buildQuoteTx', () => {
         symbol: '',
         network: ''
       }
-    } as unknown) as GetQuoteInput
+    } as unknown as GetQuoteInput
 
     await expect(buildQuoteTx(deps, { input, wallet })).rejects.toThrow(
       'ZrxSwapper:buildQuoteTx One of buyAssetContract or buyAssetSymbol or buyAssetNetwork are required'
@@ -186,7 +186,7 @@ describe('buildQuoteTx', () => {
   })
 
   it('should throw error if tokenId, symbol and network are not provided for sellAsset', async () => {
-    const input = ({
+    const input = {
       ...quoteInput,
       sellAsset: {
         ...sellAsset,
@@ -194,7 +194,7 @@ describe('buildQuoteTx', () => {
         symbol: '',
         network: ''
       }
-    } as unknown) as GetQuoteInput
+    } as unknown as GetQuoteInput
 
     await expect(buildQuoteTx(deps, { input, wallet })).rejects.toThrow(
       'ZrxSwapper:buildQuoteTx One of sellAssetContract or sellAssetSymbol or sellAssetNetwork are required'

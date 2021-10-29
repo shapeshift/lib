@@ -15,5 +15,5 @@
     // Don't coalesce watch notification
     "synchronousWatchDirectory": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*"]
 }
