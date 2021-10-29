@@ -8,8 +8,7 @@ const generateMarketCapData = async () => {
     `./src/coingecko/cachedMarketCapData.json`,
     JSON.stringify(marketCapData)
   )
+  console.info('Generated CoinGecko market cap data.')
 }
 
-generateMarketCapData().then(() => {
-  console.info('done')
-})
+generateMarketCapData()
