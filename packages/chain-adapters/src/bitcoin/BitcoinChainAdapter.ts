@@ -191,13 +191,26 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
       const signTxOutputs: BTCSignTxOutput[] = outputs.map((out) => {
         const amount = String(out.value)
         if (!out.address) {
+
+          const outputScriptType = ((x: BTCInputScriptType) => {
+            switch(x) {
+              case BTCInputScriptType.SpendWitness:
+                return BTCOutputScriptType.PayToWitness
+              case BTCInputScriptType.SpendWitness:
+                return BTCOutputScriptType.PayToWitness
+              case BTCInputScriptType.SpendWitness:
+                return BTCOutputScriptType.PayToWitness
+              default: throw new TypeError('scriptType')
+            }
+          })(scriptType)
+
           return {
             addressType: BTCOutputAddressType.Change,
             amount,
             addressNList: bip32ToAddressNList(
               `${path}/1/${String(account.chainSpecific.nextChangeAddressIndex)}`
             ),
-            scriptType: (scriptType as unknown) as BTCOutputScriptType,
+            scriptType: outputScriptType,
             isChange: true
           }
         }
