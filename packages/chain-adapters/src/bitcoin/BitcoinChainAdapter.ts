@@ -214,11 +214,20 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
             isChange: true
           }
         }
+
+        let outputScriptType: BTCOutputScriptType
+
+        if (out.address.startsWith('bc1')) outputScriptType = BTCOutputScriptType.PayToWitness
+        else if (out.address.startsWith('3'))
+          outputScriptType = BTCOutputScriptType.PayToP2SHWitness
+        else if (out.address.startsWith('1')) outputScriptType = BTCOutputScriptType.PayToAddress
+        else throw new Error('invalid address')
+
         return {
           addressType: BTCOutputAddressType.Spend,
           amount,
           address: out.address,
-          scriptType: BTCOutputScriptType.PayToWitness
+          scriptType: outputScriptType
         }
       })
 
