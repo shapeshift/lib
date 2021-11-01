@@ -11,10 +11,9 @@ import { BIP32Params, UtxoAccountType } from '@shapeshiftoss/types'
 export const utxoAccountParams = (
   asset: Asset,
   utxoAccountType: UtxoAccountType,
-  accountNumber: number,
+  accountNumber: number
 ): { bip32Params: BIP32Params; scriptType: BTCInputScriptType } => {
-
-  switch(utxoAccountType) {
+  switch (utxoAccountType) {
     case UtxoAccountType.SegwitNative:
       return {
         scriptType: BTCInputScriptType.SpendWitness,
@@ -24,26 +23,25 @@ export const utxoAccountParams = (
           accountNumber
         }
       }
-      case UtxoAccountType.SegwitP2sh:
-        return {
-          scriptType: BTCInputScriptType.SpendP2SHWitness,
-          bip32Params: {
-            purpose: 49,
-            coinType: asset.slip44,
-            accountNumber
-          }
+    case UtxoAccountType.SegwitP2sh:
+      return {
+        scriptType: BTCInputScriptType.SpendP2SHWitness,
+        bip32Params: {
+          purpose: 49,
+          coinType: asset.slip44,
+          accountNumber
         }
-        case UtxoAccountType.P2pkh:
-          return {
-            scriptType: BTCInputScriptType.SpendAddress,
-            bip32Params: {
-              purpose: 49,
-              coinType: asset.slip44,
-              accountNumber
-            }
-          }
-        default:
-          throw new TypeError('utxoAccountType')
-  
+      }
+    case UtxoAccountType.P2pkh:
+      return {
+        scriptType: BTCInputScriptType.SpendAddress,
+        bip32Params: {
+          purpose: 49,
+          coinType: asset.slip44,
+          accountNumber
+        }
+      }
+    default:
+      throw new TypeError('utxoAccountType')
   }
 }
