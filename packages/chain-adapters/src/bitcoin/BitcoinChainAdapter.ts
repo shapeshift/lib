@@ -2,7 +2,6 @@ import {
   bip32ToAddressNList,
   BTCInputScriptType,
   BTCOutputAddressType,
-  BTCOutputScriptType,
   BTCSignTx,
   BTCSignTxInput,
   BTCSignTxOutput,
@@ -18,6 +17,7 @@ import WAValidator from 'multicoin-address-validator'
 import { ChainAdapter as IChainAdapter } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
 import { toPath, toRootDerivationPath } from '../utils/bip32'
+import { toBtcOutputScriptType } from '../utils/utxoUtils'
 
 export interface ChainAdapterArgs {
   providers: {
@@ -145,6 +145,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
       const btcRecipients = recipients || [{ value: Number(value), address: to }]
 
       const path = toRootDerivationPath(bip32Params)
+      const changeScriptType = toBtcOutputScriptType(scriptType)
       const pubkey = await this.getPubKey(wallet, bip32Params, scriptType)
       const { data: utxos } = await this.providers.http.getUtxos({
         pubkey: pubkey.xpub
@@ -191,43 +192,21 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
       const signTxOutputs: BTCSignTxOutput[] = outputs.map((out) => {
         const amount = String(out.value)
         if (!out.address) {
-          const outputScriptType = ((x: BTCInputScriptType) => {
-            switch (x) {
-              case BTCInputScriptType.SpendWitness:
-                return BTCOutputScriptType.PayToWitness
-              case BTCInputScriptType.SpendP2SHWitness:
-                return BTCOutputScriptType.PayToP2SHWitness
-              case BTCInputScriptType.SpendAddress:
-                return BTCOutputScriptType.PayToAddress
-              default:
-                throw new TypeError('scriptType')
-            }
-          })(scriptType)
-
           return {
             addressType: BTCOutputAddressType.Change,
             amount,
             addressNList: bip32ToAddressNList(
               `${path}/1/${String(account.chainSpecific.nextChangeAddressIndex)}`
             ),
-            scriptType: outputScriptType,
+            scriptType: changeScriptType,
             isChange: true
           }
-        }
-
-        let outputScriptType: BTCOutputScriptType
-
-        if (out.address.startsWith('bc1')) outputScriptType = BTCOutputScriptType.PayToWitness
-        else if (out.address.startsWith('3'))
-          outputScriptType = BTCOutputScriptType.PayToP2SHWitness
-        else if (out.address.startsWith('1')) outputScriptType = BTCOutputScriptType.PayToAddress
-        else throw new Error('invalid address')
-
-        return {
-          addressType: BTCOutputAddressType.Spend,
-          amount,
-          address: out.address,
-          scriptType: outputScriptType
+        } else {
+          return {
+            addressType: BTCOutputAddressType.Spend,
+            amount,
+            address: out.address
+          }
         }
       })
 
