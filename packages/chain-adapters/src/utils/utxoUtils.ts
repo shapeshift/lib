@@ -36,7 +36,7 @@ export const utxoAccountParams = (
       return {
         scriptType: BTCInputScriptType.SpendAddress,
         bip32Params: {
-          purpose: 49,
+          purpose: 44,
           coinType: asset.slip44,
           accountNumber
         }
