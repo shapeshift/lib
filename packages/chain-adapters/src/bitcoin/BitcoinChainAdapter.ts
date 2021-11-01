@@ -16,8 +16,8 @@ import coinSelect from 'coinselect'
 import WAValidator from 'multicoin-address-validator'
 
 import { ChainAdapter as IChainAdapter } from '../api'
-import { toPath, toRootDerivationPath } from '../utils/bip32'
 import { ErrorHandler } from '../error/ErrorHandler'
+import { toPath, toRootDerivationPath } from '../utils/bip32'
 
 export interface ChainAdapterArgs {
   providers: {
@@ -197,7 +197,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
             addressNList: bip32ToAddressNList(
               `${path}/1/${String(account.chainSpecific.nextChangeAddressIndex)}`
             ),
-            scriptType: scriptType as unknown as BTCOutputScriptType,
+            scriptType: (scriptType as unknown) as BTCOutputScriptType,
             isChange: true
           }
         }
