@@ -56,26 +56,30 @@ export class CoinGeckoMarketService implements MarketService {
     const pageCount = Array(pages)
       .fill(0)
       .map((_v, i) => i + 1)
-    const combined = (
-      await Promise.all(
-        pageCount.map(async (page) => axios.get<CoinGeckoMarketCap>(urlAtPage(page)))
-      )
-    ).flat()
-    return combined
-      .map(({ data }) => data ?? []) // filter out rate limited results
-      .flat()
-      .sort((a, b) => (a.market_cap_rank > b.market_cap_rank ? 1 : -1))
-      .reduce((acc, cur) => {
-        const { id } = cur
-        try {
-          const caip19 = adapters.coingeckoToCAIP19(id)
-          const curWithoutId = omit(cur, 'id') // don't leak this through to clients
-          acc[caip19] = curWithoutId
-          return acc
-        } catch {
-          return acc // no caip found, we don't support this asset
-        }
-      }, {} as Record<string, CoinGeckoMarketCapNoId>)
+    try {
+      const combined = (
+        await Promise.all(
+          pageCount.map(async (page) => axios.get<CoinGeckoMarketCap>(urlAtPage(page)))
+        )
+      ).flat()
+      return combined
+        .map(({ data }) => data ?? []) // filter out rate limited results
+        .flat()
+        .sort((a, b) => (a.market_cap_rank > b.market_cap_rank ? 1 : -1))
+        .reduce((acc, cur) => {
+          const { id } = cur
+          try {
+            const caip19 = adapters.coingeckoToCAIP19(id)
+            const curWithoutId = omit(cur, 'id') // don't leak this through to clients
+            acc[caip19] = curWithoutId
+            return acc
+          } catch {
+            return acc // no caip found, we don't support this asset
+          }
+        }, {} as Record<string, CoinGeckoMarketCapNoId>)
+    } catch (e) {
+      return {}
+    }
   }
 
   getMarketData = async ({ chain, tokenId }: MarketDataArgs): Promise<MarketData> => {

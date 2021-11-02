@@ -84,6 +84,12 @@ describe('coingecko market service', () => {
       expect(Object.keys(result)[0]).toEqual(adapters.coingeckoToCAIP19(btc.id))
     })
 
+    it('can handle api errors', async () => {
+      mockedAxios.get.mockRejectedValue({ error: 'foo' })
+      const result = await getByMarketCap()
+      expect(Object.keys(result).length).toEqual(0)
+    })
+
     it('can handle rate limiting', async () => {
       mockedAxios.get.mockResolvedValue({ status: 429 })
       const result = await getByMarketCap()
