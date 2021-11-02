@@ -49,7 +49,7 @@ export class CoinGeckoMarketService implements MarketService {
   }
 
   async getByMarketCap(args?: GetByMarketCapArgs) {
-    const argsToUse = args ?? this.defaultGetByMarketCapArgs
+    const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
     const { pages, perPage } = argsToUse
     const urlAtPage = (page: number) =>
       `${this.baseUrl}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=${page}&sparkline=false`
