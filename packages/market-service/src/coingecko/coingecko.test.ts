@@ -1,5 +1,5 @@
 import { adapters } from '@shapeshiftoss/caip'
-import { ChainTypes, HistoryTimeframe } from '@shapeshiftoss/types'
+import { ChainTypes, CoinGeckoMarketCap, HistoryTimeframe } from '@shapeshiftoss/types'
 import axios from 'axios'
 
 import { getByMarketCap, getMarketData, getPriceHistory } from '..'
@@ -10,7 +10,7 @@ const mockedAxios = axios as jest.Mocked<typeof axios>
 
 describe('coingecko market service', () => {
   describe('getMarketCap', () => {
-    const btc = {
+    const btc: CoinGeckoMarketCap = {
       id: 'bitcoin',
       symbol: 'btc',
       name: 'Bitcoin',
@@ -39,7 +39,7 @@ describe('coingecko market service', () => {
       last_updated: '2021-10-10T22:16:39.866Z'
     }
 
-    const eth = {
+    const eth: CoinGeckoMarketCap = {
       id: 'ethereum',
       symbol: 'eth',
       name: 'Ethereum',
