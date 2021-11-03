@@ -122,6 +122,23 @@ const getTransactionMockResponse = {
   }
 }
 
+const getNetworkFeesMockedResponse = {
+  data: {
+    fast: {
+      blocksUntilConfirmation: 1,
+      satsPerKiloByte: 1024
+    },
+    average: {
+      blocksUntilConfirmation: 1,
+      satsPerKiloByte: 1024
+    },
+    slow: {
+      blocksUntilConfirmation: 1,
+      satsPerKiloByte: 1024
+    }
+  }
+}
+
 describe('BitcoinChainAdapter', () => {
   let args: bitcoin.ChainAdapterArgs = {} as any
 
@@ -244,19 +261,13 @@ describe('BitcoinChainAdapter', () => {
 
   describe('buildSendTransaction', () => {
     it('should return a formatted BTCSignTx object for a valid BuildSendTxInput parameter', async () => {
-      const mockFeeData = {
-        fast: { feePerUnit: '1' },
-        average: { feePerUnit: '1' },
-        slow: { feePerUnit: '1' }
-      }
-      mockedAxios.get.mockResolvedValueOnce(mockFeeData)
-
       const wallet: any = await getWallet()
 
       args.providers.http = {
         getUtxos: jest.fn<any, any>().mockResolvedValue(getUtxosMockResponse),
         getTransaction: jest.fn<any, any>().mockResolvedValue(getTransactionMockResponse),
-        getAccount: jest.fn().mockResolvedValue(getAccountMockResponse)
+        getAccount: jest.fn().mockResolvedValue(getAccountMockResponse),
+        getNetworkFees: jest.fn().mockResolvedValue(getNetworkFeesMockedResponse)
       } as any
 
       const adapter = new bitcoin.ChainAdapter(args)
@@ -320,19 +331,13 @@ describe('BitcoinChainAdapter', () => {
 
   describe('signTransaction', () => {
     it('should sign a properly formatted signTxInput object', async () => {
-      const mockFeeData = {
-        fast: { feePerUnit: '1' },
-        average: { feePerUnit: '1' },
-        slow: { feePerUnit: '1' }
-      }
-      mockedAxios.get.mockResolvedValueOnce(mockFeeData)
-
       const wallet: any = await getWallet()
 
       args.providers.http = {
         getUtxos: jest.fn<any, any>().mockResolvedValue(getUtxosMockResponse),
         getTransaction: jest.fn<any, any>().mockResolvedValue(getTransactionMockResponse),
-        getAccount: jest.fn().mockResolvedValue(getAccountMockResponse)
+        getAccount: jest.fn().mockResolvedValue(getAccountMockResponse),
+        getNetworkFees: jest.fn().mockResolvedValue(getNetworkFeesMockedResponse)
       } as any
 
       const adapter = new bitcoin.ChainAdapter(args)
@@ -381,14 +386,18 @@ describe('BitcoinChainAdapter', () => {
 
   describe('getFeeData', () => {
     it('should return current BTC network fees', async () => {
+      args.providers.http = {
+        getNetworkFees: jest.fn().mockResolvedValue(getNetworkFeesMockedResponse)
+      } as any
+
       const adapter = new bitcoin.ChainAdapter(args)
 
       const data = await adapter.getFeeData()
       expect(data).toEqual(
         expect.objectContaining({
-          fast: { feePerUnit: expect.any(String) },
-          average: { feePerUnit: expect.any(String) },
-          slow: { feePerUnit: expect.any(String) }
+          fast: { feePerUnit: '1' },
+          average: { feePerUnit: '1' },
+          slow: { feePerUnit: '1' }
         })
       )
     })
