@@ -315,9 +315,9 @@ describe('BitcoinChainAdapter', () => {
           fee: 226
         }
       })
-      expect(args.providers.http.getUtxos).toHaveBeenCalledTimes(2)
-      expect(args.providers.http.getAccount).toHaveBeenCalledTimes(2)
-      expect(args.providers.http.getTransaction).toHaveBeenCalledTimes(2)
+      expect(args.providers.http.getUtxos).toHaveBeenCalledTimes(1)
+      expect(args.providers.http.getAccount).toHaveBeenCalledTimes(1)
+      expect(args.providers.http.getTransaction).toHaveBeenCalledTimes(1)
     })
   })
 
