@@ -284,10 +284,6 @@ describe('BitcoinChainAdapter', () => {
         feeSpeed: chainAdapters.FeeDataKey.Slow
       }
 
-      console.log(
-        'adapter.buildSendTransaction(txInput)',
-        await adapter.buildSendTransaction(txInput)
-      )
       await expect(adapter.buildSendTransaction(txInput)).resolves.toStrictEqual({
         txToSign: {
           coin: 'Bitcoin',
