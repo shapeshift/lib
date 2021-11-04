@@ -277,12 +277,17 @@ describe('BitcoinChainAdapter', () => {
 
       const txInput: chainAdapters.BuildSendTxInput = {
         bip32Params,
-        recipients: [{ address: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4', value: 400 }],
+        to: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4',
+        value: '400',
         wallet,
         opReturnData: 'nm, u',
         feeSpeed: chainAdapters.FeeDataKey.Slow
       }
 
+      console.log(
+        'adapter.buildSendTransaction(txInput)',
+        await adapter.buildSendTransaction(txInput)
+      )
       await expect(adapter.buildSendTransaction(txInput)).resolves.toStrictEqual({
         txToSign: {
           coin: 'Bitcoin',
@@ -312,16 +317,11 @@ describe('BitcoinChainAdapter', () => {
             }
           ],
           fee: 226
-        },
-        estimatedFees: {
-          fast: { feePerUnit: '1' },
-          average: { feePerUnit: '1' },
-          slow: { feePerUnit: '1' }
         }
       })
-      expect(args.providers.http.getUtxos).toHaveBeenCalledTimes(1)
-      expect(args.providers.http.getAccount).toHaveBeenCalledTimes(1)
-      expect(args.providers.http.getTransaction).toHaveBeenCalledTimes(1)
+      expect(args.providers.http.getUtxos).toHaveBeenCalledTimes(2)
+      expect(args.providers.http.getAccount).toHaveBeenCalledTimes(2)
+      expect(args.providers.http.getTransaction).toHaveBeenCalledTimes(2)
     })
   })
 
@@ -347,7 +347,8 @@ describe('BitcoinChainAdapter', () => {
 
       const txInput: chainAdapters.BuildSendTxInput = {
         bip32Params,
-        recipients: [{ address: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4', value: 400 }],
+        to: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4',
+        value: '400',
         wallet,
         opReturnData: 'sup fool',
         feeSpeed: chainAdapters.FeeDataKey.Slow
@@ -388,12 +389,12 @@ describe('BitcoinChainAdapter', () => {
 
       const adapter = new bitcoin.ChainAdapter(args)
 
-      const data = await adapter.getFeeData()
+      const data = await adapter.getFeeData({ to: '0x', from: '0x', value: '0' })
       expect(data).toEqual(
         expect.objectContaining({
-          fast: { feePerUnit: '1' },
-          average: { feePerUnit: '1' },
-          slow: { feePerUnit: '1' }
+          average: { chainSpecific: { byteCount: '0', feePerTx: '0' }, feePerUnit: '1' },
+          fast: { chainSpecific: { byteCount: '0', feePerTx: '0' }, feePerUnit: '1' },
+          slow: { chainSpecific: { byteCount: '0', feePerTx: '0' }, feePerUnit: '1' }
         })
       )
     })

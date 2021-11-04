@@ -5,7 +5,6 @@ import {
   BTCSignTx,
   BTCSignTxInput,
   BTCSignTxOutput,
-  BTCWallet,
   HDWallet,
   PublicKey,
   supportsBTC
@@ -162,7 +161,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
         scriptType
       })
 
-      if (!from) throw new Error('from undefined')
+      if (!from) throw new Error('BitcoinChainAdapter: from undefined')
 
       const account = await this.getAccount(pubkey.xpub)
       const estimatedFees = await this.getFeeData({ to, value, from })
