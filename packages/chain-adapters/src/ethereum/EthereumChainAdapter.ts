@@ -7,7 +7,7 @@ import {
   ContractTypes,
   NetworkTypes
 } from '@shapeshiftoss/types'
-import { ethereum, unchained } from '@shapeshiftoss/unchained-client'
+import { ethereum, Token } from '@shapeshiftoss/unchained-client'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 import WAValidator from 'multicoin-address-validator'
@@ -272,16 +272,17 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     onMessage: (msg: chainAdapters.SubscribeTxsMessage<ChainTypes.Ethereum>) => void,
     onError: (err: chainAdapters.SubscribeError) => void
   ): Promise<void> {
-    // TODO: option to use sequence data for order and data validation
     await this.providers.ws.subscribeTxs(
       { topic: 'txs', addresses: input.addresses },
       (msg) => {
         const getStatus = () => {
-          const msgStatus = msg?.ethereumSpecific?.status
-          if (!msgStatus || msg.confirmations <= 0) return chainAdapters.TxStatus.pending
-          if (msgStatus === 1 && msg.confirmations > 0) return chainAdapters.TxStatus.confirmed
-          if (msgStatus <= 0) return chainAdapters.TxStatus.failed
-          return chainAdapters.TxStatus.pending
+          const msgStatus = msg.ethereumSpecific?.status
+
+          if (msgStatus === -1 && msg.confirmations <= 0) return chainAdapters.TxStatus.Pending
+          if (msgStatus === 1 && msg.confirmations > 0) return chainAdapters.TxStatus.Confirmed
+          if (msgStatus === 0) return chainAdapters.TxStatus.Failed
+
+          return chainAdapters.TxStatus.Unknown
         }
 
         const baseTx = {
@@ -297,7 +298,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           status: getStatus()
         }
 
-        const specificTx = (symbol: string, value: string, token?: unchained.Token) => ({
+        const specificTx = (symbol: string, value: string, token?: Token) => ({
           asset: token?.contract || ChainTypes.Ethereum,
           value,
           chainSpecific: {
@@ -317,7 +318,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           onMessage({
             ...baseTx,
             ...specificTx(symbol, totalValue, token),
-            type: chainAdapters.TxType.send,
+            type: chainAdapters.TxType.Send,
             to: msg?.vout?.[0]?.addresses?.[0]
           })
         })
@@ -326,7 +327,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           onMessage({
             ...baseTx,
             ...specificTx(symbol, totalValue, token),
-            type: chainAdapters.TxType.receive,
+            type: chainAdapters.TxType.Receive,
             from: msg?.vin?.[0]?.addresses?.[0]
           })
         })

@@ -104,14 +104,15 @@ export type TxFee = {
 }
 
 export enum TxType {
-  send = 'send',
-  receive = 'receive'
+  Send = 'send',
+  Receive = 'receive'
 }
 
 export enum TxStatus {
-  confirmed = 'confirmed',
-  pending = 'pending',
-  failed = 'failed'
+  Confirmed = 'confirmed',
+  Pending = 'pending',
+  Failed = 'failed',
+  Unknown = 'unknown'
 }
 
 export type SubscribeTxsMessage<T extends ChainTypes> = {

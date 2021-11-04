@@ -22,6 +22,7 @@ import { toBtcOutputScriptType } from '../utils/utxoUtils'
 export interface ChainAdapterArgs {
   providers: {
     http: bitcoin.api.V1Api
+    ws: bitcoin.ws.Client
   }
   coinName: string
 }
@@ -29,6 +30,7 @@ export interface ChainAdapterArgs {
 export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
   private readonly providers: {
     http: bitcoin.api.V1Api
+    ws: bitcoin.ws.Client
   }
 
   public static readonly defaultBIP32Params: BIP32Params = {
@@ -312,7 +314,44 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
     return { valid: false, result: chainAdapters.ValidAddressResultType.Invalid }
   }
 
-  async subscribeTxs(): Promise<void> {
-    throw new Error('Not implemented')
+  async subscribeTxs(
+    input: chainAdapters.SubscribeTxsInput,
+    onMessage: (msg: chainAdapters.SubscribeTxsMessage<ChainTypes.Bitcoin>) => void,
+    onError: (err: chainAdapters.SubscribeError) => void
+  ): Promise<void> {
+    await this.providers.ws.subscribeTxs(
+      { topic: 'txs', addresses: input.addresses },
+      (msg) => {
+        const status =
+          msg.confirmations > 0 ? chainAdapters.TxStatus.Confirmed : chainAdapters.TxStatus.Pending
+
+        const baseTx = {
+          address: msg.address,
+          asset: ChainTypes.Bitcoin,
+          blockHash: msg.blockHash,
+          blockHeight: msg.blockHeight,
+          blockTime: msg.blockTime,
+          chain: ChainTypes.Bitcoin as ChainTypes.Bitcoin,
+          confirmations: msg.confirmations,
+          network: NetworkTypes.MAINNET,
+          txid: msg.txid,
+          fee: msg.fee,
+          status
+        }
+
+        Object.entries(msg.send).forEach(([, { totalValue }]) => {
+          onMessage({ ...baseTx, type: chainAdapters.TxType.Send, value: totalValue })
+        })
+
+        Object.entries(msg.receive).forEach(([, { totalValue }]) => {
+          onMessage({
+            ...baseTx,
+            type: chainAdapters.TxType.Receive,
+            value: totalValue
+          })
+        })
+      },
+      (err) => onError({ message: err.message })
+    )
   }
 }
