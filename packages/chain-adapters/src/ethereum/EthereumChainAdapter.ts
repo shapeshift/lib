@@ -319,7 +319,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
             ...baseTx,
             ...specificTx(symbol, totalValue, token),
             type: chainAdapters.TxType.Send,
-            to: msg?.vout?.[0]?.addresses?.[0]
+            to: msg.vout[0]?.addresses?.[0]
           })
         })
 
@@ -328,7 +328,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
             ...baseTx,
             ...specificTx(symbol, totalValue, token),
             type: chainAdapters.TxType.Receive,
-            from: msg?.vin?.[0]?.addresses?.[0]
+            from: msg.vin[0]?.addresses?.[0]
           })
         })
       },

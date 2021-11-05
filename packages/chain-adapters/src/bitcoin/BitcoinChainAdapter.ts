@@ -340,14 +340,20 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
         }
 
         Object.entries(msg.send).forEach(([, { totalValue }]) => {
-          onMessage({ ...baseTx, type: chainAdapters.TxType.Send, value: totalValue })
+          onMessage({
+            ...baseTx,
+            type: chainAdapters.TxType.Send,
+            value: totalValue,
+            to: msg.vout[0]?.addresses?.[0]
+          })
         })
 
         Object.entries(msg.receive).forEach(([, { totalValue }]) => {
           onMessage({
             ...baseTx,
             type: chainAdapters.TxType.Receive,
-            value: totalValue
+            value: totalValue,
+            from: msg.vin[0]?.addresses?.[0]
           })
         })
       },
