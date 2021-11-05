@@ -1,4 +1,4 @@
-import { BTCInputScriptType, BTCSignTx, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { BTCSignTx, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 
 import { BIP32Params, ChainTypes, NetworkTypes, SwapperType } from '../base'
 import { ChainAndSwapperSpecific, ChainSpecific } from '../utility'
@@ -160,21 +160,6 @@ type ChainTxTypeInner = {
 }
 
 export type ChainTxType<T> = T extends keyof ChainTxTypeInner ? ChainTxTypeInner[T] : never
-
-// export type BuildSendTxInput = {
-//   to?: string
-//   value?: string
-//   wallet: HDWallet
-//   /** In base units **/
-//   fee?: string
-//   /** Optional param for eth txs indicating what ERC20 is being sent **/
-//   erc20ContractAddress?: string
-//   opReturnData?: string
-//   scriptType?: BTCInputScriptType
-//   gasLimit?: string
-//   bip32Params?: BIP32Params
-//   feeSpeed?: FeeDataKey
-// }
 
 export type BuildSendTxInput<T extends ChainTypes> = {
   to: string
