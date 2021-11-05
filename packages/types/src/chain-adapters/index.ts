@@ -161,21 +161,35 @@ type ChainTxTypeInner = {
 
 export type ChainTxType<T> = T extends keyof ChainTxTypeInner ? ChainTxTypeInner[T] : never
 
-export type BuildSendTxInput = {
-  to?: string
-  value?: string
+// export type BuildSendTxInput = {
+//   to?: string
+//   value?: string
+//   wallet: HDWallet
+//   /** In base units **/
+//   fee?: string
+//   /** Optional param for eth txs indicating what ERC20 is being sent **/
+//   erc20ContractAddress?: string
+//   opReturnData?: string
+//   scriptType?: BTCInputScriptType
+//   gasLimit?: string
+//   bip32Params?: BIP32Params
+//   feeSpeed?: FeeDataKey
+// }
+
+export type BuildSendTxInput<T extends ChainTypes> = {
+  to: string
+  value: string
   wallet: HDWallet
-  /** In base units **/
-  fee?: string
-  /** Optional param for eth txs indicating what ERC20 is being sent **/
-  erc20ContractAddress?: string
-  recipients?: Array<bitcoin.Recipient>
-  opReturnData?: string
-  scriptType?: BTCInputScriptType
-  gasLimit?: string
-  bip32Params?: BIP32Params
-  feeSpeed?: FeeDataKey
-}
+  bip32Params?: BIP32Params // TODO maybe these shouldnt be optional
+} & ChainSpecificBuildTxData<T>
+
+type ChainSpecificBuildTxData<T> = ChainSpecific<
+  T,
+  {
+    [ChainTypes.Ethereum]: ethereum.BuildTxInput
+    [ChainTypes.Bitcoin]: bitcoin.BuildTxInput
+  }
+>
 
 export type SignTxInput<TxType> = {
   txToSign: TxType
