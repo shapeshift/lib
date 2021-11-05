@@ -132,7 +132,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
         to,
         wallet,
         bip32Params = ChainAdapter.defaultBIP32Params,
-        chainSpecific: { satoshiPerByte, opReturnData, scriptType }
+        chainSpecific: { satoshiPerByte, scriptType }
       } = tx
 
       if (!value || !to) {
