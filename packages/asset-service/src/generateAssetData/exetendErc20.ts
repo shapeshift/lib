@@ -34,12 +34,11 @@ type YearnApiVault = {
 }
 
 export const extendErc20 = async (): Promise<TokenAsset[]> => {
-  const response: AxiosResponse = await axiosInstance.get(
+  const response: AxiosResponse = await axiosInstance.get<YearnApiVault[]>(
     `https://api.yearn.finance/v1/chains/1/vaults/all`
   )
-  const yearnVaults: YearnApiVault[] = response?.data as YearnApiVault[]
+  const yearnVaults: YearnApiVault[] = response?.data
   return yearnVaults.map((vault: YearnApiVault) => {
-    if (!vault) return {} as TokenAsset
     return {
       color: '#FFFFFF',
       contractType: ContractTypes.ERC20,
@@ -57,6 +56,6 @@ export const extendErc20 = async (): Promise<TokenAsset[]> => {
         tokenId: vault.address,
         contractType: ContractTypes.ERC20
       })
-    } as TokenAsset
+    }
   })
 }
