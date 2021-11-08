@@ -78,3 +78,9 @@ export type FeeData = {
   feePerTx: string
   byteCount: string
 }
+
+export type BuildTxInput = {
+  opReturnData?: string
+  scriptType: BTCInputScriptType
+  satoshiPerByte: string
+}

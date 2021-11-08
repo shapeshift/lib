@@ -1,3 +1,17 @@
+# [@shapeshiftoss/swapper-v1.10.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.10.0...@shapeshiftoss/swapper-v1.10.1) (2021-11-06)
+
+
+### Bug Fixes
+
+* update chain adapters and types to latest ([#195](https://github.com/shapeshift/lib/issues/195)) ([13cf236](https://github.com/shapeshift/lib/commit/13cf236846c9b827b53b109156a54c45f39a5e93))
+
+# [@shapeshiftoss/swapper-v1.10.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.9.1...@shapeshiftoss/swapper-v1.10.0) (2021-11-05)
+
+
+### Features
+
+* chain specific buildtx ([#193](https://github.com/shapeshift/lib/issues/193)) ([b2411fa](https://github.com/shapeshift/lib/commit/b2411fabd928cce5ab38dcd82d7d800941ef6b46))
+
 # [@shapeshiftoss/swapper-v1.9.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.9.0...@shapeshiftoss/swapper-v1.9.1) (2021-11-04)
 
 # [@shapeshiftoss/swapper-v1.9.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.8.0...@shapeshiftoss/swapper-v1.9.0) (2021-11-03)
