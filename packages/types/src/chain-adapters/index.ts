@@ -1,4 +1,4 @@
-import { BTCSignTx, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { BTCInputScriptType, BTCSignTx, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 
 import { BIP32Params, ChainTypes, NetworkTypes, SwapperType } from '../base'
 import { ChainAndSwapperSpecific, ChainSpecific } from '../utility'
@@ -86,7 +86,7 @@ export type QuoteFeeData<T1 extends ChainTypes, T2 extends SwapperType> = {
 // feePerUnit = sats/kbyte
 
 export type FeeData<T extends ChainTypes> = {
-  feePerUnit: string
+  txFee: string
 } & ChainSpecificFeeData<T>
 
 export type FeeDataEstimate<T extends ChainTypes> = {
@@ -204,6 +204,9 @@ export type GetFeeDataInput = {
   from: string
   to: string
   value: string
+  wallet?: HDWallet
+  bip32Params?: BIP32Params
+  scriptType?: BTCInputScriptType
 }
 
 export enum ValidAddressResultType {

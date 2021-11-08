@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   bip32ToAddressNList,
   BTCInputScriptType,
@@ -18,6 +19,7 @@ import { ChainAdapter as IChainAdapter } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
 import { toPath, toRootDerivationPath } from '../utils/bip32'
 import { toBtcOutputScriptType } from '../utils/utxoUtils'
+import BigNumber from 'bignumber.js'
 
 export interface ChainAdapterArgs {
   providers: {
@@ -139,8 +141,6 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
         throw new Error('BitcoinChainAdapter: (to and value) are required')
       }
 
-      const btcRecipients = [{ value: Number(value), address: to }]
-
       const path = toRootDerivationPath(bip32Params)
       const changeScriptType = toBtcOutputScriptType(scriptType)
       const pubkey = await this.getPubKey(wallet, bip32Params, scriptType)
@@ -169,7 +169,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
 
       const coinSelectResult = coinSelect<MappedUtxos, chainAdapters.bitcoin.Recipient>(
         mappedUtxos,
-        btcRecipients,
+        [{ value: Number(value), address: to }],
         Number(satoshiPerByte)
       )
       if (!coinSelectResult.inputs) {
@@ -177,6 +177,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
       }
 
       const { inputs, outputs, fee } = coinSelectResult
+
+      console.log('coinSelectResult fee is', fee)
 
       const signTxInputs: BTCSignTxInput[] = []
       for (const input of inputs) {
@@ -219,11 +221,10 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
         }
       })
 
-      const txToSign: BTCSignTx & { fee: number } = {
+      const txToSign: BTCSignTx = {
         coin: this.coinName,
         inputs: signTxInputs,
-        outputs: signTxOutputs,
-        fee
+        outputs: signTxOutputs
       }
 
       return { txToSign }
@@ -257,11 +258,15 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
   async getFeeData({
     to,
     from,
-    value
+    value,
+    wallet,
+    bip32Params,
+    scriptType
   }: chainAdapters.GetFeeDataInput): Promise<chainAdapters.FeeDataEstimate<ChainTypes.Bitcoin>> {
     const feeData = await this.providers.http.getNetworkFees()
 
-    if (!to || !from || !value) throw new Error('to, from and value are required')
+    if (!to || !from || !value || !wallet || !bip32Params || !scriptType)
+      throw new Error('to, from, wallet, bip32Params, scriptType and value are required')
 
     if (
       !feeData.data.fast?.satsPerKiloByte ||
@@ -275,26 +280,66 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
     const average = String(Math.round(feeData.data.average?.satsPerKiloByte / 1024))
     const slow = String(Math.round(feeData.data.slow?.satsPerKiloByte / 1024))
 
+    const fastUnsigned = await this.buildSendTransaction({
+      to,
+      value,
+      wallet,
+      bip32Params,
+      chainSpecific: { satoshiPerByte: fast, scriptType }
+    })
+
+    const averageUnsigned = await this.buildSendTransaction({
+      to,
+      value,
+      wallet,
+      bip32Params,
+      chainSpecific: { satoshiPerByte: average, scriptType }
+    })
+
+    const slowUnsigned = await this.buildSendTransaction({
+      to,
+      value,
+      wallet,
+      bip32Params,
+      chainSpecific: { satoshiPerByte: average, scriptType }
+    })
+
+    const fastSigned = await this.signTransaction({ txToSign: fastUnsigned.txToSign, wallet })
+    const averageSigned = await this.signTransaction({ txToSign: averageUnsigned.txToSign, wallet })
+    const slowSigned = await this.signTransaction({ txToSign: slowUnsigned.txToSign, wallet })
+
+    console.log('fastSigned', fastSigned)
+    console.log('averageSigned', averageSigned)
+    console.log('slowSigned', slowSigned)
+
+    const fastByteCount = String(fastSigned.length)
+    const averageByteCount = String(averageSigned.length)
+    const slowByteCount = String(slowSigned.length)
+
+    console.log('fastByteCount', fastByteCount)
+    console.log('averageByteCount', fastByteCount)
+    console.log('slowByteCount', fastByteCount)
+
     const confTimes: chainAdapters.FeeDataEstimate<ChainTypes.Bitcoin> = {
       [chainAdapters.FeeDataKey.Fast]: {
-        feePerUnit: fast,
+        txFee: new BigNumber(fast).times(fastByteCount).toPrecision(),
         chainSpecific: {
-          feePerTx: '0', // TODO,
-          byteCount: '0' // TODO
+          byteCount: String(fastByteCount),
+          satoshiPerByte: fast
         }
       },
       [chainAdapters.FeeDataKey.Average]: {
-        feePerUnit: average,
+        txFee: new BigNumber(average).times(averageByteCount).toPrecision(),
         chainSpecific: {
-          feePerTx: '0', // TODO,
-          byteCount: '0' // TODO
+          byteCount: String(averageByteCount),
+          satoshiPerByte: average
         }
       },
       [chainAdapters.FeeDataKey.Slow]: {
-        feePerUnit: slow,
+        txFee: new BigNumber(slow).times(slowByteCount).toPrecision(),
         chainSpecific: {
-          feePerTx: '0', // TODO,
-          byteCount: '0' // TODO
+          byteCount: String(slowByteCount),
+          satoshiPerByte: slow
         }
       }
     }

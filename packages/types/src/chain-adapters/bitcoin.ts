@@ -66,7 +66,7 @@ export type NodeTransaction = {
 }
 
 export type FeeData = {
-  feePerTx: string
+  satoshiPerByte: string
   byteCount: string
 }
 

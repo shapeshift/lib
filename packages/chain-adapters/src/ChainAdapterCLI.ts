@@ -101,7 +101,7 @@ const main = async () => {
         value: '1',
         wallet,
         bip32Params: ethBip32Params,
-        chainSpecific: { fee: '0', gasLimit: '0' }
+        chainSpecific: { gasPrice: '0', gasLimit: '0' }
       })
       const ethSignedTx = await ethChainAdapter.signTransaction({
         wallet,
@@ -122,7 +122,7 @@ const main = async () => {
         value: '1',
         wallet,
         bip32Params: ethBip32Params,
-        chainSpecific: { fee: '0', gasLimit: '0', erc20ContractAddress: foxContractAddress }
+        chainSpecific: { gasPrice: '0', gasLimit: '0', erc20ContractAddress: foxContractAddress }
       })
       const erc20SignedTx = await ethChainAdapter.signTransaction({
         wallet,
