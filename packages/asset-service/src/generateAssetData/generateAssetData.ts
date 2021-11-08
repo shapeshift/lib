@@ -1,4 +1,5 @@
-import { Asset, BaseAsset, ChainTypes, NetworkTypes, TokenAsset } from '@shapeshiftoss/types'
+import { TokenAsset } from '@shapeshiftoss/types'
+import { Asset, BaseAsset, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import fs from 'fs'
 import flatten from 'lodash/flatten'
 
@@ -25,7 +26,7 @@ const generateAssetData = async () => {
     (asset: Asset) => asset.caip19 === 'eip155:1/slip44:60'
   )
   if (ethereumAsset && extendedERC20Tokens?.length) {
-    ethereumAsset.tokens = flatten([ethereumAsset.tokens, extendedERC20Tokens])
+    ethereumAsset.tokens = flatten([ethereumAsset.tokens as TokenAsset[], extendedERC20Tokens])
   }
 
   await fs.promises.writeFile(
