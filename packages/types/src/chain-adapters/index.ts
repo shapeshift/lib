@@ -96,7 +96,9 @@ export type FeeDataEstimate<T extends ChainTypes> = {
 }
 
 export type SubscribeTxsInput = {
-  addresses: Array<string>
+  wallet: HDWallet
+  bip32Params?: BIP32Params
+  scriptType?: BTCInputScriptType
 }
 
 export type TxFee = {

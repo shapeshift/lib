@@ -271,8 +271,12 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     onMessage: (msg: chainAdapters.SubscribeTxsMessage<ChainTypes.Ethereum>) => void,
     onError: (err: chainAdapters.SubscribeError) => void
   ): Promise<void> {
+    const { wallet, bip32Params = ChainAdapter.defaultBIP32Params } = input
+
+    const address = await this.getAddress({ wallet, bip32Params })
+
     await this.providers.ws.subscribeTxs(
-      { topic: 'txs', addresses: input.addresses },
+      { topic: 'txs', addresses: [address] },
       (msg) => {
         const getStatus = () => {
           const msgStatus = msg.ethereumSpecific?.status

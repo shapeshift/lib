@@ -57,7 +57,7 @@ const main = async () => {
     console.log('btcAccount:', btcAccount)
 
     await btcChainAdapter.subscribeTxs(
-      { addresses: [btcAddress] },
+      { wallet, bip32Params: btcBip32Params, scriptType: BTCInputScriptType.SpendWitness },
       (msg) => console.log(msg),
       (err) => console.log(err)
     )
@@ -96,7 +96,7 @@ const main = async () => {
     console.log('ethAccount:', ethAccount)
 
     await ethChainAdapter.subscribeTxs(
-      { addresses: [ethAddress] },
+      { wallet, bip32Params: ethBip32Params },
       (msg) => console.log(msg),
       (err) => console.log(err)
     )

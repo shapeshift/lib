@@ -51,7 +51,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
     return ChainTypes.Bitcoin
   }
 
-  async getPubKey(
+  private async getPubKey(
     wallet: HDWallet,
     bip32Params: BIP32Params,
     scriptType: BTCInputScriptType
@@ -73,12 +73,15 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
     if (!pubkey) {
       return ErrorHandler('BitcoinChainAdapter: pubkey parameter is not defined')
     }
+
     try {
       const { data } = await this.providers.http.getAccount({ pubkey: pubkey })
+
       return {
         balance: data.balance,
         chain: ChainTypes.Bitcoin,
         chainSpecific: {
+          addresses: data.addresses,
           nextChangeAddressIndex: data.nextChangeAddressIndex,
           nextReceiveAddressIndex: data.nextReceiveAddressIndex
         },
@@ -349,8 +352,18 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
     onMessage: (msg: chainAdapters.SubscribeTxsMessage<ChainTypes.Bitcoin>) => void,
     onError: (err: chainAdapters.SubscribeError) => void
   ): Promise<void> {
+    const {
+      wallet,
+      bip32Params = ChainAdapter.defaultBIP32Params,
+      scriptType = BTCInputScriptType.SpendWitness
+    } = input
+
+    const { xpub } = await this.getPubKey(wallet, bip32Params, scriptType)
+    const account = await this.getAccount(xpub)
+    const addresses = (account.chainSpecific.addresses ?? []).map((address) => address.pubkey)
+
     await this.providers.ws.subscribeTxs(
-      { topic: 'txs', addresses: input.addresses },
+      { topic: 'txs', addresses },
       (msg) => {
         const status =
           msg.confirmations > 0 ? chainAdapters.TxStatus.Confirmed : chainAdapters.TxStatus.Pending
