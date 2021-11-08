@@ -4,7 +4,7 @@ import flatten from 'lodash/flatten'
 
 import { baseAssets } from './baseAssets'
 import { getTokens } from './ethTokens'
-import { extendErc20 } from './exetendErc20'
+import { extendErc20 } from './extendErc20'
 
 const generateAssetData = async () => {
   const generatedAssetData = await Promise.all(
