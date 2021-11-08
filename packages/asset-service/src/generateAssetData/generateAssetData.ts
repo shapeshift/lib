@@ -1,4 +1,3 @@
-import { TokenAsset } from '@shapeshiftoss/types'
 import { Asset, BaseAsset, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import fs from 'fs'
 import flatten from 'lodash/flatten'
