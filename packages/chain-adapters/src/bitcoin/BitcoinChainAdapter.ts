@@ -371,7 +371,6 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
           blockHash: msg.blockHash,
           blockHeight: msg.blockHeight,
           blockTime: msg.blockTime,
-          chain: ChainTypes.Bitcoin as ChainTypes.Bitcoin,
           confirmations: msg.confirmations,
           network: NetworkTypes.MAINNET,
           txid: msg.txid,
@@ -382,6 +381,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
         Object.entries(msg.send).forEach(([, { totalValue }]) => {
           onMessage({
             ...baseTx,
+            chain: ChainTypes.Bitcoin,
             type: chainAdapters.TxType.Send,
             value: totalValue,
             to: msg.vout[0]?.addresses?.[0]
@@ -391,6 +391,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
         Object.entries(msg.receive).forEach(([, { totalValue }]) => {
           onMessage({
             ...baseTx,
+            chain: ChainTypes.Bitcoin,
             type: chainAdapters.TxType.Receive,
             value: totalValue,
             from: msg.vin[0]?.addresses?.[0]

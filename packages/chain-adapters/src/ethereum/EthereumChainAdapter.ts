@@ -277,7 +277,6 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           blockHash: msg.blockHash,
           blockHeight: msg.blockHeight,
           blockTime: msg.blockTime,
-          chain: ChainTypes.Ethereum as ChainTypes.Ethereum,
           confirmations: msg.confirmations,
           network: NetworkTypes.MAINNET,
           txid: msg.txid,
@@ -305,6 +304,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           onMessage({
             ...baseTx,
             ...specificTx(symbol, totalValue, token),
+            chain: ChainTypes.Ethereum,
             type: chainAdapters.TxType.Send,
             to: msg.vout[0]?.addresses?.[0]
           })
@@ -314,6 +314,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           onMessage({
             ...baseTx,
             ...specificTx(symbol, totalValue, token),
+            chain: ChainTypes.Ethereum,
             type: chainAdapters.TxType.Receive,
             from: msg.vin[0]?.addresses?.[0]
           })
