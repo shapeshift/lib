@@ -100,7 +100,7 @@ describe('getSendMaxAmount', () => {
     expect(await getSendMaxAmount(deps, args)).toEqual(erc20Balance)
   })
 
-  it('should return max ETH balance (balance minus txFee)', async () => {
+  it('should return max ETH balance in wei (balance minus txFee)', async () => {
     const ethBalance = '1000'
     const feePerTx = '100'
     const args = {
@@ -127,7 +127,7 @@ describe('getSendMaxAmount', () => {
     )
   })
 
-  it('should return max ETH balance (balance minus txFee) with correct fee data key', async () => {
+  it('should return max ETH balance in wei (balance minus txFee) with correct fee data key', async () => {
     const ethBalance = '1000'
     const feePerTx = '500'
     const args = {

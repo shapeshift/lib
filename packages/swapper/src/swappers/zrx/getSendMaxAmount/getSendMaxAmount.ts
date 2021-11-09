@@ -50,7 +50,7 @@ export async function getSendMaxAmount(
 
   const sendMaxAmount = new BigNumber(balance).minus(estimatedFee)
 
-  if (!sendMaxAmount.gt(0)) {
+  if (sendMaxAmount.lt(0)) {
     throw new SwapError('ETH balance is less than estimated fee')
   }
 
