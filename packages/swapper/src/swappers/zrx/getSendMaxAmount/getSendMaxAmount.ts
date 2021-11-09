@@ -23,7 +23,7 @@ export async function getSendMaxAmount(
   let balance: string | undefined
   if (tokenId) {
     balance = account.chainSpecific.tokens?.find(
-      (token) => token.contract.toLowerCase() === tokenId?.toLowerCase()
+      (token) => token.contract.toLowerCase() === tokenId.toLowerCase()
     )?.balance
   } else {
     balance = account.balance
