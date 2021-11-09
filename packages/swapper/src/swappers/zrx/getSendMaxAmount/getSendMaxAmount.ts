@@ -39,17 +39,12 @@ export async function getSendMaxAmount(
     return balance
   }
 
-  let feeEstimates
-  try {
-    feeEstimates = await adapter.getFeeData({
-      to: quote.depositAddress,
-      from: ethAddress,
-      value: balance,
-      contractAddress: tokenId
-    })
-  } catch (err) {
-    throw new SwapError(`getSendMaxAmount:getFeeData - ${err}`)
-  }
+  const feeEstimates = await adapter.getFeeData({
+    to: quote.depositAddress,
+    from: ethAddress,
+    value: balance,
+    contractAddress: tokenId
+  })
 
   const estimatedFee = feeEstimates[feeEstimateKey].chainSpecific.feePerTx
 
