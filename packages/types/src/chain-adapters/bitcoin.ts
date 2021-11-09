@@ -67,11 +67,14 @@ export type NodeTransaction = {
 
 export type FeeData = {
   satoshiPerByte: string
-  byteCount: string
 }
 
 export type BuildTxInput = {
   opReturnData?: string
   scriptType: BTCInputScriptType
   satoshiPerByte: string
+}
+
+export type GetFeeDataInput = {
+  pubkey: string
 }

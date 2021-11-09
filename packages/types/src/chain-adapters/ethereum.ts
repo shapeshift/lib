@@ -50,3 +50,7 @@ export type BuildTxInput = {
   gasLimit: string
   erc20ContractAddress?: string
 }
+export type GetFeeDataInput = {
+  contractAddress?: string
+  from: string
+}

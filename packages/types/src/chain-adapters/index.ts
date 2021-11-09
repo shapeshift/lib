@@ -199,15 +199,17 @@ export type GetAddressInputBase = {
 
 export type GetAddressInput = GetAddressInputBase | bitcoin.GetAddressInput
 
-export type GetFeeDataInput = {
-  contractAddress?: string
-  from: string
+type ChainSpecificGetFeeDataInput<T> = ChainSpecific<
+  T,
+  {
+    [ChainTypes.Ethereum]: ethereum.GetFeeDataInput
+    [ChainTypes.Bitcoin]: bitcoin.GetFeeDataInput
+  }
+>
+export type GetFeeDataInput<T extends ChainTypes> = {
   to: string
   value: string
-  wallet?: HDWallet
-  bip32Params?: BIP32Params
-  scriptType?: BTCInputScriptType
-}
+} & ChainSpecificGetFeeDataInput<T>
 
 export enum ValidAddressResultType {
   Valid = 'valid',

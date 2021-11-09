@@ -185,10 +185,11 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
 
   async getFeeData({
     to,
-    from,
-    contractAddress,
-    value
-  }: chainAdapters.GetFeeDataInput): Promise<chainAdapters.FeeDataEstimate<ChainTypes.Ethereum>> {
+    value,
+    chainSpecific: { contractAddress, from }
+  }: chainAdapters.GetFeeDataInput<ChainTypes.Ethereum>): Promise<
+    chainAdapters.FeeDataEstimate<ChainTypes.Ethereum>
+  > {
     const { data: responseData } = await axios.get<chainAdapters.ZrxGasApiResponse>(
       'https://gas.api.0x.org/'
     )
