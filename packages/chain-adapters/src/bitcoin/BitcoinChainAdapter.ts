@@ -10,6 +10,7 @@ import {
   supportsBTC
 } from '@shapeshiftoss/hdwallet-core'
 import { BIP32Params, chainAdapters, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
+import { FeeData, FeeDataKey } from '@shapeshiftoss/types/dist/chain-adapters'
 import { bitcoin } from '@shapeshiftoss/unchained-client'
 import coinSelect from 'coinselect'
 import WAValidator from 'multicoin-address-validator'
@@ -287,31 +288,21 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
     ]
 
     const estimatedFees = calculateEstimatedFees(satsPerByte, utxos, value, to)
-
+    const keys = Object.values(FeeDataKey)
     /*
       Return undefined for unknown fee amounts so that we can still show any fees that we can calculate
       The consumer of this API should handle the `undefined` case and show "N/A" or something similar
      */
-    return {
-      [chainAdapters.FeeDataKey.Fast]: {
-        txFee: estimatedFees[0]?.toString(),
+    return keys.reduce((accum, key, idx) => {
+      accum[key] = {
+        txFee: estimatedFees[idx]?.toString(),
         chainSpecific: {
-          satoshiPerByte: satsPerByte[0]?.toString()
-        }
-      },
-      [chainAdapters.FeeDataKey.Average]: {
-        txFee: estimatedFees[1]?.toString(),
-        chainSpecific: {
-          satoshiPerByte: satsPerByte[1]?.toString()
-        }
-      },
-      [chainAdapters.FeeDataKey.Slow]: {
-        txFee: estimatedFees[2]?.toString(),
-        chainSpecific: {
-          satoshiPerByte: satsPerByte[2]?.toString()
+          satoshiPerByte: satsPerByte[idx]?.toString()
         }
       }
-    }
+
+      return accum
+    }, {} as Record<chainAdapters.FeeDataKey, FeeData<ChainTypes.Bitcoin>>)
   }
 
   async getAddress({
