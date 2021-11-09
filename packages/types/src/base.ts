@@ -37,8 +37,8 @@ export enum UtxoAccountType {
   P2pkh = 'P2pkh'
 }
 
+// Describes the data source for where to get the asset details or asset description.
 export enum AssetDataSource {
-  CoinCap = 'coincap',
   CoinGecko = 'coingecko',
   YearnFinance = 'yearnfinance'
 }
@@ -48,6 +48,7 @@ export enum AssetDataSource {
 type AbstractAsset = {
   caip19: string
   chain: ChainTypes
+  dataSource: AssetDataSource
   network: NetworkTypes
   symbol: string
   name: string
@@ -66,7 +67,6 @@ type OmittedTokenAssetFields = 'chain' | 'network' | 'slip44' | 'explorer' | 'ex
 type TokenAssetFields = {
   tokenId: string
   contractType: ContractTypes
-  dataSource: AssetDataSource
 }
 export type TokenAsset = Omit<AbstractAsset, OmittedTokenAssetFields> & TokenAssetFields
 export type BaseAsset = AbstractAsset & { tokens?: TokenAsset[] }

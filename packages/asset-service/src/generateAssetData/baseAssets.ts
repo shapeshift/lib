@@ -10,6 +10,7 @@ export const baseAssets: Array<BaseAsset> = [
   {
     caip19: 'eip155:1/slip44:60',
     chain: ChainTypes.Ethereum,
+    dataSource: AssetDataSource.CoinGecko,
     network: NetworkTypes.MAINNET,
     symbol: 'ETH',
     name: 'Ethereum',
@@ -26,6 +27,7 @@ export const baseAssets: Array<BaseAsset> = [
   {
     caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
     chain: ChainTypes.Bitcoin,
+    dataSource: AssetDataSource.CoinGecko,
     network: NetworkTypes.MAINNET,
     symbol: 'BTC',
     name: 'Bitcoin',
@@ -42,6 +44,7 @@ export const baseAssets: Array<BaseAsset> = [
   {
     caip19: 'bip122:000000000933ea01ad0ee984209779ba/slip44:0',
     chain: ChainTypes.Bitcoin,
+    dataSource: AssetDataSource.CoinGecko,
     network: NetworkTypes.TESTNET,
     symbol: 'BTC',
     name: 'Bitcoin',
@@ -58,6 +61,7 @@ export const baseAssets: Array<BaseAsset> = [
   {
     caip19: 'eip155:3/slip44:60',
     chain: ChainTypes.Ethereum,
+    dataSource: AssetDataSource.CoinGecko,
     network: NetworkTypes.ETH_ROPSTEN,
     symbol: 'ETH',
     name: 'Ropsten Testnet Ethereum',

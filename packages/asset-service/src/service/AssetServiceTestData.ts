@@ -13,6 +13,7 @@ export const mockBaseAssets: BaseAsset[] = [
   {
     caip19: 'eip155:1/slip44:60',
     chain: ChainTypes.Ethereum,
+    dataSource: AssetDataSource.CoinGecko,
     network: NetworkTypes.MAINNET,
     symbol: 'ETH',
     name: 'Ethereum',
@@ -59,6 +60,7 @@ export const mockBaseAssets: BaseAsset[] = [
   {
     caip19: 'eip155:3/slip44:60',
     chain: ChainTypes.Ethereum,
+    dataSource: AssetDataSource.CoinGecko,
     network: NetworkTypes.ETH_ROPSTEN,
     symbol: 'ETH',
     name: 'Ethereum',
@@ -91,6 +93,7 @@ export const mockBaseAssets: BaseAsset[] = [
   {
     caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
     chain: ChainTypes.Bitcoin,
+    dataSource: AssetDataSource.CoinGecko,
     network: NetworkTypes.MAINNET,
     symbol: 'BTC',
     name: 'Bitcoin',
@@ -107,6 +110,7 @@ export const mockBaseAssets: BaseAsset[] = [
   {
     caip19: 'bip122:000000000933ea01ad0ee984209779ba/slip44:0',
     chain: ChainTypes.Bitcoin,
+    dataSource: AssetDataSource.CoinGecko,
     network: NetworkTypes.TESTNET,
     symbol: 'BTC',
     name: 'Bitcoin',
@@ -126,6 +130,7 @@ export const mockAssets: Asset[] = [
   {
     caip19: 'eip155:1/slip44:60',
     chain: ChainTypes.Ethereum,
+    dataSource: AssetDataSource.CoinGecko,
     network: NetworkTypes.MAINNET,
     symbol: 'ETH',
     name: 'Ethereum',
@@ -146,6 +151,7 @@ export const mockAssets: Asset[] = [
     tokenId: '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
     contractType: ContractTypes.ERC20,
     color: '#FFFFFF',
+    dataSource: AssetDataSource.CoinGecko,
     secondaryColor: '#FFFFFF',
     icon: 'https://assets.coingecko.com/coins/images/12645/thumb/AAVE.png?1601374110',
     sendSupport: true,
@@ -162,6 +168,7 @@ export const mockAssets: Asset[] = [
     name: 'Fox',
     precision: 18,
     tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+    dataSource: AssetDataSource.CoinGecko,
     contractType: ContractTypes.ERC20,
     color: '#FFFFFF',
     secondaryColor: '#FFFFFF',
@@ -178,6 +185,7 @@ export const mockAssets: Asset[] = [
   {
     caip19: 'eip155:3/slip44:60',
     chain: ChainTypes.Ethereum,
+    dataSource: AssetDataSource.CoinGecko,
     network: NetworkTypes.ETH_ROPSTEN,
     symbol: 'ETH',
     name: 'Ethereum',
@@ -196,6 +204,7 @@ export const mockAssets: Asset[] = [
     name: 'Fox',
     precision: 18,
     tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+    dataSource: AssetDataSource.CoinGecko,
     contractType: ContractTypes.ERC20,
     color: '#FFFFFF',
     secondaryColor: '#FFFFFF',
@@ -212,6 +221,7 @@ export const mockAssets: Asset[] = [
   {
     caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
     chain: ChainTypes.Bitcoin,
+    dataSource: AssetDataSource.CoinGecko,
     network: NetworkTypes.MAINNET,
     symbol: 'BTC',
     name: 'Bitcoin',
@@ -228,6 +238,7 @@ export const mockAssets: Asset[] = [
   {
     caip19: 'bip122:000000000933ea01ad0ee984209779ba/slip44:0',
     chain: ChainTypes.Bitcoin,
+    dataSource: AssetDataSource.CoinGecko,
     network: NetworkTypes.TESTNET,
     symbol: 'BTC',
     name: 'Bitcoin',
@@ -247,6 +258,7 @@ export const mockIndexedAssetData: IndexedAssetData = {
   ethereum_MAINNET: {
     caip19: 'eip155:1/slip44:60',
     chain: ChainTypes.Ethereum,
+    dataSource: AssetDataSource.CoinGecko,
     network: NetworkTypes.MAINNET,
     symbol: 'ETH',
     name: 'Ethereum',
@@ -264,6 +276,7 @@ export const mockIndexedAssetData: IndexedAssetData = {
     caip19: 'eip155:1/erc20:0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
     name: 'Aave',
     precision: 18,
+    dataSource: AssetDataSource.CoinGecko,
     tokenId: '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
     contractType: ContractTypes.ERC20,
     color: '#FFFFFF',
@@ -283,6 +296,7 @@ export const mockIndexedAssetData: IndexedAssetData = {
     name: 'Fox',
     precision: 18,
     tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+    dataSource: AssetDataSource.CoinGecko,
     contractType: ContractTypes.ERC20,
     color: '#FFFFFF',
     secondaryColor: '#FFFFFF',
@@ -299,6 +313,7 @@ export const mockIndexedAssetData: IndexedAssetData = {
   ethereum_ETH_ROPSTEN: {
     caip19: 'eip155:3/slip44:60',
     chain: ChainTypes.Ethereum,
+    dataSource: AssetDataSource.CoinGecko,
     network: NetworkTypes.ETH_ROPSTEN,
     symbol: 'ETH',
     name: 'Ethereum',
@@ -317,6 +332,7 @@ export const mockIndexedAssetData: IndexedAssetData = {
     name: 'Fox',
     precision: 18,
     tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+    dataSource: AssetDataSource.CoinGecko,
     contractType: ContractTypes.ERC20,
     color: '#FFFFFF',
     secondaryColor: '#FFFFFF',
@@ -333,6 +349,7 @@ export const mockIndexedAssetData: IndexedAssetData = {
   bitcoin_MAINNET: {
     caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
     chain: ChainTypes.Bitcoin,
+    dataSource: AssetDataSource.CoinGecko,
     network: NetworkTypes.MAINNET,
     symbol: 'BTC',
     name: 'Bitcoin',
@@ -349,6 +366,7 @@ export const mockIndexedAssetData: IndexedAssetData = {
   bitcoin_TESTNET: {
     caip19: 'bip122:000000000933ea01ad0ee984209779ba/slip44:0',
     chain: ChainTypes.Bitcoin,
+    dataSource: AssetDataSource.CoinGecko,
     network: NetworkTypes.TESTNET,
     symbol: 'BTC',
     name: 'Bitcoin',

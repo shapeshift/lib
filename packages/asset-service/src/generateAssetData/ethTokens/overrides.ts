@@ -9,7 +9,7 @@ export const tokensToOverride: Array<TokenAsset> = [
     tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
     contractType: ContractTypes.ERC20,
     color: '#FFFFFF',
-    dataSource: AssetDataSource.CoinCap,
+    dataSource: AssetDataSource.CoinGecko,
     secondaryColor: '#FFFFFF',
     icon: 'https://assets.coincap.io/assets/icons/fox@2x.png',
     sendSupport: true,
