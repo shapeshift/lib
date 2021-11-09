@@ -37,6 +37,12 @@ export enum UtxoAccountType {
   P2pkh = 'P2pkh'
 }
 
+export enum AssetDataSource {
+  CoinCap = 'coincap',
+  CoinGecko = 'coingecko',
+  YearnFinance = 'yearnfinance'
+}
+
 // asset-service
 
 type AbstractAsset = {
@@ -60,6 +66,7 @@ type OmittedTokenAssetFields = 'chain' | 'network' | 'slip44' | 'explorer' | 'ex
 type TokenAssetFields = {
   tokenId: string
   contractType: ContractTypes
+  dataSource: AssetDataSource
 }
 export type TokenAsset = Omit<AbstractAsset, OmittedTokenAssetFields> & TokenAssetFields
 export type BaseAsset = AbstractAsset & { tokens?: TokenAsset[] }

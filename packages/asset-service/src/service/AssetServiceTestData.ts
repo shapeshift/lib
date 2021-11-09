@@ -1,4 +1,11 @@
-import { Asset, BaseAsset, ChainTypes, ContractTypes, NetworkTypes } from '@shapeshiftoss/types'
+import {
+  Asset,
+  AssetDataSource,
+  BaseAsset,
+  ChainTypes,
+  ContractTypes,
+  NetworkTypes
+} from '@shapeshiftoss/types'
 
 import { IndexedAssetData } from '..'
 
@@ -26,6 +33,7 @@ export const mockBaseAssets: BaseAsset[] = [
         tokenId: '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
         contractType: ContractTypes.ERC20,
         color: '#FFFFFF',
+        dataSource: AssetDataSource.CoinGecko,
         secondaryColor: '#FFFFFF',
         icon: 'https://assets.coingecko.com/coins/images/12645/thumb/AAVE.png?1601374110',
         sendSupport: true,
@@ -39,6 +47,7 @@ export const mockBaseAssets: BaseAsset[] = [
         tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
         contractType: ContractTypes.ERC20,
         color: '#FFFFFF',
+        dataSource: AssetDataSource.CoinGecko,
         secondaryColor: '#FFFFFF',
         icon: 'https://assets.coincap.io/assets/icons/fox@2x.png',
         sendSupport: true,
@@ -71,6 +80,7 @@ export const mockBaseAssets: BaseAsset[] = [
         contractType: ContractTypes.ERC20,
         color: '#FFFFFF',
         secondaryColor: '#FFFFFF',
+        dataSource: AssetDataSource.CoinGecko,
         icon: 'https://assets.coincap.io/assets/icons/fox@2x.png',
         sendSupport: true,
         receiveSupport: true,

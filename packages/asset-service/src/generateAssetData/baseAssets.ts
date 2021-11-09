@@ -1,4 +1,10 @@
-import { BaseAsset, ChainTypes, ContractTypes, NetworkTypes } from '@shapeshiftoss/types'
+import {
+  AssetDataSource,
+  BaseAsset,
+  ChainTypes,
+  ContractTypes,
+  NetworkTypes
+} from '@shapeshiftoss/types'
 
 export const baseAssets: Array<BaseAsset> = [
   {
@@ -72,6 +78,7 @@ export const baseAssets: Array<BaseAsset> = [
         tokenId: '0x1da00b6fc705f2ce4c25d7e7add25a3cc045e54a',
         contractType: ContractTypes.ERC20,
         color: '#FFFFFF',
+        dataSource: AssetDataSource.CoinGecko,
         secondaryColor: '#FFFFFF',
         icon: 'https://assets.coingecko.com/coins/images/17049/thumb/BUNNY.png?1626148809',
         sendSupport: true,
