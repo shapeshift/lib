@@ -269,9 +269,9 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
       throw new Error('undefined fee')
 
     // We have to round because coinselect library uses sats per byte which cant be decimals
-    const fastPerByte = String(Math.round(feeData.data.fast?.satsPerKiloByte / 1024))
-    const averagePerByte = String(Math.round(feeData.data.average?.satsPerKiloByte / 1024))
-    const slowPerByte = String(Math.round(feeData.data.slow?.satsPerKiloByte / 1024))
+    const fastPerByte = String(Math.round(feeData.data.fast.satsPerKiloByte / 1024))
+    const averagePerByte = String(Math.round(feeData.data.average.satsPerKiloByte / 1024))
+    const slowPerByte = String(Math.round(feeData.data.slow.satsPerKiloByte / 1024))
 
     const { data: utxos } = await this.providers.http.getUtxos({
       pubkey
