@@ -9,7 +9,7 @@ import { getSendMaxAmount } from './getSendMaxAmount'
 describe('getSendMaxAmount', () => {
   const { web3Instance, adapterManager } = setupZrxDeps()
   const { quoteInput: quote } = setupQuote()
-  const deps = { web3Instance, adapterManager }
+  const deps = { web3: web3Instance, adapterManager }
   const wallet = ({
     ethGetAddress: jest.fn(() => Promise.resolve('0xc770eefad204b5180df6a14ee197d99d808ee52d')),
     ethSignTx: jest.fn(() => Promise.resolve({}))
