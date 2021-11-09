@@ -280,20 +280,18 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
       return ErrorHandler('BitcoinChainAdapter: fee data is unavailable')
     }
 
+    const feeDataKeys = Object.values(FeeDataKey)
     // We have to round because coinselect library uses sats per byte which cant be decimals
-    const satsPerByte = [
-      convertSatsPerKilobyteToPerByte(feeData?.fast?.satsPerKiloByte),
-      convertSatsPerKilobyteToPerByte(feeData?.average?.satsPerKiloByte),
-      convertSatsPerKilobyteToPerByte(feeData?.slow?.satsPerKiloByte)
-    ]
+    const satsPerByte = feeDataKeys.map((key) =>
+      convertSatsPerKilobyteToPerByte(feeData?.[key]?.satsPerKiloByte)
+    )
 
     const estimatedFees = calculateEstimatedFees(satsPerByte, utxos, value, to)
-    const keys = Object.values(FeeDataKey)
     /*
       Return undefined for unknown fee amounts so that we can still show any fees that we can calculate
       The consumer of this API should handle the `undefined` case and show "N/A" or something similar
      */
-    return keys.reduce((accum, key, idx) => {
+    return feeDataKeys.reduce((accum, key, idx) => {
       accum[key] = {
         txFee: estimatedFees[idx]?.toString(),
         chainSpecific: {
