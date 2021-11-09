@@ -32,7 +32,7 @@ export type SendMaxAmountInput = {
   wallet: HDWallet
   quote: Quote<ChainTypes, SwapperType>
   sellAssetAccountId: string
-  feeEstimateKey: chainAdapters.FeeDataKey
+  feeEstimateKey?: chainAdapters.FeeDataKey
 }
 
 export type ZrxSwapperDeps = {

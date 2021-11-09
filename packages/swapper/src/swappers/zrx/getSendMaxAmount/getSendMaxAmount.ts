@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import { ChainTypes } from '@shapeshiftoss/types'
+import { ChainTypes, chainAdapters } from '@shapeshiftoss/types'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { SendMaxAmountInput } from '../ZrxSwapper'
 import { SwapError } from '../../../api'
@@ -11,7 +11,12 @@ type SendMaxAmountDeps = {
 
 export async function getSendMaxAmount(
   { adapterManager }: SendMaxAmountDeps,
-  { wallet, quote, sellAssetAccountId, feeEstimateKey }: SendMaxAmountInput
+  {
+    wallet,
+    quote,
+    sellAssetAccountId,
+    feeEstimateKey = chainAdapters.FeeDataKey.Average
+  }: SendMaxAmountInput
 ): Promise<string> {
   const adapter = adapterManager.byChain(ChainTypes.Ethereum)
   const bip32Params = adapter.buildBIP32Params({ accountNumber: Number(sellAssetAccountId) })
@@ -21,7 +26,7 @@ export async function getSendMaxAmount(
   const tokenId = quote.sellAsset?.tokenId
 
   let balance: string | undefined
-  if (quote.sellAsset.tokenId) {
+  if (tokenId) {
     balance = account.chainSpecific.tokens?.find(
       (token) => token.contract.toLowerCase() === tokenId?.toLowerCase()
     )?.balance
@@ -30,7 +35,12 @@ export async function getSendMaxAmount(
   }
 
   if (!balance) {
-    throw new Error(`No balance found for ${quote.sellAsset.symbol}`)
+    throw new Error(`No balance found for ${ tokenId ? quote.sellAsset.symbol : 'ETH'}`)
+  }
+
+  // return the erc20 token balance. No need to subtract the fee.
+  if (tokenId && new BigNumber(balance).gt(0)) {
+    return balance
   }
 
   let feeEstimates
@@ -46,6 +56,7 @@ export async function getSendMaxAmount(
   }
 
   const estimatedFee = feeEstimates[feeEstimateKey].chainSpecific.feePerTx
+
   const sendMaxAmount = new BigNumber(balance).minus(estimatedFee)
 
   if (!sendMaxAmount.gt(0)) {

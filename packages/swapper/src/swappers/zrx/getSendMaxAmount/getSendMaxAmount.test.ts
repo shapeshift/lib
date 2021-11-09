@@ -14,70 +14,58 @@ describe('getSendMaxAmount', () => {
     ethSignTx: jest.fn(() => Promise.resolve({}))
   } as unknown) as HDWallet
 
-  it('should throw an error if no asset balance is found', async () => {
-    const balance = '1000'
-    const args = {
-      quote: { ...quote, sellAsset: { ...quote.sellAsset, tokenId: 'notFound' } },
-      wallet,
-      sellAssetAccountId: quote.sellAssetAccountId,
-      feeEstimateKey: chainAdapters.FeeDataKey.Average
-    }
-    ;(adapterManager.byChain as jest.Mock<unknown>).mockReturnValue({
-      ...chainAdapterMockFuncs,
-      getAccount: jest.fn(() =>
-        Promise.resolve({
-          chainSpecific: { tokens: [{ contract: 'contractAddress', balance }] }
-        })
-      )
-    })
-
-    await expect(getSendMaxAmount(deps, args)).rejects.toThrow(
-      `No balance found for ${quote.sellAsset.symbol}`
-    )
-  })
-
-  it('should throw an error if no asset balance is found', async () => {
-    const balance = '1000'
-    const feePerTx = '100'
-    const args = {
-      quote: { ...quote, sellAsset: { ...quote.sellAsset, tokenId: 'notFound' } },
-      wallet,
-      sellAssetAccountId: quote.sellAssetAccountId,
-      feeEstimateKey: chainAdapters.FeeDataKey.Average
-    }
-    ;(adapterManager.byChain as jest.Mock<unknown>).mockReturnValue({
-      ...chainAdapterMockFuncs,
-      getAccount: jest.fn(() =>
-        Promise.resolve({
-          chainSpecific: { tokens: [{ contract: 'contractAddress', balance }] }
-        })
-      ),
-      getFeeData: jest.fn(() =>
-        Promise.resolve({
-          [chainAdapters.FeeDataKey.Average]: { chainSpecific: { feePerTx } }
-        })
-      )
-    })
-
-    await expect(getSendMaxAmount(deps, args)).rejects.toThrow(
-      `No balance found for ${quote.sellAsset.symbol}`
-    )
-  })
-
-  it('should throw an error if ETH balance is less than the estimated fee', async () => {
-    const balance = '100'
-    const feePerTx = '1000'
+  it('should throw an error if no erc20 asset balance is found', async () => {
+    const balance = undefined
     const args = {
       quote: { ...quote, sellAsset: { ...quote.sellAsset, tokenId: 'contractAddress' } },
       wallet,
-      sellAssetAccountId: quote.sellAssetAccountId,
-      feeEstimateKey: chainAdapters.FeeDataKey.Average
+      sellAssetAccountId: quote.sellAssetAccountId
     }
     ;(adapterManager.byChain as jest.Mock<unknown>).mockReturnValue({
       ...chainAdapterMockFuncs,
       getAccount: jest.fn(() =>
         Promise.resolve({
           chainSpecific: { tokens: [{ contract: 'contractAddress', balance }] }
+        })
+      )
+    })
+
+    await expect(getSendMaxAmount(deps, args)).rejects.toThrow(
+      `No balance found for ${quote.sellAsset.symbol}`
+    )
+  })
+
+  it('should throw an error if no ETH balance is found', async () => {
+    const args = {
+      quote: { ...quote, sellAsset: { ...quote.sellAsset, tokenId: undefined } },
+      wallet,
+      sellAssetAccountId: quote.sellAssetAccountId
+    }
+    ;(adapterManager.byChain as jest.Mock<unknown>).mockReturnValue({
+      ...chainAdapterMockFuncs,
+      getAccount: jest.fn(() =>
+        Promise.resolve({
+          balance: undefined
+        })
+      )
+    })
+
+    await expect(getSendMaxAmount(deps, args)).rejects.toThrow(`No balance found for ETH`)
+  })
+
+  it('should throw an error if ETH balance is less than the estimated fee', async () => {
+    const ethBalance = '100'
+    const feePerTx = '1000'
+    const args = {
+      quote: { ...quote, sellAsset: { ...quote.sellAsset, tokenId: undefined } },
+      wallet,
+      sellAssetAccountId: quote.sellAssetAccountId
+    }
+    ;(adapterManager.byChain as jest.Mock<unknown>).mockReturnValue({
+      ...chainAdapterMockFuncs,
+      getAccount: jest.fn(() =>
+        Promise.resolve({
+          balance: ethBalance
         })
       ),
       getFeeData: jest.fn(() =>
@@ -92,4 +80,77 @@ describe('getSendMaxAmount', () => {
     )
   })
 
+  it('should return max erc20 asset balance if tokenId is provided', async () => {
+    const erc20Balance = '100'
+    const args = {
+      quote: { ...quote, sellAsset: { ...quote.sellAsset, tokenId: 'contractAddress' } },
+      wallet,
+      sellAssetAccountId: quote.sellAssetAccountId
+    }
+    ;(adapterManager.byChain as jest.Mock<unknown>).mockReturnValue({
+      ...chainAdapterMockFuncs,
+      getAccount: jest.fn(() =>
+        Promise.resolve({
+          chainSpecific: { tokens: [{ contract: 'contractAddress', balance: erc20Balance }] }
+        })
+      )
+    })
+
+    expect(await getSendMaxAmount(deps, args)).toEqual(erc20Balance)
+  })
+
+  it('should return max ETH balance (balance minus txFee)', async () => {
+    const ethBalance = '1000'
+    const feePerTx = '100'
+    const args = {
+      quote: { ...quote, sellAsset: { ...quote.sellAsset, tokenId: undefined } },
+      wallet,
+      sellAssetAccountId: quote.sellAssetAccountId
+    }
+    ;(adapterManager.byChain as jest.Mock<unknown>).mockReturnValue({
+      ...chainAdapterMockFuncs,
+      getAccount: jest.fn(() =>
+        Promise.resolve({
+          balance: ethBalance
+        })
+      ),
+      getFeeData: jest.fn(() =>
+        Promise.resolve({
+          [chainAdapters.FeeDataKey.Average]: { chainSpecific: { feePerTx } }
+        })
+      )
+    })
+
+    expect(await getSendMaxAmount(deps, args)).toEqual(
+      new BigNumber(ethBalance).minus(feePerTx).toString()
+    )
+  })
+
+  it('should return max ETH balance (balance minus txFee) with correct fee data key', async () => {
+    const ethBalance = '1000'
+    const feePerTx = '500'
+    const args = {
+      quote: { ...quote, sellAsset: { ...quote.sellAsset, tokenId: undefined } },
+      wallet,
+      sellAssetAccountId: quote.sellAssetAccountId,
+      feeEstimateKey: chainAdapters.FeeDataKey.Fast
+    }
+    ;(adapterManager.byChain as jest.Mock<unknown>).mockReturnValue({
+      ...chainAdapterMockFuncs,
+      getAccount: jest.fn(() =>
+        Promise.resolve({
+          balance: ethBalance
+        })
+      ),
+      getFeeData: jest.fn(() =>
+        Promise.resolve({
+          [chainAdapters.FeeDataKey.Fast]: { chainSpecific: { feePerTx } }
+        })
+      )
+    })
+
+    expect(await getSendMaxAmount(deps, args)).toEqual(
+      new BigNumber(ethBalance).minus(feePerTx).toString()
+    )
+  })
 })
