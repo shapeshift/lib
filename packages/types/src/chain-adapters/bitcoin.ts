@@ -75,7 +75,7 @@ export type NodeTransaction = {
 }
 
 export type FeeData = {
-  satoshiPerByte: string
+  satoshiPerByte?: string
 }
 
 export type BuildTxInput = {

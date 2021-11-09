@@ -86,7 +86,7 @@ export type QuoteFeeData<T1 extends ChainTypes, T2 extends SwapperType> = {
 // feePerUnit = sats/kbyte
 
 export type FeeData<T extends ChainTypes> = {
-  txFee: string
+  txFee?: string
 } & ChainSpecificFeeData<T>
 
 export type FeeDataEstimate<T extends ChainTypes> = {

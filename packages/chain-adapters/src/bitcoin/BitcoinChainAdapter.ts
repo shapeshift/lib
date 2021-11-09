@@ -17,7 +17,11 @@ import WAValidator from 'multicoin-address-validator'
 import { ChainAdapter as IChainAdapter } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
 import { toPath, toRootDerivationPath } from '../utils/bip32'
-import { toBtcOutputScriptType } from '../utils/utxoUtils'
+import {
+  calculateEstimatedFees,
+  convertSatsPerKilobyteToPerByte,
+  toBtcOutputScriptType
+} from '../utils/utxoUtils'
 
 export interface ChainAdapterArgs {
   providers: {
@@ -263,65 +267,51 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
   }: chainAdapters.GetFeeDataInput<ChainTypes.Bitcoin>): Promise<
     chainAdapters.FeeDataEstimate<ChainTypes.Bitcoin>
   > {
-    const feeData = await this.providers.http.getNetworkFees()
+    if (!(to && value && pubkey)) throw new Error('to, from, value and xpub are required')
 
-    if (!to || !value || !pubkey) throw new Error('to, from, value and xpub are required')
-    if (
-      !feeData.data.fast?.satsPerKiloByte ||
-      !feeData.data.average?.satsPerKiloByte ||
-      !feeData.data.slow?.satsPerKiloByte
-    )
-      throw new Error('undefined fee')
+    let feeData: bitcoin.api.BTCNetworkFees | undefined
+    let utxos: bitcoin.api.Utxo[] | undefined
+
+    try {
+      feeData = (await this.providers.http.getNetworkFees())?.data
+      utxos = (await this.providers.http.getUtxos({ pubkey }))?.data
+    } catch (e) {
+      return ErrorHandler('BitcoinChainAdapter: fee data is unavailable')
+    }
 
     // We have to round because coinselect library uses sats per byte which cant be decimals
-    const fastPerByte = String(Math.round(feeData.data.fast.satsPerKiloByte / 1024))
-    const averagePerByte = String(Math.round(feeData.data.average.satsPerKiloByte / 1024))
-    const slowPerByte = String(Math.round(feeData.data.slow.satsPerKiloByte / 1024))
+    const satsPerByte = [
+      convertSatsPerKilobyteToPerByte(feeData?.fast?.satsPerKiloByte),
+      convertSatsPerKilobyteToPerByte(feeData?.average?.satsPerKiloByte),
+      convertSatsPerKilobyteToPerByte(feeData?.slow?.satsPerKiloByte)
+    ]
 
-    const { data: utxos } = await this.providers.http.getUtxos({
-      pubkey
-    })
+    const estimatedFees = calculateEstimatedFees(satsPerByte, utxos, value, to)
 
-    type MappedUtxos = Omit<bitcoin.api.Utxo, 'value'> & { value: number }
-    const mappedUtxos: MappedUtxos[] = utxos.map((x) => ({ ...x, value: Number(x.value) }))
-
-    const { fee: fastFee } = coinSelect<MappedUtxos, chainAdapters.bitcoin.Recipient>(
-      mappedUtxos,
-      [{ value: Number(value), address: to }],
-      Number(fastPerByte)
-    )
-    const { fee: averageFee } = coinSelect<MappedUtxos, chainAdapters.bitcoin.Recipient>(
-      mappedUtxos,
-      [{ value: Number(value), address: to }],
-      Number(averagePerByte)
-    )
-    const { fee: slowFee } = coinSelect<MappedUtxos, chainAdapters.bitcoin.Recipient>(
-      mappedUtxos,
-      [{ value: Number(value), address: to }],
-      Number(slowPerByte)
-    )
-
-    const confTimes: chainAdapters.FeeDataEstimate<ChainTypes.Bitcoin> = {
+    /*
+      Return undefined for unknown fee amounts so that we can still show any fees that we can calculate
+      The consumer of this API should handle the `undefined` case and show "N/A" or something similar
+     */
+    return {
       [chainAdapters.FeeDataKey.Fast]: {
-        txFee: String(fastFee),
+        txFee: estimatedFees[0]?.toString(),
         chainSpecific: {
-          satoshiPerByte: fastPerByte
+          satoshiPerByte: satsPerByte[0]?.toString()
         }
       },
       [chainAdapters.FeeDataKey.Average]: {
-        txFee: String(averageFee),
+        txFee: estimatedFees[1]?.toString(),
         chainSpecific: {
-          satoshiPerByte: averagePerByte
+          satoshiPerByte: satsPerByte[1]?.toString()
         }
       },
       [chainAdapters.FeeDataKey.Slow]: {
-        txFee: String(slowFee),
+        txFee: estimatedFees[2]?.toString(),
         chainSpecific: {
-          satoshiPerByte: slowPerByte
+          satoshiPerByte: satsPerByte[2]?.toString()
         }
       }
     }
-    return confTimes
   }
 
   async getAddress({
