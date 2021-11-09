@@ -11,12 +11,9 @@ import {
   GetQuoteInput,
   MinMaxOutput,
   Quote,
+  SendMaxAmountInput,
   SwapperType
 } from '@shapeshiftoss/types'
-
-// TODO:(ryankk) import from types packages
-import { SendMaxAmountInput } from './swappers/zrx/ZrxSwapper'
-
 
 export class SwapError extends Error {}
 

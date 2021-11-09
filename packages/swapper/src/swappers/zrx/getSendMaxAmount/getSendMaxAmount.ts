@@ -1,16 +1,11 @@
+import { chainAdapters, ChainTypes, SendMaxAmountInput } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
-import { ChainTypes, chainAdapters } from '@shapeshiftoss/types'
-import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import { SendMaxAmountInput } from '../ZrxSwapper'
-import { SwapError } from '../../../api'
 
-// TODO:(ryankk) move type into types package
-type SendMaxAmountDeps = {
-  adapterManager: ChainAdapterManager
-}
+import { SwapError } from '../../../api'
+import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function getSendMaxAmount(
-  { adapterManager }: SendMaxAmountDeps,
+  { adapterManager }: ZrxSwapperDeps,
   {
     wallet,
     quote,
@@ -35,7 +30,7 @@ export async function getSendMaxAmount(
   }
 
   if (!balance) {
-    throw new Error(`No balance found for ${ tokenId ? quote.sellAsset.symbol : 'ETH'}`)
+    throw new SwapError(`No balance found for ${tokenId ? quote.sellAsset.symbol : 'ETH'}`)
   }
 
   // return the erc20 token balance. No need to subtract the fee.
@@ -52,7 +47,7 @@ export async function getSendMaxAmount(
       contractAddress: tokenId
     })
   } catch (err) {
-    throw new Error(`getSendMaxAmount:getFeeData - ${err}`)
+    throw new SwapError(`getSendMaxAmount:getFeeData - ${err}`)
   }
 
   const estimatedFee = feeEstimates[feeEstimateKey].chainSpecific.feePerTx
@@ -60,7 +55,7 @@ export async function getSendMaxAmount(
   const sendMaxAmount = new BigNumber(balance).minus(estimatedFee)
 
   if (!sendMaxAmount.gt(0)) {
-    throw new Error('ETH balance is less than estimated fee')
+    throw new SwapError('ETH balance is less than estimated fee')
   }
 
   return sendMaxAmount.toString()

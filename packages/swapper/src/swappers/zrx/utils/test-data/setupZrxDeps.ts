@@ -1,5 +1,5 @@
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import { ChainTypes, chainAdapters } from '@shapeshiftoss/types'
+import { chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 jest.mock('@shapeshiftoss/chain-adapters')
@@ -24,7 +24,7 @@ export const chainAdapterMockFuncs = {
 
 // @ts-ignore
 ChainAdapterManager.mockImplementation(() => ({
-  byChain: jest.fn(() => (chainAdapterMockFuncs))
+  byChain: jest.fn(() => chainAdapterMockFuncs)
 }))
 
 export const setupZrxDeps = () => {

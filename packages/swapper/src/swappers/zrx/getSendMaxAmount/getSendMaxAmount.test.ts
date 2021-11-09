@@ -1,9 +1,10 @@
-import BigNumber from 'bignumber.js'
-import { chainAdapters } from '@shapeshiftoss/types'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { getSendMaxAmount } from './getSendMaxAmount'
-import { setupZrxDeps, chainAdapterMockFuncs } from '../utils/test-data/setupZrxDeps'
+import { chainAdapters } from '@shapeshiftoss/types'
+import BigNumber from 'bignumber.js'
+
 import { setupQuote } from '../utils/test-data/setupSwapQuote'
+import { chainAdapterMockFuncs, setupZrxDeps } from '../utils/test-data/setupZrxDeps'
+import { getSendMaxAmount } from './getSendMaxAmount'
 
 describe('getSendMaxAmount', () => {
   const { web3Instance, adapterManager } = setupZrxDeps()
