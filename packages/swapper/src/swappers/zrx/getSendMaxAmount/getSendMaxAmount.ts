@@ -41,12 +41,14 @@ export async function getSendMaxAmount(
 
   const feeEstimates = await adapter.getFeeData({
     to: quote.depositAddress,
-    from: ethAddress,
     value: balance,
-    contractAddress: tokenId
+    chainSpecific: {
+      from: ethAddress,
+      contractAddress: tokenId
+    }
   })
 
-  const estimatedFee = feeEstimates[feeEstimateKey].chainSpecific.feePerTx
+  const estimatedFee = feeEstimates[feeEstimateKey].txFee
 
   const sendMaxAmount = new BigNumber(balance).minus(estimatedFee)
 
