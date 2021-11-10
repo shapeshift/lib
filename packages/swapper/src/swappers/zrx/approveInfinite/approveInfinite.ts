@@ -4,11 +4,11 @@ import { AxiosResponse } from 'axios'
 
 import { SwapError } from '../../../api'
 import { erc20Abi } from '../utils/abi/erc20-abi'
+import { bnOrZero } from '../utils/bignumber'
 import { AFFILIATE_ADDRESS, DEFAULT_SLIPPAGE, MAX_ALLOWANCE } from '../utils/constants'
 import { grantAllowance } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
-import { bnOrZero } from '../utils/bignumber'
 
 export async function approveInfinite(
   { adapterManager, web3 }: ZrxSwapperDeps,

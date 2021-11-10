@@ -2,8 +2,8 @@ import { chainAdapters, ChainTypes, SendMaxAmountInput } from '@shapeshiftoss/ty
 import BigNumber from 'bignumber.js'
 
 import { SwapError } from '../../../api'
-import { ZrxSwapperDeps } from '../ZrxSwapper'
 import { bnOrZero } from '../utils/bignumber'
+import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function getSendMaxAmount(
   { adapterManager }: ZrxSwapperDeps,

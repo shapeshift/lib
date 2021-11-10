@@ -8,4 +8,3 @@ export const bnOrZero = (n: BigNumber.Value | null | undefined): BN => {
   const value = bn(n || 0)
   return value.isNaN() ? bn(0) : value
 }
-
