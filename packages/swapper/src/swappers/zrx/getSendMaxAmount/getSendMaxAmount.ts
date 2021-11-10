@@ -3,6 +3,7 @@ import BigNumber from 'bignumber.js'
 
 import { SwapError } from '../../../api'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
+import { bnOrZero } from '../utils/bignumber'
 
 export async function getSendMaxAmount(
   { adapterManager }: ZrxSwapperDeps,
@@ -14,7 +15,9 @@ export async function getSendMaxAmount(
   }: SendMaxAmountInput
 ): Promise<string> {
   const adapter = adapterManager.byChain(ChainTypes.Ethereum)
-  const bip32Params = adapter.buildBIP32Params({ accountNumber: Number(sellAssetAccountId) })
+  const bip32Params = adapter.buildBIP32Params({
+    accountNumber: bnOrZero(sellAssetAccountId).toNumber()
+  })
   const ethAddress = await adapter.getAddress({ wallet, bip32Params })
 
   const account = await adapter.getAccount(ethAddress)

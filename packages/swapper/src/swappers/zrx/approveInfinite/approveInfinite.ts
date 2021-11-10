@@ -8,6 +8,7 @@ import { AFFILIATE_ADDRESS, DEFAULT_SLIPPAGE, MAX_ALLOWANCE } from '../utils/con
 import { grantAllowance } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
+import { bnOrZero } from '../utils/bignumber'
 
 export async function approveInfinite(
   { adapterManager, web3 }: ZrxSwapperDeps,
@@ -15,7 +16,7 @@ export async function approveInfinite(
 ) {
   const adapter: ChainAdapter<ChainTypes.Ethereum> = adapterManager.byChain(ChainTypes.Ethereum)
   const bip32Params = adapter.buildBIP32Params({
-    accountNumber: quote.sellAssetAccountId ? Number(quote.sellAssetAccountId) : 0
+    accountNumber: bnOrZero(quote.sellAssetAccountId).toNumber()
   }) // TODO: Add account number
   const receiveAddress = await adapter.getAddress({ wallet, bip32Params })
 
