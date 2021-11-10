@@ -14,7 +14,7 @@ jest.mock('axios')
 
 const mockedAxios = axios as jest.Mocked<typeof axios>
 
-const EthAsset: Asset =   {
+const EthAsset: Asset = {
   caip19: 'eip155:3/slip44:60',
   chain: ChainTypes.Ethereum,
   dataSource: AssetDataSource.CoinGecko,
