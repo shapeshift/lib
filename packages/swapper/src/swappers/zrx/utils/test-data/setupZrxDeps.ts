@@ -17,7 +17,7 @@ export const chainAdapterMockFuncs = {
   ),
   getFeeData: jest.fn(() =>
     Promise.resolve({
-      [chainAdapters.FeeDataKey.Average]: { chainSpecific: { feePerTx: '10000' } }
+      [chainAdapters.FeeDataKey.Average]: { txFee: '10000' }
     })
   )
 }

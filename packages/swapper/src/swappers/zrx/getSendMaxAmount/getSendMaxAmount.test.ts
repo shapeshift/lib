@@ -56,7 +56,7 @@ describe('getSendMaxAmount', () => {
 
   it('should throw an error if ETH balance is less than the estimated fee', async () => {
     const ethBalance = '100'
-    const feePerTx = '1000'
+    const txFee = '1000'
     const args = {
       quote: { ...quote, sellAsset: { ...quote.sellAsset, tokenId: undefined } },
       wallet,
@@ -71,7 +71,7 @@ describe('getSendMaxAmount', () => {
       ),
       getFeeData: jest.fn(() =>
         Promise.resolve({
-          [chainAdapters.FeeDataKey.Average]: { chainSpecific: { feePerTx } }
+          [chainAdapters.FeeDataKey.Average]: { txFee }
         })
       )
     })
@@ -102,7 +102,7 @@ describe('getSendMaxAmount', () => {
 
   it('should return max ETH balance in wei (balance minus txFee)', async () => {
     const ethBalance = '1000'
-    const feePerTx = '100'
+    const txFee = '100'
     const args = {
       quote: { ...quote, sellAsset: { ...quote.sellAsset, tokenId: undefined } },
       wallet,
@@ -117,19 +117,19 @@ describe('getSendMaxAmount', () => {
       ),
       getFeeData: jest.fn(() =>
         Promise.resolve({
-          [chainAdapters.FeeDataKey.Average]: { chainSpecific: { feePerTx } }
+          [chainAdapters.FeeDataKey.Average]: { txFee }
         })
       )
     })
 
     expect(await getSendMaxAmount(deps, args)).toEqual(
-      new BigNumber(ethBalance).minus(feePerTx).toString()
+      new BigNumber(ethBalance).minus(txFee).toString()
     )
   })
 
   it('should return max ETH balance in wei (balance minus txFee) with correct fee data key', async () => {
     const ethBalance = '1000'
-    const feePerTx = '500'
+    const txFee = '500'
     const args = {
       quote: { ...quote, sellAsset: { ...quote.sellAsset, tokenId: undefined } },
       wallet,
@@ -145,13 +145,13 @@ describe('getSendMaxAmount', () => {
       ),
       getFeeData: jest.fn(() =>
         Promise.resolve({
-          [chainAdapters.FeeDataKey.Fast]: { chainSpecific: { feePerTx } }
+          [chainAdapters.FeeDataKey.Fast]: { txFee }
         })
       )
     })
 
     expect(await getSendMaxAmount(deps, args)).toEqual(
-      new BigNumber(ethBalance).minus(feePerTx).toString()
+      new BigNumber(ethBalance).minus(txFee).toString()
     )
   })
 })
