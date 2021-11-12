@@ -197,7 +197,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
 
     if (!fees) throw new TypeError('ETH Gas Fees should always exist')
 
-    const data = contractData ? contractData : await getErc20Data(to, value, contractAddress)
+    const data = contractData ?? (await getErc20Data(to, value, contractAddress))
 
     const isErc20Send = !!contractAddress
     const { data: gasLimit } = await this.providers.http.estimateGas({
