@@ -392,7 +392,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
     const { xpub } = await this.getPublicKey(wallet, bip32Params, accountType)
     const account = await this.getAccount(xpub)
     const addresses = (account.chainSpecific.addresses ?? []).map((address) => address.pubkey)
-    const id = `${toRootDerivationPath(bip32Params)}/${scriptType}`
+    const id = `${toRootDerivationPath(bip32Params)}/${accountType}`
 
     await this.providers.ws.subscribeTxs(
       { topic: 'txs', addresses, id },
