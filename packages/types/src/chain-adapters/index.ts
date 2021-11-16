@@ -136,12 +136,12 @@ export type SubscribeTxsMessage<T extends ChainTypes> = {
 } & TxTransfer<T>
 
 export type TradeDetails = {
-  buyAmount?: string
-  buyAsset?: string
-  dexName?: string
-  feeAmount?: string
-  sellAmount?: string
-  sellAsset?: string
+  buyAmount: string
+  buyAsset: string
+  dexName: string
+  feeAmount: string
+  sellAmount: string
+  sellAsset: string
 }
 
 type ChainSpecificTxTransfer<T> = ChainSpecific<

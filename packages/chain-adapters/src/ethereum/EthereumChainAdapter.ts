@@ -302,21 +302,21 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
         })
 
         if (msg.trade) {
-          Object.entries(msg.trade).forEach(([symbol, { totalValue, token }]) => {
-            onMessage({
-              ...baseTx,
-              ...specificTx(symbol, totalValue, token),
-              chain: ChainTypes.Ethereum,
-              type: chainAdapters.TxType.Trade,
-              tradeDetails: {
-                buyAmount: msg.trade?.buyAmount,
-                buyAsset: msg.trade?.buyAsset,
-                dexName: msg.trade?.dexName,
-                feeAmount: msg.trade?.feeAmount,
-                sellAmount: msg.trade?.sellAmount,
-                sellAsset: msg.trade?.sellAsset
-              }
-            })
+          onMessage({
+            ...baseTx,
+            asset: ChainTypes.Ethereum,
+            chain: ChainTypes.Ethereum,
+            value: '0',
+            chainSpecific: {},
+            type: chainAdapters.TxType.Trade,
+            tradeDetails: {
+              buyAmount: msg.trade.buyAmount,
+              buyAsset: msg.trade.buyAsset,
+              dexName: msg.trade.dexName,
+              feeAmount: msg.trade.feeAmount,
+              sellAmount: msg.trade.sellAmount,
+              sellAsset: msg.trade.sellAsset
+            }
           })
         }
 
