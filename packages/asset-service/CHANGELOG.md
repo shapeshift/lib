@@ -1,3 +1,17 @@
+# [@shapeshiftoss/asset-service-v1.7.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v1.7.1...@shapeshiftoss/asset-service-v1.7.2) (2021-11-15)
+
+
+### Bug Fixes
+
+* update deps ([#228](https://github.com/shapeshift/lib/issues/228)) ([e75d49b](https://github.com/shapeshift/lib/commit/e75d49bac8cef6387bd7934c26f38010326a617e))
+
+# [@shapeshiftoss/asset-service-v1.7.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v1.7.0...@shapeshiftoss/asset-service-v1.7.1) (2021-11-12)
+
+
+### Bug Fixes
+
+* bump types ([#224](https://github.com/shapeshift/lib/issues/224)) ([fc6ca1c](https://github.com/shapeshift/lib/commit/fc6ca1c5940701131f8421ddbe35f5f8e2d851d3))
+
 # [@shapeshiftoss/asset-service-v1.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v1.6.1...@shapeshiftoss/asset-service-v1.7.0) (2021-11-11)
 
 

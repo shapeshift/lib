@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/asset-service",
-  "version": "1.7.0",
+  "version": "1.7.2",
   "description": "Service to return supported asset details",
   "homepage": "",
   "license": "MIT",
@@ -25,8 +25,8 @@
     "type-check": "tsc --project ./tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@shapeshiftoss/caip": "^1.3.0",
-    "@shapeshiftoss/types": "^1.11.3",
+    "@shapeshiftoss/caip": "^1.4.1",
+    "@shapeshiftoss/types": "^1.11.4",
     "axios": "^0.24.0",
     "lodash": "^4.17.21"
   },

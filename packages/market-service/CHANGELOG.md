@@ -1,3 +1,17 @@
+# [@shapeshiftoss/market-service-v1.3.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.3.1...@shapeshiftoss/market-service-v1.3.2) (2021-11-15)
+
+
+### Bug Fixes
+
+* update deps ([#228](https://github.com/shapeshift/lib/issues/228)) ([e75d49b](https://github.com/shapeshift/lib/commit/e75d49bac8cef6387bd7934c26f38010326a617e))
+
+# [@shapeshiftoss/market-service-v1.3.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.3.0...@shapeshiftoss/market-service-v1.3.1) (2021-11-12)
+
+
+### Bug Fixes
+
+* bump types ([#224](https://github.com/shapeshift/lib/issues/224)) ([fc6ca1c](https://github.com/shapeshift/lib/commit/fc6ca1c5940701131f8421ddbe35f5f8e2d851d3))
+
 # [@shapeshiftoss/market-service-v1.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.2.2...@shapeshiftoss/market-service-v1.3.0) (2021-11-10)
 
 

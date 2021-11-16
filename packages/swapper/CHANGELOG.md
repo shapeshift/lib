@@ -1,3 +1,26 @@
+# [@shapeshiftoss/swapper-v1.11.5](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.11.4...@shapeshiftoss/swapper-v1.11.5) (2021-11-16)
+
+
+### Bug Fixes
+
+* update getSendMaxAmount to pass quote txData to getFeeData ([#227](https://github.com/shapeshift/lib/issues/227)) ([8256fa9](https://github.com/shapeshift/lib/commit/8256fa9daaee9f9c6cf6326cdd4ed1bcaef401a2))
+
+# [@shapeshiftoss/swapper-v1.11.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.11.3...@shapeshiftoss/swapper-v1.11.4) (2021-11-15)
+
+# [@shapeshiftoss/swapper-v1.11.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.11.2...@shapeshiftoss/swapper-v1.11.3) (2021-11-15)
+
+
+### Bug Fixes
+
+* update deps ([#228](https://github.com/shapeshift/lib/issues/228)) ([e75d49b](https://github.com/shapeshift/lib/commit/e75d49bac8cef6387bd7934c26f38010326a617e))
+
+# [@shapeshiftoss/swapper-v1.11.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.11.1...@shapeshiftoss/swapper-v1.11.2) (2021-11-12)
+
+
+### Bug Fixes
+
+* bump types ([#224](https://github.com/shapeshift/lib/issues/224)) ([fc6ca1c](https://github.com/shapeshift/lib/commit/fc6ca1c5940701131f8421ddbe35f5f8e2d851d3))
+
 # [@shapeshiftoss/swapper-v1.11.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.11.0...@shapeshiftoss/swapper-v1.11.1) (2021-11-12)
 
 

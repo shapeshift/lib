@@ -1,3 +1,19 @@
+# [@shapeshiftoss/chain-adapters-v1.15.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.15.3...@shapeshiftoss/chain-adapters-v1.15.4) (2021-11-15)
+
+# [@shapeshiftoss/chain-adapters-v1.15.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.15.2...@shapeshiftoss/chain-adapters-v1.15.3) (2021-11-12)
+
+
+### Bug Fixes
+
+* bump types ([#224](https://github.com/shapeshift/lib/issues/224)) ([fc6ca1c](https://github.com/shapeshift/lib/commit/fc6ca1c5940701131f8421ddbe35f5f8e2d851d3))
+
+# [@shapeshiftoss/chain-adapters-v1.15.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.15.1...@shapeshiftoss/chain-adapters-v1.15.2) (2021-11-12)
+
+
+### Bug Fixes
+
+* gas fees erc20 ([#223](https://github.com/shapeshift/lib/issues/223)) ([fc0159d](https://github.com/shapeshift/lib/commit/fc0159d9600efdba34d60e6edda0b3ccd6031359))
+
 # [@shapeshiftoss/chain-adapters-v1.15.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.15.0...@shapeshiftoss/chain-adapters-v1.15.1) (2021-11-12)
 
 
