@@ -443,9 +443,9 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
 
     const {
       bip32Params = ChainAdapter.defaultBIP32Params,
-      scriptType = BTCInputScriptType.SpendWitness
+      accountType = UtxoAccountType.SegwitNative
     } = input
-    const subscriptionId = `${toRootDerivationPath(bip32Params)}/${scriptType}`
+    const subscriptionId = `${toRootDerivationPath(bip32Params)}/${accountType}`
 
     this.providers.ws.unsubscribeTxs(subscriptionId, { topic: 'txs', addresses: [] })
   }
