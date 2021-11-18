@@ -414,7 +414,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
           status
         }
 
-        // treat all send transfers as a single transaction send from one account
+        // treat all send transfers as same account
         onMessage({
           ...baseTx,
           chain: ChainTypes.Bitcoin,
