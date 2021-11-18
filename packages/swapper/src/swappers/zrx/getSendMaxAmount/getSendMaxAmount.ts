@@ -63,7 +63,8 @@ export async function getSendMaxAmount(
   const paddedFee = new BigNumber(estimatedFee).times(ETH_FEE_ESTIMATE_PADDING)
   const sendMaxAmount = new BigNumber(balance).minus(paddedFee)
 
-  if (sendMaxAmount.lt(0)) {
+  // gte covers if sendMaxAmount is NaN
+  if (!sendMaxAmount.gte(0)) {
     throw new SwapError('ETH balance is less than estimated fee')
   }
 
