@@ -22,6 +22,11 @@ export async function getSendMaxAmount(
   const ethAddress = await adapter.getAddress({ wallet, bip32Params })
 
   const account = await adapter.getAccount(ethAddress)
+
+  if (!quote.sellAsset) {
+    throw new SwapError('quote.sellAsset is required')
+  }
+
   const tokenId = quote.sellAsset?.tokenId
 
   let balance: string | undefined
@@ -47,14 +52,16 @@ export async function getSendMaxAmount(
     throw new SwapError('quote.txData is required to get correct fee estimate')
   }
 
+
   const feeEstimates = await adapter.getFeeData({
     to: quote.depositAddress,
-    value: quote.sellAmount,
+    value: bnOrZero(quote.sellAmount).toString(),
     chainSpecific: {
       from: ethAddress,
       contractData: quote.txData
     }
   })
+
 
   const estimatedFee = feeEstimates[feeEstimateKey].txFee
 
