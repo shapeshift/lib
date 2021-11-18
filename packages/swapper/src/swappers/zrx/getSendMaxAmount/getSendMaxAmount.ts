@@ -48,7 +48,7 @@ export async function getSendMaxAmount(
 
   const feeEstimates = await adapter.getFeeData({
     to: quote.depositAddress,
-    value: balance,
+    value: quote.sellAmount,
     chainSpecific: {
       from: ethAddress,
       contractData: quote.txData
@@ -56,7 +56,11 @@ export async function getSendMaxAmount(
   })
 
   const estimatedFee = feeEstimates[feeEstimateKey].txFee
-  const sendMaxAmount = new BigNumber(balance).minus(estimatedFee)
+
+  //(ryankk) We need to pad the fee because the fee estimate is based off of a smaller trade. We should
+  // look at this post bounty to see if we can be more accurate.
+  const paddedFee = new BigNumber(estimatedFee).times(1.2).toString()
+  const sendMaxAmount = new BigNumber(balance).minus(paddedFee)
 
   if (sendMaxAmount.lt(0)) {
     throw new SwapError('ETH balance is less than estimated fee')
