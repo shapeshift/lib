@@ -52,7 +52,6 @@ export async function getSendMaxAmount(
     throw new SwapError('quote.txData is required to get correct fee estimate')
   }
 
-
   const feeEstimates = await adapter.getFeeData({
     to: quote.depositAddress,
     value: bnOrZero(quote.sellAmount).toString(),
@@ -61,7 +60,6 @@ export async function getSendMaxAmount(
       contractData: quote.txData
     }
   })
-
 
   const estimatedFee = feeEstimates[feeEstimateKey].txFee
 
