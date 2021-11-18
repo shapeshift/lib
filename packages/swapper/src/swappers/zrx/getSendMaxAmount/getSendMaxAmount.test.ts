@@ -2,13 +2,13 @@ import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { chainAdapters } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 
-import { ETH_ESTIMATE_PADDING } from '../utils/constants'
+import { ETH_FEE_ESTIMATE_PADDING } from '../utils/constants'
 import { setupQuote } from '../utils/test-data/setupSwapQuote'
 import { chainAdapterMockFuncs, setupZrxDeps } from '../utils/test-data/setupZrxDeps'
 import { getSendMaxAmount } from './getSendMaxAmount'
 
 const createPaddedFee = (value: string) => {
-  return new BigNumber(value).times(ETH_ESTIMATE_PADDING).toString()
+  return new BigNumber(value).times(ETH_FEE_ESTIMATE_PADDING).toString()
 }
 
 describe('getSendMaxAmount', () => {
