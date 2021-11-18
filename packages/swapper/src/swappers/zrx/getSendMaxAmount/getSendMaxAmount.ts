@@ -1,9 +1,9 @@
 import { chainAdapters, ChainTypes, SendMaxAmountInput } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
-import { ETH_ESTIMATE_PADDING } from '../utils/constants'
 
 import { SwapError } from '../../../api'
 import { bnOrZero } from '../utils/bignumber'
+import { ETH_ESTIMATE_PADDING } from '../utils/constants'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function getSendMaxAmount(
