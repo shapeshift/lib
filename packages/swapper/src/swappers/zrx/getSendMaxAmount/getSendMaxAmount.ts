@@ -1,5 +1,6 @@
 import { chainAdapters, ChainTypes, SendMaxAmountInput } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
+import { ETH_ESTIMATE_PADDING } from '../utils/constants'
 
 import { SwapError } from '../../../api'
 import { bnOrZero } from '../utils/bignumber'
@@ -57,9 +58,9 @@ export async function getSendMaxAmount(
 
   const estimatedFee = feeEstimates[feeEstimateKey].txFee
 
-  //(ryankk) We need to pad the fee because the fee estimate is based off of a smaller trade. We should
-  // look at this post bounty to see if we can be more accurate.
-  const paddedFee = new BigNumber(estimatedFee).times(1.2).toString()
+  // (ryankk) We need to pad the fee for ETH max sends because the fee estimate is based off
+  // of a minimum quote value (quote.sellAmount) and not the users full ETH balance.
+  const paddedFee = new BigNumber(estimatedFee).times(ETH_ESTIMATE_PADDING)
   const sendMaxAmount = new BigNumber(balance).minus(paddedFee)
 
   if (sendMaxAmount.lt(0)) {
