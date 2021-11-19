@@ -167,7 +167,7 @@ export const mockAssets: Asset[] = [
     slip44: 60,
     explorer: 'https://etherscan.io',
     explorerTxLink: 'https://etherscan.io/tx/',
-    explorerAddressLink: 'https://etherscan.io/address/',
+    explorerAddressLink: 'https://etherscan.io/address/'
   },
   {
     caip19: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
@@ -187,7 +187,7 @@ export const mockAssets: Asset[] = [
     slip44: 60,
     explorer: 'https://etherscan.io',
     explorerTxLink: 'https://etherscan.io/tx/',
-    explorerAddressLink: 'https://etherscan.io/address/',
+    explorerAddressLink: 'https://etherscan.io/address/'
   },
   {
     caip19: 'eip155:3/slip44:60',
@@ -225,7 +225,7 @@ export const mockAssets: Asset[] = [
     slip44: 60,
     explorer: 'https://etherscan.io',
     explorerTxLink: 'https://etherscan.io/tx/',
-    explorerAddressLink: 'https://etherscan.io/address/',
+    explorerAddressLink: 'https://etherscan.io/address/'
   },
   {
     caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
@@ -360,7 +360,7 @@ export const mockIndexedAssetData: IndexedAssetData = {
     slip44: 60,
     explorer: 'https://etherscan.io',
     explorerTxLink: 'https://etherscan.io/tx/',
-    explorerAddressLink: 'https://etherscan.io/address/',
+    explorerAddressLink: 'https://etherscan.io/address/'
   },
   bitcoin_MAINNET: {
     caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',

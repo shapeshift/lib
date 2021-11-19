@@ -64,7 +64,13 @@ type AbstractAsset = {
   receiveSupport: boolean
 }
 
-type OmittedTokenAssetFields = 'chain' | 'network' | 'slip44' | 'explorer' | 'explorerTxLink' | 'explorerAddressLink'
+type OmittedTokenAssetFields =
+  | 'chain'
+  | 'network'
+  | 'slip44'
+  | 'explorer'
+  | 'explorerTxLink'
+  | 'explorerAddressLink'
 type TokenAssetFields = {
   tokenId: string
   contractType: ContractTypes
