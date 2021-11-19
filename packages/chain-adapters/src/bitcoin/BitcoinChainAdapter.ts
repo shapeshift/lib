@@ -5,6 +5,7 @@ import {
   BTCSignTxInput,
   BTCSignTxOutput,
   HDWallet,
+  mustBeDefined,
   PublicKey,
   supportsBTC
 } from '@shapeshiftoss/hdwallet-core'
@@ -159,7 +160,6 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
         throw new Error('BitcoinChainAdapter: (to and value) are required')
       }
 
-      const path = toRootDerivationPath(bip32Params)
       const pubkey = await this.getPublicKey(wallet, bip32Params, accountType)
       const { data: utxos } = await this.providers.http.getUtxos({
         pubkey: pubkey.xpub
@@ -213,7 +213,11 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
             addressType: BTCOutputAddressType.Change,
             amount,
             addressNList: bip32ToAddressNList(
-              `${path}/1/${String(account.chainSpecific.nextChangeAddressIndex)}`
+              toPath({
+                ...bip32Params,
+                isChange: true,
+                index: mustBeDefined(account.chainSpecific.nextChangeAddressIndex)
+              })
             ),
             scriptType: accountTypeToOutputScriptType[accountType],
             isChange: true
