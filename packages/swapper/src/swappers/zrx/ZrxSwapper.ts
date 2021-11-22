@@ -17,7 +17,7 @@ import {
 import Web3 from 'web3'
 
 import { Swapper } from '../../api'
-import { approvalNeeded } from './approvalNeeded/approvalNeeded'
+import { ZrxApprovalNeeded } from './ZrxApprovalNeeded/ZrxApprovalNeeded'
 import { approveInfinite } from './approveInfinite/approveInfinite'
 import { buildQuoteTx } from './buildQuoteTx/buildQuoteTx'
 import { executeQuote } from './executeQuote/executeQuote'
@@ -87,7 +87,7 @@ export class ZrxSwapper implements Swapper {
   async approvalNeeded(
     args: ApprovalNeededInput<ChainTypes, SwapperType>
   ): Promise<ApprovalNeededOutput> {
-    return approvalNeeded(this.deps, args)
+    return ZrxApprovalNeeded(this.deps, args)
   }
 
   async approveInfinite(args: ApproveInfiniteInput<ChainTypes, SwapperType>): Promise<string> {
