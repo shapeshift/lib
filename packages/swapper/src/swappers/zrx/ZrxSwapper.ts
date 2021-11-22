@@ -22,7 +22,7 @@ import { approveInfinite } from './approveInfinite/approveInfinite'
 import { buildQuoteTx } from './buildQuoteTx/buildQuoteTx'
 import { executeQuote } from './executeQuote/executeQuote'
 import { getMinMax } from './getMinMax/getMinMax'
-import { getZrxQuote } from './getQuote/getQuote'
+import { getZrxQuote } from './getZrxQuote/getZrxQuote'
 import { getSendMaxAmount } from './getSendMaxAmount/getSendMaxAmount'
 import { getUsdRate } from './utils/helpers/helpers'
 export type ZrxSwapperDeps = {
