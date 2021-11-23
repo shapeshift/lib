@@ -18,7 +18,7 @@ import Web3 from 'web3'
 
 import { Swapper } from '../../api'
 import { ZrxApprovalNeeded } from './ZrxApprovalNeeded/ZrxApprovalNeeded'
-import { approveInfinite } from './approveInfinite/approveInfinite'
+import { ZrxApproveInfinite } from './ZrxApproveInfinite/ZrxApproveInfinite'
 import { buildQuoteTx } from './buildQuoteTx/buildQuoteTx'
 import { executeQuote } from './executeQuote/executeQuote'
 import { getMinMax } from './getMinMax/getMinMax'
@@ -91,7 +91,7 @@ export class ZrxSwapper implements Swapper {
   }
 
   async approveInfinite(args: ApproveInfiniteInput<ChainTypes, SwapperType>): Promise<string> {
-    return approveInfinite(this.deps, args)
+    return ZrxApproveInfinite(this.deps, args)
   }
 
   async getSendMaxAmount(args: SendMaxAmountInput): Promise<string> {
