@@ -6,7 +6,7 @@ import Web3 from 'web3'
 import { ZrxError } from '../..'
 import { ZrxSwapper } from '..'
 import { ZrxBuildQuoteTx } from '../zrx/ZrxBuildQuoteTx/ZrxBuildQuoteTx'
-import { executeQuote } from '../zrx/executeQuote/executeQuote'
+import { ZrxExecuteQuote } from './ZrxExecuteQuote/ZrxExecuteQuote'
 import { ZrxApprovalNeeded } from './ZrxApprovalNeeded/ZrxApprovalNeeded'
 import { ZrxApproveInfinite } from './ZrxApproveInfinite/ZrxApproveInfinite'
 import { getMinMax } from './getMinMax/getMinMax'
@@ -17,8 +17,8 @@ import { BTC, FOX, WETH } from './utils/test-data/assets'
 import { setupQuote } from './utils/test-data/setupSwapQuote'
 
 jest.mock('./utils/helpers/helpers')
-jest.mock('../zrx/executeQuote/executeQuote', () => ({
-  executeQuote: jest.fn()
+jest.mock('../zrx/ZrxExecuteQuote/ZrxExecuteQuote', () => ({
+  ZrxExecuteQuote: jest.fn()
 }))
 
 jest.mock('../zrx/ZrxBuildQuoteTx/ZrxBuildQuoteTx', () => ({
@@ -90,11 +90,11 @@ describe('ZrxSwapper', () => {
     await swapper.buildQuoteTx(args)
     expect(ZrxBuildQuoteTx).toHaveBeenCalled()
   })
-  it('calls executeQuote on swapper.executeQuote', async () => {
+  it('calls ZrxExecuteQuote on swapper.executeQuote', async () => {
     const swapper = new ZrxSwapper(zrxSwapperDeps)
     const args = { quote, wallet }
     await swapper.executeQuote(args)
-    expect(executeQuote).toHaveBeenCalled()
+    expect(ZrxExecuteQuote).toHaveBeenCalled()
   })
   it('gets default pair', () => {
     const swapper = new ZrxSwapper(zrxSwapperDeps)

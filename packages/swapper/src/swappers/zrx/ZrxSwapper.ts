@@ -20,7 +20,7 @@ import { Swapper } from '../../api'
 import { ZrxApprovalNeeded } from './ZrxApprovalNeeded/ZrxApprovalNeeded'
 import { ZrxApproveInfinite } from './ZrxApproveInfinite/ZrxApproveInfinite'
 import { ZrxBuildQuoteTx } from './ZrxBuildQuoteTx/ZrxBuildQuoteTx'
-import { executeQuote } from './executeQuote/executeQuote'
+import { ZrxExecuteQuote } from './ZrxExecuteQuote/ZrxExecuteQuote'
 import { getMinMax } from './getMinMax/getMinMax'
 import { getZrxQuote } from './getZrxQuote/getZrxQuote'
 import { getSendMaxAmount } from './getSendMaxAmount/getSendMaxAmount'
@@ -81,7 +81,7 @@ export class ZrxSwapper implements Swapper {
   }
 
   async executeQuote(args: ExecQuoteInput<ChainTypes, SwapperType>): Promise<ExecQuoteOutput> {
-    return executeQuote(this.deps, args)
+    return ZrxExecuteQuote(this.deps, args)
   }
 
   async approvalNeeded(
