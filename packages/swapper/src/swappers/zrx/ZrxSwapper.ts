@@ -17,14 +17,14 @@ import {
 import Web3 from 'web3'
 
 import { Swapper } from '../../api'
-import { ZrxApprovalNeeded } from './ZrxApprovalNeeded/ZrxApprovalNeeded'
-import { ZrxApproveInfinite } from './ZrxApproveInfinite/ZrxApproveInfinite'
-import { ZrxBuildQuoteTx } from './ZrxBuildQuoteTx/ZrxBuildQuoteTx'
-import { ZrxExecuteQuote } from './ZrxExecuteQuote/ZrxExecuteQuote'
 import { getZrxMinMax } from './getZrxMinMax/getZrxMinMax'
 import { getZrxQuote } from './getZrxQuote/getZrxQuote'
 import { getZrxSendMaxAmount } from './getZrxSendMaxAmount/getZrxSendMaxAmount'
 import { getUsdRate } from './utils/helpers/helpers'
+import { ZrxApprovalNeeded } from './ZrxApprovalNeeded/ZrxApprovalNeeded'
+import { ZrxApproveInfinite } from './ZrxApproveInfinite/ZrxApproveInfinite'
+import { ZrxBuildQuoteTx } from './ZrxBuildQuoteTx/ZrxBuildQuoteTx'
+import { ZrxExecuteQuote } from './ZrxExecuteQuote/ZrxExecuteQuote'
 export type ZrxSwapperDeps = {
   adapterManager: ChainAdapterManager
   web3: Web3

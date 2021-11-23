@@ -15,7 +15,9 @@ export async function ZrxExecuteQuote(
   }
 
   if (!sellAsset.network || !sellAsset.symbol) {
-    throw new SwapError('ZrxSwapper:ZrxExecuteQuote sellAssetNetwork and sellAssetSymbol are required')
+    throw new SwapError(
+      'ZrxSwapper:ZrxExecuteQuote sellAssetNetwork and sellAssetSymbol are required'
+    )
   }
 
   if (!quote.sellAssetAccountId) {

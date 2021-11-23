@@ -6,15 +6,15 @@ import Web3 from 'web3'
 import { ZrxError } from '../..'
 import { ZrxSwapper } from '..'
 import { ZrxBuildQuoteTx } from '../zrx/ZrxBuildQuoteTx/ZrxBuildQuoteTx'
-import { ZrxExecuteQuote } from './ZrxExecuteQuote/ZrxExecuteQuote'
-import { ZrxApprovalNeeded } from './ZrxApprovalNeeded/ZrxApprovalNeeded'
-import { ZrxApproveInfinite } from './ZrxApproveInfinite/ZrxApproveInfinite'
 import { getZrxMinMax } from './getZrxMinMax/getZrxMinMax'
 import { getZrxQuote } from './getZrxQuote/getZrxQuote'
 import { getZrxSendMaxAmount } from './getZrxSendMaxAmount/getZrxSendMaxAmount'
 import { getUsdRate } from './utils/helpers/helpers'
 import { BTC, FOX, WETH } from './utils/test-data/assets'
 import { setupQuote } from './utils/test-data/setupSwapQuote'
+import { ZrxApprovalNeeded } from './ZrxApprovalNeeded/ZrxApprovalNeeded'
+import { ZrxApproveInfinite } from './ZrxApproveInfinite/ZrxApproveInfinite'
+import { ZrxExecuteQuote } from './ZrxExecuteQuote/ZrxExecuteQuote'
 
 jest.mock('./utils/helpers/helpers')
 jest.mock('../zrx/ZrxExecuteQuote/ZrxExecuteQuote', () => ({
