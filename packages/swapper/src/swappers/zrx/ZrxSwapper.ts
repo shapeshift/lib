@@ -21,9 +21,9 @@ import { ZrxApprovalNeeded } from './ZrxApprovalNeeded/ZrxApprovalNeeded'
 import { ZrxApproveInfinite } from './ZrxApproveInfinite/ZrxApproveInfinite'
 import { ZrxBuildQuoteTx } from './ZrxBuildQuoteTx/ZrxBuildQuoteTx'
 import { ZrxExecuteQuote } from './ZrxExecuteQuote/ZrxExecuteQuote'
-import { getMinMax } from './getMinMax/getMinMax'
+import { getZrxMinMax } from './getZrxMinMax/getZrxMinMax'
 import { getZrxQuote } from './getZrxQuote/getZrxQuote'
-import { getSendMaxAmount } from './getSendMaxAmount/getSendMaxAmount'
+import { getZrxSendMaxAmount } from './getZrxSendMaxAmount/getZrxSendMaxAmount'
 import { getUsdRate } from './utils/helpers/helpers'
 export type ZrxSwapperDeps = {
   adapterManager: ChainAdapterManager
@@ -62,7 +62,7 @@ export class ZrxSwapper implements Swapper {
   }
 
   async getMinMax(input: GetQuoteInput): Promise<MinMaxOutput> {
-    return getMinMax(input)
+    return getZrxMinMax(input)
   }
 
   getAvailableAssets(assets: Asset[]): Asset[] {
@@ -95,6 +95,6 @@ export class ZrxSwapper implements Swapper {
   }
 
   async getSendMaxAmount(args: SendMaxAmountInput): Promise<string> {
-    return getSendMaxAmount(this.deps, args)
+    return getZrxSendMaxAmount(this.deps, args)
   }
 }

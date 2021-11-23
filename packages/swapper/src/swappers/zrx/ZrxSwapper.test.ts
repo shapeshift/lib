@@ -9,9 +9,9 @@ import { ZrxBuildQuoteTx } from '../zrx/ZrxBuildQuoteTx/ZrxBuildQuoteTx'
 import { ZrxExecuteQuote } from './ZrxExecuteQuote/ZrxExecuteQuote'
 import { ZrxApprovalNeeded } from './ZrxApprovalNeeded/ZrxApprovalNeeded'
 import { ZrxApproveInfinite } from './ZrxApproveInfinite/ZrxApproveInfinite'
-import { getMinMax } from './getMinMax/getMinMax'
+import { getZrxMinMax } from './getZrxMinMax/getZrxMinMax'
 import { getZrxQuote } from './getZrxQuote/getZrxQuote'
-import { getSendMaxAmount } from './getSendMaxAmount/getSendMaxAmount'
+import { getZrxSendMaxAmount } from './getZrxSendMaxAmount/getZrxSendMaxAmount'
 import { getUsdRate } from './utils/helpers/helpers'
 import { BTC, FOX, WETH } from './utils/test-data/assets'
 import { setupQuote } from './utils/test-data/setupSwapQuote'
@@ -29,8 +29,8 @@ jest.mock('./getZrxQuote/getZrxQuote', () => ({
   getZrxQuote: jest.fn()
 }))
 
-jest.mock('./getMinMax/getMinMax', () => ({
-  getMinMax: jest.fn()
+jest.mock('./getZrxMinMax/getZrxMinMax', () => ({
+  getZrxMinMax: jest.fn()
 }))
 
 jest.mock('./ZrxApprovalNeeded/ZrxApprovalNeeded', () => ({
@@ -41,8 +41,8 @@ jest.mock('./ZrxApproveInfinite/ZrxApproveInfinite', () => ({
   ZrxApproveInfinite: jest.fn()
 }))
 
-jest.mock('./getSendMaxAmount/getSendMaxAmount', () => ({
-  getSendMaxAmount: jest.fn()
+jest.mock('./getZrxSendMaxAmount/getZrxSendMaxAmount', () => ({
+  getZrxSendMaxAmount: jest.fn()
 }))
 
 describe('ZrxSwapper', () => {
@@ -109,11 +109,11 @@ describe('ZrxSwapper', () => {
     await swapper.getUsdRate(FOX)
     expect(getUsdRate).toHaveBeenCalled()
   })
-  it('calls getMinMax on swapper.getMinMax', async () => {
+  it('calls getZrxMinMax on swapper.getMinMax', async () => {
     const swapper = new ZrxSwapper(zrxSwapperDeps)
     const { quoteInput } = setupQuote()
     await swapper.getMinMax(quoteInput)
-    expect(getMinMax).toHaveBeenCalled()
+    expect(getZrxMinMax).toHaveBeenCalled()
   })
 
   it('calls ZrxApprovalNeeded on swapper.approvalNeeded', async () => {
@@ -131,7 +131,7 @@ describe('ZrxSwapper', () => {
     expect(ZrxApproveInfinite).toHaveBeenCalled()
   })
 
-  it('calls getSendMaxAmount on swapper.getSendMaxAmount', async () => {
+  it('calls getZrxSendMaxAmount on swapper.getSendMaxAmount', async () => {
     const swapper = new ZrxSwapper(zrxSwapperDeps)
     const args = {
       quote,
@@ -140,6 +140,6 @@ describe('ZrxSwapper', () => {
       feeEstimateKey: chainAdapters.FeeDataKey.Average
     }
     await swapper.getSendMaxAmount(args)
-    expect(getSendMaxAmount).toHaveBeenCalled()
+    expect(getZrxSendMaxAmount).toHaveBeenCalled()
   })
 })
