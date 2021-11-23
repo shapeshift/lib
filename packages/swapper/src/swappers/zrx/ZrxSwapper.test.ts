@@ -5,12 +5,12 @@ import Web3 from 'web3'
 
 import { ZrxError } from '../..'
 import { ZrxSwapper } from '..'
-import { buildQuoteTx } from '../zrx/buildQuoteTx/buildQuoteTx'
+import { ZrxBuildQuoteTx } from '../zrx/ZrxBuildQuoteTx/ZrxBuildQuoteTx'
 import { executeQuote } from '../zrx/executeQuote/executeQuote'
-import { approvalNeeded } from './approvalNeeded/approvalNeeded'
-import { approveInfinite } from './approveInfinite/approveInfinite'
+import { ZrxApprovalNeeded } from './ZrxApprovalNeeded/ZrxApprovalNeeded'
+import { ZrxApproveInfinite } from './ZrxApproveInfinite/ZrxApproveInfinite'
 import { getMinMax } from './getMinMax/getMinMax'
-import { getZrxQuote } from './getQuote/getQuote'
+import { getZrxQuote } from './getZrxQuote/getZrxQuote'
 import { getSendMaxAmount } from './getSendMaxAmount/getSendMaxAmount'
 import { getUsdRate } from './utils/helpers/helpers'
 import { BTC, FOX, WETH } from './utils/test-data/assets'
@@ -21,11 +21,11 @@ jest.mock('../zrx/executeQuote/executeQuote', () => ({
   executeQuote: jest.fn()
 }))
 
-jest.mock('../zrx/buildQuoteTx/buildQuoteTx', () => ({
-  buildQuoteTx: jest.fn()
+jest.mock('../zrx/ZrxBuildQuoteTx/ZrxBuildQuoteTx', () => ({
+  ZrxBuildQuoteTx: jest.fn()
 }))
 
-jest.mock('./getQuote/getQuote', () => ({
+jest.mock('./getZrxQuote/getZrxQuote', () => ({
   getZrxQuote: jest.fn()
 }))
 
@@ -33,12 +33,12 @@ jest.mock('./getMinMax/getMinMax', () => ({
   getMinMax: jest.fn()
 }))
 
-jest.mock('./approvalNeeded/approvalNeeded', () => ({
-  approvalNeeded: jest.fn()
+jest.mock('./ZrxApprovalNeeded/ZrxApprovalNeeded', () => ({
+  ZrxApprovalNeeded: jest.fn()
 }))
 
-jest.mock('./approveInfinite/approveInfinite', () => ({
-  approveInfinite: jest.fn()
+jest.mock('./ZrxApproveInfinite/ZrxApproveInfinite', () => ({
+  ZrxApproveInfinite: jest.fn()
 }))
 
 jest.mock('./getSendMaxAmount/getSendMaxAmount', () => ({
@@ -84,11 +84,11 @@ describe('ZrxSwapper', () => {
     const canTradePair = swapper.canTradePair(FOX, WETH)
     expect(canTradePair).toBeTruthy()
   })
-  it('calls buildQuoteTx on swapper.buildQuoteTx', async () => {
+  it('calls ZrxBuildQuoteTx on swapper.buildQuoteTx', async () => {
     const swapper = new ZrxSwapper(zrxSwapperDeps)
     const args = { input, wallet }
     await swapper.buildQuoteTx(args)
-    expect(buildQuoteTx).toHaveBeenCalled()
+    expect(ZrxBuildQuoteTx).toHaveBeenCalled()
   })
   it('calls executeQuote on swapper.executeQuote', async () => {
     const swapper = new ZrxSwapper(zrxSwapperDeps)
@@ -116,19 +116,19 @@ describe('ZrxSwapper', () => {
     expect(getMinMax).toHaveBeenCalled()
   })
 
-  it('calls approvalNeeded on swapper.approvalNeeded', async () => {
+  it('calls ZrxApprovalNeeded on swapper.approvalNeeded', async () => {
     const swapper = new ZrxSwapper(zrxSwapperDeps)
     const { quoteInput } = setupQuote()
     const args = { quote: quoteInput, wallet }
     await swapper.approvalNeeded(args)
-    expect(approvalNeeded).toHaveBeenCalled()
+    expect(ZrxApprovalNeeded).toHaveBeenCalled()
   })
 
-  it('calls approveInfinite on swapper.approveInfinite', async () => {
+  it('calls ZrxApproveInfinite on swapper.approveInfinite', async () => {
     const swapper = new ZrxSwapper(zrxSwapperDeps)
     const args = { quote, wallet }
     await swapper.approveInfinite(args)
-    expect(approveInfinite).toHaveBeenCalled()
+    expect(ZrxApproveInfinite).toHaveBeenCalled()
   })
 
   it('calls getSendMaxAmount on swapper.getSendMaxAmount', async () => {

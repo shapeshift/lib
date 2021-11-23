@@ -19,7 +19,7 @@ import Web3 from 'web3'
 import { Swapper } from '../../api'
 import { ZrxApprovalNeeded } from './ZrxApprovalNeeded/ZrxApprovalNeeded'
 import { ZrxApproveInfinite } from './ZrxApproveInfinite/ZrxApproveInfinite'
-import { buildQuoteTx } from './buildQuoteTx/buildQuoteTx'
+import { ZrxBuildQuoteTx } from './ZrxBuildQuoteTx/ZrxBuildQuoteTx'
 import { executeQuote } from './executeQuote/executeQuote'
 import { getMinMax } from './getMinMax/getMinMax'
 import { getZrxQuote } from './getZrxQuote/getZrxQuote'
@@ -50,7 +50,7 @@ export class ZrxSwapper implements Swapper {
   }
 
   async buildQuoteTx(args: BuildQuoteTxInput): Promise<Quote<ChainTypes, SwapperType>> {
-    return buildQuoteTx(this.deps, args)
+    return ZrxBuildQuoteTx(this.deps, args)
   }
 
   async getQuote(input: GetQuoteInput): Promise<Quote<ChainTypes, SwapperType>> {
