@@ -10,3 +10,4 @@ declare module 'coinselect' {
   ): { fee: number } & ({ inputs: T[]; outputs: U[] } | { inputs: undefined; outputs: undefined })
   export = coinSelect
 }
+declare module 'coinselect/split'

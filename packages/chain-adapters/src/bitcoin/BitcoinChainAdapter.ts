@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   bip32ToAddressNList,
   BTCOutputAddressType,
@@ -17,6 +18,7 @@ import {
 } from '@shapeshiftoss/types'
 import { bitcoin } from '@shapeshiftoss/unchained-client'
 import coinSelect from 'coinselect'
+import split from 'coinselect/split'
 import WAValidator from 'multicoin-address-validator'
 
 import { ChainAdapter as IChainAdapter } from '../api'
@@ -152,7 +154,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
         to,
         wallet,
         bip32Params = ChainAdapter.defaultBIP32Params,
-        chainSpecific: { satoshiPerByte, accountType }
+        chainSpecific: { satoshiPerByte, accountType },
+        sendMax = false
       } = tx
 
       if (!value || !to) {
@@ -264,7 +267,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
   async getFeeData({
     to,
     value,
-    chainSpecific: { pubkey }
+    chainSpecific: { pubkey },
+    sendMax = false
   }: chainAdapters.GetFeeDataInput<ChainTypes.Bitcoin>): Promise<
     chainAdapters.FeeDataEstimate<ChainTypes.Bitcoin>
   > {
@@ -290,23 +294,45 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
     type MappedUtxos = Omit<bitcoin.api.Utxo, 'value'> & { value: number }
     const mappedUtxos: MappedUtxos[] = utxos.map((x) => ({ ...x, value: Number(x.value) }))
 
-    const { fee: fastFee } = coinSelect<MappedUtxos, chainAdapters.bitcoin.Recipient>(
-      mappedUtxos,
-      [{ value: Number(value), address: to }],
-      Number(fastPerByte)
-    )
-    const { fee: averageFee } = coinSelect<MappedUtxos, chainAdapters.bitcoin.Recipient>(
-      mappedUtxos,
-      [{ value: Number(value), address: to }],
-      Number(averagePerByte)
-    )
-    const { fee: slowFee } = coinSelect<MappedUtxos, chainAdapters.bitcoin.Recipient>(
-      mappedUtxos,
-      [{ value: Number(value), address: to }],
-      Number(slowPerByte)
-    )
+    let fastFee
+    let averageFee
+    let slowFee
+    if (sendMax) {
+      console.log('sendMax')
 
-    const confTimes: chainAdapters.FeeDataEstimate<ChainTypes.Bitcoin> = {
+      fastFee = 0
+      averageFee = 0
+      slowFee = 0
+
+      console.log('mappedUtxos', mappedUtxos)
+      const sendMaxResultFast = split(mappedUtxos, [{ address: to }], Number(fastPerByte))
+      const sendMaxResultAverage = split(mappedUtxos, [{ address: to }], Number(averagePerByte))
+      const sendMaxResultSlow = split(mappedUtxos, [{ address: to }], Number(slowPerByte))
+      fastFee = sendMaxResultFast.fee
+      averageFee = sendMaxResultAverage.fee
+      slowFee = sendMaxResultSlow.fee
+    } else {
+      const { fee: fast } = coinSelect<MappedUtxos, chainAdapters.bitcoin.Recipient>(
+        mappedUtxos,
+        [{ value: Number(value), address: to }],
+        Number(fastPerByte)
+      )
+      const { fee: average } = coinSelect<MappedUtxos, chainAdapters.bitcoin.Recipient>(
+        mappedUtxos,
+        [{ value: Number(value), address: to }],
+        Number(averagePerByte)
+      )
+      const { fee: slow } = coinSelect<MappedUtxos, chainAdapters.bitcoin.Recipient>(
+        mappedUtxos,
+        [{ value: Number(value), address: to }],
+        Number(slowPerByte)
+      )
+      fastFee = fast
+      averageFee = average
+      slowFee = slow
+    }
+
+    return {
       [chainAdapters.FeeDataKey.Fast]: {
         txFee: String(fastFee),
         chainSpecific: {
@@ -326,7 +352,6 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
         }
       }
     }
-    return confTimes
   }
 
   async getAddress({

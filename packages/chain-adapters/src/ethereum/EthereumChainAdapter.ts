@@ -119,7 +119,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
         to,
         wallet,
         bip32Params = ChainAdapter.defaultBIP32Params,
-        chainSpecific: { erc20ContractAddress, gasPrice, gasLimit }
+        chainSpecific: { erc20ContractAddress, gasPrice, gasLimit },
+        sendMax = false
       } = tx
 
       if (!to) throw new Error('EthereumChainAdapter: to is required')
@@ -186,7 +187,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
   async getFeeData({
     to,
     value,
-    chainSpecific: { contractAddress, from, contractData }
+    chainSpecific: { contractAddress, from, contractData },
+    sendMax = false
   }: chainAdapters.GetFeeDataInput<ChainTypes.Ethereum>): Promise<
     chainAdapters.FeeDataEstimate<ChainTypes.Ethereum>
   > {
