@@ -11,7 +11,7 @@ import { GetByMarketCapArgs } from '@shapeshiftoss/types/src'
 import { MarketServiceEnum, MarketServices } from './api'
 import { CoinGeckoMarketService } from './coingecko/coingecko'
 
-export const getMarketService = (): MarketServices => {
+export const getMarketServices = (): MarketServices => {
   return {
     [MarketServiceEnum.COIN_GECKO]: new CoinGeckoMarketService(),
     [MarketServiceEnum.COIN_CAP]: new CoinGeckoMarketService()
@@ -19,11 +19,11 @@ export const getMarketService = (): MarketServices => {
 }
 
 export const getByMarketCap: GetByMarketCapType = async (args?: GetByMarketCapArgs) => {
-  return getMarketService()[MarketServiceEnum.COIN_GECKO].getByMarketCap(args)
+  return getMarketServices()[MarketServiceEnum.COIN_GECKO].getByMarketCap(args)
 }
 
 export const getMarketData: MarketDataType = async ({ chain, tokenId }: MarketDataArgs) => {
-  return getMarketService()[MarketServiceEnum.COIN_GECKO].getMarketData({ chain, tokenId })
+  return getMarketServices()[MarketServiceEnum.COIN_GECKO].getMarketData({ chain, tokenId })
 }
 
 export const getPriceHistory: PriceHistoryType = ({
@@ -31,7 +31,7 @@ export const getPriceHistory: PriceHistoryType = ({
   timeframe,
   tokenId
 }: PriceHistoryArgs): Promise<HistoryData[]> => {
-  return getMarketService()[MarketServiceEnum.COIN_GECKO].getPriceHistory({
+  return getMarketServices()[MarketServiceEnum.COIN_GECKO].getPriceHistory({
     chain,
     timeframe,
     tokenId
