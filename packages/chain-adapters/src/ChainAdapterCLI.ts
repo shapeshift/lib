@@ -140,6 +140,11 @@ const main = async () => {
     } catch (err) {
       console.log('erc20Tx error:', err.message)
     }
+
+    /** COSMOS CLI */
+
+    /** OSMOSIS CLI */
+
   } catch (err) {
     console.error(err)
   }

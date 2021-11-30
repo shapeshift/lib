@@ -4,6 +4,8 @@ import * as unchained from '@shapeshiftoss/unchained-client'
 import { ChainAdapter } from './api'
 import * as bitcoin from './bitcoin'
 import * as ethereum from './ethereum'
+import * as osmosis from './osmosis'
+import * as cosmos from './cosmos'
 
 export type UnchainedUrl = {
   httpUrl: string
