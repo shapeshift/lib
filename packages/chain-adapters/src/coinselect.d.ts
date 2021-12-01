@@ -10,4 +10,15 @@ declare module 'coinselect' {
   ): { fee: number } & ({ inputs: T[]; outputs: U[] } | { inputs: undefined; outputs: undefined })
   export = coinSelect
 }
-declare module 'coinselect/split'
+declare module 'coinselect/split' {
+  type Item = {
+    script?: Uint8Array
+    value: number
+  }
+  declare function split(
+    utxos: any[],
+    outputs: any[],
+    feeRate: number
+  ): { fee: number } & ({ inputs: T[]; outputs: U[] } | { inputs: undefined; outputs: undefined })
+  export = split
+}

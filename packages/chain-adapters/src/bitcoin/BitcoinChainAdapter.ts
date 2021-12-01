@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {
   bip32ToAddressNList,
   BTCOutputAddressType,
@@ -178,12 +177,17 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
       type MappedUtxos = Omit<bitcoin.api.Utxo, 'value'> & { value: number }
       const mappedUtxos: MappedUtxos[] = utxos.map((x) => ({ ...x, value: Number(x.value) }))
 
-      const coinSelectResult = coinSelect<MappedUtxos, chainAdapters.bitcoin.Recipient>(
-        mappedUtxos,
-        [{ value: Number(value), address: to }],
-        Number(satoshiPerByte)
-      )
-      if (!coinSelectResult.inputs) {
+      let coinSelectResult
+      if (sendMax) {
+        coinSelectResult = split(mappedUtxos, [{ address: to }], Number(satoshiPerByte))
+      } else {
+        coinSelectResult = coinSelect<MappedUtxos, chainAdapters.bitcoin.Recipient>(
+          mappedUtxos,
+          [{ value: Number(value), address: to }],
+          Number(satoshiPerByte)
+        )
+      }
+      if (!coinSelectResult || !coinSelectResult.inputs || !coinSelectResult.outputs) {
         throw new Error("BitcoinChainAdapter: coinSelect didn't select coins")
       }
 
@@ -235,7 +239,6 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
         inputs: signTxInputs,
         outputs: signTxOutputs
       }
-
       return { txToSign }
     } catch (err) {
       return ErrorHandler(err)
@@ -298,13 +301,9 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
     let averageFee
     let slowFee
     if (sendMax) {
-      console.log('sendMax')
-
       fastFee = 0
       averageFee = 0
       slowFee = 0
-
-      console.log('mappedUtxos', mappedUtxos)
       const sendMaxResultFast = split(mappedUtxos, [{ address: to }], Number(fastPerByte))
       const sendMaxResultAverage = split(mappedUtxos, [{ address: to }], Number(averagePerByte))
       const sendMaxResultSlow = split(mappedUtxos, [{ address: to }], Number(slowPerByte))
