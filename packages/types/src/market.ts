@@ -1,6 +1,12 @@
 import { ChainTypes } from '.'
 
+export enum MarketSourceEnum {
+  COIN_GECKO = 'coingecko',
+  COIN_CAP = 'coincap'
+}
+
 export type MarketData = {
+  marketSource: MarketSourceEnum
   price: string
   marketCap: string
   volume: string
@@ -41,12 +47,12 @@ export type GetByMarketCapArgs = {
   perPage: number
 }
 
-export type CoinGeckoMarketCapNoId = Omit<CoinGeckoMarketCap, 'id'>
-export type CoinGeckoMarketCapResult = {
-  [k: string]: CoinGeckoMarketCapNoId
+export type MarketCapResult = {
+  [k: string]: MarketData
 }
-export type GetByMarketCapType = (args?: GetByMarketCapArgs) => Promise<CoinGeckoMarketCapResult>
+export type GetByMarketCapType = (args?: GetByMarketCapArgs) => Promise<MarketCapResult>
 
+export type CoinGeckoMarketCapNoId = Omit<CoinGeckoMarketCap, 'id'>
 export type CoinGeckoMarketCap = {
   id: string
   symbol: string

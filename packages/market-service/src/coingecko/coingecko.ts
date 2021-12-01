@@ -2,12 +2,13 @@ import { adapters } from '@shapeshiftoss/caip'
 import {
   ChainTypes,
   CoinGeckoMarketCap,
-  CoinGeckoMarketCapNoId,
   GetByMarketCapArgs,
   HistoryData,
   HistoryTimeframe,
+  MarketCapResult,
   MarketData,
   MarketDataArgs,
+  MarketSourceEnum,
   PriceHistoryArgs
 } from '@shapeshiftoss/types'
 import axios from 'axios'
@@ -71,12 +72,19 @@ export class CoinGeckoMarketService implements MarketService {
           try {
             const caip19 = adapters.coingeckoToCAIP19(id)
             const curWithoutId = omit(cur, 'id') // don't leak this through to clients
-            acc[caip19] = curWithoutId
+            // acc[caip19] = curWithoutId
+            acc[caip19] = {
+              marketSource: MarketSourceEnum.COIN_GECKO,
+              price: curWithoutId.current_price.toString(),
+              marketCap: curWithoutId.market_cap.toString(),
+              volume: curWithoutId.total_volume.toString(),
+              changePercent24Hr: curWithoutId.price_change_percentage_24h
+            }
             return acc
           } catch {
             return acc // no caip found, we don't support this asset
           }
-        }, {} as Record<string, CoinGeckoMarketCapNoId>)
+        }, {} as Record<string, MarketData>)
     } catch (e) {
       return {}
     }
@@ -96,6 +104,7 @@ export class CoinGeckoMarketService implements MarketService {
       const currency = 'usd'
       const marketData = data?.market_data
       return {
+        marketSource: MarketSourceEnum.COIN_GECKO,
         price: marketData?.current_price?.[currency],
         marketCap: marketData?.market_cap?.[currency],
         changePercent24Hr: marketData?.price_change_percentage_24h,
