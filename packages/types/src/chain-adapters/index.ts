@@ -224,7 +224,7 @@ type ChainSpecificGetFeeDataInput<T> = ChainSpecific<
 export type GetFeeDataInput<T extends ChainTypes> = {
   to: string
   value: string
-  sendMax: boolean
+  sendMax?: boolean
 } & ChainSpecificGetFeeDataInput<T>
 
 export enum ValidAddressResultType {
