@@ -13,11 +13,12 @@ declare module 'coinselect' {
 declare module 'coinselect/split' {
   type Item = {
     script?: Uint8Array
-    value: number
+    value?: number
+    address?: string
   }
   declare function split(
-    utxos: any[],
-    outputs: any[],
+    utxos: Item[],
+    outputs: Item[],
     feeRate: number
   ): { fee: number } & ({ inputs: T[]; outputs: U[] } | { inputs: undefined; outputs: undefined })
   export = split
