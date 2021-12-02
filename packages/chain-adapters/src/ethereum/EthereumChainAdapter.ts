@@ -360,7 +360,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
             ...specificTx(symbol, totalValue, token),
             chain: ChainTypes.Ethereum,
             type: chainAdapters.TxType.Send,
-            to: msg.vout[0]?.addresses?.[0]
+            // For erc20 sends the vout address is the contract
+            to: msg?.tokenTransfers?.[0].to || msg.vout[0]?.addresses?.[0]
           })
         })
 
