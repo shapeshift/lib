@@ -1,3 +1,19 @@
+# [@shapeshiftoss/market-service-v1.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.4.1...@shapeshiftoss/market-service-v1.5.0) (2021-11-30)
+
+
+### Features
+
+* use sibling packages as peerDependencies ([#229](https://github.com/shapeshift/lib/issues/229)) ([7de039e](https://github.com/shapeshift/lib/commit/7de039e89907d98048fe6b1e39b4a1e64377cb50))
+
+# [@shapeshiftoss/market-service-v1.4.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.4.0...@shapeshiftoss/market-service-v1.4.1) (2021-11-29)
+
+# [@shapeshiftoss/market-service-v1.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.3.2...@shapeshiftoss/market-service-v1.4.0) (2021-11-29)
+
+
+### Features
+
+* return dates as epoch times ([06de6b8](https://github.com/shapeshift/lib/commit/06de6b8cb684f4565de963c511e849be03906300))
+
 # [@shapeshiftoss/market-service-v1.3.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.3.1...@shapeshiftoss/market-service-v1.3.2) (2021-11-15)
 
 

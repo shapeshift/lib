@@ -1,3 +1,19 @@
+# [@shapeshiftoss/swapper-v1.12.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.11.12...@shapeshiftoss/swapper-v1.12.0) (2021-11-30)
+
+
+### Features
+
+* use sibling packages as peerDependencies ([#229](https://github.com/shapeshift/lib/issues/229)) ([7de039e](https://github.com/shapeshift/lib/commit/7de039e89907d98048fe6b1e39b4a1e64377cb50))
+
+# [@shapeshiftoss/swapper-v1.11.12](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.11.11...@shapeshiftoss/swapper-v1.11.12) (2021-11-29)
+
+
+### Bug Fixes
+
+* rename zrx swapper functions ([#252](https://github.com/shapeshift/lib/issues/252)) ([d56c134](https://github.com/shapeshift/lib/commit/d56c134d80863a15a95fa0c7197292a32421c53f))
+
+# [@shapeshiftoss/swapper-v1.11.11](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.11.10...@shapeshiftoss/swapper-v1.11.11) (2021-11-24)
+
 # [@shapeshiftoss/swapper-v1.11.10](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.11.9...@shapeshiftoss/swapper-v1.11.10) (2021-11-22)
 
 
