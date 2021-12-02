@@ -5,7 +5,6 @@ import {
   GetByMarketCapArgs,
   HistoryData,
   HistoryTimeframe,
-  MarketCapResult,
   MarketData,
   MarketDataArgs,
   MarketSourceEnum,

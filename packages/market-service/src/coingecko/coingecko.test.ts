@@ -1,8 +1,9 @@
 import { adapters } from '@shapeshiftoss/caip'
-import { ChainTypes, CoinGeckoMarketCap, HistoryTimeframe } from '@shapeshiftoss/types'
+import { ChainTypes, HistoryTimeframe } from '@shapeshiftoss/types'
 import axios from 'axios'
 
 import { getByMarketCap, getMarketData, getPriceHistory } from '..'
+import { CoinGeckoMarketCap } from './coingecko-types'
 
 jest.mock('axios')
 
@@ -138,6 +139,7 @@ describe('coingecko market service', () => {
 
     it('should return market data for ETH', async () => {
       const result = {
+        marketSource: 'coingecko',
         price: 3611.19,
         marketCap: 424970837706,
         changePercent24Hr: 2.19682,
