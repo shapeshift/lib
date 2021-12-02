@@ -1,13 +1,6 @@
 import { ChainTypes } from '.'
 
-export enum MarketSourceEnum {
-  COIN_GECKO = 'coingecko',
-  COIN_CAP = 'coincap',
-  YEARN = 'yearn'
-}
-
 export type MarketData = {
-  marketSource: MarketSourceEnum
   price: string
   marketCap: string
   volume: string

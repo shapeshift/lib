@@ -1,13 +1,11 @@
 import { adapters } from '@shapeshiftoss/caip'
 import {
   ChainTypes,
-  CoinGeckoMarketCap,
   GetByMarketCapArgs,
   HistoryData,
   HistoryTimeframe,
   MarketData,
   MarketDataArgs,
-  MarketSourceEnum,
   PriceHistoryArgs
 } from '@shapeshiftoss/types'
 import axios from 'axios'
@@ -15,6 +13,7 @@ import dayjs from 'dayjs'
 import omit from 'lodash/omit'
 
 import { MarketService } from '../api'
+import { CoinGeckoMarketCap } from './coingecko-types'
 
 // tons more params here: https://www.coingecko.com/en/api/documentation
 type CoinGeckoAssetData = {
@@ -71,9 +70,7 @@ export class CoinGeckoMarketService implements MarketService {
           try {
             const caip19 = adapters.coingeckoToCAIP19(id)
             const curWithoutId = omit(cur, 'id') // don't leak this through to clients
-            // acc[caip19] = curWithoutId
             acc[caip19] = {
-              marketSource: MarketSourceEnum.COIN_GECKO,
               price: curWithoutId.current_price.toString(),
               marketCap: curWithoutId.market_cap.toString(),
               volume: curWithoutId.total_volume.toString(),
@@ -103,7 +100,6 @@ export class CoinGeckoMarketService implements MarketService {
       const currency = 'usd'
       const marketData = data?.market_data
       return {
-        marketSource: MarketSourceEnum.COIN_GECKO,
         price: marketData?.current_price?.[currency],
         marketCap: marketData?.market_cap?.[currency],
         changePercent24Hr: marketData?.price_change_percentage_24h,

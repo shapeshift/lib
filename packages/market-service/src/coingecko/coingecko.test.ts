@@ -139,7 +139,6 @@ describe('coingecko market service', () => {
 
     it('should return market data for ETH', async () => {
       const result = {
-        marketSource: 'coingecko',
         price: 3611.19,
         marketCap: 424970837706,
         changePercent24Hr: 2.19682,
