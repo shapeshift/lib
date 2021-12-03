@@ -109,7 +109,7 @@ export type TxFee = {
 export enum TxType {
   Send = 'send',
   Receive = 'receive',
-  Trade = 'trade'
+  Unknown = 'unknown'
 }
 
 export enum TxStatus {
@@ -125,23 +125,24 @@ export type SubscribeTxsMessage<T extends ChainTypes> = {
   blockHeight: number
   blockTime: number
   chain: T
+  caip2: string
   confirmations: number
-  network: NetworkTypes
   txid: string
-  to?: string
-  from?: string
   fee?: TxFee
   status: TxStatus
   tradeDetails?: TradeDetails
-} & TxTransfer<T>
+  transfers: Array<TxTransfer<T>>
+}
+
+export enum TradeType {
+  Trade = 'trade',
+  Refund = 'refund'
+}
 
 export type TradeDetails = {
-  buyAmount: string
-  buyAsset: string
   dexName: string
-  feeAmount: string
-  sellAmount: string
-  sellAsset: string
+  memo?: string
+  type: TradeType
 }
 
 type ChainSpecificTxTransfer<T> = ChainSpecific<
@@ -152,7 +153,9 @@ type ChainSpecificTxTransfer<T> = ChainSpecific<
 >
 
 export type TxTransfer<T extends ChainTypes> = {
-  asset: string
+  caip19: string
+  from: string
+  to: string
   type: TxType
   value: string
 } & ChainSpecificTxTransfer<T>

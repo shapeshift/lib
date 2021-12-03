@@ -16,6 +16,7 @@ import {
   UtxoAccountType
 } from '@shapeshiftoss/types'
 import { bitcoin } from '@shapeshiftoss/unchained-client'
+import { TransferType } from '@shapeshiftoss/unchained-tx-parser'
 import coinSelect from 'coinselect'
 import split from 'coinselect/split'
 import WAValidator from 'multicoin-address-validator'
@@ -413,42 +414,37 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
       subscriptionId,
       { topic: 'txs', addresses },
       (msg) => {
-        const status =
-          msg.confirmations > 0 ? chainAdapters.TxStatus.Confirmed : chainAdapters.TxStatus.Pending
+        const getType = (type: TransferType): chainAdapters.TxType => {
+          if (type === TransferType.Send) return chainAdapters.TxType.Send
+          if (type === TransferType.Receive) return chainAdapters.TxType.Receive
 
-        const baseTx = {
+          return chainAdapters.TxType.Unknown
+        }
+
+        const transfers = msg.transfers.map<chainAdapters.TxTransfer<ChainTypes.Bitcoin>>(
+          (transfer) => ({
+            caip19: transfer.caip19,
+            from: transfer.from,
+            to: transfer.to,
+            type: getType(transfer.type),
+            value: transfer.totalValue
+          })
+        )
+
+        return {
           address: msg.address,
-          asset: ChainTypes.Bitcoin,
           blockHash: msg.blockHash,
           blockHeight: msg.blockHeight,
           blockTime: msg.blockTime,
+          caip2: msg.caip2,
           confirmations: msg.confirmations,
-          network: NetworkTypes.MAINNET,
-          txid: msg.txid,
           fee: msg.fee,
-          status
+          status: msg.status,
+          tradeDetails: msg.trade,
+          transfers,
+          txid: msg.txid,
+          value: msg.value
         }
-
-        // treat all send transfers as same account
-        if (Object.keys(msg.send).length) {
-          onMessage({
-            ...baseTx,
-            chain: ChainTypes.Bitcoin,
-            type: chainAdapters.TxType.Send,
-            value: msg.value,
-            to: msg.vout[0]?.addresses?.[0]
-          })
-        }
-
-        Object.entries(msg.receive).forEach(([, { totalValue }]) => {
-          onMessage({
-            ...baseTx,
-            chain: ChainTypes.Bitcoin,
-            type: chainAdapters.TxType.Receive,
-            value: totalValue,
-            from: msg.vin[0]?.addresses?.[0]
-          })
-        })
       },
       (err) => onError({ message: err.message })
     )
