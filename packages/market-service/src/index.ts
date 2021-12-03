@@ -38,6 +38,6 @@ export const findPriceHistoryByCaip19: PriceHistoryType = async ({
   for (let i = 0; i < MarketProviders.length && !result; i++) {
     result = await MarketProviders[i].findPriceHistoryByCaip19({ caip19, timeframe })
   }
-  if (!result) throw new Error('Cannot find service provider for price history data.')
+  if (!result) return []
   return result
 }
