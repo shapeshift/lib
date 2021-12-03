@@ -355,12 +355,19 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
         }
 
         Object.entries(msg.send).forEach(([symbol, { totalValue, token }]) => {
+          const tokenTransferTo = msg?.tokenTransfers?.find((transfer) => {
+            return (
+              transfer.from === msg.vin[0]?.addresses?.[0] &&
+              transfer.token === token?.contract &&
+              transfer.value === totalValue
+            )
+          })?.to
           onMessage({
             ...baseTx,
             ...specificTx(symbol, totalValue, token),
             chain: ChainTypes.Ethereum,
             type: chainAdapters.TxType.Send,
-            to: msg.vout[0]?.addresses?.[0]
+            to: tokenTransferTo ?? msg.vout[0]?.addresses?.[0]
           })
         })
 
