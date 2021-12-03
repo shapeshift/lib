@@ -32,15 +32,6 @@ type CoinGeckoAssetData = {
   }
 }
 
-// type CoinGeckoIDMap = {
-//   [k in ChainTypes]: string
-// }
-
-// const coingeckoIDMap: CoinGeckoIDMap = Object.freeze({
-//   [ChainTypes.Ethereum]: 'ethereum',
-//   [ChainTypes.Bitcoin]: 'bitcoin'
-// })
-
 export class CoinGeckoMarketService implements MarketService {
   baseUrl = 'https://api.coingecko.com/api/v3'
 
