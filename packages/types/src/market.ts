@@ -1,5 +1,3 @@
-import { ChainTypes } from '.'
-
 export type MarketData = {
   price: string
   marketCap: string
@@ -22,21 +20,20 @@ export type HistoryData = {
 }
 
 export type PriceHistoryArgs = {
-  chain: ChainTypes
+  caip19: string
   timeframe: HistoryTimeframe
-  tokenId?: string
 }
 
 export type MarketDataArgs = {
-  chain: ChainTypes
-  tokenId?: string
+  caip19: string
 }
 
-export type MarketDataType = (args: MarketDataArgs) => Promise<MarketData>
+export type findAllMarketType = (args: findAllMarketArgs) => Promise<MarketCapResult>
+export type findByCaip19MarketType = (args: MarketDataArgs) => Promise<MarketData>
 
 export type PriceHistoryType = (args: PriceHistoryArgs) => Promise<HistoryData[]>
 
-export type GetByMarketCapArgs = {
+export type findAllMarketArgs = {
   pages: number
   perPage: number
 }
@@ -44,4 +41,4 @@ export type GetByMarketCapArgs = {
 export type MarketCapResult = {
   [k: string]: MarketData
 }
-export type GetByMarketCapType = (args?: GetByMarketCapArgs) => Promise<MarketCapResult>
+// export type GetByMarketCapType = (args?: GetByMarketCapArgs) => Promise<MarketCapResult>

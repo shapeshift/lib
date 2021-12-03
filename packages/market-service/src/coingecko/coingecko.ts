@@ -1,9 +1,11 @@
-import { adapters } from '@shapeshiftoss/caip'
+import { adapters, CAIP19 } from '@shapeshiftoss/caip'
+import { fromCAIP19 } from '@shapeshiftoss/caip/dist/caip19/caip19'
 import {
   ChainTypes,
-  GetByMarketCapArgs,
+  findAllMarketArgs,
   HistoryData,
   HistoryTimeframe,
+  MarketCapResult,
   MarketData,
   MarketDataArgs,
   PriceHistoryArgs
@@ -30,24 +32,24 @@ type CoinGeckoAssetData = {
   }
 }
 
-type CoinGeckoIDMap = {
-  [k in ChainTypes]: string
-}
+// type CoinGeckoIDMap = {
+//   [k in ChainTypes]: string
+// }
 
-const coingeckoIDMap: CoinGeckoIDMap = Object.freeze({
-  [ChainTypes.Ethereum]: 'ethereum',
-  [ChainTypes.Bitcoin]: 'bitcoin'
-})
+// const coingeckoIDMap: CoinGeckoIDMap = Object.freeze({
+//   [ChainTypes.Ethereum]: 'ethereum',
+//   [ChainTypes.Bitcoin]: 'bitcoin'
+// })
 
 export class CoinGeckoMarketService implements MarketService {
   baseUrl = 'https://api.coingecko.com/api/v3'
 
-  private readonly defaultGetByMarketCapArgs: GetByMarketCapArgs = {
+  private readonly defaultGetByMarketCapArgs: findAllMarketArgs = {
     pages: 10,
     perPage: 250
   }
 
-  async getByMarketCap(args?: GetByMarketCapArgs) {
+  findAll = async (args?: findAllMarketArgs) => {
     const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
     const { pages, perPage } = argsToUse
     const urlAtPage = (page: number) =>
@@ -80,15 +82,16 @@ export class CoinGeckoMarketService implements MarketService {
           } catch {
             return acc // no caip found, we don't support this asset
           }
-        }, {} as Record<string, MarketData>)
+        }, {} as MarketCapResult)
     } catch (e) {
       return {}
     }
   }
 
-  getMarketData = async ({ chain, tokenId }: MarketDataArgs): Promise<MarketData> => {
-    const id = coingeckoIDMap[chain]
+  findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData> => {
     try {
+      const id = adapters.CAIP19ToCoingecko(caip19)
+      const { tokenId } = fromCAIP19(caip19)
       const isToken = !!tokenId
       const contractUrl = isToken ? `/contract/${tokenId}` : ''
 
@@ -111,12 +114,12 @@ export class CoinGeckoMarketService implements MarketService {
     }
   }
 
-  getPriceHistory = async ({
-    chain,
-    timeframe,
-    tokenId
+  findPriceHistoryByCaip19 = async ({
+    caip19,
+    timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
-    const id = coingeckoIDMap[chain]
+    const id = adapters.CAIP19ToCoingecko(caip19)
+    const { tokenId } = fromCAIP19(caip19)
 
     const end = dayjs().startOf('minute')
     let start
