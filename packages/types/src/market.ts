@@ -41,4 +41,3 @@ export type findAllMarketArgs = {
 export type MarketCapResult = {
   [k: string]: MarketData
 }
-// export type GetByMarketCapType = (args?: GetByMarketCapArgs) => Promise<MarketCapResult>
