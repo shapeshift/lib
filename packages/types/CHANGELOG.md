@@ -1,3 +1,26 @@
+# [@shapeshiftoss/types-v1.16.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v1.16.0...@shapeshiftoss/types-v1.16.1) (2021-12-02)
+
+# [@shapeshiftoss/types-v1.16.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v1.15.0...@shapeshiftoss/types-v1.16.0) (2021-12-02)
+
+
+### Features
+
+* add optional description to base asset type ([#264](https://github.com/shapeshift/lib/issues/264)) ([9fc4c63](https://github.com/shapeshift/lib/commit/9fc4c637286c3f285cdeb21970f370ca63b19301))
+
+# [@shapeshiftoss/types-v1.15.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v1.14.0...@shapeshiftoss/types-v1.15.0) (2021-12-02)
+
+
+### Features
+
+* send max ([#262](https://github.com/shapeshift/lib/issues/262)) ([dab48ec](https://github.com/shapeshift/lib/commit/dab48ecabc808ecf0de8989bf390003bd6483517))
+
+# [@shapeshiftoss/types-v1.14.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v1.13.1...@shapeshiftoss/types-v1.14.0) (2021-11-30)
+
+
+### Features
+
+* use sibling packages as peerDependencies ([#229](https://github.com/shapeshift/lib/issues/229)) ([7de039e](https://github.com/shapeshift/lib/commit/7de039e89907d98048fe6b1e39b4a1e64377cb50))
+
 # [@shapeshiftoss/types-v1.13.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v1.13.0...@shapeshiftoss/types-v1.13.1) (2021-11-22)
 
 

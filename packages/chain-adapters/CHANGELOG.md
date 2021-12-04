@@ -1,3 +1,24 @@
+# [@shapeshiftoss/chain-adapters-v1.20.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.20.0...@shapeshiftoss/chain-adapters-v1.20.1) (2021-12-03)
+
+
+### Bug Fixes
+
+* to address on erc20 sends ([#265](https://github.com/shapeshift/lib/issues/265)) ([3c0b439](https://github.com/shapeshift/lib/commit/3c0b4397454e8f25c03092e7b6c5c9c569247743))
+
+# [@shapeshiftoss/chain-adapters-v1.20.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.19.0...@shapeshiftoss/chain-adapters-v1.20.0) (2021-12-02)
+
+
+### Features
+
+* send max ([#262](https://github.com/shapeshift/lib/issues/262)) ([dab48ec](https://github.com/shapeshift/lib/commit/dab48ecabc808ecf0de8989bf390003bd6483517))
+
+# [@shapeshiftoss/chain-adapters-v1.19.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.18.4...@shapeshiftoss/chain-adapters-v1.19.0) (2021-11-30)
+
+
+### Features
+
+* use sibling packages as peerDependencies ([#229](https://github.com/shapeshift/lib/issues/229)) ([7de039e](https://github.com/shapeshift/lib/commit/7de039e89907d98048fe6b1e39b4a1e64377cb50))
+
 # [@shapeshiftoss/chain-adapters-v1.18.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.18.3...@shapeshiftoss/chain-adapters-v1.18.4) (2021-11-24)
 
 
