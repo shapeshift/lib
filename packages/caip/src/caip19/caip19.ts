@@ -26,6 +26,7 @@ type ToCAIP19Args = {
 
 type ToCAIP19 = (args: ToCAIP19Args) => string
 
+// @ts-ignore
 export const toCAIP19: ToCAIP19 = ({ chain, network, contractType, tokenId }) => {
   const caip2 = toCAIP2({ chain, network })
 

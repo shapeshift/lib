@@ -18,6 +18,7 @@ export class ChainAdapterManager {
   private instances: Map<ChainTypes, ChainAdapter<ChainTypes>> = new Map()
 
   constructor(unchainedUrls: UnchainedUrls) {
+    console.log("ChainTypes: ",ChainTypes)
     if (!unchainedUrls) {
       throw new Error('Blockchain urls required')
     }
@@ -41,7 +42,17 @@ export class ChainAdapterManager {
               () => new bitcoin.ChainAdapter({ providers: { http, ws }, coinName: 'Bitcoin' })
             )
           }
+          case ChainTypes.Osmosis: {
+            const http = new unchained.osmosis.api.V1Api(
+              new unchained.osmosis.api.Configuration({ basePath: httpUrl })
+            )
+            return this.addChain(
+              type,
+              () => new osmosis.ChainAdapter({ providers: { http }, coinName: 'Osmosis' })
+            )
+          }
           default:
+            console.log("ChainTypes: ",ChainTypes)
             throw new Error(`ChainAdapterManager: cannot instantiate ${type} chain adapter`)
         }
       }

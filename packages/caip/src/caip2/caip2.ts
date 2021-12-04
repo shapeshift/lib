@@ -46,6 +46,7 @@ export const toCAIP2: ToCAIP2 = ({ chain, network }): string => {
     }
   } as const
 
+  // @ts-ignore
   const namespace: ChainNamespace = shapeShiftToCAIP2[chain].namespace
 
   switch (chain) {

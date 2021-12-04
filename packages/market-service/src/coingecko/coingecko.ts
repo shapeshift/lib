@@ -34,6 +34,7 @@ type CoinGeckoIDMap = {
   [k in ChainTypes]: string
 }
 
+// @ts-ignore
 const coingeckoIDMap: CoinGeckoIDMap = Object.freeze({
   [ChainTypes.Ethereum]: 'ethereum',
   [ChainTypes.Bitcoin]: 'bitcoin'
