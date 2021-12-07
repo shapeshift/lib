@@ -17,7 +17,7 @@ const MarketProviders = [new CoinGeckoMarketService()]
 export const findAll = async (args?: FindAllMarketArgs): Promise<MarketCapResult> => {
   let result: MarketCapResult | null = null
   // Go through market providers listed above and look for market data for all assets.
-  // Once data is found, exist the loop and return result. If no data is found for any
+  // Once data is found, exit the loop and return result. If no data is found for any
   // provider, throw an error.
   for (let i = 0; i < MarketProviders.length && !result; i++) {
     result = await MarketProviders[i].findAll(args)
