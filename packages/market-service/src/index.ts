@@ -6,13 +6,13 @@ import {
   PriceHistoryArgs,
   PriceHistoryType
 } from '@shapeshiftoss/types'
-import { findAllMarketArgs } from '@shapeshiftoss/types/src'
+import { FindAllMarketArgs } from '@shapeshiftoss/types/src'
 
 import { CoinGeckoMarketService } from './coingecko/coingecko'
 
 const MarketProviders = [new CoinGeckoMarketService()]
 
-export const findAll = async (args?: findAllMarketArgs): Promise<MarketCapResult> => {
+export const findAll = async (args?: FindAllMarketArgs): Promise<MarketCapResult> => {
   let result: MarketCapResult | null = null
   for (let i = 0; i < MarketProviders.length && !result; i++) {
     result = await MarketProviders[i].findAll(args)

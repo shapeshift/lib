@@ -1,8 +1,8 @@
-import { findAllMarketType, findByCaip19MarketType, PriceHistoryType } from '@shapeshiftoss/types'
+import { FindAllMarketType, FindByCaip19MarketType, PriceHistoryType } from '@shapeshiftoss/types'
 
 export interface MarketService {
   baseUrl: string
-  findAll: findAllMarketType
+  findAll: FindAllMarketType
   findPriceHistoryByCaip19: PriceHistoryType
-  findByCaip19: findByCaip19MarketType
+  findByCaip19: FindByCaip19MarketType
 }

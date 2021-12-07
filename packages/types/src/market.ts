@@ -28,12 +28,12 @@ export type MarketDataArgs = {
   caip19: string
 }
 
-export type findAllMarketType = (args: findAllMarketArgs) => Promise<MarketCapResult>
-export type findByCaip19MarketType = (args: MarketDataArgs) => Promise<MarketData>
+export type FindAllMarketType = (args: FindAllMarketArgs) => Promise<MarketCapResult>
+export type FindByCaip19MarketType = (args: MarketDataArgs) => Promise<MarketData>
 
 export type PriceHistoryType = (args: PriceHistoryArgs) => Promise<HistoryData[]>
 
-export type findAllMarketArgs = {
+export type FindAllMarketArgs = {
   pages: number
   perPage: number
 }

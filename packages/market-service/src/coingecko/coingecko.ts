@@ -2,7 +2,7 @@ import { adapters } from '@shapeshiftoss/caip'
 import { fromCAIP19 } from '@shapeshiftoss/caip/dist/caip19/caip19'
 import {
   ChainTypes,
-  findAllMarketArgs,
+  FindAllMarketArgs,
   HistoryData,
   HistoryTimeframe,
   MarketCapResult,
@@ -35,12 +35,12 @@ type CoinGeckoAssetData = {
 export class CoinGeckoMarketService implements MarketService {
   baseUrl = 'https://api.coingecko.com/api/v3'
 
-  private readonly defaultGetByMarketCapArgs: findAllMarketArgs = {
+  private readonly defaultGetByMarketCapArgs: FindAllMarketArgs = {
     pages: 10,
     perPage: 250
   }
 
-  findAll = async (args?: findAllMarketArgs) => {
+  findAll = async (args?: FindAllMarketArgs) => {
     const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
     const { pages, perPage } = argsToUse
     const urlAtPage = (page: number) =>
