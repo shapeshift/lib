@@ -81,9 +81,9 @@ export class CoinGeckoMarketService implements MarketService {
 
   findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData> => {
     try {
-      const id = adapters.CAIP19ToCoingecko(caip19)
       const { tokenId } = fromCAIP19(caip19)
       const isToken = !!tokenId
+      const id = isToken ? 'ethereum' : adapters.CAIP19ToCoingecko(caip19)
       const contractUrl = isToken ? `/contract/${tokenId}` : ''
 
       const { data }: { data: CoinGeckoAssetData } = await axios.get(
@@ -109,8 +109,8 @@ export class CoinGeckoMarketService implements MarketService {
     caip19,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
-    const id = adapters.CAIP19ToCoingecko(caip19)
     const { tokenId } = fromCAIP19(caip19)
+    const id = tokenId ? 'ethereum' : adapters.CAIP19ToCoingecko(caip19)
 
     const end = dayjs().startOf('minute')
     let start
