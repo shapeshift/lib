@@ -9,7 +9,6 @@ import {
   NetworkTypes
 } from '@shapeshiftoss/types'
 import { ethereum } from '@shapeshiftoss/unchained-client'
-import { TransferType } from '@shapeshiftoss/unchained-tx-parser'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 import WAValidator from 'multicoin-address-validator'
@@ -17,7 +16,7 @@ import { numberToHex } from 'web3-utils'
 
 import { ChainAdapter as IChainAdapter } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
-import { toPath, toRootDerivationPath } from '../utils/bip32'
+import { getStatus, getType, toPath, toRootDerivationPath } from '../utils'
 import erc20Abi from './erc20Abi.json'
 
 export interface ChainAdapterArgs {
@@ -298,49 +297,43 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       subscriptionId,
       { topic: 'txs', addresses: [address] },
       (msg) => {
-        const getType = (type: TransferType): chainAdapters.TxType => {
-          if (type === TransferType.Send) return chainAdapters.TxType.Send
-          if (type === TransferType.Receive) return chainAdapters.TxType.Receive
+        console.log('msg', msg)
+        const transfers = msg.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
+          caip19: transfer.caip19,
+          from: transfer.from,
+          to: transfer.to,
+          type: getType(transfer.type),
+          value: transfer.totalValue,
+          chainSpecific: {
+            ...(transfer.token && {
+              token: {
+                contract: transfer.token.contract,
+                contractType:
+                  caip19.fromCAIP19(transfer.caip19).contractType ?? ContractTypes.ERC20,
+                name: transfer.token.name,
+                precision: transfer.token.decimals,
+                symbol: transfer.token.symbol
+              }
+            })
+          }
+        }))
 
-          return chainAdapters.TxType.Unknown
-        }
+        console.log('sending msg', msg.txid)
 
-        const transfers = msg.transfers.map<chainAdapters.TxTransfer<ChainTypes.Ethereum>>(
-          (transfer) => ({
-            caip19: transfer.caip19,
-            from: transfer.from,
-            to: transfer.to,
-            type: getType(transfer.type),
-            value: transfer.totalValue,
-            chainSpecific: {
-              ...(transfer.token && {
-                token: {
-                  contract: transfer.token.contract,
-                  contractType:
-                    caip19.fromCAIP19(transfer.caip19).contractType ?? ContractTypes.ERC20,
-                  name: transfer.token.name,
-                  precision: transfer.token.decimals,
-                  symbol: transfer.token.symbol
-                }
-              })
-            }
-          })
-        )
-
-        return {
+        onMessage({
           address: msg.address,
           blockHash: msg.blockHash,
           blockHeight: msg.blockHeight,
           blockTime: msg.blockTime,
           caip2: msg.caip2,
+          chain: ChainTypes.Ethereum,
           confirmations: msg.confirmations,
           fee: msg.fee,
-          status: msg.status,
+          status: getStatus(msg.status),
           tradeDetails: msg.trade,
           transfers,
-          txid: msg.txid,
-          value: msg.value
-        }
+          txid: msg.txid
+        })
       },
       (err) => onError({ message: err.message })
     )
