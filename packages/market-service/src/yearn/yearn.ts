@@ -1,10 +1,11 @@
-
 import { adapters } from '@shapeshiftoss/caip'
+import { fromCAIP19, toCAIP19 } from '@shapeshiftoss/caip/dist/caip19/caip19'
 import {
   ChainTypes,
-  GetByMarketCapArgs,
+  FindAllMarketArgs,
   HistoryData,
   HistoryTimeframe,
+  MarketCapResult,
   MarketData,
   MarketDataArgs,
   PriceHistoryArgs
@@ -45,58 +46,69 @@ const coingeckoIDMap: CoinGeckoIDMap = Object.freeze({
 export class YearnMarketCapService implements MarketService {
   baseUrl = 'https://api.yearn.finance'
 
-  private readonly defaultGetByMarketCapArgs: GetByMarketCapArgs = {
+  private readonly defaultGetByMarketCapArgs: FindAllMarketArgs = {
     pages: 10,
     perPage: 250
   }
 
-  async getByMarketCap(args?: GetByMarketCapArgs) {
-    const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
-    const { pages, perPage } = argsToUse
-    const urlAtPage = (page: number) =>
-      `${this.baseUrl}/v1/chains/1/vaults/all`
-    const pageCount = Array(pages)
-      .fill(0)
-      .map((_v, i) => i + 1)
+  findAll = async (args?: FindAllMarketArgs) => {
+    const url = `${this.baseUrl}/v1/chains/1/vaults/all`
+    // const pageCount = Array(pages)
+    //   .fill(0)
+    //   .map((_v, i) => i + 1)
     try {
-      const combined = (
-        await Promise.all(
-          pageCount.map(async (page) => axios.get<YearnMarketCapCap>(urlAtPage(page)))
-        )
-      ).flat()
-      return combined
-        .map(({ data }) => data ?? []) // filter out rate limited results
-        .flat()
-        .sort((a, b) => (a.market_cap_rank > b.market_cap_rank ? 1 : -1))
-        .reduce((acc, cur) => {
-          const { id } = cur
-          try {
-            const caip19 = adapters.coingeckoToCAIP19(id)
-            const curWithoutId = omit(cur, 'id') // don't leak this through to clients
-            acc[caip19] = {
-              price: curWithoutId.current_price.toString(),
-              marketCap: curWithoutId.market_cap.toString(),
-              volume: curWithoutId.total_volume.toString(),
-              changePercent24Hr: curWithoutId.price_change_percentage_24h
-            }
-            return acc
-          } catch {
-            return acc // no caip found, we don't support this asset
-          }
-        }, {} as Record<string, MarketData>)
+      const { data } = await axios.get<YearnMarketCap[]>(url)
+      // const marketCapData = data.reduce((acc, yearnData) => {
+
+      // }, {})
+      const yearnItem = data[0]
+      console.dir({ yearnItem }, { color: true, depth: 4 })
+      return {
+        ['caip19']: {
+          price: '10',
+          marketCap: '10',
+          volume: '10',
+          changePercent24Hr: 10
+        }
+      } as MarketCapResult
+      // const combined = (
+      //   await Promise.all(
+      //     pageCount.map(async (page) => axios.get<YearnMarketCap>(url))
+      //   )
+      // ).flat()
+      // return combined
+      //   .map(({ data }) => data ?? []) // filter out rate limited results
+      //   .flat()
+      //   .sort((a, b) => (a.market_cap_rank > b.market_cap_rank ? 1 : -1))
+      //   .reduce((acc, cur) => {
+      //     const { id } = cur
+      //     try {
+      //       const caip19 = adapters.coingeckoToCAIP19(id)
+      //       const curWithoutId = omit(cur, 'id') // don't leak this through to clients
+      //       acc[caip19] = {
+      //         price: curWithoutId.current_price.toString(),
+      //         marketCap: curWithoutId.market_cap.toString(),
+      //         volume: curWithoutId.total_volume.toString(),
+      //         changePercent24Hr: curWithoutId.price_change_percentage_24h
+      //       }
+      //       return acc
+      //     } catch {
+      //       return acc // no caip found, we don't support this asset
+      //     }
+      //   }, {} as MarketCapResult)
     } catch (e) {
       return {}
     }
   }
 
-  getMarketData = async ({ chain, tokenId }: MarketDataArgs): Promise<MarketData> => {
-    const id = coingeckoIDMap[chain]
+  findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData> => {
     try {
+      const { tokenId } = fromCAIP19(caip19)
       const isToken = !!tokenId
       const contractUrl = isToken ? `/contract/${tokenId}` : ''
 
       const { data }: { data: YearnAssetData } = await axios.get(
-        `${this.baseUrl}/coins/${id}${contractUrl}`
+        `${this.baseUrl}/coins/${tokenId}${contractUrl}`
       )
 
       // TODO: get correct localizations
@@ -114,12 +126,13 @@ export class YearnMarketCapService implements MarketService {
     }
   }
 
-  getPriceHistory = async ({
-    chain,
-    timeframe,
-    tokenId
+  findPriceHistoryByCaip19 = async ({
+    caip19,
+    timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
-    const id = coingeckoIDMap[chain]
+    // TODO: Figure out how to get price history data for yAssets
+    const { tokenId } = fromCAIP19(caip19)
+    const id = tokenId
 
     const end = dayjs().startOf('minute')
     let start
