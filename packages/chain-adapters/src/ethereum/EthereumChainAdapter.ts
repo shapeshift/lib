@@ -297,7 +297,6 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       subscriptionId,
       { topic: 'txs', addresses: [address] },
       (msg) => {
-        console.log('msg', msg)
         const transfers = msg.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
           caip19: transfer.caip19,
           from: transfer.from,
@@ -317,8 +316,6 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
             })
           }
         }))
-
-        console.log('sending msg', msg.txid)
 
         onMessage({
           address: msg.address,
