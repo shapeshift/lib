@@ -20,7 +20,7 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: Install
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --peer
       # needs to run after install
       - name: Commitlint PR title
         env:
