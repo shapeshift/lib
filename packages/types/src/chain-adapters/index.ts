@@ -1,3 +1,4 @@
+import { CAIP2, CAIP19 } from '@shapeshiftoss/caip'
 import { BTCSignTx, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 
 import { BIP32Params, ChainTypes, NetworkTypes, SwapperType, UtxoAccountType } from '../base'
@@ -18,10 +19,15 @@ type ChainSpecificAccount<T> = ChainSpecific<
 export type Account<T extends ChainTypes> = {
   balance: string
   pubkey: string
-  symbol: string
+  caip2: CAIP2
+  caip19: CAIP19
   chain: T
-  network: NetworkTypes
 } & ChainSpecificAccount<T>
+
+export type AssetBalance = {
+  balance: string
+  caip19: CAIP19
+}
 
 type ChainSpecificTransaction<T> = ChainSpecific<
   T,
