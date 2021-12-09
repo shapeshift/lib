@@ -1,13 +1,16 @@
+import { Yearn, ChainId } from '@yfi/sdk'
 import { adapters } from '@shapeshiftoss/caip'
 import { fromCAIP19, toCAIP19 } from '@shapeshiftoss/caip/dist/caip19/caip19'
 import {
   ChainTypes,
+  ContractTypes,
   FindAllMarketArgs,
   HistoryData,
   HistoryTimeframe,
   MarketCapResult,
   MarketData,
   MarketDataArgs,
+  NetworkTypes,
   PriceHistoryArgs
 } from '@shapeshiftoss/types'
 import axios from 'axios'
@@ -32,45 +35,62 @@ type YearnAssetData = {
   }
 }
 
-// TODO: change this
-type CoinGeckoIDMap = {
-  [k in ChainTypes]: string
+type YearnMarketCapServiceArgs = {
+  yearnSdk: Yearn<ChainId>
 }
-
-// TODO: change this
-const coingeckoIDMap: CoinGeckoIDMap = Object.freeze({
-  [ChainTypes.Ethereum]: 'ethereum',
-  [ChainTypes.Bitcoin]: 'bitcoin'
-})
 
 export class YearnMarketCapService implements MarketService {
   baseUrl = 'https://api.yearn.finance'
+  yearnSdk: Yearn<ChainId>
 
   private readonly defaultGetByMarketCapArgs: FindAllMarketArgs = {
     pages: 10,
     perPage: 250
   }
 
+  constructor(args: YearnMarketCapServiceArgs) {
+    this.yearnSdk = args.yearnSdk
+  }
+
   findAll = async (args?: FindAllMarketArgs) => {
     const url = `${this.baseUrl}/v1/chains/1/vaults/all`
-    // const pageCount = Array(pages)
-    //   .fill(0)
-    //   .map((_v, i) => i + 1)
     try {
       const { data } = await axios.get<YearnMarketCap[]>(url)
+      // const assets = await this.yearnSdk.services.lens.adapters.vaults.v2.tokens()
+      // console.log({ assets })
+      return data
+        .sort((a, b) => (a.tvl.tvl > b.tvl.tvl ? 1 : -1))
+        .reduce((acc, yearnItem) => {
+          const caip19: string = toCAIP19({
+            chain: ChainTypes.Ethereum,
+            network: NetworkTypes.MAINNET,
+            contractType: ContractTypes.ERC20,
+            tokenId: yearnItem.address
+          })
+
+          acc[caip19] = {
+            price: '10',
+            marketCap: '10',
+            volume: '10',
+            changePercent24Hr: 10
+          }
+
+          return acc
+        }, {} as MarketCapResult)
+
       // const marketCapData = data.reduce((acc, yearnData) => {
 
       // }, {})
-      const yearnItem = data[0]
-      console.dir({ yearnItem }, { color: true, depth: 4 })
-      return {
-        ['caip19']: {
-          price: '10',
-          marketCap: '10',
-          volume: '10',
-          changePercent24Hr: 10
-        }
-      } as MarketCapResult
+      // const yearnItem = data[0]
+      // console.dir({ yearnMarketData }, { color: true, depth: 4 })
+      // return {
+      //   ['caip19']: {
+      //     price: '10',
+      //     marketCap: '10',
+      //     volume: '10',
+      //     changePercent24Hr: 10
+      //   }
+      // } as MarketCapResult
       // const combined = (
       //   await Promise.all(
       //     pageCount.map(async (page) => axios.get<YearnMarketCap>(url))
@@ -97,6 +117,7 @@ export class YearnMarketCapService implements MarketService {
       //     }
       //   }, {} as MarketCapResult)
     } catch (e) {
+      console.log(e)
       return {}
     }
   }
