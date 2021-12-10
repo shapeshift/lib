@@ -1,5 +1,3 @@
-import BigNumber from 'bignumber.js'
-import { Yearn, ChainId } from '@yfi/sdk'
 import { adapters } from '@shapeshiftoss/caip'
 import { fromCAIP19, toCAIP19 } from '@shapeshiftoss/caip/dist/caip19/caip19'
 import {
@@ -14,9 +12,13 @@ import {
   NetworkTypes,
   PriceHistoryArgs
 } from '@shapeshiftoss/types'
+import { ChainId,Yearn } from '@yfi/sdk'
 import axios from 'axios'
+import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
+import { ethers } from 'ethers'
 import omit from 'lodash/omit'
+import { debugPort } from 'process'
 
 import { MarketService } from '../api'
 import { YearnMarketCap } from './yearn-types'
@@ -54,9 +56,7 @@ export class YearnMarketCapService implements MarketService {
   }
 
   findAll = async (args?: FindAllMarketArgs) => {
-    const url = `${this.baseUrl}/v1/chains/1/vaults/all`
     try {
-      const { data } = await axios.get<YearnMarketCap[]>(url)
       const vaults = await this.yearnSdk.vaults.get()
 
       // Vault token price (when total asssets inside is 0 (calculate underlying asset price)): underlyingTokenBalance.amountUsdc / underlyingTokenBalance.amount
@@ -80,7 +80,6 @@ export class YearnMarketCapService implements MarketService {
             contractType: ContractTypes.ERC20,
             tokenId: yearnItem.address
           })
-          // console.dir({ yearnItem }, { depth: 5 })
           // if amountUsdc of a yearn asset is 0, the asset has not price or value
           if (new BigNumber(yearnItem.underlyingTokenBalance.amountUsdc).eq(0)) {
             acc[caip19] = {
@@ -97,11 +96,16 @@ export class YearnMarketCapService implements MarketService {
           let changePercent24Hr = 0
 
           const price = new BigNumber(yearnItem.underlyingTokenBalance.amountUsdc)
+            .div('1e+6')
             .div(yearnItem.underlyingTokenBalance.amount)
             .times(`1e+${yearnItem.decimals}`)
-            .toFixed(0)
+            .times(yearnItem.metadata.pricePerShare)
+            .div(`1e+${yearnItem.decimals}`)
+            .toFixed(2)
 
-          const marketCap = yearnItem.underlyingTokenBalance.amountUsdc
+          const marketCap = new BigNumber(yearnItem.underlyingTokenBalance.amountUsdc)
+            .div('1e+6')
+            .toFixed(2)
 
           const historicEarnings = yearnItem.metadata.historicEarnings
           const lastHistoricalEarnings = historicEarnings
@@ -118,7 +122,10 @@ export class YearnMarketCapService implements MarketService {
 
           if (lastHistoricalEarnings) {
             changePercent24Hr =
-              volume.div(lastHistoricalEarnings.earnings.amountUsdc).toNumber() || 0
+              volume
+                .div(lastHistoricalEarnings.earnings.amountUsdc)
+                .div('1e+6')
+                .toNumber() || 0
           }
 
           acc[caip19] = {
@@ -136,24 +143,66 @@ export class YearnMarketCapService implements MarketService {
     }
   }
 
-  findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData> => {
+  findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData | null> => {
     try {
       const { tokenId } = fromCAIP19(caip19)
-      const isToken = !!tokenId
-      const contractUrl = isToken ? `/contract/${tokenId}` : ''
+      if (!tokenId) return null
+      const checksumAddress = ethers.utils.getAddress(tokenId)
+      const vaults = await this.yearnSdk.vaults.get([checksumAddress])
+      if (!vaults || !vaults.length) return null
+      const vault = vaults[0]
 
-      const { data }: { data: YearnAssetData } = await axios.get(
-        `${this.baseUrl}/coins/${tokenId}${contractUrl}`
-      )
+      if (new BigNumber(vault.underlyingTokenBalance.amountUsdc).eq(0)) {
+        return {
+          price: '0',
+          marketCap: '0',
+          volume: '0',
+          changePercent24Hr: 0
+        }
+      }
 
-      // TODO: get correct localizations
-      const currency = 'usd'
-      const marketData = data?.market_data
+      let volume = new BigNumber('0')
+      let changePercent24Hr = 0
+
+      const price = new BigNumber(vault.underlyingTokenBalance.amountUsdc)
+        .div('1e+6')
+        .div(vault.underlyingTokenBalance.amount)
+        .times(`1e+${vault.decimals}`)
+        .times(vault.metadata.pricePerShare)
+        .div(`1e+${vault.decimals}`)
+        .toFixed(2)
+
+      const marketCap = new BigNumber(vault.underlyingTokenBalance.amountUsdc)
+        .div('1e+6')
+        .toFixed(2)
+
+      const historicEarnings = vault.metadata.historicEarnings
+      const lastHistoricalEarnings = historicEarnings
+        ? historicEarnings[historicEarnings.length - 1]
+        : null
+      const secondToLastHistoricalEarnings = historicEarnings
+        ? historicEarnings[historicEarnings.length - 2]
+        : null
+      if (lastHistoricalEarnings && secondToLastHistoricalEarnings) {
+        volume = new BigNumber(lastHistoricalEarnings.earnings.amountUsdc)
+          .minus(secondToLastHistoricalEarnings.earnings.amountUsdc)
+          .div('1e+6')
+          .dp(2)
+      }
+
+      if (lastHistoricalEarnings) {
+        changePercent24Hr =
+          volume
+            .div(lastHistoricalEarnings.earnings.amountUsdc)
+            .times('1e+6')
+            .toNumber() || 0
+      }
+
       return {
-        price: marketData?.current_price?.[currency],
-        marketCap: marketData?.market_cap?.[currency],
-        changePercent24Hr: marketData?.price_change_percentage_24h,
-        volume: marketData?.total_volume?.[currency]
+        price,
+        marketCap,
+        volume: volume.abs().toString(),
+        changePercent24Hr
       }
     } catch (e) {
       console.warn(e)
