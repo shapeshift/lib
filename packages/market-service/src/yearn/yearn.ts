@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js'
 import { Yearn, ChainId } from '@yfi/sdk'
 import { adapters } from '@shapeshiftoss/caip'
 import { fromCAIP19, toCAIP19 } from '@shapeshiftoss/caip/dist/caip19/caip19'
@@ -56,10 +57,22 @@ export class YearnMarketCapService implements MarketService {
     const url = `${this.baseUrl}/v1/chains/1/vaults/all`
     try {
       const { data } = await axios.get<YearnMarketCap[]>(url)
-      // const assets = await this.yearnSdk.services.lens.adapters.vaults.v2.tokens()
-      // console.log({ assets })
-      return data
-        .sort((a, b) => (a.tvl.tvl > b.tvl.tvl ? 1 : -1))
+      const vaults = await this.yearnSdk.vaults.get()
+
+      // Vault token price (when total asssets inside is 0 (calculate underlying asset price)): underlyingTokenBalance.amountUsdc / underlyingTokenBalance.amount
+      // Acutal vault token price: underlying token price * (pricePerShare / (1e+decimals of vault asset))
+      // MarketCap:  vault.underlyingTokenBalance.amountUsdc
+      // Volume:  last historical earnings - second to last historical earnings
+      // Change24: volume / last historical earnings
+
+      // vault.underlyingTokenBalance.amount - total holdings of underlying asset inside the vault
+      // vault.underlyingTokenBalance.amountUsdc - marketCap of vault
+      return vaults
+        .sort((a, b) =>
+          new BigNumber(a.underlyingTokenBalance.amountUsdc).lt(b.underlyingTokenBalance.amountUsdc)
+            ? 1
+            : -1
+        )
         .reduce((acc, yearnItem) => {
           const caip19: string = toCAIP19({
             chain: ChainTypes.Ethereum,
@@ -67,55 +80,56 @@ export class YearnMarketCapService implements MarketService {
             contractType: ContractTypes.ERC20,
             tokenId: yearnItem.address
           })
+          // console.dir({ yearnItem }, { depth: 5 })
+          // if amountUsdc of a yearn asset is 0, the asset has not price or value
+          if (new BigNumber(yearnItem.underlyingTokenBalance.amountUsdc).eq(0)) {
+            acc[caip19] = {
+              price: '0',
+              marketCap: '0',
+              volume: '0',
+              changePercent24Hr: 0
+            }
+
+            return acc
+          }
+
+          let volume = new BigNumber('0')
+          let changePercent24Hr = 0
+
+          const price = new BigNumber(yearnItem.underlyingTokenBalance.amountUsdc)
+            .div(yearnItem.underlyingTokenBalance.amount)
+            .times(`1e+${yearnItem.decimals}`)
+            .toFixed(0)
+
+          const marketCap = yearnItem.underlyingTokenBalance.amountUsdc
+
+          const historicEarnings = yearnItem.metadata.historicEarnings
+          const lastHistoricalEarnings = historicEarnings
+            ? historicEarnings[historicEarnings.length - 1]
+            : null
+          const secondToLastHistoricalEarnings = historicEarnings
+            ? historicEarnings[historicEarnings.length - 2]
+            : null
+          if (lastHistoricalEarnings && secondToLastHistoricalEarnings) {
+            volume = new BigNumber(lastHistoricalEarnings.earnings.amountUsdc).minus(
+              secondToLastHistoricalEarnings.earnings.amountUsdc
+            )
+          }
+
+          if (lastHistoricalEarnings) {
+            changePercent24Hr =
+              volume.div(lastHistoricalEarnings.earnings.amountUsdc).toNumber() || 0
+          }
 
           acc[caip19] = {
-            price: '10',
-            marketCap: '10',
-            volume: '10',
-            changePercent24Hr: 10
+            price,
+            marketCap,
+            volume: volume.abs().toString(),
+            changePercent24Hr
           }
 
           return acc
         }, {} as MarketCapResult)
-
-      // const marketCapData = data.reduce((acc, yearnData) => {
-
-      // }, {})
-      // const yearnItem = data[0]
-      // console.dir({ yearnMarketData }, { color: true, depth: 4 })
-      // return {
-      //   ['caip19']: {
-      //     price: '10',
-      //     marketCap: '10',
-      //     volume: '10',
-      //     changePercent24Hr: 10
-      //   }
-      // } as MarketCapResult
-      // const combined = (
-      //   await Promise.all(
-      //     pageCount.map(async (page) => axios.get<YearnMarketCap>(url))
-      //   )
-      // ).flat()
-      // return combined
-      //   .map(({ data }) => data ?? []) // filter out rate limited results
-      //   .flat()
-      //   .sort((a, b) => (a.market_cap_rank > b.market_cap_rank ? 1 : -1))
-      //   .reduce((acc, cur) => {
-      //     const { id } = cur
-      //     try {
-      //       const caip19 = adapters.coingeckoToCAIP19(id)
-      //       const curWithoutId = omit(cur, 'id') // don't leak this through to clients
-      //       acc[caip19] = {
-      //         price: curWithoutId.current_price.toString(),
-      //         marketCap: curWithoutId.market_cap.toString(),
-      //         volume: curWithoutId.total_volume.toString(),
-      //         changePercent24Hr: curWithoutId.price_change_percentage_24h
-      //       }
-      //       return acc
-      //     } catch {
-      //       return acc // no caip found, we don't support this asset
-      //     }
-      //   }, {} as MarketCapResult)
     } catch (e) {
       console.log(e)
       return {}

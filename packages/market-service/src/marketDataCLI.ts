@@ -7,7 +7,7 @@ const main = async (): Promise<void> => {
   const yearnSdk = new Yearn(1, { provider })
   const yearnMarketService = new YearnMarketCapService({ yearnSdk })
   const findAllData = await yearnMarketService.findAll()
-  // console.log({ findAllData })
+  console.log({ findAllData })
 }
 
 main().then(() => console.info('Done'))
