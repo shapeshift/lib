@@ -1,4 +1,3 @@
-import { adapters } from '@shapeshiftoss/caip'
 import { fromCAIP19, toCAIP19 } from '@shapeshiftoss/caip/dist/caip19/caip19'
 import {
   ChainTypes,
@@ -12,31 +11,28 @@ import {
   NetworkTypes,
   PriceHistoryArgs
 } from '@shapeshiftoss/types'
-import { ChainId,Yearn } from '@yfi/sdk'
-import axios from 'axios'
+import { ChainId, Yearn } from '@yfi/sdk'
 import BigNumber from 'bignumber.js'
-import dayjs from 'dayjs'
 import { ethers } from 'ethers'
-import omit from 'lodash/omit'
-import { debugPort } from 'process'
+import head from 'lodash/head'
 
 import { MarketService } from '../api'
-import { YearnMarketCap } from './yearn-types'
+import { ACCOUNT_HISTORIC_EARNINGS } from './gql-queries'
 
 // TODO: fix this to represent yearn data
-type YearnAssetData = {
-  chain: ChainTypes
-  market_data: {
-    current_price: { [key: string]: string }
-    market_cap: { [key: string]: string }
-    total_volume: { [key: string]: string }
-    high_24h: { [key: string]: string }
-    low_24h: { [key: string]: string }
-    total_supply: string
-    max_supply: string
-    price_change_percentage_24h: number
-  }
-}
+// type YearnAssetData = {
+//   chain: ChainTypes
+//   market_data: {
+//     current_price: { [key: string]: string }
+//     market_cap: { [key: string]: string }
+//     total_volume: { [key: string]: string }
+//     high_24h: { [key: string]: string }
+//     low_24h: { [key: string]: string }
+//     total_supply: string
+//     max_supply: string
+//     price_change_percentage_24h: number
+//   }
+// }
 
 type YearnMarketCapServiceArgs = {
   yearnSdk: Yearn<ChainId>
@@ -150,7 +146,8 @@ export class YearnMarketCapService implements MarketService {
       const checksumAddress = ethers.utils.getAddress(tokenId)
       const vaults = await this.yearnSdk.vaults.get([checksumAddress])
       if (!vaults || !vaults.length) return null
-      const vault = vaults[0]
+      const vault = head(vaults)
+      if (!vault) return null
 
       if (new BigNumber(vault.underlyingTokenBalance.amountUsdc).eq(0)) {
         return {
@@ -210,53 +207,79 @@ export class YearnMarketCapService implements MarketService {
     }
   }
 
+  private getDate(daysAgo: number) {
+    const date = new Date()
+    date.setDate(date.getDate() - daysAgo)
+    return date
+  }
+
   findPriceHistoryByCaip19 = async ({
     caip19,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
-    // TODO: Figure out how to get price history data for yAssets
     const { tokenId } = fromCAIP19(caip19)
-    const id = tokenId
+    if (!tokenId) return []
+    const checksumAddress = ethers.utils.getAddress(tokenId)
 
-    const end = dayjs().startOf('minute')
-    let start
+    let daysAgo
     switch (timeframe) {
       case HistoryTimeframe.HOUR:
-        start = end.subtract(1, 'hour')
+        daysAgo = 2
         break
       case HistoryTimeframe.DAY:
-        start = end.subtract(1, 'day')
+        daysAgo = 3
         break
       case HistoryTimeframe.WEEK:
-        start = end.subtract(1, 'week')
+        daysAgo = 7
         break
       case HistoryTimeframe.MONTH:
-        start = end.subtract(1, 'month')
+        daysAgo = 30
         break
       case HistoryTimeframe.YEAR:
-        start = end.subtract(1, 'year')
+        daysAgo = 365
         break
       case HistoryTimeframe.ALL:
-        start = end.subtract(20, 'years')
+        daysAgo = 3650
         break
       default:
-        start = end
+        daysAgo = 1
     }
 
     try {
-      const from = start.valueOf() / 1000
-      const to = end.valueOf() / 1000
-      const contract = tokenId ? `/contract/${tokenId}` : ''
-      const url = `${this.baseUrl}/coins/${id}${contract}`
-      // TODO: change vs_currency to localized currency
-      const currency = 'usd'
-      const { data: historyData } = await axios.get(
-        `${url}/market_chart/range?id=${id}&vs_currency=${currency}&from=${from}&to=${to}`
-      )
-      return historyData?.prices?.map((data: [string, number]) => {
+      const vaults = await this.yearnSdk.vaults.get([checksumAddress])
+      const decimals = vaults[0].decimals
+
+      const response = (await this.yearnSdk.services.subgraph.fetchQuery(
+        ACCOUNT_HISTORIC_EARNINGS,
+        {
+          id: checksumAddress,
+          shareToken: checksumAddress,
+          fromDate: this.getDate(daysAgo)
+            .getTime()
+            .toString(),
+          toDate: this.getDate(0)
+            .getTime()
+            .toString()
+        }
+      )) as any // TODO: type this response.
+
+      type VaultDayData = {
+        pricePerShare: string
+        timestamp: string
+        tokenPriceUSDC: string
+      }
+      const vaultDayData: VaultDayData[] =
+        response.data.account.vaultPositions[0].vault.vaultDayData
+
+      return vaultDayData.map((datum: VaultDayData) => {
         return {
-          date: data[0],
-          price: data[1]
+          date: datum.timestamp,
+          price: new BigNumber(datum.tokenPriceUSDC)
+            .div(`1e+6`)
+            .times(datum.pricePerShare)
+            .div(`1e+${decimals}`)
+            .dp(6)
+            .toNumber()
         }
       })
     } catch (e) {
