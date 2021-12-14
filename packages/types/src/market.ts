@@ -34,8 +34,7 @@ export type FindByCaip19MarketType = (args: MarketDataArgs) => Promise<MarketDat
 export type PriceHistoryType = (args: PriceHistoryArgs) => Promise<HistoryData[]>
 
 export type FindAllMarketArgs = {
-  pages: number
-  perPage: number
+  count: number
 }
 
 export type MarketCapResult = {

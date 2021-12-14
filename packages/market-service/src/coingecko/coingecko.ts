@@ -11,6 +11,7 @@ import {
   PriceHistoryArgs
 } from '@shapeshiftoss/types'
 import axios from 'axios'
+import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 import omit from 'lodash/omit'
 
@@ -36,13 +37,17 @@ export class CoinGeckoMarketService implements MarketService {
   baseUrl = 'https://api.coingecko.com/api/v3'
 
   private readonly defaultGetByMarketCapArgs: FindAllMarketArgs = {
-    pages: 10,
-    perPage: 250
+    count: 2500
   }
 
   findAll = async (args?: FindAllMarketArgs) => {
     const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
-    const { pages, perPage } = argsToUse
+    const { count } = argsToUse
+    const perPage = 250
+    const pages = new BigNumber(count)
+      .div(perPage)
+      .decimalPlaces(0)
+      .toNumber()
     const urlAtPage = (page: number) =>
       `${this.baseUrl}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=${page}&sparkline=false`
     const pageCount = Array(pages)

@@ -43,8 +43,7 @@ export class YearnMarketCapService implements MarketService {
   yearnSdk: Yearn<ChainId>
 
   private readonly defaultGetByMarketCapArgs: FindAllMarketArgs = {
-    pages: 10,
-    perPage: 250
+    count: 2500
   }
 
   constructor(args: YearnMarketCapServiceArgs) {
@@ -53,8 +52,9 @@ export class YearnMarketCapService implements MarketService {
 
   findAll = async (args?: FindAllMarketArgs) => {
     try {
-      const vaults = await this.yearnSdk.vaults.get()
-
+      const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
+      const response = await this.yearnSdk.vaults.get()
+      const vaults = response.splice(0, argsToUse.count)
       // Vault token price (when total asssets inside is 0 (calculate underlying asset price)): underlyingTokenBalance.amountUsdc / underlyingTokenBalance.amount
       // Acutal vault token price: underlying token price * (pricePerShare / (1e+decimals of vault asset))
       // MarketCap:  vault.underlyingTokenBalance.amountUsdc

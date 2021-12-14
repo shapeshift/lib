@@ -2,7 +2,7 @@ import { adapters } from '@shapeshiftoss/caip'
 import { ChainTypes, HistoryTimeframe } from '@shapeshiftoss/types'
 import axios from 'axios'
 
-import { findAll, findByCaip19, findPriceHistoryByCaip19 } from '..'
+import { findAll } from '..'
 import { YearnMarketCap } from './yearn-types'
 
 jest.mock('axios')

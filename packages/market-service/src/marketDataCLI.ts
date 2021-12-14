@@ -2,7 +2,7 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { HistoryTimeframe } from '@shapeshiftoss/types'
 import { Yearn } from '@yfi/sdk'
 
-import { CoinGeckoMarketService } from './coingecko/coingecko'
+// import { CoinGeckoMarketService } from './coingecko/coingecko'
 import { YearnMarketCapService } from './yearn/yearn'
 
 const main = async (): Promise<void> => {
