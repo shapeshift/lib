@@ -1,24 +1,24 @@
-import { BIP32Params } from '@shapeshiftoss/types'
+import { BIP44Params } from '@shapeshiftoss/types'
 
-export const toRootDerivationPath = (bip32Params: BIP32Params): string => {
-  const { purpose, coinType, accountNumber } = bip32Params
-  if (typeof purpose === 'undefined') throw new Error('toPath: bip32Params.purpose is required')
-  if (typeof coinType === 'undefined') throw new Error('toPath: bip32Params.coinType is required')
+export const toRootDerivationPath = (bip44Params: BIP44Params): string => {
+  const { purpose, coinType, accountNumber } = bip44Params
+  if (typeof purpose === 'undefined') throw new Error('toPath: bip44Params.purpose is required')
+  if (typeof coinType === 'undefined') throw new Error('toPath: bip44Params.coinType is required')
   if (typeof accountNumber === 'undefined')
-    throw new Error('toPath: bip32Params.accountNumber is required')
+    throw new Error('toPath: bip44Params.accountNumber is required')
   return `m/${purpose}'/${coinType}'/${accountNumber}'`
 }
 
-export const toPath = (bip32Params: BIP32Params): string => {
-  const { purpose, coinType, accountNumber, isChange = false, index = 0 } = bip32Params
-  if (typeof purpose === 'undefined') throw new Error('toPath: bip32Params.purpose is required')
-  if (typeof coinType === 'undefined') throw new Error('toPath: bip32Params.coinType is required')
+export const toPath = (bip44Params: BIP44Params): string => {
+  const { purpose, coinType, accountNumber, isChange = false, index = 0 } = bip44Params
+  if (typeof purpose === 'undefined') throw new Error('toPath: bip44Params.purpose is required')
+  if (typeof coinType === 'undefined') throw new Error('toPath: bip44Params.coinType is required')
   if (typeof accountNumber === 'undefined')
-    throw new Error('toPath: bip32Params.accountNumber is required')
+    throw new Error('toPath: bip44Params.accountNumber is required')
   return `m/${purpose}'/${coinType}'/${accountNumber}'/${Number(isChange)}/${index}`
 }
 
-export const fromPath = (path: string): BIP32Params => {
+export const fromPath = (path: string): BIP44Params => {
   const parts = path.split('/')
   const sliced = parts.slice(1) // discard the m/
   if (sliced.length !== 5) throw new Error(`fromPath: path only has ${sliced.length} parts`)
