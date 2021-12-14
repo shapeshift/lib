@@ -18,6 +18,7 @@ import head from 'lodash/head'
 
 import { MarketService } from '../api'
 import { ACCOUNT_HISTORIC_EARNINGS } from './gql-queries'
+import { VaultDayDataGQLResponse } from './yearn-types'
 
 // TODO: fix this to represent yearn data
 // type YearnAssetData = {
@@ -249,7 +250,7 @@ export class YearnMarketCapService implements MarketService {
       const vaults = await this.yearnSdk.vaults.get([checksumAddress])
       const decimals = vaults[0].decimals
 
-      const response = (await this.yearnSdk.services.subgraph.fetchQuery(
+      const response: VaultDayDataGQLResponse = await this.yearnSdk.services.subgraph.fetchQuery(
         ACCOUNT_HISTORIC_EARNINGS,
         {
           id: checksumAddress,
@@ -261,7 +262,7 @@ export class YearnMarketCapService implements MarketService {
             .getTime()
             .toString()
         }
-      )) as any // TODO: type this response.
+      )
 
       type VaultDayData = {
         pricePerShare: string
