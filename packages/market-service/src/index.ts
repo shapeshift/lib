@@ -58,7 +58,11 @@ export const findPriceHistoryByCaip19: PriceHistoryType = async ({
   let result: HistoryData[] | null = null
   // Loop through market providers and look for asset price history data. Once found, exit loop.
   for (let i = 0; i < MarketProviders.length && !result; i++) {
-    result = await MarketProviders[i].findPriceHistoryByCaip19({ caip19, timeframe })
+    try {
+      result = await MarketProviders[i].findPriceHistoryByCaip19({ caip19, timeframe })
+    } catch (e) {
+      console.info(e)
+    }
   }
   if (!result) return []
   return result
