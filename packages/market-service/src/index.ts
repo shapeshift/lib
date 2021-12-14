@@ -1,3 +1,4 @@
+import { JsonRpcProvider } from '@ethersproject/providers'
 import {
   HistoryData,
   MarketCapResult,
@@ -6,9 +7,8 @@ import {
   PriceHistoryArgs,
   PriceHistoryType
 } from '@shapeshiftoss/types'
-import { Yearn } from '@yfi/sdk'
-import { JsonRpcProvider } from '@ethersproject/providers'
 import { FindAllMarketArgs } from '@shapeshiftoss/types/src'
+import { Yearn } from '@yfi/sdk'
 
 import { CoinGeckoMarketService } from './coingecko/coingecko'
 import { YearnMarketCapService } from './yearn/yearn'
