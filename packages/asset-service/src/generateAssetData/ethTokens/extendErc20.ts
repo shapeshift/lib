@@ -1,4 +1,4 @@
-import { caip19, caip2 } from '@shapeshiftoss/caip'
+import { caip2, caip19 } from '@shapeshiftoss/caip'
 import {
   AssetDataSource,
   ChainTypes,
