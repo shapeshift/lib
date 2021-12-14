@@ -1,5 +1,5 @@
 type Strategy = {
-  address: string,
+  address: string
   name: string
 }
 export type YearnMarketCap = {

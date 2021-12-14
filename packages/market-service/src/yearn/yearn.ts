@@ -134,7 +134,7 @@ export class YearnMarketCapService implements MarketService {
           return acc
         }, {} as MarketCapResult)
     } catch (e) {
-      console.log(e)
+      console.info(e)
       return {}
     }
   }

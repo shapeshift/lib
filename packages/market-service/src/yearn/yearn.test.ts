@@ -2,7 +2,7 @@ import { adapters } from '@shapeshiftoss/caip'
 import { ChainTypes, HistoryTimeframe } from '@shapeshiftoss/types'
 import axios from 'axios'
 
-import { getByMarketCap, getMarketData, getPriceHistory } from '..'
+import { findAll, findByCaip19, findPriceHistoryByCaip19 } from '..'
 import { YearnMarketCap } from './yearn-types'
 
 jest.mock('axios')
@@ -13,26 +13,28 @@ describe('yearn market service', () => {
   describe('getMarketCap', () => {
     const yWETH: YearnMarketCap = {
       inception: 10774489,
-      address: "0xe1237aA7f535b0CC33Fd973D66cBf830354D16c7",
-      symbol: "yWETH",
-      name: "WETH",
-      display_name: "ETH",
-      icon: "https://rawcdn.githack.com/yearn/yearn-assets/3b3d8fd7fa311063f3af618ddc04e8c4a258009f/icons/multichain-tokens/1/0xe1237aA7f535b0CC33Fd973D66cBf830354D16c7/logo-128.png",
+      address: '0xe1237aA7f535b0CC33Fd973D66cBf830354D16c7',
+      symbol: 'yWETH',
+      name: 'WETH',
+      display_name: 'ETH',
+      icon:
+        'https://rawcdn.githack.com/yearn/yearn-assets/3b3d8fd7fa311063f3af618ddc04e8c4a258009f/icons/multichain-tokens/1/0xe1237aA7f535b0CC33Fd973D66cBf830354D16c7/logo-128.png',
       token: {
-        name: "Wrapped Ether",
-        symbol: "WETH",
-        address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        name: 'Wrapped Ether',
+        symbol: 'WETH',
+        address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
         decimals: 18,
-        display_name: "ETH",
-        icon: "https://rawcdn.githack.com/yearn/yearn-assets/3b3d8fd7fa311063f3af618ddc04e8c4a258009f/icons/multichain-tokens/1/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo-128.png"
+        display_name: 'ETH',
+        icon:
+          'https://rawcdn.githack.com/yearn/yearn-assets/3b3d8fd7fa311063f3af618ddc04e8c4a258009f/icons/multichain-tokens/1/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo-128.png'
       },
       tvl: {
-        total_assets: 1.3440975607459204e+21,
+        total_assets: 1.3440975607459204e21,
         price: 4346.53360987,
         tvl: 5842165.222726428
       },
       apy: {
-        type: "v1:simple",
+        type: 'v1:simple',
         gross_apr: 0.013240587048120034,
         net_apy: 0.010647678260664595,
         fees: {
@@ -53,18 +55,20 @@ describe('yearn market service', () => {
 
     const yYFI: YearnMarketCap = {
       inception: 10690968,
-      address: "0xBA2E7Fed597fd0E3e70f5130BcDbbFE06bB94fe1",
-      symbol: "yYFI",
-      name: "YFI",
-      display_name: "YFI",
-      icon: "https://rawcdn.githack.com/yearn/yearn-assets/3b3d8fd7fa311063f3af618ddc04e8c4a258009f/icons/multichain-tokens/1/0xBA2E7Fed597fd0E3e70f5130BcDbbFE06bB94fe1/logo-128.png",
+      address: '0xBA2E7Fed597fd0E3e70f5130BcDbbFE06bB94fe1',
+      symbol: 'yYFI',
+      name: 'YFI',
+      display_name: 'YFI',
+      icon:
+        'https://rawcdn.githack.com/yearn/yearn-assets/3b3d8fd7fa311063f3af618ddc04e8c4a258009f/icons/multichain-tokens/1/0xBA2E7Fed597fd0E3e70f5130BcDbbFE06bB94fe1/logo-128.png',
       token: {
-        name: "yearn.finance",
-        symbol: "YFI",
-        address: "0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e",
+        name: 'yearn.finance',
+        symbol: 'YFI',
+        address: '0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e',
         decimals: 18,
-        display_name: "YFI",
-        icon: "https://rawcdn.githack.com/yearn/yearn-assets/3b3d8fd7fa311063f3af618ddc04e8c4a258009f/icons/multichain-tokens/1/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/logo-128.png"
+        display_name: 'YFI',
+        icon:
+          'https://rawcdn.githack.com/yearn/yearn-assets/3b3d8fd7fa311063f3af618ddc04e8c4a258009f/icons/multichain-tokens/1/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/logo-128.png'
       },
       tvl: {
         total_assets: 25510491874529993000,
@@ -72,7 +76,7 @@ describe('yearn market service', () => {
         tvl: 600210.8528239417
       },
       apy: {
-        type: "v1:simple",
+        type: 'v1:simple',
         gross_apr: 0.011183846540845366,
         net_apy: 0.011245403520755648,
         fees: {
@@ -91,14 +95,14 @@ describe('yearn market service', () => {
       },
       strategies: [
         {
-        address: "0x395F93350D5102B6139Abfc84a7D6ee70488797C",
-        name: "StrategyYFIGovernance"
+          address: '0x395F93350D5102B6139Abfc84a7D6ee70488797C',
+          name: 'StrategyYFIGovernance'
         }
       ],
       endorsed: true,
-      version: "0.1",
+      version: '0.1',
       decimals: 18,
-      type: "v1",
+      type: 'v1',
       emergency_shutdown: false,
       updated: 1638829836,
       migration: null
@@ -106,38 +110,38 @@ describe('yearn market service', () => {
 
     it('can flatten multiple responses', async () => {
       mockedAxios.get.mockResolvedValueOnce({ data: [yWETH] }).mockResolvedValue({ data: [yYFI] })
-      const result = await getByMarketCap()
+      const result = await findAll()
       expect(Object.keys(result).length).toEqual(2)
     })
 
     it('can sort by market cap', async () => {
       mockedAxios.get.mockResolvedValueOnce({ data: [yWETH] }).mockResolvedValue({ data: [yYFI] })
-      const result = await getByMarketCap()
+      const result = await findAll()
       //TODO: fix this
       expect(Object.keys(result)[0]).toEqual(adapters.coingeckoToCAIP19(yYFI.address))
     })
 
     it('can handle api errors', async () => {
       mockedAxios.get.mockRejectedValue({ error: 'foo' })
-      const result = await getByMarketCap()
+      const result = await findAll()
       expect(Object.keys(result).length).toEqual(0)
     })
 
     it('can handle rate limiting', async () => {
       mockedAxios.get.mockResolvedValue({ status: 429 })
-      const result = await getByMarketCap()
+      const result = await findAll()
       expect(Object.keys(result).length).toEqual(0)
     })
 
     it('can return some results if partially rate limited', async () => {
       mockedAxios.get.mockResolvedValueOnce({ status: 429 }).mockResolvedValue({ data: [eth] })
-      const result = await getByMarketCap()
+      const result = await findAll()
       expect(Object.keys(result).length).toEqual(1)
     })
 
     it('can use default args', async () => {
       mockedAxios.get.mockResolvedValue({ data: [btc] })
-      await getByMarketCap()
+      await findAll()
       expect(mockedAxios.get).toHaveBeenCalledTimes(10)
     })
 
@@ -145,7 +149,7 @@ describe('yearn market service', () => {
       mockedAxios.get.mockResolvedValue({ data: [btc] })
       const pages = 1
       const perPage = 10
-      await getByMarketCap({ pages, perPage })
+      await findAll({ pages, perPage })
       expect(mockedAxios.get).toHaveBeenCalledTimes(1)
       const url =
         'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false'
@@ -154,7 +158,7 @@ describe('yearn market service', () => {
 
     it('can map yearn to caip ids', async () => {
       mockedAxios.get.mockResolvedValueOnce({ data: [btc] }).mockResolvedValue({ data: [eth] })
-      const result = await getByMarketCap()
+      const result = await findAll()
       const btcCaip19 = adapters.coingeckoToCAIP19('bitcoin')
       const ethCaip19 = adapters.coingeckoToCAIP19('ethereum')
       const [btcKey, ethKey] = Object.keys(result)
