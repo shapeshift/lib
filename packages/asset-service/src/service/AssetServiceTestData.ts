@@ -99,7 +99,7 @@ export const mockBaseAssets: BaseAsset[] = [
   },
   {
     caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
-    caip2: 'eip155:3',
+    caip2: 'bip122:000000000019d6689c085ae165831e93',
     chain: ChainTypes.Bitcoin,
     dataSource: AssetDataSource.CoinGecko,
     network: NetworkTypes.MAINNET,
