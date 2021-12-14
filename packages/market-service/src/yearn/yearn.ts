@@ -250,7 +250,7 @@ export class YearnMarketCapService implements MarketService {
       const vaults = await this.yearnSdk.vaults.get([checksumAddress])
       const decimals = vaults[0].decimals
 
-      const response: VaultDayDataGQLResponse = await this.yearnSdk.services.subgraph.fetchQuery(
+      const response: VaultDayDataGQLResponse = (await this.yearnSdk.services.subgraph.fetchQuery(
         ACCOUNT_HISTORIC_EARNINGS,
         {
           id: checksumAddress,
@@ -262,7 +262,7 @@ export class YearnMarketCapService implements MarketService {
             .getTime()
             .toString()
         }
-      )
+      )) as VaultDayDataGQLResponse
 
       type VaultDayData = {
         pricePerShare: string

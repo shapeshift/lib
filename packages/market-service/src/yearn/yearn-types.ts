@@ -53,32 +53,22 @@ export type YearnMarketCap = {
   }
 }
 
+type VaultDayDatum = {
+  pricePerShare: string
+  timestamp: string
+  tokenPriceUSDC: string
+}
+
+type VaultPosition = {
+  vault: {
+    vaultDayData: VaultDayDatum[]
+  }
+}
+
 export type VaultDayDataGQLResponse = {
   data: {
     account: {
-      vaultPositions: [
-        {
-          vault: {
-            vaultDayData: [
-              {
-                pricePerShare: string
-                timestamp: string
-                tokenPriceUSDC: string
-              },
-              {
-                pricePerShare: string
-                timestamp: string
-                tokenPriceUSDC: string
-              },
-              {
-                pricePerShare: string
-                timestamp: string
-                tokenPriceUSDC: string
-              }
-            ]
-          }
-        }
-      ]
+      vaultPositions: VaultPosition[]
     }
   }
 }
