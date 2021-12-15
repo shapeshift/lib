@@ -43,11 +43,9 @@ export class CoinGeckoMarketService implements MarketService {
   findAll = async (args?: FindAllMarketArgs) => {
     const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
     const { count } = argsToUse
-    const perPage = 250
-    const pages = new BigNumber(count)
-      .div(perPage)
-      .decimalPlaces(0)
-      .toNumber()
+    const perPage = count > 250 ? 250 : count
+    const pages = Math.ceil(new BigNumber(count).div(perPage).toNumber())
+
     const urlAtPage = (page: number) =>
       `${this.baseUrl}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=${page}&sparkline=false`
     const pageCount = Array(pages)
