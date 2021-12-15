@@ -20,21 +20,6 @@ import { MarketService } from '../api'
 import { ACCOUNT_HISTORIC_EARNINGS } from './gql-queries'
 import { VaultDayDataGQLResponse } from './yearn-types'
 
-// TODO: fix this to represent yearn data
-// type YearnAssetData = {
-//   chain: ChainTypes
-//   market_data: {
-//     current_price: { [key: string]: string }
-//     market_cap: { [key: string]: string }
-//     total_volume: { [key: string]: string }
-//     high_24h: { [key: string]: string }
-//     low_24h: { [key: string]: string }
-//     total_supply: string
-//     max_supply: string
-//     price_change_percentage_24h: number
-//   }
-// }
-
 type YearnMarketCapServiceArgs = {
   yearnSdk: Yearn<ChainId>
 }
@@ -55,7 +40,7 @@ export class YearnMarketCapService implements MarketService {
     try {
       const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
       const response = await this.yearnSdk.vaults.get()
-      const vaults = response.splice(0, argsToUse.count)
+      const vaults = response.slice(0, argsToUse.count + 1)
       // Vault token price (when total asssets inside is 0 (calculate underlying asset price)): underlyingTokenBalance.amountUsdc / underlyingTokenBalance.amount
       // Acutal vault token price: underlying token price * (pricePerShare / (1e+decimals of vault asset))
       // MarketCap:  vault.underlyingTokenBalance.amountUsdc
