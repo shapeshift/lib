@@ -47,7 +47,7 @@ export class CoinCapMarketService implements MarketService {
         .reduce((acc, cur) => {
           const { id } = cur
           try {
-            const caip19 = adapters.coingeckoToCAIP19(id)
+            const caip19 = adapters.coincapToCAIP19(id)
             const curWithoutId = omit(cur, 'id') // don't leak this through to clients
             acc[caip19] = {
               price: curWithoutId.priceUsd.toString(),
@@ -73,7 +73,7 @@ export class CoinCapMarketService implements MarketService {
         throw new Error('Coincap does not support tokens')
       }
 
-      const id = adapters.CAIP19ToCoingecko(caip19)
+      const id = adapters.CAIP19ToCoinCap(caip19)
 
       const { data } = await axios.get(
         `${this.baseUrl}/assets/${id}`
@@ -97,11 +97,11 @@ export class CoinCapMarketService implements MarketService {
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
     const { tokenId } = fromCAIP19(caip19)
-    const id = tokenId ? 'ethereum' : adapters.CAIP19ToCoingecko(caip19)
+    const id = tokenId ? 'ethereum' : adapters.CAIP19ToCoinCap(caip19)
 
     const end = dayjs().startOf('minute')
     let start
-    let interval // to match coingeckos
+    let interval
     switch (timeframe) {
       case HistoryTimeframe.HOUR:
         start = end.subtract(1, 'hour')
