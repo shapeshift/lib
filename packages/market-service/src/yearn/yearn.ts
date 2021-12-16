@@ -24,6 +24,8 @@ type YearnMarketCapServiceArgs = {
   yearnSdk: Yearn<ChainId>
 }
 
+const USDC_PRECISION = 6
+
 export class YearnMarketCapService implements MarketService {
   baseUrl = 'https://api.yearn.finance'
   yearnSdk: Yearn<ChainId>
@@ -71,7 +73,7 @@ export class YearnMarketCapService implements MarketService {
           let changePercent24Hr = 0
 
           const price = new BigNumber(yearnItem.underlyingTokenBalance.amountUsdc)
-            .div('1e+6')
+            .div(`1e+${USDC_PRECISION}`)
             .div(yearnItem.underlyingTokenBalance.amount)
             .times(`1e+${yearnItem.decimals}`)
             .times(yearnItem.metadata.pricePerShare)
@@ -79,7 +81,7 @@ export class YearnMarketCapService implements MarketService {
             .toFixed(2)
 
           const marketCap = new BigNumber(yearnItem.underlyingTokenBalance.amountUsdc)
-            .div('1e+6')
+            .div(`1e+${USDC_PRECISION}`)
             .toFixed(2)
 
           const historicEarnings = yearnItem.metadata.historicEarnings
@@ -99,7 +101,7 @@ export class YearnMarketCapService implements MarketService {
             changePercent24Hr =
               volume
                 .div(lastHistoricalEarnings.earnings.amountUsdc)
-                .div('1e+6')
+                .div(`1e+${USDC_PRECISION}`)
                 .toNumber() || 0
           }
 
@@ -142,7 +144,7 @@ export class YearnMarketCapService implements MarketService {
       let changePercent24Hr = 0
 
       const price = new BigNumber(vault.underlyingTokenBalance.amountUsdc)
-        .div('1e+6')
+        .div(`1e+${USDC_PRECISION}`)
         .div(vault.underlyingTokenBalance.amount)
         .times(`1e+${vault.decimals}`)
         .times(vault.metadata.pricePerShare)
@@ -150,7 +152,7 @@ export class YearnMarketCapService implements MarketService {
         .toFixed(2)
 
       const marketCap = new BigNumber(vault.underlyingTokenBalance.amountUsdc)
-        .div('1e+6')
+        .div(`1e+${USDC_PRECISION}`)
         .toFixed(2)
 
       const historicEarnings = vault.metadata.historicEarnings
@@ -163,7 +165,7 @@ export class YearnMarketCapService implements MarketService {
       if (lastHistoricalEarnings && secondToLastHistoricalEarnings) {
         volume = new BigNumber(lastHistoricalEarnings.earnings.amountUsdc)
           .minus(secondToLastHistoricalEarnings.earnings.amountUsdc)
-          .div('1e+6')
+          .div(`1e+${USDC_PRECISION}`)
           .dp(2)
       }
 
@@ -171,7 +173,7 @@ export class YearnMarketCapService implements MarketService {
         changePercent24Hr =
           volume
             .div(lastHistoricalEarnings.earnings.amountUsdc)
-            .times('1e+6')
+            .times(`1e+${USDC_PRECISION}`)
             .toNumber() || 0
       }
 
@@ -256,7 +258,7 @@ export class YearnMarketCapService implements MarketService {
         return {
           date: datum.timestamp,
           price: new BigNumber(datum.tokenPriceUSDC)
-            .div(`1e+6`)
+            .div(`1e+${USDC_PRECISION}`)
             .times(datum.pricePerShare)
             .div(`1e+${decimals}`)
             .dp(6)
