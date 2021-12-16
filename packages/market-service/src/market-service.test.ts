@@ -5,14 +5,13 @@ import {
   mockCGFindByCaip19Data,
   mockCGPriceHistoryData
 } from './coingecko/coingeckoMockData'
-import { __test__, findAll, findByCaip19, findPriceHistoryByCaip19 } from './index'
+import { findAll, findByCaip19, findPriceHistoryByCaip19 } from './index'
+import { MarketProviders } from './market-providers'
 import {
   mockYearnFindByCaip19Data,
   mockYearnPriceHistoryData,
   mockYearnServiceFindAllData
 } from './yearn/yearnMockData'
-
-const { MarketProviders } = __test__
 
 jest.mock('./coingecko/coingecko', () => ({
   CoinGeckoMarketService: jest.fn().mockImplementation(() => {
