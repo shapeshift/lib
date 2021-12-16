@@ -4,7 +4,7 @@ import { FeeDataKey, QuoteFeeData, SignTxInput } from './chain-adapters'
 
 /** Common */
 
-export type BIP32Params = {
+export type BIP44Params = {
   purpose: number
   coinType: number
   accountNumber: number
@@ -48,6 +48,7 @@ export enum AssetDataSource {
 
 type AbstractAsset = {
   caip19: string
+  caip2: string
   chain: ChainTypes
   description?: string
   dataSource: AssetDataSource
