@@ -169,7 +169,7 @@ describe('coingecko market service', () => {
       mockedAxios.get.mockRejectedValue(Error)
       jest.spyOn(console, 'warn').mockImplementation(() => void 0)
       await expect(coinGeckoMarkeService.findByCaip19(args)).rejects.toEqual(
-        new Error('MarketService(findByCaip19): error fetching market data')
+        new Error('CoinGeckoMarketService(findByCaip19): error fetching market data')
       )
     })
   })
@@ -202,7 +202,7 @@ describe('coingecko market service', () => {
       mockedAxios.get.mockRejectedValue(Error)
       jest.spyOn(console, 'warn').mockImplementation(() => void 0)
       await expect(coinGeckoMarkeService.findPriceHistoryByCaip19(args)).rejects.toEqual(
-        new Error('MarketService(findPriceHistoryByCaip19): error fetching price history')
+        new Error('CoinGeckoMarketService(findPriceHistoryByCaip19): error fetching price history')
       )
     })
   })
