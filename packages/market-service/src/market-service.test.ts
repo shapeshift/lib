@@ -36,28 +36,6 @@ jest.mock('./yearn/yearn', () => ({
 
 jest.mock('@yfi/sdk')
 
-// const mockedYearnSdk = jest.fn(() => ({
-//   vaults: {
-//     get: jest.fn((addresses) => {
-//       return addresses
-//         ? mockYearnRestData.filter((datum) => addresses.includes(datum.address))
-//         : mockYearnRestData
-//     })
-//   },
-//   services: {
-//     subgraph: {
-//       fetchQuery: jest.fn(() => mockYearnGQLData)
-//     }
-//   }
-// }))()
-
-// const mockedCGService = CoinGeckoMarketService as jest.Mocked<typeof CoinGeckoMarketService>
-// const mockedYearnService = CoinGeckoMarketService as jest.Mocked<typeof CoinGeckoMarketService>
-
-// const coinGeckoMarkeService = new CoinGeckoMarketService()
-// // @ts-ignore
-// const yearnMarkeService = new YearnMarketCapService({ yearnSdk: mockedYearnSdk })
-
 describe('coingecko market service', () => {
   describe('findAll', () => {
     it('can return from coingecko and skip yearn', async () => {

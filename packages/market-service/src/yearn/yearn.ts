@@ -41,14 +41,7 @@ export class YearnMarketCapService implements MarketService {
       const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
       const response = await this.yearnSdk.vaults.get()
       const vaults = response.slice(0, argsToUse.count)
-      // Vault token price (when total asssets inside is 0 (calculate underlying asset price)): underlyingTokenBalance.amountUsdc / underlyingTokenBalance.amount
-      // Acutal vault token price: underlying token price * (pricePerShare / (1e+decimals of vault asset))
-      // MarketCap:  vault.underlyingTokenBalance.amountUsdc
-      // Volume:  last historical earnings - second to last historical earnings
-      // Change24: volume / last historical earnings
 
-      // vault.underlyingTokenBalance.amount - total holdings of underlying asset inside the vault
-      // vault.underlyingTokenBalance.amountUsdc - marketCap of vault
       return vaults
         .sort((a, b) =>
           new BigNumber(a.underlyingTokenBalance.amountUsdc).lt(b.underlyingTokenBalance.amountUsdc)
