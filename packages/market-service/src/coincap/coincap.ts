@@ -67,12 +67,6 @@ export class CoinCapMarketService implements MarketService {
 
   findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData> => {
     try {
-      const { tokenId } = fromCAIP19(caip19)
-      const isToken = !!tokenId
-      if (isToken) {
-        throw new Error('Coincap does not support tokens')
-      }
-
       const id = adapters.CAIP19ToCoinCap(caip19)
 
       const { data } = await axios.get(
