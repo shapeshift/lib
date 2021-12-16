@@ -12,11 +12,11 @@ import {
   PriceHistoryArgs
 } from '@shapeshiftoss/types'
 import { ChainId, Yearn } from '@yfi/sdk'
-import { bn, bnOrZero } from '../utils/bignumber'
 import { ethers } from 'ethers'
 import head from 'lodash/head'
 
 import { MarketService } from '../api'
+import { bn, bnOrZero } from '../utils/bignumber'
 import { ACCOUNT_HISTORIC_EARNINGS } from './gql-queries'
 import { VaultDayDataGQLResponse } from './yearn-types'
 
