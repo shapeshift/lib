@@ -123,6 +123,7 @@ export class YearnMarketCapService implements MarketService {
       const { tokenId } = fromCAIP19(caip19)
       if (!tokenId) return null
       const checksumAddress = ethers.utils.getAddress(tokenId)
+      if (!checksumAddress) return null
       const vaults = await this.yearnSdk.vaults.get([checksumAddress])
       if (!vaults || !vaults.length) return null
       const vault = head(vaults)
@@ -196,35 +197,36 @@ export class YearnMarketCapService implements MarketService {
     caip19,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
-    const { tokenId } = fromCAIP19(caip19)
-    if (!tokenId) return []
-    const checksumAddress = ethers.utils.getAddress(tokenId)
-
-    let daysAgo
-    switch (timeframe) {
-      case HistoryTimeframe.HOUR:
-        daysAgo = 2
-        break
-      case HistoryTimeframe.DAY:
-        daysAgo = 3
-        break
-      case HistoryTimeframe.WEEK:
-        daysAgo = 7
-        break
-      case HistoryTimeframe.MONTH:
-        daysAgo = 30
-        break
-      case HistoryTimeframe.YEAR:
-        daysAgo = 365
-        break
-      case HistoryTimeframe.ALL:
-        daysAgo = 3650
-        break
-      default:
-        daysAgo = 1
-    }
-
     try {
+      const { tokenId } = fromCAIP19(caip19)
+      if (!tokenId) return []
+      const checksumAddress = ethers.utils.getAddress(tokenId)
+      if (!checksumAddress) return []
+
+      let daysAgo
+      switch (timeframe) {
+        case HistoryTimeframe.HOUR:
+          daysAgo = 2
+          break
+        case HistoryTimeframe.DAY:
+          daysAgo = 3
+          break
+        case HistoryTimeframe.WEEK:
+          daysAgo = 7
+          break
+        case HistoryTimeframe.MONTH:
+          daysAgo = 30
+          break
+        case HistoryTimeframe.YEAR:
+          daysAgo = 365
+          break
+        case HistoryTimeframe.ALL:
+          daysAgo = 3650
+          break
+        default:
+          daysAgo = 1
+      }
+
       const vaults = await this.yearnSdk.vaults.get([checksumAddress])
       const decimals = vaults[0].decimals
 
