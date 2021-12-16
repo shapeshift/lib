@@ -12,7 +12,7 @@ import {
   PriceHistoryArgs
 } from '@shapeshiftoss/types'
 import { ChainId, Yearn } from '@yfi/sdk'
-import BigNumber from 'bignumber.js'
+import { bn, bnOrZero } from '../utils/bignumber'
 import { ethers } from 'ethers'
 import head from 'lodash/head'
 
@@ -46,7 +46,7 @@ export class YearnMarketCapService implements MarketService {
 
       return vaults
         .sort((a, b) =>
-          new BigNumber(a.underlyingTokenBalance.amountUsdc).lt(b.underlyingTokenBalance.amountUsdc)
+          bnOrZero(a.underlyingTokenBalance.amountUsdc).lt(b.underlyingTokenBalance.amountUsdc)
             ? 1
             : -1
         )
@@ -58,7 +58,7 @@ export class YearnMarketCapService implements MarketService {
             tokenId: yearnItem.address
           })
           // if amountUsdc of a yearn asset is 0, the asset has not price or value
-          if (new BigNumber(yearnItem.underlyingTokenBalance.amountUsdc).eq(0)) {
+          if (bnOrZero(yearnItem.underlyingTokenBalance.amountUsdc).eq(0)) {
             acc[caip19] = {
               price: '0',
               marketCap: '0',
@@ -69,19 +69,19 @@ export class YearnMarketCapService implements MarketService {
             return acc
           }
 
-          let volume = new BigNumber('0')
+          let volume = bn('0')
           let changePercent24Hr = 0
 
-          const price = new BigNumber(yearnItem.underlyingTokenBalance.amountUsdc)
-            .div(`1e+${USDC_PRECISION}`)
+          const price = bnOrZero(yearnItem.underlyingTokenBalance.amountUsdc)
+            .div('1e+6')
             .div(yearnItem.underlyingTokenBalance.amount)
             .times(`1e+${yearnItem.decimals}`)
             .times(yearnItem.metadata.pricePerShare)
             .div(`1e+${yearnItem.decimals}`)
             .toFixed(2)
 
-          const marketCap = new BigNumber(yearnItem.underlyingTokenBalance.amountUsdc)
-            .div(`1e+${USDC_PRECISION}`)
+          const marketCap = bnOrZero(yearnItem.underlyingTokenBalance.amountUsdc)
+            .div('1e+6')
             .toFixed(2)
 
           const historicEarnings = yearnItem.metadata.historicEarnings
@@ -92,7 +92,7 @@ export class YearnMarketCapService implements MarketService {
             ? historicEarnings[historicEarnings.length - 2]
             : null
           if (lastHistoricalEarnings && secondToLastHistoricalEarnings) {
-            volume = new BigNumber(lastHistoricalEarnings.earnings.amountUsdc).minus(
+            volume = bnOrZero(lastHistoricalEarnings.earnings.amountUsdc).minus(
               secondToLastHistoricalEarnings.earnings.amountUsdc
             )
           }
@@ -131,7 +131,7 @@ export class YearnMarketCapService implements MarketService {
       const vault = head(vaults)
       if (!vault) return null
 
-      if (new BigNumber(vault.underlyingTokenBalance.amountUsdc).eq(0)) {
+      if (bnOrZero(vault.underlyingTokenBalance.amountUsdc).eq(0)) {
         return {
           price: '0',
           marketCap: '0',
@@ -140,19 +140,19 @@ export class YearnMarketCapService implements MarketService {
         }
       }
 
-      let volume = new BigNumber('0')
+      let volume = bn('0')
       let changePercent24Hr = 0
 
-      const price = new BigNumber(vault.underlyingTokenBalance.amountUsdc)
-        .div(`1e+${USDC_PRECISION}`)
+      const price = bnOrZero(vault.underlyingTokenBalance.amountUsdc)
+        .div('1e+6')
         .div(vault.underlyingTokenBalance.amount)
         .times(`1e+${vault.decimals}`)
         .times(vault.metadata.pricePerShare)
         .div(`1e+${vault.decimals}`)
         .toFixed(2)
 
-      const marketCap = new BigNumber(vault.underlyingTokenBalance.amountUsdc)
-        .div(`1e+${USDC_PRECISION}`)
+      const marketCap = bnOrZero(vault.underlyingTokenBalance.amountUsdc)
+        .div('1e+6')
         .toFixed(2)
 
       const historicEarnings = vault.metadata.historicEarnings
@@ -163,7 +163,7 @@ export class YearnMarketCapService implements MarketService {
         ? historicEarnings[historicEarnings.length - 2]
         : null
       if (lastHistoricalEarnings && secondToLastHistoricalEarnings) {
-        volume = new BigNumber(lastHistoricalEarnings.earnings.amountUsdc)
+        volume = bnOrZero(lastHistoricalEarnings.earnings.amountUsdc)
           .minus(secondToLastHistoricalEarnings.earnings.amountUsdc)
           .div(`1e+${USDC_PRECISION}`)
           .dp(2)
@@ -257,8 +257,8 @@ export class YearnMarketCapService implements MarketService {
       return vaultDayData.map((datum: VaultDayData) => {
         return {
           date: datum.timestamp,
-          price: new BigNumber(datum.tokenPriceUSDC)
-            .div(`1e+${USDC_PRECISION}`)
+          price: bnOrZero(datum.tokenPriceUSDC)
+            .div(`1e+6`)
             .times(datum.pricePerShare)
             .div(`1e+${decimals}`)
             .dp(6)
