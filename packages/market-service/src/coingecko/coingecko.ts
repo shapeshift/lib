@@ -104,7 +104,7 @@ export class CoinGeckoMarketService implements MarketService {
       }
     } catch (e) {
       console.warn(e)
-      throw new Error('MarketService(findByCaip19): error fetching market data')
+      throw new Error('CoinGeckoMarketService(findByCaip19): error fetching market data')
     }
   }
 
@@ -158,7 +158,9 @@ export class CoinGeckoMarketService implements MarketService {
       })
     } catch (e) {
       console.warn(e)
-      throw new Error('MarketService(findPriceHistoryByCaip19): error fetching price history')
+      throw new Error(
+        'CoinGeckoMarketService(findPriceHistoryByCaip19): error fetching price history'
+      )
     }
   }
 }

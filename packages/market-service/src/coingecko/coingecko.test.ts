@@ -12,7 +12,7 @@ const mockedAxios = axios as jest.Mocked<typeof axios>
 const coinGeckoMarkeService = new CoinGeckoMarketService()
 
 describe('coingecko market service', () => {
-  describe('getMarketCap', () => {
+  describe('findAll', () => {
     const btc: CoinGeckoMarketCap = {
       id: 'bitcoin',
       symbol: 'btc',

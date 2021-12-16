@@ -1,4 +1,4 @@
-;[
+export const yearnMockRestData = [
   {
     address: '0xcB550A6D4C8e3517A939BC79d0c7093eb7cF56B5',
     typeId: 'VAULT_V2',
@@ -97,7 +97,7 @@
           date: '2021-11-27T17:34:01.000Z'
         },
         {
-          earnings: { amountUsdc: '4568298565', amount: '9265827' },
+          earnings: { amountUsdc: '4368298565', amount: '9235827' },
           date: '2021-11-27T17:34:01.000Z'
         },
         {
@@ -193,8 +193,8 @@
         },
         {
           earnings: {
-            amountUsdc: '21408471734966',
-            amount: '21382214375712138070254065'
+            amountUsdc: '21308471734966',
+            amount: '21282214375712138070254065'
           },
           date: '2021-11-21T00:51:34.000Z'
         },
@@ -209,3 +209,43 @@
     }
   }
 ]
+
+export const mockedYearnGQLData = {
+  data: {
+    account: {
+      vaultPositions: [
+        {
+          vault: {
+            vaultDayData: [
+              {
+                pricePerShare: '1082124440389265991',
+                timestamp: '1639132035000',
+                tokenPriceUSDC: '999932'
+              },
+              {
+                pricePerShare: '1082124440389265991',
+                timestamp: '1639241453000',
+                tokenPriceUSDC: '1000000'
+              },
+              {
+                pricePerShare: '1082124440389265991',
+                timestamp: '1639269839000',
+                tokenPriceUSDC: '999963'
+              },
+              {
+                pricePerShare: '1084750123794815921',
+                timestamp: '1639441831000',
+                tokenPriceUSDC: '1000418'
+              },
+              {
+                pricePerShare: '1084750123794815921',
+                timestamp: '1639530562000',
+                tokenPriceUSDC: '1001033'
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

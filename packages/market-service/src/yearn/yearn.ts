@@ -40,7 +40,7 @@ export class YearnMarketCapService implements MarketService {
     try {
       const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
       const response = await this.yearnSdk.vaults.get()
-      const vaults = response.slice(0, argsToUse.count + 1)
+      const vaults = response.slice(0, argsToUse.count)
       // Vault token price (when total asssets inside is 0 (calculate underlying asset price)): underlyingTokenBalance.amountUsdc / underlyingTokenBalance.amount
       // Acutal vault token price: underlying token price * (pricePerShare / (1e+decimals of vault asset))
       // MarketCap:  vault.underlyingTokenBalance.amountUsdc
@@ -189,7 +189,7 @@ export class YearnMarketCapService implements MarketService {
       }
     } catch (e) {
       console.warn(e)
-      throw new Error('MarketService(getMarketData): error fetching market data')
+      throw new Error('YearnMarketService(findByCaip19): error fetching market data')
     }
   }
 
@@ -270,7 +270,7 @@ export class YearnMarketCapService implements MarketService {
       })
     } catch (e) {
       console.warn(e)
-      throw new Error('MarketService(getPriceHistory): error fetching price history')
+      throw new Error('YearnMarketService(getPriceHistory): error fetching price history')
     }
   }
 }

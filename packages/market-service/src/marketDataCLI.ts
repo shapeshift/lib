@@ -6,7 +6,8 @@ import { Yearn } from '@yfi/sdk'
 import { YearnMarketCapService } from './yearn/yearn'
 
 const main = async (): Promise<void> => {
-  const caip19 = 'eip155:1/erc20:0xa258c4606ca8206d8aa700ce2143d7db854d168c' // WETH Vault
+  // const caip19 = 'eip155:1/erc20:0xa258c4606ca8206d8aa700ce2143d7db854d168c' // WETH Vault
+  const caip19 = 'eip155:1/erc20:0x19d3364a399d251e894ac732651be8b0e4e85001' // yvDai Vault
   // const caip19 = 'eip155:1/erc20:0x5f18c75abdae578b483e5f43f12a39cf75b973a9' // USDC Vault
   // const caip19 = 'eip155:1/erc20:0xa696a63cc78dffa1a63e9e50587c197387ff6c7e' // BTC Vault
   // const caip19 = 'bip122:000000000019d6689c085ae165831e93/slip44:0' // BTC
@@ -18,7 +19,7 @@ const main = async (): Promise<void> => {
   // const data = await yearnMarketService.findByCaip19({ caip19 })
   const data = await yearnMarketService.findPriceHistoryByCaip19({
     caip19,
-    timeframe: HistoryTimeframe.DAY
+    timeframe: HistoryTimeframe.WEEK
   })
   // const data = await cgMarkteService.findPriceHistoryByCaip19({
   //   caip19,
