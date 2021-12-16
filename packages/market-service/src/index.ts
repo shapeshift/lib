@@ -67,3 +67,7 @@ export const findPriceHistoryByCaip19: PriceHistoryType = async ({
   if (!result) return []
   return result
 }
+
+export const __test__ = {
+  MarketProviders
+}
