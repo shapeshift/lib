@@ -10,7 +10,6 @@ import { FindAllMarketArgs } from '@shapeshiftoss/types/src'
 
 import { MarketProviders } from './market-providers'
 
-
 export const findAll = async (args?: FindAllMarketArgs): Promise<MarketCapResult> => {
   let result: MarketCapResult | null = null
   // Go through market providers listed above and look for market data for all assets.
