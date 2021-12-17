@@ -2,7 +2,6 @@ import { Contract } from '@ethersproject/contracts'
 import { CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
-import { Tx } from '@shapeshiftoss/unchained-tx-parser'
 import { ethereum } from '@shapeshiftoss/unchained-client'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
@@ -11,7 +10,7 @@ import { numberToHex } from 'web3-utils'
 
 import { ChainAdapter as IChainAdapter } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
-import { getContractType, getStatus, getType, toPath, toRootDerivationPath } from '../utils'
+import { getContractType, toPath, toRootDerivationPath } from '../utils'
 import erc20Abi from './erc20Abi.json'
 
 export interface ChainAdapterArgs {
@@ -254,8 +253,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       data
     })
 
-    const feeData =  (await this.providers.http.getGasFees()).data
-    const normalizationConstants: any = {
+    const feeData = (await this.providers.http.getGasFees()).data
+    const normalizationConstants = {
       instant: String(new BigNumber(fees.instant).dividedBy(fees.fast)),
       average: String(1),
       slow: String(new BigNumber(fees.low).dividedBy(fees.fast))
@@ -267,8 +266,12 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
         chainSpecific: {
           gasLimit,
           gasPrice: String(fees.instant),
-          maxFeePerGas: String(new BigNumber(feeData.maxFeePerGas).times(normalizationConstants.instant)),
-          maxPriorityFeePerGas: String(new BigNumber(feeData.maxPriorityFeePerGas).times(normalizationConstants.instant))
+          maxFeePerGas: String(
+            new BigNumber(feeData.maxFeePerGas).times(normalizationConstants.instant)
+          ),
+          maxPriorityFeePerGas: String(
+            new BigNumber(feeData.maxPriorityFeePerGas).times(normalizationConstants.instant)
+          )
         }
       },
       average: {
@@ -276,8 +279,12 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
         chainSpecific: {
           gasLimit,
           gasPrice: String(fees.fast),
-          maxFeePerGas: String(new BigNumber(feeData.maxFeePerGas).times(normalizationConstants.average)),
-          maxPriorityFeePerGas: String(new BigNumber(feeData.maxPriorityFeePerGas).times(normalizationConstants.average))
+          maxFeePerGas: String(
+            new BigNumber(feeData.maxFeePerGas).times(normalizationConstants.average)
+          ),
+          maxPriorityFeePerGas: String(
+            new BigNumber(feeData.maxPriorityFeePerGas).times(normalizationConstants.average)
+          )
         }
       },
       slow: {
@@ -285,8 +292,12 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
         chainSpecific: {
           gasLimit,
           gasPrice: String(fees.low),
-          maxFeePerGas: String(new BigNumber(feeData.maxFeePerGas).times(normalizationConstants.slow)),
-          maxPriorityFeePerGas: String(new BigNumber(feeData.maxPriorityFeePerGas).times(normalizationConstants.slow))
+          maxFeePerGas: String(
+            new BigNumber(feeData.maxFeePerGas).times(normalizationConstants.slow)
+          ),
+          maxPriorityFeePerGas: String(
+            new BigNumber(feeData.maxPriorityFeePerGas).times(normalizationConstants.slow)
+          )
         }
       }
     }
@@ -323,13 +334,15 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       subscriptionId,
       { topic: 'txs', addresses: [address] },
       (msg: chainAdapters.SubscribeTxsMessage<ChainTypes.Ethereum>) => {
-        const transfers = msg.transfers.map<chainAdapters.TxTransfer>((transfer: chainAdapters.TxTransfer) => ({
-          caip19: transfer.caip19,
-          from: transfer.from,
-          to: transfer.to,
-          type: transfer.type,
-          value: transfer.value
-        }))
+        const transfers = msg.transfers.map<chainAdapters.TxTransfer>(
+          (transfer: chainAdapters.TxTransfer) => ({
+            caip19: transfer.caip19,
+            from: transfer.from,
+            to: transfer.to,
+            type: transfer.type,
+            value: transfer.value
+          })
+        )
 
         onMessage({
           address: msg.address,
