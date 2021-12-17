@@ -2636,7 +2636,7 @@
     bignumber.js "^9.0.1"
     ethers "^5.4.0"
 
-"@shapeshiftoss/unchained-client@^4.0.1":
+"@shapeshiftoss/unchained-client@^4.0.0":
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/unchained-client/-/unchained-client-4.1.0.tgz#e16f4809c325dc9c375987861747276de267c5b2"
   integrity sha512-gbzAwgBc9zSRUOxb8FpOeaQ+qddbRFPw+S87xC6gS5Yg6PPiLLYhZ6dP22ufRMNAVkDSFowSouEOmBOn8Pf3ew==
@@ -2646,7 +2646,7 @@
     isomorphic-ws "^4.0.1"
     ws "^8.3.0"
 
-"@shapeshiftoss/unchained-tx-parser@^4.0.1", "@shapeshiftoss/unchained-tx-parser@^4.1.0":
+"@shapeshiftoss/unchained-tx-parser@^4.0.0", "@shapeshiftoss/unchained-tx-parser@^4.1.0":
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/unchained-tx-parser/-/unchained-tx-parser-4.1.0.tgz#74ca2c7bf7e9793900e079a3e86f2e1d74e54ddb"
   integrity sha512-PpXM1qQd8gWqvIw/PTb4lrOxEzXGp4RxtI1ItXlpb2AI84MXuqGIJebePsg2Tpgqq7LaZxAZoKdXcNd5km1OLg==

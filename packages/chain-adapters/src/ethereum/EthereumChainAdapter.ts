@@ -2,6 +2,7 @@ import { Contract } from '@ethersproject/contracts'
 import { CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
+import { Tx } from '@shapeshiftoss/unchained-tx-parser'
 import { ethereum } from '@shapeshiftoss/unchained-client'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
@@ -326,8 +327,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           caip19: transfer.caip19,
           from: transfer.from,
           to: transfer.to,
-          type: getType(transfer.type),
-          value: transfer.totalValue
+          type: transfer.type,
+          value: transfer.value
         }))
 
         onMessage({
@@ -339,13 +340,13 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           chain: ChainTypes.Ethereum,
           confirmations: msg.confirmations,
           fee: msg.fee,
-          status: getStatus(msg.status),
-          tradeDetails: msg.trade,
+          status: msg.status,
+          tradeDetails: msg.tradeDetails,
           transfers,
           txid: msg.txid
         })
       },
-      (err) => onError({ message: err.message })
+      (err: chainAdapters.SubscribeError) => onError({ message: err.message })
     )
   }
 

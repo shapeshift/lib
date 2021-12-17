@@ -439,8 +439,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
           caip19: transfer.caip19,
           from: transfer.from,
           to: transfer.to,
-          type: getType(transfer.type),
-          value: transfer.totalValue
+          type: transfer.type,
+          value: transfer.value
         }))
 
         onMessage({
@@ -452,13 +452,13 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
           chain: ChainTypes.Bitcoin,
           confirmations: msg.confirmations,
           fee: msg.fee,
-          status: getStatus(msg.status),
-          tradeDetails: msg.trade,
+          status: msg.status,
+          tradeDetails: msg.tradeDetails,
           transfers,
           txid: msg.txid
         })
       },
-      (err) => onError({ message: err.message })
+      (err: chainAdapters.SubscribeError) => onError({ message: err.message })
     )
   }
 
