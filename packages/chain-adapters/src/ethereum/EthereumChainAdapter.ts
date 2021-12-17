@@ -240,26 +240,39 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       data
     })
 
+    const feeData =  (await this.providers.http.getGasFees()).data
+    const normalizationConstants: any = {
+      instant: String(new BigNumber(fees.instant).dividedBy(fees.fast)),
+      average: String(1),
+      slow: String(new BigNumber(fees.low).dividedBy(fees.fast))
+    }
+
     return {
       fast: {
         txFee: new BigNumber(fees.instant).times(gasLimit).toPrecision(),
         chainSpecific: {
           gasLimit,
-          gasPrice: String(fees.instant)
+          gasPrice: String(fees.instant),
+          maxFeePerGas: String(new BigNumber(feeData.maxFeePerGas).times(normalizationConstants.instant)),
+          maxPriorityFeePerGas: String(new BigNumber(feeData.maxPriorityFeePerGas).times(normalizationConstants.instant))
         }
       },
       average: {
         txFee: new BigNumber(fees.fast).times(gasLimit).toPrecision(),
         chainSpecific: {
           gasLimit,
-          gasPrice: String(fees.fast)
+          gasPrice: String(fees.fast),
+          maxFeePerGas: String(new BigNumber(feeData.maxFeePerGas).times(normalizationConstants.average)),
+          maxPriorityFeePerGas: String(new BigNumber(feeData.maxPriorityFeePerGas).times(normalizationConstants.average))
         }
       },
       slow: {
         txFee: new BigNumber(fees.low).times(gasLimit).toPrecision(),
         chainSpecific: {
           gasLimit,
-          gasPrice: String(fees.low)
+          gasPrice: String(fees.low),
+          maxFeePerGas: String(new BigNumber(feeData.maxFeePerGas).times(normalizationConstants.slow)),
+          maxPriorityFeePerGas: String(new BigNumber(feeData.maxPriorityFeePerGas).times(normalizationConstants.slow))
         }
       }
     }
@@ -295,8 +308,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     await this.providers.ws.subscribeTxs(
       subscriptionId,
       { topic: 'txs', addresses: [address] },
-      (msg) => {
-        const transfers = msg.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
+      (msg: chainAdapters.SubscribeTxsMessage<ChainTypes.Ethereum>) => {
+        const transfers = msg.transfers.map<chainAdapters.TxTransfer>((transfer: chainAdapters.TxTransfer) => ({
           caip19: transfer.caip19,
           from: transfer.from,
           to: transfer.to,

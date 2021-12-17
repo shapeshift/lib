@@ -20,6 +20,8 @@ export type TokenWithBalance = Token & {
 export type FeeData = {
   gasPrice: string
   gasLimit: string
+  maxFeePerGas: string
+  maxPriorityFeePerGas: string
 }
 
 export type QuoteFeeData = {

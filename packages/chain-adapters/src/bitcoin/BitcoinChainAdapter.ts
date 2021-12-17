@@ -13,7 +13,7 @@ import {
   chainAdapters,
   ChainTypes,
   NetworkTypes,
-  UtxoAccountType
+  UtxoAccountType, 
 } from '@shapeshiftoss/types'
 import { bitcoin } from '@shapeshiftoss/unchained-client'
 import coinSelect from 'coinselect'
@@ -414,8 +414,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
     await this.providers.ws.subscribeTxs(
       subscriptionId,
       { topic: 'txs', addresses },
-      (msg) => {
-        const transfers = msg.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
+      (msg: chainAdapters.SubscribeTxsMessage<ChainTypes.Bitcoin>) => {
+        const transfers = msg.transfers.map<chainAdapters.TxTransfer>((transfer: chainAdapters.TxTransfer) => ({
           caip19: transfer.caip19,
           from: transfer.from,
           to: transfer.to,
