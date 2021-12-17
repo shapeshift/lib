@@ -11,11 +11,11 @@ import {
   PriceHistoryArgs
 } from '@shapeshiftoss/types'
 import axios from 'axios'
-import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 import omit from 'lodash/omit'
 
 import { MarketService } from '../api'
+import { bnOrZero } from '../utils/bignumber'
 import { CoinGeckoMarketCap } from './coingecko-types'
 
 // tons more params here: https://www.coingecko.com/en/api/documentation
@@ -44,7 +44,11 @@ export class CoinGeckoMarketService implements MarketService {
     const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
     const { count } = argsToUse
     const perPage = count > 250 ? 250 : count
-    const pages = Math.ceil(new BigNumber(count).div(perPage).toNumber())
+    const pages = Math.ceil(
+      bnOrZero(count)
+        .div(perPage)
+        .toNumber()
+    )
 
     const urlAtPage = (page: number) =>
       `${this.baseUrl}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=${page}&sparkline=false`
