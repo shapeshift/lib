@@ -1,6 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Yearn } from '@yfi/sdk'
 
+import { CoinCapMarketService } from './coincap/coincap'
 import { CoinGeckoMarketService } from './coingecko/coingecko'
 import { YearnMarketCapService } from './yearn/yearn'
 // YearnMarketCapService deps
@@ -11,5 +12,6 @@ const yearnSdk = new Yearn(1, { provider })
 // More reliable providers should be listed first.
 export const MarketProviders = [
   new CoinGeckoMarketService(),
+  new CoinCapMarketService(),
   new YearnMarketCapService({ yearnSdk })
 ]
