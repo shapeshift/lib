@@ -29,11 +29,13 @@ export const writeFiles = async (data: Record<string, Record<string, string>>) =
   console.info('Generated CoinCap CAIP19 adapter data.')
 }
 
-export const fetchData = async (URL: string) => (await axios.get<{ data: CoinCapCoin[] }>(URL)).data.data
+export const fetchData = async (URL: string) =>
+  (await axios.get<{ data: CoinCapCoin[] }>(URL)).data.data
 
 export const parseEthData = (data: CoinCapCoin[]) => {
   const ethCoins = data.filter(
-    ({ id, explorer }) => (explorer && explorer.startsWith('https://etherscan.io/token/0x')) || id === 'ethereum'
+    ({ id, explorer }) =>
+      (explorer && explorer.startsWith('https://etherscan.io/token/0x')) || id === 'ethereum'
   )
 
   const chain = ChainTypes.Ethereum
@@ -43,7 +45,10 @@ export const parseEthData = (data: CoinCapCoin[]) => {
   const result = ethCoins.reduce((acc, { id, explorer }) => {
     let tokenId
     if (id !== 'ethereum' && explorer) {
-      tokenId = explorer.replace('https://etherscan.io/token/', '').split('#')[0].split('?')[0]
+      tokenId = explorer
+        .replace('https://etherscan.io/token/', '')
+        .split('#')[0]
+        .split('?')[0]
     }
     const caip19 = toCAIP19({ chain, network, ...(tokenId ? { contractType, tokenId } : {}) })
     acc[caip19] = id

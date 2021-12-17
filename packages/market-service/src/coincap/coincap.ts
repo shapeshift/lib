@@ -10,8 +10,8 @@ import {
   PriceHistoryArgs
 } from '@shapeshiftoss/types'
 import axios from 'axios'
-import omit from 'lodash/omit'
 import dayjs from 'dayjs'
+import omit from 'lodash/omit'
 
 import { MarketService } from '../api'
 import { CoinCapMarketCap } from './coincap-types'
@@ -27,8 +27,7 @@ export class CoinCapMarketService implements MarketService {
   findAll = async (args?: FindAllMarketArgs) => {
     const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
     const { pages, perPage } = argsToUse
-    const urlAtPage = (page: number) =>
-    `${this.baseUrl}/assets?limit=${perPage}&offset=${page}`
+    const urlAtPage = (page: number) => `${this.baseUrl}/assets?limit=${perPage}&offset=${page}`
     const pageCount = Array(pages)
       .fill(0)
       .map((_v, i) => i + 1)
@@ -41,9 +40,9 @@ export class CoinCapMarketService implements MarketService {
       ).flat()
 
       return combined
-        .map(({ data }) => data && data.data ? data.data : []) // filter out rate limited results
+        .map(({ data }) => (data && data.data ? data.data : [])) // filter out rate limited results
         .flat()
-        .sort((a, b) => a.rank > b.rank ? 1 : -1)
+        .sort((a, b) => (a.rank > b.rank ? 1 : -1))
         .reduce((acc, cur) => {
           const { id } = cur
           try {
@@ -70,16 +69,14 @@ export class CoinCapMarketService implements MarketService {
       const { tokenId } = fromCAIP19(caip19)
       const id = tokenId ? 'ethereum' : adapters.CAIP19ToCoinCap(caip19)
 
-      const { data } = await axios.get(
-        `${this.baseUrl}/assets/${id}`
-      )
+      const { data } = await axios.get(`${this.baseUrl}/assets/${id}`)
 
       const marketData = data.data as CoinCapMarketCap
       return {
         price: marketData.priceUsd,
         marketCap: marketData.marketCapUsd,
         changePercent24Hr: parseFloat(marketData.changePercent24Hr),
-        volume: marketData.volumeUsd24Hr,
+        volume: marketData.volumeUsd24Hr
       }
     } catch (e) {
       console.warn(e)
@@ -131,11 +128,13 @@ export class CoinCapMarketService implements MarketService {
       const to = end.valueOf()
       const contract = tokenId ? `/contract/${tokenId}` : ''
       const url = `${this.baseUrl}/assets/${id}${contract}/history`
-      const { data: { data } } = await axios.get(`${url}?id=${id}&start=${from}&end=${to}&interval=${interval}`)
-      return data.map((item: { priceUsd: number, time: number }) => {
+      const {
+        data: { data }
+      } = await axios.get(`${url}?id=${id}&start=${from}&end=${to}&interval=${interval}`)
+      return data.map((item: { priceUsd: number; time: number }) => {
         return {
           date: Number(item.time),
-          price: Number(item.priceUsd),
+          price: Number(item.priceUsd)
         }
       })
     } catch (e) {
