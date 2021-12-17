@@ -1,4 +1,5 @@
-import { BIP32Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
+import { CAIP2 } from '@shapeshiftoss/caip'
+import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 
 export interface ChainAdapter<T extends ChainTypes> {
   /**
@@ -6,12 +7,14 @@ export interface ChainAdapter<T extends ChainTypes> {
    */
   getType(): T
 
+  getCaip2(): Promise<CAIP2>
+
   /**
    * Get the balance of an address
    */
   getAccount(pubkey: string): Promise<chainAdapters.Account<T>>
 
-  buildBIP32Params(params: Partial<BIP32Params>): BIP32Params
+  buildBIP44Params(params: Partial<BIP44Params>): BIP44Params
 
   getTxHistory(input: chainAdapters.TxHistoryInput): Promise<chainAdapters.TxHistoryResponse<T>>
 

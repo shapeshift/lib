@@ -1,3 +1,4 @@
+import { caip19 } from '@shapeshiftoss/caip'
 import { chainAdapters, ChainTypes, SendMaxAmountInput } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 
@@ -16,10 +17,10 @@ export async function getZrxSendMaxAmount(
   }: SendMaxAmountInput
 ): Promise<string> {
   const adapter = adapterManager.byChain(ChainTypes.Ethereum)
-  const bip32Params = adapter.buildBIP32Params({
+  const bip44Params = adapter.buildBIP44Params({
     accountNumber: bnOrZero(sellAssetAccountId).toNumber()
   })
-  const ethAddress = await adapter.getAddress({ wallet, bip32Params })
+  const ethAddress = await adapter.getAddress({ wallet, bip44Params })
 
   const account = await adapter.getAccount(ethAddress)
 
@@ -31,10 +32,9 @@ export async function getZrxSendMaxAmount(
 
   let balance: string | undefined
   if (tokenId) {
-    balance = account.chainSpecific.tokens?.find(
-      (token: chainAdapters.ethereum.TokenWithBalance) =>
-        token.contract.toLowerCase() === tokenId.toLowerCase()
-    )?.balance
+    balance = account.chainSpecific.tokens?.find((token: chainAdapters.AssetBalance) => {
+      return caip19.fromCAIP19(token.caip19).tokenId === tokenId.toLowerCase()
+    })?.balance
   } else {
     balance = account.balance
   }

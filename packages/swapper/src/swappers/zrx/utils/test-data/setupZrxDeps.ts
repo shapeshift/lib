@@ -5,14 +5,15 @@ import Web3 from 'web3'
 jest.mock('@shapeshiftoss/chain-adapters')
 
 export const chainAdapterMockFuncs = {
-  buildBIP32Params: jest.fn(() => ({ purpose: 44, coinType: 60, accountNumber: 0 })),
+  buildBIP44Params: jest.fn(() => ({ purpose: 44, coinType: 60, accountNumber: 0 })),
   buildSendTransaction: jest.fn(() => Promise.resolve({ txToSign: {} })),
   signTransaction: jest.fn(() => Promise.resolve('signedTx')),
   broadcastTransaction: jest.fn(() => Promise.resolve('broadcastedTx')),
+  getInfo: jest.fn(() => Promise.resolve({ data: { network: 'mainnet' } })),
   getAddress: jest.fn(() => Promise.resolve('address')),
   getAccount: jest.fn(() =>
     Promise.resolve({
-      chainSpecific: { tokens: [{ contract: 'contractAddress', balance: '1000000' }] }
+      chainSpecific: { tokens: [{ caip19: 'eip155:1/erc20:contractAddress', balance: '1000000' }] }
     })
   ),
   getFeeData: jest.fn(() =>

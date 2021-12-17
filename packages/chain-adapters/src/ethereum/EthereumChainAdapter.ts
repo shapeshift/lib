@@ -1,12 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
+import { CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
-import {
-  BIP32Params,
-  chainAdapters,
-  ChainTypes,
-  ContractTypes,
-  NetworkTypes
-} from '@shapeshiftoss/types'
+import { BIP44Params, chainAdapters, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import { ethereum } from '@shapeshiftoss/unchained-client'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
@@ -15,7 +10,7 @@ import { numberToHex } from 'web3-utils'
 
 import { ChainAdapter as IChainAdapter } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
-import { getStatus, getType, toPath, toRootDerivationPath } from '../utils'
+import { getContractType, getStatus, getType, toPath, toRootDerivationPath } from '../utils'
 import erc20Abi from './erc20Abi.json'
 
 export interface ChainAdapterArgs {
@@ -37,7 +32,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     http: ethereum.api.V1Api
     ws: ethereum.ws.Client
   }
-  public static readonly defaultBIP32Params: BIP32Params = {
+  public static readonly defaultBIP44Params: BIP44Params = {
     purpose: 44,
     coinType: 60,
     accountNumber: 0
@@ -51,38 +46,57 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     return ChainTypes.Ethereum
   }
 
-  async getAccount(pubkey: string): Promise<chainAdapters.Account<ChainTypes.Ethereum>> {
+  async getCaip2(): Promise<CAIP2> {
     try {
-      const { data } = await this.providers.http.getAccount({ pubkey })
+      const { data } = await this.providers.http.getInfo()
 
-      return {
-        balance: data.balance,
-        chain: ChainTypes.Ethereum,
-        chainSpecific: {
-          nonce: data.nonce,
-          tokens: data.tokens.map((token) => ({
-            balance: token.balance,
-            contract: token.contract,
-            // note: unchained gets token types from blockbook
-            // blockbook only has one definition of a TokenType for ethereum
-            // https://github1s.com/trezor/blockbook/blob/master/api/types.go#L140
-            contractType: ContractTypes.ERC20,
-            name: token.name,
-            precision: token.decimals,
-            symbol: token.symbol
-          }))
-        },
-        network: NetworkTypes.MAINNET, // TODO(0xdef1cafe): need to reflect this from the provider
-        pubkey: data.pubkey,
-        symbol: 'ETH' // TODO(0xdef1cafe): this is real dirty
+      switch (data.network) {
+        case 'mainnet':
+          return caip2.toCAIP2({ chain: ChainTypes.Ethereum, network: NetworkTypes.MAINNET })
+        case 'ropsten':
+          return caip2.toCAIP2({ chain: ChainTypes.Ethereum, network: NetworkTypes.ETH_ROPSTEN })
+        case 'rinkeby':
+          return caip2.toCAIP2({ chain: ChainTypes.Ethereum, network: NetworkTypes.ETH_RINKEBY })
+        default:
+          throw new Error(`EthereumChainAdapter: network is not supported: ${data.network}`)
       }
     } catch (err) {
       return ErrorHandler(err)
     }
   }
 
-  buildBIP32Params(params: Partial<BIP32Params>): BIP32Params {
-    return { ...ChainAdapter.defaultBIP32Params, ...params }
+  async getAccount(pubkey: string): Promise<chainAdapters.Account<ChainTypes.Ethereum>> {
+    try {
+      const caip = await this.getCaip2()
+      const { chain, network } = caip2.fromCAIP2(caip)
+      const { data } = await this.providers.http.getAccount({ pubkey })
+
+      return {
+        balance: data.balance,
+        caip2: caip,
+        caip19: caip19.toCAIP19({ chain, network }),
+        chain: ChainTypes.Ethereum,
+        chainSpecific: {
+          nonce: data.nonce,
+          tokens: data.tokens.map((token) => ({
+            balance: token.balance,
+            caip19: caip19.toCAIP19({
+              chain,
+              network,
+              contractType: getContractType(token.type),
+              tokenId: token.contract
+            })
+          }))
+        },
+        pubkey: data.pubkey
+      }
+    } catch (err) {
+      return ErrorHandler(err)
+    }
+  }
+
+  buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
+    return { ...ChainAdapter.defaultBIP44Params, ...params }
   }
 
   async getTxHistory({
@@ -118,7 +132,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       const {
         to,
         wallet,
-        bip32Params = ChainAdapter.defaultBIP32Params,
+        bip44Params = ChainAdapter.defaultBIP44Params,
         chainSpecific: { erc20ContractAddress, gasPrice, gasLimit },
         sendMax = false
       } = tx
@@ -128,10 +142,10 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
 
       const destAddress = erc20ContractAddress ?? to
 
-      const path = toPath(bip32Params)
+      const path = toPath(bip44Params)
       const addressNList = bip32ToAddressNList(path)
 
-      const from = await this.getAddress({ bip32Params, wallet })
+      const from = await this.getAddress({ bip44Params, wallet })
       const { chainSpecific } = await this.getAccount(from)
 
       const isErc20Send = !!erc20ContractAddress
@@ -140,10 +154,9 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
         const account = await this.getAccount(from)
         if (isErc20Send) {
           if (!erc20ContractAddress) throw new Error('no token address')
-          const erc20Balance = account?.chainSpecific?.tokens?.find(
-            (token: { contract: string; balance: string }) =>
-              token.contract.toLowerCase() === erc20ContractAddress.toLowerCase()
-          )?.balance
+          const erc20Balance = account?.chainSpecific?.tokens?.find((token) => {
+            return caip19.fromCAIP19(token.caip19).tokenId === erc20ContractAddress.toLowerCase()
+          })?.balance
           if (!erc20Balance) throw new Error('no balance')
           tx.value = erc20Balance
         } else {
@@ -223,10 +236,10 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     // in MOST cases any eth amount will cost the same 21000 gas
     if (sendMax && isErc20Send && contractAddress) {
       const account = await this.getAccount(from)
-      const erc20Balance = account?.chainSpecific?.tokens?.find(
-        (token: { contract: string; balance: string }) =>
-          token.contract.toLowerCase() === contractAddress.toLowerCase()
-      )?.balance
+      const erc20Balance = account?.chainSpecific?.tokens?.find((token) => {
+        const { tokenId } = caip19.fromCAIP19(token.caip19)
+        return tokenId === contractAddress.toLowerCase()
+      })?.balance
       if (!erc20Balance) throw new Error('no balance')
       value = erc20Balance
     }
@@ -279,8 +292,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
   }
 
   async getAddress(input: chainAdapters.GetAddressInput): Promise<string> {
-    const { wallet, bip32Params = ChainAdapter.defaultBIP32Params } = input
-    const path = toPath(bip32Params)
+    const { wallet, bip44Params = ChainAdapter.defaultBIP44Params } = input
+    const path = toPath(bip44Params)
     const addressNList = bip32ToAddressNList(path)
     const ethAddress = await (wallet as ETHWallet).ethGetAddress({
       addressNList,
@@ -300,10 +313,10 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     onMessage: (msg: chainAdapters.SubscribeTxsMessage<ChainTypes.Ethereum>) => void,
     onError: (err: chainAdapters.SubscribeError) => void
   ): Promise<void> {
-    const { wallet, bip32Params = ChainAdapter.defaultBIP32Params } = input
+    const { wallet, bip44Params = ChainAdapter.defaultBIP44Params } = input
 
-    const address = await this.getAddress({ wallet, bip32Params })
-    const subscriptionId = toRootDerivationPath(bip32Params)
+    const address = await this.getAddress({ wallet, bip44Params })
+    const subscriptionId = toRootDerivationPath(bip44Params)
 
     await this.providers.ws.subscribeTxs(
       subscriptionId,
@@ -339,8 +352,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
   unsubscribeTxs(input?: chainAdapters.SubscribeTxsInput): void {
     if (!input) return this.providers.ws.unsubscribeTxs()
 
-    const { bip32Params = ChainAdapter.defaultBIP32Params } = input
-    const subscriptionId = toRootDerivationPath(bip32Params)
+    const { bip44Params = ChainAdapter.defaultBIP44Params } = input
+    const subscriptionId = toRootDerivationPath(bip44Params)
 
     this.providers.ws.unsubscribeTxs(subscriptionId, { topic: 'txs', addresses: [] })
   }
