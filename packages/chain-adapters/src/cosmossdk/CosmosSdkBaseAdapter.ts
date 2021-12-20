@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CAIP2 } from '@shapeshiftoss/caip'
@@ -5,33 +6,51 @@ import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 
 import { ChainAdapter as IChainAdapter } from '../api'
 
-export class CosmosSdkBaseAdapter<T extends ChainTypes> {
-  getType(): T {
+type chainType = ChainTypes.Cosmos | ChainTypes.Osmosis
+
+export abstract class CosmosSdkBaseAdapter<T extends ChainTypes> implements IChainAdapter<chainType> {
+
+  public static readonly defaultBIP44Params: BIP44Params = {
+    purpose: 44,
+    coinType: 60,
+    accountNumber: 0
+  }
+
+  getType(): chainType {
     throw new Error('Method not implemented.')
   }
   getCaip2(): Promise<CAIP2> {
     throw new Error('Method not implemented.')
   }
-  getAccount(pubkey: string): Promise<chainAdapters.Account<T>> {
+  getAccount(pubkey: string): Promise<chainAdapters.Account<chainType>> {
     throw new Error('Method not implemented.')
   }
   buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
     throw new Error('Method not implemented.')
   }
-  getTxHistory(input: chainAdapters.TxHistoryInput): Promise<chainAdapters.TxHistoryResponse<T>> {
+  getTxHistory(input: chainAdapters.TxHistoryInput): Promise<chainAdapters.TxHistoryResponse<chainType>> {
     throw new Error('Method not implemented.')
   }
+
+
   buildSendTransaction(
-    input: chainAdapters.BuildSendTxInput<T>
-  ): Promise<{ txToSign: chainAdapters.ChainTxType<T> }> {
+    tx: chainAdapters.BuildSendTxInput<chainType>
+  ): Promise<{ txToSign: chainAdapters.ChainTxType<chainType> }> {
+    const {
+      to,
+      wallet,
+      bip44Params = CosmosSdkBaseAdapter.defaultBIP44Params,
+      chainSpecific: { gas },
+      sendMax = false
+    } = tx
     throw new Error('Method not implemented.')
   }
+
+
   getAddress(input: chainAdapters.GetAddressInput): Promise<string> {
     throw new Error('Method not implemented.')
   }
-  signTransaction(
-    signTxInput: chainAdapters.SignTxInput<chainAdapters.ChainTxType<T>>
-  ): Promise<string> {
+  signTransaction(signTxInput: chainAdapters.SignTxInput<chainAdapters.ChainTxType<T>>): Promise<string> {
     throw new Error('Method not implemented.')
   }
   getFeeData(

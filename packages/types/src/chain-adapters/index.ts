@@ -3,8 +3,9 @@ import { BTCSignTx, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, ChainTypes, NetworkTypes, SwapperType, UtxoAccountType } from '../base'
 import { ChainAndSwapperSpecific, ChainSpecific } from '../utility'
 import * as bitcoin from './bitcoin'
+import * as cosmos from './cosmos'
 import * as ethereum from './ethereum'
-
+import * as osmosis from './osmosis'
 export { bitcoin, ethereum }
 
 type ChainSpecificAccount<T> = ChainSpecific<
@@ -191,6 +192,7 @@ type ChainSpecificBuildTxData<T> = ChainSpecific<
   {
     [ChainTypes.Ethereum]: ethereum.BuildTxInput
     [ChainTypes.Bitcoin]: bitcoin.BuildTxInput
+    [ChainTypes.Cosmos]: cosmos.BuildTxInput
   }
 >
 
