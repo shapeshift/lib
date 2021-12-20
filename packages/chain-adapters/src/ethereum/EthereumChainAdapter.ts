@@ -345,7 +345,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     await this.providers.ws.subscribeTxs(
       subscriptionId,
       { topic: 'txs', addresses: [address] },
-      (msg: chainAdapters.SubscribeTxsMessage<ChainTypes.Ethereum>) => {
+      (msg) => {
         const transfers = msg.transfers.map<chainAdapters.TxTransfer>(
           (transfer: chainAdapters.TxTransfer) => ({
             caip19: transfer.caip19,
@@ -366,7 +366,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           confirmations: msg.confirmations,
           fee: msg.fee,
           status: msg.status,
-          tradeDetails: msg.tradeDetails,
+          tradeDetails: msg.trade,
           transfers,
           txid: msg.txid
         })
