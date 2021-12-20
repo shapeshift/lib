@@ -193,6 +193,7 @@ type ChainSpecificBuildTxData<T> = ChainSpecific<
     [ChainTypes.Ethereum]: ethereum.BuildTxInput
     [ChainTypes.Bitcoin]: bitcoin.BuildTxInput
     [ChainTypes.Cosmos]: cosmos.BuildTxInput
+    [ChainTypes.Osmosis]: osmosis.BuildTxInput
   }
 >
 
