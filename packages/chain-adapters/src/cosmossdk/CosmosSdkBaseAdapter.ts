@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CAIP2 } from '@shapeshiftoss/caip'
-import { ChainTypes } from '@shapeshiftoss/types'
 import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 
 import { ChainAdapter as IChainAdapter } from '../api'
