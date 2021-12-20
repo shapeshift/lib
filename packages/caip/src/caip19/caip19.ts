@@ -30,6 +30,12 @@ export const toCAIP19: ToCAIP19 = ({ chain, network, contractType, tokenId }) =>
   const caip2 = toCAIP2({ chain, network })
 
   switch (chain) {
+    case ChainTypes.Cosmos: {
+      throw new Error('Not implemented')
+    }
+    case ChainTypes.Osmosis: {
+      throw new Error('Not implemented')
+    }
     case ChainTypes.Ethereum: {
       tokenId = tokenId?.toLowerCase()
 

@@ -12,6 +12,8 @@ type ChainSpecificAccount<T> = ChainSpecific<
   {
     [ChainTypes.Ethereum]: ethereum.Account
     [ChainTypes.Bitcoin]: bitcoin.Account
+    [ChainTypes.Cosmos]: cosmos.Account
+    [ChainTypes.Osmosis]: osmosis.Account
   }
 >
 

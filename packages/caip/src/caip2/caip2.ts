@@ -43,6 +43,21 @@ export const toCAIP2: ToCAIP2 = ({ chain, network }): string => {
         [NetworkTypes.MAINNET]: ChainReference.BitcoinMainnet,
         [NetworkTypes.TESTNET]: ChainReference.BitcoinTestnet
       }
+    },
+    // TODO
+    [ChainTypes.Cosmos]: {
+      namespace: ChainNamespace.Bitcoin,
+      reference: {
+        [NetworkTypes.MAINNET]: ChainReference.BitcoinMainnet,
+        [NetworkTypes.TESTNET]: ChainReference.BitcoinTestnet
+      }
+    },
+    [ChainTypes.Osmosis]: {
+      namespace: ChainNamespace.Bitcoin,
+      reference: {
+        [NetworkTypes.MAINNET]: ChainReference.BitcoinMainnet,
+        [NetworkTypes.TESTNET]: ChainReference.BitcoinTestnet
+      }
     }
   } as const
 
