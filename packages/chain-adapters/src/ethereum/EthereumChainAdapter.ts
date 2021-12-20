@@ -260,6 +260,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       slow: String(new BigNumber(fees.low).dividedBy(fees.fast))
     }
 
+    console.log('Fees', fees, normalizationConstants)
+
     return {
       fast: {
         txFee: new BigNumber(fees.instant).times(gasLimit).toPrecision(),
@@ -267,10 +269,14 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           gasLimit,
           gasPrice: String(fees.instant),
           maxFeePerGas: String(
-            new BigNumber(feeData.maxFeePerGas).times(normalizationConstants.instant)
+            new BigNumber(feeData.maxFeePerGas)
+              .times(normalizationConstants.instant)
+              .toFixed(0, BigNumber.ROUND_CEIL)
           ),
           maxPriorityFeePerGas: String(
-            new BigNumber(feeData.maxPriorityFeePerGas).times(normalizationConstants.instant)
+            new BigNumber(feeData.maxPriorityFeePerGas)
+              .times(normalizationConstants.instant)
+              .toFixed(0, BigNumber.ROUND_CEIL)
           )
         }
       },
@@ -280,10 +286,14 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           gasLimit,
           gasPrice: String(fees.fast),
           maxFeePerGas: String(
-            new BigNumber(feeData.maxFeePerGas).times(normalizationConstants.average)
+            new BigNumber(feeData.maxFeePerGas)
+              .times(normalizationConstants.average)
+              .toFixed(0, BigNumber.ROUND_CEIL)
           ),
           maxPriorityFeePerGas: String(
-            new BigNumber(feeData.maxPriorityFeePerGas).times(normalizationConstants.average)
+            new BigNumber(feeData.maxPriorityFeePerGas)
+              .times(normalizationConstants.average)
+              .toFixed(0, BigNumber.ROUND_CEIL)
           )
         }
       },
@@ -293,10 +303,14 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           gasLimit,
           gasPrice: String(fees.low),
           maxFeePerGas: String(
-            new BigNumber(feeData.maxFeePerGas).times(normalizationConstants.slow)
+            new BigNumber(feeData.maxFeePerGas)
+              .times(normalizationConstants.slow)
+              .toFixed(0, BigNumber.ROUND_CEIL)
           ),
           maxPriorityFeePerGas: String(
-            new BigNumber(feeData.maxPriorityFeePerGas).times(normalizationConstants.slow)
+            new BigNumber(feeData.maxPriorityFeePerGas)
+              .times(normalizationConstants.slow)
+              .toFixed(0, BigNumber.ROUND_CEIL)
           )
         }
       }
