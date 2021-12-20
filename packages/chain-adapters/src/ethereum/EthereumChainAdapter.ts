@@ -260,8 +260,6 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       slow: String(new BigNumber(fees.low).dividedBy(fees.fast))
     }
 
-    console.log('Fees', fees, normalizationConstants)
-
     return {
       fast: {
         txFee: new BigNumber(fees.instant).times(gasLimit).toPrecision(),

@@ -4,27 +4,7 @@
  * Test EthereumChainAdapter
  * @group unit
  */
-
-import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import * as unchained from '@shapeshiftoss/unchained-client'
-
 import * as ethereum from './EthereumChainAdapter'
-
-import axios from 'axios'
-
-const testMnemonic = 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle'
-
-const getWallet = async (): Promise<HDWallet> => {
-  const nativeAdapterArgs: NativeAdapterArgs = {
-    mnemonic: testMnemonic,
-    deviceId: 'test'
-  }
-  const wallet = new NativeHDWallet(nativeAdapterArgs)
-  await wallet.initialize()
-
-  return wallet
-}
 
 const getGasFeesMockedResponse = {
   data: {
