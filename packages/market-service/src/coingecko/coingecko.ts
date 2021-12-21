@@ -121,7 +121,7 @@ export class CoinGeckoMarketService implements MarketService {
     if (!adapters.CAIP19ToCoingecko(caip19)) return []
     try {
       const { tokenId } = fromCAIP19(caip19)
-      const id = tokenId ? 'ethereum' : adapters.CAIP19ToCoiqqngecko(caip19)
+      const id = tokenId ? 'ethereum' : adapters.CAIP19ToCoingecko(caip19)
 
       const end = dayjs().startOf('minute')
       let start
