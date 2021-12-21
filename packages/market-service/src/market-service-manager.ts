@@ -19,7 +19,8 @@ export const findAll = async (args?: FindAllMarketArgs): Promise<MarketCapResult
     try {
       result = await MarketProviders[i].findAll(args)
     } catch (e) {
-      console.info(e)
+      // Swallow error, not every asset will be with every provider.
+      continue
     }
   }
   if (!result) throw new Error('Cannot find market service provider for market data.')
@@ -33,7 +34,8 @@ export const findByCaip19 = async ({ caip19 }: MarketDataArgs) => {
     try {
       result = await MarketProviders[i].findByCaip19({ caip19 })
     } catch (e) {
-      console.info(e)
+      // Swallow error, not every asset will be with every provider.
+      continue
     }
   }
   if (!result) return null
@@ -46,11 +48,12 @@ export const findPriceHistoryByCaip19: PriceHistoryType = async ({
 }: PriceHistoryArgs): Promise<HistoryData[]> => {
   let result: HistoryData[] | null = null
   // Loop through market providers and look for asset price history data. Once found, exit loop.
-  for (let i = 0; i < MarketProviders.length && !result; i++) {
+  for (let i = 0; i < MarketProviders.length && !result?.length; i++) {
     try {
       result = await MarketProviders[i].findPriceHistoryByCaip19({ caip19, timeframe })
     } catch (e) {
-      console.info(e)
+      // Swallow error, not every asset will be with every provider.
+      continue
     }
   }
   if (!result) return []
