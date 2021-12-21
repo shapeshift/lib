@@ -29,7 +29,8 @@ export const parseEthData = (data: Vault[]) => {
   const network = NetworkTypes.MAINNET
   const contractType = ContractTypes.ERC20
 
-  const result = data.reduce((acc, { address }) => {
+  const result = data.reduce((acc, datum) => {
+    const { address } = datum
     const id = address
     const tokenId = toLower(address)
     const caip19 = toCAIP19({ chain, network, contractType, tokenId })
