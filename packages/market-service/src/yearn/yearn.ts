@@ -1,5 +1,5 @@
 import { adapters } from '@shapeshiftoss/caip'
-import { fromCAIP19, toCAIP19 } from '@shapeshiftoss/caip/dist/caip19/caip19'
+import { toCAIP19 } from '@shapeshiftoss/caip/dist/caip19/caip19'
 import {
   ChainTypes,
   ContractTypes,
