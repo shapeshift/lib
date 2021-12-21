@@ -6,9 +6,9 @@ import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 
 import { ChainAdapter as IChainAdapter } from '../api'
 
-type chainType = ChainTypes.Cosmos | ChainTypes.Osmosis
+type CosmosChains = ChainTypes.Cosmos | ChainTypes.Osmosis
 
-export abstract class CosmosSdkBaseAdapter<T extends ChainTypes> implements IChainAdapter<chainType> {
+export abstract class CosmosSdkBaseAdapter<T extends ChainTypes> implements IChainAdapter<CosmosChains> {
 
   public static readonly defaultBIP44Params: BIP44Params = {
     purpose: 44,
@@ -16,26 +16,26 @@ export abstract class CosmosSdkBaseAdapter<T extends ChainTypes> implements ICha
     accountNumber: 0
   }
 
-  getType(): chainType {
+  getType(): CosmosChains {
     throw new Error('Method not implemented.')
   }
   getCaip2(): Promise<CAIP2> {
     throw new Error('Method not implemented.')
   }
-  getAccount(pubkey: string): Promise<chainAdapters.Account<chainType>> {
+  getAccount(pubkey: string): Promise<chainAdapters.Account<CosmosChains>> {
     throw new Error('Method not implemented.')
   }
   buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
     throw new Error('Method not implemented.')
   }
-  getTxHistory(input: chainAdapters.TxHistoryInput): Promise<chainAdapters.TxHistoryResponse<chainType>> {
+  getTxHistory(input: chainAdapters.TxHistoryInput): Promise<chainAdapters.TxHistoryResponse<CosmosChains>> {
     throw new Error('Method not implemented.')
   }
 
 
   buildSendTransaction(
-    tx: chainAdapters.BuildSendTxInput<chainType>
-  ): Promise<{ txToSign: chainAdapters.ChainTxType<chainType> }> {
+    tx: chainAdapters.BuildSendTxInput<CosmosChains>
+  ): Promise<{ txToSign: chainAdapters.ChainTxType<CosmosChains> }> {
     const {
       to,
       wallet,
@@ -66,7 +66,7 @@ export abstract class CosmosSdkBaseAdapter<T extends ChainTypes> implements ICha
   }
   subscribeTxs(
     input: chainAdapters.SubscribeTxsInput,
-    onMessage: (msg: chainAdapters.SubscribeTxsMessage<T>) => void,
+    onMessage: (msg: chainAdapters.SubscribeTxsMessage<CosmosChains>) => void,
     onError?: (err: chainAdapters.SubscribeError) => void
   ): Promise<void> {
     throw new Error('Method not implemented.')
