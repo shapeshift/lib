@@ -19,8 +19,7 @@ export const findAll = async (args?: FindAllMarketArgs): Promise<MarketCapResult
     try {
       result = await MarketProviders[i].findAll(args)
     } catch (e) {
-      // Swallow error, not every asset will be with every provider.
-      continue
+      console.info(e)
     }
   }
   if (!result) throw new Error('Cannot find market service provider for market data.')
