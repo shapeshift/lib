@@ -9,7 +9,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Osmosis>
 
   public static readonly defaultBIP44Params: BIP44Params = {
     purpose: 44,
-    coinType: 60,
+    coinType: 118,
     accountNumber: 0
   }
 

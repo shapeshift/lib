@@ -12,7 +12,7 @@ export abstract class CosmosSdkBaseAdapter<T extends ChainTypes> implements ICha
 
   public static readonly defaultBIP44Params: BIP44Params = {
     purpose: 44,
-    coinType: 60,
+    coinType: 118,
     accountNumber: 0
   }
 
