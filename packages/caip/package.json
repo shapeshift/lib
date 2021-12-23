@@ -27,14 +27,13 @@
     "test": "jest test",
     "type-check": "tsc --project ./tsconfig.json --noEmit"
   },
-  "dependencies": {
-    "@yfi/sdk": "^1.0.12"
-  },
+  "dependencies": {},
   "peerDependencies": {
     "@shapeshiftoss/types": "^1.13.1"
   },
   "devDependencies": {
     "@shapeshiftoss/types": "^1.13.1",
+    "@yfi/sdk": "^1.0.12",
     "axios": "^0.24.0"
   }
 }
