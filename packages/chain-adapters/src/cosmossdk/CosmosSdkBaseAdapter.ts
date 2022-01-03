@@ -20,7 +20,7 @@ export abstract class CosmosSdkBaseAdapter<T extends ChainTypes>
   implements IChainAdapter<chainType> {
   public static readonly defaultBIP44Params: BIP44Params = {
     purpose: 44,
-    coinType: 60,
+    coinType: 118,
     accountNumber: 0
   }
 
@@ -30,27 +30,25 @@ export abstract class CosmosSdkBaseAdapter<T extends ChainTypes>
     this.chainSpecificProperties = args
   }
 
-  getType(): chainType {
+  getType(): CosmosChains {
     throw new Error('Method not implemented.')
   }
   getCaip2(): Promise<CAIP2> {
     throw new Error('Method not implemented.')
   }
-  getAccount(pubkey: string): Promise<chainAdapters.Account<chainType>> {
+  getAccount(pubkey: string): Promise<chainAdapters.Account<CosmosChains>> {
     throw new Error('Method not implemented.')
   }
   buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
     throw new Error('Method not implemented.')
   }
-  getTxHistory(
-    input: chainAdapters.TxHistoryInput
-  ): Promise<chainAdapters.TxHistoryResponse<chainType>> {
+  getTxHistory(input: chainAdapters.TxHistoryInput): Promise<chainAdapters.TxHistoryResponse<CosmosChains>> {
     throw new Error('Method not implemented.')
   }
 
   buildSendTransaction(
-    tx: chainAdapters.BuildSendTxInput<chainType>
-  ): Promise<{ txToSign: chainAdapters.ChainTxType<chainType> }> {
+    tx: chainAdapters.BuildSendTxInput<CosmosChains>
+  ): Promise<{ txToSign: chainAdapters.ChainTxType<CosmosChains> }> {
     const {
       to,
       wallet,
@@ -82,7 +80,7 @@ export abstract class CosmosSdkBaseAdapter<T extends ChainTypes>
   }
   async subscribeTxs(
     input: chainAdapters.SubscribeTxsInput,
-    onMessage: (msg: chainAdapters.SubscribeTxsMessage<T>) => void,
+    onMessage: (msg: chainAdapters.SubscribeTxsMessage<CosmosChains>) => void,
     onError?: (err: chainAdapters.SubscribeError) => void
   ): Promise<void> {
     const { wallet, bip44Params = ChainAdapter.defaultBIP44Params } = input

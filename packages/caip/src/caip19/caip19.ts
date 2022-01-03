@@ -14,7 +14,9 @@ export enum AssetNamespace {
 
 export enum AssetReference {
   Bitcoin = 0,
-  Ethereum = 60
+  Ethereum = 60,
+  Cosmos = 118,
+  Osmosis = 118
 }
 
 type ToCAIP19Args = {
@@ -31,10 +33,10 @@ export const toCAIP19: ToCAIP19 = ({ chain, network, contractType, tokenId }) =>
 
   switch (chain) {
     case ChainTypes.Cosmos: {
-      throw new Error('Not implemented')
+      return `${caip2}/${AssetNamespace.Slip44}:${AssetReference.Cosmos}`
     }
     case ChainTypes.Osmosis: {
-      throw new Error('Not implemented')
+      return `${caip2}/${AssetNamespace.Slip44}:${AssetReference.Osmosis}`
     }
     case ChainTypes.Ethereum: {
       tokenId = tokenId?.toLowerCase()

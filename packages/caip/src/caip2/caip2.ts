@@ -6,7 +6,9 @@ export type CAIP2 = string
 
 export enum ChainNamespace {
   Ethereum = 'eip155',
-  Bitcoin = 'bip122'
+  Bitcoin = 'bip122',
+  Cosmos = 'cosmos',
+  Osmosis = 'osmosis'
 }
 
 export enum ChainReference {
@@ -17,7 +19,9 @@ export enum ChainReference {
   // https://github.com/bitcoin/bips/blob/master/bip-0122.mediawiki#definition-of-chain-id
   // caip2 uses max length of 32 chars of the genesis block
   BitcoinMainnet = '000000000019d6689c085ae165831e93',
-  BitcoinTestnet = '000000000933ea01ad0ee984209779ba'
+  BitcoinTestnet = '000000000933ea01ad0ee984209779ba',
+  CosmosMainnet = 'cosmoshub-4',
+  OsmosisMainnet = 'osmosis-1'
 }
 
 type ToCAIP2Args = {
@@ -44,19 +48,16 @@ export const toCAIP2: ToCAIP2 = ({ chain, network }): string => {
         [NetworkTypes.TESTNET]: ChainReference.BitcoinTestnet
       }
     },
-    // TODO
     [ChainTypes.Cosmos]: {
-      namespace: ChainNamespace.Bitcoin,
+      namespace: ChainNamespace.Cosmos,
       reference: {
-        [NetworkTypes.MAINNET]: ChainReference.BitcoinMainnet,
-        [NetworkTypes.TESTNET]: ChainReference.BitcoinTestnet
+        [NetworkTypes.MAINNET]: ChainReference.CosmosMainnet
       }
     },
     [ChainTypes.Osmosis]: {
-      namespace: ChainNamespace.Bitcoin,
+      namespace: ChainNamespace.Osmosis,
       reference: {
-        [NetworkTypes.MAINNET]: ChainReference.BitcoinMainnet,
-        [NetworkTypes.TESTNET]: ChainReference.BitcoinTestnet
+        [NetworkTypes.MAINNET]: ChainReference.OsmosisMainnet
       }
     }
   } as const
@@ -83,6 +84,28 @@ export const toCAIP2: ToCAIP2 = ({ chain, network }): string => {
       switch (network) {
         case NetworkTypes.MAINNET:
         case NetworkTypes.TESTNET: {
+          const reference: ChainReference = referenceMap[network]
+          const caip2 = `${namespace}:${reference}`
+          return caip2
+        }
+      }
+      break
+    }
+    case ChainTypes.Cosmos: {
+      const referenceMap = shapeShiftToCAIP2[chain].reference
+      switch (network) {
+        case NetworkTypes.MAINNET: {
+          const reference: ChainReference = referenceMap[network]
+          const caip2 = `${namespace}:${reference}`
+          return caip2
+        }
+      }
+      break
+    }
+    case ChainTypes.Osmosis: {
+      const referenceMap = shapeShiftToCAIP2[chain].reference
+      switch (network) {
+        case NetworkTypes.MAINNET: {
           const reference: ChainReference = referenceMap[network]
           const caip2 = `${namespace}:${reference}`
           return caip2
@@ -143,6 +166,30 @@ export const fromCAIP2: FromCAIP2 = (caip2) => {
         }
       }
     }
+    case ChainNamespace.Cosmos: {
+      const chain = ChainTypes.Cosmos
+      switch (n) {
+        case ChainReference.CosmosMainnet: {
+          const network = NetworkTypes.MAINNET
+          return { chain, network }
+        }
+        default: {
+          throw new Error(`fromCAIP19: unsupported ${c} network: ${n}`)
+        }
+      }
+    }
+    case ChainNamespace.Osmosis: {
+      const chain = ChainTypes.Osmosis
+      switch (n) {
+        case ChainReference.OsmosisMainnet: {
+          const network = NetworkTypes.MAINNET
+          return { chain, network }
+        }
+        default: {
+          throw new Error(`fromCAIP19: unsupported ${c} network: ${n}`)
+        }
+      }
+    }
   }
 
   throw new Error(`fromCAIP19: unsupported chain: ${c}`)
@@ -172,6 +219,21 @@ export const isCAIP2: IsCAIP2 = (caip2) => {
         case ChainReference.BitcoinTestnet:
           return true
       }
+      break
+    }
+    case ChainNamespace.Cosmos: {
+      switch (n) {
+        case ChainReference.CosmosMainnet:
+          return true
+      }
+      break
+    }
+    case ChainNamespace.Osmosis: {
+      switch (n) {
+        case ChainReference.OsmosisMainnet:
+          return true
+      }
+      break
     }
   }
 
