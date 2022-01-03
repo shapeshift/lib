@@ -30,7 +30,8 @@ export enum NetworkTypes {
   MAINNET = 'MAINNET',
   TESTNET = 'TESTNET', // BTC, LTC, etc...
   ETH_ROPSTEN = 'ETH_ROPSTEN',
-  ETH_RINKEBY = 'ETH_RINKEBY'
+  ETH_RINKEBY = 'ETH_RINKEBY',
+  COSMOS_COSMOSHUB_4 = 'COSMOS_COSMOSHUB_4'
 }
 
 export enum UtxoAccountType {

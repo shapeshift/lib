@@ -5,15 +5,29 @@ import { CAIP2 } from '@shapeshiftoss/caip'
 import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 
 import { ChainAdapter as IChainAdapter } from '../api'
+import { ChainAdapter } from '../bitcoin'
 
-type chainType = ChainTypes.Cosmos | ChainTypes.Osmosis
+export type chainType = ChainTypes.Cosmos | ChainTypes.Osmosis
 
-export abstract class CosmosSdkBaseAdapter<T extends ChainTypes> implements IChainAdapter<chainType> {
+export interface ChainAdapterArgs {
+  providers: {
+    http: any
+    ws: any
+  }
+}
 
+export abstract class CosmosSdkBaseAdapter<T extends ChainTypes>
+  implements IChainAdapter<chainType> {
   public static readonly defaultBIP44Params: BIP44Params = {
     purpose: 44,
     coinType: 60,
     accountNumber: 0
+  }
+
+  chainSpecificProperties: ChainAdapterArgs
+
+  setChainSpecificProperties(args: ChainAdapterArgs) {
+    this.chainSpecificProperties = args
   }
 
   getType(): chainType {
@@ -28,10 +42,11 @@ export abstract class CosmosSdkBaseAdapter<T extends ChainTypes> implements ICha
   buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
     throw new Error('Method not implemented.')
   }
-  getTxHistory(input: chainAdapters.TxHistoryInput): Promise<chainAdapters.TxHistoryResponse<chainType>> {
+  getTxHistory(
+    input: chainAdapters.TxHistoryInput
+  ): Promise<chainAdapters.TxHistoryResponse<chainType>> {
     throw new Error('Method not implemented.')
   }
-
 
   buildSendTransaction(
     tx: chainAdapters.BuildSendTxInput<chainType>
@@ -46,11 +61,12 @@ export abstract class CosmosSdkBaseAdapter<T extends ChainTypes> implements ICha
     throw new Error('Method not implemented.')
   }
 
-
   getAddress(input: chainAdapters.GetAddressInput): Promise<string> {
     throw new Error('Method not implemented.')
   }
-  signTransaction(signTxInput: chainAdapters.SignTxInput<chainAdapters.ChainTxType<T>>): Promise<string> {
+  signTransaction(
+    signTxInput: chainAdapters.SignTxInput<chainAdapters.ChainTxType<T>>
+  ): Promise<string> {
     throw new Error('Method not implemented.')
   }
   getFeeData(
@@ -64,12 +80,13 @@ export abstract class CosmosSdkBaseAdapter<T extends ChainTypes> implements ICha
   validateAddress(address: string): Promise<chainAdapters.ValidAddressResult> {
     throw new Error('Method not implemented.')
   }
-  subscribeTxs(
+  async subscribeTxs(
     input: chainAdapters.SubscribeTxsInput,
     onMessage: (msg: chainAdapters.SubscribeTxsMessage<T>) => void,
     onError?: (err: chainAdapters.SubscribeError) => void
   ): Promise<void> {
-    throw new Error('Method not implemented.')
+    const { wallet, bip44Params = ChainAdapter.defaultBIP44Params } = input
+    const address = await this.getAddress({ wallet, bip44Params })
   }
   unsubscribeTxs(input?: chainAdapters.SubscribeTxsInput): void {
     throw new Error('Method not implemented.')
