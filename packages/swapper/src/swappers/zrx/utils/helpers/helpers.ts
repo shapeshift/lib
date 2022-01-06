@@ -157,7 +157,6 @@ export const grantAllowance = async ({
   } catch (error) {
     throw new Error(`grantAllowance - buildSendTransaction: ${error}`)
   }
-  // Here
   if (wallet.supportsOfflineSigning()) {
     try {
       signedTx = await adapter.signTransaction({ txToSign: grantAllowanceTxToSign, wallet })
