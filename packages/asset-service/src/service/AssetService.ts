@@ -57,12 +57,14 @@ export class AssetService {
     this.assetFileUrl = assetFileUrl
   }
 
-  get isInitialized(): boolean {
-    return Array.isArray(this.assetData) && Array.isArray(this.flatAssetData)
+  get isInitialized(): Promise<boolean> {
+    return (async () => {
+      return Array.isArray(this.assetData) && Array.isArray(this.flatAssetData)
+    })()
   }
 
-  private checkInitialized() {
-    if (!this.isInitialized) throw new Error('Asset service not initialized')
+  private async checkInitialized() {
+    if (!(await this.isInitialized)) throw new Error('Asset service not initialized')
   }
 
   /**
@@ -89,8 +91,8 @@ export class AssetService {
    * @param network mainnet, testnet, eth ropsten, etc
    * @returns base coins (ETH, BNB, etc...) along with their supported tokens in a flattened list
    */
-  byNetwork(network?: NetworkTypes): Asset[] {
-    this.checkInitialized()
+  async byNetwork(network?: NetworkTypes): Promise<Asset[]> {
+    await this.checkInitialized()
     return network
       ? this.flatAssetData.filter((asset) => asset.network == network)
       : this.flatAssetData
@@ -103,8 +105,8 @@ export class AssetService {
    * @param tokenId token identifier (contract address on eth)
    * @returns First asset found
    */
-  byTokenId({ chain, network, tokenId }: ByTokenIdArgs): Asset {
-    this.checkInitialized()
+  async byTokenId({ chain, network, tokenId }: ByTokenIdArgs): Promise<Asset> {
+    await this.checkInitialized()
     const index = getDataIndexKey(chain, network ?? NetworkTypes.MAINNET, tokenId)
     const result = this.indexedAssetData[index]
     if (!result) {
