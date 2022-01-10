@@ -10,7 +10,7 @@ import { numberToHex } from 'web3-utils'
 
 import { ChainAdapter as IChainAdapter } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
-import { getContractType, toPath, toRootDerivationPath } from '../utils'
+import { getContractType, getStatus, getType, toPath, toRootDerivationPath } from '../utils'
 import erc20Abi from './erc20Abi.json'
 
 export interface ChainAdapterArgs {
@@ -346,15 +346,13 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       subscriptionId,
       { topic: 'txs', addresses: [address] },
       (msg) => {
-        const transfers = msg.transfers.map<chainAdapters.TxTransfer>(
-          (transfer: chainAdapters.TxTransfer) => ({
-            caip19: transfer.caip19,
-            from: transfer.from,
-            to: transfer.to,
-            type: transfer.type,
-            value: transfer.value
-          })
-        )
+        const transfers = msg.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
+          caip19: transfer.caip19,
+          from: transfer.from,
+          to: transfer.to,
+          type: getType(transfer.type),
+          value: transfer.totalValue
+        }))
 
         onMessage({
           address: msg.address,
@@ -365,7 +363,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           chain: ChainTypes.Ethereum,
           confirmations: msg.confirmations,
           fee: msg.fee,
-          status: msg.status,
+          status: getStatus(msg.status),
           tradeDetails: msg.trade,
           transfers,
           txid: msg.txid

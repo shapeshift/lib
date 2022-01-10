@@ -27,6 +27,8 @@ import {
   accountTypeToOutputScriptType,
   accountTypeToScriptType,
   convertXpubVersion,
+  getStatus,
+  getType,
   toPath,
   toRootDerivationPath
 } from '../utils'
@@ -433,15 +435,13 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
       subscriptionId,
       { topic: 'txs', addresses },
       (msg) => {
-        const transfers = msg.transfers.map<chainAdapters.TxTransfer>(
-          (transfer: chainAdapters.TxTransfer) => ({
-            caip19: transfer.caip19,
-            from: transfer.from,
-            to: transfer.to,
-            type: transfer.type,
-            value: transfer.value
-          })
-        )
+        const transfers = msg.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
+          caip19: transfer.caip19,
+          from: transfer.from,
+          to: transfer.to,
+          type: getType(transfer.type),
+          value: transfer.totalValue
+        }))
 
         onMessage({
           address: msg.address,
@@ -452,7 +452,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
           chain: ChainTypes.Bitcoin,
           confirmations: msg.confirmations,
           fee: msg.fee,
-          status: msg.status,
+          status: getStatus(msg.status),
           tradeDetails: msg.trade,
           transfers,
           txid: msg.txid
