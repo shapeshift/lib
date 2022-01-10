@@ -458,7 +458,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
           txid: msg.txid
         })
       },
-      (err: chainAdapters.SubscribeError) => onError({ message: err.message })
+      (err) => onError({ message: err.message })
     )
   }
 
