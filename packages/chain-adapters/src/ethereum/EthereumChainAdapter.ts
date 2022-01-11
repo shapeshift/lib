@@ -291,7 +291,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
 
   async validateAddress(address: string): Promise<chainAdapters.ValidAddressResult> {
     const isValidAddress = WAValidator.validate(address, this.getType())
-    const isValidEnsAddress = new RegExp(/([A-Za-z]*\.)?([A-Za-z]{3,})\.eth/).test(address)
+    const isValidEnsAddress = /^([0-9A-Z]([-0-9A-Z]*[0-9A-Z])?\.)+eth$/i.test(address)
     if (isValidAddress || isValidEnsAddress)
       return { valid: true, result: chainAdapters.ValidAddressResultType.Valid }
     return { valid: false, result: chainAdapters.ValidAddressResultType.Invalid }
