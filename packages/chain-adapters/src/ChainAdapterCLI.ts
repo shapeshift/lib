@@ -110,7 +110,6 @@ const main = async () => {
         }
       })
       console.log('getFeeData', feeData)
-
     } catch (err) {
       console.log('getFeeDataError:', err.message)
     }
