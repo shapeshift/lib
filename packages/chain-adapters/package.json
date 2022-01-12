@@ -46,7 +46,7 @@
     "@shapeshiftoss/caip": "^1.5.1",
     "@shapeshiftoss/hdwallet-core": "^1.18.2",
     "@shapeshiftoss/hdwallet-native": "^1.18.2",
-    "@shapeshiftoss/types": "^1.13.1",
+    "@shapeshiftoss/types": "^1.20.0",
     "@shapeshiftoss/unchained-client": "^5.0.0",
     "@shapeshiftoss/unchained-tx-parser": "^5.0.0",
     "@types/bs58check": "^2.1.0",
