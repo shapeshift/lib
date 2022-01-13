@@ -40,6 +40,10 @@ export interface ChainAdapterArgs {
     ws: bitcoin.ws.Client
   }
   coinName: string
+  coinType: ChainTypes
+  curve?: string
+  bip44Params: BIP44Params
+
 }
 
 export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
@@ -47,23 +51,24 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
     http: bitcoin.api.V1Api
     ws: bitcoin.ws.Client
   }
-
-  public static readonly defaultBIP44Params: BIP44Params = {
-    purpose: 84, // segwit native
-    coinType: 0,
-    accountNumber: 0
-  }
-
-  // TODO(0xdef1cafe): constraint this to utxo coins and refactor this to be a UTXOChainAdapter
-  coinName: string
+  private readonly coinName: string
+  private readonly coinType: ChainTypes
+  private readonly bip44Params: BIP44Params
+  private readonly curve: string = 'secp256k1'
 
   constructor(args: ChainAdapterArgs) {
     this.providers = args.providers
     this.coinName = args.coinName
+    this.coinType = args.coinType
+    this.bip44Params = args.bip44Params
+
+    if (args.curve != undefined){
+      this.curve = args.curve
+    }
   }
 
-  getType(): ChainTypes.Bitcoin {
-    return ChainTypes.Bitcoin
+  getType(): ChainTypes {
+    return this.coinType
   }
 
   async getCaip2(): Promise<CAIP2> {
@@ -72,11 +77,11 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
 
       switch (data.network) {
         case 'mainnet':
-          return caip2.toCAIP2({ chain: ChainTypes.Bitcoin, network: NetworkTypes.MAINNET })
+          return caip2.toCAIP2({ chain: this.bip44Params.coinType, network: NetworkTypes.MAINNET })
         case 'testnet':
-          return caip2.toCAIP2({ chain: ChainTypes.Bitcoin, network: NetworkTypes.TESTNET })
+          return caip2.toCAIP2({ chain: this.bip44Params.coinType, network: NetworkTypes.TESTNET })
         default:
-          throw new Error(`BitcoinChainAdapter: network is not supported: ${data.network}`)
+          throw new Error(`UTXOChainAdapter: network is not supported: ${data.network}`)
       }
     } catch (err) {
       return ErrorHandler(err)
@@ -93,7 +98,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
       {
         coin: this.coinName,
         addressNList: bip32ToAddressNList(path),
-        curve: 'secp256k1', // TODO(0xdef1cafe): from constant?
+        curve: this.curve,
         scriptType: accountTypeToScriptType[accountType]
       }
     ])
@@ -106,9 +111,9 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
     return publicKeys[0]
   }
 
-  async getAccount(pubkey: string): Promise<chainAdapters.Account<ChainTypes.Bitcoin>> {
+  async getAccount(pubkey: string): Promise<chainAdapters.Account<ChainTypes>> {
     if (!pubkey) {
-      return ErrorHandler('BitcoinChainAdapter: pubkey parameter is not defined')
+      return ErrorHandler('UTXOChainAdapter: pubkey parameter is not defined')
     }
 
     try {
@@ -119,8 +124,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
       const balance = bnOrZero(data.balance).plus(bnOrZero(data.unconfirmedBalance))
 
       return {
-        balance: balance.toString(),
-        chain: ChainTypes.Bitcoin,
+        balance: data.balance,
+        chain: this.coinType,
         caip2: caip,
         caip19: caip19.toCAIP19({ chain, network }),
         chainSpecific: {
@@ -136,7 +141,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
   }
 
   buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
-    return { ...ChainAdapter.defaultBIP44Params, ...params }
+    return { ...this.bip44Params, ...params }
   }
 
   async getTxHistory(
@@ -153,9 +158,9 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
         totalPages: data.totalPages,
         transactions: data.transactions.map((tx) => ({
           ...tx,
-          chain: ChainTypes.Bitcoin,
+          chain: this.coinType,
           network: NetworkTypes.MAINNET,
-          symbol: 'BTC',
+          symbol: this.coinName,
           chainSpecific: {
             opReturnData: ''
           }
@@ -168,22 +173,22 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
   }
 
   async buildSendTransaction(
-    tx: chainAdapters.BuildSendTxInput<ChainTypes.Bitcoin>
+    tx: chainAdapters.BuildSendTxInput<ChainTypes>
   ): Promise<{
-    txToSign: chainAdapters.ChainTxType<ChainTypes.Bitcoin>
+    txToSign: chainAdapters.ChainTxType<ChainTypes>
   }> {
     try {
       const {
         value,
         to,
         wallet,
-        bip44Params = ChainAdapter.defaultBIP44Params,
+        bip44Params = this.bip44Params,
         chainSpecific: { satoshiPerByte, accountType },
         sendMax = false
       } = tx
 
       if (!value || !to) {
-        throw new Error('BitcoinChainAdapter: (to and value) are required')
+        throw new Error('UTXOChainAdapter: (to and value) are required')
       }
 
       const path = toRootDerivationPath(bip44Params)
@@ -194,7 +199,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
 
       if (!supportsBTC(wallet))
         throw new Error(
-          'BitcoinChainAdapter: signTransaction wallet does not support signing btc txs'
+          `UTXOChainAdapter: signTransaction wallet does not support signing ${this.coinName} txs`
         )
 
       const account = await this.getAccount(pubkey.xpub)
@@ -213,7 +218,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
         )
       }
       if (!coinSelectResult || !coinSelectResult.inputs || !coinSelectResult.outputs) {
-        throw new Error("BitcoinChainAdapter: coinSelect didn't select coins")
+        throw new Error("UTXOChainAdapter: coinSelect didn't select coins")
       }
 
       const { inputs, outputs } = coinSelectResult
@@ -271,16 +276,16 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
   }
 
   async signTransaction(
-    signTxInput: chainAdapters.SignTxInput<chainAdapters.ChainTxType<ChainTypes.Bitcoin>>
+    signTxInput: chainAdapters.SignTxInput<chainAdapters.ChainTxType<ChainTypes>>
   ): Promise<string> {
     try {
       const { txToSign, wallet } = signTxInput
       if (!supportsBTC(wallet))
         throw new Error(
-          'BitcoinChainAdapter: signTransaction wallet does not support signing btc txs'
+          `UTXOChainAdapter: signTransaction wallet does not support signing ${this.coinName} txs`
         )
       const signedTx = await wallet.btcSignTx(txToSign)
-      if (!signedTx) throw ErrorHandler('BitcoinChainAdapter: error signing tx')
+      if (!signedTx) throw ErrorHandler('UTXOChainAdapter: error signing tx')
       return signedTx.serializedTx
     } catch (err) {
       return ErrorHandler(err)
@@ -297,8 +302,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
     value,
     chainSpecific: { pubkey },
     sendMax = false
-  }: chainAdapters.GetFeeDataInput<ChainTypes.Bitcoin>): Promise<
-    chainAdapters.FeeDataEstimate<ChainTypes.Bitcoin>
+  }: chainAdapters.GetFeeDataInput<ChainTypes>): Promise<
+    chainAdapters.FeeDataEstimate<ChainTypes>
   > {
     const feeData = await this.providers.http.getNetworkFees()
 
@@ -380,12 +385,12 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
 
   async getAddress({
     wallet,
-    bip44Params = ChainAdapter.defaultBIP44Params,
+    bip44Params,
     accountType = UtxoAccountType.SegwitP2sh,
     showOnDevice = false
   }: chainAdapters.bitcoin.GetAddressInput): Promise<string> {
     if (!supportsBTC(wallet)) {
-      throw new Error('BitcoinChainAdapter: wallet does not support btc')
+      throw new Error('UTXOChainAdapter: wallet does not support btc')
     }
 
     const { isChange } = bip44Params
@@ -408,7 +413,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
       scriptType: accountTypeToScriptType[accountType],
       showDisplay: Boolean(showOnDevice)
     })
-    if (!btcAddress) throw new Error('BitcoinChainAdapter: no btcAddress available from wallet')
+    if (!btcAddress) throw new Error(`UTXOChainAdapter: no ${this.coinName} Address available from wallet`)
     return btcAddress
   }
 
@@ -420,19 +425,18 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
 
   async subscribeTxs(
     input: chainAdapters.SubscribeTxsInput,
-    onMessage: (msg: chainAdapters.SubscribeTxsMessage<ChainTypes.Bitcoin>) => void,
+    onMessage: (msg: chainAdapters.SubscribeTxsMessage<ChainTypes>) => void,
     onError: (err: chainAdapters.SubscribeError) => void
   ): Promise<void> {
     const {
       wallet,
-      bip44Params = ChainAdapter.defaultBIP44Params,
       accountType = UtxoAccountType.SegwitNative
     } = input
 
-    const { xpub } = await this.getPublicKey(wallet, bip44Params, accountType)
+    const { xpub } = await this.getPublicKey(wallet, this.bip44Params, accountType)
     const account = await this.getAccount(xpub)
     const addresses = (account.chainSpecific.addresses ?? []).map((address) => address.pubkey)
-    const subscriptionId = `${toRootDerivationPath(bip44Params)}/${accountType}`
+    const subscriptionId = `${toRootDerivationPath(this.bip44Params)}/${accountType}`
 
     await this.providers.ws.subscribeTxs(
       subscriptionId,
@@ -469,10 +473,9 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
     if (!input) return this.providers.ws.unsubscribeTxs()
 
     const {
-      bip44Params = ChainAdapter.defaultBIP44Params,
       accountType = UtxoAccountType.SegwitNative
     } = input
-    const subscriptionId = `${toRootDerivationPath(bip44Params)}/${accountType}`
+    const subscriptionId = `${toRootDerivationPath(this.bip44Params)}/${accountType}`
 
     this.providers.ws.unsubscribeTxs(subscriptionId, { topic: 'txs', addresses: [] })
   }
