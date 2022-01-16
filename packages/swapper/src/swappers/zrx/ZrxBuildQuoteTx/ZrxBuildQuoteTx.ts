@@ -69,7 +69,7 @@ export async function ZrxBuildQuoteTx(
     )
   }
 
-  const adapter = adapterManager.byChain(buyAsset.chain)
+  const adapter = (await adapterManager).byChain(buyAsset.chain)
   const bip44Params = adapter.buildBIP44Params({ accountNumber: Number(buyAssetAccountId) })
   const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 
@@ -159,7 +159,7 @@ export async function ZrxBuildQuoteTx(
 
     const allowanceRequired = await getAllowanceRequired({
       quote,
-      web3,
+      web3: await web3,
       erc20AllowanceAbi
     })
     quote.allowanceGrantRequired = allowanceRequired.gt(0)

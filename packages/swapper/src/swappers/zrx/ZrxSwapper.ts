@@ -26,9 +26,10 @@ import { ZrxApprovalNeeded } from './ZrxApprovalNeeded/ZrxApprovalNeeded'
 import { ZrxApproveInfinite } from './ZrxApproveInfinite/ZrxApproveInfinite'
 import { ZrxBuildQuoteTx } from './ZrxBuildQuoteTx/ZrxBuildQuoteTx'
 import { ZrxExecuteQuote } from './ZrxExecuteQuote/ZrxExecuteQuote'
+
 export type ZrxSwapperDeps = {
-  adapterManager: ChainAdapterManager
-  web3: Web3
+  adapterManager: ChainAdapterManager | Promise<ChainAdapterManager>
+  web3: Web3 | Promise<Web3>
 }
 
 export class ZrxError extends Error {

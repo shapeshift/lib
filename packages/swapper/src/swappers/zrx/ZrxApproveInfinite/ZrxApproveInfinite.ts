@@ -14,7 +14,9 @@ export async function ZrxApproveInfinite(
   { adapterManager, web3 }: ZrxSwapperDeps,
   { quote, wallet }: ApproveInfiniteInput<ChainTypes, SwapperType>
 ) {
-  const adapter: ChainAdapter<ChainTypes.Ethereum> = adapterManager.byChain(ChainTypes.Ethereum)
+  const adapter: ChainAdapter<ChainTypes.Ethereum> = (await adapterManager).byChain(
+    ChainTypes.Ethereum
+  )
   const bip44Params = adapter.buildBIP44Params({
     accountNumber: bnOrZero(quote.sellAssetAccountId).toNumber()
   }) // TODO: Add account number
@@ -58,7 +60,7 @@ export async function ZrxApproveInfinite(
     wallet,
     adapter,
     erc20Abi,
-    web3
+    web3: await web3
   })
 
   return allowanceGrantRequired

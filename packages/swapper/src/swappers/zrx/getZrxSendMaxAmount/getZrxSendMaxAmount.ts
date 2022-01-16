@@ -16,7 +16,7 @@ export async function getZrxSendMaxAmount(
     feeEstimateKey = chainAdapters.FeeDataKey.Average
   }: SendMaxAmountInput
 ): Promise<string> {
-  const adapter = adapterManager.byChain(ChainTypes.Ethereum)
+  const adapter = (await adapterManager).byChain(ChainTypes.Ethereum)
   const bip44Params = adapter.buildBIP44Params({
     accountNumber: bnOrZero(sellAssetAccountId).toNumber()
   })

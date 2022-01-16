@@ -39,7 +39,7 @@ export async function ZrxExecuteQuote(
 
   // value is 0 for erc20s
   const value = sellAsset.symbol === 'ETH' ? quote.sellAmount : '0'
-  const adapter = adapterManager.byChain(sellAsset.chain)
+  const adapter = (await adapterManager).byChain(sellAsset.chain)
   const bip44Params = adapter.buildBIP44Params({
     accountNumber: Number(quote.sellAssetAccountId)
   })

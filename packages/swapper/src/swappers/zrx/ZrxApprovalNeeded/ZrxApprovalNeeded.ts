@@ -36,7 +36,7 @@ export async function ZrxApprovalNeeded(
 
   const accountNumber = quote.sellAssetAccountId ? Number(quote.sellAssetAccountId) : 0
 
-  const adapter = adapterManager.byChain(sellAsset.chain)
+  const adapter = (await adapterManager).byChain(sellAsset.chain)
   const bip44Params = adapter.buildBIP44Params({ accountNumber })
   const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 
@@ -69,7 +69,7 @@ export async function ZrxApprovalNeeded(
     throw new SwapError('ZrxApprovalNeeded - tokenId and allowanceTarget are required')
   }
   const allowanceResult = await getERC20Allowance({
-    web3,
+    web3: await web3,
     erc20AllowanceAbi,
     tokenId: quote.sellAsset.tokenId,
     spenderAddress: data.allowanceTarget,
