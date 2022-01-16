@@ -1,10 +1,17 @@
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { Asset, ChainTypes, Quote, QuoteResponse, SwapperType } from '@shapeshiftoss/types'
+import {
+  Asset,
+  ChainTypes,
+  numberToHex,
+  Quote,
+  QuoteResponse,
+  SwapperType
+} from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
-import { AbiItem, numberToHex } from 'web3-utils'
+import { /*type*/ AbiItem } from 'web3-utils' // TODO: import type once linter fixed
 
 import { SwapError } from '../../../../api'
 import { ZrxError } from '../../ZrxSwapper'

@@ -1,4 +1,4 @@
-import { AbiItem } from 'web3-utils'
+import { /*type*/ AbiItem } from 'web3-utils' // TODO: import type once linter fixed
 
 export const erc20Abi: Array<AbiItem> = [
   {

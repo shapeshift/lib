@@ -1,12 +1,17 @@
 import { Contract } from '@ethersproject/contracts'
 import { CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, chainAdapters, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
+import {
+  BIP44Params,
+  chainAdapters,
+  ChainTypes,
+  NetworkTypes,
+  numberToHex
+} from '@shapeshiftoss/types'
 import { ethereum } from '@shapeshiftoss/unchained-client'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 import WAValidator from 'multicoin-address-validator'
-import { numberToHex } from 'web3-utils'
 
 import { ChainAdapter as IChainAdapter } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
