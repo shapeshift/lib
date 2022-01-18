@@ -4,6 +4,8 @@
  * Test EthereumChainAdapter
  * @group unit
  */
+import { chainAdapters } from '@shapeshiftoss/types'
+
 import * as ethereum from './EthereumChainAdapter'
 
 const getGasFeesMockedResponse = {
@@ -101,6 +103,86 @@ describe('EthereumChainAdapter', () => {
           }
         })
       )
+    })
+  })
+
+  describe('address validation', () => {
+    const validAddressTuple = {
+      valid: true,
+      result: chainAdapters.ValidAddressResultType.Valid
+    }
+
+    const invalidAddressTuple = {
+      valid: false,
+      result: chainAdapters.ValidAddressResultType.Invalid
+    }
+
+    describe('validateAddress', () => {
+      it('should return true for a valid address', async () => {
+        const adapter = new ethereum.ChainAdapter(args)
+        const referenceAddress = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
+        const expectedReturnValue = validAddressTuple
+        const res = await adapter.validateAddress(referenceAddress)
+        expect(res).toMatchObject(expectedReturnValue)
+      })
+
+      it('should return false for an empty address', async () => {
+        const adapter = new ethereum.ChainAdapter(args)
+        const referenceAddress = ''
+        const expectedReturnValue = invalidAddressTuple
+        const res = await adapter.validateAddress(referenceAddress)
+        expect(res).toMatchObject(expectedReturnValue)
+      })
+
+      it('should return false for an invalid address', async () => {
+        const adapter = new ethereum.ChainAdapter(args)
+        const referenceAddress = 'foobar'
+        const expectedReturnValue = invalidAddressTuple
+        const res = await adapter.validateAddress(referenceAddress)
+        expect(res).toMatchObject(expectedReturnValue)
+      })
+    })
+
+    describe('validateEnsAddress', () => {
+      it('should return true for a valid .eth address', async () => {
+        const adapter = new ethereum.ChainAdapter(args)
+        const referenceAddress = 'vitalik.eth'
+        const expectedReturnValue = validAddressTuple
+        const res = await adapter.validateEnsAddress(referenceAddress)
+        expect(res).toMatchObject(expectedReturnValue)
+      })
+
+      it('should return false for an empty address', async () => {
+        const adapter = new ethereum.ChainAdapter(args)
+        const referenceAddress = ''
+        const expectedReturnValue = invalidAddressTuple
+        const res = await adapter.validateEnsAddress(referenceAddress)
+        expect(res).toMatchObject(expectedReturnValue)
+      })
+
+      it('should return false for an invalid address', async () => {
+        const adapter = new ethereum.ChainAdapter(args)
+        const referenceAddress = 'foobar'
+        const expectedReturnValue = invalidAddressTuple
+        const res = await adapter.validateEnsAddress(referenceAddress)
+        expect(res).toMatchObject(expectedReturnValue)
+      })
+
+      it('should return false for a valid address directly followed by more chars', async () => {
+        const adapter = new ethereum.ChainAdapter(args)
+        const referenceAddress = 'vitalik.ethfoobar'
+        const expectedReturnValue = invalidAddressTuple
+        const res = await adapter.validateEnsAddress(referenceAddress)
+        expect(res).toMatchObject(expectedReturnValue)
+      })
+
+      it('should return false for a valid address in the middle of a string', async () => {
+        const adapter = new ethereum.ChainAdapter(args)
+        const referenceAddress = 'asdadfvitalik.ethasdadf'
+        const expectedReturnValue = invalidAddressTuple
+        const res = await adapter.validateEnsAddress(referenceAddress)
+        expect(res).toMatchObject(expectedReturnValue)
+      })
     })
   })
 })
