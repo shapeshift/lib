@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /**
- * Test BitcoinChainAdapter
+ * Test UTXOChainAdapter
  * @group unit
  */
 
@@ -134,7 +134,7 @@ const getNetworkFeesMockedResponse = {
   }
 }
 
-describe('BitcoinChainAdapter', () => {
+describe('UTXOChainAdapter', () => {
   let args: bitcoin.ChainAdapterArgs = {} as any
 
   beforeEach(() => {
@@ -200,7 +200,7 @@ describe('BitcoinChainAdapter', () => {
 
       const adapter = new bitcoin.ChainAdapter(args)
       await expect(adapter.getAccount('')).rejects.toThrow(
-        'BitcoinChainAdapter: pubkey parameter is not defined'
+        'UTXOChainAdapter: pubkey parameter is not defined'
       )
     })
   })

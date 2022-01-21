@@ -2,8 +2,9 @@ import { ChainTypes } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 
 import { ChainAdapter } from './api'
-import * as bitcoin from './utxo'
+import * as utxo from './utxo'
 import * as ethereum from './ethereum'
+import { ChainAdapterArgs } from './utxo'
 
 export type UnchainedUrl = {
   httpUrl: string
@@ -36,7 +37,7 @@ export class ChainAdapterManager {
             const ws = new unchained.bitcoin.ws.Client(wsUrl)
             return this.addChain(
               type,
-              () => new bitcoin.ChainAdapter({ providers: { http, ws }, coinName: 'Bitcoin' })
+              () => new utxo.ChainAdapter({ providers: { http, ws }, coinName: 'Bitcoin', chainType: ChainTypes.Bitcoin } as ChainAdapterArgs<ChainTypes.Bitcoin>)
             )
           }
           default:
