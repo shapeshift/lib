@@ -3,19 +3,20 @@ import fs from 'fs'
 
 import { baseAssets } from './baseAssets'
 import { getTokens } from './ethTokens'
-import { extendErc20 } from './ethTokens/extendErc20'
+import { getIronBankTokens, getYearnVaults } from './ethTokens/yearnErc20'
 
 const generateAssetData = async () => {
   const generatedAssetData = await Promise.all(
     baseAssets.map(async (baseAsset) => {
       if (baseAsset.chain === ChainTypes.Ethereum && baseAsset.network === NetworkTypes.MAINNET) {
-        const [ethTokens, extendedERC20Tokens] = await Promise.all([
+        const [ethTokens, yearnVaults, ironBankTokens] = await Promise.all([
           await getTokens(),
-          await extendErc20()
+          await getYearnVaults(),
+          await getIronBankTokens()
         ])
         const baseAssetWithTokens: BaseAsset = {
           ...baseAsset,
-          tokens: ethTokens.concat(extendedERC20Tokens)
+          tokens: ethTokens.concat(yearnVaults).concat(ironBankTokens)
         }
         return baseAssetWithTokens
       } else {

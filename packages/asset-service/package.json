@@ -25,6 +25,8 @@
     "type-check": "tsc --project ./tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@ethersproject/providers": "^5.5.2",
+    "@yfi/sdk": "^1.0.25",
     "axios": "^0.24.0",
     "lodash": "^4.17.21"
   },
