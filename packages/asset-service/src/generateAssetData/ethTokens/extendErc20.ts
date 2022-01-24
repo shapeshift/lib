@@ -16,7 +16,7 @@ export const getYearnVaults = async (): Promise<TokenAsset[]> => {
 
   return vaults.map((vault: Vault) => {
     return {
-      color: '#276BDB',
+      color: '#276BDB', // yearn.finance blue
       contractType: ContractTypes.ERC20,
       dataSource: AssetDataSource.YearnFinance,
       icon: vault.metadata.displayIcon,
@@ -45,7 +45,7 @@ export const getIronBankTokens = async (): Promise<TokenAsset[]> => {
   const ironBankTokens: Token[] = await yearnSdk.ironBank.tokens()
   return ironBankTokens.map((token: Token) => {
     return {
-      color: '#276BDB',
+      color: '#276BDB', // yearn.finance blue
       contractType: ContractTypes.ERC20,
       dataSource: AssetDataSource.YearnFinance,
       icon: token.icon ?? '',
@@ -74,7 +74,7 @@ export const getZapperTokens = async (): Promise<TokenAsset[]> => {
   const zapperTokens: Token[] = await yearnSdk.tokens.supported()
   return zapperTokens.map((token: Token) => {
     return {
-      color: '#7057F5',
+      color: '#7057F5', // zapper protocol purple
       contractType: ContractTypes.ERC20,
       dataSource: AssetDataSource.YearnFinance,
       icon: token.icon ?? '',
