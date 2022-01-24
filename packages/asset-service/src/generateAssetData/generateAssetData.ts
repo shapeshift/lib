@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 import { BaseAsset, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import fs from 'fs'
 import uniqBy from 'lodash/uniqBy'

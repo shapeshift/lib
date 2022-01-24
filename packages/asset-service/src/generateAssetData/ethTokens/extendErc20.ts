@@ -7,7 +7,6 @@ import {
   TokenAsset
 } from '@shapeshiftoss/types'
 import { Token, Vault } from '@yfi/sdk'
-import fs from 'fs'
 import toLower from 'lodash/toLower'
 
 import { yearnSdk } from './yearnSdk'
