@@ -12,15 +12,17 @@ import {
   NetworkTypes,
   PriceHistoryArgs
 } from '@shapeshiftoss/types'
-import { ChainId, Yearn } from '@yfi/sdk'
+import { ChainId, Token, Yearn } from '@yfi/sdk'
 import head from 'lodash/head'
+// import last from 'lodash/last'
+import uniqBy from 'lodash/uniqBy'
 
 import { MarketService } from '../api'
 import { bn, bnOrZero } from '../utils/bignumber'
 import { ACCOUNT_HISTORIC_EARNINGS } from './gql-queries'
 import { VaultDayDataGQLResponse } from './yearn-types'
 
-type YearnVaultMarketCapServiceArgs = {
+type YearnTokenMarketCapServiceArgs = {
   yearnSdk: Yearn<ChainId>
 }
 
@@ -34,86 +36,48 @@ export class YearnTokenMarketCapService implements MarketService {
     count: 2500
   }
 
-  constructor(args: YearnVaultMarketCapServiceArgs) {
+  constructor(args: YearnTokenMarketCapServiceArgs) {
     this.yearnSdk = args.yearnSdk
   }
 
   findAll = async (args?: FindAllMarketArgs) => {
     try {
       const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
-      const response = await this.yearnSdk.vaults.get()
-      const vaults = response.slice(0, argsToUse.count)
+      const response = await Promise.allSettled([
+        this.yearnSdk.ironBank.tokens(),
+        this.yearnSdk.tokens.supported(),
+        this.yearnSdk.vaults.tokens()
+      ])
+      const [ironBankResponse, zapperResponse, underlyingTokensResponse] = response
 
-      return vaults
-        .sort((a, b) =>
-          bnOrZero(a.underlyingTokenBalance.amountUsdc).lt(b.underlyingTokenBalance.amountUsdc)
-            ? 1
-            : -1
-        )
-        .reduce((acc, yearnItem) => {
-          const caip19: string = toCAIP19({
-            chain: ChainTypes.Ethereum,
-            network: NetworkTypes.MAINNET,
-            contractType: ContractTypes.ERC20,
-            tokenId: yearnItem.address
-          })
-          // if amountUsdc of a yearn asset is 0, the asset has not price or value
-          if (bnOrZero(yearnItem.underlyingTokenBalance.amountUsdc).eq(0)) {
-            acc[caip19] = {
-              price: '0',
-              marketCap: '0',
-              volume: '0',
-              changePercent24Hr: 0
-            }
+      // Ignore rejected promises, return successful responses.
+      const responseTokens = [
+        ...(ironBankResponse.status === 'fulfilled' ? ironBankResponse.value : []),
+        ...(zapperResponse.status === 'fulfilled' ? zapperResponse.value : []),
+        ...(underlyingTokensResponse.status === 'fulfilled' ? underlyingTokensResponse.value : [])
+      ]
+      const uniqueTokens: Token[] = uniqBy(responseTokens, 'address')
+      const tokens = uniqueTokens.slice(0, argsToUse.count)
 
-            return acc
-          }
+      return tokens.reduce((acc, token) => {
+        const caip19: string = toCAIP19({
+          chain: ChainTypes.Ethereum,
+          network: NetworkTypes.MAINNET,
+          contractType: ContractTypes.ERC20,
+          tokenId: token.address
+        })
+        acc[caip19] = {
+          price: bnOrZero(token.priceUsdc)
+            .div(`1e+${USDC_PRECISION}`)
+            .toString(),
+          // TODO: figure out how to get these values.
+          marketCap: '0',
+          volume: '0',
+          changePercent24Hr: 0
+        }
 
-          let volume = bn('0')
-          let changePercent24Hr = 0
-
-          const price = bnOrZero(yearnItem.underlyingTokenBalance.amountUsdc)
-            .div('1e+6')
-            .div(yearnItem.underlyingTokenBalance.amount)
-            .times(`1e+${yearnItem.decimals}`)
-            .times(yearnItem.metadata.pricePerShare)
-            .div(`1e+${yearnItem.decimals}`)
-            .toFixed(2)
-
-          const marketCap = bnOrZero(yearnItem.underlyingTokenBalance.amountUsdc)
-            .div('1e+6')
-            .toFixed(2)
-
-          const historicEarnings = yearnItem.metadata.historicEarnings
-          const lastHistoricalEarnings = historicEarnings
-            ? historicEarnings[historicEarnings.length - 1]
-            : null
-          const secondToLastHistoricalEarnings = historicEarnings
-            ? historicEarnings[historicEarnings.length - 2]
-            : null
-          if (lastHistoricalEarnings && secondToLastHistoricalEarnings) {
-            volume = bnOrZero(lastHistoricalEarnings.earnings.amountUsdc).minus(
-              secondToLastHistoricalEarnings.earnings.amountUsdc
-            )
-          }
-
-          if (lastHistoricalEarnings) {
-            changePercent24Hr =
-              volume
-                .div(lastHistoricalEarnings.earnings.amountUsdc)
-                .div(`1e+${USDC_PRECISION}`)
-                .toNumber() || 0
-          }
-
-          acc[caip19] = {
-            price,
-            marketCap,
-            volume: volume.abs().toString(),
-            changePercent24Hr
-          }
-
-          return acc
-        }, {} as MarketCapResult)
+        return acc
+      }, {} as MarketCapResult)
     } catch (e) {
       console.info(e)
       return {}

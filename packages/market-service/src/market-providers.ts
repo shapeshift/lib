@@ -3,6 +3,7 @@ import { Yearn } from '@yfi/sdk'
 
 import { CoinCapMarketService } from './coincap/coincap'
 import { CoinGeckoMarketService } from './coingecko/coingecko'
+import { YearnTokenMarketCapService } from './yearn/yearn-tokens'
 import { YearnVaultMarketCapService } from './yearn/yearn-vaults'
 // YearnVaultMarketCapService deps
 const provider = new JsonRpcProvider(process.env.REACT_APP_UNCHAINED_ETHEREUM_HTTP_URL)
@@ -11,7 +12,8 @@ const yearnSdk = new Yearn(1, { provider })
 // Order of this MarketProviders array constitutes the order of provders we will be checking first.
 // More reliable providers should be listed first.
 export const MarketProviders = [
-  new CoinGeckoMarketService(),
-  new CoinCapMarketService(),
-  new YearnVaultMarketCapService({ yearnSdk })
+  // new CoinGeckoMarketService(),
+  // new CoinCapMarketService(),
+  // new YearnVaultMarketCapService({ yearnSdk })
+  new YearnTokenMarketCapService({ yearnSdk })
 ]
