@@ -1,7 +1,7 @@
 import { toCAIP19 } from '@shapeshiftoss/caip/dist/caip19/caip19'
 import { ChainTypes, ContractTypes, HistoryTimeframe, NetworkTypes } from '@shapeshiftoss/types'
 
-import { YearnMarketCapService } from './yearn'
+import { YearnVaultMarketCapService } from './yearn-vaults'
 import { mockYearnGQLData, mockYearnRestData } from './yearnMockData'
 
 jest.mock('@yfi/sdk')
@@ -22,7 +22,7 @@ const mockedYearnSdk = jest.fn(() => ({
 }))()
 
 // @ts-ignore
-const yearnMarketCapService = new YearnMarketCapService({ yearnSdk: mockedYearnSdk })
+const yearnMarketCapService = new YearnVaultMarketCapService({ yearnSdk: mockedYearnSdk })
 
 describe('yearn market service', () => {
   describe('findAll', () => {

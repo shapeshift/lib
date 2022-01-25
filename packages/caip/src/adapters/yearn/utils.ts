@@ -7,7 +7,7 @@ import toLower from 'lodash/toLower'
 import { toCAIP2 } from '../../caip2/caip2'
 import { toCAIP19 } from './../../caip19/caip19'
 
-// YearnMarketCapService deps
+// YearnVaultMarketCapService deps
 const provider = new JsonRpcProvider(process.env.REACT_APP_UNCHAINED_ETHEREUM_HTTP_URL)
 const yearnSdk = new Yearn(1, { provider })
 

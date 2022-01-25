@@ -33,8 +33,8 @@ jest.mock('./coincap/coincap', () => ({
   })
 }))
 
-jest.mock('./yearn/yearn', () => ({
-  YearnMarketCapService: jest.fn().mockImplementation(() => {
+jest.mock('./yearn/yearn-vaults', () => ({
+  YearnVaultMarketCapService: jest.fn().mockImplementation(() => {
     return {
       findAll: jest.fn(() => mockYearnServiceFindAllData),
       findByCaip19: jest.fn(() => mockYearnFindByCaip19Data),

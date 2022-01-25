@@ -3,8 +3,8 @@ import { Yearn } from '@yfi/sdk'
 
 import { CoinCapMarketService } from './coincap/coincap'
 import { CoinGeckoMarketService } from './coingecko/coingecko'
-import { YearnMarketCapService } from './yearn/yearn'
-// YearnMarketCapService deps
+import { YearnVaultMarketCapService } from './yearn/yearn-vaults'
+// YearnVaultMarketCapService deps
 const provider = new JsonRpcProvider(process.env.REACT_APP_UNCHAINED_ETHEREUM_HTTP_URL)
 const yearnSdk = new Yearn(1, { provider })
 
@@ -13,5 +13,5 @@ const yearnSdk = new Yearn(1, { provider })
 export const MarketProviders = [
   new CoinGeckoMarketService(),
   new CoinCapMarketService(),
-  new YearnMarketCapService({ yearnSdk })
+  new YearnVaultMarketCapService({ yearnSdk })
 ]

@@ -3,7 +3,7 @@ import { HistoryTimeframe } from '@shapeshiftoss/types'
 import { Yearn } from '@yfi/sdk'
 
 // import { CoinGeckoMarketService } from './coingecko/coingecko'
-import { YearnMarketCapService } from './yearn/yearn'
+import { YearnVaultMarketCapService } from './yearn/yearn-vaults'
 
 const main = async (): Promise<void> => {
   // const caip19 = 'eip155:1/erc20:0xa258c4606ca8206d8aa700ce2143d7db854d168c' // WETH Vault
@@ -13,7 +13,7 @@ const main = async (): Promise<void> => {
   // const caip19 = 'bip122:000000000019d6689c085ae165831e93/slip44:0' // BTC
   const provider = new JsonRpcProvider('https://dev-daemon.ethereum.shapeshift.com')
   const yearnSdk = new Yearn(1, { provider })
-  const yearnMarketService = new YearnMarketCapService({ yearnSdk })
+  const yearnMarketService = new YearnVaultMarketCapService({ yearnSdk })
   // const cgMarkteService = new CoinGeckoMarketService()
   // const data = await yearnMarketService.findAll()
   // const data = await yearnMarketService.findByCaip19({ caip19 })
