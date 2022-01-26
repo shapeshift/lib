@@ -5,22 +5,16 @@ import {
   ContractTypes,
   FindAllMarketArgs,
   HistoryData,
-  HistoryTimeframe,
   MarketCapResult,
   MarketData,
   MarketDataArgs,
-  NetworkTypes,
-  PriceHistoryArgs
+  NetworkTypes
 } from '@shapeshiftoss/types'
 import { ChainId, Token, Yearn } from '@yfi/sdk'
-import head from 'lodash/head'
-// import last from 'lodash/last'
 import uniqBy from 'lodash/uniqBy'
 
 import { MarketService } from '../api'
-import { bn, bnOrZero } from '../utils/bignumber'
-import { ACCOUNT_HISTORIC_EARNINGS } from './gql-queries'
-import { VaultDayDataGQLResponse } from './yearn-types'
+import { bnOrZero } from '../utils/bignumber'
 
 type YearnTokenMarketCapServiceArgs = {
   yearnSdk: Yearn<ChainId>
@@ -89,6 +83,11 @@ export class YearnTokenMarketCapService implements MarketService {
     const address = adapters.CAIP19ToYearn(caip19)
     if (!address) return null
     try {
+      // the yearnSdk caches the response to all of these calls and returns the cache if found.
+      // Unfortunately, the functions do not take in an argument for a single address to return a
+      // single token, so we are limited to getting all tokens then doing a find on them to return
+      // the price to web. Doing allSettled so that one rejection does not interfere with the other
+      // calls.
       const response = await Promise.allSettled([
         this.yearnSdk.ironBank.tokens(),
         this.yearnSdk.tokens.supported(),
@@ -113,7 +112,6 @@ export class YearnTokenMarketCapService implements MarketService {
         volume: '0',
         changePercent24Hr: 0
       }
-      return null
     } catch (e) {
       console.warn(e)
       throw new Error('YearnMarketService(findByCaip19): error fetching market data')
