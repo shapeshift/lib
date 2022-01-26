@@ -120,81 +120,10 @@ export class YearnTokenMarketCapService implements MarketService {
     }
   }
 
-  private getDate(daysAgo: number) {
-    const date = new Date()
-    date.setDate(date.getDate() - daysAgo)
-    return date
-  }
-
-  findPriceHistoryByCaip19 = async ({
-    caip19,
-    timeframe
-  }: PriceHistoryArgs): Promise<HistoryData[]> => {
+  findPriceHistoryByCaip19 = async (): Promise<HistoryData[]> => {
     try {
+      // TODO: figure out a way to get zapper, ironbank and underlying token historical data.
       return []
-    // const id = adapters.CAIP19ToYearn(caip19)
-    // if (!id) return []
-    // try {
-    //   let daysAgo
-    //   switch (timeframe) {
-    //     case HistoryTimeframe.HOUR:
-    //       daysAgo = 2
-    //       break
-    //     case HistoryTimeframe.DAY:
-    //       daysAgo = 3
-    //       break
-    //     case HistoryTimeframe.WEEK:
-    //       daysAgo = 7
-    //       break
-    //     case HistoryTimeframe.MONTH:
-    //       daysAgo = 30
-    //       break
-    //     case HistoryTimeframe.YEAR:
-    //       daysAgo = 365
-    //       break
-    //     case HistoryTimeframe.ALL:
-    //       daysAgo = 3650
-    //       break
-    //     default:
-    //       daysAgo = 1
-    //   }
-
-    //   const vaults = await this.yearnSdk.vaults.get([id])
-    //   const decimals = vaults[0].decimals
-
-    //   const response: VaultDayDataGQLResponse = (await this.yearnSdk.services.subgraph.fetchQuery(
-    //     ACCOUNT_HISTORIC_EARNINGS,
-    //     {
-    //       id,
-    //       shareToken: id,
-    //       fromDate: this.getDate(daysAgo)
-    //         .getTime()
-    //         .toString(),
-    //       toDate: this.getDate(0)
-    //         .getTime()
-    //         .toString()
-    //     }
-    //   )) as VaultDayDataGQLResponse
-
-    //   type VaultDayData = {
-    //     pricePerShare: string
-    //     timestamp: string
-    //     tokenPriceUSDC: string
-    //   }
-    //   const vaultDayData: VaultDayData[] =
-    //     response.data.account.vaultPositions[0].vault.vaultDayData
-
-    //   return vaultDayData.map((datum: VaultDayData) => {
-    //     return {
-    //       date: datum.timestamp,
-    //       price: bnOrZero(datum.tokenPriceUSDC)
-    //         .div(`1e+${USDC_PRECISION}`)
-    //         .times(datum.pricePerShare)
-    //         .div(`1e+${decimals}`)
-    //         .dp(6)
-    //         .toNumber()
-    //     }
-    //   })
     } catch (e) {
       console.warn(e)
       throw new Error('YearnMarketService(getPriceHistory): error fetching price history')
