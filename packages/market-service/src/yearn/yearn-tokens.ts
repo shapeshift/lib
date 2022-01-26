@@ -42,42 +42,43 @@ export class YearnTokenMarketCapService implements MarketService {
 
   findAll = async (args?: FindAllMarketArgs) => {
     try {
-      const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
-      const response = await Promise.allSettled([
-        this.yearnSdk.ironBank.tokens(),
-        this.yearnSdk.tokens.supported(),
-        this.yearnSdk.vaults.tokens()
-      ])
-      const [ironBankResponse, zapperResponse, underlyingTokensResponse] = response
+      // const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
+      // const response = await Promise.allSettled([
+      //   this.yearnSdk.ironBank.tokens(),
+      //   this.yearnSdk.tokens.supported(),
+      //   this.yearnSdk.vaults.tokens()
+      // ])
+      // const [ironBankResponse, zapperResponse, underlyingTokensResponse] = response
 
-      // Ignore rejected promises, return successful responses.
-      const responseTokens = [
-        ...(ironBankResponse.status === 'fulfilled' ? ironBankResponse.value : []),
-        ...(zapperResponse.status === 'fulfilled' ? zapperResponse.value : []),
-        ...(underlyingTokensResponse.status === 'fulfilled' ? underlyingTokensResponse.value : [])
-      ]
-      const uniqueTokens: Token[] = uniqBy(responseTokens, 'address')
-      const tokens = uniqueTokens.slice(0, argsToUse.count)
+      // // Ignore rejected promises, return successful responses.
+      // const responseTokens = [
+      //   ...(ironBankResponse.status === 'fulfilled' ? ironBankResponse.value : []),
+      //   ...(zapperResponse.status === 'fulfilled' ? zapperResponse.value : []),
+      //   ...(underlyingTokensResponse.status === 'fulfilled' ? underlyingTokensResponse.value : [])
+      // ]
+      // const uniqueTokens: Token[] = uniqBy(responseTokens, 'address')
+      // const tokens = uniqueTokens.slice(0, argsToUse.count)
 
-      return tokens.reduce((acc, token) => {
-        const caip19: string = toCAIP19({
-          chain: ChainTypes.Ethereum,
-          network: NetworkTypes.MAINNET,
-          contractType: ContractTypes.ERC20,
-          tokenId: token.address
-        })
-        acc[caip19] = {
-          price: bnOrZero(token.priceUsdc)
-            .div(`1e+${USDC_PRECISION}`)
-            .toString(),
-          // TODO: figure out how to get these values.
-          marketCap: '0',
-          volume: '0',
-          changePercent24Hr: 0
-        }
+      // return tokens.reduce((acc, token) => {
+      //   const caip19: string = toCAIP19({
+      //     chain: ChainTypes.Ethereum,
+      //     network: NetworkTypes.MAINNET,
+      //     contractType: ContractTypes.ERC20,
+      //     tokenId: token.address
+      //   })
+      //   acc[caip19] = {
+      //     price: bnOrZero(token.priceUsdc)
+      //       .div(`1e+${USDC_PRECISION}`)
+      //       .toFixed(2),
+      //     // TODO: figure out how to get these values.
+      //     marketCap: '0',
+      //     volume: '0',
+      //     changePercent24Hr: 0
+      //   }
 
-        return acc
-      }, {} as MarketCapResult)
+      //   return acc
+      // }, {} as MarketCapResult)
+      return {}
     } catch (e) {
       console.info(e)
       return {}
@@ -85,66 +86,35 @@ export class YearnTokenMarketCapService implements MarketService {
   }
 
   findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData | null> => {
-    const id = adapters.CAIP19ToYearn(caip19)
-    if (!id) return null
+    // const address = adapters.CAIP19ToYearn(caip19)
+    // if (!address) return null
     try {
-      const vaults = await this.yearnSdk.vaults.get([id])
-      if (!vaults || !vaults.length) return null
-      const vault = head(vaults)
-      if (!vault) return null
+    //   // let token = await this.yearnSdk.vaults.tokens([id])
+    //   const response = await Promise.allSettled([
+    //     this.yearnSdk.ironBank.tokens(),
+    //     this.yearnSdk.tokens.supported(),
+    //     this.yearnSdk.vaults.tokens()
+    //   ])
+    //   const [ironBankResponse, zapperResponse, underlyingTokensResponse] = response
 
-      if (bnOrZero(vault.underlyingTokenBalance.amountUsdc).eq(0)) {
-        return {
-          price: '0',
-          marketCap: '0',
-          volume: '0',
-          changePercent24Hr: 0
-        }
-      }
+    //   // Ignore rejected promises, return successful responses.
+    //   const responseTokens = [
+    //     ...(ironBankResponse.status === 'fulfilled' ? ironBankResponse.value : []),
+    //     ...(zapperResponse.status === 'fulfilled' ? zapperResponse.value : []),
+    //     ...(underlyingTokensResponse.status === 'fulfilled' ? underlyingTokensResponse.value : [])
+    //   ]
+    //   const token = responseTokens.find((tok: Token) => tok.address === address)
+    //   if (!token) return null
 
-      let volume = bn('0')
-      let changePercent24Hr = 0
-
-      const price = bnOrZero(vault.underlyingTokenBalance.amountUsdc)
-        .div('1e+6')
-        .div(vault.underlyingTokenBalance.amount)
-        .times(`1e+${vault.decimals}`)
-        .times(vault.metadata.pricePerShare)
-        .div(`1e+${vault.decimals}`)
-        .toFixed(2)
-
-      const marketCap = bnOrZero(vault.underlyingTokenBalance.amountUsdc)
-        .div('1e+6')
-        .toFixed(2)
-
-      const historicEarnings = vault.metadata.historicEarnings
-      const lastHistoricalEarnings = historicEarnings
-        ? historicEarnings[historicEarnings.length - 1]
-        : null
-      const secondToLastHistoricalEarnings = historicEarnings
-        ? historicEarnings[historicEarnings.length - 2]
-        : null
-      if (lastHistoricalEarnings && secondToLastHistoricalEarnings) {
-        volume = bnOrZero(lastHistoricalEarnings.earnings.amountUsdc)
-          .minus(secondToLastHistoricalEarnings.earnings.amountUsdc)
-          .div(`1e+${USDC_PRECISION}`)
-          .dp(2)
-      }
-
-      if (lastHistoricalEarnings) {
-        changePercent24Hr =
-          volume
-            .div(lastHistoricalEarnings.earnings.amountUsdc)
-            .times(`1e+${USDC_PRECISION}`)
-            .toNumber() || 0
-      }
-
-      return {
-        price,
-        marketCap,
-        volume: volume.abs().toString(),
-        changePercent24Hr
-      }
+    //   return {
+    //     price: bnOrZero(token.priceUsdc)
+    //       .div(`1e+${USDC_PRECISION}`)
+    //       .toFixed(2),
+    //     marketCap: '0',
+    //     volume: '0',
+    //     changePercent24Hr: 0
+    //   }
+      return null
     } catch (e) {
       console.warn(e)
       throw new Error('YearnMarketService(findByCaip19): error fetching market data')
@@ -161,69 +131,71 @@ export class YearnTokenMarketCapService implements MarketService {
     caip19,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
-    const id = adapters.CAIP19ToYearn(caip19)
-    if (!id) return []
     try {
-      let daysAgo
-      switch (timeframe) {
-        case HistoryTimeframe.HOUR:
-          daysAgo = 2
-          break
-        case HistoryTimeframe.DAY:
-          daysAgo = 3
-          break
-        case HistoryTimeframe.WEEK:
-          daysAgo = 7
-          break
-        case HistoryTimeframe.MONTH:
-          daysAgo = 30
-          break
-        case HistoryTimeframe.YEAR:
-          daysAgo = 365
-          break
-        case HistoryTimeframe.ALL:
-          daysAgo = 3650
-          break
-        default:
-          daysAgo = 1
-      }
+      return []
+    // const id = adapters.CAIP19ToYearn(caip19)
+    // if (!id) return []
+    // try {
+    //   let daysAgo
+    //   switch (timeframe) {
+    //     case HistoryTimeframe.HOUR:
+    //       daysAgo = 2
+    //       break
+    //     case HistoryTimeframe.DAY:
+    //       daysAgo = 3
+    //       break
+    //     case HistoryTimeframe.WEEK:
+    //       daysAgo = 7
+    //       break
+    //     case HistoryTimeframe.MONTH:
+    //       daysAgo = 30
+    //       break
+    //     case HistoryTimeframe.YEAR:
+    //       daysAgo = 365
+    //       break
+    //     case HistoryTimeframe.ALL:
+    //       daysAgo = 3650
+    //       break
+    //     default:
+    //       daysAgo = 1
+    //   }
 
-      const vaults = await this.yearnSdk.vaults.get([id])
-      const decimals = vaults[0].decimals
+    //   const vaults = await this.yearnSdk.vaults.get([id])
+    //   const decimals = vaults[0].decimals
 
-      const response: VaultDayDataGQLResponse = (await this.yearnSdk.services.subgraph.fetchQuery(
-        ACCOUNT_HISTORIC_EARNINGS,
-        {
-          id,
-          shareToken: id,
-          fromDate: this.getDate(daysAgo)
-            .getTime()
-            .toString(),
-          toDate: this.getDate(0)
-            .getTime()
-            .toString()
-        }
-      )) as VaultDayDataGQLResponse
+    //   const response: VaultDayDataGQLResponse = (await this.yearnSdk.services.subgraph.fetchQuery(
+    //     ACCOUNT_HISTORIC_EARNINGS,
+    //     {
+    //       id,
+    //       shareToken: id,
+    //       fromDate: this.getDate(daysAgo)
+    //         .getTime()
+    //         .toString(),
+    //       toDate: this.getDate(0)
+    //         .getTime()
+    //         .toString()
+    //     }
+    //   )) as VaultDayDataGQLResponse
 
-      type VaultDayData = {
-        pricePerShare: string
-        timestamp: string
-        tokenPriceUSDC: string
-      }
-      const vaultDayData: VaultDayData[] =
-        response.data.account.vaultPositions[0].vault.vaultDayData
+    //   type VaultDayData = {
+    //     pricePerShare: string
+    //     timestamp: string
+    //     tokenPriceUSDC: string
+    //   }
+    //   const vaultDayData: VaultDayData[] =
+    //     response.data.account.vaultPositions[0].vault.vaultDayData
 
-      return vaultDayData.map((datum: VaultDayData) => {
-        return {
-          date: datum.timestamp,
-          price: bnOrZero(datum.tokenPriceUSDC)
-            .div(`1e+${USDC_PRECISION}`)
-            .times(datum.pricePerShare)
-            .div(`1e+${decimals}`)
-            .dp(6)
-            .toNumber()
-        }
-      })
+    //   return vaultDayData.map((datum: VaultDayData) => {
+    //     return {
+    //       date: datum.timestamp,
+    //       price: bnOrZero(datum.tokenPriceUSDC)
+    //         .div(`1e+${USDC_PRECISION}`)
+    //         .times(datum.pricePerShare)
+    //         .div(`1e+${decimals}`)
+    //         .dp(6)
+    //         .toNumber()
+    //     }
+    //   })
     } catch (e) {
       console.warn(e)
       throw new Error('YearnMarketService(getPriceHistory): error fetching price history')
