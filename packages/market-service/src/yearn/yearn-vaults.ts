@@ -225,6 +225,7 @@ export class YearnVaultMarketCapService implements MarketService {
       }
 
       const vaults = await this.yearnSdk.vaults.get([id])
+      if (!vaults || !vaults.length) return []
       const decimals = vaults[0].decimals
 
       const response: VaultDayDataGQLResponse = (await this.yearnSdk.services.subgraph.fetchQuery(

@@ -42,42 +42,42 @@ export class YearnTokenMarketCapService implements MarketService {
 
   findAll = async (args?: FindAllMarketArgs) => {
     try {
-      // const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
-      // const response = await Promise.allSettled([
-      //   this.yearnSdk.ironBank.tokens(),
-      //   this.yearnSdk.tokens.supported(),
-      //   this.yearnSdk.vaults.tokens()
-      // ])
-      // const [ironBankResponse, zapperResponse, underlyingTokensResponse] = response
+      const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
+      const response = await Promise.allSettled([
+        this.yearnSdk.ironBank.tokens(),
+        this.yearnSdk.tokens.supported(),
+        this.yearnSdk.vaults.tokens()
+      ])
+      const [ironBankResponse, zapperResponse, underlyingTokensResponse] = response
 
-      // // Ignore rejected promises, return successful responses.
-      // const responseTokens = [
-      //   ...(ironBankResponse.status === 'fulfilled' ? ironBankResponse.value : []),
-      //   ...(zapperResponse.status === 'fulfilled' ? zapperResponse.value : []),
-      //   ...(underlyingTokensResponse.status === 'fulfilled' ? underlyingTokensResponse.value : [])
-      // ]
-      // const uniqueTokens: Token[] = uniqBy(responseTokens, 'address')
-      // const tokens = uniqueTokens.slice(0, argsToUse.count)
+      // Ignore rejected promises, return successful responses.
+      const responseTokens = [
+        ...(ironBankResponse.status === 'fulfilled' ? ironBankResponse.value : []),
+        ...(zapperResponse.status === 'fulfilled' ? zapperResponse.value : []),
+        ...(underlyingTokensResponse.status === 'fulfilled' ? underlyingTokensResponse.value : [])
+      ]
+      const uniqueTokens: Token[] = uniqBy(responseTokens, 'address')
+      const tokens = uniqueTokens.slice(0, argsToUse.count)
 
-      // return tokens.reduce((acc, token) => {
-      //   const caip19: string = toCAIP19({
-      //     chain: ChainTypes.Ethereum,
-      //     network: NetworkTypes.MAINNET,
-      //     contractType: ContractTypes.ERC20,
-      //     tokenId: token.address
-      //   })
-      //   acc[caip19] = {
-      //     price: bnOrZero(token.priceUsdc)
-      //       .div(`1e+${USDC_PRECISION}`)
-      //       .toFixed(2),
-      //     // TODO: figure out how to get these values.
-      //     marketCap: '0',
-      //     volume: '0',
-      //     changePercent24Hr: 0
-      //   }
+      return tokens.reduce((acc, token) => {
+        const caip19: string = toCAIP19({
+          chain: ChainTypes.Ethereum,
+          network: NetworkTypes.MAINNET,
+          contractType: ContractTypes.ERC20,
+          tokenId: token.address
+        })
+        acc[caip19] = {
+          price: bnOrZero(token.priceUsdc)
+            .div(`1e+${USDC_PRECISION}`)
+            .toFixed(2),
+          // TODO: figure out how to get these values.
+          marketCap: '0',
+          volume: '0',
+          changePercent24Hr: 0
+        }
 
-      //   return acc
-      // }, {} as MarketCapResult)
+        return acc
+      }, {} as MarketCapResult)
       return {}
     } catch (e) {
       console.info(e)
@@ -86,34 +86,33 @@ export class YearnTokenMarketCapService implements MarketService {
   }
 
   findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData | null> => {
-    // const address = adapters.CAIP19ToYearn(caip19)
-    // if (!address) return null
+    const address = adapters.CAIP19ToYearn(caip19)
+    if (!address) return null
     try {
-    //   // let token = await this.yearnSdk.vaults.tokens([id])
-    //   const response = await Promise.allSettled([
-    //     this.yearnSdk.ironBank.tokens(),
-    //     this.yearnSdk.tokens.supported(),
-    //     this.yearnSdk.vaults.tokens()
-    //   ])
-    //   const [ironBankResponse, zapperResponse, underlyingTokensResponse] = response
+      const response = await Promise.allSettled([
+        this.yearnSdk.ironBank.tokens(),
+        this.yearnSdk.tokens.supported(),
+        this.yearnSdk.vaults.tokens()
+      ])
+      const [ironBankResponse, zapperResponse, underlyingTokensResponse] = response
 
-    //   // Ignore rejected promises, return successful responses.
-    //   const responseTokens = [
-    //     ...(ironBankResponse.status === 'fulfilled' ? ironBankResponse.value : []),
-    //     ...(zapperResponse.status === 'fulfilled' ? zapperResponse.value : []),
-    //     ...(underlyingTokensResponse.status === 'fulfilled' ? underlyingTokensResponse.value : [])
-    //   ]
-    //   const token = responseTokens.find((tok: Token) => tok.address === address)
-    //   if (!token) return null
+      // Ignore rejected promises, return successful responses.
+      const responseTokens = [
+        ...(ironBankResponse.status === 'fulfilled' ? ironBankResponse.value : []),
+        ...(zapperResponse.status === 'fulfilled' ? zapperResponse.value : []),
+        ...(underlyingTokensResponse.status === 'fulfilled' ? underlyingTokensResponse.value : [])
+      ]
+      const token = responseTokens.find((tok: Token) => tok.address === address)
+      if (!token) return null
 
-    //   return {
-    //     price: bnOrZero(token.priceUsdc)
-    //       .div(`1e+${USDC_PRECISION}`)
-    //       .toFixed(2),
-    //     marketCap: '0',
-    //     volume: '0',
-    //     changePercent24Hr: 0
-    //   }
+      return {
+        price: bnOrZero(token.priceUsdc)
+          .div(`1e+${USDC_PRECISION}`)
+          .toFixed(2),
+        marketCap: '0',
+        volume: '0',
+        changePercent24Hr: 0
+      }
       return null
     } catch (e) {
       console.warn(e)
