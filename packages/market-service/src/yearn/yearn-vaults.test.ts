@@ -94,7 +94,7 @@ describe('yearn market service', () => {
     }
     it('should return market data for yvDai', async () => {
       const result = {
-        price: '1.08',
+        price: '1.084750123794815921',
         marketCap: '3754148.94',
         changePercent24Hr: 0.00467104804294,
         volume: '100000'
