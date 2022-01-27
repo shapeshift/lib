@@ -72,7 +72,6 @@ export class YearnTokenMarketCapService implements MarketService {
 
         return acc
       }, {} as MarketCapResult)
-      return {}
     } catch (e) {
       console.info(e)
       return {}
