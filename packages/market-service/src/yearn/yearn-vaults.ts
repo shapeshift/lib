@@ -78,7 +78,7 @@ export class YearnVaultMarketCapService implements MarketService {
             .times(`1e+${yearnItem.decimals}`)
             .times(yearnItem.metadata.pricePerShare)
             .div(`1e+${yearnItem.decimals}`)
-            .toFixed(2)
+            .toString()
 
           const marketCap = bnOrZero(yearnItem.underlyingTokenBalance.amountUsdc)
             .div('1e+6')
@@ -147,7 +147,7 @@ export class YearnVaultMarketCapService implements MarketService {
         .times(`1e+${vault.decimals}`)
         .times(vault.metadata.pricePerShare)
         .div(`1e+${vault.decimals}`)
-        .toFixed(2)
+        .toString()
 
       const marketCap = bnOrZero(vault.underlyingTokenBalance.amountUsdc)
         .div('1e+6')

@@ -63,7 +63,7 @@ export class YearnTokenMarketCapService implements MarketService {
         acc[caip19] = {
           price: bnOrZero(token.priceUsdc)
             .div(`1e+${USDC_PRECISION}`)
-            .toFixed(2),
+            .toString(),
           // TODO: figure out how to get these values.
           marketCap: '0',
           volume: '0',
@@ -107,7 +107,7 @@ export class YearnTokenMarketCapService implements MarketService {
       return {
         price: bnOrZero(token.priceUsdc)
           .div(`1e+${USDC_PRECISION}`)
-          .toFixed(2),
+          .toString(),
         marketCap: '0',
         volume: '0',
         changePercent24Hr: 0
