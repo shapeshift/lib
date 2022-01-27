@@ -1,3 +1,24 @@
+# [@shapeshiftoss/chain-adapters-v1.28.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.27.0...@shapeshiftoss/chain-adapters-v1.28.0) (2022-01-26)
+
+
+### Features
+
+* **EthereumChainAdapter:** buildSendTransaction and broadcastTransaction tests ([#320](https://github.com/shapeshift/lib/issues/320)) ([369ac4d](https://github.com/shapeshift/lib/commit/369ac4d675b178b498f893d8ecec46e034db8959))
+
+# [@shapeshiftoss/chain-adapters-v1.27.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.26.0...@shapeshiftoss/chain-adapters-v1.27.0) (2022-01-26)
+
+
+### Features
+
+* **buildSendTransaction:** throw on sendMax with 0 balance ([#319](https://github.com/shapeshift/lib/issues/319)) ([c6754d4](https://github.com/shapeshift/lib/commit/c6754d4958e9f549b1dbefca6f37602deb6f6622))
+
+# [@shapeshiftoss/chain-adapters-v1.26.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.25.0...@shapeshiftoss/chain-adapters-v1.26.0) (2022-01-26)
+
+
+### Features
+
+* **EthereumChainAdapter:** address methods tests ([#316](https://github.com/shapeshift/lib/issues/316)) ([a18a3fc](https://github.com/shapeshift/lib/commit/a18a3fc41adf39644c2663387477ee2c4576b069))
+
 # [@shapeshiftoss/chain-adapters-v1.25.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.24.0...@shapeshiftoss/chain-adapters-v1.25.0) (2022-01-20)
 
 
