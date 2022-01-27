@@ -2,7 +2,7 @@ import { toCAIP19 } from '@shapeshiftoss/caip/dist/caip19/caip19'
 import { ChainTypes, ContractTypes, HistoryTimeframe, NetworkTypes } from '@shapeshiftoss/types'
 
 import { YearnVaultMarketCapService } from './yearn-vaults'
-import { mockYearnGQLData, mockYearVaultRestData } from './yearnMockData'
+import { mockYearnGQLData, mockYearnVaultRestData } from './yearnMockData'
 
 jest.mock('@yfi/sdk')
 
@@ -10,8 +10,8 @@ const mockedYearnSdk = jest.fn(() => ({
   vaults: {
     get: jest.fn((addresses) => {
       return addresses
-        ? mockYearVaultRestData.filter((datum) => addresses.includes(datum.address))
-        : mockYearVaultRestData
+        ? mockYearnVaultRestData.filter((datum) => addresses.includes(datum.address))
+        : mockYearnVaultRestData
     })
   },
   services: {
@@ -74,13 +74,13 @@ describe('yearn market service', () => {
         chain: ChainTypes.Ethereum,
         network: NetworkTypes.MAINNET,
         contractType: ContractTypes.ERC20,
-        tokenId: mockYearVaultRestData[0].address.toLowerCase()
+        tokenId: mockYearnVaultRestData[0].address.toLowerCase()
       })
       const yvDaiCaip19 = toCAIP19({
         chain: ChainTypes.Ethereum,
         network: NetworkTypes.MAINNET,
         contractType: ContractTypes.ERC20,
-        tokenId: mockYearVaultRestData[1].address.toLowerCase()
+        tokenId: mockYearnVaultRestData[1].address.toLowerCase()
       })
       const [yvDaiKey, yvBtcKey] = Object.keys(result)
       expect(yvDaiKey).toEqual(yvDaiCaip19)

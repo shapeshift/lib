@@ -1,6 +1,6 @@
 import { Token, Vault } from '@yfi/sdk'
 
-export const mockYearVaultRestData: Vault[] = [
+export const mockYearnVaultRestData: Vault[] = [
   {
     address: '0xcB550A6D4C8e3517A939BC79d0c7093eb7cF56B5',
     typeId: 'VAULT_V2',
