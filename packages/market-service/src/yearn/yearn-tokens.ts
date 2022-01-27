@@ -118,12 +118,7 @@ export class YearnTokenMarketCapService implements MarketService {
   }
 
   findPriceHistoryByCaip19 = async (): Promise<HistoryData[]> => {
-    try {
-      // TODO: figure out a way to get zapper, ironbank and underlying token historical data.
-      return []
-    } catch (e) {
-      console.warn(e)
-      throw new Error('YearnMarketService(getPriceHistory): error fetching price history')
-    }
+    // TODO: figure out a way to get zapper, ironbank and underlying token historical data.
+    return []
   }
 }
