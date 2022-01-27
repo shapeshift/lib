@@ -34,19 +34,6 @@ describe('yearn token market service', () => {
       expect(Object.keys(result).length).toEqual(2)
     })
 
-    it('can sort by tvl', async () => {
-      const yvBTCAddress = '0xcb550a6d4c8e3517a939bc79d0c7093eb7cf56b5'
-      const result = await yearnTokenMarketCapService.findAll()
-      expect(Object.keys(result)[0]).toEqual(
-        toCAIP19({
-          chain: ChainTypes.Ethereum,
-          network: NetworkTypes.MAINNET,
-          contractType: ContractTypes.ERC20,
-          tokenId: yvBTCAddress.toLowerCase()
-        })
-      )
-    })
-
     it('can handle api errors', async () => {
       mockedYearnSdk.vaults.tokens.mockResolvedValueOnce({ error: 'foo' } as never)
       mockedYearnSdk.tokens.supported.mockResolvedValueOnce({ error: 'foo' } as never)
