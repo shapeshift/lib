@@ -44,7 +44,7 @@ const generateAssetData = async () => {
         const uniqueTokens = uniqBy(tokens, 'caip19') // Remove dups
         const batchSize = 100 // tune this to keep rate limiting happy
         const tokenBatches = chunk(uniqueTokens, batchSize)
-        const modifiedTokens: TokenAsset[] = []
+        let modifiedTokens: TokenAsset[] = []
         for (const [i, batch] of tokenBatches.entries()) {
           console.info(`processing batch ${i + 1} of ${tokenBatches.length}`)
           const promises = batch.map(async (token, idx) => {
@@ -69,7 +69,7 @@ const generateAssetData = async () => {
               return { ...uniqueTokens[idx], icon }
             }
           })
-          modifiedTokens.concat(newModifiedTokens)
+          modifiedTokens = modifiedTokens.concat(newModifiedTokens)
         }
         const baseAssetWithTokens: BaseAsset = {
           ...baseAsset,
