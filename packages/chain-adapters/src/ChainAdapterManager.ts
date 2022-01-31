@@ -1,4 +1,4 @@
-import { ChainTypes } from '@shapeshiftoss/types'
+import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 
 import { ChainAdapter } from './api'
@@ -42,13 +42,21 @@ export class ChainAdapterManager {
           }
 
           case ChainTypes.Cosmos: {
-            // const http = new unchained.cosmos.api.V1Api(
-            //   new unchained.cosmos.api.Configuration({ basePath: httpUrl })
-            // )
+            const http = new unchained.cosmos.api.V1Api(
+              new unchained.cosmos.api.Configuration({ basePath: httpUrl })
+            )
             // const ws = new unchained.cosmos.ws.Client(wsUrl)
+            const ws = ''
             return this.addChain(
               type,
-              () => new cosmos.ChainAdapter()
+              () => new cosmos.ChainAdapter({
+                providers: {
+                  http,
+                  ws
+                },
+                symbol: 'ATOM',
+                network: NetworkTypes.COSMOS_COSMOSHUB_4
+              })
             )
           }
           default:

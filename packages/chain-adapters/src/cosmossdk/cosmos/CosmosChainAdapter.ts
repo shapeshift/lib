@@ -1,11 +1,19 @@
 /* eslint-disable prettier/prettier */
-import { bip32ToAddressNList, CosmosSignTx, CosmosWallet } from '@shapeshiftoss/hdwallet-core'
+import {
+  bip32ToAddressNList,
+  CosmosSignTx,
+  CosmosTx,
+  CosmosWallet
+} from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import { ChainAdapter as IChainAdapter } from '../../api'
-import { CosmosSdkBaseAdapter } from '../CosmosSdkBaseAdapter'
+import { ChainAdapterArgs, CosmosSdkBaseAdapter } from '../CosmosSdkBaseAdapter'
 import { toPath } from '../../utils'
+import { cosmos } from '@shapeshiftoss/unchained-client'
 
 import { ErrorHandler } from '../../error/ErrorHandler'
+import { ChainReference } from '@shapeshiftoss/caip/dist/caip2/caip2'
+import BigNumber from 'bignumber.js'
 
 // import { cosmos } from '@shapeshiftoss/unchained-client'
 
@@ -17,18 +25,9 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos>
     accountNumber: 0
   }
 
-  constructor() {
+  constructor(args: ChainAdapterArgs) {
     super()
-    this.setChainSpecificProperties({
-      providers: {
-        // http: cosmos.api.V1Api,
-        // ws: cosmos.ws.client
-        http: '',
-        ws: ''
-      },
-      symbol: 'ATOM',
-      network: NetworkTypes.COSMOS_COSMOSHUB_4
-    })
+    this.setChainSpecificProperties(args)
   }
 
   getType(): ChainTypes.Cosmos {
@@ -55,6 +54,73 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos>
 
       // Make generic or union type for signed transactions and return
       return JSON.stringify(signedTx)
+    } catch (err) {
+      return ErrorHandler(err)
+    }
+  }
+
+  async buildSendTransaction(
+    tx: chainAdapters.BuildSendTxInput<ChainTypes.Cosmos>
+  ): Promise<{ txToSign: CosmosSignTx }> {
+    try {
+      const {
+        to,
+        wallet,
+        bip44Params = CosmosSdkBaseAdapter.defaultBIP44Params,
+        chainSpecific: { gas },
+        sendMax = false,
+        value
+      } = tx
+
+      if (!to) throw new Error('CosmosChainAdapter: to is required')
+      if (!value) throw new Error('CosmosChainAdapter: value is required')
+
+      const path = toPath(bip44Params)
+      const addressNList = bip32ToAddressNList(path)
+      const from = await this.getAddress({ bip44Params, wallet })
+
+      if (sendMax) {
+        const account = await this.getAccount(from)
+        tx.value = new BigNumber(account.balance).minus(gas).toString()
+      }
+
+      const utx: CosmosTx = {
+        fee: {
+          amount: [
+            {
+              amount: new BigNumber(gas).toString(),
+              denom: 'uatom'
+            }
+          ],
+          gas: gas
+        },
+        msg: [
+          {
+            type: 'cosmos-sdk/MsgSend',
+            value: {
+              amount: [
+                {
+                  amount: new BigNumber(value).toString(),
+                  denom: 'uatom'
+                }
+              ],
+              from_address: from,
+              to_address: to
+            }
+          }
+        ],
+        signatures: [],
+        memo: ''
+      }
+
+      const txToSign: CosmosSignTx = {
+        addressNList,
+        tx: utx,
+        chain_id: ChainReference.CosmosMainnet,
+        account_number: '',
+        sequence: ''
+      }
+      return { txToSign }
     } catch (err) {
       return ErrorHandler(err)
     }
@@ -99,29 +165,29 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos>
   //   }
   // }
 
-  async getTxHistory({
-    pubkey
-  }: cosmos.api.V1ApiGetTxHistoryRequest): Promise<
-    chainAdapters.TxHistoryResponse<ChainTypes.Cosmos>
-  > {
-    try {
-      const { data } = await this.chainSpecificProperties.providers.http.getTxHistory({ pubkey })
+  // async getTxHistory({
+  //   pubkey
+  // }: cosmos.api.V1ApiGetTxHistoryRequest): Promise<
+  //   chainAdapters.TxHistoryResponse<ChainTypes.Cosmos>
+  // > {
+  //   try {
+  //     const { data } = await this.chainSpecificProperties.providers.http.getTxHistory({ pubkey })
 
-      return {
-        page: data.page,
-        totalPages: data.totalPages,
-        transactions: data.transactions.map((tx) => ({
-          ...tx,
-          chain: ChainTypes.Cosmos,
-          network: NetworkTypes.MAINNET,
-          symbol: 'ATOM'
-        })),
-        txs: data.txs
-      }
-    } catch (err) {
-      return ErrorHandler(err)
-    }
-  }
+  //     return {
+  //       page: data.page,
+  //       totalPages: data.totalPages,
+  //       transactions: data.transactions.map((tx) => ({
+  //         ...tx,
+  //         chain: ChainTypes.Cosmos,
+  //         network: NetworkTypes.MAINNET,
+  //         symbol: 'ATOM'
+  //       })),
+  //       txs: data.txs
+  //     }
+  //   } catch (err) {
+  //     return ErrorHandler(err)
+  //   }
+  // }
 
   // async signAndBroadcastTransaction(
   //   signTxInput: chainAdapters.SignTxInput<CosmosSignTx>

@@ -2,12 +2,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
+import { bip32ToAddressNList, Cosmos, CosmosSignTx, CosmosTx } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import { ChainAdapter as IChainAdapter } from '../api'
 import { ChainAdapter } from '../bitcoin'
 import { ErrorHandler } from '../error/ErrorHandler'
-import { toRootDerivationPath } from '../utils'
+import { toPath, toRootDerivationPath } from '../utils'
 import WAValidator from 'multicoin-address-validator'
+import { FeeDataKey } from '@shapeshiftoss/types/dist/chain-adapters'
+import BigNumber from 'bignumber.js'
+import { ChainReference } from '../../../caip/dist/caip2/caip2'
 
 export type CosmosChainTypes = ChainTypes.Cosmos | ChainTypes.Osmosis
 
@@ -91,7 +95,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
       return {
         page: data.page,
         totalPages: data.totalPages,
-        transactions: data.transactions.map((tx) => ({
+        transactions: data.transactions.map((tx: chainAdapters.Transaction<T>) => ({
           ...tx,
           chain: this.getType(),
           network: this.chainSpecificProperties.network,
@@ -104,32 +108,25 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
     }
   }
 
-  buildSendTransaction(
+  async buildSendTransaction(
     tx: chainAdapters.BuildSendTxInput<T>
   ): Promise<{ txToSign: chainAdapters.ChainTxType<T> }> {
-    const {
-      to,
-      wallet,
-      bip44Params = CosmosSdkBaseAdapter.defaultBIP44Params,
-      chainSpecific: { gas },
-      sendMax = false
-    } = tx
     throw new Error('Method not implemented.')
   }
 
-  getAddress(input: chainAdapters.GetAddressInput): Promise<string> {
+  async getAddress(input: chainAdapters.GetAddressInput): Promise<string> {
     // Method is implementation-specific
     throw new Error('Method not implemented.')
   }
 
-  signTransaction(
+  async signTransaction(
     signTxInput: chainAdapters.SignTxInput<chainAdapters.ChainTxType<T>>
   ): Promise<string> {
     // Method is implementation-specific
     throw new Error('Method not implemented.')
   }
 
-  getFeeData(
+  async getFeeData(
     input: Partial<chainAdapters.GetFeeDataInput<T>>
   ): Promise<chainAdapters.FeeDataEstimate<T>> {
     throw new Error('Method not implemented.')
@@ -185,7 +182,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
           txid: msg.txid
         })
       },
-      (err) => onError({ message: err.message })
+      (err: chainAdapters.SubscribeError) => onError?.({ message: err.message })
     )
   }
 

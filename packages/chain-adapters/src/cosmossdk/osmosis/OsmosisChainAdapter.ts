@@ -5,7 +5,7 @@ import { BIP44Params, chainAdapters, ChainTypes, NetworkTypes } from '@shapeshif
 import { toPath } from '../../utils'
 import { ErrorHandler } from '../../error/ErrorHandler'
 import { ChainAdapter as IChainAdapter } from '../../api'
-import { CosmosSdkBaseAdapter } from '../CosmosSdkBaseAdapter'
+import { ChainAdapterArgs, CosmosSdkBaseAdapter } from '../CosmosSdkBaseAdapter'
 export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Osmosis>
   implements IChainAdapter<ChainTypes.Osmosis> {
   public static readonly defaultBIP44Params: BIP44Params = {
@@ -14,18 +14,9 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Osmosis>
     accountNumber: 0
   }
 
-  constructor() {
+  constructor(args: ChainAdapterArgs) {
     super()
-    this.setChainSpecificProperties({
-      providers: {
-        // http: osmosis.api.V1Api,
-        // ws: osmosis.ws.client
-        http: '',
-        ws: ''
-      },
-      symbol: 'OSMO',
-      network: NetworkTypes.COSMOS_COSMOSHUB_4
-    })
+    this.setChainSpecificProperties(args)
   }
 
   getType(): ChainTypes.Osmosis {

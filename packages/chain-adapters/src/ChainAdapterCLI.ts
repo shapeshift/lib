@@ -29,7 +29,7 @@ const unchainedUrls = {
     wsUrl: 'wss://dev-api.ethereum.shapeshift.com'
   },
   [ChainTypes.Cosmos]: {
-    httpUrl: '',
+    httpUrl: 'http://api.cosmos.localhost',
     wsUrl: ''
   }
 }
@@ -145,16 +145,48 @@ const main = async () => {
     //   console.log('erc20Tx error:', err.message)
     // }
 
-
     /** COSMOS CLI */
     const cosmosChainAdapter = chainAdapterManager.byChain(ChainTypes.Cosmos)
-    const cosmosBip44Params: BIP44Params = { purpose: 44, coinType: 118, accountNumber: 0}
+    const cosmosBip44Params: BIP44Params = { purpose: 44, coinType: 118, accountNumber: 0 }
+    console.log(cosmosChainAdapter)
 
-    const cosmosAddress = await cosmosChainAdapter.getAddress({wallet, bip44Params: cosmosBip44Params})
+    const cosmosAddress = await cosmosChainAdapter.getAddress({
+      wallet,
+      bip44Params: cosmosBip44Params
+    })
     console.log('cosmosAddress:', cosmosAddress)
 
     const cosmosAccount = await cosmosChainAdapter.getAccount(cosmosAddress)
     console.log(cosmosAccount)
+
+    // await cosmosChainAdapter.subscribeTxs(
+    //   { wallet, bip44Params: cosmosBip44Params },
+    //   (msg) => console.log(msg),
+    //   (err) => console.log(err)
+    // )
+
+    // send cosmos example
+    try {
+      const cosmosUnsignedTx = await cosmosChainAdapter.buildSendTransaction({
+        to: `0x47CB53752e5dc0A972440dA127DCA9FBA6C2Ab6F`,
+        value: '1',
+        wallet,
+        bip44Params: cosmosBip44Params,
+        chainSpecific: { gas: '0' }
+      })
+      const cosmosSignedTx = await cosmosChainAdapter.signTransaction({
+        wallet,
+        txToSign: cosmosUnsignedTx.txToSign
+      })
+      console.log('cosmosSignedTx:', cosmosSignedTx)
+
+      const cosmosTxID = await cosmosChainAdapter.broadcastTransaction(cosmosSignedTx)
+      console.log('cosmosTxID:', cosmosTxID)
+    } catch (err) {
+      console.log('cosmosTx error:', err.message)
+    }
+
+
   } catch (err) {
     console.error(err)
   }
