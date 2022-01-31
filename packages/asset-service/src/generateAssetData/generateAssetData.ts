@@ -1,11 +1,12 @@
 import 'dotenv/config'
 
 import { caip19 } from '@shapeshiftoss/caip'
-import { BaseAsset, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
+import { BaseAsset, ChainTypes, NetworkTypes, TokenAsset } from '@shapeshiftoss/types'
+import axios from 'axios'
 import fs from 'fs'
+import { chunk } from 'lodash'
 import uniqBy from 'lodash/uniqBy'
 
-import { testUrl } from '../helpers/testUrl'
 import { generateTrustWalletUrl } from '../service/TrustWalletService'
 import { baseAssets } from './baseAssets'
 import { getTokens } from './ethTokens'
@@ -41,26 +42,35 @@ const generateAssetData = async () => {
           ...underlyingTokens
         ]
         const uniqueTokens = uniqBy(tokens, 'caip19') // Remove dups
-        // this will break after we support more than ~65096 assets
-        // (hard limit of file descriptors in node) https://stackoverflow.com/a/17033757
-        // batch the requests after that point
-        const promises = uniqueTokens.map(async (token, idx) => {
-          const { chain } = caip19.fromCAIP19(uniqueTokens[idx].caip19)
-          const { info } = generateTrustWalletUrl({ chain, tokenId: token.tokenId })
-          const result = await testUrl(info)
-          console.info(`${idx + 1} of ${uniqueTokens.length}`, token.name, result)
-          return result
-        }) // beard fill in url
-        const result = await Promise.allSettled(promises)
-        const modifiedTokens = result.map((res, idx) => {
-          if (res.status === 'rejected') {
-            return uniqueTokens[idx] // token without modified icon
-          } else {
+        const batchSize = 100 // tune this to keep rate limiting happy
+        const tokenBatches = chunk(uniqueTokens, batchSize)
+        const modifiedTokens: TokenAsset[] = []
+        for (const [i, batch] of tokenBatches.entries()) {
+          console.info(`processing batch ${i + 1} of ${tokenBatches.length}`)
+          const promises = batch.map(async (token, idx) => {
             const { chain } = caip19.fromCAIP19(uniqueTokens[idx].caip19)
-            const { icon } = generateTrustWalletUrl({ chain, tokenId: uniqueTokens[idx].tokenId })
-            return { ...uniqueTokens[idx], icon }
-          }
-        })
+            const { info } = generateTrustWalletUrl({ chain, tokenId: token.tokenId })
+            return axios.head(info) // return promise
+          })
+          console.info('we have promises')
+          const result = await Promise.allSettled(promises)
+          console.info('all settled')
+          const newModifiedTokens = result.map((res, idx) => {
+            if (res.status === 'rejected') {
+              console.info('no change')
+              return uniqueTokens[idx] // token without modified icon
+            } else {
+              console.info(
+                `new icon for ${idx * batchSize + 1} of ${uniqueTokens.length}`,
+                uniqueTokens[idx].name
+              )
+              const { chain } = caip19.fromCAIP19(uniqueTokens[idx].caip19)
+              const { icon } = generateTrustWalletUrl({ chain, tokenId: uniqueTokens[idx].tokenId })
+              return { ...uniqueTokens[idx], icon }
+            }
+          })
+          modifiedTokens.concat(newModifiedTokens)
+        }
         const baseAssetWithTokens: BaseAsset = {
           ...baseAsset,
           tokens: modifiedTokens
