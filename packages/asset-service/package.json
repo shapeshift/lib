@@ -26,7 +26,8 @@
   },
   "dependencies": {
     "axios": "^0.24.0",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "web3": "^1.7.0"
   },
   "peerDependencies": {
     "@shapeshiftoss/caip": "^1.4.2",
