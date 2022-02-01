@@ -52,9 +52,7 @@ const generateAssetData = async () => {
             const { info } = generateTrustWalletUrl({ chain, tokenId: token.tokenId })
             return axios.head(info) // return promise
           })
-          console.info('we have promises')
           const result = await Promise.allSettled(promises)
-          console.info('all settled')
           const newModifiedTokens = result.map((res, idx) => {
             const key = i * batchSize + idx
             if (res.status === 'rejected') {
