@@ -47,8 +47,8 @@ const generateAssetData = async () => {
         let modifiedTokens: TokenAsset[] = []
         for (const [i, batch] of tokenBatches.entries()) {
           console.info(`processing batch ${i + 1} of ${tokenBatches.length}`)
-          const promises = batch.map(async (token, idx) => {
-            const { chain } = caip19.fromCAIP19(uniqueTokens[idx].caip19)
+          const promises = batch.map(async (token) => {
+            const { chain } = caip19.fromCAIP19(token.caip19)
             const { info } = generateTrustWalletUrl({ chain, tokenId: token.tokenId })
             return axios.head(info) // return promise
           })
@@ -56,17 +56,13 @@ const generateAssetData = async () => {
           const result = await Promise.allSettled(promises)
           console.info('all settled')
           const newModifiedTokens = result.map((res, idx) => {
+            const key = i * batchSize + idx
             if (res.status === 'rejected') {
-              console.info('no change')
-              return uniqueTokens[idx] // token without modified icon
+              return uniqueTokens[key] // token without modified icon
             } else {
-              console.info(
-                `new icon for ${idx * batchSize + 1} of ${uniqueTokens.length}`,
-                uniqueTokens[idx].name
-              )
-              const { chain } = caip19.fromCAIP19(uniqueTokens[idx].caip19)
-              const { icon } = generateTrustWalletUrl({ chain, tokenId: uniqueTokens[idx].tokenId })
-              return { ...uniqueTokens[idx], icon }
+              const { chain } = caip19.fromCAIP19(uniqueTokens[key].caip19)
+              const { icon } = generateTrustWalletUrl({ chain, tokenId: uniqueTokens[key].tokenId })
+              return { ...uniqueTokens[key], icon }
             }
           })
           modifiedTokens = modifiedTokens.concat(newModifiedTokens)

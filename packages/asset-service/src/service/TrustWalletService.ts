@@ -6,14 +6,17 @@ type TrustWalletServiceProps = {
   tokenId: string
 }
 export const generateTrustWalletUrl = ({ chain, tokenId }: TrustWalletServiceProps) => {
-  let address = tokenId
-  switch (chain) {
-    case ChainTypes.Ethereum:
-      address = Web3.utils.toChecksumAddress(tokenId)
-      break
+  let url = `https://rawcdn.githack.com/trustwallet/assets/master/blockchains/${chain}`
+  if (tokenId) {
+    url += `/assets/`
+    switch (chain) {
+      case ChainTypes.Ethereum:
+        url += Web3.utils.toChecksumAddress(tokenId)
+        break
+    }
   }
   return {
-    info: `https://rawcdn.githack.com/trustwallet/assets/master/blockchains/${chain}/assets/${address}/info.json`,
-    icon: `https://rawcdn.githack.com/trustwallet/assets/master/blockchains/${chain}/assets/${address}/logo.png`
+    info: `${url}/info.json`,
+    icon: `${url}/logo.png`
   }
 }
