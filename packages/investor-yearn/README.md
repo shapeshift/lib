@@ -1,95 +1,92 @@
 # @shapeshiftoss/logger
 
-Shapeshift's JSON logging library.
+Shapeshift's yearn investor package.
 
 ## Installation
 
 ```bash
-yarn add @shapeshiftoss/logger
+yarn add @shapeshiftoss/investor-yearn
 ```
 
 ## Initialization
 
 ```javascript
-import { Logger } from '@shapeshiftoss/logger'
+import { YearnVaultApi } from '@shapeshiftoss/investor-yearn'
 
-const logger = new Logger({
-  // name of the app or service
-  namespace: ['Parent'],
-  // alias: name: 'Parent'
-  // severity threshold (default='info')
-  level: 'debug',
-  // extra fields to include on each message
-  defaultFields: {
-      fn: 'defaultFn'
-  }
-})
+  const api = new YearnVaultApi({
+    adapter: adapters.byChain(ChainTypes.Ethereum), // adapter is an ETH @shapeshiftoss/chain-adapters
+    providerUrl: '<your eth node privider url>'
+  })
+  await api.initialize()
 ```
-
-## Logging
 
 ### Functions
 
-* trace
-* debug
-* info
-* warn
-* error
+* initialize
+* findAll
+* findByDepositVaultAddress
+* findByVaultTokenId
+* getGasPrice
+* getTxReceipt
+* checksumAddress
+* getVaultId
+* approveEstimatedGas
+* approve
+* allowance
+* depositEstimatedGas
+* deposit
+* withdrawEstimatedGas
+* withdraw
+* balance
+* token
+* totalSupply
+* pricePerShare
+* apy
 
 ### Examples
 ```javascript
-// (string)
-logger.info('my message')
-// {"fn":"defaultFn","message":"my message",
-//   "timestamp":"2021-10-25T17:48:33.255Z","namespace":"Parent","status":"info"}
+
+await api.initialize()
 
 // (object)
-logger.debug({ txid: '123aef' })
-// {"fn":"defaultFn","txid":"123aef",
-//   "timestamp":"2021-10-25T17:49:21.105Z","namespace":"Parent","status":"debug"}
+await api.deposit({
+  amountDesired: new BigNumber(10).times(`1e+18`) // 10 underlying tokens
+  tokenContractAddress: '0xdef1cafe',
+  vaultAddress: '0xdef1c4fe',
+  userAddress: '0xdef1caf3',
+  dryRun: false,
+  wallet: HDWallet
+})
 
-// (error)
-logger.error(new Error('something went wrong'))
-// {"fn":"defaultFn","error":{"message":"something went wrong","stack":"...snip...","kind":"Error"},
-//  "timestamp":"2021-10-25T17:49:31.626Z","namespace":"Parent","status":"error"}
+// returns a string of the txid
+//   '0x2d1e60192fe3f671ecb46d9165fdf2a03bd4a4fb8764dacc2a07c5df6307ac59'
 
-// (error, object, string)
-logger.error(
-    new Error('something went wrong'),
-    { data: { orderId: '123-aef-33' }},
-    'error occured while fetching order'
-)
-/*
-{"fn":"defaultFn",
-  "error":{"message":"something went wrong","stack":"...snip...","kind":"Error"},
-  "data":{"orderId":"123-aef-33"},
-  "message":"error occured while fetching order",
-  "timestamp":"2021-10-25T17:50:53.101Z",
-  "namespace":"Parent",
-  "status":"error"
-}
- */
-```
+await api.deposit({
+  amountDesired: new BigNumber(10).times(`1e+18`) // 10 underlying tokens
+  tokenContractAddress: '0xdef1cafe',
+  vaultAddress: '0xdef1c4fe',
+  userAddress: '0xdef1caf3',
+  dryRun: true,
+  wallet: HDWallet
+})
 
+// When dryrun is true, it returns a string signed transaction
+// '0xf86c0a85046c7cfe0083016dea94d1310c1e038bc12865d3d3997275b3e4737c6302880b503be34d9fe80080269fc7eaaa9c21f59adf8ad43ed66cf5ef9ee1c317bd4d32cd65401e7aaca47cfaa0387d79c65b90be6260d09dcfb780f29dd8133b9b1ceb20b83b7e442b4bfc30cb'
 
-## Child loggers
+await api.depositEstimatedGas({
+  amountDesired: new BigNumber(10).times(`1e+18`) // 10 underlying tokens
+  tokenContractAddress: '0xdef1cafe',
+  vaultAddress: '0xdef1c4fe',
+  userAddress: '0xdef1caf3',
+})
 
-```javascript
-const child = logger.child({ foo: 'bar' })
-child.info({ biz: 'baz' }, 'hello!') 
-// {"fn":"defaultFn","foo":"bar","biz":"baz","message":"hello!",
-//   "timestamp":"2021-10-25T17:52:29.111Z","namespace":"Parent","status":"info"}
-```
+// returns a BigNumber of the gas estimate
 
-### Namespacing
+await api.apy({
+  vaultAddress: '0xdef1cafe'
+})
 
-The `namespace` configuration property can be used to keep track of the depth/call stack.
+// returns a string of the net_apy for that vault
+// '32.59'
 
-When including `namespace` in a child, it APPENDS the values to the existing namespace making it easy to see in the output the chain that leads to the output.
-
-```javascript
-const child2 = child.child({ namespace: ['MyModule', 'myFunction']})
-child.info({ biz: 'baz' }, 'hello!') 
-// {"fn":"defaultFn","biz":"baz","message":"hello!",
-//   "timestamp":"2021-10-25T17:53:55.909Z","namespace":"Parent:MyModule:myFunction","status":"info"}
 ```
