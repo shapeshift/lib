@@ -14,7 +14,7 @@ export type ApproveInput = {
   wallet: HDWallet
 }
 
-export type ApproveEstimatedGasInput = Pick<ApproveInput, 'userAddress' | 'tokenContractAddress'>
+export type EstimateGasApproveInput = Pick<ApproveInput, 'userAddress' | 'tokenContractAddress'>
 
 export type TxInput = {
   accountNumber?: number
@@ -26,7 +26,7 @@ export type TxInput = {
   amountDesired: BigNumber
 }
 
-export type TxEstimatedGasInput = Pick<
+export type EstimateGasTxInput = Pick<
   TxInput,
   'tokenContractAddress' | 'vaultAddress' | 'userAddress' | 'amountDesired'
 >

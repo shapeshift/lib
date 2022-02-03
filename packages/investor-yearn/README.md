@@ -30,12 +30,12 @@ import { YearnVaultApi } from '@shapeshiftoss/investor-yearn'
 * getTxReceipt
 * checksumAddress
 * getVaultId
-* approveEstimatedGas
+* estimateApproveGas
 * approve
 * allowance
-* depositEstimatedGas
+* estimateDepositGas
 * deposit
-* withdrawEstimatedGas
+* estimateWithdrawGas
 * withdraw
 * balance
 * token

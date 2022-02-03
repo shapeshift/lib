@@ -17,18 +17,19 @@ import { bnOrZero } from '../utils/bignumber'
 import { buildTxToSign } from '../utils/buildTxToSign'
 import {
   Allowanceinput,
-  ApproveEstimatedGasInput,
+  EstimateGasApproveInput,
   ApproveInput,
   APYInput,
   BalanceInput,
   TokenInput,
-  TxEstimatedGasInput,
+  EstimateGasTxInput,
   TxInput
 } from './yearn-types'
 
 export type ConstructorArgs = {
   adapter: ChainAdapter<ChainTypes.Ethereum>
   providerUrl: string
+  network?: 1 | 250 | 1337 | 42161 // 1: 'ethereum', 250: 'fantom', 1337: 'ethereum', 42161: 'arbitrum'
 }
 
 export type YearnVault = Vault
@@ -42,12 +43,12 @@ export class YearnVaultApi {
   private yearnSdk: Yearn<1>
   private ssRouterContract: any
 
-  constructor({ adapter, providerUrl }: ConstructorArgs) {
+  constructor({ adapter, providerUrl, network = 1 }: ConstructorArgs) {
     this.adapter = adapter
     this.provider = new Web3.providers.HttpProvider(providerUrl)
     this.jsonRpcProvider = new JsonRpcProvider(providerUrl)
     this.web3 = new Web3(this.provider)
-    this.yearnSdk = new Yearn(1, { provider: this.jsonRpcProvider, disableAllowlist: true })
+    this.yearnSdk = new Yearn(network, { provider: this.jsonRpcProvider, disableAllowlist: true })
     this.ssRouterContract = new this.web3.eth.Contract(ssRouterAbi, ssRouterContractAddress)
     this.vaults = []
   }
@@ -113,7 +114,7 @@ export class YearnVaultApi {
     return id
   }
 
-  async approveEstimatedGas(input: ApproveEstimatedGasInput): Promise<BigNumber> {
+  async estimateApproveGas(input: EstimateGasApproveInput): Promise<BigNumber> {
     const { userAddress, tokenContractAddress } = input
     const depositTokenContract = new this.web3.eth.Contract(erc20Abi, tokenContractAddress)
     const estimatedGas = await depositTokenContract.methods
@@ -127,7 +128,7 @@ export class YearnVaultApi {
   async approve(input: ApproveInput): Promise<string> {
     const { accountNumber = 0, dryRun = false, tokenContractAddress, userAddress, wallet } = input
     if (!wallet) throw new Error('Missing inputs')
-    const estimatedGas: BigNumber = await this.approveEstimatedGas(input)
+    const estimatedGas: BigNumber = await this.estimateApproveGas(input)
     const depositTokenContract = new this.web3.eth.Contract(erc20Abi, tokenContractAddress)
     const data: string = depositTokenContract.methods
       .approve(ssRouterContractAddress, MAX_ALLOWANCE)
@@ -167,7 +168,7 @@ export class YearnVaultApi {
     return depositTokenContract.methods.allowance(userAddress, ssRouterContractAddress).call()
   }
 
-  async depositEstimatedGas(input: TxEstimatedGasInput): Promise<BigNumber> {
+  async estimateDepositGas(input: EstimateGasTxInput): Promise<BigNumber> {
     const { amountDesired, userAddress, tokenContractAddress, vaultAddress } = input
 
     const vaultIndex = await this.getVaultId({ tokenContractAddress, vaultAddress })
@@ -193,7 +194,7 @@ export class YearnVaultApi {
       wallet
     } = input
     if (!wallet || !vaultAddress) throw new Error('Missing inputs')
-    const estimatedGas: BigNumber = await this.depositEstimatedGas(input)
+    const estimatedGas: BigNumber = await this.estimateDepositGas(input)
 
     // In order to properly earn affiliate revenue, we must deposit to the vault through the SS
     // router contract. This is not necessary for withdraws. We can withdraw directly from the vault
@@ -236,7 +237,7 @@ export class YearnVaultApi {
 
   // Withdraws are done through the vault contract itself, there is no need to go through the SS
   // router contract, so we estimate the gas from the vault itself.
-  async withdrawEstimatedGas(input: TxEstimatedGasInput): Promise<BigNumber> {
+  async estimateWithdrawGas(input: EstimateGasTxInput): Promise<BigNumber> {
     const { amountDesired, userAddress, vaultAddress } = input
     const vaultContract = new this.web3.eth.Contract(yv2VaultAbi, vaultAddress)
     const estimatedGas = await vaultContract.methods
@@ -257,7 +258,7 @@ export class YearnVaultApi {
       wallet
     } = input
     if (!wallet || !vaultAddress) throw new Error('Missing inputs')
-    const estimatedGas: BigNumber = await this.withdrawEstimatedGas(input)
+    const estimatedGas: BigNumber = await this.estimateWithdrawGas(input)
 
     // We use the vault directly to withdraw the vault tokens. There is no benefit to the DAO to use
     // the router to withdraw funds and there is an extra approval required for the user if we
