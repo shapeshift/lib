@@ -6,23 +6,25 @@ import { BigNumber } from 'bignumber.js'
 import { toLower } from 'lodash'
 import isNil from 'lodash/isNil'
 import Web3 from 'web3'
-import { TransactionReceipt } from 'web3-core/types'
+import { HttpProvider, TransactionReceipt } from 'web3-core/types'
+import { Contract } from 'web3-eth-contract'
 
-import { MAX_ALLOWANCE } from '../constants/allowance'
-import { erc20Abi } from '../constants/erc20-abi'
-import { ssRouterContractAddress } from '../constants/router-contract'
-import { ssRouterAbi } from '../constants/ss-router-abi'
-import { yv2VaultAbi } from '../constants/yv2Vaults-abi'
-import { bnOrZero } from '../utils/bignumber'
-import { buildTxToSign } from '../utils/buildTxToSign'
+import {
+  erc20Abi,
+  MAX_ALLOWANCE,
+  ssRouterAbi,
+  ssRouterContractAddress,
+  yv2VaultAbi
+} from '../constants'
+import { bnOrZero, buildTxToSign } from '../utils'
 import {
   Allowanceinput,
-  EstimateGasApproveInput,
   ApproveInput,
   APYInput,
   BalanceInput,
-  TokenInput,
+  EstimateGasApproveInput,
   EstimateGasTxInput,
+  TokenInput,
   TxInput
 } from './yearn-types'
 
@@ -36,12 +38,12 @@ export type YearnVault = Vault
 
 export class YearnVaultApi {
   public adapter: ChainAdapter<ChainTypes.Ethereum>
-  public provider: any
+  public provider: HttpProvider
   public jsonRpcProvider: JsonRpcProvider
   public web3: Web3
   public vaults: Vault[]
   private yearnSdk: Yearn<1>
-  private ssRouterContract: any
+  private ssRouterContract: Contract
 
   constructor({ adapter, providerUrl, network = 1 }: ConstructorArgs) {
     this.adapter = adapter
@@ -164,7 +166,10 @@ export class YearnVaultApi {
 
   async allowance(input: Allowanceinput): Promise<string> {
     const { userAddress, tokenContractAddress } = input
-    const depositTokenContract: any = new this.web3.eth.Contract(erc20Abi, tokenContractAddress)
+    const depositTokenContract: Contract = new this.web3.eth.Contract(
+      erc20Abi,
+      tokenContractAddress
+    )
     return depositTokenContract.methods.allowance(userAddress, ssRouterContractAddress).call()
   }
 
@@ -264,7 +269,7 @@ export class YearnVaultApi {
     // the router to withdraw funds and there is an extra approval required for the user if we
     // withdrew from the vault using the shapeshift router. Affiliate fees for SS are the same
     // either way. For this reason, we simply withdraw from the vault directly.
-    const vaultContract: any = new this.web3.eth.Contract(yv2VaultAbi, vaultAddress)
+    const vaultContract: Contract = new this.web3.eth.Contract(yv2VaultAbi, vaultAddress)
     const data: string = vaultContract.methods
       .withdraw(amountDesired.toString(), userAddress)
       .encodeABI({
