@@ -1,6 +1,6 @@
 # @shapeshiftoss/logger
 
-Shapeshift's yearn investor package.
+ShapeShift's Yearn investor package.
 
 ## Installation
 
