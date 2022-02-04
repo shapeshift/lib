@@ -252,7 +252,7 @@ export class YearnVaultMarketCapService implements MarketService {
 
       return vaultDayData.map((datum: VaultDayData) => {
         return {
-          date: datum.timestamp,
+          date: Number(datum.timestamp),
           price: bnOrZero(datum.tokenPriceUSDC)
             .div(`1e+${USDC_PRECISION}`)
             .times(datum.pricePerShare)
