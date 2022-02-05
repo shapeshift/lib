@@ -28,7 +28,7 @@ export const getSupportedVaults = async (): Promise<SupportedYearnVault[]> => {
       chain: ChainTypes.Ethereum,
       provider: DefiProvider.Yearn,
       type: DefiType.Vault,
-      expired: !!vault.metadata.depositsDisabled || bnOrZero(vault.metadata.depositLimit).lte(0)
+      expired: vault.metadata.depositsDisabled || bnOrZero(vault.metadata.depositLimit).lte(0)
     }
   })
 }
