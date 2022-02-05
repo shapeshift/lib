@@ -13,6 +13,7 @@ import {
   PriceHistoryArgs
 } from '@shapeshiftoss/types'
 import { ChainId, Yearn } from '@yfi/sdk'
+import compact from 'lodash/compact'
 import head from 'lodash/head'
 
 import { MarketService } from '../api'
@@ -250,17 +251,29 @@ export class YearnVaultMarketCapService implements MarketService {
       const vaultDayData: VaultDayData[] =
         response.data.account.vaultPositions[0].vault.vaultDayData
 
-      return vaultDayData.map((datum: VaultDayData) => {
-        return {
-          date: Number(datum.timestamp),
-          price: bnOrZero(datum.tokenPriceUSDC)
-            .div(`1e+${USDC_PRECISION}`)
-            .times(datum.pricePerShare)
-            .div(`1e+${decimals}`)
-            .dp(6)
-            .toNumber()
+      return vaultDayData.reduce<HistoryData[]>((acc, current: VaultDayData) => {
+        const date = Number(current.timestamp)
+        const dateCheck = new Date(date).valueOf()
+        if (isNaN(dateCheck)) {
+          console.error('Yearn SDK vault has invalid date')
+          return acc
         }
-      })
+        const price = bn(current.tokenPriceUSDC)
+          .div(`1e+${USDC_PRECISION}`)
+          .times(current.pricePerShare)
+          .div(`1e+${decimals}`)
+          .dp(6)
+
+        if (price.isNaN()) {
+          console.error('Yearn SDK vault has invalid price')
+          return acc
+        }
+        acc.push({
+          date,
+          price: price.toNumber()
+        })
+        return acc
+      }, [])
     } catch (e) {
       console.warn(e)
       throw new Error('YearnMarketService(getPriceHistory): error fetching price history')

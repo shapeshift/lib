@@ -15,7 +15,7 @@ import dayjs from 'dayjs'
 import omit from 'lodash/omit'
 
 import { MarketService } from '../api'
-import { bnOrZero } from '../utils/bignumber'
+import { bn, bnOrZero } from '../utils/bignumber'
 import { CoinGeckoMarketCap } from './coingecko-types'
 
 // tons more params here: https://www.coingecko.com/en/api/documentation
@@ -152,17 +152,33 @@ export class CoinGeckoMarketService implements MarketService {
       const to = end.valueOf() / 1000
       const contract = tokenId ? `/contract/${tokenId}` : ''
       const url = `${this.baseUrl}/coins/${id}${contract}`
+      type CoinGeckoHistoryData = {
+        prices: [number, number][]
+      }
+
       // TODO: change vs_currency to localized currency
       const currency = 'usd'
-      const { data: historyData } = await axios.get(
+      const { data: historyData } = await axios.get<CoinGeckoHistoryData>(
         `${url}/market_chart/range?id=${id}&vs_currency=${currency}&from=${from}&to=${to}`
       )
-      return historyData?.prices?.map((data: [number, number]) => {
-        return {
-          date: data[0],
-          price: data[1]
+      return historyData?.prices?.reduce<HistoryData[]>((acc, data) => {
+        const date = data[0]
+        const dateCheck = new Date(date).valueOf()
+        if (isNaN(dateCheck)) {
+          console.error('Coingecko asset has invalid date')
+          return acc
         }
-      })
+        const price = bn(data[1])
+        if (price.isNaN()) {
+          console.error('Coingecko asset has invalid price')
+          return acc
+        }
+        acc.push({
+          date: data[0],
+          price: price.toNumber()
+        })
+        return acc
+      }, [])
     } catch (e) {
       console.warn(e)
       throw new Error(
