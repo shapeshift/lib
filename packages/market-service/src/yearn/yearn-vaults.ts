@@ -13,7 +13,6 @@ import {
   PriceHistoryArgs
 } from '@shapeshiftoss/types'
 import { ChainId, Yearn } from '@yfi/sdk'
-import compact from 'lodash/compact'
 import head from 'lodash/head'
 
 import { MarketService } from '../api'
