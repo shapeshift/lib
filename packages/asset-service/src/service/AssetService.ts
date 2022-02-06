@@ -115,7 +115,7 @@ export class AssetService {
   }
 
   async description({ asset }: { asset: Asset }): Promise<string> {
-    const descriptions: Record<string, any> = assetsDescriptions
+    const descriptions: Record<string, string> = assetsDescriptions
 
     // Return overriden asset description if it exists
     if (descriptions[asset.caip19]) return descriptions[asset.caip19]
