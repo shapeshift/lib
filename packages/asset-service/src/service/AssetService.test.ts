@@ -140,6 +140,21 @@ describe('AssetService', () => {
       await expect(assetService.description({ asset: EthAsset })).resolves.toEqual(description.en)
     })
 
+    it('should return the overridden description if it exists', async () => {
+      const assetService = new AssetService(assetFileUrl)
+      const description = 'overriden description'
+
+      jest.mock(
+        './descriptions.json',
+        () => ({
+          [EthAsset.caip19]: description
+        }),
+        { virtual: true }
+      )
+
+      await expect(assetService.description({ asset: EthAsset })).resolves.toEqual(description)
+    })
+
     it('should throw if not found', async () => {
       const assetService = new AssetService(assetFileUrl)
       mockedAxios.get.mockRejectedValue({ data: null })

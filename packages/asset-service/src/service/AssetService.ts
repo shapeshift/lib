@@ -115,14 +115,13 @@ export class AssetService {
   }
 
   async description({ asset }: { asset: Asset }): Promise<string> {
-    // Return overriden asset description if it exist
+    // Return overriden asset description if it exists
     if (assetsDescriptions[asset.caip19]) return assetsDescriptions[asset.caip19]
     
     if (asset.dataSource !== AssetDataSource.CoinGecko) return ''
     const contractUrl =
       typeof asset.tokenId === 'string' ? `/contract/${asset.tokenId?.toLowerCase()}` : ''
     const errorMessage = `AssetService:description: no description availble for ${asset.tokenId} on chain ${asset.chain}`
-
 
     try {
       type CoinData = {
