@@ -2,6 +2,7 @@ import { Asset, AssetDataSource, BaseAsset, ChainTypes, NetworkTypes } from '@sh
 import axios from 'axios'
 
 import localAssetData from './generatedAssetData.json'
+import assetsDescriptions from './descriptions.json'
 
 export const flattenAssetData = (assetData: BaseAsset[]): Asset[] => {
   const flatAssetData: Asset[] = []
@@ -114,11 +115,14 @@ export class AssetService {
   }
 
   async description({ asset }: { asset: Asset }): Promise<string> {
-    // Currently, we only get decription data for tokens with a coingecko datasource
+    // Return overriden asset description if it exist
+    if (assetDescriptions[asset.caip19]) return assetDescriptions[asset.caip19]
+    
     if (asset.dataSource !== AssetDataSource.CoinGecko) return ''
     const contractUrl =
       typeof asset.tokenId === 'string' ? `/contract/${asset.tokenId?.toLowerCase()}` : ''
     const errorMessage = `AssetService:description: no description availble for ${asset.tokenId} on chain ${asset.chain}`
+
 
     try {
       type CoinData = {
