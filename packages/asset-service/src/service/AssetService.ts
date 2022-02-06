@@ -115,9 +115,11 @@ export class AssetService {
   }
 
   async description({ asset }: { asset: Asset }): Promise<string> {
+    const descriptions: Record<string, any> = assetsDescriptions
+
     // Return overriden asset description if it exists
-    if (assetsDescriptions[asset.caip19]) return assetsDescriptions[asset.caip19]
-    
+    if (descriptions[asset.caip19]) return descriptions[asset.caip19]
+
     if (asset.dataSource !== AssetDataSource.CoinGecko) return ''
     const contractUrl =
       typeof asset.tokenId === 'string' ? `/contract/${asset.tokenId?.toLowerCase()}` : ''
