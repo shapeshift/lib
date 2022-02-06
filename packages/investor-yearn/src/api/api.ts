@@ -17,6 +17,7 @@ import {
   yv2VaultAbi
 } from '../constants'
 import { bnOrZero, buildTxToSign } from '../utils'
+import { transformVault } from '../utils/transformVault'
 import {
   Allowanceinput,
   ApproveInput,
@@ -67,13 +68,13 @@ export class YearnVaultApi {
   findByDepositVaultAddress(vaultAddress: string) {
     const vault = this.vaults.find((item) => toLower(item.address) === toLower(vaultAddress))
     if (!vault) return null
-    return vault
+    return transformVault(vault)
   }
 
   findByVaultTokenId(vaultAddress: string) {
     const vault = this.vaults.find((item) => toLower(item.address) === toLower(vaultAddress))
     if (!vault) return null
-    return vault
+    return transformVault(vault)
   }
 
   async getGasPrice() {
