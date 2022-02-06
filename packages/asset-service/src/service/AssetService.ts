@@ -116,7 +116,7 @@ export class AssetService {
 
   async description({ asset }: { asset: Asset }): Promise<string> {
     // Return overriden asset description if it exist
-    if (assetDescriptions[asset.caip19]) return assetDescriptions[asset.caip19]
+    if (assetsDescriptions[asset.caip19]) return assetsDescriptions[asset.caip19]
     
     if (asset.dataSource !== AssetDataSource.CoinGecko) return ''
     const contractUrl =
