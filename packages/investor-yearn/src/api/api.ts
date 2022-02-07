@@ -16,8 +16,7 @@ import {
   ssRouterContractAddress,
   yv2VaultAbi
 } from '../constants'
-import { bnOrZero, buildTxToSign } from '../utils'
-import { transformVault } from '../utils/transformVault'
+import { bnOrZero, buildTxToSign, transformVault } from '../utils'
 import {
   Allowanceinput,
   ApproveInput,
