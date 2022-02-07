@@ -17,6 +17,7 @@ import head from 'lodash/head'
 
 import { MarketService } from '../api'
 import { bn, bnOrZero } from '../utils/bignumber'
+import { isValidDate } from '../utils/isValidDate'
 import { ACCOUNT_HISTORIC_EARNINGS } from './gql-queries'
 import { VaultDayDataGQLResponse } from './yearn-types'
 
@@ -252,8 +253,7 @@ export class YearnVaultMarketCapService implements MarketService {
 
       return vaultDayData.reduce<HistoryData[]>((acc, current: VaultDayData) => {
         const date = Number(current.timestamp)
-        const dateCheck = new Date(date).valueOf()
-        if (isNaN(dateCheck)) {
+        if (!isValidDate(date)) {
           console.error('Yearn SDK vault has invalid date')
           return acc
         }

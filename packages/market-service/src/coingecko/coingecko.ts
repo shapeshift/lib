@@ -16,6 +16,7 @@ import omit from 'lodash/omit'
 
 import { MarketService } from '../api'
 import { bn, bnOrZero } from '../utils/bignumber'
+import { isValidDate } from '../utils/isValidDate'
 import { CoinGeckoMarketCap } from './coingecko-types'
 
 // tons more params here: https://www.coingecko.com/en/api/documentation
@@ -163,8 +164,7 @@ export class CoinGeckoMarketService implements MarketService {
       )
       return historyData?.prices?.reduce<HistoryData[]>((acc, data) => {
         const date = data[0]
-        const dateCheck = new Date(date).valueOf()
-        if (isNaN(dateCheck)) {
+        if (!isValidDate(date)) {
           console.error('Coingecko asset has invalid date')
           return acc
         }

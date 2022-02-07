@@ -15,6 +15,7 @@ import omit from 'lodash/omit'
 
 import { MarketService } from '../api'
 import { bn, bnOrZero } from '../utils/bignumber'
+import { isValidDate } from '../utils/isValidDate'
 import { CoinCapMarketCap } from './coincap-types'
 
 export class CoinCapMarketService implements MarketService {
@@ -151,8 +152,7 @@ export class CoinCapMarketService implements MarketService {
 
       return coincapData.reduce<HistoryData[]>((acc, current) => {
         const date = current.time
-        const dateCheck = new Date(date).valueOf()
-        if (isNaN(dateCheck)) {
+        if (!isValidDate(date)) {
           console.error('Coincap asset history data has invalid date')
           return acc
         }
