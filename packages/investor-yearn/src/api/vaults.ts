@@ -1,5 +1,4 @@
 import { ChainTypes } from '@shapeshiftoss/types'
-import { Vault } from '@yfi/sdk'
 
 import { transformVault } from '../utils'
 import { YearnVault } from './api'
