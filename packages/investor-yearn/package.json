@@ -37,5 +37,10 @@
     "@shapeshiftoss/chain-adapters": "^1.31.1",
     "@shapeshiftoss/hdwallet-core": "^1.18.4",
     "@shapeshiftoss/types": "^1.21.0"
+  },
+  "devDependencies": {
+    "@shapeshiftoss/chain-adapters": "^1.31.1",
+    "@shapeshiftoss/hdwallet-core": "^1.18.4",
+    "@shapeshiftoss/types": "^1.21.1"
   }
 }
