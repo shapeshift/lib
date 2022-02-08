@@ -2645,7 +2645,7 @@
     web-encoding "^1.1.0"
     wif "^2.0.6"
 
-"@shapeshiftoss/hdwallet-core@1.18.4", "@shapeshiftoss/hdwallet-core@^1.18.2", "@shapeshiftoss/hdwallet-core@^1.18.4", "@shapeshiftoss/hdwallet-core@latest":
+"@shapeshiftoss/hdwallet-core@1.18.4", "@shapeshiftoss/hdwallet-core@^1.18.2", "@shapeshiftoss/hdwallet-core@latest":
   version "1.18.4"
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/hdwallet-core/-/hdwallet-core-1.18.4.tgz#7272baa4b43de0fbb5e651d47cdeb9554f4ddd33"
   integrity sha512-dnzh6EmicNVb4AZPjN3d00z04SqLvKAUMqEhLq9v/rUtY7yb8dcvw5vHCnLEtq3a+N4UkH6rDA33i/hMjTBhUQ==
