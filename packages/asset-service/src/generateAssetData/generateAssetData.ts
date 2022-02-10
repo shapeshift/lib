@@ -8,7 +8,7 @@ import { addTokensToEth } from './ethTokens'
 
 const blacklistedAssets: Array<string> = blacklist
 
-const filterBlacklistedAssets = <T extends BaseAsset | TokenAsset>(assets: T[]): T[] => {
+const filterBlacklistedAssets = <T extends BaseAsset | TokenAsset>(assets: T[]) => {
   const filteredAssets = filter(assets, (token) => {
     if ('tokens' in token && token.tokens) {
       token.tokens = filterBlacklistedAssets(token.tokens)
