@@ -6,6 +6,8 @@ import { atom, bitcoin, tBitcoin, tEthereum } from './baseAssets'
 import { getOsmosisAssets } from './cosmos/getOsmosisAssets'
 import { addTokensToEth } from './ethTokens'
 
+const blacklistedAssets: Array<string> = blacklist
+
 const generateAssetData = async () => {
   const ethereum = await addTokensToEth()
   const osmosisAssets = await getOsmosisAssets()
