@@ -26,7 +26,7 @@ const generateAssetData = async () => {
 
   const generatedAssetData = [bitcoin, tBitcoin, ethereum, tEthereum, atom, ...osmosisAssets]
 
-  generatedAssetData = filterBlacklistedAssets(generatedAssetData)
+  const filteredAssetData = filterBlacklistedAssets(generatedAssetData)
 
   await fs.promises.writeFile(
     `./src/service/generatedAssetData.json`,
