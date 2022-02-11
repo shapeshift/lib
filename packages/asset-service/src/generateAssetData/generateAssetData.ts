@@ -9,6 +9,7 @@ import uniqBy from 'lodash/uniqBy'
 
 import { generateTrustWalletUrl } from '../service/TrustWalletService'
 import { baseAssets } from './baseAssets'
+import { getCosmosData } from './cosmos/getCosmosData'
 import { getTokens } from './ethTokens'
 import {
   getIronBankTokens,
@@ -18,7 +19,7 @@ import {
 } from './ethTokens/extendErc20'
 
 const generateAssetData = async () => {
-  const generatedAssetData = await Promise.all(
+  const baseAssetData = await Promise.all(
     baseAssets.map(async (baseAsset) => {
       if (baseAsset.chain === ChainTypes.Ethereum && baseAsset.network === NetworkTypes.MAINNET) {
         const [ethTokens, yearnVaults, ironBankTokens, zapperTokens, underlyingTokens] =
@@ -70,6 +71,10 @@ const generateAssetData = async () => {
       }
     })
   )
+
+  const cosmosAssetData = await getCosmosData()
+
+  const generatedAssetData = [...baseAssetData, ...cosmosAssetData]
 
   await fs.promises.writeFile(
     `./src/service/generatedAssetData.json`,
