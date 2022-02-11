@@ -28,9 +28,13 @@ const assetList = [EthAsset, BtcAsset, ERC20Asset] as BaseAsset[]
 
 describe('Utils', () => {
   describe('filterBlacklistedAssets', () => {
-    it('should filter BTC and ERC20 from the asset list', () => {
+    it('should filter BTC from the asset list', () => {
       const filteredAssetList = filterBlacklistedAssets(assetList)
       expect(filteredAssetList).toHaveLength(1)
+    })
+
+    it('should filter ERC20 from the asset list', () => {
+      const filteredAssetList = filterBlacklistedAssets(assetList)
       const ethFiltered = filteredAssetList[0]
       expect(ethFiltered.tokens).toHaveLength(0)
     })
