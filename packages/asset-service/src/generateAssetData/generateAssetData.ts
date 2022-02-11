@@ -6,7 +6,7 @@ import { atom, bitcoin, tBitcoin, tEthereum } from './baseAssets'
 import { getOsmosisAssets } from './cosmos/getOsmosisAssets'
 import { addTokensToEth } from './ethTokens'
 
-const blacklistedAssets: Array<string> = blacklist
+const blacklistedAssets: string[] = blacklist
 
 export const filterBlacklistedAssets = <T extends BaseAsset | TokenAsset>(assets: T[]) => {
   const isBaseAsset = (asset: BaseAsset | TokenAsset): asset is BaseAsset =>
