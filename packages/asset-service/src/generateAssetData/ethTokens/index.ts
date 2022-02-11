@@ -47,6 +47,8 @@ export async function getTokens(): Promise<TokenAsset[]> {
 
     const tokenId = token.address.toLowerCase()
 
+    if (!tokenId) return []
+
     const result: TokenAsset = {
       caip19: caip19.toCAIP19({ chain, network, contractType, tokenId }),
       caip2: caip2.toCAIP2({ chain, network }),
