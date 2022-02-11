@@ -37,7 +37,7 @@ export async function getTokens(): Promise<TokenAsset[]> {
   const network = NetworkTypes.MAINNET
   const contractType = ContractTypes.ERC20
 
-  const tokens = uniswapTokenData.tokens.map((token) => {
+  const tokens = uniswapTokenData.tokens.flatMap((token) => {
     const overrideToken: TokenAsset | undefined = lodash.find(
       tokensToOverride,
       (override: TokenAsset) => override.tokenId === token.address
