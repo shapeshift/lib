@@ -3,7 +3,11 @@ import { filter } from 'lodash'
 
 import { filterBlacklistedAssets } from './generateAssetData'
 
-jest.mock('./blacklist.json', () => ['eip155:3/slip44:60'], { virtual: true })
+jest.mock(
+  './blacklist.json',
+  () => ['eip155:3/slip44:60', 'eip155:1/erc20:0x426ca1ea2406c07d75db9585f22781c096e3d0e0'],
+  { virtual: true }
+)
 
 const EthAsset: BaseAsset = {
   caip19: 'eip155:3/slip44:60',
@@ -45,7 +49,27 @@ const BtcAsset: BaseAsset = {
   receiveSupport: false
 }
 
-const assetList = [EthAsset, BtcAsset]
+const MNEAsset: BaseAsset = {
+  caip19: 'eip155:1/erc20:0x426ca1ea2406c07d75db9585f22781c096e3d0e0',
+  caip2: 'eip155:1',
+  chain: ChainTypes.Bitcoin,
+  dataSource: AssetDataSource.CoinGecko,
+  network: NetworkTypes.MAINNET,
+  symbol: 'MNE',
+  name: 'Minereum',
+  precision: 8,
+  slip44: 0,
+  color: '#FFFFFF',
+  secondaryColor: '#FFFFFF',
+  icon: 'https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0x426ca1ea2406c07d75db9585f22781c096e3d0e0/logo.png',
+  explorer: 'https://etherscan.io',
+  explorerAddressLink: 'https://etherscan.io/address/',
+  explorerTxLink: 'https://etherscan.io/tx/',
+  sendSupport: false,
+  receiveSupport: false
+}
+
+const assetList = [EthAsset, BtcAsset, MNEAsset]
 
 describe('Utils', () => {
   describe('filterBlacklistedAssets', () => {
