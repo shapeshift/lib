@@ -22,9 +22,9 @@ describe('Utils', () => {
     it('should filter ERC20 from the asset list', () => {
       const filteredAssetList = filterBlacklistedAssets(blacklistedAssets, assetList)
       const ethFiltered = filteredAssetList[0]
-      const blacklistedToken = ETHMockedAsset.tokens![1]
+      const remainingToken = ETHMockedAsset.tokens![1]
 
-      expect(ethFiltered.tokens![0]).toHaveProperty('caip19', blacklistedToken.caip19)
+      expect(ethFiltered.tokens![0]).toHaveProperty('caip19', remainingToken.caip19)
     })
   })
 })
