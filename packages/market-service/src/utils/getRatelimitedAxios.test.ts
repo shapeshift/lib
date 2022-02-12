@@ -4,8 +4,8 @@ import http from 'http'
 import { getRatelimitedAxios } from './getRatelimitedAxios'
 
 const MAX_RPS = 10
-// setting MAX_RPS to 10 and perMilliseconds to 1000 to make it so we send not more than 10 requests every second
-const ratelimitedAxios = getRatelimitedAxios(MAX_RPS, 1000)
+// setting maxRequests to 9 and perMilliseconds to 1000 to make sure we don't send not more than 10 requests every second
+const ratelimitedAxios = getRatelimitedAxios(MAX_RPS - 1, 1000)
 
 // setting this to 1 minute as we need a good amount of time for our tests to run
 jest.setTimeout(60000)
