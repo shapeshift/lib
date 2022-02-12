@@ -45,6 +45,22 @@ describe('coincap market service', () => {
       explorer: 'https://etherscan.io/'
     }
 
+    const apiCalls: number[] = []
+
+    const callApi = async () => {
+      if (apiCalls.length > COINCAP_MAX_RPS) {
+        setTimeout(() => {
+          apiCalls.length = 0
+        }, 1000)
+        return 429
+      }
+      mockedAxios.get
+        .mockResolvedValueOnce({ data: { data: [eth] } })
+        .mockResolvedValue({ data: { data: [btc] } })
+      const result = await coinMarketService.findAll()
+      return result
+    }
+
     it('can flatten multiple responses', async () => {
       mockedAxios.get
         .mockResolvedValueOnce({ data: { data: [eth] } })
@@ -70,10 +86,7 @@ describe('coincap market service', () => {
     it('does not get rate limited', async () => {
       // using COINCAP_MAX_RPS * 10 here to demonstrate that it does not get ratelimited
       for (let index = 0; index < COINCAP_MAX_RPS * 10; index++) {
-        mockedAxios.get
-          .mockResolvedValueOnce({ data: { data: [eth] } })
-          .mockResolvedValue({ data: { data: [btc] } })
-        const result = await coinMarketService.findAll()
+        const result = await callApi()
         expect(Object.keys(result)[0]).toEqual(adapters.coincapToCAIP19(btc.id))
       }
     })

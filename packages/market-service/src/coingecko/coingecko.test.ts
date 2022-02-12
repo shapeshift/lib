@@ -77,6 +77,20 @@ describe('coingecko market service', () => {
       last_updated: '2021-10-10T22:16:22.950Z'
     }
 
+    const apiCalls: number[] = []
+
+    const callApi = async () => {
+      if (apiCalls.length > COINGECKO_MAX_RPS) {
+        setTimeout(() => {
+          apiCalls.length = 0
+        }, 1000)
+        return 429
+      }
+      mockedAxios.get.mockResolvedValueOnce({ data: [btc] }).mockResolvedValue({ data: [eth] })
+      const result = await coinGeckoMarketService.findAll()
+      return result
+    }
+
     it('can flatten multiple responses', async () => {
       mockedAxios.get.mockResolvedValueOnce({ data: [eth] }).mockResolvedValue({ data: [btc] })
       const result = await coinGeckoMarketService.findAll()
@@ -98,8 +112,7 @@ describe('coingecko market service', () => {
     it('does not get rate limited', async () => {
       // using COINGECKO_MAX_RPS * 10 here to demonstrate that it does not get ratelimited
       for (let index = 0; index < COINGECKO_MAX_RPS * 10; index++) {
-        mockedAxios.get.mockResolvedValueOnce({ data: [btc] }).mockResolvedValue({ data: [eth] })
-        const result = await coinGeckoMarketService.findAll()
+        const result = await callApi()
         expect(Object.keys(result)[0]).toEqual(adapters.coingeckoToCAIP19(btc.id))
       }
     })
