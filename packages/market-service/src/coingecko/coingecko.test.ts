@@ -1,15 +1,13 @@
 import { adapters } from '@shapeshiftoss/caip'
 import { HistoryTimeframe } from '@shapeshiftoss/types'
-import { RateLimitedAxiosInstance } from 'axios-rate-limit'
+import axios from 'axios'
 
-import { COINGECKO_MAX_RPS } from '../constants'
-import { getRatelimitedAxios } from '../utils/getRatelimitedAxios'
 import { CoinGeckoMarketService } from './coingecko'
 import { CoinGeckoMarketCap } from './coingecko-types'
 
-const axios = getRatelimitedAxios(COINGECKO_MAX_RPS)
+jest.mock('axios')
 
-const mockedAxios = axios as jest.Mocked<RateLimitedAxiosInstance>
+const mockedAxios = axios as jest.Mocked<typeof axios>
 
 const coinGeckoMarketService = new CoinGeckoMarketService()
 
@@ -77,20 +75,6 @@ describe('coingecko market service', () => {
       last_updated: '2021-10-10T22:16:22.950Z'
     }
 
-    const apiCalls: number[] = []
-
-    const apiCalled = () => {
-      if (apiCalls.length > COINGECKO_MAX_RPS) {
-        setTimeout(() => {
-          apiCalls.length = 0
-        }, 1000)
-        return 429
-      }
-      if (Date.now() - apiCalls[0] > 1000) apiCalls.length = 0
-      apiCalls.push(Date.now())
-      return 200
-    }
-
     it('can flatten multiple responses', async () => {
       mockedAxios.get.mockResolvedValueOnce({ data: [eth] }).mockResolvedValue({ data: [btc] })
       const result = await coinGeckoMarketService.findAll()
@@ -107,16 +91,6 @@ describe('coingecko market service', () => {
       mockedAxios.get.mockRejectedValue({ error: 'foo' })
       const result = await coinGeckoMarketService.findAll()
       expect(Object.keys(result).length).toEqual(0)
-    })
-
-    it('does not get rate limited', async () => {
-      // using COINCAP_MAX_RPS * 10 here to demonstrate that it does not get ratelimited
-      for (let index = 0; index < COINGECKO_MAX_RPS * 10; index++) {
-        mockedAxios.get.mockResolvedValueOnce({ data: [eth] }).mockResolvedValue({ data: [btc] })
-        await coinGeckoMarketService.findAll().then(() => {
-          expect(apiCalled).toEqual(200)
-        })
-      }
     })
 
     it('can handle rate limiting', async () => {
