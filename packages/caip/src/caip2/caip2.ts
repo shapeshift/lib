@@ -50,7 +50,7 @@ export const toCAIP2: ToCAIP2 = ({ chain, network }): string => {
     [ChainTypes.CosmosSDK]: {
       namespace: ChainNamespace.CosmosSDK,
       reference: {
-        [NetworkTypes.MAINNET]: ChainReference.CosmosSDKGaiaMainnet,
+        [NetworkTypes.COSMOS_SDK_GAIA_MAINNET]: ChainReference.CosmosSDKGaiaMainnet,
         [NetworkTypes.COSMOS_SDK_GAIA_VEGA]: ChainReference.CosmosSDKGaiaVega
       }
     }
@@ -62,7 +62,7 @@ export const toCAIP2: ToCAIP2 = ({ chain, network }): string => {
     case ChainTypes.CosmosSDK: {
       const referenceMap = shapeShiftToCAIP2[chain].reference
       switch (network) {
-        case NetworkTypes.MAINNET:
+        case NetworkTypes.COSMOS_SDK_GAIA_MAINNET:
         case NetworkTypes.COSMOS_SDK_GAIA_VEGA: {
           const reference: ChainReference = referenceMap[network]
           const caip2 = `${namespace}:${reference}`

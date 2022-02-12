@@ -6,7 +6,7 @@ describe('caip2', () => {
   describe('toCAIP2', () => {
     it('can turn CosmosHub (Gaia) mainnet to caip2', () => {
       const chain = ChainTypes.CosmosSDK
-      const network = NetworkTypes.MAINNET
+      const network = NetworkTypes.COSMOS_SDK_GAIA_MAINNET
       const result = toCAIP2({ chain, network })
       expect(result).toEqual('cosmos:cosmoshub-4')
     })

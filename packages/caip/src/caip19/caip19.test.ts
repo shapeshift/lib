@@ -28,7 +28,7 @@ describe('caip19', () => {
 
     it('can make Cosmos SDK caip19 identifier on CosmosHub(Gaia) mainnet', () => {
       const chain = ChainTypes.CosmosSDK
-      const network = NetworkTypes.MAINNET
+      const network = NetworkTypes.COSMOS_SDK_GAIA_MAINNET
       const result = toCAIP19({ chain, network })
       expect(result).toEqual('cosmos:cosmoshub-4/slip44:118')
     })
