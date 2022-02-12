@@ -1,15 +1,18 @@
 import { adapters } from '@shapeshiftoss/caip'
 import { HistoryTimeframe } from '@shapeshiftoss/types'
-import axios from 'axios'
+import { RateLimitedAxiosInstance } from 'axios-rate-limit'
 
+import { getRatelimitedAxios } from '../utils/getRatelimitedAxios'
 import { CoinCapMarketService } from './coincap'
 import { CoinCapMarketCap } from './coincap-types'
 
 const coinMarketService = new CoinCapMarketService()
 
-jest.mock('axios')
+// 200 requests per minute or ~3 requests per second as per https://docs.coincap.io/ "Limits" section
+const maxRPS = 8
+const axios = getRatelimitedAxios(maxRPS)
 
-const mockedAxios = axios as jest.Mocked<typeof axios>
+const mockedAxios = axios as jest.Mocked<RateLimitedAxiosInstance>
 
 describe('coincap market service', () => {
   describe('getMarketCap', () => {
@@ -63,6 +66,17 @@ describe('coincap market service', () => {
       mockedAxios.get.mockRejectedValue({ error: 'foo' })
       const result = await coinMarketService.findAll()
       expect(Object.keys(result).length).toEqual(0)
+    })
+
+    it('does not get rate limited', async () => {
+      // using maxRPS * 10 here to demonstrate that it does not get ratelimited
+      for (let index = 0; index < maxRPS * 10; index++) {
+        mockedAxios.get
+          .mockResolvedValueOnce({ data: { data: [eth] } })
+          .mockResolvedValue({ data: { data: [btc] } })
+        const result = await coinMarketService.findAll()
+        expect(Object.keys(result)[0]).toEqual(adapters.coincapToCAIP19(btc.id))
+      }
     })
 
     it('can handle rate limiting', async () => {
