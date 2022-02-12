@@ -9,14 +9,17 @@ import {
   MarketDataArgs,
   PriceHistoryArgs
 } from '@shapeshiftoss/types'
-import axios from 'axios'
 import dayjs from 'dayjs'
 import omit from 'lodash/omit'
 
 import { MarketService } from '../api'
 import { bn, bnOrZero } from '../utils/bignumber'
+import { getRatelimitedAxios } from '../utils/getRatelimitedAxios'
 import { isValidDate } from '../utils/isValidDate'
 import { CoinCapMarketCap } from './coincap-types'
+
+// 200 requests per minute or ~3 requests per second as per https://docs.coincap.io/ "Limits" section
+const axios = getRatelimitedAxios(3)
 
 export class CoinCapMarketService implements MarketService {
   baseUrl = 'https://api.coincap.io/v2'

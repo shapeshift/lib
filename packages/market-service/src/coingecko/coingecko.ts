@@ -10,12 +10,12 @@ import {
   MarketDataArgs,
   PriceHistoryArgs
 } from '@shapeshiftoss/types'
-import axios from 'axios'
 import dayjs from 'dayjs'
 import omit from 'lodash/omit'
 
 import { MarketService } from '../api'
 import { bn, bnOrZero } from '../utils/bignumber'
+import { getRatelimitedAxios } from '../utils/getRatelimitedAxios'
 import { isValidDate } from '../utils/isValidDate'
 import { CoinGeckoMarketCap } from './coingecko-types'
 
@@ -33,6 +33,9 @@ type CoinGeckoAssetData = {
     price_change_percentage_24h: number
   }
 }
+
+// 8 requests per second as per https://www.coingecko.com/en/api_terms section 4.2
+const axios = getRatelimitedAxios(8)
 
 export class CoinGeckoMarketService implements MarketService {
   baseUrl = 'https://api.coingecko.com/api/v3'
