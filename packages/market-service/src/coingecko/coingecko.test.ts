@@ -1,13 +1,17 @@
 import { adapters } from '@shapeshiftoss/caip'
 import { HistoryTimeframe } from '@shapeshiftoss/types'
-import axios from 'axios'
+import { RateLimitedAxiosInstance } from 'axios-rate-limit'
 
+import { COINGECKO_MAX_RPS } from '../constants'
+import { getRatelimitedAxios } from '../utils/getRatelimitedAxios'
 import { CoinGeckoMarketService } from './coingecko'
 import { CoinGeckoMarketCap } from './coingecko-types'
 
+const axios = getRatelimitedAxios(COINGECKO_MAX_RPS)
+
 jest.mock('axios')
 
-const mockedAxios = axios as jest.Mocked<typeof axios>
+const mockedAxios = axios as jest.Mocked<RateLimitedAxiosInstance>
 
 const coinGeckoMarketService = new CoinGeckoMarketService()
 

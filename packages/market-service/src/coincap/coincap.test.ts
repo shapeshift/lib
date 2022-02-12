@@ -1,15 +1,18 @@
 import { adapters } from '@shapeshiftoss/caip'
 import { HistoryTimeframe } from '@shapeshiftoss/types'
-import axios from 'axios'
+import { RateLimitedAxiosInstance } from 'axios-rate-limit'
 
+import { COINCAP_MAX_RPS } from '../constants'
+import { getRatelimitedAxios } from '../utils/getRatelimitedAxios'
 import { CoinCapMarketService } from './coincap'
 import { CoinCapMarketCap } from './coincap-types'
 
 const coinMarketService = new CoinCapMarketService()
+const axios = getRatelimitedAxios(COINCAP_MAX_RPS)
 
 jest.mock('axios')
 
-const mockedAxios = axios as jest.Mocked<typeof axios>
+const mockedAxios = axios as jest.Mocked<RateLimitedAxiosInstance>
 
 describe('coincap market service', () => {
   describe('getMarketCap', () => {
