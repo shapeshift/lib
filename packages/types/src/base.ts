@@ -21,14 +21,16 @@ export enum ContractTypes {
 
 export enum ChainTypes {
   Ethereum = 'ethereum',
-  Bitcoin = 'bitcoin'
+  Bitcoin = 'bitcoin',
+  CosmosSDK = 'cosmosSdk'
 }
 
 export enum NetworkTypes {
   MAINNET = 'MAINNET',
   TESTNET = 'TESTNET', // BTC, LTC, etc...
   ETH_ROPSTEN = 'ETH_ROPSTEN',
-  ETH_RINKEBY = 'ETH_RINKEBY'
+  ETH_RINKEBY = 'ETH_RINKEBY',
+  COSMOS_SDK_GAIA_VEGA = 'COSMOS_SDK_GAIA_VEGA'
 }
 
 export enum UtxoAccountType {
