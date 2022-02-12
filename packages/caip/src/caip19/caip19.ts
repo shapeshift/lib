@@ -7,6 +7,8 @@ import { fromCAIP2, toCAIP2 } from './../caip2/caip2'
 export type CAIP19 = string
 
 export enum AssetNamespace {
+  CW20 = 'cw20',
+  CW721 = 'cw721',
   ERC20 = 'erc20',
   ERC721 = 'erc721',
   Slip44 = 'slip44'
@@ -14,7 +16,8 @@ export enum AssetNamespace {
 
 export enum AssetReference {
   Bitcoin = 0,
-  Ethereum = 60
+  Ethereum = 60,
+  Atom = 118
 }
 
 type ToCAIP19Args = {
@@ -30,6 +33,12 @@ export const toCAIP19: ToCAIP19 = ({ chain, network, contractType, tokenId }) =>
   const caip2 = toCAIP2({ chain, network })
 
   switch (chain) {
+    // TODO: add other chains support, this just supports Cosmos Hub (Gaia)'s Atom
+    // TODO: There is no chain-level fungible token standard in Cosmos SDK, but CosmWasm chains have CW20/CW721
+    // Support will be added as a separate commit/PR
+    case ChainTypes.CosmosSDK: {
+      return `${caip2}/${AssetNamespace.Slip44}:${AssetReference.Atom}`
+    }
     case ChainTypes.Ethereum: {
       tokenId = tokenId?.toLowerCase()
 
@@ -116,6 +125,8 @@ export const fromCAIP19: FromCAIP19 = (caip19) => {
         }
         case AssetNamespace.ERC20:
         case AssetNamespace.ERC721:
+        case AssetNamespace.CW20:
+        case AssetNamespace.CW721:
         default: {
           throw new Error(`fromCAIP19: invalid asset reference ${reference} on chain ${chain}`)
         }
@@ -143,6 +154,11 @@ export const fromCAIP19: FromCAIP19 = (caip19) => {
           const contractType = ContractTypes.ERC721
           const tokenId = referenceString.toLowerCase()
           return { chain, network, contractType, tokenId }
+        }
+        case AssetNamespace.CW20:
+        case AssetNamespace.CW721:
+        default: {
+          throw new Error(`fromCAIP19: invalid asset reference ${reference} on chain ${chain}`)
         }
       }
     }
