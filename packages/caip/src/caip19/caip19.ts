@@ -17,7 +17,7 @@ export enum AssetNamespace {
 export enum AssetReference {
   Bitcoin = 0,
   Ethereum = 60,
-  Atom = 118
+  CosmosSdk = 118
 }
 
 type ToCAIP19Args = {
@@ -33,11 +33,10 @@ export const toCAIP19: ToCAIP19 = ({ chain, network, contractType, tokenId }) =>
   const caip2 = toCAIP2({ chain, network })
 
   switch (chain) {
-    // TODO: add other chains support, this just supports Cosmos Hub (Gaia)'s Atom
     // TODO: There is no chain-level fungible token standard in Cosmos SDK, but CosmWasm chains have CW20/CW721
-    // Support will be added as a separate commit/PR
+    // This should be implemented when we want to support tokens for Cosmos SDK chains
     case ChainTypes.CosmosSDK: {
-      return `${caip2}/${AssetNamespace.Slip44}:${AssetReference.Atom}`
+      return `${caip2}/${AssetNamespace.Slip44}:${AssetReference.CosmosSdk}`
     }
     case ChainTypes.Ethereum: {
       tokenId = tokenId?.toLowerCase()

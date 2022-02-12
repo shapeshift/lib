@@ -4,6 +4,13 @@ import { fromCAIP2, isCAIP2, toCAIP2 } from './caip2'
 
 describe('caip2', () => {
   describe('toCAIP2', () => {
+    it('can turn CosmosHub (Gaia) mainnet to caip2', () => {
+      const chain = ChainTypes.CosmosSDK
+      const network = NetworkTypes.MAINNET
+      const result = toCAIP2({ chain, network })
+      expect(result).toEqual('cosmos:cosmoshub-4')
+    })
+
     it('can turn eth mainnet to caip2', () => {
       const chain = ChainTypes.Ethereum
       const network = NetworkTypes.MAINNET
@@ -43,6 +50,34 @@ describe('caip2', () => {
       const badBtcCaip2 = 'bip122:000000000xxxxxxxxxxxxxxxxxxxxxxx'
       expect(() => fromCAIP2(badBtcCaip2)).toThrow(
         'fromCAIP19: unsupported bip122 network: 000000000xxxxxxxxxxxxxxxxxxxxxxx'
+      )
+    })
+
+    it('can turn CosmosHub(Gaia) mainnet to chain and network', () => {
+      const gaiaCaip2 = 'cosmos:cosmoshub-4'
+      const { chain, network } = fromCAIP2(gaiaCaip2)
+      expect(chain).toEqual(ChainTypes.CosmosSDK)
+      expect(network).toEqual(NetworkTypes.MAINNET)
+    })
+
+    it('can turn CosmosHub(Gaia) testnet to chain and network', () => {
+      const btcCaip2 = 'cosmos:vega-testnet'
+      const { chain, network } = fromCAIP2(btcCaip2)
+      expect(chain).toEqual(ChainTypes.CosmosSDK)
+      expect(network).toEqual(NetworkTypes.COSMOS_SDK_GAIA_VEGA)
+    })
+
+    it('throws with invalid CosmosHub(Gaia) namespace caip', () => {
+      const badCosmosSdkCaip2 = 'cosmosssssssssss:kek-testnet'
+      expect(() => fromCAIP2(badCosmosSdkCaip2)).toThrow(
+        'fromCAIP19: unsupported chain: cosmosssssssssss'
+      )
+    })
+
+    it('throws with invalid CosmosHub(Gaia) reference caip', () => {
+      const badCosmosSdkCaip2 = 'cosmos:kek-testnet'
+      expect(() => fromCAIP2(badCosmosSdkCaip2)).toThrow(
+        'fromCAIP19: unsupported cosmos network: kek-testnet'
       )
     })
 

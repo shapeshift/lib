@@ -26,6 +26,28 @@ describe('caip19', () => {
       )
     })
 
+    it('can make Cosmos SDK caip19 identifier on CosmosHub(Gaia) mainnet', () => {
+      const chain = ChainTypes.CosmosSDK
+      const network = NetworkTypes.MAINNET
+      const result = toCAIP19({ chain, network })
+      expect(result).toEqual('cosmos:cosmoshub-4/slip44:118')
+    })
+
+    it('can make Cosmos SDK caip19 identifier on CosmosHub(Gaia) vega', () => {
+      const chain = ChainTypes.CosmosSDK
+      const network = NetworkTypes.COSMOS_SDK_GAIA_VEGA
+      const result = toCAIP19({ chain, network })
+      expect(result).toEqual('cosmos:vega-testnet/slip44:118')
+    })
+
+    it('throws with invalid Cosmos SDK network', () => {
+      const chain = ChainTypes.CosmosSDK
+      const network = NetworkTypes.TESTNET
+      expect(() => toCAIP19({ chain, network })).toThrow(
+        'toCAIP2: unsupported cosmosSdk network: TESTNET'
+      )
+    })
+
     it('throws with invalid btc network', () => {
       const chain = ChainTypes.Bitcoin
       const network = NetworkTypes.ETH_ROPSTEN
