@@ -2,13 +2,12 @@ import { adapters } from '@shapeshiftoss/caip'
 import { HistoryTimeframe } from '@shapeshiftoss/types'
 import { RateLimitedAxiosInstance } from 'axios-rate-limit'
 
+import { COINGECKO_MAX_RPS } from '../constants'
 import { getRatelimitedAxios } from '../utils/getRatelimitedAxios'
 import { CoinGeckoMarketService } from './coingecko'
 import { CoinGeckoMarketCap } from './coingecko-types'
 
-// 8 requests per second as per https://www.coingecko.com/en/api_terms section 4.2
-const maxRPS = 8
-const axios = getRatelimitedAxios(maxRPS)
+const axios = getRatelimitedAxios(COINGECKO_MAX_RPS)
 
 const mockedAxios = axios as jest.Mocked<RateLimitedAxiosInstance>
 
@@ -97,8 +96,8 @@ describe('coingecko market service', () => {
     })
 
     it('does not get rate limited', async () => {
-      // using maxRPS * 10 here to demonstrate that it does not get ratelimited
-      for (let index = 0; index < maxRPS * 10; index++) {
+      // using COINGECKO_MAX_RPS * 10 here to demonstrate that it does not get ratelimited
+      for (let index = 0; index < COINGECKO_MAX_RPS * 10; index++) {
         mockedAxios.get.mockResolvedValueOnce({ data: [btc] }).mockResolvedValue({ data: [eth] })
         const result = await coinGeckoMarketService.findAll()
         expect(Object.keys(result)[0]).toEqual(adapters.coingeckoToCAIP19(btc.id))

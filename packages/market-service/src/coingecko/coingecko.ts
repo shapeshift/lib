@@ -14,6 +14,7 @@ import dayjs from 'dayjs'
 import omit from 'lodash/omit'
 
 import { MarketService } from '../api'
+import { COINGECKO_MAX_RPS } from '../constants'
 import { bn, bnOrZero } from '../utils/bignumber'
 import { getRatelimitedAxios } from '../utils/getRatelimitedAxios'
 import { isValidDate } from '../utils/isValidDate'
@@ -34,8 +35,7 @@ type CoinGeckoAssetData = {
   }
 }
 
-// 8 requests per second as per https://www.coingecko.com/en/api_terms section 4.2
-const axios = getRatelimitedAxios(8)
+const axios = getRatelimitedAxios(COINGECKO_MAX_RPS)
 
 export class CoinGeckoMarketService implements MarketService {
   baseUrl = 'https://api.coingecko.com/api/v3'

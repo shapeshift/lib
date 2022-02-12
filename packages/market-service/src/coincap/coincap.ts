@@ -13,13 +13,13 @@ import dayjs from 'dayjs'
 import omit from 'lodash/omit'
 
 import { MarketService } from '../api'
+import { COINCAP_MAX_RPS } from '../constants'
 import { bn, bnOrZero } from '../utils/bignumber'
 import { getRatelimitedAxios } from '../utils/getRatelimitedAxios'
 import { isValidDate } from '../utils/isValidDate'
 import { CoinCapMarketCap } from './coincap-types'
 
-// 200 requests per minute or ~3 requests per second as per https://docs.coincap.io/ "Limits" section
-const axios = getRatelimitedAxios(3)
+const axios = getRatelimitedAxios(COINCAP_MAX_RPS)
 
 export class CoinCapMarketService implements MarketService {
   baseUrl = 'https://api.coincap.io/v2'
