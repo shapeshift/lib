@@ -8,28 +8,13 @@ import { addTokensToEth } from './ethTokens'
 
 const blacklistedAssets: string[] = blacklist
 
-export const filterBlacklistedAssets = <T extends BaseAsset | TokenAsset>(assets: T[]) => {
-  const isBaseAsset = (asset: BaseAsset | TokenAsset): asset is BaseAsset =>
-    Boolean((asset as BaseAsset)?.tokens)
-
-  const filteredAssets = filter(assets, (token) => {
-    if (isBaseAsset(token) && token.tokens) {
-      token.tokens = filterBlacklistedAssets(token.tokens)
-    }
-
-    return !blacklistedAssets.includes(token.caip19)
-  })
-
-  return filteredAssets
-}
-
 const generateAssetData = async () => {
   const ethereum = await addTokensToEth()
   const osmosisAssets = await getOsmosisAssets()
 
   const generatedAssetData = [bitcoin, tBitcoin, ethereum, tEthereum, atom, ...osmosisAssets]
 
-  const filteredAssetData = filterBlacklistedAssets(generatedAssetData)
+  const generatedAssetData = filterBlacklistedAssets(blacklistedAssets, unfilteredAssetData)
 
   await fs.promises.writeFile(
     `./src/service/generatedAssetData.json`,
