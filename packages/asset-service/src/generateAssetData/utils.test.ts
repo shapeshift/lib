@@ -22,7 +22,7 @@ describe('Utils', () => {
       const ethFiltered = filteredAssetList[0]
       const remainingToken = ETHMockedAsset.tokens[1]
 
-      expect(ethFiltered.tokens[0]).toHaveProperty('caip19', remainingToken.caip19)
+      expect(ethFiltered.tokens![0]).toHaveProperty('caip19', remainingToken.caip19)
     })
   })
 })
