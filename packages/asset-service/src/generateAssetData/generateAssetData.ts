@@ -6,15 +6,13 @@ import { atom, bitcoin, tBitcoin, tEthereum } from './baseAssets'
 import { getOsmosisAssets } from './cosmos/getOsmosisAssets'
 import { addTokensToEth } from './ethTokens'
 
-const blacklistedAssets: string[] = blacklist
-
 const generateAssetData = async () => {
   const ethereum = await addTokensToEth()
   const osmosisAssets = await getOsmosisAssets()
 
   const generatedAssetData = [bitcoin, tBitcoin, ethereum, tEthereum, atom, ...osmosisAssets]
 
-  const generatedAssetData = filterBlacklistedAssets(blacklistedAssets, unfilteredAssetData)
+  const generatedAssetData = filterBlacklistedAssets(blacklist, unfilteredAssetData)
 
   await fs.promises.writeFile(
     `./src/service/generatedAssetData.json`,
