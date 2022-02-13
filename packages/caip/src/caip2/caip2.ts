@@ -19,8 +19,10 @@ export enum ChainReference {
   // caip2 uses max length of 32 chars of the genesis block
   BitcoinMainnet = '000000000019d6689c085ae165831e93',
   BitcoinTestnet = '000000000933ea01ad0ee984209779ba',
-  CosmosSDKGaiaMainnet = 'cosmoshub-4',
-  CosmosSDKGaiaVega = 'vega-testnet'
+  CosmosSdkGaiaMainnet = 'cosmoshub-4',
+  CosmosSdkGaiaVega = 'vega-testnet',
+  CosmosSdkOsmosisMainnet = 'osmosis-1',
+  CosmosSdkOsmosisTestnet = 'osmo-testnet-1'
 }
 
 type ToCAIP2Args = {
@@ -50,8 +52,11 @@ export const toCAIP2: ToCAIP2 = ({ chain, network }): string => {
     [ChainTypes.CosmosSDK]: {
       namespace: ChainNamespace.CosmosSDK,
       reference: {
-        [NetworkTypes.COSMOS_SDK_GAIA_MAINNET]: ChainReference.CosmosSDKGaiaMainnet,
-        [NetworkTypes.COSMOS_SDK_GAIA_VEGA]: ChainReference.CosmosSDKGaiaVega
+        [NetworkTypes.COSMOS_SDK_GAIA_MAINNET]: ChainReference.CosmosSdkGaiaMainnet,
+        [NetworkTypes.COSMOS_SDK_GAIA_VEGA]: ChainReference.CosmosSdkGaiaVega,
+
+        [NetworkTypes.COSMOS_SDK_OSMOSIS_MAINNET]: ChainReference.CosmosSdkOsmosisMainnet,
+        [NetworkTypes.COSMOS_SDK_OSMOSIS_TESTNET]: ChainReference.CosmosSdkOsmosisTestnet
       }
     }
   } as const
@@ -63,7 +68,9 @@ export const toCAIP2: ToCAIP2 = ({ chain, network }): string => {
       const referenceMap = shapeShiftToCAIP2[chain].reference
       switch (network) {
         case NetworkTypes.COSMOS_SDK_GAIA_MAINNET:
-        case NetworkTypes.COSMOS_SDK_GAIA_VEGA: {
+        case NetworkTypes.COSMOS_SDK_GAIA_VEGA:
+        case NetworkTypes.COSMOS_SDK_OSMOSIS_MAINNET:
+        case NetworkTypes.COSMOS_SDK_OSMOSIS_TESTNET: {
           const reference: ChainReference = referenceMap[network]
           const caip2 = `${namespace}:${reference}`
           return caip2
@@ -118,12 +125,20 @@ export const fromCAIP2: FromCAIP2 = (caip2) => {
     case ChainNamespace.CosmosSDK: {
       const chain = ChainTypes.CosmosSDK
       switch (n) {
-        case ChainReference.CosmosSDKGaiaMainnet: {
+        case ChainReference.CosmosSdkGaiaMainnet: {
           const network = NetworkTypes.MAINNET
           return { chain, network }
         }
-        case ChainReference.CosmosSDKGaiaVega: {
+        case ChainReference.CosmosSdkGaiaVega: {
           const network = NetworkTypes.COSMOS_SDK_GAIA_VEGA
+          return { chain, network }
+        }
+        case ChainReference.CosmosSdkOsmosisMainnet: {
+          const network = NetworkTypes.COSMOS_SDK_OSMOSIS_MAINNET
+          return { chain, network }
+        }
+        case ChainReference.CosmosSdkOsmosisTestnet: {
+          const network = NetworkTypes.COSMOS_SDK_OSMOSIS_TESTNET
           return { chain, network }
         }
         default: {
@@ -184,8 +199,8 @@ export const isCAIP2: IsCAIP2 = (caip2) => {
   switch (c) {
     case ChainNamespace.CosmosSDK: {
       switch (n) {
-        case ChainReference.CosmosSDKGaiaMainnet:
-        case ChainReference.CosmosSDKGaiaVega:
+        case ChainReference.CosmosSdkGaiaMainnet:
+        case ChainReference.CosmosSdkGaiaVega:
           return true
       }
       break

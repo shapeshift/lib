@@ -11,6 +11,13 @@ describe('caip2', () => {
       expect(result).toEqual('cosmos:cosmoshub-4')
     })
 
+    it('can turn Osmosis mainnet to caip2', () => {
+      const chain = ChainTypes.CosmosSDK
+      const network = NetworkTypes.COSMOS_SDK_OSMOSIS_MAINNET
+      const result = toCAIP2({ chain, network })
+      expect(result).toEqual('cosmos:osmosis-1')
+    })
+
     it('can turn eth mainnet to caip2', () => {
       const chain = ChainTypes.Ethereum
       const network = NetworkTypes.MAINNET
@@ -67,18 +74,32 @@ describe('caip2', () => {
       expect(network).toEqual(NetworkTypes.COSMOS_SDK_GAIA_VEGA)
     })
 
-    it('throws with invalid CosmosHub(Gaia) namespace caip', () => {
+    it('throws with invalid Cosmos SDK namespace caip', () => {
       const badCosmosSdkCaip2 = 'cosmosssssssssss:kek-testnet'
       expect(() => fromCAIP2(badCosmosSdkCaip2)).toThrow(
         'fromCAIP19: unsupported chain: cosmosssssssssss'
       )
     })
 
-    it('throws with invalid CosmosHub(Gaia) reference caip', () => {
+    it('throws with invalid Cosmos SDK reference caip', () => {
       const badCosmosSdkCaip2 = 'cosmos:kek-testnet'
       expect(() => fromCAIP2(badCosmosSdkCaip2)).toThrow(
         'fromCAIP19: unsupported cosmos network: kek-testnet'
       )
+    })
+
+    it('can turn Osmosis mainnet to chain and network', () => {
+      const osmosisCaip2 = 'cosmos:osmosis-1'
+      const { chain, network } = fromCAIP2(osmosisCaip2)
+      expect(chain).toEqual(ChainTypes.CosmosSDK)
+      expect(network).toEqual(NetworkTypes.COSMOS_SDK_OSMOSIS_MAINNET)
+    })
+
+    it('can turn Osmosis testnet to chain and network', () => {
+      const osmosisCaip2 = 'cosmos:osmo-testnet-1'
+      const { chain, network } = fromCAIP2(osmosisCaip2)
+      expect(chain).toEqual(ChainTypes.CosmosSDK)
+      expect(network).toEqual(NetworkTypes.COSMOS_SDK_OSMOSIS_TESTNET)
     })
 
     it('can turn eth mainnet to chain and network', () => {
