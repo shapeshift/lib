@@ -1,6 +1,13 @@
 import realFs from 'fs'
 
-import { makeBtcData, parseData, parseEthData, writeFiles } from './utils'
+import {
+  makeBtcData,
+  makeCosmosSdkGaiaData,
+  makeCosmosSdkOsmosisData,
+  parseData,
+  parseEthData,
+  writeFiles
+} from './utils'
 
 const eth = {
   id: 'ethereum',
@@ -47,6 +54,36 @@ const btc = {
   explorer: 'https://blockchain.info/'
 }
 
+const cosmos = {
+  id: 'cosmos',
+  rank: '24',
+  symbol: 'ATOM',
+  name: 'Cosmos',
+  supply: '248453201.0000000000000000',
+  maxSupply: null,
+  marketCapUsd: '6802617738.3591834303735576',
+  volumeUsd24Hr: '294469112.0045679597220454',
+  priceUsd: '27.3798756102932376',
+  changePercent24Hr: '-2.0945235735481851',
+  vwap24Hr: '27.4571410501515669',
+  explorer: 'https://www.mintscan.io/'
+}
+
+const osmosis = {
+  id: 'osmosis',
+  rank: '730',
+  symbol: 'OSMO',
+  name: 'Osmosis',
+  supply: '229862431.0000000000000000',
+  maxSupply: '1000000000.0000000000000000',
+  marketCapUsd: '1957320025.1314825668859843',
+  volumeUsd24Hr: '15685.4558405572962647',
+  priceUsd: '8.5151802172121053',
+  changePercent24Hr: '0.5555705025303916',
+  vwap24Hr: '8.7723272775832324',
+  explorer: 'https://www.mintscan.io/osmosis'
+}
+
 jest.mock('fs', () => ({
   promises: {
     writeFile: jest.fn(async () => undefined)
@@ -68,14 +105,35 @@ describe('parseEthData', () => {
     const expected = { 'bip122:000000000019d6689c085ae165831e93/slip44:0': 'bitcoin' }
     expect(result).toEqual(expected)
   })
+
+  it('can parse cosmos data', async () => {
+    const result = makeCosmosSdkGaiaData()
+    const expected = { 'cosmos:cosmoshub-4/slip44:118': 'cosmos' }
+    expect(result).toEqual(expected)
+  })
+
+  it('can parse osmosis data', async () => {
+    const result = makeCosmosSdkOsmosisData()
+    const expected = {
+      'cosmos:osmosis-1/slip44:118': 'osmosis'
+    }
+    expect(result).toEqual(expected)
+  })
 })
 
 describe('parseData', () => {
   it('can parse all data', async () => {
-    const result = parseData([eth, fox, btc])
+    const result = parseData([eth, fox, btc, cosmos, osmosis])
     const expected = {
       'bip122:000000000019d6689c085ae165831e93': {
         'bip122:000000000019d6689c085ae165831e93/slip44:0': 'bitcoin'
+      },
+      'cosmos:cosmoshub-4': {
+        'cosmos:cosmoshub-4/slip44:118': 'cosmos'
+      },
+
+      'cosmos:osmosis-1': {
+        'cosmos:osmosis-1/slip44:118': 'osmosis'
       },
       'eip155:1': {
         'eip155:1/slip44:60': 'ethereum',

@@ -1,6 +1,13 @@
 import realFs from 'fs'
 
-import { makeBtcData, parseData, parseEthData, writeFiles } from './utils'
+import {
+  makeBtcData,
+  makeCosmosSdkGaiaData,
+  makeCosmosSdkOsmosisData,
+  parseData,
+  parseEthData,
+  writeFiles
+} from './utils'
 
 const eth = {
   id: 'ethereum',
@@ -34,6 +41,22 @@ const btc = {
   platforms: {}
 }
 
+const cosmos = {
+  id: 'cosmos',
+  symbol: 'atom',
+  name: 'Cosmos',
+  platforms: {
+    osmosis: 'IBC/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2'
+  }
+}
+
+const osmosis = {
+  id: 'osmosis',
+  symbol: 'osmo',
+  name: 'osmosis',
+  platforms: {}
+}
+
 jest.mock('fs', () => ({
   promises: {
     writeFile: jest.fn(async () => undefined)
@@ -55,14 +78,32 @@ describe('parseEthData', () => {
     const expected = { 'bip122:000000000019d6689c085ae165831e93/slip44:0': 'bitcoin' }
     expect(result).toEqual(expected)
   })
+
+  it('can parse cosmos data', async () => {
+    const result = makeCosmosSdkGaiaData()
+    const expected = { 'cosmos:cosmoshub-4/slip44:118': 'cosmos' }
+    expect(result).toEqual(expected)
+  })
+
+  it('can parse osmosis data', async () => {
+    const result = makeCosmosSdkOsmosisData()
+    const expected = { 'cosmos:osmosis-1/slip44:118': 'osmosis' }
+    expect(result).toEqual(expected)
+  })
 })
 
 describe('parseData', () => {
   it('can parse all data', async () => {
-    const result = parseData([eth, fox, btc])
+    const result = parseData([eth, fox, btc, cosmos, osmosis])
     const expected = {
       'bip122:000000000019d6689c085ae165831e93': {
         'bip122:000000000019d6689c085ae165831e93/slip44:0': 'bitcoin'
+      },
+      'cosmos:cosmoshub-4': {
+        'cosmos:cosmoshub-4/slip44:118': 'cosmos'
+      },
+      'cosmos:osmosis-1': {
+        'cosmos:osmosis-1/slip44:118': 'osmosis'
       },
       'eip155:1': {
         'eip155:1/slip44:60': 'ethereum',
