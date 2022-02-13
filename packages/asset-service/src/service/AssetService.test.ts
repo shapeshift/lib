@@ -1,6 +1,7 @@
 import {
   Asset,
   AssetDataSource,
+  BaseAsset,
   ChainTypes,
   ContractTypes,
   NetworkTypes
@@ -48,12 +49,14 @@ describe('AssetService', () => {
   describe('utilities', () => {
     describe('flattenAssetData', () => {
       it('should flatten data correctly', () => {
-        expect(flattenAssetData(mockBaseAssets)).toEqual(mockAssets)
+        expect(flattenAssetData(mockBaseAssets as BaseAsset[])).toEqual(mockAssets)
       })
     })
     describe('indexAssetData', () => {
       it('should index data correctly', () => {
-        expect(indexAssetData(flattenAssetData(mockBaseAssets))).toEqual(mockIndexedAssetData)
+        expect(indexAssetData(flattenAssetData(mockBaseAssets as BaseAsset[]))).toEqual(
+          mockIndexedAssetData
+        )
       })
     })
   })
