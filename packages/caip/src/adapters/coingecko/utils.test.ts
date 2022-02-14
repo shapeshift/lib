@@ -9,7 +9,7 @@ import {
   writeFiles
 } from './utils'
 
-const eth = {
+const makeEthMockCoingeckoResponse = () => ({
   id: 'ethereum',
   symbol: 'eth',
   name: 'Ethereum',
@@ -23,39 +23,39 @@ const eth = {
     'optimistic-ethereum': '0x4200000000000000000000000000000000000006',
     tomochain: '0x2eaa73bd0db20c64f53febea7b5f5e5bccc7fb8b'
   }
-}
+})
 
-const fox = {
+const makeFoxMockCoingeckoResponse = () => ({
   id: 'shapeshift-fox-token',
   symbol: 'fox',
   name: 'ShapeShift FOX Token',
   platforms: {
     ethereum: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
   }
-}
+})
 
-const btc = {
+const makeBtcMockCoingeckoResponse = () => ({
   id: 'bitcoin',
   symbol: 'btc',
   name: 'Bitcoin',
   platforms: {}
-}
+})
 
-const cosmos = {
+const makeCosmosMockCoingeckoResponse = () => ({
   id: 'cosmos',
   symbol: 'atom',
   name: 'Cosmos',
   platforms: {
     osmosis: 'IBC/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2'
   }
-}
+})
 
-const osmosis = {
+const makeOsmosisMockCoingeckoResponse = () => ({
   id: 'osmosis',
   symbol: 'osmo',
   name: 'osmosis',
   platforms: {}
-}
+})
 
 jest.mock('fs', () => ({
   promises: {
@@ -65,7 +65,7 @@ jest.mock('fs', () => ({
 
 describe('parseEthData', () => {
   it('can parse eth data', async () => {
-    const result = parseEthData([eth, fox])
+    const result = parseEthData([makeEthMockCoingeckoResponse(), makeFoxMockCoingeckoResponse()])
     const expected = {
       'eip155:1/slip44:60': 'ethereum',
       'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d': 'shapeshift-fox-token'
@@ -94,7 +94,13 @@ describe('parseEthData', () => {
 
 describe('parseData', () => {
   it('can parse all data', async () => {
-    const result = parseData([eth, fox, btc, cosmos, osmosis])
+    const result = parseData([
+      makeEthMockCoingeckoResponse(),
+      makeFoxMockCoingeckoResponse(),
+      makeBtcMockCoingeckoResponse(),
+      makeCosmosMockCoingeckoResponse(),
+      makeOsmosisMockCoingeckoResponse()
+    ])
     const expected = {
       'bip122:000000000019d6689c085ae165831e93': {
         'bip122:000000000019d6689c085ae165831e93/slip44:0': 'bitcoin'

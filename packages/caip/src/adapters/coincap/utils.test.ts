@@ -9,7 +9,7 @@ import {
   writeFiles
 } from './utils'
 
-const eth = {
+const makeEthMockCoincapResponse = () => ({
   id: 'ethereum',
   rank: '2',
   symbol: 'ETH',
@@ -22,9 +22,9 @@ const eth = {
   changePercent24Hr: '1.7301970732523704',
   vwap24Hr: '3796.0013297212388563',
   explorer: 'https://etherscan.io/'
-}
+})
 
-const fox = {
+const makeFoxMockCoincapResponse = () => ({
   id: 'fox-token',
   rank: '396',
   symbol: 'FOX',
@@ -37,9 +37,9 @@ const fox = {
   changePercent24Hr: '-3.1066427856364231',
   vwap24Hr: '0.6546275575306273',
   explorer: 'https://etherscan.io/token/0xc770eefad204b5180df6a14ee197d99d808ee52d'
-}
+})
 
-const btc = {
+const makeBtcMockCoincapResponse = () => ({
   id: 'bitcoin',
   rank: '1',
   symbol: 'BTC',
@@ -52,9 +52,9 @@ const btc = {
   changePercent24Hr: '2.0370678507913180',
   vwap24Hr: '47473.8260811456834087',
   explorer: 'https://blockchain.info/'
-}
+})
 
-const cosmos = {
+const makeCosmosMockCoincapResponse = () => ({
   id: 'cosmos',
   rank: '24',
   symbol: 'ATOM',
@@ -67,9 +67,9 @@ const cosmos = {
   changePercent24Hr: '-2.0945235735481851',
   vwap24Hr: '27.4571410501515669',
   explorer: 'https://www.mintscan.io/'
-}
+})
 
-const osmosis = {
+const makeOsmosisMockCoincapResponse = () => ({
   id: 'osmosis',
   rank: '730',
   symbol: 'OSMO',
@@ -82,7 +82,7 @@ const osmosis = {
   changePercent24Hr: '0.5555705025303916',
   vwap24Hr: '8.7723272775832324',
   explorer: 'https://www.mintscan.io/osmosis'
-}
+})
 
 jest.mock('fs', () => ({
   promises: {
@@ -92,7 +92,7 @@ jest.mock('fs', () => ({
 
 describe('parseEthData', () => {
   it('can parse eth data', async () => {
-    const result = parseEthData([eth, fox])
+    const result = parseEthData([makeEthMockCoincapResponse(), makeFoxMockCoincapResponse()])
     const expected = {
       'eip155:1/slip44:60': 'ethereum',
       'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d': 'fox-token'
@@ -123,7 +123,13 @@ describe('parseEthData', () => {
 
 describe('parseData', () => {
   it('can parse all data', async () => {
-    const result = parseData([eth, fox, btc, cosmos, osmosis])
+    const result = parseData([
+      makeEthMockCoincapResponse(),
+      makeFoxMockCoincapResponse(),
+      makeBtcMockCoincapResponse(),
+      makeCosmosMockCoincapResponse(),
+      makeOsmosisMockCoincapResponse()
+    ])
     const expected = {
       'bip122:000000000019d6689c085ae165831e93': {
         'bip122:000000000019d6689c085ae165831e93/slip44:0': 'bitcoin'
