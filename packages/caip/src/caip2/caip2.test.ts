@@ -4,9 +4,9 @@ import { fromCAIP2, isCAIP2, toCAIP2 } from './caip2'
 
 describe('caip2', () => {
   describe('toCAIP2', () => {
-    it('can turn CosmosHub (Gaia) mainnet to caip2', () => {
+    it('can turn CosmosHub mainnet to caip2', () => {
       const chain = ChainTypes.CosmosSDK
-      const network = NetworkTypes.COSMOS_SDK_GAIA_MAINNET
+      const network = NetworkTypes.COSMOS_SDK_COSMOSHUB_MAINNET
       const result = toCAIP2({ chain, network })
       expect(result).toEqual('cosmos:cosmoshub-4')
     })
@@ -60,18 +60,18 @@ describe('caip2', () => {
       )
     })
 
-    it('can turn CosmosHub(Gaia) mainnet to chain and network', () => {
-      const gaiaCaip2 = 'cosmos:cosmoshub-4'
-      const { chain, network } = fromCAIP2(gaiaCaip2)
+    it('can turn CosmosHub mainnet to chain and network', () => {
+      const cosmosHubCaip2 = 'cosmos:cosmoshub-4'
+      const { chain, network } = fromCAIP2(cosmosHubCaip2)
       expect(chain).toEqual(ChainTypes.CosmosSDK)
       expect(network).toEqual(NetworkTypes.MAINNET)
     })
 
-    it('can turn CosmosHub(Gaia) testnet to chain and network', () => {
+    it('can turn CosmosHub testnet to chain and network', () => {
       const btcCaip2 = 'cosmos:vega-testnet'
       const { chain, network } = fromCAIP2(btcCaip2)
       expect(chain).toEqual(ChainTypes.CosmosSDK)
-      expect(network).toEqual(NetworkTypes.COSMOS_SDK_GAIA_VEGA)
+      expect(network).toEqual(NetworkTypes.COSMOS_SDK_COSMOSHUB_VEGA)
     })
 
     it('throws with invalid Cosmos SDK namespace caip', () => {

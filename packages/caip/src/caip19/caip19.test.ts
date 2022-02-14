@@ -26,16 +26,16 @@ describe('caip19', () => {
       )
     })
 
-    it('can make Cosmos SDK caip19 identifier on CosmosHub(Gaia) mainnet', () => {
+    it('can make Cosmos SDK caip19 identifier on CosmosHub mainnet', () => {
       const chain = ChainTypes.CosmosSDK
-      const network = NetworkTypes.COSMOS_SDK_GAIA_MAINNET
+      const network = NetworkTypes.COSMOS_SDK_COSMOSHUB_MAINNET
       const result = toCAIP19({ chain, network })
       expect(result).toEqual('cosmos:cosmoshub-4/slip44:118')
     })
 
-    it('can make Cosmos SDK caip19 identifier on CosmosHub(Gaia) vega', () => {
+    it('can make Cosmos SDK caip19 identifier on CosmosHub vega', () => {
       const chain = ChainTypes.CosmosSDK
-      const network = NetworkTypes.COSMOS_SDK_GAIA_VEGA
+      const network = NetworkTypes.COSMOS_SDK_COSMOSHUB_VEGA
       const result = toCAIP19({ chain, network })
       expect(result).toEqual('cosmos:vega-testnet/slip44:118')
     })

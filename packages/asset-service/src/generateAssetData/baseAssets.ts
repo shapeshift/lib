@@ -105,7 +105,7 @@ export const baseAssets: Array<BaseAsset> = [
     caip2: 'cosmos:cosmoshub-4',
     chain: ChainTypes.CosmosSDK,
     dataSource: AssetDataSource.CoinGecko,
-    network: NetworkTypes.COSMOS_SDK_GAIA_MAINNET,
+    network: NetworkTypes.COSMOS_SDK_COSMOSHUB_MAINNET,
     symbol: 'ATOM',
     name: 'Cosmos',
     precision: 18,

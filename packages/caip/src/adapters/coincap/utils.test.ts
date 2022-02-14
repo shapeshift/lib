@@ -2,7 +2,7 @@ import realFs from 'fs'
 
 import {
   makeBtcData,
-  makeCosmosSdkGaiaData,
+  makeCosmosSdkCosmosHubData,
   makeCosmosSdkOsmosisData,
   parseData,
   parseEthData,
@@ -107,7 +107,7 @@ describe('parseEthData', () => {
   })
 
   it('can parse cosmos data', async () => {
-    const result = makeCosmosSdkGaiaData()
+    const result = makeCosmosSdkCosmosHubData()
     const expected = { 'cosmos:cosmoshub-4/slip44:118': 'cosmos' }
     expect(result).toEqual(expected)
   })
