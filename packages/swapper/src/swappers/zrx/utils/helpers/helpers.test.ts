@@ -59,7 +59,7 @@ describe('utils', () => {
           buyAmount: '1000000000',
           sellToken: 'FOX'
         }
-      });
+      })
     })
     it('getUsdRate fails', async () => {
       ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data: {} }))
