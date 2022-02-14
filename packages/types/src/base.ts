@@ -51,6 +51,7 @@ type AbstractAsset = {
   caip2: string
   chain: ChainTypes
   description?: string
+  isTrustedDescription?: boolean
   dataSource: AssetDataSource
   network: NetworkTypes
   symbol: string
