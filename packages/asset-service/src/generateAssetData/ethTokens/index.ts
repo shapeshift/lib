@@ -37,16 +37,23 @@ export async function getTokens(): Promise<TokenAsset[]> {
   const network = NetworkTypes.MAINNET
   const contractType = ContractTypes.ERC20
 
-  const tokens = uniswapTokenData.tokens.map((token) => {
+  const tokens = uniswapTokenData.tokens.reduce<TokenAsset[]>((acc, token) => {
     const overrideToken: TokenAsset | undefined = lodash.find(
       tokensToOverride,
       (override: TokenAsset) => override.tokenId === token.address
     )
 
-    if (overrideToken) return overrideToken
+    if (overrideToken) {
+      acc.push(overrideToken)
+      return acc
+    }
 
     const tokenId = token.address.toLowerCase()
 
+    if (!tokenId) {
+      // if no token address, we can't deal with this asset.
+      return acc
+    }
     const result: TokenAsset = {
       caip19: caip19.toCAIP19({ chain, network, contractType, tokenId }),
       caip2: caip2.toCAIP2({ chain, network }),
@@ -62,8 +69,9 @@ export async function getTokens(): Promise<TokenAsset[]> {
       receiveSupport: true,
       symbol: token.symbol
     }
-    return result
-  })
+    acc.push(result)
+    return acc
+  }, [])
 
   return tokens
 }
