@@ -47,10 +47,10 @@ type ByTokenIdArgs = {
   tokenId?: string
 }
 
-type DescriptionData = {
+type DescriptionData = Readonly<{
   description: string
-  isTrusted: boolean
-}
+  isTrusted?: boolean
+}>
 
 export class AssetService {
   private assetFileUrl?: string
@@ -122,7 +122,7 @@ export class AssetService {
   async description({ asset }: { asset: Asset }): Promise<DescriptionData> {
     const descriptions: Record<string, string> = assetsDescriptions
 
-    // Return overriden asset description if it exists and add isTrusted for description links
+    // Return overridden asset description if it exists and add isTrusted for description links
     if (descriptions[asset.caip19]) {
       return {
         description: descriptions[asset.caip19],
@@ -131,10 +131,7 @@ export class AssetService {
     }
 
     if (asset.dataSource !== AssetDataSource.CoinGecko) {
-      return {
-        description: '',
-        isTrusted: false
-      }
+      return { description: '' }
     }
 
     const contractUrl =
@@ -151,10 +148,7 @@ export class AssetService {
         `https://api.coingecko.com/api/v3/coins/${asset.chain}${contractUrl}`
       )
 
-      return {
-        description: data?.description?.en ?? '',
-        isTrusted: false
-      }
+      return { description: data?.description?.en ?? '' }
     } catch (e) {
       throw new Error(errorMessage)
     }
