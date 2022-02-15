@@ -77,8 +77,8 @@ export const makeOsmosisData = () => {
 }
 
 export const parseData = (d: CoinCapCoin[]) => {
-  const ethMainnet = toCAIP2({ chain: ChainTypes.Ethereum, network: NetworkTypes.MAINNET })
-  const btcMainnet = toCAIP2({ chain: ChainTypes.Bitcoin, network: NetworkTypes.MAINNET })
+  const ethereumMainnet = toCAIP2({ chain: ChainTypes.Ethereum, network: NetworkTypes.MAINNET })
+  const bitcoinMainnet = toCAIP2({ chain: ChainTypes.Bitcoin, network: NetworkTypes.MAINNET })
   const cosmosHubMainnet = toCAIP2({
     chain: ChainTypes.Cosmos,
     network: NetworkTypes.COSMOSHUB_MAINNET
@@ -88,8 +88,8 @@ export const parseData = (d: CoinCapCoin[]) => {
     network: NetworkTypes.OSMOSIS_MAINNET
   })
   return {
-    [ethMainnet]: parseEthData(d),
-    [btcMainnet]: makeBtcData(),
+    [ethereumMainnet]: parseEthData(d),
+    [bitcoinMainnet]: makeBtcData(),
     [cosmosHubMainnet]: makeCosmosHubData(),
     [osmosisMainnet]: makeOsmosisData()
   }
