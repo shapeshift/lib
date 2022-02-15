@@ -15,12 +15,15 @@ import uniqBy from 'lodash/uniqBy'
 
 import { MarketService } from '../api'
 import { bnOrZero } from '../utils/bignumber'
+import { yearnRatelimiter } from '../utils/getYearnRatelimiter'
 
 type YearnTokenMarketCapServiceArgs = {
   yearnSdk: Yearn<ChainId>
 }
 
 const USDC_PRECISION = 6
+
+const ratelimit = yearnRatelimiter()
 
 export class YearnTokenMarketCapService implements MarketService {
   baseUrl = 'https://api.yearn.finance'
@@ -38,9 +41,9 @@ export class YearnTokenMarketCapService implements MarketService {
     try {
       const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
       const response = await Promise.allSettled([
-        this.yearnSdk.ironBank.tokens(),
-        this.yearnSdk.tokens.supported(),
-        this.yearnSdk.vaults.tokens()
+        ratelimit(this.yearnSdk.ironBank.tokens),
+        ratelimit(this.yearnSdk.tokens.supported),
+        ratelimit(this.yearnSdk.vaults.tokens)
       ])
       const [ironBankResponse, zapperResponse, underlyingTokensResponse] = response
 
@@ -86,9 +89,9 @@ export class YearnTokenMarketCapService implements MarketService {
       // the price to web. Doing allSettled so that one rejection does not interfere with the other
       // calls.
       const response = await Promise.allSettled([
-        this.yearnSdk.ironBank.tokens(),
-        this.yearnSdk.tokens.supported(),
-        this.yearnSdk.vaults.tokens()
+        ratelimit(this.yearnSdk.ironBank.tokens),
+        ratelimit(this.yearnSdk.tokens.supported),
+        ratelimit(this.yearnSdk.vaults.tokens)
       ])
       const [ironBankResponse, zapperResponse, underlyingTokensResponse] = response
 

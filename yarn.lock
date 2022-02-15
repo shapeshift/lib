@@ -9315,6 +9315,11 @@ p-queue@^6.6.2:
     eventemitter3 "^4.0.4"
     p-timeout "^3.2.0"
 
+p-ratelimit@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/p-ratelimit/-/p-ratelimit-1.0.1.tgz#a07fb2419f9811feb99fb687f97e00aa0244ac3e"
+  integrity sha512-tKBGoow6aWRH68K2eQx+qc1gSegjd5VLirZYc1Yms9pPFsYQ9TFI6aMn0vJH2vmvzjNpjlWZOFft4aPUen2w0A==
+
 p-reduce@^2.0.0, p-reduce@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/p-reduce/-/p-reduce-2.1.0.tgz#09408da49507c6c274faa31f28df334bc712b64a"

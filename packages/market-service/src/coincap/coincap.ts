@@ -13,13 +13,13 @@ import dayjs from 'dayjs'
 import omit from 'lodash/omit'
 
 import { MarketService } from '../api'
-import { COINCAP_MAX_RPS } from '../constants'
+import { COINCAP_MAX_RPM } from '../constants'
 import { bn, bnOrZero } from '../utils/bignumber'
 import { getRatelimitedAxios } from '../utils/getRatelimitedAxios'
 import { isValidDate } from '../utils/isValidDate'
 import { CoinCapMarketCap } from './coincap-types'
 
-const axios = getRatelimitedAxios(COINCAP_MAX_RPS)
+const axios = getRatelimitedAxios(COINCAP_MAX_RPM)
 
 export class CoinCapMarketService implements MarketService {
   baseUrl = 'https://api.coincap.io/v2'

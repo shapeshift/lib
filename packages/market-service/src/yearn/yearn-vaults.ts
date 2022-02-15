@@ -17,6 +17,7 @@ import head from 'lodash/head'
 
 import { MarketService } from '../api'
 import { bn, bnOrZero } from '../utils/bignumber'
+import { yearnRatelimiter } from '../utils/getYearnRatelimiter'
 import { isValidDate } from '../utils/isValidDate'
 import { ACCOUNT_HISTORIC_EARNINGS } from './gql-queries'
 import { VaultDayDataGQLResponse } from './yearn-types'
@@ -26,6 +27,8 @@ type YearnVaultMarketCapServiceArgs = {
 }
 
 const USDC_PRECISION = 6
+
+const ratelimit = yearnRatelimiter()
 
 export class YearnVaultMarketCapService implements MarketService {
   baseUrl = 'https://api.yearn.finance'
@@ -42,7 +45,7 @@ export class YearnVaultMarketCapService implements MarketService {
   findAll = async (args?: FindAllMarketArgs) => {
     try {
       const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
-      const response = await this.yearnSdk.vaults.get()
+      const response = await ratelimit(this.yearnSdk.vaults.get)
       const vaults = response.slice(0, argsToUse.count)
 
       return vaults
@@ -125,7 +128,7 @@ export class YearnVaultMarketCapService implements MarketService {
     const id = adapters.CAIP19ToYearn(caip19)
     if (!id) return null
     try {
-      const vaults = await this.yearnSdk.vaults.get([id])
+      const vaults = await ratelimit(() => this.yearnSdk.vaults.get([id]))
       if (!vaults || !vaults.length) return null
       const vault = head(vaults)
       if (!vault) return null
@@ -199,7 +202,7 @@ export class YearnVaultMarketCapService implements MarketService {
     const id = adapters.CAIP19ToYearn(caip19)
     if (!id) return []
     try {
-      let daysAgo
+      let daysAgo: number
       switch (timeframe) {
         case HistoryTimeframe.HOUR:
           daysAgo = 2
@@ -223,18 +226,17 @@ export class YearnVaultMarketCapService implements MarketService {
           daysAgo = 1
       }
 
-      const vaults = await this.yearnSdk.vaults.get([id])
+      const vaults = await ratelimit(() => this.yearnSdk.vaults.get([id]))
       if (!vaults || !vaults.length) return []
       const decimals = vaults[0].decimals
 
-      const response: VaultDayDataGQLResponse = (await this.yearnSdk.services.subgraph.fetchQuery(
-        ACCOUNT_HISTORIC_EARNINGS,
-        {
+      const response: VaultDayDataGQLResponse = (await ratelimit(() =>
+        this.yearnSdk.services.subgraph.fetchQuery(ACCOUNT_HISTORIC_EARNINGS, {
           id,
           shareToken: id,
           fromDate: this.getDate(daysAgo).getTime().toString(),
           toDate: this.getDate(0).getTime().toString()
-        }
+        })
       )) as VaultDayDataGQLResponse
 
       type VaultDayData = {

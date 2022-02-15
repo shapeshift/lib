@@ -9,6 +9,8 @@ const ratelimitedAxios = getRatelimitedAxios(MAX_RPS - 1, 1000)
 
 // setting this to 1 minute as we need a good amount of time for our tests to run
 jest.setTimeout(60000)
+// enabling mock timers so we don't slow down CI
+jest.useFakeTimers()
 
 const apiCalls: number[] = []
 
