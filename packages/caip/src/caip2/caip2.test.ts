@@ -18,14 +18,14 @@ describe('caip2', () => {
       expect(result).toEqual('cosmos:osmosis-1')
     })
 
-    it('can turn eth mainnet to caip2', () => {
+    it('can turn Ethereum mainnet to caip2', () => {
       const chain = ChainTypes.Ethereum
       const network = NetworkTypes.MAINNET
       const result = toCAIP2({ chain, network })
       expect(result).toEqual('eip155:1')
     })
 
-    it('can turn btc mainnet to caip2', () => {
+    it('can turn Bitcoin mainnet to caip2', () => {
       const chain = ChainTypes.Bitcoin
       const network = NetworkTypes.MAINNET
       const result = toCAIP2({ chain, network })
@@ -34,28 +34,28 @@ describe('caip2', () => {
   })
 
   describe('fromCAIP2', () => {
-    it('can turn btc mainnet to chain and network', () => {
-      const btcCaip2 = 'bip122:000000000019d6689c085ae165831e93'
-      const { chain, network } = fromCAIP2(btcCaip2)
+    it('can turn Bitcoin mainnet to chain and network', () => {
+      const bitcoinCaip2 = 'bip122:000000000019d6689c085ae165831e93'
+      const { chain, network } = fromCAIP2(bitcoinCaip2)
       expect(chain).toEqual(ChainTypes.Bitcoin)
       expect(network).toEqual(NetworkTypes.MAINNET)
     })
 
-    it('can turn btc testnet to chain and network', () => {
-      const btcCaip2 = 'bip122:000000000933ea01ad0ee984209779ba'
-      const { chain, network } = fromCAIP2(btcCaip2)
+    it('can turn Bitcoin testnet to chain and network', () => {
+      const bitcoinCaip2 = 'bip122:000000000933ea01ad0ee984209779ba'
+      const { chain, network } = fromCAIP2(bitcoinCaip2)
       expect(chain).toEqual(ChainTypes.Bitcoin)
       expect(network).toEqual(NetworkTypes.TESTNET)
     })
 
-    it('throws with invalid btc namespace caip', () => {
-      const badBtcCaip2 = 'bip999:000000000933ea01ad0ee984209779ba'
-      expect(() => fromCAIP2(badBtcCaip2)).toThrow('fromCAIP19: unsupported chain: bip999')
+    it('throws with invalid Bitcoin namespace caip', () => {
+      const badbitcoinCaip2 = 'bip999:000000000933ea01ad0ee984209779ba'
+      expect(() => fromCAIP2(badbitcoinCaip2)).toThrow('fromCAIP19: unsupported chain: bip999')
     })
 
-    it('throws with invalid btc reference caip', () => {
-      const badBtcCaip2 = 'bip122:000000000xxxxxxxxxxxxxxxxxxxxxxx'
-      expect(() => fromCAIP2(badBtcCaip2)).toThrow(
+    it('throws with invalid Bitcoin reference caip', () => {
+      const badbitcoinCaip2 = 'bip122:000000000xxxxxxxxxxxxxxxxxxxxxxx'
+      expect(() => fromCAIP2(badbitcoinCaip2)).toThrow(
         'fromCAIP19: unsupported bip122 network: 000000000xxxxxxxxxxxxxxxxxxxxxxx'
       )
     })
@@ -92,43 +92,45 @@ describe('caip2', () => {
       const osmosisCaip2 = 'cosmos:osmosis-1'
       const { chain, network } = fromCAIP2(osmosisCaip2)
       expect(chain).toEqual(ChainTypes.Cosmos)
-      expect(network).toEqual(NetworkTypes.COSMOS_OSMOSIS_MAINNET)
+      expect(network).toEqual(NetworkTypes.OSMOSIS_MAINNET)
     })
 
     it('can turn Osmosis testnet to chain and network', () => {
       const osmosisCaip2 = 'cosmos:osmo-testnet-1'
       const { chain, network } = fromCAIP2(osmosisCaip2)
       expect(chain).toEqual(ChainTypes.Cosmos)
-      expect(network).toEqual(NetworkTypes.COSMOS_OSMOSIS_TESTNET)
+      expect(network).toEqual(NetworkTypes.OSMOSIS_TESTNET)
     })
 
-    it('can turn eth mainnet to chain and network', () => {
-      const ethCaip2 = 'eip155:1'
-      const { chain, network } = fromCAIP2(ethCaip2)
+    it('can turn Ethereum mainnet to chain and network', () => {
+      const ethereumCaip2 = 'eip155:1'
+      const { chain, network } = fromCAIP2(ethereumCaip2)
       expect(chain).toEqual(ChainTypes.Ethereum)
       expect(network).toEqual(NetworkTypes.MAINNET)
     })
 
-    it('throws with invalid eth namespace caip', () => {
-      const badEthCaip2 = 'eip123:1'
-      expect(() => fromCAIP2(badEthCaip2)).toThrow('fromCAIP19: unsupported chain: eip123')
+    it('throws with invalid Ethereum namespace caip', () => {
+      const badethereumCaip2 = 'eip123:1'
+      expect(() => fromCAIP2(badethereumCaip2)).toThrow('fromCAIP19: unsupported chain: eip123')
     })
 
-    it('throws with invalid eth reference caip', () => {
-      const badEthCaip2 = 'eip155:999'
-      expect(() => fromCAIP2(badEthCaip2)).toThrow('fromCAIP19: unsupported eip155 network: 999')
+    it('throws with invalid Ethereum reference caip', () => {
+      const badethereumCaip2 = 'eip155:999'
+      expect(() => fromCAIP2(badethereumCaip2)).toThrow(
+        'fromCAIP19: unsupported eip155 network: 999'
+      )
     })
 
-    it('can turn eth ropsten to chain and network', () => {
-      const ethCaip2 = 'eip155:3'
-      const { chain, network } = fromCAIP2(ethCaip2)
+    it('can turn Ethereum ropsten to chain and network', () => {
+      const ethereumCaip2 = 'eip155:3'
+      const { chain, network } = fromCAIP2(ethereumCaip2)
       expect(chain).toEqual(ChainTypes.Ethereum)
       expect(network).toEqual(NetworkTypes.ETH_ROPSTEN)
     })
 
-    it('can turn eth rinkeby to chain and network', () => {
-      const ethCaip2 = 'eip155:4'
-      const { chain, network } = fromCAIP2(ethCaip2)
+    it('can turn Ethereum rinkeby to chain and network', () => {
+      const ethereumCaip2 = 'eip155:4'
+      const { chain, network } = fromCAIP2(ethereumCaip2)
       expect(chain).toEqual(ChainTypes.Ethereum)
       expect(network).toEqual(NetworkTypes.ETH_RINKEBY)
     })
