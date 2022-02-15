@@ -41,9 +41,9 @@ export class YearnTokenMarketCapService implements MarketService {
     try {
       const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
       const response = await Promise.allSettled([
-        ratelimit(this.yearnSdk.ironBank.tokens),
-        ratelimit(this.yearnSdk.tokens.supported),
-        ratelimit(this.yearnSdk.vaults.tokens)
+        ratelimit(() => this.yearnSdk.ironBank.tokens()),
+        ratelimit(() => this.yearnSdk.tokens.supported()),
+        ratelimit(() => this.yearnSdk.vaults.tokens())
       ])
       const [ironBankResponse, zapperResponse, underlyingTokensResponse] = response
 
