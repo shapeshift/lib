@@ -22,7 +22,7 @@ export enum ContractTypes {
 export enum ChainTypes {
   Ethereum = 'ethereum',
   Bitcoin = 'bitcoin',
-  CosmosSDK = 'cosmosSdk'
+  Cosmos = 'cosmos'
 }
 
 export enum NetworkTypes {
@@ -30,10 +30,10 @@ export enum NetworkTypes {
   TESTNET = 'TESTNET', // BTC, LTC, etc...
   ETH_ROPSTEN = 'ETH_ROPSTEN',
   ETH_RINKEBY = 'ETH_RINKEBY',
-  COSMOS_SDK_COSMOSHUB_MAINNET = 'COSMOS_SDK_COSMOSHUB_MAINNET',
-  COSMOS_SDK_COSMOSHUB_VEGA = 'COSMOS_SDK_COSMOSHUB_VEGA',
-  COSMOS_SDK_OSMOSIS_MAINNET = 'COSMOS_SDK_OSMOSIS_MAINNET',
-  COSMOS_SDK_OSMOSIS_TESTNET = 'COSMOS_SDK_OSMOSIS_TESTNET'
+  COSMOSHUB_MAINNET = 'COSMOSHUB_MAINNET',
+  COSMOSHUB_VEGA = 'COSMOSHUB_VEGA',
+  OSMOSIS_MAINNET = 'OSMOSIS_MAINNET',
+  OSMOSIS_TESTNET = 'OSMOSIS_TESTNET'
 }
 
 export enum UtxoAccountType {

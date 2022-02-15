@@ -26,25 +26,25 @@ describe('caip19', () => {
       )
     })
 
-    it('can make Cosmos SDK caip19 identifier on CosmosHub mainnet', () => {
-      const chain = ChainTypes.CosmosSDK
-      const network = NetworkTypes.COSMOS_SDK_COSMOSHUB_MAINNET
+    it('can make Cosmos caip19 identifier on CosmosHub mainnet', () => {
+      const chain = ChainTypes.Cosmos
+      const network = NetworkTypes.COSMOSHUB_MAINNET
       const result = toCAIP19({ chain, network })
       expect(result).toEqual('cosmos:cosmoshub-4/slip44:118')
     })
 
-    it('can make Cosmos SDK caip19 identifier on CosmosHub vega', () => {
-      const chain = ChainTypes.CosmosSDK
-      const network = NetworkTypes.COSMOS_SDK_COSMOSHUB_VEGA
+    it('can make Cosmos caip19 identifier on CosmosHub vega', () => {
+      const chain = ChainTypes.Cosmos
+      const network = NetworkTypes.COSMOSHUB_VEGA
       const result = toCAIP19({ chain, network })
       expect(result).toEqual('cosmos:vega-testnet/slip44:118')
     })
 
-    it('throws with invalid Cosmos SDK network', () => {
-      const chain = ChainTypes.CosmosSDK
+    it('throws with invalid Cosmos network', () => {
+      const chain = ChainTypes.Cosmos
       const network = NetworkTypes.TESTNET
       expect(() => toCAIP19({ chain, network })).toThrow(
-        'toCAIP2: unsupported cosmosSdk network: TESTNET'
+        'toCAIP2: unsupported cosmos network: TESTNET'
       )
     })
 

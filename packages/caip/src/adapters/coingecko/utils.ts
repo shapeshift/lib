@@ -52,15 +52,15 @@ export const makeBtcData = () => {
 }
 
 export const makeCosmosSdkCosmosHubData = () => {
-  const chain = ChainTypes.CosmosSDK
-  const network = NetworkTypes.COSMOS_SDK_COSMOSHUB_MAINNET
+  const chain = ChainTypes.Cosmos
+  const network = NetworkTypes.COSMOSHUB_MAINNET
   const caip19 = toCAIP19({ chain, network })
   return { [caip19]: 'cosmos' }
 }
 
 export const makeCosmosSdkOsmosisData = () => {
-  const chain = ChainTypes.CosmosSDK
-  const network = NetworkTypes.COSMOS_SDK_OSMOSIS_MAINNET
+  const chain = ChainTypes.Cosmos
+  const network = NetworkTypes.OSMOSIS_MAINNET
   const caip19 = toCAIP19({ chain, network })
   return { [caip19]: 'osmosis' }
 }
@@ -69,12 +69,12 @@ export const parseData = (d: CoingeckoCoin[]) => {
   const ethMainnet = toCAIP2({ chain: ChainTypes.Ethereum, network: NetworkTypes.MAINNET })
   const btcMainnet = toCAIP2({ chain: ChainTypes.Bitcoin, network: NetworkTypes.MAINNET })
   const cosmosSdkCosmosHubMainnet = toCAIP2({
-    chain: ChainTypes.CosmosSDK,
-    network: NetworkTypes.COSMOS_SDK_COSMOSHUB_MAINNET
+    chain: ChainTypes.Cosmos,
+    network: NetworkTypes.COSMOSHUB_MAINNET
   })
   const cosmosSdkOsmosisMainnet = toCAIP2({
-    chain: ChainTypes.CosmosSDK,
-    network: NetworkTypes.COSMOS_SDK_OSMOSIS_MAINNET
+    chain: ChainTypes.Cosmos,
+    network: NetworkTypes.OSMOSIS_MAINNET
   })
   return {
     [ethMainnet]: parseEthData(d),

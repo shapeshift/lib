@@ -103,9 +103,9 @@ export const baseAssets: Array<BaseAsset> = [
   {
     caip19: 'cosmos:cosmoshub-4/slip44:118',
     caip2: 'cosmos:cosmoshub-4',
-    chain: ChainTypes.CosmosSDK,
+    chain: ChainTypes.Cosmos,
     dataSource: AssetDataSource.CoinGecko,
-    network: NetworkTypes.COSMOS_SDK_COSMOSHUB_MAINNET,
+    network: NetworkTypes.COSMOSHUB_MAINNET,
     symbol: 'ATOM',
     name: 'Cosmos',
     precision: 18,
@@ -122,9 +122,9 @@ export const baseAssets: Array<BaseAsset> = [
   {
     caip19: 'cosmos:osmosis-1/slip44:118',
     caip2: 'cosmos:osmosis-1',
-    chain: ChainTypes.CosmosSDK,
+    chain: ChainTypes.Cosmos,
     dataSource: AssetDataSource.CoinGecko,
-    network: NetworkTypes.COSMOS_SDK_OSMOSIS_MAINNET,
+    network: NetworkTypes.OSMOSIS_MAINNET,
     symbol: 'OSMO',
     name: 'Osmosis',
     precision: 18,
