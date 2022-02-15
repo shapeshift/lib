@@ -4,22 +4,15 @@ import http from 'http'
 import { getRatelimitedAxios } from './getRatelimitedAxios'
 
 const MAX_RPS = 10
-// setting maxRequests to 9 and perMilliseconds to 1000 to make sure we don't send not more than 10 requests every second
-const ratelimitedAxios = getRatelimitedAxios(MAX_RPS - 1, 1000)
-
-// setting this to 1 minute as we need a good amount of time for our tests to run
-jest.setTimeout(60000)
-// enabling mock timers so we don't slow down CI
-jest.useFakeTimers()
+// setting maxRequests to 10 and perMilliseconds to 1000 to make sure we don't send not more than 10 requests every second
+const ratelimitedAxios = getRatelimitedAxios(MAX_RPS, 1000)
 
 const apiCalls: number[] = []
 
 const server = http
   .createServer((_req, res) => {
     if (apiCalls.length > MAX_RPS) {
-      setTimeout(() => {
-        apiCalls.length = 0
-      }, 1000)
+      apiCalls.length = 0
       res.writeHead(429)
       return res.end()
     }
