@@ -9,7 +9,7 @@ import {
 
 import { IndexedAssetData } from '..'
 
-export const ETHMockedAsset = {
+export const ETHMockedAsset: BaseAsset = {
   caip19: 'eip155:1/slip44:60',
   caip2: 'eip155:1',
   chain: ChainTypes.Ethereum,
@@ -59,9 +59,9 @@ export const ETHMockedAsset = {
       symbol: 'FOX'
     }
   ]
-} as const
+}
 
-export const BTCMockedAsset = {
+export const BTCMockedAsset: BaseAsset = {
   caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
   caip2: 'bip122:000000000019d6689c085ae165831e93',
   chain: ChainTypes.Bitcoin,
@@ -79,9 +79,9 @@ export const BTCMockedAsset = {
   explorerAddressLink: 'https://live.blockcypher.com/btc/address/',
   sendSupport: false,
   receiveSupport: false
-} as const
+}
 
-export const mockBaseAssets = [
+export const mockBaseAssets: BaseAsset[] = [
   ETHMockedAsset,
   {
     caip19: 'eip155:3/slip44:60',
@@ -281,7 +281,7 @@ export const mockAssets: Asset[] = [
     sendSupport: false,
     receiveSupport: false
   }
-] as BaseAsset[]
+]
 
 export const mockIndexedAssetData: IndexedAssetData = {
   ethereum_MAINNET: {
