@@ -66,7 +66,7 @@ const makeCosmosMockCoincapResponse = () => ({
   priceUsd: '27.3798756102932376',
   changePercent24Hr: '-2.0945235735481851',
   vwap24Hr: '27.4571410501515669',
-  explorer: 'https://www.mintscan.io/'
+  explorer: 'https://www.mintscan.io/cosmos'
 })
 
 const makeOsmosisMockCoincapResponse = () => ({
