@@ -49,13 +49,13 @@ describe('caip2', () => {
     })
 
     it('throws with invalid Bitcoin namespace caip', () => {
-      const badbitcoinCaip2 = 'bip999:000000000933ea01ad0ee984209779ba'
-      expect(() => fromCAIP2(badbitcoinCaip2)).toThrow('fromCAIP19: unsupported chain: bip999')
+      const badBitcoinCaip2 = 'bip999:000000000933ea01ad0ee984209779ba'
+      expect(() => fromCAIP2(badBitcoinCaip2)).toThrow('fromCAIP19: unsupported chain: bip999')
     })
 
     it('throws with invalid Bitcoin reference caip', () => {
-      const badbitcoinCaip2 = 'bip122:000000000xxxxxxxxxxxxxxxxxxxxxxx'
-      expect(() => fromCAIP2(badbitcoinCaip2)).toThrow(
+      const badBitcoinCaip2 = 'bip122:000000000xxxxxxxxxxxxxxxxxxxxxxx'
+      expect(() => fromCAIP2(badBitcoinCaip2)).toThrow(
         'fromCAIP19: unsupported bip122 network: 000000000xxxxxxxxxxxxxxxxxxxxxxx'
       )
     })
@@ -75,7 +75,7 @@ describe('caip2', () => {
     })
 
     it('throws with invalid Cosmos namespace caip', () => {
-      const badCosmosCaip2 = 'cosmosssssssssss:kek-testnet'
+      const badCosmosCaip2 = 'cosmosssssssssss:cosmoshub-4'
       expect(() => fromCAIP2(badCosmosCaip2)).toThrow(
         'fromCAIP19: unsupported chain: cosmosssssssssss'
       )
@@ -110,13 +110,13 @@ describe('caip2', () => {
     })
 
     it('throws with invalid Ethereum namespace caip', () => {
-      const badethereumCaip2 = 'eip123:1'
-      expect(() => fromCAIP2(badethereumCaip2)).toThrow('fromCAIP19: unsupported chain: eip123')
+      const badEthereumCaip2 = 'eip123:1'
+      expect(() => fromCAIP2(badEthereumCaip2)).toThrow('fromCAIP19: unsupported chain: eip123')
     })
 
     it('throws with invalid Ethereum reference caip', () => {
-      const badethereumCaip2 = 'eip155:999'
-      expect(() => fromCAIP2(badethereumCaip2)).toThrow(
+      const badEthereumCaip2 = 'eip155:999'
+      expect(() => fromCAIP2(badEthereumCaip2)).toThrow(
         'fromCAIP19: unsupported eip155 network: 999'
       )
     })
