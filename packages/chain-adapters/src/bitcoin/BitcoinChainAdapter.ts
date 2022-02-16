@@ -40,6 +40,7 @@ export interface ChainAdapterArgs {
     ws: bitcoin.ws.Client
   }
   coinName: string
+  chainId?: CAIP2
 }
 
 export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
@@ -47,7 +48,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
     http: bitcoin.api.V1Api
     ws: bitcoin.ws.Client
   }
-
+  private readonly chainId : CAIP2 = 'bip122:000000000019d6689c085ae165831e93'
   public static readonly defaultBIP44Params: BIP44Params = {
     purpose: 84, // segwit native
     coinType: 0,
@@ -58,6 +59,17 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
   coinName: string
 
   constructor(args: ChainAdapterArgs) {
+    if(args.chainId){
+        try{
+          const { chain } = caip2.fromCAIP2(args.chainId)
+          if (chain !== ChainTypes.Bitcoin) {
+            throw new Error()
+          }
+          this.chainId = args.chainId
+        }catch (e) {
+          throw new Error(`The ChainID ${args.chainId} is not supported`)
+        }
+    }
     this.providers = args.providers
     this.coinName = args.coinName
   }
@@ -66,23 +78,12 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
     return ChainTypes.Bitcoin
   }
 
-  async getCaip2(): Promise<CAIP2> {
-    try {
-      const { data } = await this.providers.http.getInfo()
-
-      switch (data.network) {
-        case 'mainnet':
-          return caip2.toCAIP2({ chain: ChainTypes.Bitcoin, network: NetworkTypes.MAINNET })
-        case 'testnet':
-          return caip2.toCAIP2({ chain: ChainTypes.Bitcoin, network: NetworkTypes.TESTNET })
-        default:
-          throw new Error(`BitcoinChainAdapter: network is not supported: ${data.network}`)
-      }
-    } catch (err) {
-      return ErrorHandler(err)
-    }
+   getCaip2(): CAIP2 {
+      return this.chainId
   }
-
+  getChainId(): CAIP2 {
+    return this.chainId
+  }
   private async getPublicKey(
     wallet: HDWallet,
     bip44Params: BIP44Params,
@@ -112,7 +113,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
     }
 
     try {
-      const caip = await this.getCaip2()
+      const caip =  this.getCaip2()
       const { chain, network } = caip2.fromCAIP2(caip)
       const { data } = await this.providers.http.getAccount({ pubkey: pubkey })
 
