@@ -4,12 +4,12 @@ import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import fs from 'fs'
 
 import { bitcoin, tBitcoin, tEthereum } from './baseAssets'
-import { getCosmosData } from './cosmos/getOsmosisData'
+import { getOsmosisAssets } from './cosmos/getOsmosisAssets'
 import { addTokensToEth } from './ethTokens'
 
 const generateAssetData = async () => {
   const ethereum = await addTokensToEth()
-  const osmosis = await getCosmosData()
+  const osmosis = await getOsmosisAssets()
 
   const generatedAssetData = [bitcoin, tBitcoin, ethereum, tEthereum, osmosis]
 
