@@ -52,7 +52,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     if (args.chainId) {
       try {
         const { chain } = caip2.fromCAIP2(args.chainId)
-        if (chain !== ChainTypes.Bitcoin) {
+        if (chain !== ChainTypes.Ethereum) {
           throw new Error()
         }
         this.chainId = args.chainId
