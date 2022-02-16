@@ -11,7 +11,7 @@ import {
   getUnderlyingVaultTokens,
   getYearnVaults,
   getZapperTokens
-} from './extendErc20'
+} from './yearnVaults'
 import { getUniswapTokens } from './uniswap'
 
 export const addTokensToEth = async (): Promise<BaseAsset> => {

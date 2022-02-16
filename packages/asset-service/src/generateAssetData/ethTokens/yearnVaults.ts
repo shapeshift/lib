@@ -15,9 +15,6 @@ export const getYearnVaults = async (): Promise<TokenAsset[]> => {
   const vaults: Vault[] = await yearnSdk.vaults.get()
 
   return vaults.map((vault: Vault) => {
-    if (!vault.address) {
-      console.log('getYearnVaults', vault)
-    }
     return {
       color: '#276BDB', // yearn.finance blue
       contractType: ContractTypes.ERC20,

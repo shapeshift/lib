@@ -1,1 +1,1 @@
-export * from './getOsmosisData'
+export * from './getOsmosisAssets'
