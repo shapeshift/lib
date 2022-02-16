@@ -1,17 +1,16 @@
 import 'dotenv/config'
 
-import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import fs from 'fs'
 
-import { bitcoin, tBitcoin, tEthereum } from './baseAssets'
+import { atom, bitcoin, tBitcoin, tEthereum } from './baseAssets'
 import { getOsmosisAssets } from './cosmos/getOsmosisAssets'
 import { addTokensToEth } from './ethTokens'
 
 const generateAssetData = async () => {
   const ethereum = await addTokensToEth()
-  const osmosis = await getOsmosisAssets()
+  const osmosisAssets = await getOsmosisAssets()
 
-  const generatedAssetData = [bitcoin, tBitcoin, ethereum, tEthereum, osmosis]
+  const generatedAssetData = [bitcoin, tBitcoin, ethereum, tEthereum, atom, ...osmosisAssets]
 
   await fs.promises.writeFile(
     `./src/service/generatedAssetData.json`,

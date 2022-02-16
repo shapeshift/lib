@@ -56,9 +56,9 @@ export const getOsmosisAssets = async (): Promise<Asset[]> => {
     acc.push({
       caip19: `cosmos:osmosis-1/${assetNamespace}:${assetReference}`,
       caip2: 'cosmos:osmosis-1',
-      chain: ChainTypes.Ethereum,
+      chain: ChainTypes.Cosmos,
       dataSource: AssetDataSource.CoinGecko,
-      network: NetworkTypes.MAINNET,
+      network: NetworkTypes.OSMOSIS_MAINNET,
       symbol: current.symbol,
       name: current.name,
       precision,
