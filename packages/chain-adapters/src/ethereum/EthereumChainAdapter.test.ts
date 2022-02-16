@@ -17,6 +17,7 @@ import * as ethereum from './EthereumChainAdapter'
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 const EOA_ADDRESS = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
 const ENS_NAME = 'vitalik.eth'
+const VALID_CHAIN_ID = 'eip155:1'
 
 const getGasFeesMockedResponse = {
   data: {
@@ -88,6 +89,25 @@ describe('EthereumChainAdapter', () => {
       }
     }
   })
+
+  describe('constructor', () => {
+    it('should return chainAdapter with no chainId', () => {
+      const adapter = new ethereum.ChainAdapter(args)
+      const chainId = adapter.getChainId()
+      expect(chainId).toEqual(VALID_CHAIN_ID)
+    })
+    it('should return chainAdapter with valid chainId', () => {
+      args.chainId = VALID_CHAIN_ID
+      const adapter = new ethereum.ChainAdapter(args)
+      const chainId = adapter.getChainId()
+      expect(chainId).toEqual(VALID_CHAIN_ID)
+    })
+    it('should return chainAdapter with invalid chainId', () => {
+      args.chainId = 'INVALID_CHAINID'
+      expect(() => new ethereum.ChainAdapter(args)).toThrow(/The ChainID (.+) is not supported/)
+    })
+  })
+
   describe('getBalance', () => {
     it('is unimplemented', () => {
       expect(true).toBeTruthy()

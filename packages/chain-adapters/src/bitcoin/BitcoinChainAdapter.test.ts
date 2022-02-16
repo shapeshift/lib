@@ -13,6 +13,7 @@ import { BIP44Params, chainAdapters, ChainTypes, UtxoAccountType } from '@shapes
 import * as bitcoin from './BitcoinChainAdapter'
 
 const testMnemonic = 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle'
+const VALID_CHAIN_ID = 'bip122:000000000019d6689c085ae165831e93'
 
 const getWallet = async (): Promise<HDWallet> => {
   const nativeAdapterArgs: NativeAdapterArgs = {
@@ -141,6 +142,24 @@ describe('BitcoinChainAdapter', () => {
       },
       coinName: 'Bitcoin'
     }
+  })
+
+  describe('constructor', () => {
+    it('should return chainAdapter with no chainId', () => {
+      const adapter = new bitcoin.ChainAdapter(args)
+      const chainId = adapter.getChainId()
+      expect(chainId).toEqual(VALID_CHAIN_ID)
+    })
+    it('should return chainAdapter with valid chainId', () => {
+      args.chainId = VALID_CHAIN_ID
+      const adapter = new bitcoin.ChainAdapter(args)
+      const chainId = adapter.getChainId()
+      expect(chainId).toEqual(VALID_CHAIN_ID)
+    })
+    it('should return chainAdapter with invalid chainId', () => {
+      args.chainId = 'INVALID_CHAINID'
+      expect(() => new bitcoin.ChainAdapter(args)).toThrow(/The ChainID (.+) is not supported/)
+    })
   })
 
   describe('getType', () => {
