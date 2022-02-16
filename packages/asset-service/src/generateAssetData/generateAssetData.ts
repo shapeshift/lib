@@ -14,7 +14,8 @@ const generateAssetData = async () => {
 
   await fs.promises.writeFile(
     `./src/service/generatedAssetData.json`,
-    JSON.stringify(generatedAssetData)
+    // beautify the file for github diff.
+    JSON.stringify(generatedAssetData, null, 2)
   )
 }
 
