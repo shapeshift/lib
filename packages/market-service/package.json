@@ -33,10 +33,10 @@
   },
   "peerDependencies": {
     "@shapeshiftoss/caip": "^1.4.2",
-    "@shapeshiftoss/types": "^1.21.1"
+    "@shapeshiftoss/types": "^1.23.0"
   },
   "devDependencies": {
     "@shapeshiftoss/caip": "^1.4.2",
-    "@shapeshiftoss/types": "^1.21.1"
+    "@shapeshiftoss/types": "^1.23.0"
   }
 }
