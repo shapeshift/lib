@@ -1,3 +1,17 @@
+# [@shapeshiftoss/chain-adapters-v1.33.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.32.0...@shapeshiftoss/chain-adapters-v1.33.0) (2022-02-16)
+
+
+### Features
+
+* add isTrusted to description of asset service ([#357](https://github.com/shapeshift/lib/issues/357)) ([49b002f](https://github.com/shapeshift/lib/commit/49b002f240ab29f3e6e85cfa7ef324bd16c7c3e3))
+
+# [@shapeshiftoss/chain-adapters-v1.32.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.31.3...@shapeshiftoss/chain-adapters-v1.32.0) (2022-02-16)
+
+
+### Features
+
+* add "byChainId" function to ChainAdapter Manager ([#379](https://github.com/shapeshift/lib/issues/379)) ([bdf8d26](https://github.com/shapeshift/lib/commit/bdf8d261b50ff2c208556e6da811e77868bf0add))
+
 # [@shapeshiftoss/chain-adapters-v1.31.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.31.2...@shapeshiftoss/chain-adapters-v1.31.3) (2022-02-15)
 
 # [@shapeshiftoss/chain-adapters-v1.31.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.31.1...@shapeshiftoss/chain-adapters-v1.31.2) (2022-02-10)
