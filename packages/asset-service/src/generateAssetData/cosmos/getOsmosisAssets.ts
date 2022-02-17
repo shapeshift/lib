@@ -30,12 +30,6 @@ export const getOsmosisAssets = async (): Promise<Asset[]> => {
     'https://raw.githubusercontent.com/osmosis-labs/assetlists/main/osmosis-1/osmosis-1.assetlist.json'
   )
 
-  // Development code only to view the response beautified in the editor.
-  await fs.promises.writeFile(
-    `./src/generateAssetData/cosmos/deleteme.json`,
-    JSON.stringify(data, null, 2)
-  )
-
   return data.assets.reduce<Asset[]>((acc, current) => {
     if (!current) return acc
 
