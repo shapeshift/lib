@@ -1,6 +1,5 @@
 import { Asset, AssetDataSource, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import axios from 'axios'
-import fs from 'fs'
 
 type AssetList = {
   description: string
