@@ -1,5 +1,11 @@
+import { caip19 } from '@shapeshiftoss/caip'
 import { Asset, AssetDataSource, BaseAsset, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import axios from 'axios'
+
+/* eslint-disable */
+const Identicon = require('identicon.js')
+const { fonts, renderPixels } = require('js-pixel-fonts')
+/* eslint-enable */
 
 import assetsDescriptions from './descriptions.json'
 import localAssetData from './generatedAssetData.json'
@@ -12,7 +18,7 @@ export const flattenAssetData = (assetData: BaseAsset[]): Asset[] => {
     flatAssetData.push(newAsset)
     if (baseAsset.tokens) {
       for (const tokenAsset of baseAsset.tokens) {
-        flatAssetData.push({
+        const flatAssetDatum = {
           ...tokenAsset,
           chain: baseAsset.chain,
           network: baseAsset.network,
@@ -20,7 +26,37 @@ export const flattenAssetData = (assetData: BaseAsset[]): Asset[] => {
           explorer: baseAsset.explorer,
           explorerAddressLink: baseAsset.explorerAddressLink,
           explorerTxLink: baseAsset.explorerTxLink
-        })
+        }
+        if (typeof flatAssetDatum.icon === 'undefined') {
+          const { tokenId } = caip19.fromCAIP19(flatAssetDatum.caip19)
+          const symbolPixels = renderPixels(flatAssetDatum.symbol[0], fonts.sevenPlus) // 7 x 5
+          const symbolScale = 12
+          const imageSize = 128
+          const offsetX = Math.round((imageSize - 5 * symbolScale) / 2)
+          const offsetY = Math.round((imageSize - 7 * symbolScale) / 2)
+          const options = {
+            background: [45, 55, 72, 255],
+            size: imageSize
+          }
+          const identiconImage = new Identicon(tokenId?.substring(2), options).render()
+          // render pixel symbol
+          for (let x = 0; x < imageSize; x++) {
+            const offsettedX = Math.floor((x - offsetX) / symbolScale)
+            if (offsettedX < 0 || offsettedX >= 5) continue
+            for (let y = 0; y < imageSize; y++) {
+              const offsettedY = Math.floor((y - offsetY) / symbolScale)
+              if (offsettedY < 0 || offsettedY >= 7) continue
+              if (symbolPixels[offsettedY][offsettedX]) {
+                identiconImage.buffer[identiconImage.index(x, y)] = identiconImage.color.apply(
+                  identiconImage,
+                  [255, 255, 255, 255]
+                )
+              }
+            }
+          }
+          flatAssetDatum.icon = `data:image/png;base64,${identiconImage.getBase64()}`
+        }
+        flatAssetData.push(flatAssetDatum)
       }
     }
   }
