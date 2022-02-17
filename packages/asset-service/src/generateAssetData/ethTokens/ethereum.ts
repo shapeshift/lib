@@ -6,13 +6,13 @@ import uniqBy from 'lodash/uniqBy'
 
 import { generateTrustWalletUrl } from '../../service/TrustWalletService'
 import { ethereum } from '../baseAssets'
+import { getUniswapTokens } from './uniswap'
 import {
   getIronBankTokens,
   getUnderlyingVaultTokens,
   getYearnVaults,
   getZapperTokens
 } from './yearnVaults'
-import { getUniswapTokens } from './uniswap'
 
 export const addTokensToEth = async (): Promise<BaseAsset> => {
   const baseAsset = ethereum
