@@ -4,6 +4,7 @@ import { BTCMockedAsset, ETHMockedAsset } from '../service/AssetServiceTestData'
 import blacklist from './blacklist.json'
 import { filterBlacklistedAssets } from './utils'
 
+// We need to use the non-null assertion because we know this mocks contains the token property
 jest.mock('./blacklist.json', () => [ETHMockedAsset.tokens![0].caip19, BTCMockedAsset.caip19], {
   virtual: true
 })
