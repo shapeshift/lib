@@ -97,10 +97,10 @@ describe('EthereumChainAdapter', () => {
       expect(chainId).toEqual(VALID_CHAIN_ID)
     })
     it('should return chainAdapter with valid chainId', () => {
-      args.chainId = VALID_CHAIN_ID
+      args.chainId = 'eip155:3'
       const adapter = new ethereum.ChainAdapter(args)
       const chainId = adapter.getChainId()
-      expect(chainId).toEqual(VALID_CHAIN_ID)
+      expect(chainId).toEqual('eip155:3')
     })
     it('should return chainAdapter with invalid chainId', () => {
       args.chainId = 'INVALID_CHAINID'
@@ -488,7 +488,6 @@ describe('EthereumChainAdapter', () => {
         }
       })
       expect(args.providers.http.getAccount).toHaveBeenCalledTimes(1)
-      expect(args.providers.http.getInfo).toHaveBeenCalledTimes(1)
     })
     it('sendmax: true without chainSpecific.erc20ContractAddress should throw if ETH balance is 0', async () => {
       args.providers.http = {
@@ -522,7 +521,6 @@ describe('EthereumChainAdapter', () => {
 
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow('no balance')
       expect(args.providers.http.getAccount).toHaveBeenCalledTimes(2)
-      expect(args.providers.http.getInfo).toHaveBeenCalledTimes(2)
     })
     it('sendMax: true without chainSpecific.erc20ContractAddress - should build a tx with full account balance - gas fee', async () => {
       const balance = '2500000'
@@ -570,7 +568,6 @@ describe('EthereumChainAdapter', () => {
         }
       })
       expect(args.providers.http.getAccount).toHaveBeenCalledTimes(2)
-      expect(args.providers.http.getInfo).toHaveBeenCalledTimes(2)
     })
     it("should build a tx with value: '0' for ERC20 txs without sendMax", async () => {
       args.providers.http = {
@@ -613,7 +610,6 @@ describe('EthereumChainAdapter', () => {
         }
       })
       expect(args.providers.http.getAccount).toHaveBeenCalledTimes(1)
-      expect(args.providers.http.getInfo).toHaveBeenCalledTimes(1)
     })
     it('sendmax: true with chainSpecific.erc20ContractAddress should build a tx with full account balance - gas fee', async () => {
       args.providers.http = {
@@ -658,7 +654,6 @@ describe('EthereumChainAdapter', () => {
         }
       })
       expect(args.providers.http.getAccount).toHaveBeenCalledTimes(2)
-      expect(args.providers.http.getInfo).toHaveBeenCalledTimes(2)
     })
 
     it('sendmax: true with chainSpecific.erc20ContractAddress should throw if token balance is 0', async () => {
@@ -694,7 +689,6 @@ describe('EthereumChainAdapter', () => {
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow('no balance')
 
       expect(args.providers.http.getAccount).toHaveBeenCalledTimes(2)
-      expect(args.providers.http.getInfo).toHaveBeenCalledTimes(2)
     })
   })
 })

@@ -151,10 +151,10 @@ describe('BitcoinChainAdapter', () => {
       expect(chainId).toEqual(VALID_CHAIN_ID)
     })
     it('should return chainAdapter with valid chainId', () => {
-      args.chainId = VALID_CHAIN_ID
+      args.chainId = 'bip122:000000000019d6689c085ae165831e93'
       const adapter = new bitcoin.ChainAdapter(args)
       const chainId = adapter.getChainId()
-      expect(chainId).toEqual(VALID_CHAIN_ID)
+      expect(chainId).toEqual('bip122:000000000019d6689c085ae165831e93')
     })
     it('should return chainAdapter with invalid chainId', () => {
       args.chainId = 'INVALID_CHAINID'
