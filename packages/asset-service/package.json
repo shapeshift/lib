@@ -1,13 +1,14 @@
 {
   "name": "@shapeshiftoss/asset-service",
-  "version": "1.18.1",
+  "version": "1.19.2",
   "description": "Service to return supported asset details",
   "homepage": "",
   "license": "MIT",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist"
+    "dist/index.*",
+    "dist/service"
   ],
   "publishConfig": {
     "access": "public"
@@ -25,7 +26,7 @@
     "type-check": "tsc --project ./tsconfig.json --noEmit"
   },
   "dependencies": {
-    "axios": "^0.24.0",
+    "axios": "^0.26.0",
     "lodash": "^4.17.21"
   },
   "peerDependencies": {
