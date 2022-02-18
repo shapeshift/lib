@@ -188,28 +188,28 @@ export const fromCAIP19: FromCAIP19 = (caip19) => {
             chain,
             network,
             assetNamespace: AssetNamespace.IBC,
-            assetReference: referenceString.toLowerCase()
+            assetReference: referenceString
           }
         case AssetNamespace.CW721:
           return {
             chain,
             network,
             assetNamespace: AssetNamespace.IBC,
-            assetReference: referenceString.toLowerCase()
+            assetReference: referenceString
           }
         case AssetNamespace.IBC:
           return {
             chain,
             network,
             assetNamespace: AssetNamespace.IBC,
-            assetReference: referenceString.toLowerCase()
+            assetReference: referenceString
           }
         case AssetNamespace.NATIVE:
           return {
             chain,
             network,
             assetNamespace: AssetNamespace.IBC,
-            assetReference: referenceString.toLowerCase()
+            assetReference: referenceString
           }
         case AssetNamespace.ERC20:
         case AssetNamespace.ERC721:
