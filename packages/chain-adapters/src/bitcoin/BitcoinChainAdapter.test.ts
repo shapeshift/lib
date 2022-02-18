@@ -145,18 +145,18 @@ describe('BitcoinChainAdapter', () => {
   })
 
   describe('constructor', () => {
-    it('should return chainAdapter with no chainId', () => {
+    it('should return chainAdapter with default Bitcoin chainId if called with no chainId', () => {
       const adapter = new bitcoin.ChainAdapter(args)
       const chainId = adapter.getChainId()
       expect(chainId).toEqual(VALID_CHAIN_ID)
     })
-    it('should return chainAdapter with valid chainId', () => {
+    it('should return chainAdapter with valid chainId if called with valid chainId', () => {
       args.chainId = 'bip122:000000000019d6689c085ae165831e93'
       const adapter = new bitcoin.ChainAdapter(args)
       const chainId = adapter.getChainId()
       expect(chainId).toEqual('bip122:000000000019d6689c085ae165831e93')
     })
-    it('should return chainAdapter with invalid chainId', () => {
+    it('should throw if called with invalid chainId', () => {
       args.chainId = 'INVALID_CHAINID'
       expect(() => new bitcoin.ChainAdapter(args)).toThrow(/The ChainID (.+) is not supported/)
     })

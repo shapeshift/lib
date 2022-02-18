@@ -91,18 +91,18 @@ describe('EthereumChainAdapter', () => {
   })
 
   describe('constructor', () => {
-    it('should return chainAdapter with no chainId', () => {
+    it('should return chainAdapter with Ethereum mainnet chainId if called with no chainId', () => {
       const adapter = new ethereum.ChainAdapter(args)
       const chainId = adapter.getChainId()
       expect(chainId).toEqual(VALID_CHAIN_ID)
     })
-    it('should return chainAdapter with valid chainId', () => {
+    it('should return chainAdapter with valid chainId if called with valid chainId', () => {
       args.chainId = 'eip155:3'
       const adapter = new ethereum.ChainAdapter(args)
       const chainId = adapter.getChainId()
       expect(chainId).toEqual('eip155:3')
     })
-    it('should return chainAdapter with invalid chainId', () => {
+    it('should throw if called with invalid chainId', () => {
       args.chainId = 'INVALID_CHAINID'
       expect(() => new ethereum.ChainAdapter(args)).toThrow(/The ChainID (.+) is not supported/)
     })
