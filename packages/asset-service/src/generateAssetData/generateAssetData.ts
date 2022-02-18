@@ -3,14 +3,16 @@ import 'dotenv/config'
 import fs from 'fs'
 
 import { atom, bitcoin, tBitcoin, tEthereum } from './baseAssets'
+import blacklist from './blacklist.json'
 import { getOsmosisAssets } from './cosmos/getOsmosisAssets'
 import { addTokensToEth } from './ethTokens'
+import { filterBlacklistedAssets } from './utils'
 
 const generateAssetData = async () => {
   const ethereum = await addTokensToEth()
   const osmosisAssets = await getOsmosisAssets()
 
-  const generatedAssetData = [bitcoin, tBitcoin, ethereum, tEthereum, atom, ...osmosisAssets]
+  const unfilteredAssetData = [bitcoin, tBitcoin, ethereum, tEthereum, atom, ...osmosisAssets]
 
   const generatedAssetData = filterBlacklistedAssets(blacklist, unfilteredAssetData)
 
