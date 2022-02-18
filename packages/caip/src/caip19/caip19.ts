@@ -178,7 +178,9 @@ export const fromCAIP19: FromCAIP19 = (caip19) => {
         case AssetNamespace.ERC20:
         case AssetNamespace.ERC721:
         case AssetNamespace.CW20:
+          return { chain, network }
         case AssetNamespace.CW721:
+          return { chain, network }
         default: {
           throw new Error(`fromCAIP19: invalid asset reference ${reference} on chain ${chain}`)
         }
