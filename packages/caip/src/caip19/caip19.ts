@@ -87,6 +87,8 @@ type FromCAIP19Return = {
   network: NetworkTypes
   contractType?: ContractTypes
   tokenId?: string
+  assetNamespace?: AssetNamespace
+  assetReference?: string
 }
 
 type FromCAIP19 = (caip19: string) => FromCAIP19Return
@@ -128,6 +130,8 @@ export const fromCAIP19: FromCAIP19 = (caip19) => {
         case AssetNamespace.ERC721:
         case AssetNamespace.CW20:
         case AssetNamespace.CW721:
+        case AssetNamespace.NATIVE:
+        case AssetNamespace.IBC:
         default: {
           throw new Error(`fromCAIP19: invalid asset reference ${reference} on chain ${chain}`)
         }
@@ -158,6 +162,8 @@ export const fromCAIP19: FromCAIP19 = (caip19) => {
         }
         case AssetNamespace.CW20:
         case AssetNamespace.CW721:
+        case AssetNamespace.NATIVE:
+        case AssetNamespace.IBC:
         default: {
           throw new Error(`fromCAIP19: invalid asset reference ${reference} on chain ${chain}`)
         }
@@ -177,16 +183,36 @@ export const fromCAIP19: FromCAIP19 = (caip19) => {
             }
           }
         }
+        case AssetNamespace.CW20:
+          return {
+            chain,
+            network,
+            assetNamespace: AssetNamespace.IBC,
+            assetReference: referenceString.toLowerCase()
+          }
+        case AssetNamespace.CW721:
+          return {
+            chain,
+            network,
+            assetNamespace: AssetNamespace.IBC,
+            assetReference: referenceString.toLowerCase()
+          }
+        case AssetNamespace.IBC:
+          return {
+            chain,
+            network,
+            assetNamespace: AssetNamespace.IBC,
+            assetReference: referenceString.toLowerCase()
+          }
+        case AssetNamespace.NATIVE:
+          return {
+            chain,
+            network,
+            assetNamespace: AssetNamespace.IBC,
+            assetReference: referenceString.toLowerCase()
+          }
         case AssetNamespace.ERC20:
         case AssetNamespace.ERC721:
-        case AssetNamespace.CW20:
-          return { chain, network }
-        case AssetNamespace.CW721:
-          return { chain, network }
-        case AssetNamespace.IBC:
-          return { chain, network }
-        case AssetNamespace.NATIVE:
-          return { chain, network }
         default: {
           throw new Error(`fromCAIP19: invalid asset reference ${reference} on chain ${chain}`)
         }
