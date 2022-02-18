@@ -11,7 +11,9 @@ export enum AssetNamespace {
   CW721 = 'cw721',
   ERC20 = 'erc20',
   ERC721 = 'erc721',
-  Slip44 = 'slip44'
+  Slip44 = 'slip44',
+  NATIVE = 'native',
+  IBC = 'ibc'
 }
 
 export enum AssetReference {
@@ -180,6 +182,10 @@ export const fromCAIP19: FromCAIP19 = (caip19) => {
         case AssetNamespace.CW20:
           return { chain, network }
         case AssetNamespace.CW721:
+          return { chain, network }
+        case AssetNamespace.IBC:
+          return { chain, network }
+        case AssetNamespace.NATIVE:
           return { chain, network }
         default: {
           throw new Error(`fromCAIP19: invalid asset reference ${reference} on chain ${chain}`)
