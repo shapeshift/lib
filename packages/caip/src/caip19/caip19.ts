@@ -161,6 +161,29 @@ export const fromCAIP19: FromCAIP19 = (caip19) => {
         }
       }
     }
+    case ChainTypes.Cosmos: {
+      switch (namespace) {
+        case AssetNamespace.Slip44: {
+          switch (reference) {
+            case AssetReference.Cosmos: {
+              return { chain, network }
+            }
+            case AssetReference.Ethereum:
+            case AssetReference.Bitcoin:
+            default: {
+              throw new Error(`fromCAIP19: invalid asset reference ${reference} on chain ${chain}`)
+            }
+          }
+        }
+        case AssetNamespace.ERC20:
+        case AssetNamespace.ERC721:
+        case AssetNamespace.CW20:
+        case AssetNamespace.CW721:
+        default: {
+          throw new Error(`fromCAIP19: invalid asset reference ${reference} on chain ${chain}`)
+        }
+      }
+    }
   }
 
   throw new Error(`fromCAIP19: error parsing caip19: ${caip19}`)
