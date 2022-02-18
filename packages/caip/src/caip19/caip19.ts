@@ -27,18 +27,41 @@ type ToCAIP19Args = {
   network: NetworkTypes
   contractType?: ContractTypes
   tokenId?: string
+  assetNamespace?: AssetNamespace
+  assetReference?: string
 }
 
 type ToCAIP19 = (args: ToCAIP19Args) => string
 
-export const toCAIP19: ToCAIP19 = ({ chain, network, contractType, tokenId }) => {
+export const toCAIP19: ToCAIP19 = ({
+  chain,
+  network,
+  contractType,
+  tokenId,
+  assetNamespace,
+  assetReference
+}): string => {
   const caip2 = toCAIP2({ chain, network })
 
   switch (chain) {
     // TODO: There is no chain-level fungible token standard in Cosmos SDK, but CosmWasm chains have CW20/CW721
     // This should be implemented when we want to support tokens for Cosmos SDK chains
     case ChainTypes.Cosmos: {
-      return `${caip2}/${AssetNamespace.Slip44}:${AssetReference.Cosmos}`
+      if (!assetNamespace || !assetReference) {
+        return `${caip2}/${AssetNamespace.Slip44}:${AssetReference.Cosmos}`
+      }
+      switch (assetNamespace) {
+        case AssetNamespace.CW20:
+        case AssetNamespace.CW721:
+        case AssetNamespace.IBC:
+        case AssetNamespace.NATIVE:
+          return `${caip2}/${assetNamespace}:${assetReference}`
+        default: {
+          throw new Error(
+            `Could not construct CAIP19 chain: ${chain}, network: ${network}, assetNamespace: ${assetNamespace}, assetReference: ${assetReference}`
+          )
+        }
+      }
     }
     case ChainTypes.Ethereum: {
       tokenId = tokenId?.toLowerCase()
@@ -78,6 +101,9 @@ export const toCAIP19: ToCAIP19 = ({ chain, network, contractType, tokenId }) =>
     }
     case ChainTypes.Bitcoin: {
       return `${caip2}/${AssetNamespace.Slip44}:${AssetReference.Bitcoin}`
+    }
+    default: {
+      throw new Error(`Chain type not supported: ${chain}`)
     }
   }
 }
@@ -120,20 +146,13 @@ export const fromCAIP19: FromCAIP19 = (caip19) => {
             case AssetReference.Bitcoin: {
               return { chain, network }
             }
-            case AssetReference.Ethereum:
             default: {
               throw new Error(`fromCAIP19: invalid asset reference ${reference} on chain ${chain}`)
             }
           }
         }
-        case AssetNamespace.ERC20:
-        case AssetNamespace.ERC721:
-        case AssetNamespace.CW20:
-        case AssetNamespace.CW721:
-        case AssetNamespace.NATIVE:
-        case AssetNamespace.IBC:
         default: {
-          throw new Error(`fromCAIP19: invalid asset reference ${reference} on chain ${chain}`)
+          throw new Error(`fromCAIP19: invalid asset namespace ${namespace} on chain ${chain}`)
         }
       }
     }
@@ -144,7 +163,6 @@ export const fromCAIP19: FromCAIP19 = (caip19) => {
             case AssetReference.Ethereum: {
               return { chain, network }
             }
-            case AssetReference.Bitcoin:
             default: {
               throw new Error(`fromCAIP19: invalid asset reference ${reference} on chain ${chain}`)
             }
@@ -160,12 +178,8 @@ export const fromCAIP19: FromCAIP19 = (caip19) => {
           const tokenId = referenceString.toLowerCase()
           return { chain, network, contractType, tokenId }
         }
-        case AssetNamespace.CW20:
-        case AssetNamespace.CW721:
-        case AssetNamespace.NATIVE:
-        case AssetNamespace.IBC:
         default: {
-          throw new Error(`fromCAIP19: invalid asset reference ${reference} on chain ${chain}`)
+          throw new Error(`fromCAIP19: invalid asset namespace ${namespace} on chain ${chain}`)
         }
       }
     }
@@ -179,7 +193,7 @@ export const fromCAIP19: FromCAIP19 = (caip19) => {
             case AssetReference.Ethereum:
             case AssetReference.Bitcoin:
             default: {
-              throw new Error(`fromCAIP19: invalid asset reference ${reference} on chain ${chain}`)
+              throw new Error(`fromCAIP19: invalid asset namespace ${namespace} on chain ${chain}`)
             }
           }
         }
@@ -211,10 +225,8 @@ export const fromCAIP19: FromCAIP19 = (caip19) => {
             assetNamespace: AssetNamespace.NATIVE,
             assetReference: referenceString
           }
-        case AssetNamespace.ERC20:
-        case AssetNamespace.ERC721:
         default: {
-          throw new Error(`fromCAIP19: invalid asset reference ${reference} on chain ${chain}`)
+          throw new Error(`fromCAIP19: invalid asset namespace ${namespace} on chain ${chain}`)
         }
       }
     }
