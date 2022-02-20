@@ -103,9 +103,7 @@ const getRenderedIdenticonPNG = (
         // make the pixel at current position white (RGBA: 255, 255, 255, 255)
         paintPixel(identiconImage, x, y, identiconOptions.identiconText.textColor)
         if (identiconOptions.identiconText.enableShadow) {
-          // create shadow on (x + 1, y), (x, y + 1) and (x + 1, y + 1).
-          paintPixel(identiconImage, x + 1, y, identiconOptions.identiconText.shadowColor)
-          paintPixel(identiconImage, x, y + 1, identiconOptions.identiconText.shadowColor)
+          // create shadow
           paintPixel(identiconImage, x + 1, y + 1, identiconOptions.identiconText.shadowColor)
         }
       }
