@@ -7,12 +7,11 @@ export type IdenticonOptions = {
   // identicon options, checks https://github.com/stewartlord/identicon.js
   identiconImage?: {
     size?: number // defines the size (px) of generated identicon
-    margin?: number
+    margin?: number // range from 0. to 1.
     foreground?: [number, number, number, number] // RGBA
     background?: [number, number, number, number] // RGBA
-    saturation?: number
-    brightness?: number
-    format?: string // 'png' or 'svg'
+    saturation?: number // range from 0. to 1.
+    brightness?: number // range from 0. to 1.
   }
   // text options
   identiconText?: {
@@ -53,7 +52,7 @@ const getRenderedIdenticonPNG = (
       background: options?.identiconImage?.background || [240, 240, 240, 255],
       saturation: options?.identiconImage?.saturation || 0.7,
       brightness: options?.identiconImage?.brightness || 0.5,
-      format: options?.identiconImage?.format || 'png'
+      format: 'png'
     },
     identiconText: {
       textColor: options?.identiconText?.textColor || [255, 255, 255, 255],
