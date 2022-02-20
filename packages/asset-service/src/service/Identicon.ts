@@ -57,7 +57,10 @@ const getRenderedIdenticonPNG = (
     },
     identiconText: {
       textColor: options?.identiconText?.textColor || [255, 255, 255, 255],
-      symbolScale: options?.identiconText?.symbolScale || 5,
+      // if no provided `symbolScale`, then `symbolScale` is automatically computed given image size and text length
+      symbolScale:
+        options?.identiconText?.symbolScale ||
+        Math.floor((options?.identiconImage?.size || 128) / (6 * (text?.length || 3))),
       enableShadow: options?.identiconText?.enableShadow || false,
       shadowColor: options?.identiconText?.shadowColor || [0, 0, 0, 255]
     }
