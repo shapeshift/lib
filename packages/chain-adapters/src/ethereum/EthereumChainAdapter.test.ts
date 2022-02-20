@@ -18,16 +18,6 @@ const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 const EOA_ADDRESS = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
 const ENS_NAME = 'vitalik.eth'
 
-const getGasFeesMockedResponse = {
-  data: {
-    gasPrice: '1',
-    maxFeePerGas: '300',
-    maxPriorityFeePerGas: '10'
-  }
-}
-
-const estimateGasMockedResponse = { data: '21000' }
-
 const testMnemonic = 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle'
 
 const getWallet = async (): Promise<ETHWallet> => {
@@ -61,8 +51,6 @@ jest.mock('axios', () => ({
 }))
 
 describe('EthereumChainAdapter', () => {
-  let args: ethereum.ChainAdapterArgs = {} as any
-
   const gasPrice = '42'
   const gasLimit = '42000'
   const erc20ContractAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
@@ -76,18 +64,48 @@ describe('EthereumChainAdapter', () => {
       },
       chainSpecificAdditionalProps
     )
-  const getInfoMockResponse = {
-    data: { network: 'mainnet' }
-  }
 
-  beforeEach(() => {
-    args = {
-      providers: {
-        http: {} as unchainedEthereum.api.V1Api,
-        ws: {} as unchainedEthereum.ws.Client
-      }
+  const makeGetGasFeesMockedResponse = () => ({
+    data: {
+      gasPrice: '1',
+      maxFeePerGas: '300',
+      maxPriorityFeePerGas: '10'
     }
   })
+
+  const makeEstimateGasMockedResponse = () => ({ data: '21000' })
+
+  const makeGetInfoMockResponse = () => ({
+    data: { network: 'mainnet' }
+  })
+  const makeGetAccountMockResponse = (balance: {
+    balance: string
+    erc20Balance: string | undefined
+  }) => ({
+    data: {
+      balance: balance.balance,
+      unconfirmedBalance: '0',
+      nonce: 2,
+      tokens: [
+        {
+          caip19: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
+          balance: balance.erc20Balance,
+          type: 'ERC20',
+          contract: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
+        }
+      ]
+    }
+  })
+
+  const makeChainAdapterArgs = (
+    httpProvider = {} as unknown as unchainedEthereum.api.V1Api
+  ): ethereum.ChainAdapterArgs => ({
+    providers: {
+      http: httpProvider,
+      ws: {} as unchainedEthereum.ws.Client
+    }
+  })
+
   describe('getBalance', () => {
     it('is unimplemented', () => {
       expect(true).toBeTruthy()
@@ -96,10 +114,11 @@ describe('EthereumChainAdapter', () => {
 
   describe('getFeeData', () => {
     it('should return current ETH network fees', async () => {
-      args.providers.http = {
-        estimateGas: jest.fn().mockResolvedValue(estimateGasMockedResponse),
-        getGasFees: jest.fn().mockResolvedValue(getGasFeesMockedResponse)
+      const httpProvider = {
+        estimateGas: jest.fn().mockResolvedValue(makeEstimateGasMockedResponse()),
+        getGasFees: jest.fn().mockResolvedValue(makeGetGasFeesMockedResponse())
       } as unknown as unchainedEthereum.api.V1Api
+      const args = makeChainAdapterArgs(httpProvider)
 
       const adapter = new ethereum.ChainAdapter(args)
 
@@ -158,6 +177,7 @@ describe('EthereumChainAdapter', () => {
 
   describe('getAddress', () => {
     it('returns ETH address', async () => {
+      const args = makeChainAdapterArgs()
       const adapter = new ethereum.ChainAdapter(args)
       const bip44Params = { purpose: 44, coinType: 60, accountNumber: 0 }
       const wallet = await getWallet()
@@ -169,6 +189,7 @@ describe('EthereumChainAdapter', () => {
 
   describe('validateAddress', () => {
     it('should return true for a valid address', async () => {
+      const args = makeChainAdapterArgs()
       const adapter = new ethereum.ChainAdapter(args)
       const referenceAddress = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
       const expectedReturnValue = validAddressTuple
@@ -177,6 +198,7 @@ describe('EthereumChainAdapter', () => {
     })
 
     it('should return false for an empty address', async () => {
+      const args = makeChainAdapterArgs()
       const adapter = new ethereum.ChainAdapter(args)
       const referenceAddress = ''
       const expectedReturnValue = invalidAddressTuple
@@ -185,6 +207,7 @@ describe('EthereumChainAdapter', () => {
     })
 
     it('should return false for an invalid address', async () => {
+      const args = makeChainAdapterArgs()
       const adapter = new ethereum.ChainAdapter(args)
       const referenceAddress = 'foobar'
       const expectedReturnValue = invalidAddressTuple
@@ -195,6 +218,7 @@ describe('EthereumChainAdapter', () => {
 
   describe('validateEnsAddress', () => {
     it('should return true for a valid .eth address', async () => {
+      const args = makeChainAdapterArgs()
       const adapter = new ethereum.ChainAdapter(args)
       const referenceAddress = 'vitalik.eth'
       const expectedReturnValue = validAddressTuple
@@ -203,6 +227,7 @@ describe('EthereumChainAdapter', () => {
     })
 
     it('should return false for an empty address', async () => {
+      const args = makeChainAdapterArgs()
       const adapter = new ethereum.ChainAdapter(args)
       const referenceAddress = ''
       const expectedReturnValue = invalidAddressTuple
@@ -211,6 +236,7 @@ describe('EthereumChainAdapter', () => {
     })
 
     it('should return false for an invalid address', async () => {
+      const args = makeChainAdapterArgs()
       const adapter = new ethereum.ChainAdapter(args)
       const referenceAddress = 'foobar'
       const expectedReturnValue = invalidAddressTuple
@@ -219,6 +245,7 @@ describe('EthereumChainAdapter', () => {
     })
 
     it('should return false for a valid address directly followed by more chars', async () => {
+      const args = makeChainAdapterArgs()
       const adapter = new ethereum.ChainAdapter(args)
       const referenceAddress = 'vitalik.ethfoobar'
       const expectedReturnValue = invalidAddressTuple
@@ -227,6 +254,7 @@ describe('EthereumChainAdapter', () => {
     })
 
     it('should return false for a valid address in the middle of a string', async () => {
+      const args = makeChainAdapterArgs()
       const adapter = new ethereum.ChainAdapter(args)
       const referenceAddress = 'asdadfvitalik.ethasdadf'
       const expectedReturnValue = invalidAddressTuple
@@ -238,24 +266,13 @@ describe('EthereumChainAdapter', () => {
   describe('signTransaction', () => {
     it('should sign a properly formatted txToSign object', async () => {
       const balance = '2500000'
-      args.providers.http = {
-        getInfo: jest.fn().mockResolvedValue(getInfoMockResponse),
-        getAccount: jest.fn<any, any>().mockResolvedValue({
-          data: {
-            balance,
-            unconfirmedBalance: '0',
-            nonce: 2,
-            tokens: [
-              {
-                caip19: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
-                balance: '424242',
-                type: 'ERC20',
-                contract: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
-              }
-            ]
-          }
-        })
+      const httpProvider = {
+        getInfo: jest.fn().mockResolvedValue(makeGetInfoMockResponse()),
+        getAccount: jest
+          .fn<any, any>()
+          .mockResolvedValue(makeGetAccountMockResponse({ balance, erc20Balance: '424242' }))
       } as unknown as unchainedEthereum.api.V1Api
+      const args = makeChainAdapterArgs(httpProvider)
       const adapter = new ethereum.ChainAdapter(args)
 
       const tx = {
@@ -278,24 +295,13 @@ describe('EthereumChainAdapter', () => {
     })
     it('should throw on txToSign with invalid data', async () => {
       const balance = '2500000'
-      args.providers.http = {
-        getInfo: jest.fn().mockResolvedValue(getInfoMockResponse),
-        getAccount: jest.fn<any, any>().mockResolvedValue({
-          data: {
-            balance,
-            unconfirmedBalance: '0',
-            nonce: 2,
-            tokens: [
-              {
-                caip19: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
-                balance: '424242',
-                type: 'ERC20',
-                contract: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
-              }
-            ]
-          }
-        })
+      const httpProvider = {
+        getInfo: jest.fn().mockResolvedValue(makeGetInfoMockResponse()),
+        getAccount: jest
+          .fn<any, any>()
+          .mockResolvedValue(makeGetAccountMockResponse({ balance, erc20Balance: '424242' }))
       } as unknown as unchainedEthereum.api.V1Api
+      const args = makeChainAdapterArgs(httpProvider)
       const adapter = new ethereum.ChainAdapter(args)
 
       const tx = {
@@ -318,6 +324,7 @@ describe('EthereumChainAdapter', () => {
 
   describe('signAndBroadcastTransaction', () => {
     it('should throw if no hash is returned by wallet.ethSendTx', async () => {
+      const args = makeChainAdapterArgs()
       const adapter = new ethereum.ChainAdapter(args)
       const wallet = await getWallet()
       wallet.ethSendTx = async () => null
@@ -333,6 +340,7 @@ describe('EthereumChainAdapter', () => {
     })
 
     it('should return the hash returned by wallet.ethSendTx', async () => {
+      const args = makeChainAdapterArgs()
       const adapter = new ethereum.ChainAdapter(args)
       const wallet = await getWallet()
       wallet.ethSendTx = async () => ({
@@ -354,10 +362,13 @@ describe('EthereumChainAdapter', () => {
     it('should correctly call sendTx and return its response', async () => {
       const expectedResult = 'success'
 
-      args.providers.http = {
+      const httpProvider = {
         sendTx: jest.fn().mockResolvedValue({ data: expectedResult })
       } as unknown as unchainedEthereum.api.V1Api
+
+      const args = makeChainAdapterArgs(httpProvider)
       const adapter = new ethereum.ChainAdapter(args)
+
       const mockTx = '0x123'
       const result = await adapter.broadcastTransaction(mockTx)
 
@@ -368,6 +379,7 @@ describe('EthereumChainAdapter', () => {
 
   describe('buildSendTransaction', () => {
     it('should throw if passed tx has no "to" property', async () => {
+      const args = makeChainAdapterArgs()
       const adapter = new ethereum.ChainAdapter(args)
 
       const tx = {
@@ -381,25 +393,16 @@ describe('EthereumChainAdapter', () => {
     })
 
     it('should throw if passed tx has ENS as "to" property', async () => {
-      args.providers.http = {
-        getInfo: jest.fn().mockResolvedValue(getInfoMockResponse),
-        getAccount: jest.fn<any, any>().mockResolvedValue({
-          data: {
-            balance: '2500000',
-            unconfirmedBalance: '0',
-            nonce: 2,
-            tokens: [
-              {
-                caip19: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
-                balance: '424242',
-                type: 'ERC20',
-                contract: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
-              }
-            ]
-          }
-        })
+      const httpProvider = {
+        getInfo: jest.fn().mockResolvedValue(makeGetInfoMockResponse()),
+        getAccount: jest
+          .fn<any, any>()
+          .mockResolvedValue(
+            makeGetAccountMockResponse({ balance: '2500000', erc20Balance: '424242' })
+          )
       } as unknown as unchainedEthereum.api.V1Api
 
+      const args = makeChainAdapterArgs(httpProvider)
       const adapter = new ethereum.ChainAdapter(args)
 
       const tx = {
@@ -415,6 +418,7 @@ describe('EthereumChainAdapter', () => {
     })
 
     it('should throw if passed tx has no "value" property', async () => {
+      const args = makeChainAdapterArgs()
       const adapter = new ethereum.ChainAdapter(args)
 
       const tx = {
@@ -428,25 +432,14 @@ describe('EthereumChainAdapter', () => {
     })
 
     it('should return a validly formatted ETHSignTx object for a valid BuildSendTxInput parameter', async () => {
-      args.providers.http = {
-        getInfo: jest.fn().mockResolvedValue(getInfoMockResponse),
-        getAccount: jest.fn<any, any>().mockResolvedValue({
-          data: {
-            balance: '0',
-            unconfirmedBalance: '0',
-            nonce: 2,
-            tokens: [
-              {
-                caip19: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
-                balance: '424242',
-                type: 'ERC20',
-                contract: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
-              }
-            ]
-          }
-        })
+      const httpProvider = {
+        getInfo: jest.fn().mockResolvedValue(makeGetInfoMockResponse()),
+        getAccount: jest
+          .fn<any, any>()
+          .mockResolvedValue(makeGetAccountMockResponse({ balance: '0', erc20Balance: '424242' }))
       } as unknown as unchainedEthereum.api.V1Api
 
+      const args = makeChainAdapterArgs(httpProvider)
       const adapter = new ethereum.ChainAdapter(args)
 
       const tx = {
@@ -471,25 +464,14 @@ describe('EthereumChainAdapter', () => {
       expect(args.providers.http.getInfo).toHaveBeenCalledTimes(1)
     })
     it('sendmax: true without chainSpecific.erc20ContractAddress should throw if ETH balance is 0', async () => {
-      args.providers.http = {
-        getInfo: jest.fn().mockResolvedValue(getInfoMockResponse),
-        getAccount: jest.fn<any, any>().mockResolvedValue({
-          data: {
-            balance: '0',
-            unconfirmedBalance: '0',
-            nonce: 2,
-            tokens: [
-              {
-                caip19: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
-                balance: '424242',
-                type: 'ERC20',
-                contract: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
-              }
-            ]
-          }
-        })
+      const httpProvider = {
+        getInfo: jest.fn().mockResolvedValue(makeGetInfoMockResponse()),
+        getAccount: jest
+          .fn<any, any>()
+          .mockResolvedValue(makeGetAccountMockResponse({ balance: '0', erc20Balance: '424242' }))
       } as unknown as unchainedEthereum.api.V1Api
 
+      const args = makeChainAdapterArgs(httpProvider)
       const adapter = new ethereum.ChainAdapter(args)
 
       const tx = {
@@ -509,25 +491,14 @@ describe('EthereumChainAdapter', () => {
       const expectedValue = numberToHex(
         bn(balance).minus(bn(gasLimit).multipliedBy(gasPrice)) as any
       )
-      args.providers.http = {
-        getInfo: jest.fn().mockResolvedValue(getInfoMockResponse),
-        getAccount: jest.fn<any, any>().mockResolvedValue({
-          data: {
-            balance,
-            unconfirmedBalance: '0',
-            nonce: 2,
-            tokens: [
-              {
-                caip19: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
-                balance: '424242',
-                type: 'ERC20',
-                contract: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
-              }
-            ]
-          }
-        })
+      const httpProvider = {
+        getInfo: jest.fn().mockResolvedValue(makeGetInfoMockResponse()),
+        getAccount: jest
+          .fn<any, any>()
+          .mockResolvedValue(makeGetAccountMockResponse({ balance, erc20Balance: '424242' }))
       } as unknown as unchainedEthereum.api.V1Api
 
+      const args = makeChainAdapterArgs(httpProvider)
       const adapter = new ethereum.ChainAdapter(args)
 
       const tx = {
@@ -553,25 +524,16 @@ describe('EthereumChainAdapter', () => {
       expect(args.providers.http.getInfo).toHaveBeenCalledTimes(2)
     })
     it("should build a tx with value: '0' for ERC20 txs without sendMax", async () => {
-      args.providers.http = {
-        getInfo: jest.fn().mockResolvedValue(getInfoMockResponse),
-        getAccount: jest.fn<any, any>().mockResolvedValue({
-          data: {
-            balance: '2500000',
-            unconfirmedBalance: '0',
-            nonce: 2,
-            tokens: [
-              {
-                caip19: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
-                balance: '424242',
-                type: 'ERC20',
-                contract: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
-              }
-            ]
-          }
-        })
+      const httpProvider = {
+        getInfo: jest.fn().mockResolvedValue(makeGetInfoMockResponse()),
+        getAccount: jest
+          .fn<any, any>()
+          .mockResolvedValue(
+            makeGetAccountMockResponse({ balance: '2500000', erc20Balance: '424242' })
+          )
       } as unknown as unchainedEthereum.api.V1Api
 
+      const args = makeChainAdapterArgs(httpProvider)
       const adapter = new ethereum.ChainAdapter(args)
 
       const tx = {
@@ -596,25 +558,16 @@ describe('EthereumChainAdapter', () => {
       expect(args.providers.http.getInfo).toHaveBeenCalledTimes(1)
     })
     it('sendmax: true with chainSpecific.erc20ContractAddress should build a tx with full account balance - gas fee', async () => {
-      args.providers.http = {
-        getInfo: jest.fn().mockResolvedValue(getInfoMockResponse),
-        getAccount: jest.fn<any, any>().mockResolvedValue({
-          data: {
-            balance: '2500000',
-            unconfirmedBalance: '0',
-            nonce: 2,
-            tokens: [
-              {
-                caip19: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
-                balance: '424242',
-                type: 'ERC20',
-                contract: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
-              }
-            ]
-          }
-        })
+      const httpProvider = {
+        getInfo: jest.fn().mockResolvedValue(makeGetInfoMockResponse()),
+        getAccount: jest
+          .fn<any, any>()
+          .mockResolvedValue(
+            makeGetAccountMockResponse({ balance: '2500000', erc20Balance: '424242' })
+          )
       } as unknown as unchainedEthereum.api.V1Api
 
+      const args = makeChainAdapterArgs(httpProvider)
       const adapter = new ethereum.ChainAdapter(args)
 
       const tx = {
@@ -642,25 +595,16 @@ describe('EthereumChainAdapter', () => {
     })
 
     it('sendmax: true with chainSpecific.erc20ContractAddress should throw if token balance is 0', async () => {
-      args.providers.http = {
-        getInfo: jest.fn().mockResolvedValue(getInfoMockResponse),
-        getAccount: jest.fn<any, any>().mockResolvedValue({
-          data: {
-            balance: '2500000',
-            unconfirmedBalance: '0',
-            nonce: 2,
-            tokens: [
-              {
-                caip19: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
-                balance: undefined,
-                type: 'ERC20',
-                contract: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
-              }
-            ]
-          }
-        })
+      const httpProvider = {
+        getInfo: jest.fn().mockResolvedValue(makeGetInfoMockResponse()),
+        getAccount: jest
+          .fn<any, any>()
+          .mockResolvedValue(
+            makeGetAccountMockResponse({ balance: '2500000', erc20Balance: undefined })
+          )
       } as unknown as unchainedEthereum.api.V1Api
 
+      const args = makeChainAdapterArgs(httpProvider)
       const adapter = new ethereum.ChainAdapter(args)
 
       const tx = {
