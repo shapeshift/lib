@@ -13,7 +13,7 @@ It does not provide asset market data (price, volume, etc) or wallet balance inf
 
 ## Blacklist usage
 
-You can contribute to blacklist a flagged token by adding his [caip19](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-19.md) to the [blacklist.json](https://github.com/shapeshift/lib/blob/main/packages/asset-service/src/generateAssetData/blacklist.json) list.
+You can contribute to blacklist a flagged token by adding its [caip19](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-19.md) to the [blacklist.json](https://github.com/shapeshift/lib/blob/main/packages/asset-service/src/generateAssetData/blacklist.json) list.
 
 ## Overriding the description of an asset
 
