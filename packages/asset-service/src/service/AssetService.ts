@@ -3,8 +3,8 @@ import { Asset, AssetDataSource, BaseAsset, ChainTypes, NetworkTypes } from '@sh
 import axios from 'axios'
 
 import assetsDescriptions from './descriptions.json'
+import { getRenderedIdenticonBase64, IdenticonOptions } from './GenerateAssetIcon'
 import localAssetData from './generatedAssetData.json'
-import { getRenderedIdenticonBase64, IdenticonOptions } from './Identicon'
 
 export const flattenAssetData = (assetData: BaseAsset[]): Asset[] => {
   const flatAssetData: Asset[] = []

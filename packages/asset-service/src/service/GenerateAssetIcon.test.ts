@@ -1,4 +1,4 @@
-import { getRenderedIdenticonBase64, IdenticonOptions } from './Identicon'
+import { getRenderedIdenticonBase64, IdenticonOptions } from './GenerateAssetIcon'
 
 const options: IdenticonOptions = {
   identiconImage: {
