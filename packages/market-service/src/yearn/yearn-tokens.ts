@@ -14,7 +14,11 @@ import { ChainId, Token, Yearn } from '@yfi/sdk'
 import uniqBy from 'lodash/uniqBy'
 
 import { MarketService } from '../api'
+import { RATE_LIMIT_THRESHOLDS_PER_MINUTE } from '../config'
 import { bnOrZero } from '../utils/bignumber'
+import { createRateLimiter } from '../utils/rateLimit'
+
+const rateLimiter = createRateLimiter(RATE_LIMIT_THRESHOLDS_PER_MINUTE.YEARN)
 
 type YearnTokenMarketCapServiceArgs = {
   yearnSdk: Yearn<ChainId>
@@ -37,11 +41,13 @@ export class YearnTokenMarketCapService implements MarketService {
   findAll = async (args?: FindAllMarketArgs) => {
     try {
       const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
-      const response = await Promise.allSettled([
-        this.yearnSdk.ironBank.tokens(),
-        this.yearnSdk.tokens.supported(),
-        this.yearnSdk.vaults.tokens()
-      ])
+      const response = await rateLimiter(() =>
+        Promise.allSettled([
+          this.yearnSdk.ironBank.tokens(),
+          this.yearnSdk.tokens.supported(),
+          this.yearnSdk.vaults.tokens()
+        ])
+      )
       const [ironBankResponse, zapperResponse, underlyingTokensResponse] = response
 
       // Ignore rejected promises, return successful responses.
@@ -85,11 +91,13 @@ export class YearnTokenMarketCapService implements MarketService {
       // single token, so we are limited to getting all tokens then doing a find on them to return
       // the price to web. Doing allSettled so that one rejection does not interfere with the other
       // calls.
-      const response = await Promise.allSettled([
-        this.yearnSdk.ironBank.tokens(),
-        this.yearnSdk.tokens.supported(),
-        this.yearnSdk.vaults.tokens()
-      ])
+      const response = await rateLimiter(() =>
+        Promise.allSettled([
+          this.yearnSdk.ironBank.tokens(),
+          this.yearnSdk.tokens.supported(),
+          this.yearnSdk.vaults.tokens()
+        ])
+      )
       const [ironBankResponse, zapperResponse, underlyingTokensResponse] = response
 
       // Ignore rejected promises, return successful responses.
