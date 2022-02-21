@@ -6,13 +6,13 @@ import { createRateLimiter, rateLimitedAxios } from './rateLimiters'
 describe('rate limiters utilities', () => {
   describe('should get rate limited', () => {
     it('using rateLimitedAxios', async () => {
-      const totalRequests = 30
+      const totalRequests = 200
 
       let successCount = 0
-      const axiosAdapterLimiterRate = 2
-      const axiosAdapterLimiterInterval = 100
+      const axiosAdapterLimiterRate = 100
+      const axiosAdapterLimiterInterval = 1000
       /**
-       * this is for testing a service that has a rate limiter
+       * this is for testing an external service that has a rate limit
        */
       const axiosAdapterLimiter = new ServerRateLimiter({
         tokensPerInterval: axiosAdapterLimiterRate,
@@ -23,9 +23,9 @@ describe('rate limiters utilities', () => {
       async function axiosTestAdapter(config: AxiosRequestConfig) {
         const remainingRequests = await axiosAdapterLimiter.removeTokens(1)
 
-        // exeeded rate limiter
+        // exceeded rateLimiter limit
         if (remainingRequests < 0) {
-          return Promise.reject({ status: 429 })
+          throw { status: 429 }
         }
         return Promise.resolve(config)
       }
@@ -36,12 +36,12 @@ describe('rate limiters utilities', () => {
       let errorStatus = null
 
       for (let i = 0; i < totalRequests; i++) {
-        await testAxiosInstance
-          .get('/')
-          .then(onSuccess)
-          .catch(({ status }) => {
-            errorStatus = status
-          })
+        try {
+          await testAxiosInstance.get('/')
+          onSuccess()
+        } catch (error) {
+          errorStatus = error.status
+        }
       }
 
       expect(successCount).toBeLessThan(totalRequests)
@@ -49,10 +49,10 @@ describe('rate limiters utilities', () => {
     })
 
     it('using createRateLimiter', async () => {
-      const totalCalls = 400
+      const totalCalls = 200
 
       const rateLimiterRate = 100
-      const rateLimiterInterval = 10
+      const rateLimiterInterval = 1000
       let successCount = 0
       let errorStatus = null
 
@@ -64,7 +64,7 @@ describe('rate limiters utilities', () => {
 
       const functionToBeCalled = async () => {
         const remainingCalls = await functionLimiter.removeTokens(1)
-        // exeeded rate limiter
+        // exceeded rateLimiter limit
         if (remainingCalls < 0) {
           return Promise.reject({ status: 429 })
         }
@@ -74,11 +74,12 @@ describe('rate limiters utilities', () => {
       const onSuccess = () => successCount++
 
       for (let i = 0; i < totalCalls; i++) {
-        await functionToBeCalled()
-          .then(onSuccess)
-          .catch(({ status }) => {
-            errorStatus = status
-          })
+        try {
+          await functionToBeCalled()
+          onSuccess()
+        } catch (error) {
+          errorStatus = error.status
+        }
       }
 
       expect(errorStatus).toEqual(429)
@@ -88,11 +89,11 @@ describe('rate limiters utilities', () => {
 
   describe('should not get rate limited', () => {
     it('using rateLimitedAxios', async () => {
-      const totalRequests = 30
+      const totalRequests = 200
 
       let successCount = 0
-      const axiosAdapterLimiterRate = 2
-      const axiosAdapterLimiterInterval = 100
+      const axiosAdapterLimiterRate = 100
+      const axiosAdapterLimiterInterval = 1000
       /**
        * this is for testing a service that has a rate limiter
        */
@@ -104,9 +105,9 @@ describe('rate limiters utilities', () => {
 
       async function axiosTestAdapter(config: AxiosRequestConfig) {
         const remainingRequests = await axiosAdapterLimiter.removeTokens(1)
-        // exeeded rate limiter
+        // exceeded rateLimiter limit
         if (remainingRequests < 0) {
-          return Promise.reject({ status: 429 })
+          throw { status: 429 }
         }
         return Promise.resolve(config)
       }
@@ -122,12 +123,12 @@ describe('rate limiters utilities', () => {
       let errorStatus = null
       const start = Date.now()
       for (let i = 0; i < totalRequests; i++) {
-        await testAxiosInstance
-          .get('/')
-          .then(onSuccess)
-          .catch(({ status }) => {
-            errorStatus = status
-          })
+        try {
+          await testAxiosInstance.get('/')
+          onSuccess()
+        } catch (error) {
+          errorStatus = error.status
+        }
       }
       const end = Date.now()
 
@@ -145,10 +146,10 @@ describe('rate limiters utilities', () => {
     })
 
     it('using createRateLimiter', async () => {
-      const totalCalls = 400
+      const totalCalls = 200
 
       const rateLimiterRate = 100
-      const rateLimiterInterval = 10
+      const rateLimiterInterval = 1000
       let successCount = 0
       let errorStatus = null
 
@@ -162,7 +163,7 @@ describe('rate limiters utilities', () => {
 
       const functionToBeCalled = async () => {
         const remainingCalls = await functionLimiter.removeTokens(1)
-        // exeeded rate limiter
+        // exceeded rateLimiter limit
         if (remainingCalls < 0) {
           return Promise.reject({ status: 429 })
         }
@@ -173,11 +174,12 @@ describe('rate limiters utilities', () => {
 
       const start = Date.now()
       for (let i = 0; i < totalCalls; i++) {
-        await rateLimiter(() => functionToBeCalled())
-          .then(onSuccess)
-          .catch(({ status }) => {
-            errorStatus = status
-          })
+        try {
+          await rateLimiter(() => functionToBeCalled())
+          onSuccess()
+        } catch (error) {
+          errorStatus = error.status
+        }
       }
       const end = Date.now()
 
