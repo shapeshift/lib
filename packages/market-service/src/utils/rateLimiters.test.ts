@@ -27,7 +27,7 @@ describe('rate limiters utilities', () => {
         if (remainingRequests < 0) {
           throw { status: 429 }
         }
-        return Promise.resolve(config)
+        return config
       }
 
       const testAxiosInstance = axios.create({ adapter: axiosTestAdapter as AxiosAdapter })
@@ -66,9 +66,9 @@ describe('rate limiters utilities', () => {
         const remainingCalls = await functionLimiter.removeTokens(1)
         // exceeded rateLimiter limit
         if (remainingCalls < 0) {
-          return Promise.reject({ status: 429 })
+          throw { status: 429 }
         }
-        return Promise.resolve(true)
+        return true
       }
 
       const onSuccess = () => successCount++
@@ -109,7 +109,7 @@ describe('rate limiters utilities', () => {
         if (remainingRequests < 0) {
           throw { status: 429 }
         }
-        return Promise.resolve(config)
+        return config
       }
 
       const testAxiosInstance = rateLimitedAxios(
@@ -165,9 +165,9 @@ describe('rate limiters utilities', () => {
         const remainingCalls = await functionLimiter.removeTokens(1)
         // exceeded rateLimiter limit
         if (remainingCalls < 0) {
-          return Promise.reject({ status: 429 })
+          throw { status: 429 }
         }
-        return Promise.resolve(true)
+        return true
       }
 
       const onSuccess = () => successCount++
