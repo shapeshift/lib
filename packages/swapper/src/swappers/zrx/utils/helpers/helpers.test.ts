@@ -53,6 +53,13 @@ describe('utils', () => {
       )
       const rate = await getUsdRate({ symbol: 'FOX' })
       expect(rate).toBe('0.5')
+      expect(zrxService.get).toHaveBeenCalledWith('/swap/v1/price', {
+        params: {
+          buyToken: 'USDC',
+          buyAmount: '1000000000',
+          sellToken: 'FOX'
+        }
+      })
     })
     it('getUsdRate fails', async () => {
       ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data: {} }))
@@ -159,9 +166,10 @@ describe('utils', () => {
 
   describe('grantAllowance', () => {
     const walletAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
-    const wallet = ({
+    const wallet = {
+      supportsOfflineSigning: jest.fn(() => true),
       ethGetAddress: jest.fn(() => Promise.resolve(walletAddress))
-    } as unknown) as HDWallet
+    } as unknown as HDWallet
 
     it('should throw if sellAsset.tokenId is not provided', async () => {
       const quote = {

@@ -31,7 +31,11 @@ export enum NetworkTypes {
   TESTNET = 'TESTNET', // BTC, LTC, etc...
   ETH_ROPSTEN = 'ETH_ROPSTEN',
   ETH_RINKEBY = 'ETH_RINKEBY',
-  COSMOS_COSMOSHUB_4 = 'COSMOS_COSMOSHUB_4'
+  COSMOS_COSMOSHUB_4 = 'COSMOS_COSMOSHUB_4',
+  COSMOSHUB_MAINNET = 'COSMOSHUB_MAINNET',
+  COSMOSHUB_VEGA = 'COSMOSHUB_VEGA',
+  OSMOSIS_MAINNET = 'OSMOSIS_MAINNET',
+  OSMOSIS_TESTNET = 'OSMOSIS_TESTNET'
 }
 
 export enum UtxoAccountType {
@@ -54,6 +58,7 @@ type AbstractAsset = {
   caip2: string
   chain: ChainTypes
   description?: string
+  isTrustedDescription?: boolean
   dataSource: AssetDataSource
   network: NetworkTypes
   symbol: string

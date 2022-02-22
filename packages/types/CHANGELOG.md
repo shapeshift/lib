@@ -1,3 +1,38 @@
+# [@shapeshiftoss/types-v1.23.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v1.22.0...@shapeshiftoss/types-v1.23.0) (2022-02-16)
+
+
+### Features
+
+* add isTrusted to description of asset service ([#357](https://github.com/shapeshift/lib/issues/357)) ([49b002f](https://github.com/shapeshift/lib/commit/49b002f240ab29f3e6e85cfa7ef324bd16c7c3e3))
+
+# [@shapeshiftoss/types-v1.22.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v1.21.1...@shapeshiftoss/types-v1.22.0) (2022-02-16)
+
+
+### Features
+
+* caip2/caip19 for Cosmos SDK ([#371](https://github.com/shapeshift/lib/issues/371)) ([24d8f03](https://github.com/shapeshift/lib/commit/24d8f034348e4e6f11da7bdba035312924a0fe9d))
+
+# [@shapeshiftoss/types-v1.21.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v1.21.0...@shapeshiftoss/types-v1.21.1) (2022-02-07)
+
+
+### Bug Fixes
+
+* yearn chart data ([#341](https://github.com/shapeshift/lib/issues/341)) ([9a4dead](https://github.com/shapeshift/lib/commit/9a4dead4a8fe64972941b6a97978f805de0c61d6))
+
+# [@shapeshiftoss/types-v1.21.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v1.20.0...@shapeshiftoss/types-v1.21.0) (2022-01-12)
+
+
+### Features
+
+* add EIP-1559 parameters to getFeeData return object ([#288](https://github.com/shapeshift/lib/issues/288)) ([1329396](https://github.com/shapeshift/lib/commit/1329396954dc4cc5dd84578dd396a1383d9f027d))
+
+# [@shapeshiftoss/types-v1.20.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v1.19.1...@shapeshiftoss/types-v1.20.0) (2021-12-17)
+
+
+### Features
+
+* implement yearn market service ([#273](https://github.com/shapeshift/lib/issues/273)) ([d999850](https://github.com/shapeshift/lib/commit/d999850a5ab73de64b77626c4c36edd3da9f3117))
+
 # [@shapeshiftoss/types-v1.19.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v1.19.0...@shapeshiftoss/types-v1.19.1) (2021-12-15)
 
 # [@shapeshiftoss/types-v1.19.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v1.18.0...@shapeshiftoss/types-v1.19.0) (2021-12-14)

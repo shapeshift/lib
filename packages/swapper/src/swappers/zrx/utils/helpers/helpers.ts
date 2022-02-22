@@ -102,7 +102,7 @@ export const getUsdRate = async (input: Pick<Asset, 'symbol' | 'tokenId'>): Prom
     {
       params: {
         buyToken: 'USDC',
-        buyAmount: '1000000', // $1
+        buyAmount: '1000000000', // rate is imprecise for low $ values, hence asking for $1000
         sellToken: tokenId || symbol
       }
     }
@@ -157,18 +157,36 @@ export const grantAllowance = async ({
   } catch (error) {
     throw new Error(`grantAllowance - buildSendTransaction: ${error}`)
   }
+  if (wallet.supportsOfflineSigning()) {
+    try {
+      signedTx = await adapter.signTransaction({ txToSign: grantAllowanceTxToSign, wallet })
+    } catch (error) {
+      throw new SwapError(`grantAllowance - signTransaction error: ${error}`)
+    }
 
-  try {
-    signedTx = await adapter.signTransaction({ txToSign: grantAllowanceTxToSign, wallet })
-  } catch (error) {
-    throw new Error(`grantAllowance - signTransaction: ${error}`)
+    if (!signedTx) {
+      throw new SwapError(`grantAllowance - Signed transaction is required: ${signedTx}`)
+    }
+
+    try {
+      broadcastedTxId = await adapter.broadcastTransaction(signedTx)
+    } catch (error) {
+      throw new SwapError(`grantAllowance - broadcastTransaction error: ${error}`)
+    }
+
+    return broadcastedTxId
+  } else if (wallet.supportsBroadcast() && adapter.signAndBroadcastTransaction) {
+    try {
+      broadcastedTxId = await adapter.signAndBroadcastTransaction?.({
+        txToSign: grantAllowanceTxToSign,
+        wallet
+      })
+    } catch (error) {
+      throw new SwapError(`grantAllowance - signAndBroadcastTransaction error: ${error}`)
+    }
+
+    return broadcastedTxId
+  } else {
+    throw new SwapError('grantAllowance - invalid HDWallet config')
   }
-
-  try {
-    broadcastedTxId = await adapter.broadcastTransaction(signedTx)
-  } catch (error) {
-    throw new Error(`grantAllowance - broadcastTransaction: ${error}`)
-  }
-
-  return broadcastedTxId
 }

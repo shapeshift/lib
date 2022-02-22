@@ -1,3 +1,60 @@
+# [@shapeshiftoss/market-service-v1.11.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.11.2...@shapeshiftoss/market-service-v1.11.3) (2022-02-22)
+
+# [@shapeshiftoss/market-service-v1.11.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.11.1...@shapeshiftoss/market-service-v1.11.2) (2022-02-18)
+
+# [@shapeshiftoss/market-service-v1.11.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.11.0...@shapeshiftoss/market-service-v1.11.1) (2022-02-17)
+
+# [@shapeshiftoss/market-service-v1.11.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.10.2...@shapeshiftoss/market-service-v1.11.0) (2022-02-16)
+
+
+### Features
+
+* add isTrusted to description of asset service ([#357](https://github.com/shapeshift/lib/issues/357)) ([49b002f](https://github.com/shapeshift/lib/commit/49b002f240ab29f3e6e85cfa7ef324bd16c7c3e3))
+
+# [@shapeshiftoss/market-service-v1.10.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.10.1...@shapeshiftoss/market-service-v1.10.2) (2022-02-09)
+
+# [@shapeshiftoss/market-service-v1.10.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.10.0...@shapeshiftoss/market-service-v1.10.1) (2022-02-07)
+
+
+### Bug Fixes
+
+* yearn chart data ([#341](https://github.com/shapeshift/lib/issues/341)) ([9a4dead](https://github.com/shapeshift/lib/commit/9a4dead4a8fe64972941b6a97978f805de0c61d6))
+
+# [@shapeshiftoss/market-service-v1.10.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.9.0...@shapeshiftoss/market-service-v1.10.0) (2022-01-31)
+
+
+### Features
+
+* 821 extend yearn vaults ([#335](https://github.com/shapeshift/lib/issues/335)) ([ef7f591](https://github.com/shapeshift/lib/commit/ef7f5919f27a9e5db1b2c064fda741f6566c672d))
+
+# [@shapeshiftoss/market-service-v1.9.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.8.0...@shapeshiftoss/market-service-v1.9.0) (2022-01-27)
+
+
+### Features
+
+* extend market service for pricing data on new tokens ([#327](https://github.com/shapeshift/lib/issues/327)) ([d506d99](https://github.com/shapeshift/lib/commit/d506d99c8e35f92c111bccc09a4a73e12430acb5))
+
+# [@shapeshiftoss/market-service-v1.8.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.7.0...@shapeshiftoss/market-service-v1.8.0) (2022-01-03)
+
+
+### Features
+
+* short circuit market data calls to providers that don't support that asset ([#292](https://github.com/shapeshift/lib/issues/292)) ([861fc19](https://github.com/shapeshift/lib/commit/861fc19e8bf92a7e84a37a9b61e33a1a10f02d2d))
+
+# [@shapeshiftoss/market-service-v1.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.6.0...@shapeshiftoss/market-service-v1.7.0) (2021-12-17)
+
+
+### Features
+
+* implement yearn market service ([#273](https://github.com/shapeshift/lib/issues/273)) ([d999850](https://github.com/shapeshift/lib/commit/d999850a5ab73de64b77626c4c36edd3da9f3117))
+
+# [@shapeshiftoss/market-service-v1.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.5.2...@shapeshiftoss/market-service-v1.6.0) (2021-12-17)
+
+
+### Features
+
+* implement coincap market service (fixes [#281](https://github.com/shapeshift/lib/issues/281)) ([#286](https://github.com/shapeshift/lib/issues/286)) ([2159a00](https://github.com/shapeshift/lib/commit/2159a005754a8234b87abb648796ea63c69452b3))
+
 # [@shapeshiftoss/market-service-v1.5.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.5.1...@shapeshiftoss/market-service-v1.5.2) (2021-12-08)
 
 # [@shapeshiftoss/market-service-v1.5.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.5.0...@shapeshiftoss/market-service-v1.5.1) (2021-12-02)

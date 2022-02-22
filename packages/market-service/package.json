@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/market-service",
-  "version": "1.5.2",
+  "version": "1.11.3",
   "description": "ShapeShift market data service",
   "homepage": "",
   "license": "MIT",
@@ -20,20 +20,23 @@
     "build": "yarn clean && tsc --project tsconfig.build.json",
     "clean": "rm -rf dist",
     "dev": "tsc --watch",
-    "generate": "yarn build && node ./dist/coingecko/generateMarketCapData.js",
     "test": "jest test",
-    "type-check": "tsc --project ./tsconfig.json --noEmit"
+    "type-check": "tsc --project ./tsconfig.json --noEmit",
+    "marketcli": "yarn build && node ./dist/marketDataCLI.js"
   },
   "dependencies": {
-    "axios": "^0.21.2",
+    "@ethersproject/providers": "^5.5.1",
+    "@yfi/sdk": "^1.0.29",
+    "axios": "^0.26.0",
+    "bignumber.js": "^9.0.1",
     "dayjs": "^1.10.6"
   },
   "peerDependencies": {
-    "@shapeshiftoss/caip": "^1.4.2",
-    "@shapeshiftoss/types": "^1.13.1"
+    "@shapeshiftoss/caip": "^1.11.0",
+    "@shapeshiftoss/types": "^1.23.0"
   },
   "devDependencies": {
-    "@shapeshiftoss/caip": "^1.4.2",
-    "@shapeshiftoss/types": "^1.13.1"
+    "@shapeshiftoss/caip": "^1.11.0",
+    "@shapeshiftoss/types": "^1.23.0"
   }
 }

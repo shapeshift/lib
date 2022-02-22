@@ -16,7 +16,7 @@ export enum HistoryTimeframe {
 
 export type HistoryData = {
   price: number
-  date: string
+  date: number
 }
 
 export type PriceHistoryArgs = {
@@ -29,13 +29,12 @@ export type MarketDataArgs = {
 }
 
 export type FindAllMarketType = (args: FindAllMarketArgs) => Promise<MarketCapResult>
-export type FindByCaip19MarketType = (args: MarketDataArgs) => Promise<MarketData>
+export type FindByCaip19MarketType = (args: MarketDataArgs) => Promise<MarketData | null>
 
 export type PriceHistoryType = (args: PriceHistoryArgs) => Promise<HistoryData[]>
 
 export type FindAllMarketArgs = {
-  pages: number
-  perPage: number
+  count: number
 }
 
 export type MarketCapResult = {

@@ -10,7 +10,14 @@ import { numberToHex } from 'web3-utils'
 
 import { ChainAdapter as IChainAdapter } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
-import { getContractType, getStatus, getType, toPath, toRootDerivationPath } from '../utils'
+import {
+  bnOrZero,
+  getContractType,
+  getStatus,
+  getType,
+  toPath,
+  toRootDerivationPath
+} from '../utils'
 import erc20Abi from './erc20Abi.json'
 
 export interface ChainAdapterArgs {
@@ -71,8 +78,10 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       const { chain, network } = caip2.fromCAIP2(caip)
       const { data } = await this.providers.http.getAccount({ pubkey })
 
+      const balance = bnOrZero(data.balance).plus(bnOrZero(data.unconfirmedBalance))
+
       return {
-        balance: data.balance,
+        balance: balance.toString(),
         caip2: caip,
         caip19: caip19.toCAIP19({ chain, network }),
         chain: ChainTypes.Ethereum,
@@ -123,9 +132,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     }
   }
 
-  async buildSendTransaction(
-    tx: chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>
-  ): Promise<{
+  async buildSendTransaction(tx: chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>): Promise<{
     txToSign: ETHSignTx
   }> {
     try {
@@ -160,6 +167,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           if (!erc20Balance) throw new Error('no balance')
           tx.value = erc20Balance
         } else {
+          if (new BigNumber(account.balance).isZero()) throw new Error('no balance')
+
           const fee = new BigNumber(gasPrice).times(gasLimit)
           tx.value = new BigNumber(account.balance).minus(fee).toString()
         }
@@ -253,26 +262,63 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       data
     })
 
+    const feeData = (await this.providers.http.getGasFees()).data
+    const normalizationConstants = {
+      instant: String(new BigNumber(fees.instant).dividedBy(fees.fast)),
+      average: String(1),
+      slow: String(new BigNumber(fees.low).dividedBy(fees.fast))
+    }
+
     return {
       fast: {
         txFee: new BigNumber(fees.instant).times(gasLimit).toPrecision(),
         chainSpecific: {
           gasLimit,
-          gasPrice: String(fees.instant)
+          gasPrice: String(fees.instant),
+          maxFeePerGas: String(
+            new BigNumber(feeData.maxFeePerGas)
+              .times(normalizationConstants.instant)
+              .toFixed(0, BigNumber.ROUND_CEIL)
+          ),
+          maxPriorityFeePerGas: String(
+            new BigNumber(feeData.maxPriorityFeePerGas)
+              .times(normalizationConstants.instant)
+              .toFixed(0, BigNumber.ROUND_CEIL)
+          )
         }
       },
       average: {
         txFee: new BigNumber(fees.fast).times(gasLimit).toPrecision(),
         chainSpecific: {
           gasLimit,
-          gasPrice: String(fees.fast)
+          gasPrice: String(fees.fast),
+          maxFeePerGas: String(
+            new BigNumber(feeData.maxFeePerGas)
+              .times(normalizationConstants.average)
+              .toFixed(0, BigNumber.ROUND_CEIL)
+          ),
+          maxPriorityFeePerGas: String(
+            new BigNumber(feeData.maxPriorityFeePerGas)
+              .times(normalizationConstants.average)
+              .toFixed(0, BigNumber.ROUND_CEIL)
+          )
         }
       },
       slow: {
         txFee: new BigNumber(fees.low).times(gasLimit).toPrecision(),
         chainSpecific: {
           gasLimit,
-          gasPrice: String(fees.low)
+          gasPrice: String(fees.low),
+          maxFeePerGas: String(
+            new BigNumber(feeData.maxFeePerGas)
+              .times(normalizationConstants.slow)
+              .toFixed(0, BigNumber.ROUND_CEIL)
+          ),
+          maxPriorityFeePerGas: String(
+            new BigNumber(feeData.maxPriorityFeePerGas)
+              .times(normalizationConstants.slow)
+              .toFixed(0, BigNumber.ROUND_CEIL)
+          )
         }
       }
     }
@@ -292,6 +338,13 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
   async validateAddress(address: string): Promise<chainAdapters.ValidAddressResult> {
     const isValidAddress = WAValidator.validate(address, this.getType())
     if (isValidAddress) return { valid: true, result: chainAdapters.ValidAddressResultType.Valid }
+    return { valid: false, result: chainAdapters.ValidAddressResultType.Invalid }
+  }
+
+  async validateEnsAddress(address: string): Promise<chainAdapters.ValidAddressResult> {
+    const isValidEnsAddress = /^([0-9A-Z]([-0-9A-Z]*[0-9A-Z])?\.)+eth$/i.test(address)
+    if (isValidEnsAddress)
+      return { valid: true, result: chainAdapters.ValidAddressResultType.Valid }
     return { valid: false, result: chainAdapters.ValidAddressResultType.Invalid }
   }
 

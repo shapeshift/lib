@@ -1,3 +1,99 @@
+# [@shapeshiftoss/chain-adapters-v1.33.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.33.1...@shapeshiftoss/chain-adapters-v1.33.2) (2022-02-18)
+
+# [@shapeshiftoss/chain-adapters-v1.33.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.33.0...@shapeshiftoss/chain-adapters-v1.33.1) (2022-02-17)
+
+# [@shapeshiftoss/chain-adapters-v1.33.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.32.0...@shapeshiftoss/chain-adapters-v1.33.0) (2022-02-16)
+
+
+### Features
+
+* add isTrusted to description of asset service ([#357](https://github.com/shapeshift/lib/issues/357)) ([49b002f](https://github.com/shapeshift/lib/commit/49b002f240ab29f3e6e85cfa7ef324bd16c7c3e3))
+
+# [@shapeshiftoss/chain-adapters-v1.32.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.31.3...@shapeshiftoss/chain-adapters-v1.32.0) (2022-02-16)
+
+
+### Features
+
+* add "byChainId" function to ChainAdapter Manager ([#379](https://github.com/shapeshift/lib/issues/379)) ([bdf8d26](https://github.com/shapeshift/lib/commit/bdf8d261b50ff2c208556e6da811e77868bf0add))
+
+# [@shapeshiftoss/chain-adapters-v1.31.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.31.2...@shapeshiftoss/chain-adapters-v1.31.3) (2022-02-15)
+
+# [@shapeshiftoss/chain-adapters-v1.31.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.31.1...@shapeshiftoss/chain-adapters-v1.31.2) (2022-02-10)
+
+# [@shapeshiftoss/chain-adapters-v1.31.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.31.0...@shapeshiftoss/chain-adapters-v1.31.1) (2022-02-01)
+
+# [@shapeshiftoss/chain-adapters-v1.31.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.30.0...@shapeshiftoss/chain-adapters-v1.31.0) (2022-01-31)
+
+
+### Features
+
+* **EthereumChainAdapter:** test throw on passed ENS 'to' ([#322](https://github.com/shapeshift/lib/issues/322)) ([1838e40](https://github.com/shapeshift/lib/commit/1838e40eae6974e63f0f5e1d987a9f5a43840d9b))
+
+# [@shapeshiftoss/chain-adapters-v1.30.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.29.1...@shapeshiftoss/chain-adapters-v1.30.0) (2022-01-28)
+
+
+### Features
+
+* **EthereumChainAdapter:** add signAndBroadcastTransaction tests ([#334](https://github.com/shapeshift/lib/issues/334)) ([d07923b](https://github.com/shapeshift/lib/commit/d07923bb857630ea40d3145274e2054dda67d06b))
+
+# [@shapeshiftoss/chain-adapters-v1.29.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.29.0...@shapeshiftoss/chain-adapters-v1.29.1) (2022-01-28)
+
+# [@shapeshiftoss/chain-adapters-v1.29.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.28.0...@shapeshiftoss/chain-adapters-v1.29.0) (2022-01-28)
+
+
+### Features
+
+* **EthereumChainAdapter:** add signTransaction tests ([#328](https://github.com/shapeshift/lib/issues/328)) ([e11d589](https://github.com/shapeshift/lib/commit/e11d58908fcc55680048e015ea21af0a3dce943b))
+
+# [@shapeshiftoss/chain-adapters-v1.28.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.27.0...@shapeshiftoss/chain-adapters-v1.28.0) (2022-01-26)
+
+
+### Features
+
+* **EthereumChainAdapter:** buildSendTransaction and broadcastTransaction tests ([#320](https://github.com/shapeshift/lib/issues/320)) ([369ac4d](https://github.com/shapeshift/lib/commit/369ac4d675b178b498f893d8ecec46e034db8959))
+
+# [@shapeshiftoss/chain-adapters-v1.27.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.26.0...@shapeshiftoss/chain-adapters-v1.27.0) (2022-01-26)
+
+
+### Features
+
+* **buildSendTransaction:** throw on sendMax with 0 balance ([#319](https://github.com/shapeshift/lib/issues/319)) ([c6754d4](https://github.com/shapeshift/lib/commit/c6754d4958e9f549b1dbefca6f37602deb6f6622))
+
+# [@shapeshiftoss/chain-adapters-v1.26.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.25.0...@shapeshiftoss/chain-adapters-v1.26.0) (2022-01-26)
+
+
+### Features
+
+* **EthereumChainAdapter:** address methods tests ([#316](https://github.com/shapeshift/lib/issues/316)) ([a18a3fc](https://github.com/shapeshift/lib/commit/a18a3fc41adf39644c2663387477ee2c4576b069))
+
+# [@shapeshiftoss/chain-adapters-v1.25.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.24.0...@shapeshiftoss/chain-adapters-v1.25.0) (2022-01-20)
+
+
+### Features
+
+* improve ChainAdapter typings ([#315](https://github.com/shapeshift/lib/issues/315)) ([dd8fb0c](https://github.com/shapeshift/lib/commit/dd8fb0cc386d0412013ccb641b244273484fd510))
+
+# [@shapeshiftoss/chain-adapters-v1.24.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.23.1...@shapeshiftoss/chain-adapters-v1.24.0) (2022-01-17)
+
+
+### Features
+
+* add ENS validation ([#296](https://github.com/shapeshift/lib/issues/296)) ([7b92c24](https://github.com/shapeshift/lib/commit/7b92c246905f59d62a96e9071e391ee8369c2133))
+
+# [@shapeshiftoss/chain-adapters-v1.23.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.23.0...@shapeshiftoss/chain-adapters-v1.23.1) (2022-01-12)
+
+
+### Bug Fixes
+
+* return unconfirmed balances as part of account balance response ([#297](https://github.com/shapeshift/lib/issues/297)) ([47e22f5](https://github.com/shapeshift/lib/commit/47e22f50dae578650b847f78f07f8dff85e01cf5))
+
+# [@shapeshiftoss/chain-adapters-v1.23.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.22.1...@shapeshiftoss/chain-adapters-v1.23.0) (2022-01-12)
+
+
+### Features
+
+* add EIP-1559 parameters to getFeeData return object ([#288](https://github.com/shapeshift/lib/issues/288)) ([1329396](https://github.com/shapeshift/lib/commit/1329396954dc4cc5dd84578dd396a1383d9f027d))
+
 # [@shapeshiftoss/chain-adapters-v1.22.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.22.0...@shapeshiftoss/chain-adapters-v1.22.1) (2021-12-15)
 
 # [@shapeshiftoss/chain-adapters-v1.22.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.21.1...@shapeshiftoss/chain-adapters-v1.22.0) (2021-12-10)

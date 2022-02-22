@@ -1,3 +1,53 @@
+# [@shapeshiftoss/caip-v1.11.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v1.11.2...@shapeshiftoss/caip-v1.11.3) (2022-02-18)
+
+
+### Bug Fixes
+
+* update fromCaip19 ([#389](https://github.com/shapeshift/lib/issues/389)) ([5ee728f](https://github.com/shapeshift/lib/commit/5ee728fe69c09d8a2d0459ebd020aa4d4f871929))
+
+# [@shapeshiftoss/caip-v1.11.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v1.11.1...@shapeshiftoss/caip-v1.11.2) (2022-02-18)
+
+# [@shapeshiftoss/caip-v1.11.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v1.11.0...@shapeshiftoss/caip-v1.11.1) (2022-02-17)
+
+# [@shapeshiftoss/caip-v1.11.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v1.10.2...@shapeshiftoss/caip-v1.11.0) (2022-02-16)
+
+
+### Features
+
+* caip2/caip19 for Cosmos SDK ([#371](https://github.com/shapeshift/lib/issues/371)) ([24d8f03](https://github.com/shapeshift/lib/commit/24d8f034348e4e6f11da7bdba035312924a0fe9d))
+
+# [@shapeshiftoss/caip-v1.10.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v1.10.1...@shapeshiftoss/caip-v1.10.2) (2022-02-16)
+
+# [@shapeshiftoss/caip-v1.10.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v1.10.0...@shapeshiftoss/caip-v1.10.1) (2022-02-09)
+
+# [@shapeshiftoss/caip-v1.10.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v1.9.0...@shapeshiftoss/caip-v1.10.0) (2022-01-31)
+
+
+### Features
+
+* 821 extend yearn vaults ([#335](https://github.com/shapeshift/lib/issues/335)) ([ef7f591](https://github.com/shapeshift/lib/commit/ef7f5919f27a9e5db1b2c064fda741f6566c672d))
+
+# [@shapeshiftoss/caip-v1.9.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v1.8.0...@shapeshiftoss/caip-v1.9.0) (2022-01-27)
+
+
+### Features
+
+* extend market service for pricing data on new tokens ([#327](https://github.com/shapeshift/lib/issues/327)) ([d506d99](https://github.com/shapeshift/lib/commit/d506d99c8e35f92c111bccc09a4a73e12430acb5))
+
+# [@shapeshiftoss/caip-v1.8.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v1.7.0...@shapeshiftoss/caip-v1.8.0) (2022-01-03)
+
+
+### Features
+
+* short circuit market data calls to providers that don't support that asset ([#292](https://github.com/shapeshift/lib/issues/292)) ([861fc19](https://github.com/shapeshift/lib/commit/861fc19e8bf92a7e84a37a9b61e33a1a10f02d2d))
+
+# [@shapeshiftoss/caip-v1.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v1.6.1...@shapeshiftoss/caip-v1.7.0) (2021-12-17)
+
+
+### Features
+
+* implement coincap market service (fixes [#281](https://github.com/shapeshift/lib/issues/281)) ([#286](https://github.com/shapeshift/lib/issues/286)) ([2159a00](https://github.com/shapeshift/lib/commit/2159a005754a8234b87abb648796ea63c69452b3))
+
 # [@shapeshiftoss/caip-v1.6.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v1.6.0...@shapeshiftoss/caip-v1.6.1) (2021-12-09)
 
 

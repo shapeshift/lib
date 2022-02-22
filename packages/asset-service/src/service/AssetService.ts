@@ -1,6 +1,7 @@
 import { Asset, AssetDataSource, BaseAsset, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import axios from 'axios'
 
+import assetsDescriptions from './descriptions.json'
 import localAssetData from './generatedAssetData.json'
 
 export const flattenAssetData = (assetData: BaseAsset[]): Asset[] => {
@@ -31,8 +32,9 @@ const getDataIndexKey = (chain: ChainTypes, network: NetworkTypes, tokenId?: str
 }
 
 export const indexAssetData = (flatAssetData: Asset[]): IndexedAssetData => {
-  return flatAssetData.reduce((acc, val) => {
-    return { ...acc, [getDataIndexKey(val.chain, val.network, val.tokenId)]: val }
+  return flatAssetData.reduce<IndexedAssetData>((acc, val) => {
+    acc[getDataIndexKey(val.chain, val.network, val.tokenId)] = val
+    return acc
   }, {})
 }
 
@@ -45,6 +47,11 @@ type ByTokenIdArgs = {
   network?: NetworkTypes
   tokenId?: string
 }
+
+type DescriptionData = Readonly<{
+  description: string
+  isTrusted?: boolean
+}>
 
 export class AssetService {
   private assetFileUrl?: string
@@ -113,9 +120,21 @@ export class AssetService {
     return result
   }
 
-  async description({ asset }: { asset: Asset }): Promise<string> {
-    // Currently, we only get decription data for tokens with a coingecko datasource
-    if (asset.dataSource !== AssetDataSource.CoinGecko) return ''
+  async description({ asset }: { asset: Asset }): Promise<DescriptionData> {
+    const descriptions: Record<string, string> = assetsDescriptions
+
+    // Return overridden asset description if it exists and add isTrusted for description links
+    if (descriptions[asset.caip19]) {
+      return {
+        description: descriptions[asset.caip19],
+        isTrusted: true
+      }
+    }
+
+    if (asset.dataSource !== AssetDataSource.CoinGecko) {
+      return { description: '' }
+    }
+
     const contractUrl =
       typeof asset.tokenId === 'string' ? `/contract/${asset.tokenId?.toLowerCase()}` : ''
     const errorMessage = `AssetService:description: no description availble for ${asset.tokenId} on chain ${asset.chain}`
@@ -129,7 +148,8 @@ export class AssetService {
       const { data } = await axios.get<CoinData>(
         `https://api.coingecko.com/api/v3/coins/${asset.chain}${contractUrl}`
       )
-      return data?.description?.en ?? ''
+
+      return { description: data?.description?.en ?? '' }
     } catch (e) {
       throw new Error(errorMessage)
     }

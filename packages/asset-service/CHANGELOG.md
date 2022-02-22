@@ -1,3 +1,90 @@
+# [@shapeshiftoss/asset-service-v1.19.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v1.19.2...@shapeshiftoss/asset-service-v1.19.3) (2022-02-22)
+
+
+### Bug Fixes
+
+* typo in getOsmosisAssets and caused the wrong caip19 in generated asset data ([#393](https://github.com/shapeshift/lib/issues/393)) ([d763ebc](https://github.com/shapeshift/lib/commit/d763ebccba8db4a8e3c4ab19713661d69aad6b26))
+
+# [@shapeshiftoss/asset-service-v1.19.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v1.19.1...@shapeshiftoss/asset-service-v1.19.2) (2022-02-18)
+
+# [@shapeshiftoss/asset-service-v1.19.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v1.19.0...@shapeshiftoss/asset-service-v1.19.1) (2022-02-18)
+
+# [@shapeshiftoss/asset-service-v1.19.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v1.18.1...@shapeshiftoss/asset-service-v1.19.0) (2022-02-17)
+
+
+### Features
+
+* cosmos assets ([#366](https://github.com/shapeshift/lib/issues/366)) ([cb3dfac](https://github.com/shapeshift/lib/commit/cb3dfacb4f45ba7bb18cf58020b10935422c6314))
+
+# [@shapeshiftoss/asset-service-v1.18.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v1.18.0...@shapeshiftoss/asset-service-v1.18.1) (2022-02-17)
+
+# [@shapeshiftoss/asset-service-v1.18.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v1.17.0...@shapeshiftoss/asset-service-v1.18.0) (2022-02-16)
+
+
+### Features
+
+* improve asset service performance ([#378](https://github.com/shapeshift/lib/issues/378)) ([42b58a6](https://github.com/shapeshift/lib/commit/42b58a65cf80d6638d401f89ff56e40d22b88761))
+
+# [@shapeshiftoss/asset-service-v1.17.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v1.16.0...@shapeshiftoss/asset-service-v1.17.0) (2022-02-16)
+
+
+### Features
+
+* add isTrusted to description of asset service ([#357](https://github.com/shapeshift/lib/issues/357)) ([49b002f](https://github.com/shapeshift/lib/commit/49b002f240ab29f3e6e85cfa7ef324bd16c7c3e3))
+
+# [@shapeshiftoss/asset-service-v1.16.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v1.15.2...@shapeshiftoss/asset-service-v1.16.0) (2022-02-16)
+
+
+### Features
+
+* caip2/caip19 for Cosmos SDK ([#371](https://github.com/shapeshift/lib/issues/371)) ([24d8f03](https://github.com/shapeshift/lib/commit/24d8f034348e4e6f11da7bdba035312924a0fe9d))
+
+# [@shapeshiftoss/asset-service-v1.15.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v1.15.1...@shapeshiftoss/asset-service-v1.15.2) (2022-02-10)
+
+# [@shapeshiftoss/asset-service-v1.15.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v1.15.0...@shapeshiftoss/asset-service-v1.15.1) (2022-02-08)
+
+# [@shapeshiftoss/asset-service-v1.15.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v1.14.0...@shapeshiftoss/asset-service-v1.15.0) (2022-02-08)
+
+
+### Features
+
+* add ability to manually define asset descriptions ([#348](https://github.com/shapeshift/lib/issues/348)) ([bfe255b](https://github.com/shapeshift/lib/commit/bfe255b8e2a74ba608b9fbb73b03578e10b8a1ad))
+
+# [@shapeshiftoss/asset-service-v1.14.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v1.13.0...@shapeshiftoss/asset-service-v1.14.0) (2022-02-02)
+
+
+### Features
+
+* add trust wallet icons ([#337](https://github.com/shapeshift/lib/issues/337)) ([6767a0f](https://github.com/shapeshift/lib/commit/6767a0f346f79b14ee1b627e2e8c34d8906ae6a7))
+
+# [@shapeshiftoss/asset-service-v1.13.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v1.12.0...@shapeshiftoss/asset-service-v1.13.0) (2022-01-31)
+
+
+### Features
+
+* 821 extend yearn vaults ([#335](https://github.com/shapeshift/lib/issues/335)) ([ef7f591](https://github.com/shapeshift/lib/commit/ef7f5919f27a9e5db1b2c064fda741f6566c672d))
+
+# [@shapeshiftoss/asset-service-v1.12.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v1.11.0...@shapeshiftoss/asset-service-v1.12.0) (2022-01-27)
+
+
+### Features
+
+* extend market service for pricing data on new tokens ([#327](https://github.com/shapeshift/lib/issues/327)) ([d506d99](https://github.com/shapeshift/lib/commit/d506d99c8e35f92c111bccc09a4a73e12430acb5))
+
+# [@shapeshiftoss/asset-service-v1.11.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v1.10.0...@shapeshiftoss/asset-service-v1.11.0) (2022-01-25)
+
+
+### Features
+
+* yearn underlying assets ([#323](https://github.com/shapeshift/lib/issues/323)) ([e4366c1](https://github.com/shapeshift/lib/commit/e4366c1b4a19f1f6c515f337887edd3af04cda4e))
+
+# [@shapeshiftoss/asset-service-v1.10.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v1.9.0...@shapeshiftoss/asset-service-v1.10.0) (2021-12-17)
+
+
+### Features
+
+* implement yearn market service ([#273](https://github.com/shapeshift/lib/issues/273)) ([d999850](https://github.com/shapeshift/lib/commit/d999850a5ab73de64b77626c4c36edd3da9f3117))
+
 # [@shapeshiftoss/asset-service-v1.9.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v1.8.0...@shapeshiftoss/asset-service-v1.9.0) (2021-12-14)
 
 

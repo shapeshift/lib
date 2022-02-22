@@ -7,9 +7,13 @@ import { fromCAIP2, toCAIP2 } from './../caip2/caip2'
 export type CAIP19 = string
 
 export enum AssetNamespace {
+  CW20 = 'cw20',
+  CW721 = 'cw721',
   ERC20 = 'erc20',
   ERC721 = 'erc721',
-  Slip44 = 'slip44'
+  Slip44 = 'slip44',
+  NATIVE = 'native',
+  IBC = 'ibc'
 }
 
 export enum AssetReference {
@@ -24,19 +28,44 @@ type ToCAIP19Args = {
   network: NetworkTypes
   contractType?: ContractTypes
   tokenId?: string
+  assetNamespace?: AssetNamespace
+  assetReference?: string
 }
 
 type ToCAIP19 = (args: ToCAIP19Args) => string
 
-export const toCAIP19: ToCAIP19 = ({ chain, network, contractType, tokenId }) => {
+export const toCAIP19: ToCAIP19 = ({
+  chain,
+  network,
+  contractType,
+  tokenId,
+  assetNamespace,
+  assetReference
+}): string => {
   const caip2 = toCAIP2({ chain, network })
 
   switch (chain) {
-    case ChainTypes.Cosmos: {
-      return `${caip2}/${AssetNamespace.Slip44}:${AssetReference.Cosmos}`
-    }
     case ChainTypes.Osmosis: {
       return `${caip2}/${AssetNamespace.Slip44}:${AssetReference.Osmosis}`
+    }
+    // TODO: There is no chain-level fungible token standard in Cosmos SDK, but CosmWasm chains have CW20/CW721
+    // This should be implemented when we want to support tokens for Cosmos SDK chains
+    case ChainTypes.Cosmos: {
+      if (!assetNamespace || !assetReference) {
+        return `${caip2}/${AssetNamespace.Slip44}:${AssetReference.Cosmos}`
+      }
+      switch (assetNamespace) {
+        case AssetNamespace.CW20:
+        case AssetNamespace.CW721:
+        case AssetNamespace.IBC:
+        case AssetNamespace.NATIVE:
+          return `${caip2}/${assetNamespace}:${assetReference}`
+        default: {
+          throw new Error(
+            `Could not construct CAIP19 chain: ${chain}, network: ${network}, assetNamespace: ${assetNamespace}, assetReference: ${assetReference}`
+          )
+        }
+      }
     }
     case ChainTypes.Ethereum: {
       tokenId = tokenId?.toLowerCase()
@@ -77,6 +106,9 @@ export const toCAIP19: ToCAIP19 = ({ chain, network, contractType, tokenId }) =>
     case ChainTypes.Bitcoin: {
       return `${caip2}/${AssetNamespace.Slip44}:${AssetReference.Bitcoin}`
     }
+    default: {
+      throw new Error(`Chain type not supported: ${chain}`)
+    }
   }
 }
 
@@ -85,6 +117,8 @@ type FromCAIP19Return = {
   network: NetworkTypes
   contractType?: ContractTypes
   tokenId?: string
+  assetNamespace?: AssetNamespace
+  assetReference?: string
 }
 
 type FromCAIP19 = (caip19: string) => FromCAIP19Return
@@ -116,16 +150,13 @@ export const fromCAIP19: FromCAIP19 = (caip19) => {
             case AssetReference.Bitcoin: {
               return { chain, network }
             }
-            case AssetReference.Ethereum:
             default: {
               throw new Error(`fromCAIP19: invalid asset reference ${reference} on chain ${chain}`)
             }
           }
         }
-        case AssetNamespace.ERC20:
-        case AssetNamespace.ERC721:
         default: {
-          throw new Error(`fromCAIP19: invalid asset reference ${reference} on chain ${chain}`)
+          throw new Error(`fromCAIP19: invalid asset namespace ${namespace} on chain ${chain}`)
         }
       }
     }
@@ -136,7 +167,6 @@ export const fromCAIP19: FromCAIP19 = (caip19) => {
             case AssetReference.Ethereum: {
               return { chain, network }
             }
-            case AssetReference.Bitcoin:
             default: {
               throw new Error(`fromCAIP19: invalid asset reference ${reference} on chain ${chain}`)
             }
@@ -151,6 +181,56 @@ export const fromCAIP19: FromCAIP19 = (caip19) => {
           const contractType = ContractTypes.ERC721
           const tokenId = referenceString.toLowerCase()
           return { chain, network, contractType, tokenId }
+        }
+        default: {
+          throw new Error(`fromCAIP19: invalid asset namespace ${namespace} on chain ${chain}`)
+        }
+      }
+    }
+    case ChainTypes.Cosmos: {
+      switch (namespace) {
+        case AssetNamespace.Slip44: {
+          switch (reference) {
+            case AssetReference.Cosmos: {
+              return { chain, network }
+            }
+            case AssetReference.Ethereum:
+            case AssetReference.Bitcoin:
+            default: {
+              throw new Error(`fromCAIP19: invalid asset namespace ${namespace} on chain ${chain}`)
+            }
+          }
+        }
+        case AssetNamespace.CW20:
+          return {
+            chain,
+            network,
+            assetNamespace: AssetNamespace.CW20,
+            assetReference: referenceString
+          }
+        case AssetNamespace.CW721:
+          return {
+            chain,
+            network,
+            assetNamespace: AssetNamespace.CW721,
+            assetReference: referenceString
+          }
+        case AssetNamespace.IBC:
+          return {
+            chain,
+            network,
+            assetNamespace: AssetNamespace.IBC,
+            assetReference: referenceString
+          }
+        case AssetNamespace.NATIVE:
+          return {
+            chain,
+            network,
+            assetNamespace: AssetNamespace.NATIVE,
+            assetReference: referenceString
+          }
+        default: {
+          throw new Error(`fromCAIP19: invalid asset namespace ${namespace} on chain ${chain}`)
         }
       }
     }

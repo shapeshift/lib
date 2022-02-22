@@ -1,35 +1,26 @@
-import { BaseAsset, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
+import 'dotenv/config'
+
 import fs from 'fs'
 
-import { baseAssets } from './baseAssets'
-import { getTokens } from './ethTokens'
-import { extendErc20 } from './ethTokens/extendErc20'
+import { atom, bitcoin, tBitcoin, tEthereum } from './baseAssets'
+import { getOsmosisAssets } from './cosmos/getOsmosisAssets'
+import { addTokensToEth } from './ethTokens'
 
 const generateAssetData = async () => {
-  const generatedAssetData = await Promise.all(
-    baseAssets.map(async (baseAsset) => {
-      if (baseAsset.chain === ChainTypes.Ethereum && baseAsset.network === NetworkTypes.MAINNET) {
-        const [ethTokens, extendedERC20Tokens] = await Promise.all([
-          await getTokens(),
-          await extendErc20()
-        ])
-        const baseAssetWithTokens: BaseAsset = {
-          ...baseAsset,
-          tokens: ethTokens.concat(extendedERC20Tokens)
-        }
-        return baseAssetWithTokens
-      } else {
-        return baseAsset
-      }
-    })
-  )
+  const ethereum = await addTokensToEth()
+  const osmosisAssets = await getOsmosisAssets()
+
+  const generatedAssetData = [bitcoin, tBitcoin, ethereum, tEthereum, atom, ...osmosisAssets]
 
   await fs.promises.writeFile(
     `./src/service/generatedAssetData.json`,
-    JSON.stringify(generatedAssetData)
+    // beautify the file for github diff.
+    JSON.stringify(generatedAssetData, null, 2)
   )
 }
 
-generateAssetData().then(() => {
-  console.info('done')
-})
+generateAssetData()
+  .then(() => {
+    console.info('done')
+  })
+  .catch((err) => console.info(err))

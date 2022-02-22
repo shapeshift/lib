@@ -1,3 +1,23 @@
+# [@shapeshiftoss/swapper-v1.15.5](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.15.4...@shapeshiftoss/swapper-v1.15.5) (2022-02-18)
+
+# [@shapeshiftoss/swapper-v1.15.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.15.3...@shapeshiftoss/swapper-v1.15.4) (2022-02-17)
+
+# [@shapeshiftoss/swapper-v1.15.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.15.2...@shapeshiftoss/swapper-v1.15.3) (2022-02-16)
+
+
+### Bug Fixes
+
+* incorrect usd rate for multiple assets ([#372](https://github.com/shapeshift/lib/issues/372)) ([70221f1](https://github.com/shapeshift/lib/commit/70221f11c03a95143db64cd711ea5c00f7b5957d))
+
+# [@shapeshiftoss/swapper-v1.15.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.15.1...@shapeshiftoss/swapper-v1.15.2) (2022-02-10)
+
+# [@shapeshiftoss/swapper-v1.15.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.15.0...@shapeshiftoss/swapper-v1.15.1) (2022-01-07)
+
+
+### Bug Fixes
+
+* metamask toggle for erc20 trade ([#294](https://github.com/shapeshift/lib/issues/294)) ([7477423](https://github.com/shapeshift/lib/commit/7477423581423116822f5cc8e84faa14ed2bd14e))
+
 # [@shapeshiftoss/swapper-v1.15.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.14.1...@shapeshiftoss/swapper-v1.15.0) (2021-12-16)
 
 

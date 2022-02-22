@@ -103,6 +103,21 @@ const main = async () => {
     //   (err) => console.log(err)
     // )
 
+    // estimate gas fees
+    // try {
+    //   const feeData = await ethChainAdapter.getFeeData({
+    //     to: '0x642F4Bda144C63f6DC47EE0fDfbac0a193e2eDb7',
+    //     value: '123',
+    //     chainSpecific: {
+    //       from: '0x0000000000000000000000000000000000000000',
+    //       contractData: '0x'
+    //     }
+    //   })
+    //   console.log('getFeeData', feeData)
+    // } catch (err) {
+    //   console.log('getFeeDataError:', err.message)
+    // }
+
     // send eth example
     // try {
     //   const ethUnsignedTx = await ethChainAdapter.buildSendTransaction({

@@ -15,6 +15,8 @@ import dayjs from 'dayjs'
 import omit from 'lodash/omit'
 
 import { MarketService } from '../api'
+import { bn, bnOrZero } from '../utils/bignumber'
+import { isValidDate } from '../utils/isValidDate'
 import { CoinGeckoMarketCap } from './coingecko-types'
 
 // tons more params here: https://www.coingecko.com/en/api/documentation
@@ -36,13 +38,15 @@ export class CoinGeckoMarketService implements MarketService {
   baseUrl = 'https://api.coingecko.com/api/v3'
 
   private readonly defaultGetByMarketCapArgs: FindAllMarketArgs = {
-    pages: 10,
-    perPage: 250
+    count: 2500
   }
 
   findAll = async (args?: FindAllMarketArgs) => {
     const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
-    const { pages, perPage } = argsToUse
+    const { count } = argsToUse
+    const perPage = count > 250 ? 250 : count
+    const pages = Math.ceil(bnOrZero(count).div(perPage).toNumber())
+
     const urlAtPage = (page: number) =>
       `${this.baseUrl}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=${page}&sparkline=false`
     const pageCount = Array(pages)
@@ -62,6 +66,7 @@ export class CoinGeckoMarketService implements MarketService {
           const { id } = cur
           try {
             const caip19 = adapters.coingeckoToCAIP19(id)
+            if (!caip19) return acc
             const curWithoutId = omit(cur, 'id') // don't leak this through to clients
             acc[caip19] = {
               price: curWithoutId.current_price.toString(),
@@ -79,8 +84,9 @@ export class CoinGeckoMarketService implements MarketService {
     }
   }
 
-  findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData> => {
+  findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData | null> => {
     try {
+      if (!adapters.CAIP19ToCoingecko(caip19)) return null
       const { tokenId } = fromCAIP19(caip19)
       const isToken = !!tokenId
       const id = isToken ? 'ethereum' : adapters.CAIP19ToCoingecko(caip19)
@@ -101,7 +107,7 @@ export class CoinGeckoMarketService implements MarketService {
       }
     } catch (e) {
       console.warn(e)
-      throw new Error('MarketService(findByCaip19): error fetching market data')
+      throw new Error('CoinGeckoMarketService(findByCaip19): error fetching market data')
     }
   }
 
@@ -109,53 +115,71 @@ export class CoinGeckoMarketService implements MarketService {
     caip19,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
-    const { tokenId } = fromCAIP19(caip19)
-    const id = tokenId ? 'ethereum' : adapters.CAIP19ToCoingecko(caip19)
-
-    const end = dayjs().startOf('minute')
-    let start
-    switch (timeframe) {
-      case HistoryTimeframe.HOUR:
-        start = end.subtract(1, 'hour')
-        break
-      case HistoryTimeframe.DAY:
-        start = end.subtract(1, 'day')
-        break
-      case HistoryTimeframe.WEEK:
-        start = end.subtract(1, 'week')
-        break
-      case HistoryTimeframe.MONTH:
-        start = end.subtract(1, 'month')
-        break
-      case HistoryTimeframe.YEAR:
-        start = end.subtract(1, 'year')
-        break
-      case HistoryTimeframe.ALL:
-        start = end.subtract(20, 'years')
-        break
-      default:
-        start = end
-    }
-
+    if (!adapters.CAIP19ToCoingecko(caip19)) return []
     try {
+      const { tokenId } = fromCAIP19(caip19)
+      const id = tokenId ? 'ethereum' : adapters.CAIP19ToCoingecko(caip19)
+
+      const end = dayjs().startOf('minute')
+      let start
+      switch (timeframe) {
+        case HistoryTimeframe.HOUR:
+          start = end.subtract(1, 'hour')
+          break
+        case HistoryTimeframe.DAY:
+          start = end.subtract(1, 'day')
+          break
+        case HistoryTimeframe.WEEK:
+          start = end.subtract(1, 'week')
+          break
+        case HistoryTimeframe.MONTH:
+          start = end.subtract(1, 'month')
+          break
+        case HistoryTimeframe.YEAR:
+          start = end.subtract(1, 'year')
+          break
+        case HistoryTimeframe.ALL:
+          start = end.subtract(20, 'years')
+          break
+        default:
+          start = end
+      }
+
       const from = start.valueOf() / 1000
       const to = end.valueOf() / 1000
       const contract = tokenId ? `/contract/${tokenId}` : ''
       const url = `${this.baseUrl}/coins/${id}${contract}`
+      type CoinGeckoHistoryData = {
+        prices: [number, number][]
+      }
+
       // TODO: change vs_currency to localized currency
       const currency = 'usd'
-      const { data: historyData } = await axios.get(
+      const { data: historyData } = await axios.get<CoinGeckoHistoryData>(
         `${url}/market_chart/range?id=${id}&vs_currency=${currency}&from=${from}&to=${to}`
       )
-      return historyData?.prices?.map((data: [string, number]) => {
-        return {
-          date: data[0],
-          price: data[1]
+      return historyData?.prices?.reduce<HistoryData[]>((acc, data) => {
+        const date = data[0]
+        if (!isValidDate(date)) {
+          console.error('Coingecko asset has invalid date')
+          return acc
         }
-      })
+        const price = bn(data[1])
+        if (price.isNaN()) {
+          console.error('Coingecko asset has invalid price')
+          return acc
+        }
+        acc.push({
+          date: data[0],
+          price: price.toNumber()
+        })
+        return acc
+      }, [])
     } catch (e) {
       console.warn(e)
-      throw new Error('MarketService(findPriceHistoryByCaip19): error fetching price history')
+      throw new Error(
+        'CoinGeckoMarketService(findPriceHistoryByCaip19): error fetching price history'
+      )
     }
   }
 }
