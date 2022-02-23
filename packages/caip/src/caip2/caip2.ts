@@ -57,7 +57,6 @@ export const toCAIP2: ToCAIP2 = ({ chain, network }): string => {
         [NetworkTypes.COSMOS_COSMOSHUB_4]: ChainReference.CosmosMainnet,
         [NetworkTypes.COSMOSHUB_MAINNET]: ChainReference.CosmosHubMainnet,
         [NetworkTypes.COSMOSHUB_VEGA]: ChainReference.CosmosHubVega
-        
       }
     },
     [ChainTypes.Osmosis]: {
@@ -66,7 +65,6 @@ export const toCAIP2: ToCAIP2 = ({ chain, network }): string => {
         [NetworkTypes.MAINNET]: ChainReference.OsmosisMainnet,
         [NetworkTypes.OSMOSIS_MAINNET]: ChainReference.OsmosisMainnet,
         [NetworkTypes.OSMOSIS_TESTNET]: ChainReference.OsmosisTestnet
-        
       }
     }
   } as const
@@ -104,7 +102,7 @@ export const toCAIP2: ToCAIP2 = ({ chain, network }): string => {
       switch (network) {
         case NetworkTypes.COSMOSHUB_MAINNET:
         case NetworkTypes.COSMOSHUB_VEGA:
-        case NetworkTypes.COSMOS_COSMOSHUB_4:{
+        case NetworkTypes.COSMOS_COSMOSHUB_4: {
           const reference: ChainReference = referenceMap[network]
           const caip2 = `${namespace}:${reference}`
           return caip2
@@ -145,20 +143,16 @@ export const fromCAIP2: FromCAIP2 = (caip2) => {
     case ChainNamespace.Cosmos: {
       const chain = ChainTypes.Cosmos
       switch (n) {
+        case ChainReference.CosmosMainnet: {
+          const network = NetworkTypes.COSMOS_COSMOSHUB_4
+          return { chain, network }
+        }
         case ChainReference.CosmosHubMainnet: {
           const network = NetworkTypes.COSMOSHUB_MAINNET
           return { chain, network }
         }
         case ChainReference.CosmosHubVega: {
           const network = NetworkTypes.COSMOSHUB_VEGA
-          return { chain, network }
-        }
-        case ChainReference.OsmosisMainnet: {
-          const network = NetworkTypes.OSMOSIS_MAINNET
-          return { chain, network }
-        }
-        case ChainReference.OsmosisTestnet: {
-          const network = NetworkTypes.OSMOSIS_TESTNET
           return { chain, network }
         }
         default: {
@@ -203,23 +197,15 @@ export const fromCAIP2: FromCAIP2 = (caip2) => {
         }
       }
     }
-    case ChainNamespace.Cosmos: {
-      const chain = ChainTypes.Cosmos
-      switch (n) {
-        case ChainReference.CosmosMainnet: {
-          const network = NetworkTypes.COSMOS_COSMOSHUB_4
-          return { chain, network }
-        }
-        default: {
-          throw new Error(`fromCAIP19: unsupported ${c} network: ${n}`)
-        }
-      }
-    }
     case ChainNamespace.Osmosis: {
       const chain = ChainTypes.Osmosis
       switch (n) {
         case ChainReference.OsmosisMainnet: {
           const network = NetworkTypes.MAINNET
+          return { chain, network }
+        }
+        case ChainReference.OsmosisTestnet: {
+          const network = NetworkTypes.OSMOSIS_TESTNET
           return { chain, network }
         }
         default: {
@@ -243,6 +229,7 @@ export const isCAIP2: IsCAIP2 = (caip2) => {
   switch (c) {
     case ChainNamespace.Cosmos: {
       switch (n) {
+        case ChainReference.CosmosMainnet:
         case ChainReference.CosmosHubMainnet:
         case ChainReference.CosmosHubVega:
           return true
@@ -263,13 +250,6 @@ export const isCAIP2: IsCAIP2 = (caip2) => {
       switch (n) {
         case ChainReference.BitcoinMainnet:
         case ChainReference.BitcoinTestnet:
-          return true
-      }
-      break
-    }
-    case ChainNamespace.Cosmos: {
-      switch (n) {
-        case ChainReference.CosmosMainnet:
           return true
       }
       break
