@@ -18,9 +18,7 @@ export interface ChainAdapter<T extends ChainTypes> {
 
   getTxHistory(input: chainAdapters.TxHistoryInput): Promise<chainAdapters.TxHistoryResponse<T>>
 
-  buildSendTransaction(
-    tx: chainAdapters.BuildSendTxInput<T>
-  ): Promise<{
+  buildSendTransaction(tx: chainAdapters.BuildSendTxInput<T>): Promise<{
     txToSign: chainAdapters.ChainTxType<T>
   }>
 

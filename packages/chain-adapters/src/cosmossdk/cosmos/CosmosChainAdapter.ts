@@ -1,19 +1,18 @@
 /* eslint-disable prettier/prettier */
+import { ChainReference } from '@shapeshiftoss/caip/dist/caip2/caip2'
 import {
   bip32ToAddressNList,
   CosmosSignTx,
   CosmosTx,
   CosmosWallet
 } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, chainAdapters, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
-import { ChainAdapter as IChainAdapter } from '../../api'
-import { ChainAdapterArgs, CosmosSdkBaseAdapter } from '../CosmosSdkBaseAdapter'
-import { toPath } from '../../utils'
-import { cosmos } from '@shapeshiftoss/unchained-client'
-
-import { ErrorHandler } from '../../error/ErrorHandler'
-import { ChainReference } from '@shapeshiftoss/caip/dist/caip2/caip2'
+import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
+
+import { ChainAdapter as IChainAdapter } from '../../api'
+import { ErrorHandler } from '../../error/ErrorHandler'
+import { toPath } from '../../utils'
+import { ChainAdapterArgs, CosmosSdkBaseAdapter } from '../CosmosSdkBaseAdapter'
 
 // import { cosmos } from '@shapeshiftoss/unchained-client'
 
@@ -126,69 +125,6 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos>
     }
   }
 
-  // async getCaip2(): Promise<CAIP2> {
-  //   try {
-  //     const { data } = await this.chainSpecificProperties.providers.http.getInfo()
-
-  //     switch (data.network) {
-  //       case 'mainnet':
-  //         return caip2.toCAIP2({
-  //           chain: ChainTypes.Cosmos,
-  //           network: NetworkTypes.COSMOS_COSMOSHUB_4
-  //         })
-  //       default:
-  //         throw new Error(`CosmosChainAdapter: network is not supported: ${data.network}`)
-  //     }
-  //   } catch (err) {
-  //     return ErrorHandler(err)
-  //   }
-  // }
-
-  // async getAccount(pubkey: string): Promise<chainAdapters.Account<ChainTypes.Cosmos>> {
-  //   try {
-  //     const caip = await this.getCaip2()
-  //     const { chain, network } = caip2.fromCAIP2(caip)
-  //     const { data } = await this.chainSpecificProperties.providers.http.getAccount({ pubkey })
-
-  //     return {
-  //       balance: data.balance,
-  //       caip2: caip,
-  //       caip19: caip19.toCAIP19({ chain, network }),
-  //       chain: ChainTypes.Cosmos,
-  //       chainSpecific: {
-  //         sequence: data.sequence
-  //       },
-  //       pubkey: data.pubkey
-  //     }
-  //   } catch (err) {
-  //     return ErrorHandler(err)
-  //   }
-  // }
-
-  // async getTxHistory({
-  //   pubkey
-  // }: cosmos.api.V1ApiGetTxHistoryRequest): Promise<
-  //   chainAdapters.TxHistoryResponse<ChainTypes.Cosmos>
-  // > {
-  //   try {
-  //     const { data } = await this.chainSpecificProperties.providers.http.getTxHistory({ pubkey })
-
-  //     return {
-  //       page: data.page,
-  //       totalPages: data.totalPages,
-  //       transactions: data.transactions.map((tx) => ({
-  //         ...tx,
-  //         chain: ChainTypes.Cosmos,
-  //         network: NetworkTypes.MAINNET,
-  //         symbol: 'ATOM'
-  //       })),
-  //       txs: data.txs
-  //     }
-  //   } catch (err) {
-  //     return ErrorHandler(err)
-  //   }
-  // }
-
   // async signAndBroadcastTransaction(
   //   signTxInput: chainAdapters.SignTxInput<CosmosSignTx>
   // ): Promise<string> {
@@ -203,10 +139,6 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos>
   //   }
   // }
 
-  // async broadcastTransaction(hex: string) {
-  //   const { data } = await this.chainSpecificProperties.providers.http.sendTx({ sendTxBody: { hex } })
-  //   return data
-  // }
 
   // async getFeeData({
   //   to,
@@ -272,57 +204,5 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos>
   //   }
   // }
 
-  // async subscribeTxs(
-  //   input: chainAdapters.SubscribeTxsInput,
-  //   onMessage: (msg: chainAdapters.SubscribeTxsMessage<ChainTypes.Cosmos>) => void,
-  //   onError: (err: chainAdapters.SubscribeError) => void
-  // ): Promise<void> {
-  //   const { wallet, bip44Params = ChainAdapter.defaultBIP44Params } = input
 
-  //   const address = await this.getAddress({ wallet, bip44Params })
-  //   const subscriptionId = toRootDerivationPath(bip44Params)
-
-  //   await this.chainSpecificProperties.providers.ws.subscribeTxs(
-  //     subscriptionId,
-  //     { topic: 'txs', addresses: [address] },
-  //     (msg: chainAdapters.SubscribeTxsMessage<ChainTypes.Cosmos>) => {
-  //       const transfers = msg.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
-  //         caip19: transfer.caip19,
-  //         from: transfer.from,
-  //         to: transfer.to,
-  //         type: transfer.type,
-  //         value: transfer.value
-  //       }))
-
-  //       onMessage({
-  //         address: msg.address,
-  //         blockHash: msg.blockHash,
-  //         blockHeight: msg.blockHeight,
-  //         blockTime: msg.blockTime,
-  //         caip2: msg.caip2,
-  //         chain: ChainTypes.Cosmos,
-  //         confirmations: msg.confirmations,
-  //         fee: msg.fee,
-  //         status: msg.status,
-  //         tradeDetails: msg.tradeDetails,
-  //         transfers,
-  //         txid: msg.txid
-  //       })
-  //     },
-  //     (err) => onError({ message: err.message })
-  //   )
-  // }
-
-  // unsubscribeTxs(input?: chainAdapters.SubscribeTxsInput): void {
-  //   if (!input) return this.chainSpecificProperties.providers.ws.unsubscribeTxs()
-
-  //   const { bip44Params = ChainAdapter.defaultBIP44Params } = input
-  //   const subscriptionId = toRootDerivationPath(bip44Params)
-
-  //   this.chainSpecificProperties.providers.ws.unsubscribeTxs(subscriptionId, { topic: 'txs', addresses: [] })
-  // }
-
-  // closeTxs(): void {
-  //   this.chainSpecificProperties.providers.ws.close('txs')
-  // }
 }

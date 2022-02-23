@@ -4,14 +4,15 @@
 import { CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, Cosmos, CosmosSignTx, CosmosTx } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
+import { FeeDataKey } from '@shapeshiftoss/types/dist/chain-adapters'
+import BigNumber from 'bignumber.js'
+import WAValidator from 'multicoin-address-validator'
+
+import { ChainReference } from '../../../caip/dist/caip2/caip2'
 import { ChainAdapter as IChainAdapter } from '../api'
 import { ChainAdapter } from '../bitcoin'
 import { ErrorHandler } from '../error/ErrorHandler'
 import { toPath, toRootDerivationPath } from '../utils'
-import WAValidator from 'multicoin-address-validator'
-import { FeeDataKey } from '@shapeshiftoss/types/dist/chain-adapters'
-import BigNumber from 'bignumber.js'
-import { ChainReference } from '../../../caip/dist/caip2/caip2'
 
 export type CosmosChainTypes = ChainTypes.Cosmos | ChainTypes.Osmosis
 
@@ -119,16 +120,16 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
     throw new Error('Method not implemented.')
   }
 
+  async getFeeData(
+    input: Partial<chainAdapters.GetFeeDataInput<T>>
+  ): Promise<chainAdapters.FeeDataEstimate<T>> {
+    throw new Error('Method not implemented.')
+  }
+
   async signTransaction(
     signTxInput: chainAdapters.SignTxInput<chainAdapters.ChainTxType<T>>
   ): Promise<string> {
     // Method is implementation-specific
-    throw new Error('Method not implemented.')
-  }
-
-  async getFeeData(
-    input: Partial<chainAdapters.GetFeeDataInput<T>>
-  ): Promise<chainAdapters.FeeDataEstimate<T>> {
     throw new Error('Method not implemented.')
   }
 
@@ -137,6 +138,12 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
       sendTxBody: { hex }
     })
     return data
+  }
+
+  async signAndBroadcastTransaction(
+    signTxInput: chainAdapters.SignTxInput<CosmosSignTx>
+  ): Promise<string> {
+    throw new Error('Method not implemented.')
   }
 
   async validateAddress(address: string): Promise<chainAdapters.ValidAddressResult> {

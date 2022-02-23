@@ -7,5 +7,5 @@ export type Account = {
 }
 
 export type FeeData = {
-  
+  value: string
 }
