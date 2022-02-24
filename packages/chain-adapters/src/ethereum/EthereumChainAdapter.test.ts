@@ -83,9 +83,13 @@ describe('EthereumChainAdapter', () => {
   const makeEstimateGasMockedResponse = (overrideArgs?: { data: string }) =>
     merge({ data: '21000' }, overrideArgs)
 
-  const makeGetInfoMockResponse = () => ({
-    data: { network: 'mainnet' }
-  })
+  const makeGetInfoMockResponse = (overrideArgs?: { data: { network: string } }) =>
+    merge(
+      {
+        data: { network: 'mainnet' }
+      },
+      overrideArgs
+    )
   const makeGetAccountMockResponse = (balance: {
     balance: string
     erc20Balance: string | undefined
