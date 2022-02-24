@@ -97,11 +97,11 @@ describe('writeFiles', () => {
     console.info = jest.fn()
     await writeFiles(data)
     expect(realFs.promises.writeFile).toBeCalledWith(
-      './src/adapters/coincap/generated/foo/adapter.json',
+      './src/adapters/osmosis/generated/foo/adapter.json',
       fooCaips
     )
     expect(realFs.promises.writeFile).toBeCalledWith(
-      './src/adapters/coincap/generated/bar/adapter.json',
+      './src/adapters/osmosis/generated/bar/adapter.json',
       barCaips
     )
     expect(console.info).toBeCalledWith('Generated Osmosis CAIP19 adapter data.')
