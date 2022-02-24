@@ -1,4 +1,3 @@
-import { caip19 } from '@shapeshiftoss/caip'
 import { Asset, AssetDataSource, BaseAsset, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import axios from 'axios'
 
@@ -14,7 +13,7 @@ export const flattenAssetData = (assetData: BaseAsset[]): Asset[] => {
     flatAssetData.push(newAsset)
     if (baseAsset.tokens) {
       for (const tokenAsset of baseAsset.tokens) {
-        const flatAssetDatum = {
+        flatAssetData.push({
           ...tokenAsset,
           chain: baseAsset.chain,
           network: baseAsset.network,
@@ -22,27 +21,7 @@ export const flattenAssetData = (assetData: BaseAsset[]): Asset[] => {
           explorer: baseAsset.explorer,
           explorerAddressLink: baseAsset.explorerAddressLink,
           explorerTxLink: baseAsset.explorerTxLink
-        }
-        if (!flatAssetDatum.icon) {
-          const { tokenId } = caip19.fromCAIP19(flatAssetDatum.caip19)
-          const options: IdenticonOptions = {
-            identiconImage: {
-              size: 128,
-              background: [45, 55, 72, 255]
-            },
-            identiconText: {
-              symbolScale: 7,
-              enableShadow: true
-            }
-          }
-          if (tokenId)
-            flatAssetDatum.icon = getRenderedIdenticonBase64(
-              tokenId,
-              flatAssetDatum.symbol.substring(0, 3),
-              options
-            )
-        }
-        flatAssetData.push(flatAssetDatum)
+        })
       }
     }
   }
@@ -175,5 +154,13 @@ export class AssetService {
     } catch (e) {
       throw new Error(errorMessage)
     }
+  }
+
+  async generateAssetIconBase64(
+    identity: string,
+    text?: string,
+    options?: IdenticonOptions
+  ): Promise<string> {
+    return getRenderedIdenticonBase64(identity, text, options)
   }
 }
