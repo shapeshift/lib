@@ -66,15 +66,22 @@ describe('EthereumChainAdapter', () => {
       chainSpecificAdditionalProps
     )
 
-  const makeGetGasFeesMockedResponse = () => ({
-    data: {
-      gasPrice: '1',
-      maxFeePerGas: '300',
-      maxPriorityFeePerGas: '10'
-    }
-  })
+  const makeGetGasFeesMockedResponse = (overrideArgs?: {
+    data: { gasPrice?: string; maxFeePerGas?: string; maxPriorityFeePerGas?: string }
+  }) =>
+    merge(
+      {
+        data: {
+          gasPrice: '1',
+          maxFeePerGas: '300',
+          maxPriorityFeePerGas: '10'
+        }
+      },
+      overrideArgs
+    )
 
-  const makeEstimateGasMockedResponse = () => ({ data: '21000' })
+  const makeEstimateGasMockedResponse = (overrideArgs?: { data: string }) =>
+    merge({ data: '21000' }, overrideArgs)
 
   const makeGetInfoMockResponse = () => ({
     data: { network: 'mainnet' }
@@ -98,16 +105,19 @@ describe('EthereumChainAdapter', () => {
     }
   })
 
-  const makeChainAdapterArgs = (
-    httpProvider = {} as unknown as unchainedEthereum.api.V1Api,
+  const makeChainAdapterArgs = (overrideArgs?: {
+    providers?: { http: unchainedEthereum.api.V1Api }
     chainId?: string
-  ): ethereum.ChainAdapterArgs => ({
-    ...(chainId ? { chainId } : {}),
-    providers: {
-      http: httpProvider,
-      ws: {} as unchainedEthereum.ws.Client
-    }
-  })
+  }): ethereum.ChainAdapterArgs =>
+    merge(
+      {
+        providers: {
+          http: {} as unknown as unchainedEthereum.api.V1Api,
+          ws: {} as unchainedEthereum.ws.Client
+        }
+      },
+      overrideArgs
+    )
 
   describe('constructor', () => {
     it('should return chainAdapter with Ethereum mainnet chainId if called with no chainId', () => {
@@ -117,13 +127,13 @@ describe('EthereumChainAdapter', () => {
       expect(chainId).toEqual(VALID_CHAIN_ID)
     })
     it('should return chainAdapter with valid chainId if called with valid chainId', () => {
-      const args = makeChainAdapterArgs(undefined, 'eip155:3')
+      const args = makeChainAdapterArgs({ chainId: 'eip155:3' })
       const adapter = new ethereum.ChainAdapter(args)
       const chainId = adapter.getChainId()
       expect(chainId).toEqual('eip155:3')
     })
     it('should throw if called with invalid chainId', () => {
-      const args = makeChainAdapterArgs(undefined, 'INVALID_CHAINID')
+      const args = makeChainAdapterArgs({ chainId: 'INVALID_CHAINID' })
       expect(() => new ethereum.ChainAdapter(args)).toThrow(/The ChainID (.+) is not supported/)
     })
   })
@@ -140,7 +150,7 @@ describe('EthereumChainAdapter', () => {
         estimateGas: jest.fn().mockResolvedValue(makeEstimateGasMockedResponse()),
         getGasFees: jest.fn().mockResolvedValue(makeGetGasFeesMockedResponse())
       } as unknown as unchainedEthereum.api.V1Api
-      const args = makeChainAdapterArgs(httpProvider)
+      const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
 
       const adapter = new ethereum.ChainAdapter(args)
 
@@ -294,7 +304,7 @@ describe('EthereumChainAdapter', () => {
           .fn<any, any>()
           .mockResolvedValue(makeGetAccountMockResponse({ balance, erc20Balance: '424242' }))
       } as unknown as unchainedEthereum.api.V1Api
-      const args = makeChainAdapterArgs(httpProvider)
+      const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
       const adapter = new ethereum.ChainAdapter(args)
 
       const tx = {
@@ -323,7 +333,7 @@ describe('EthereumChainAdapter', () => {
           .fn<any, any>()
           .mockResolvedValue(makeGetAccountMockResponse({ balance, erc20Balance: '424242' }))
       } as unknown as unchainedEthereum.api.V1Api
-      const args = makeChainAdapterArgs(httpProvider)
+      const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
       const adapter = new ethereum.ChainAdapter(args)
 
       const tx = {
@@ -388,7 +398,7 @@ describe('EthereumChainAdapter', () => {
         sendTx: jest.fn().mockResolvedValue({ data: expectedResult })
       } as unknown as unchainedEthereum.api.V1Api
 
-      const args = makeChainAdapterArgs(httpProvider)
+      const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
       const adapter = new ethereum.ChainAdapter(args)
 
       const mockTx = '0x123'
@@ -424,7 +434,7 @@ describe('EthereumChainAdapter', () => {
           )
       } as unknown as unchainedEthereum.api.V1Api
 
-      const args = makeChainAdapterArgs(httpProvider)
+      const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
       const adapter = new ethereum.ChainAdapter(args)
 
       const tx = {
@@ -461,7 +471,7 @@ describe('EthereumChainAdapter', () => {
           .mockResolvedValue(makeGetAccountMockResponse({ balance: '0', erc20Balance: '424242' }))
       } as unknown as unchainedEthereum.api.V1Api
 
-      const args = makeChainAdapterArgs(httpProvider)
+      const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
       const adapter = new ethereum.ChainAdapter(args)
 
       const tx = {
@@ -492,7 +502,7 @@ describe('EthereumChainAdapter', () => {
           .mockResolvedValue(makeGetAccountMockResponse({ balance: '0', erc20Balance: '424242' }))
       } as unknown as unchainedEthereum.api.V1Api
 
-      const args = makeChainAdapterArgs(httpProvider)
+      const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
       const adapter = new ethereum.ChainAdapter(args)
 
       const tx = {
@@ -518,7 +528,7 @@ describe('EthereumChainAdapter', () => {
           .mockResolvedValue(makeGetAccountMockResponse({ balance, erc20Balance: '424242' }))
       } as unknown as unchainedEthereum.api.V1Api
 
-      const args = makeChainAdapterArgs(httpProvider)
+      const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
       const adapter = new ethereum.ChainAdapter(args)
 
       const tx = {
@@ -552,7 +562,7 @@ describe('EthereumChainAdapter', () => {
           )
       } as unknown as unchainedEthereum.api.V1Api
 
-      const args = makeChainAdapterArgs(httpProvider)
+      const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
       const adapter = new ethereum.ChainAdapter(args)
 
       const tx = {
@@ -585,7 +595,7 @@ describe('EthereumChainAdapter', () => {
           )
       } as unknown as unchainedEthereum.api.V1Api
 
-      const args = makeChainAdapterArgs(httpProvider)
+      const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
       const adapter = new ethereum.ChainAdapter(args)
 
       const tx = {
@@ -621,7 +631,7 @@ describe('EthereumChainAdapter', () => {
           )
       } as unknown as unchainedEthereum.api.V1Api
 
-      const args = makeChainAdapterArgs(httpProvider)
+      const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
       const adapter = new ethereum.ChainAdapter(args)
 
       const tx = {
