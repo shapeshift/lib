@@ -115,7 +115,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos>
       const txToSign: CosmosSignTx = {
         addressNList,
         tx: utx,
-        chain_id: ChainReference.CosmosMainnet,
+        chain_id: ChainReference.CosmosHubMainnet,
         account_number: '',
         sequence: ''
       }

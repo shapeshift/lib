@@ -20,7 +20,6 @@ export enum ChainReference {
   // caip2 uses max length of 32 chars of the genesis block
   BitcoinMainnet = '000000000019d6689c085ae165831e93',
   BitcoinTestnet = '000000000933ea01ad0ee984209779ba',
-  CosmosMainnet = 'cosmoshub-4',
   CosmosHubMainnet = 'cosmoshub-4',
   CosmosHubVega = 'vega-testnet',
   OsmosisMainnet = 'osmosis-1',
@@ -54,7 +53,6 @@ export const toCAIP2: ToCAIP2 = ({ chain, network }): string => {
     [ChainTypes.Cosmos]: {
       namespace: ChainNamespace.Cosmos,
       reference: {
-        [NetworkTypes.COSMOS_COSMOSHUB_4]: ChainReference.CosmosMainnet,
         [NetworkTypes.COSMOSHUB_MAINNET]: ChainReference.CosmosHubMainnet,
         [NetworkTypes.COSMOSHUB_VEGA]: ChainReference.CosmosHubVega
       }
@@ -101,8 +99,7 @@ export const toCAIP2: ToCAIP2 = ({ chain, network }): string => {
       const referenceMap = shapeShiftToCAIP2[chain].reference
       switch (network) {
         case NetworkTypes.COSMOSHUB_MAINNET:
-        case NetworkTypes.COSMOSHUB_VEGA:
-        case NetworkTypes.COSMOS_COSMOSHUB_4: {
+        case NetworkTypes.COSMOSHUB_VEGA: {
           const reference: ChainReference = referenceMap[network]
           const caip2 = `${namespace}:${reference}`
           return caip2
@@ -143,10 +140,6 @@ export const fromCAIP2: FromCAIP2 = (caip2) => {
     case ChainNamespace.Cosmos: {
       const chain = ChainTypes.Cosmos
       switch (n) {
-        case ChainReference.CosmosMainnet: {
-          const network = NetworkTypes.COSMOS_COSMOSHUB_4
-          return { chain, network }
-        }
         case ChainReference.CosmosHubMainnet: {
           const network = NetworkTypes.COSMOSHUB_MAINNET
           return { chain, network }
@@ -229,7 +222,6 @@ export const isCAIP2: IsCAIP2 = (caip2) => {
   switch (c) {
     case ChainNamespace.Cosmos: {
       switch (n) {
-        case ChainReference.CosmosMainnet:
         case ChainReference.CosmosHubMainnet:
         case ChainReference.CosmosHubVega:
           return true

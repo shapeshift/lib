@@ -30,7 +30,7 @@ const unchainedUrls = {
   },
   [ChainTypes.Cosmos]: {
     httpUrl: 'http://api.cosmos.localhost',
-    wsUrl: ''
+    wsUrl: 'ws://api.cosmos.localhost'
   }
 }
 
@@ -80,8 +80,8 @@ const main = async () => {
         txToSign: btcUnsignedTx.txToSign
       })
       console.log('btcSignedTx:', btcSignedTx)
-      const btcTxID = await btcChainAdapter.broadcastTransaction(btcSignedTx)
-      console.log('btcTxID: ', btcTxID)
+      // const btcTxID = await btcChainAdapter.broadcastTransaction(btcSignedTx)
+      // console.log('btcTxID: ', btcTxID)
     } catch (err) {
       console.log('btcTx error:', err.message)
     }
