@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { ChainReference } from '@shapeshiftoss/caip/dist/caip2/caip2'
 import {
   bip32ToAddressNList,
@@ -14,7 +13,6 @@ import { ErrorHandler } from '../../error/ErrorHandler'
 import { toPath } from '../../utils'
 import { ChainAdapterArgs, CosmosSdkBaseAdapter } from '../CosmosSdkBaseAdapter'
 
-// import { cosmos } from '@shapeshiftoss/unchained-client'
 
 export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos>
   implements IChainAdapter<ChainTypes.Cosmos> {
