@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { adapters } from '@shapeshiftoss/caip'
 import { MarketService } from '../api'
 import { OsmosisMarketCap } from './osmosis-types'
 import {
@@ -16,23 +17,29 @@ export class OsmosisMarketService implements MarketService {
 
   findAll = async (args?: FindAllMarketArgs) => {
     const osmosisApiUrl = `${this.baseUrl}/tokens/v2/all`
-    const { data } = await axios.get<OsmosisMarketCap[]>(osmosisApiUrl)
-    const results = data.map((token: OsmosisMarketCap) => {
-      return {
-        price: token.price.toString(),
-        marketCap: token.liquidity.toString(),
-        volume: token.volume_24h.toString(),
-        changePercent24Hr: token.price_24h_change
-      }
-    })
+    try{
+      const { data }: { data: OsmosisMarketCap[] } = await axios.get(osmosisApiUrl)
+      const results = data
+      .map((data) => (data ?? [])) // filter out rate limited results
+      .sort((a, b) => (a.liquidity < b.liquidity ? 1 : -1))
+      .reduce((acc, token) => {
+        const caip19 = adapters.osmosisToCAIP19(token.denom)
+        if (!caip19) return acc
 
-    return {
-      '1234': {
-        price: '1234',
-        marketCap: '1234',
-        volume: '1234',
-        changePercent24Hr: 1234.12
-      }
+        acc[caip19] = {
+          price: token.price.toString(),
+          marketCap: token.liquidity.toString(),
+          volume: token.volume_24h.toString(),
+          changePercent24Hr: token.price_24h_change
+        }
+
+        return acc
+      }, {} as MarketCapResult)
+
+      return results
+
+    } catch (e) {
+      return {}
     }
   }
 
