@@ -53,9 +53,9 @@ describe('parseOsmosisData', () => {
     ])
     const expected = {
       'cosmos:osmosis-1/ibc:27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2':
-        'ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2',
-      'cosmos:osmosis-1/native:uion': 'uion',
-      'cosmos:osmosis-1/slip44:118': 'uosmo'
+        'ATOM',
+      'cosmos:osmosis-1/native:uion': 'ION',
+      'cosmos:osmosis-1/slip44:118': 'OSMO'
     }
     expect(result).toEqual(expected)
   })
@@ -71,9 +71,9 @@ describe('parseData', () => {
     const expected = {
       'cosmos:osmosis-1': {
         'cosmos:osmosis-1/ibc:27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2':
-          'ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2',
-        'cosmos:osmosis-1/native:uion': 'uion',
-        'cosmos:osmosis-1/slip44:118': 'uosmo'
+          'ATOM',
+        'cosmos:osmosis-1/native:uion': 'ION',
+        'cosmos:osmosis-1/slip44:118': 'OSMO'
       }
     }
     expect(result).toEqual(expected)

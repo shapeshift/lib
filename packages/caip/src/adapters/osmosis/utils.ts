@@ -29,7 +29,7 @@ export const writeFiles = async (data: Record<string, Record<string, string>>) =
 export const fetchData = async (URL: string) => (await axios.get<OsmosisCoin[]>(URL)).data
 
 export const parseOsmosisData = (data: OsmosisCoin[]) => {
-  const results = data.reduce((acc, { denom }) => {
+  const results = data.reduce((acc, { denom, symbol }) => {
     const isOsmo = denom === 'uosmo'
     const isIon = denom === 'uion'
     let assetNamespace
@@ -48,7 +48,7 @@ export const parseOsmosisData = (data: OsmosisCoin[]) => {
     const network = NetworkTypes.OSMOSIS_MAINNET
     const caip19 = toCAIP19({ chain, network, assetNamespace, assetReference })
 
-    acc[caip19] = denom
+    acc[caip19] = symbol
     return acc
   }, {} as Record<string, string>)
 
