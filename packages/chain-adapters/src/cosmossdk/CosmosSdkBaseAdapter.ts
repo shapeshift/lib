@@ -1,25 +1,24 @@
 import { CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
-import { bip32ToAddressNList, Cosmos, CosmosSignTx, CosmosTx } from '@shapeshiftoss/hdwallet-core'
+import { CosmosSignTx } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
-import { FeeDataKey } from '@shapeshiftoss/types/dist/chain-adapters'
-import BigNumber from 'bignumber.js'
+import { cosmos } from '@shapeshiftoss/unchained-client'
 import WAValidator from 'multicoin-address-validator'
 
-import { ChainReference } from '../../../caip/dist/caip2/caip2'
 import { ChainAdapter as IChainAdapter } from '../api'
 import { ChainAdapter } from '../bitcoin'
 import { ErrorHandler } from '../error/ErrorHandler'
-import { toPath, toRootDerivationPath } from '../utils'
+import { toRootDerivationPath } from '../utils'
 
 export type CosmosChainTypes = ChainTypes.Cosmos | ChainTypes.Osmosis
 
 export interface ChainAdapterArgs {
   providers: {
-    http: any
+    http: cosmos.api.V1Api
     ws: any
   }
   symbol: string
   network: NetworkTypes
+  chainId: CAIP2
 }
 
 export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implements IChainAdapter<T> {
@@ -33,28 +32,35 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
 
   setChainSpecificProperties(args: ChainAdapterArgs) {
     this.chainSpecificProperties = args
+    if (args.chainId) {
+      try {
+        const { chain } = caip2.fromCAIP2(args.chainId)
+        if (
+          chain !==
+          caip2.toCAIP2({
+            chain: this.getType(),
+            network: this.chainSpecificProperties.network
+          })
+        ) {
+          throw new Error()
+        }
+        this.chainSpecificProperties.chainId = args.chainId
+      } catch (e) {
+        throw new Error(`The ChainID ${args.chainId} is not supported`)
+      }
+    }
   }
 
   getType(): T {
     throw new Error('Method not implemented.')
   }
 
-  async getCaip2(): Promise<CAIP2> {
-    try {
-      const { data } = await this.chainSpecificProperties.providers.http.getInfo()
+  getCaip2(): CAIP2 {
+    return this.chainSpecificProperties.chainId
+  }
 
-      switch (data.network) {
-        case 'mainnet':
-          return caip2.toCAIP2({
-            chain: this.getType(),
-            network: this.chainSpecificProperties.network
-          })
-        default:
-          throw new Error(`CosmosChainAdapter: network is not supported: ${data.network}`)
-      }
-    } catch (err) {
-      return ErrorHandler(err)
-    }
+  getChainId(): CAIP2 {
+    return this.chainSpecificProperties.chainId
   }
 
   async getAccount(pubkey: string): Promise<chainAdapters.Account<T>> {

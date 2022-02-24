@@ -13,9 +13,10 @@ import { ErrorHandler } from '../../error/ErrorHandler'
 import { toPath } from '../../utils'
 import { ChainAdapterArgs, CosmosSdkBaseAdapter } from '../CosmosSdkBaseAdapter'
 
-
-export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos>
-  implements IChainAdapter<ChainTypes.Cosmos> {
+export class ChainAdapter
+  extends CosmosSdkBaseAdapter<ChainTypes.Cosmos>
+  implements IChainAdapter<ChainTypes.Cosmos>
+{
   public static readonly defaultBIP44Params: BIP44Params = {
     purpose: 44,
     coinType: 118,

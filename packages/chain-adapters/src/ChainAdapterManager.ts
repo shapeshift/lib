@@ -1,5 +1,6 @@
 import type { CAIP2 } from '@shapeshiftoss/caip'
 import { caip2 } from '@shapeshiftoss/caip'
+import { ChainNamespace } from '@shapeshiftoss/caip/dist/caip2/caip2'
 import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 
@@ -58,7 +59,8 @@ export class ChainAdapterManager {
                     ws
                   },
                   symbol: 'ATOM',
-                  network: NetworkTypes.COSMOS_COSMOSHUB_4
+                  network: NetworkTypes.COSMOS_COSMOSHUB_4,
+                  chainId: ChainNamespace.Cosmos
                 })
             )
           }
