@@ -30,8 +30,6 @@ type ToCAIP2Args = {
   network: NetworkTypes
 }
 
-type ToCAIP2 = (args: ToCAIP2Args) => string
-
 const shapeShiftToCAIP2 = Object.freeze({
   [ChainTypes.Ethereum]: {
     namespace: ChainNamespace.Ethereum,
@@ -64,7 +62,8 @@ const shapeShiftToCAIP2 = Object.freeze({
   }
 })
 
-export const toCAIP2: ToCAIP2 = ({ chain, network }): string => {
+export const toCAIP2 = (args: ToCAIP2Args): string => {
+  const { chain, network } = args
   const namespace: ChainNamespace = shapeShiftToCAIP2[chain].namespace
 
   switch (chain) {
@@ -75,8 +74,7 @@ export const toCAIP2: ToCAIP2 = ({ chain, network }): string => {
         case NetworkTypes.ETH_ROPSTEN:
         case NetworkTypes.ETH_RINKEBY: {
           const reference: ChainReference = referenceMap[network]
-          const caip2 = `${namespace}:${reference}`
-          return caip2
+          return `${namespace}:${reference}`
         }
       }
       break
@@ -87,8 +85,7 @@ export const toCAIP2: ToCAIP2 = ({ chain, network }): string => {
         case NetworkTypes.MAINNET:
         case NetworkTypes.TESTNET: {
           const reference: ChainReference = referenceMap[network]
-          const caip2 = `${namespace}:${reference}`
-          return caip2
+          return `${namespace}:${reference}`
         }
       }
       break
@@ -99,8 +96,7 @@ export const toCAIP2: ToCAIP2 = ({ chain, network }): string => {
         case NetworkTypes.COSMOSHUB_MAINNET:
         case NetworkTypes.COSMOSHUB_VEGA: {
           const reference: ChainReference = referenceMap[network]
-          const caip2 = `${namespace}:${reference}`
-          return caip2
+          return `${namespace}:${reference}`
         }
       }
       break
@@ -111,10 +107,10 @@ export const toCAIP2: ToCAIP2 = ({ chain, network }): string => {
         case NetworkTypes.OSMOSIS_MAINNET:
         case NetworkTypes.OSMOSIS_TESTNET: {
           const reference: ChainReference = referenceMap[network]
-          const caip2 = `${namespace}:${reference}`
-          return caip2
+          return `${namespace}:${reference}`
         }
       }
+      break
     }
   }
 
