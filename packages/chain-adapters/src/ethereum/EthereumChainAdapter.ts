@@ -392,7 +392,6 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
               parser: msg.data.parser ?? 'unknown'
             }
           })
-
         })
       },
       (err) => onError({ message: err.message })
