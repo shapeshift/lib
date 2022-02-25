@@ -38,7 +38,7 @@ export class ChainAdapterManager {
             const ws = new unchained.bitcoin.ws.Client(wsUrl)
             return this.addChain(
               type,
-              () => new bitcoin.ChainAdapter({ providers: { http, ws }, coinName: 'Cosmos' })
+              () => new bitcoin.ChainAdapter({ providers: { http, ws }, coinName: 'Bitcoin' })
             )
           }
 
@@ -48,13 +48,7 @@ export class ChainAdapterManager {
             )
             return this.addChain(
               type,
-              () =>
-                new cosmos.ChainAdapter({
-                  providers: {
-                    http
-                  },
-                  coinName: 'Cosmos'
-                })
+              () => new cosmos.ChainAdapter({ providers: { http }, coinName: 'Cosmos' })
             )
           }
           default:
