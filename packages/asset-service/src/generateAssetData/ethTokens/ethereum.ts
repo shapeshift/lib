@@ -2,6 +2,7 @@ import { caip19 } from '@shapeshiftoss/caip'
 import { BaseAsset, TokenAsset } from '@shapeshiftoss/types'
 import axios from 'axios'
 import chunk from 'lodash/chunk'
+import orderBy from 'lodash/orderBy'
 import uniqBy from 'lodash/uniqBy'
 
 import { getRenderedIdenticonBase64, IdenticonOptions } from '../../service/GenerateAssetIcon'
@@ -32,7 +33,7 @@ export const addTokensToEth = async (): Promise<BaseAsset> => {
     ...zapperTokens,
     ...underlyingTokens
   ]
-  const uniqueTokens = uniqBy(tokens, 'caip19') // Remove dups
+  const uniqueTokens = orderBy(uniqBy(tokens, 'caip19'), 'caip19') // Remove dups and order for PR readability
   const batchSize = 100 // tune this to keep rate limiting happy
   const tokenBatches = chunk(uniqueTokens, batchSize)
   let modifiedTokens: TokenAsset[] = []
