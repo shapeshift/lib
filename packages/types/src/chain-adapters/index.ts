@@ -153,7 +153,7 @@ export type TradeDetails = {
 
 export interface TxMetadata {
   method?: string
-  parser?: string
+  parser: string
 }
 
 export type TxTransfer = {
