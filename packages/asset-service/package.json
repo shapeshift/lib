@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/asset-service",
-  "version": "1.19.3",
+  "version": "1.19.2",
   "description": "Service to return supported asset details",
   "homepage": "",
   "license": "MIT",
@@ -27,6 +27,8 @@
   },
   "dependencies": {
     "axios": "^0.26.0",
+    "identicon.js": "^2.3.3",
+    "js-pixel-fonts": "^1.5.0",
     "lodash": "^4.17.21"
   },
   "peerDependencies": {
