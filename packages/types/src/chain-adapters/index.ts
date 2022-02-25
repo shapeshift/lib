@@ -137,7 +137,7 @@ export type SubscribeTxsMessage<T extends ChainTypes> = {
   status: TxStatus
   tradeDetails?: TradeDetails
   transfers: Array<TxTransfer>
-  data?: TxMetadata | undefined
+  data?: TxMetadata
 }
 
 export enum TradeType {
