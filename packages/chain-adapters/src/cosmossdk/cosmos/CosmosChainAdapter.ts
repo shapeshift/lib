@@ -1,4 +1,4 @@
-import { ChainReference } from '@shapeshiftoss/caip/dist/caip2/caip2'
+import { CAIP2, ChainReference } from '@shapeshiftoss/caip/dist/caip2/caip2'
 import {
   bip32ToAddressNList,
   CosmosSignTx,
@@ -17,6 +17,8 @@ export class ChainAdapter
   extends CosmosSdkBaseAdapter<ChainTypes.Cosmos>
   implements IChainAdapter<ChainTypes.Cosmos>
 {
+  protected readonly supportedChainIds = ['cosmos:cosmoshub-4', 'cosmos:vega-testnet']
+  protected readonly chainId = this.supportedChainIds[0]
   public static readonly defaultBIP44Params: BIP44Params = {
     purpose: 44,
     coinType: 118,
@@ -24,8 +26,7 @@ export class ChainAdapter
   }
 
   constructor(args: ChainAdapterArgs) {
-    super()
-    this.setChainSpecificProperties(args)
+    super(args)
   }
 
   getType(): ChainTypes.Cosmos {
@@ -50,8 +51,7 @@ export class ChainAdapter
 
       if (!signedTx) throw new Error('Error signing tx')
 
-      // Make generic or union type for signed transactions and return
-      return JSON.stringify(signedTx)
+      return signedTx.serialized
     } catch (err) {
       return ErrorHandler(err)
     }

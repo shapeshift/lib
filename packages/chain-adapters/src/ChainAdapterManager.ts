@@ -48,19 +48,14 @@ export class ChainAdapterManager {
             const http = new unchained.cosmos.api.V1Api(
               new unchained.cosmos.api.Configuration({ basePath: httpUrl })
             )
-            // const ws = new unchained.cosmos.ws.Client(wsUrl)
-            const ws = ''
             return this.addChain(
               type,
               () =>
                 new cosmos.ChainAdapter({
                   providers: {
-                    http,
-                    ws
+                    http
                   },
-                  symbol: 'ATOM',
-                  network: NetworkTypes.COSMOS_COSMOSHUB_4,
-                  chainId: ChainNamespace.Cosmos
+                  symbol: 'ATOM'
                 })
             )
           }

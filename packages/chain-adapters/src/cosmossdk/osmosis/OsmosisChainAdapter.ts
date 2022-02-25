@@ -9,6 +9,9 @@ export class ChainAdapter
   extends CosmosSdkBaseAdapter<ChainTypes.Osmosis>
   implements IChainAdapter<ChainTypes.Osmosis>
 {
+  protected readonly supportedChainIds = ['cosmos:osmosis-1', 'cosmos:osmo-testnet-1']
+  protected readonly chainId = this.supportedChainIds[0]
+
   public static readonly defaultBIP44Params: BIP44Params = {
     purpose: 44,
     coinType: 118,
@@ -16,8 +19,7 @@ export class ChainAdapter
   }
 
   constructor(args: ChainAdapterArgs) {
-    super()
-    this.setChainSpecificProperties(args)
+    super(args)
   }
 
   getType(): ChainTypes.Osmosis {
@@ -42,8 +44,7 @@ export class ChainAdapter
 
       if (!signedTx) throw new Error('Error signing tx')
 
-      // Make generic or union type for signed transactions and return
-      return JSON.stringify(signedTx)
+      return signedTx.serialized
     } catch (err) {
       return ErrorHandler(err)
     }

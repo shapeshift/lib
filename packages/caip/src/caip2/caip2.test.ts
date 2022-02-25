@@ -12,7 +12,7 @@ describe('caip2', () => {
     })
 
     it('can turn Osmosis mainnet to caip2', () => {
-      const chain = ChainTypes.Cosmos
+      const chain = ChainTypes.Osmosis
       const network = NetworkTypes.OSMOSIS_MAINNET
       const result = toCAIP2({ chain, network })
       expect(result).toEqual('cosmos:osmosis-1')
@@ -91,14 +91,14 @@ describe('caip2', () => {
     it('can turn Osmosis mainnet to chain and network', () => {
       const osmosisCaip2 = 'cosmos:osmosis-1'
       const { chain, network } = fromCAIP2(osmosisCaip2)
-      expect(chain).toEqual(ChainTypes.Cosmos)
+      expect(chain).toEqual(ChainTypes.Osmosis)
       expect(network).toEqual(NetworkTypes.OSMOSIS_MAINNET)
     })
 
     it('can turn Osmosis testnet to chain and network', () => {
       const osmosisCaip2 = 'cosmos:osmo-testnet-1'
       const { chain, network } = fromCAIP2(osmosisCaip2)
-      expect(chain).toEqual(ChainTypes.Cosmos)
+      expect(chain).toEqual(ChainTypes.Osmosis)
       expect(network).toEqual(NetworkTypes.OSMOSIS_TESTNET)
     })
 
