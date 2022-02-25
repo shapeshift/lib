@@ -386,7 +386,10 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           tradeDetails: msg.trade,
           transfers,
           txid: msg.txid,
-          data: msg.data
+          data: {
+            method: msg.data?.method,
+            parser: msg.data?.parser ?? 'unknown'
+          }
         })
       },
       (err) => onError({ message: err.message })
