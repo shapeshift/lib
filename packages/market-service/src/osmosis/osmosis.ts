@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { adapters } from '@shapeshiftoss/caip'
+import { adapters, caip19 as caip19Funcs } from '@shapeshiftoss/caip'
+import { bnOrZero } from '../utils/bignumber'
 import { MarketService } from '../api'
 import { OsmosisMarketCap } from './osmosis-types'
 import {
@@ -17,42 +18,61 @@ export class OsmosisMarketService implements MarketService {
 
   findAll = async (args?: FindAllMarketArgs) => {
     const osmosisApiUrl = `${this.baseUrl}/tokens/v2/all`
-    try{
+    try {
       const { data }: { data: OsmosisMarketCap[] } = await axios.get(osmosisApiUrl)
       const results = data
-      .map((data) => (data ?? [])) // filter out rate limited results
-      .sort((a, b) => (a.liquidity < b.liquidity ? 1 : -1))
-      .reduce((acc, token) => {
-        const caip19 = adapters.osmosisToCAIP19(token.denom)
-        if (!caip19) return acc
+        .map((data) => data ?? []) // filter out rate limited results
+        .sort((a, b) => (a.liquidity < b.liquidity ? 1 : -1))
+        .reduce((acc, token) => {
+          const caip19 = adapters.osmosisToCAIP19(token.denom)
+          if (!caip19) return acc
 
-        acc[caip19] = {
-          price: token.price.toString(),
-          marketCap: token.liquidity.toString(),
-          volume: token.volume_24h.toString(),
-          changePercent24Hr: token.price_24h_change
-        }
+          acc[caip19] = {
+            price: token.price.toString(),
+            marketCap: token.liquidity.toString(),
+            volume: token.volume_24h.toString(),
+            changePercent24Hr: token.price_24h_change
+          }
 
-        return acc
-      }, {} as MarketCapResult)
+          return acc
+        }, {} as MarketCapResult)
 
       return results
-
     } catch (e) {
       return {}
     }
   }
 
-  findByCaip19 = async (args?: MarketDataArgs): Promise<MarketData | null> => {
-    return {
-      price: '0',
-      marketCap: '0',
-      volume: '0',
-      changePercent24Hr: 0
+  findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData | null> => {
+    if (!adapters.CAIP19ToOsmosis(caip19)) return null
+
+    try {
+      const symbol = adapters.CAIP19ToOsmosis(caip19)
+      const { data }: { data: OsmosisMarketCap[] } = await axios.get(`${this.baseUrl}/tokens/v2/${symbol}`)
+      const marketData = data[0]
+
+      if (!marketData) {
+        return {
+          price: '',
+          marketCap: '',
+          volume: '',
+          changePercent24Hr: 0
+        }
+      }
+
+      return {
+        price: marketData.price.toString(),
+        marketCap: marketData.liquidity.toString(),
+        volume: marketData.volume_24h.toString(),
+        changePercent24Hr: bnOrZero(marketData.price_24h_change).toNumber()
+      }
+    } catch (e) {
+      console.warn(e)
+      throw new Error('MarketService(findByCaip19): error fetching market data')
     }
   }
 
   findPriceHistoryByCaip19 = async (args?: PriceHistoryArgs): Promise<HistoryData[]> => {
-    return [{ date: 12345, price: 12.1}]
+    return [{ date: 12345, price: 12.1 }]
   }
 }

@@ -52,13 +52,13 @@ describe('osmosis market service', () => {
       expect(Object.keys(result)[0]).toEqual(adapters.osmosisToCAIP19(osmo.denom))
     })
 
-    it('can handle api errors', async () => {
+    it('should handle api errors', async () => {
       mockedAxios.get.mockRejectedValue({ error: 'foo' })
       const result = await osmosisMarketService.findAll()
       expect(Object.keys(result).length).toEqual(0)
     })
 
-    it('can handle rate limiting', async () => {
+    it('should handle rate limiting', async () => {
       mockedAxios.get.mockResolvedValue({ status: 429 })
       const result = await osmosisMarketService.findAll()
       expect(Object.keys(result).length).toEqual(0)
@@ -66,7 +66,43 @@ describe('osmosis market service', () => {
   })
 
   describe('findByCaip19', () => {
-    expect(true).toBe(true)
+
+    it('should return market data for Secret Network', async () => {
+      const args = { caip19: 'cosmos:osmosis-1/ibc:0954E1C28EB7AF5B72D24F3BC2B47BBB2FDF91BDDFD57B74B99E133AED40972A' }
+      const result = {
+        price: '4.5456667708',
+        marketCap: '17581752.09948758',
+        volume: '3289855.395915219',
+        changePercent24Hr: -15.4199369882
+      }
+
+      mockedAxios.get.mockResolvedValue({ data: [secretNetwork] })
+      expect(await osmosisMarketService.findByCaip19(args)).toEqual(result)
+    })
+
+    it('should return market data for Ion', async () => {
+      const args = { caip19: 'cosmos:osmosis-1/native:uion' }
+      const result = {
+        price: '7110.2708806483',
+        marketCap: '8737040.33551496',
+        volume: '353672.5116333088',
+        changePercent24Hr: -15.5060091033
+      }
+      mockedAxios.get.mockResolvedValue({ data: [ion] })
+      expect(await osmosisMarketService.findByCaip19(args)).toEqual(result)
+    })
+
+    it('should return market data for Osmosis', async () => {
+      const args = { caip19: 'cosmos:osmosis-1/slip44:118' }
+      const result = {
+        price: '8.0939512289',
+        marketCap: '513382677.98398143',
+        volume: '169020038.66921267',
+        changePercent24Hr: -8.5460553557
+      }
+      mockedAxios.get.mockResolvedValue({ data: [osmo] })
+      expect(await osmosisMarketService.findByCaip19(args)).toEqual(result)
+    })
   })
 
   describe('findPriceHistoryByCaip19', () => {
