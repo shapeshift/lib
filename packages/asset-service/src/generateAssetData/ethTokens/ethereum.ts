@@ -4,6 +4,7 @@ import axios from 'axios'
 import chunk from 'lodash/chunk'
 import uniqBy from 'lodash/uniqBy'
 
+import { getRenderedIdenticonBase64, IdenticonOptions } from '../../service/GenerateAssetIcon'
 import { generateTrustWalletUrl } from '../../service/TrustWalletService'
 import { ethereum } from '../baseAssets'
 import { getUniswapTokens } from './uniswap'
@@ -46,6 +47,23 @@ export const addTokensToEth = async (): Promise<BaseAsset> => {
     const newModifiedTokens = result.map((res, idx) => {
       const key = i * batchSize + idx
       if (res.status === 'rejected') {
+        if (!uniqueTokens[key].icon) {
+          const options: IdenticonOptions = {
+            identiconImage: {
+              size: 128,
+              background: [45, 55, 72, 255]
+            },
+            identiconText: {
+              symbolScale: 7,
+              enableShadow: true
+            }
+          }
+          uniqueTokens[key].icon = getRenderedIdenticonBase64(
+            uniqueTokens[key].caip19,
+            uniqueTokens[key].symbol.substring(0, 3),
+            options
+          )
+        }
         return uniqueTokens[key] // token without modified icon
       } else {
         const { chain } = caip19.fromCAIP19(uniqueTokens[key].caip19)
