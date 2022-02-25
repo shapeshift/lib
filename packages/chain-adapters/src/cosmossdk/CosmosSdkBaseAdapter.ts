@@ -43,9 +43,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
     this.providers = args.providers
   }
 
-  getType(): T {
-    throw new Error('Method not implemented.')
-  }
+  abstract getType(): T
 
   getChainId(): CAIP2 {
     return this.chainId
@@ -117,29 +115,19 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
     }
   }
 
-  async buildSendTransaction(
+  abstract buildSendTransaction(
     tx: chainAdapters.BuildSendTxInput<T>
-  ): Promise<{ txToSign: chainAdapters.ChainTxType<T> }> {
-    throw new Error('Method not implemented.')
-  }
+  ): Promise<{ txToSign: chainAdapters.ChainTxType<T> }>
 
-  async getAddress(input: chainAdapters.GetAddressInput): Promise<string> {
-    // Method is implementation-specific
-    throw new Error('Method not implemented.')
-  }
+  abstract getAddress(input: chainAdapters.GetAddressInput): Promise<string>
 
-  async getFeeData(
+  abstract getFeeData(
     input: Partial<chainAdapters.GetFeeDataInput<T>>
-  ): Promise<chainAdapters.FeeDataEstimate<T>> {
-    throw new Error('Method not implemented.')
-  }
+  ): Promise<chainAdapters.FeeDataEstimate<T>>
 
-  async signTransaction(
+  abstract signTransaction(
     signTxInput: chainAdapters.SignTxInput<chainAdapters.ChainTxType<T>>
-  ): Promise<string> {
-    // Method is implementation-specific
-    throw new Error('Method not implemented.')
-  }
+  ): Promise<string>
 
   async broadcastTransaction(hex: string): Promise<string> {
     const { data } = await this.providers.http.sendTx({
@@ -148,11 +136,9 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
     return data
   }
 
-  async signAndBroadcastTransaction(
+  abstract signAndBroadcastTransaction(
     signTxInput: chainAdapters.SignTxInput<CosmosSignTx>
-  ): Promise<string> {
-    throw new Error('Method not implemented.')
-  }
+  ): Promise<string>
 
   async validateAddress(address: string): Promise<chainAdapters.ValidAddressResult> {
     const isValidAddress = WAValidator.validate(address, this.getType())

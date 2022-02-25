@@ -37,11 +37,19 @@ export class ChainAdapter
     const { wallet, bip44Params = ChainAdapter.defaultBIP44Params } = input
     const path = toPath(bip44Params)
     const addressNList = bip32ToAddressNList(path)
-    const cosmosAddress = await (wallet as CosmosWallet).cosmosGetAddress({
-      addressNList,
-      showDisplay: Boolean(input.showOnDevice)
-    })
-    return cosmosAddress as string
+
+    try {
+      const cosmosAddress = await (wallet as CosmosWallet).cosmosGetAddress({
+        addressNList,
+        showDisplay: Boolean(input.showOnDevice)
+      })
+      if (!cosmosAddress) {
+        throw new Error('Unable to generate Cosmos address.')
+      }
+      return cosmosAddress
+    } catch (error) {
+      return ErrorHandler(error)
+    }
   }
 
   async signTransaction(signTxInput: chainAdapters.SignTxInput<CosmosSignTx>): Promise<string> {
@@ -122,5 +130,17 @@ export class ChainAdapter
     } catch (err) {
       return ErrorHandler(err)
     }
+  }
+
+  async getFeeData(
+    input: Partial<chainAdapters.GetFeeDataInput<ChainTypes.Cosmos>>
+  ): Promise<chainAdapters.FeeDataEstimate<ChainTypes.Cosmos>> {
+    throw new Error('Method not implemented.')
+  }
+
+  async signAndBroadcastTransaction(
+    signTxInput: chainAdapters.SignTxInput<CosmosSignTx>
+  ): Promise<string> {
+    throw new Error('Method not implemented.')
   }
 }

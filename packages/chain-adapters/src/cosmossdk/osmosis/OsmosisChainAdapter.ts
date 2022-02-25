@@ -49,4 +49,22 @@ export class ChainAdapter
       return ErrorHandler(err)
     }
   }
+
+  async buildSendTransaction(
+    tx: chainAdapters.BuildSendTxInput<ChainTypes.Osmosis>
+  ): Promise<{ txToSign: chainAdapters.ChainTxType<ChainTypes.Osmosis> }> {
+    throw new Error('Method not implemented.')
+  }
+
+  async getFeeData(
+    input: Partial<chainAdapters.GetFeeDataInput<ChainTypes.Osmosis>>
+  ): Promise<chainAdapters.FeeDataEstimate<ChainTypes.Osmosis>> {
+    throw new Error('Method not implemented.')
+  }
+
+  async signAndBroadcastTransaction(
+    signTxInput: chainAdapters.SignTxInput<OsmosisSignTx>
+  ): Promise<string> {
+    throw new Error('Method not implemented.')
+  }
 }
