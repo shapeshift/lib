@@ -74,6 +74,9 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
           sequence: data.sequence
         },
         pubkey: data.pubkey
+        /* TypeScript can't guarantee the correct type for the chainSpecific field because of the generic return type.
+           It is preferable to define and type the return instead of applying the cast below, but that's left as an exercise
+           for the reader. */
       } as chainAdapters.Account<T>
     } catch (err) {
       return ErrorHandler(err)
