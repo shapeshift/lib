@@ -133,12 +133,14 @@ export class ChainAdapter
   }
 
   async getFeeData(
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars -- Disable no-unused-vars lint rule for unimplemented methods */
     input: Partial<chainAdapters.GetFeeDataInput<ChainTypes.Cosmos>>
   ): Promise<chainAdapters.FeeDataEstimate<ChainTypes.Cosmos>> {
     throw new Error('Method not implemented.')
   }
 
   async signAndBroadcastTransaction(
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars -- Disable no-unused-vars lint rule for unimplemented methods */
     signTxInput: chainAdapters.SignTxInput<CosmosSignTx>
   ): Promise<string> {
     throw new Error('Method not implemented.')

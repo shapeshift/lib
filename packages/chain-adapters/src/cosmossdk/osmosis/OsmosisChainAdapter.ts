@@ -51,18 +51,21 @@ export class ChainAdapter
   }
 
   async buildSendTransaction(
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars -- Disable no-unused-vars lint rule for unimplemented methods */
     tx: chainAdapters.BuildSendTxInput<ChainTypes.Osmosis>
   ): Promise<{ txToSign: chainAdapters.ChainTxType<ChainTypes.Osmosis> }> {
     throw new Error('Method not implemented.')
   }
 
   async getFeeData(
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars -- Disable no-unused-vars lint rule for unimplemented methods */
     input: Partial<chainAdapters.GetFeeDataInput<ChainTypes.Osmosis>>
   ): Promise<chainAdapters.FeeDataEstimate<ChainTypes.Osmosis>> {
     throw new Error('Method not implemented.')
   }
 
   async signAndBroadcastTransaction(
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars -- Disable no-unused-vars lint rule for unimplemented methods */
     signTxInput: chainAdapters.SignTxInput<OsmosisSignTx>
   ): Promise<string> {
     throw new Error('Method not implemented.')
