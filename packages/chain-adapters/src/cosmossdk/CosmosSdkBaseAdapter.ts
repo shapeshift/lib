@@ -19,13 +19,13 @@ export interface ChainAdapterArgs {
     http: cosmos.api.V1Api
     // unchained-client 5.1.1 does not have a websocket client for cosmos
   }
-  symbol: string
+  coinName: string
 }
 
 export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implements IChainAdapter<T> {
   protected readonly chainId: CAIP2
   protected readonly supportedChainIds: CAIP2[]
-  protected readonly symbol: string
+  protected readonly coinName: string
   protected readonly providers: {
     http: cosmos.api.V1Api
   }
@@ -57,14 +57,14 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
 
   async getAccount(pubkey: string): Promise<chainAdapters.Account<T>> {
     try {
-      const caip = await this.getCaip2()
+      const caip = this.getCaip2()
       const { chain, network } = caip2.fromCAIP2(caip)
       const { data } = await this.providers.http.getAccount({ pubkey })
 
       return {
         balance: data.balance,
         caip2: caip,
-        // This is the caip19 for default asset on the chain (ATOM/OSMO/etc)
+        // This is the caip19 for native token on the chain (ATOM/OSMO/etc)
         caip19: caip19.toCAIP19({
           chain,
           network,
@@ -108,7 +108,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
       //      */
       //     chain: caip2.fromCAIP2(this.getCaip2()).chain,
       //     network: caip2.fromCAIP2(this.getCaip2()).network,
-      //     symbol: this.symbol
+      //     coinName: this.coinName
       //   })),
       //   txs: data.txs.length
       // }

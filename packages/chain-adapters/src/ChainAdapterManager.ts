@@ -53,7 +53,7 @@ export class ChainAdapterManager {
                   providers: {
                     http
                   },
-                  symbol: 'ATOM'
+                  coinName: 'Cosmos'
                 })
             )
           }

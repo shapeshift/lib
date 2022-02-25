@@ -29,8 +29,8 @@ const unchainedUrls = {
     wsUrl: 'wss://dev-api.ethereum.shapeshift.com'
   },
   [ChainTypes.Cosmos]: {
-    httpUrl: 'http://api.cosmos.localhost',
-    wsUrl: 'ws://api.cosmos.localhost'
+    httpUrl: 'http://dev-api.cosmos.shapeshift.com',
+    wsUrl: 'ws://dev-api.cosmos.shapeshift.com'
   }
 }
 
@@ -131,8 +131,8 @@ const main = async () => {
         txToSign: ethUnsignedTx.txToSign
       })
       console.log('ethSignedTx:', ethSignedTx)
-      const ethTxID = await ethChainAdapter.broadcastTransaction(ethSignedTx)
-      console.log('ethTxID:', ethTxID)
+      // const ethTxID = await ethChainAdapter.broadcastTransaction(ethSignedTx)
+      // console.log('ethTxID:', ethTxID)
     } catch (err) {
       console.log('ethTx error:', err.message)
     }
@@ -193,8 +193,8 @@ const main = async () => {
       })
       console.log('cosmosSignedTx:', cosmosSignedTx)
 
-      const cosmosTxID = await cosmosChainAdapter.broadcastTransaction(cosmosSignedTx)
-      console.log('cosmosTxID:', cosmosTxID)
+      // const cosmosTxID = await cosmosChainAdapter.broadcastTransaction(cosmosSignedTx)
+      // console.log('cosmosTxID:', cosmosTxID)
     } catch (err) {
       console.log('cosmosTx error:', err.message)
     }
