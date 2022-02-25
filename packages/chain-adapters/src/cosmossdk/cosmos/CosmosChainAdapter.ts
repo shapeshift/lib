@@ -1,4 +1,4 @@
-import { CAIP2, ChainReference } from '@shapeshiftoss/caip/dist/caip2/caip2'
+import { caip2 } from '@shapeshiftoss/caip'
 import {
   bip32ToAddressNList,
   CosmosSignTx,
@@ -114,7 +114,7 @@ export class ChainAdapter
       const txToSign: CosmosSignTx = {
         addressNList,
         tx: utx,
-        chain_id: ChainReference.CosmosHubMainnet,
+        chain_id: caip2.ChainReference.CosmosHubMainnet,
         account_number: '',
         sequence: ''
       }

@@ -1,7 +1,5 @@
-import type { CAIP2 } from '@shapeshiftoss/caip'
-import { caip2 } from '@shapeshiftoss/caip'
-import { ChainNamespace } from '@shapeshiftoss/caip/dist/caip2/caip2'
-import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
+import { CAIP2, caip2 } from '@shapeshiftoss/caip'
+import { ChainTypes } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 
 import { ChainAdapter } from './api'

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// no-unused-vars is temporarily disabled until more functions are implemented
 import { CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
 import { AssetNamespace } from '@shapeshiftoss/caip/dist/caip19/caip19'
 import { CosmosSignTx } from '@shapeshiftoss/hdwallet-core'
@@ -21,9 +23,9 @@ export interface ChainAdapterArgs {
 }
 
 export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implements IChainAdapter<T> {
-  protected readonly chainId: CAIP2 = ''
-  protected readonly supportedChainIds: CAIP2[] = []
-  protected readonly symbol: string = 'ATOM'
+  protected readonly chainId: CAIP2
+  protected readonly supportedChainIds: CAIP2[]
+  protected readonly symbol: string
   protected readonly providers: {
     http: cosmos.api.V1Api
   }
@@ -34,7 +36,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
     accountNumber: 0
   }
 
-  constructor(args: ChainAdapterArgs) {
+  protected constructor(args: ChainAdapterArgs) {
     if (args.chainId && this.supportedChainIds.includes(args.chainId)) {
       this.chainId = args.chainId
     }
