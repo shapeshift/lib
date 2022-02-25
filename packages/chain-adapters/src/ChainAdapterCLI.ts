@@ -29,8 +29,8 @@ const unchainedUrls = {
     wsUrl: 'wss://dev-api.ethereum.shapeshift.com'
   },
   [ChainTypes.Cosmos]: {
-    httpUrl: 'http://dev-api.cosmos.shapeshift.com',
-    wsUrl: 'ws://dev-api.cosmos.shapeshift.com'
+    httpUrl: 'https://dev-api.cosmos.shapeshift.com',
+    wsUrl: 'wss://dev-api.cosmos.shapeshift.com'
   }
 }
 
