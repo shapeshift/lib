@@ -1,3 +1,21 @@
+# [@shapeshiftoss/chain-adapters-v1.35.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.35.0...@shapeshiftoss/chain-adapters-v1.35.1) (2022-02-25)
+
+# [@shapeshiftoss/chain-adapters-v1.35.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.34.0...@shapeshiftoss/chain-adapters-v1.35.0) (2022-02-25)
+
+
+### Features
+
+* add metadata to transaction WebSocket messages ([#396](https://github.com/shapeshift/lib/issues/396)) ([7f6ccf3](https://github.com/shapeshift/lib/commit/7f6ccf35c9f31044e74cb77c869e0126618f4fb9))
+
+# [@shapeshiftoss/chain-adapters-v1.34.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.33.2...@shapeshiftoss/chain-adapters-v1.34.0) (2022-02-23)
+
+
+### Features
+
+* refactor ChainAdapter.getCaip2() functions to be synchronous & add `getChainId` [#381](https://github.com/shapeshift/lib/issues/381) ([#384](https://github.com/shapeshift/lib/issues/384)) ([5bd0cce](https://github.com/shapeshift/lib/commit/5bd0cce1864050994c84978fb181aeed44891884))
+
+# [@shapeshiftoss/chain-adapters-v1.33.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.33.1...@shapeshiftoss/chain-adapters-v1.33.2) (2022-02-18)
+
 # [@shapeshiftoss/chain-adapters-v1.33.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.33.0...@shapeshiftoss/chain-adapters-v1.33.1) (2022-02-17)
 
 # [@shapeshiftoss/chain-adapters-v1.33.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v1.32.0...@shapeshiftoss/chain-adapters-v1.33.0) (2022-02-16)

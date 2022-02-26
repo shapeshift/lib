@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/chain-adapters",
-  "version": "1.33.1",
+  "version": "1.35.1",
   "description": "> TODO: description",
   "homepage": "",
   "license": "MIT",
@@ -25,7 +25,7 @@
     "type-check": "tsc --project ./tsconfig.json --noEmit"
   },
   "dependencies": {
-    "axios": "^0.21.2",
+    "axios": "^0.26.0",
     "bignumber.js": "^9.0.1",
     "bitcoinjs-lib": "^5.2.0",
     "coinselect": "^3.1.12",
@@ -38,8 +38,8 @@
     "@shapeshiftoss/hdwallet-core": "^1.18.2",
     "@shapeshiftoss/hdwallet-native": "^1.18.2",
     "@shapeshiftoss/types": "^1.23.0",
-    "@shapeshiftoss/unchained-client": "^5.1.0",
-    "@shapeshiftoss/unchained-tx-parser": "^5.1.0",
+    "@shapeshiftoss/unchained-client": "^5.2.0",
+    "@shapeshiftoss/unchained-tx-parser": "^5.2.0",
     "bs58check": "^2.0.0"
   },
   "devDependencies": {
@@ -47,8 +47,8 @@
     "@shapeshiftoss/hdwallet-core": "^1.18.2",
     "@shapeshiftoss/hdwallet-native": "^1.18.2",
     "@shapeshiftoss/types": "^1.23.0",
-    "@shapeshiftoss/unchained-client": "^5.1.0",
-    "@shapeshiftoss/unchained-tx-parser": "^5.1.0",
+    "@shapeshiftoss/unchained-client": "^5.2.0",
+    "@shapeshiftoss/unchained-tx-parser": "^5.2.0",
     "@types/bs58check": "^2.1.0",
     "@types/multicoin-address-validator": "^0.5.0"
   }

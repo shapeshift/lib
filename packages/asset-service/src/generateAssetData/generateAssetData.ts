@@ -1,6 +1,7 @@
 import 'dotenv/config'
 
 import fs from 'fs'
+import orderBy from 'lodash/orderBy'
 
 import { atom, bitcoin, tBitcoin, tEthereum } from './baseAssets'
 import blacklist from './blacklist.json'
@@ -12,9 +13,12 @@ const generateAssetData = async () => {
   const ethereum = await addTokensToEth()
   const osmosisAssets = await getOsmosisAssets()
 
+  // all assets, included assets to be blacklisted
   const unfilteredAssetData = [bitcoin, tBitcoin, ethereum, tEthereum, atom, ...osmosisAssets]
-
-  const generatedAssetData = filterBlacklistedAssets(blacklist, unfilteredAssetData)
+  // remove blacklisted assets
+  const filteredAssetData = filterBlacklistedAssets(blacklist, unfilteredAssetData)
+  // deterministic order so diffs are readable
+  const generatedAssetData = orderBy(filteredAssetData, 'caip19')
 
   await fs.promises.writeFile(
     `./src/service/generatedAssetData.json`,
