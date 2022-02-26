@@ -1,4 +1,4 @@
-import { bip32ToAddressNList, OsmosisSignTx, OsmosisWallet } from '@shapeshiftoss/hdwallet-core'
+import { bip32ToAddressNList, OsmosisSignTx, supportsOsmosis } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 
 import { ChainAdapter as IChainAdapter } from '../../api'
@@ -30,21 +30,36 @@ export class ChainAdapter
     const { wallet, bip44Params = ChainAdapter.defaultBIP44Params } = input
     const path = toPath(bip44Params)
     const addressNList = bip32ToAddressNList(path)
-    const osmosisAddress = await (wallet as OsmosisWallet).osmosisGetAddress({
-      addressNList,
-      showDisplay: Boolean(input.showOnDevice)
-    })
-    return osmosisAddress as string
+    try {
+      if (supportsOsmosis(wallet)) {
+        const osmosisAddress = await wallet.osmosisGetAddress({
+          addressNList,
+          showDisplay: Boolean(input.showOnDevice)
+        })
+        if (!osmosisAddress) {
+          throw new Error('Unable to generate Osmosis address')
+        }
+        return osmosisAddress as string
+      } else {
+        throw new Error('Wallet does not support Osmosis.')
+      }
+    } catch (error) {
+      return ErrorHandler(error)
+    }
   }
 
   async signTransaction(signTxInput: chainAdapters.SignTxInput<OsmosisSignTx>): Promise<string> {
     try {
       const { txToSign, wallet } = signTxInput
-      const signedTx = await (wallet as OsmosisWallet).osmosisSignTx(txToSign)
+      if (supportsOsmosis(wallet)) {
+        const signedTx = await wallet.osmosisSignTx(txToSign)
 
-      if (!signedTx) throw new Error('Error signing tx')
+        if (!signedTx) throw new Error('Error signing tx')
 
-      return signedTx.serialized
+        return signedTx.serialized
+      } else {
+        throw new Error('Wallet does not support Osmosis.')
+      }
     } catch (err) {
       return ErrorHandler(err)
     }

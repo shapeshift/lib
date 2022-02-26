@@ -3,7 +3,7 @@ import {
   bip32ToAddressNList,
   CosmosSignTx,
   CosmosTx,
-  CosmosWallet
+  supportsCosmos
 } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
@@ -39,14 +39,18 @@ export class ChainAdapter
     const addressNList = bip32ToAddressNList(path)
 
     try {
-      const cosmosAddress = await (wallet as CosmosWallet).cosmosGetAddress({
-        addressNList,
-        showDisplay: Boolean(input.showOnDevice)
-      })
-      if (!cosmosAddress) {
-        throw new Error('Unable to generate Cosmos address.')
+      if (supportsCosmos(wallet)) {
+        const cosmosAddress = await wallet.cosmosGetAddress({
+          addressNList,
+          showDisplay: Boolean(input.showOnDevice)
+        })
+        if (!cosmosAddress) {
+          throw new Error('Unable to generate Cosmos address.')
+        }
+        return cosmosAddress
+      } else {
+        throw new Error('Wallet does not support Cosmos.')
       }
-      return cosmosAddress
     } catch (error) {
       return ErrorHandler(error)
     }
@@ -55,11 +59,15 @@ export class ChainAdapter
   async signTransaction(signTxInput: chainAdapters.SignTxInput<CosmosSignTx>): Promise<string> {
     try {
       const { txToSign, wallet } = signTxInput
-      const signedTx = await (wallet as CosmosWallet).cosmosSignTx(txToSign)
+      if (supportsCosmos(wallet)) {
+        const signedTx = await wallet.cosmosSignTx(txToSign)
 
-      if (!signedTx) throw new Error('Error signing tx')
+        if (!signedTx) throw new Error('Error signing tx')
 
-      return signedTx.serialized
+        return signedTx.serialized
+      } else {
+        throw new Error('Wallet does not support Cosmos.')
+      }
     } catch (err) {
       return ErrorHandler(err)
     }

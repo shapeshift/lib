@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // no-unused-vars is temporarily disabled until more functions are implemented
-import { CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
-import { AssetNamespace } from '@shapeshiftoss/caip/dist/caip19/caip19'
+import { AssetNamespace, CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
 import { CosmosSignTx } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 import { cosmos } from '@shapeshiftoss/unchained-client'
