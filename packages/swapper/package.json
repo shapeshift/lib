@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/swapper",
-  "version": "1.15.5",
+  "version": "1.16.0",
   "description": "TODO: description",
   "repository": "https://github.com/shapeshift/lib",
   "license": "MIT",
@@ -37,7 +37,7 @@
     "@shapeshiftoss/asset-service": "^1.6.1",
     "@shapeshiftoss/caip": "^1.11.0",
     "@shapeshiftoss/chain-adapters": "^1.33.0",
-    "@shapeshiftoss/hdwallet-core": "^1.18.2",
+    "@shapeshiftoss/hdwallet-core": "^1.19.0",
     "@shapeshiftoss/types": "^1.23.0",
     "@types/readline-sync": "^1.4.4",
     "readline-sync": "^1.4.10",
