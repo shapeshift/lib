@@ -12,7 +12,7 @@ describe('osmosis adapter', () => {
       const assetNamespace = AssetNamespace.IBC
       const assetReference = '0954E1C28EB7AF5B72D24F3BC2B47BBB2FDF91BDDFD57B74B99E133AED40972A'
       const caip19 = toCAIP19({ chain, network, assetNamespace, assetReference })
-      expect(osmosisToCAIP19('ibc/0954E1C28EB7AF5B72D24F3BC2B47BBB2FDF91BDDFD57B74B99E133AED40972A')).toEqual(caip19)
+      expect(osmosisToCAIP19('SCRT')).toEqual(caip19)
     })
 
     it('can get CAIP19 id for secondary native asset (ion)', () => {
@@ -21,14 +21,14 @@ describe('osmosis adapter', () => {
       const assetNamespace = AssetNamespace.NATIVE
       const assetReference = 'uion'
       const caip19 = toCAIP19({ chain, network, assetNamespace, assetReference })
-      expect(osmosisToCAIP19('uion')).toEqual(caip19)
+      expect(osmosisToCAIP19('ION')).toEqual(caip19)
     })
 
     it('can get CAIP19 id for native asset (osmo)', () => {
       const chain = ChainTypes.Cosmos
       const network = NetworkTypes.OSMOSIS_MAINNET
       const caip19 = toCAIP19({ chain, network })
-      expect(osmosisToCAIP19('uosmo')).toEqual(caip19)
+      expect(osmosisToCAIP19('OSMO')).toEqual(caip19)
     })
   })
 
@@ -39,7 +39,7 @@ describe('osmosis adapter', () => {
       const assetNamespace = AssetNamespace.IBC
       const assetReference = '0954E1C28EB7AF5B72D24F3BC2B47BBB2FDF91BDDFD57B74B99E133AED40972A'
       const caip19 = toCAIP19({ chain, network, assetNamespace, assetReference })
-      expect(CAIP19ToOsmosis(caip19)).toEqual('ibc/0954E1C28EB7AF5B72D24F3BC2B47BBB2FDF91BDDFD57B74B99E133AED40972A')
+      expect(CAIP19ToOsmosis(caip19)).toEqual('SCRT')
     })
 
     it('can get osmosis id for secondary native osmosis CAIP19 (ion)', () => {
@@ -48,14 +48,14 @@ describe('osmosis adapter', () => {
       const assetNamespace = AssetNamespace.NATIVE
       const assetReference = 'uion'
       const caip19 = toCAIP19({ chain, network, assetNamespace, assetReference })
-      expect(CAIP19ToOsmosis(caip19)).toEqual('uion')
+      expect(CAIP19ToOsmosis(caip19)).toEqual('ION')
     })
 
     it('can get osmosis id for native osmosis CAIP19 (osmo)', () => {
       const chain = ChainTypes.Cosmos
       const network = NetworkTypes.OSMOSIS_MAINNET
       const caip19 = toCAIP19({ chain, network })
-      expect(CAIP19ToOsmosis(caip19)).toEqual('uosmo')
+      expect(CAIP19ToOsmosis(caip19)).toEqual('OSMO')
     })
   })
 })
