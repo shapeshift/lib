@@ -27,7 +27,7 @@ info You can now run `yarn link "@shapeshiftoss/types"` in the projects where yo
 ✨  Done in 0.47s.
 ```
 
-Similary you can unlink packages, which can be useful for debugging failing CI runs
+Similarly you can unlink packages, which can be useful for debugging failing CI runs
 ```bash
 ➜ yarn unlink-packages
 yarn run v1.22.15
