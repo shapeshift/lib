@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { adapters } from '@shapeshiftoss/caip'
+import { HistoryTimeframe } from '@shapeshiftoss/types'
 import { OsmosisMarketCap } from './osmosis-types'
 import { OsmosisMarketService } from './osmosis'
 
@@ -66,9 +67,11 @@ describe('osmosis market service', () => {
   })
 
   describe('findByCaip19', () => {
-
     it('should return market data for Secret Network', async () => {
-      const args = { caip19: 'cosmos:osmosis-1/ibc:0954E1C28EB7AF5B72D24F3BC2B47BBB2FDF91BDDFD57B74B99E133AED40972A' }
+      const args = {
+        caip19:
+          'cosmos:osmosis-1/ibc:0954E1C28EB7AF5B72D24F3BC2B47BBB2FDF91BDDFD57B74B99E133AED40972A'
+      }
       const result = {
         price: '4.5456667708',
         marketCap: '17581752.09948758',
@@ -106,6 +109,113 @@ describe('osmosis market service', () => {
   })
 
   describe('findPriceHistoryByCaip19', () => {
-    expect(true).toBe(true)
+    it('should return market data for OSMO (v1 endpoint)', async () => {
+      const args = {
+        caip19: 'cosmos:osmosis-1/slip44:118',
+        timeframe: HistoryTimeframe.HOUR
+      }
+
+      const mockHistoryData = [
+        {
+          time: 1645279200,
+          close: 8.7099702887,
+          high: 8.7230634538,
+          low: 8.7027347275,
+          open: 8.7230634538,
+          volume: 322395.5646646317
+        },
+        {
+          time: 1645282800,
+          close: 8.720258958,
+          high: 8.7281887188,
+          low: 8.7088941334,
+          open: 8.7099702887,
+          volume: 215774.9291578648
+        },
+        {
+          time: 1645286400,
+          close: 8.7551263817,
+          high: 8.8301414047,
+          low: 8.7183602443,
+          open: 8.7202062522,
+          volume: 544372.0382400643
+        },
+        {
+          time: 1645290000,
+          close: 8.7544961127,
+          high: 8.7584181833,
+          low: 8.7271467319,
+          open: 8.7551263817,
+          volume: 303458.094971553
+        }
+      ]
+
+      const expected = [
+        { date: new Date('2022-02-19T14:00:00.000Z').valueOf(), price: 8.7099702887 },
+        { date: new Date('2022-02-19T15:00:00.000Z').valueOf(), price: 8.720258958 },
+        { date: new Date('2022-02-19T16:00:00.000Z').valueOf(), price: 8.7551263817 },
+        { date: new Date('2022-02-19T17:00:00.000Z').valueOf(), price: 8.7544961127 }
+      ]
+      mockedAxios.get.mockResolvedValue({ data: mockHistoryData })
+      expect(await osmosisMarketService.findPriceHistoryByCaip19(args)).toEqual(expected)
+    })
+
+    it('should return market data for OSMO (v2 endpoint)', async () => {
+      const args = {
+        caip19: 'cosmos:osmosis-1/slip44:118',
+        timeframe: HistoryTimeframe.YEAR
+      }
+      const mockHistoryData = [
+        {
+          time: 1624492800,
+          close: 5.4010989774,
+          high: 5.4141295587,
+          low: 5.0003632977,
+          open: 5.0003632977
+        },
+        {
+          time: 1624579200,
+          close: 7.3442392291,
+          high: 7.3448735644,
+          low: 5.3572962709,
+          open: 5.4010989774
+        },
+        {
+          time: 1624665600,
+          close: 6.2011885916,
+          high: 7.5765008227,
+          low: 6.0288315142,
+          open: 7.3442142218
+        },
+        {
+          time: 1624752000,
+          close: 5.3994292528,
+          high: 6.2012808102,
+          low: 5.0807420392,
+          open: 6.2011885916
+        }
+      ]
+
+      const expected = [
+        { date: new Date('2021-06-24T00:00:00.000Z').valueOf(), price: 5.4010989774 },
+        { date: new Date('2021-06-25T00:00:00.000Z').valueOf(), price: 7.3442392291 },
+        { date: new Date('2021-06-26T00:00:00.000Z').valueOf(), price: 6.2011885916 },
+        { date: new Date('2021-06-27T00:00:00.000Z').valueOf(), price: 5.3994292528 }
+      ]
+      mockedAxios.get.mockResolvedValue({ data: mockHistoryData })
+      expect(await osmosisMarketService.findPriceHistoryByCaip19(args)).toEqual(expected)
+    })
+
+    it('should return null on network error', async () => {
+      const args = {
+        caip19: 'cosmos:osmosis-1/slip44:118',
+        timeframe: HistoryTimeframe.YEAR
+      }
+      mockedAxios.get.mockRejectedValue(Error)
+      jest.spyOn(console, 'warn').mockImplementation(() => void 0)
+      await expect(osmosisMarketService.findPriceHistoryByCaip19(args)).rejects.toEqual(
+        new Error('MarketService(findPriceHistoryByCaip19): error fetching price history')
+      )
+    })
   })
 })

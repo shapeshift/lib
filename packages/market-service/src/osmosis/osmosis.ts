@@ -1,8 +1,10 @@
 import axios from 'axios'
-import { adapters, caip19 as caip19Funcs } from '@shapeshiftoss/caip'
+import { adapters } from '@shapeshiftoss/caip'
+import dayjs from 'dayjs'
 import { bnOrZero } from '../utils/bignumber'
 import { MarketService } from '../api'
-import { OsmosisMarketCap } from './osmosis-types'
+import { isValidDate } from '../utils/isValidDate'
+import { OsmosisMarketCap, OsmosisHistoryData } from './osmosis-types'
 import {
   FindAllMarketArgs,
   HistoryData,
@@ -48,7 +50,9 @@ export class OsmosisMarketService implements MarketService {
 
     try {
       const symbol = adapters.CAIP19ToOsmosis(caip19)
-      const { data }: { data: OsmosisMarketCap[] } = await axios.get(`${this.baseUrl}/tokens/v2/${symbol}`)
+      const { data }: { data: OsmosisMarketCap[] } = await axios.get(
+        `${this.baseUrl}/tokens/v2/${symbol}`
+      )
       const marketData = data[0]
 
       if (!marketData) {
@@ -72,7 +76,71 @@ export class OsmosisMarketService implements MarketService {
     }
   }
 
-  findPriceHistoryByCaip19 = async (args?: PriceHistoryArgs): Promise<HistoryData[]> => {
-    return [{ date: 12345, price: 12.1 }]
+  findPriceHistoryByCaip19 = async ({
+    caip19,
+    timeframe
+  }: PriceHistoryArgs): Promise<HistoryData[]> => {
+    if (!adapters.CAIP19ToOsmosis(caip19)) return []
+    const symbol = adapters.CAIP19ToOsmosis(caip19)
+
+    let range
+    let isV1
+    switch (timeframe) {
+      case HistoryTimeframe.HOUR:
+        range = '5'
+        isV1 = false
+        break
+      case HistoryTimeframe.DAY:
+        range = '60'
+        isV1 = false
+        break
+      case HistoryTimeframe.WEEK:
+        range = '7d'
+        isV1 = false
+        break
+      case HistoryTimeframe.MONTH:
+        range = '1mo'
+        isV1 = false
+        break
+      case HistoryTimeframe.YEAR:
+        range = '1y'
+        isV1 = true
+        break
+      case HistoryTimeframe.ALL:
+        range = 'all'
+        isV1 = true
+        break
+      default:
+        range = 'all'
+        isV1 = true
+    }
+
+    try {
+      // Historical timeframe data from the v2 endpoint does not support ranges greater than 1 month
+      // and v1 doesn't support ranges less than 7 week, so we use both to get all ranges.
+      const url = `${this.baseUrl}/tokens/${
+        isV1 ? 'v1' : 'v2'
+      }/historical/${symbol}/chart?range=${range}`
+
+      const { data } = await axios.get<OsmosisHistoryData[]>(url)
+
+      return data.reduce<HistoryData[]>((acc, current) => {
+        // convert timestamp from seconds to milliseconds
+        const date = bnOrZero(current.time).times(1000).toNumber()
+        if (!isValidDate(date)) {
+          console.error('Osmosis asset history data has invalid date')
+          return acc
+        }
+        const price = bnOrZero(current.close)
+        acc.push({
+          date,
+          price: price.toNumber()
+        })
+        return acc
+      }, [])
+    } catch (e) {
+      console.warn(e)
+      throw new Error('MarketService(findPriceHistoryByCaip19): error fetching price history')
+    }
   }
 }
