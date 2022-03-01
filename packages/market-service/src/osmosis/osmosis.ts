@@ -95,11 +95,11 @@ export class OsmosisMarketService implements MarketService {
         break
       case HistoryTimeframe.WEEK:
         range = '7d'
-        isV1 = false
+        isV1 = true
         break
       case HistoryTimeframe.MONTH:
         range = '1mo'
-        isV1 = false
+        isV1 = true
         break
       case HistoryTimeframe.YEAR:
         range = '1y'
