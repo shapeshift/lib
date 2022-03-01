@@ -3,7 +3,7 @@ import axios from 'axios'
 import fs from 'fs'
 
 import { toCAIP2 } from '../../caip2/caip2'
-import { AssetNamespace, toCAIP19 } from './../../caip19/caip19'
+import { AssetNamespace, AssetReference, toCAIP19 } from './../../caip19/caip19'
 
 export type OsmosisCoin = {
   price: number
@@ -36,10 +36,9 @@ export const parseOsmosisData = (data: OsmosisCoin[]) => {
     let assetReference
 
     if (isIon || isOsmo) {
-      // passing assetReference/assetNamespace as undefined to toCAIP19 will return the default cosmos chains caip19
-      // for native assets that are used to pay fees. Osmosis is that native asset for the Osmosis chain.
-      assetReference = isIon ? denom : undefined
-      assetNamespace = isIon ? AssetNamespace.NATIVE : undefined
+      // TODO(ryankk): remove `toString` when AssetReferences are changed to strings
+      assetReference = isIon ? denom : AssetReference.Osmosis.toString()
+      assetNamespace = isIon ? AssetNamespace.NATIVE : AssetNamespace.Slip44
     } else {
       assetReference = denom.split('/')[1]
       assetNamespace = AssetNamespace.IBC
