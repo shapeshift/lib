@@ -44,7 +44,7 @@ export const parseOsmosisData = (data: OsmosisCoin[]) => {
       assetReference = denom.split('/')[1]
       assetNamespace = AssetNamespace.IBC
     }
-    const chain = ChainTypes.Cosmos
+    const chain = ChainTypes.Osmosis
     const network = NetworkTypes.OSMOSIS_MAINNET
     const caip19 = toCAIP19({ chain, network, assetNamespace, assetReference })
 
@@ -57,7 +57,7 @@ export const parseOsmosisData = (data: OsmosisCoin[]) => {
 
 export const parseData = (d: OsmosisCoin[]) => {
   const osmosisMainnet = toCAIP2({
-    chain: ChainTypes.Cosmos,
+    chain: ChainTypes.Osmosis,
     network: NetworkTypes.OSMOSIS_MAINNET
   })
 
