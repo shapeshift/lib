@@ -1,12 +1,5 @@
-import axios from 'axios'
 import { adapters } from '@shapeshiftoss/caip'
-import dayjs from 'dayjs'
-import { bnOrZero } from '../utils/bignumber'
-import { MarketService } from '../api'
-import { isValidDate } from '../utils/isValidDate'
-import { OsmosisMarketCap, OsmosisHistoryData } from './osmosis-types'
 import {
-  FindAllMarketArgs,
   HistoryData,
   HistoryTimeframe,
   MarketCapResult,
@@ -14,15 +7,21 @@ import {
   MarketDataArgs,
   PriceHistoryArgs
 } from '@shapeshiftoss/types'
+import axios from 'axios'
+
+import { MarketService } from '../api'
+import { bnOrZero } from '../utils/bignumber'
+import { isValidDate } from '../utils/isValidDate'
+import { OsmosisHistoryData, OsmosisMarketCap } from './osmosis-types'
 
 export class OsmosisMarketService implements MarketService {
   baseUrl = 'https://api-osmosis.imperator.co'
 
-  findAll = async (args?: FindAllMarketArgs) => {
+  findAll = async () => {
     const osmosisApiUrl = `${this.baseUrl}/tokens/v2/all`
     try {
-      const { data }: { data: OsmosisMarketCap[] } = await axios.get(osmosisApiUrl)
-      const results = data
+      const { data: osmosisData }: { data: OsmosisMarketCap[] } = await axios.get(osmosisApiUrl)
+      const results = osmosisData
         .map((data) => data ?? []) // filter out rate limited results
         .sort((a, b) => (a.liquidity < b.liquidity ? 1 : -1))
         .reduce((acc, token) => {

@@ -1,5 +1,3 @@
-import toLower from 'lodash/toLower'
-
 import * as adapters from './generated'
 
 export const osmosisUrl = 'https://api-osmosis.imperator.co/tokens/v2/all'

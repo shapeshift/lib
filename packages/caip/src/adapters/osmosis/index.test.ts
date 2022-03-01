@@ -1,6 +1,6 @@
-import { ChainTypes, ContractTypes, NetworkTypes } from '@shapeshiftoss/types'
-import { AssetReference, AssetNamespace } from '../../caip19/caip19'
+import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 
+import { AssetNamespace } from '../../caip19/caip19'
 import { toCAIP19 } from './../../caip19/caip19'
 import { CAIP19ToOsmosis, osmosisToCAIP19 } from '.'
 

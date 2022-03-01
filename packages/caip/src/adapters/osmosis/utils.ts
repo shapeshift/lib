@@ -3,7 +3,7 @@ import axios from 'axios'
 import fs from 'fs'
 
 import { toCAIP2 } from '../../caip2/caip2'
-import { toCAIP19, AssetNamespace } from './../../caip19/caip19'
+import { AssetNamespace, toCAIP19 } from './../../caip19/caip19'
 
 export type OsmosisCoin = {
   price: number

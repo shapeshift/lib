@@ -1,8 +1,9 @@
-import axios from 'axios'
 import { adapters } from '@shapeshiftoss/caip'
 import { HistoryTimeframe } from '@shapeshiftoss/types'
-import { OsmosisMarketCap } from './osmosis-types'
+import axios from 'axios'
+
 import { OsmosisMarketService } from './osmosis'
+import { OsmosisMarketCap } from './osmosis-types'
 
 jest.mock('axios')
 
