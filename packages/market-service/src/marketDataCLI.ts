@@ -1,8 +1,8 @@
-import { JsonRpcProvider } from '@ethersproject/providers'
+// import { JsonRpcProvider } from '@ethersproject/providers'
 import { HistoryTimeframe } from '@shapeshiftoss/types'
-// import { HistoryTimeframe } from '@shapeshiftoss/types'
-import { Yearn } from '@yfi/sdk'
 
+// import { HistoryTimeframe } from '@shapeshiftoss/types'
+// import { Yearn } from '@yfi/sdk'
 // import { CoinGeckoMarketService } from './coingecko/coingecko'
 // import { YearnVaultMarketCapService } from './yearn/yearn-vaults'
 // import { YearnTokenMarketCapService } from './yearn/yearn-tokens'
