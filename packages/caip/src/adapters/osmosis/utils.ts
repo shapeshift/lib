@@ -30,19 +30,21 @@ export const fetchData = async (URL: string) => (await axios.get<OsmosisCoin[]>(
 
 export const parseOsmosisData = (data: OsmosisCoin[]) => {
   const results = data.reduce((acc, { denom, symbol }) => {
+    const isNativeAsset = !Boolean(denom.split('/')[1])
     const isOsmo = denom === 'uosmo'
-    const isIon = denom === 'uion'
+
     let assetNamespace
     let assetReference
 
-    if (isIon || isOsmo) {
+    if (isNativeAsset) {
       // TODO(ryankk): remove `toString` when AssetReferences are changed to strings
-      assetReference = isIon ? denom : AssetReference.Osmosis.toString()
-      assetNamespace = isIon ? AssetNamespace.NATIVE : AssetNamespace.Slip44
+      assetReference = isOsmo ? AssetReference.Osmosis.toString() : denom
+      assetNamespace = isOsmo ? AssetNamespace.Slip44 : AssetNamespace.NATIVE
     } else {
       assetReference = denom.split('/')[1]
       assetNamespace = AssetNamespace.IBC
     }
+
     const chain = ChainTypes.Osmosis
     const network = NetworkTypes.OSMOSIS_MAINNET
     const caip19 = toCAIP19({ chain, network, assetNamespace, assetReference })
