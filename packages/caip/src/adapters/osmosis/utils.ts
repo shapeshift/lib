@@ -30,7 +30,8 @@ export const fetchData = async (URL: string) => (await axios.get<OsmosisCoin[]>(
 
 export const parseOsmosisData = (data: OsmosisCoin[]) => {
   const results = data.reduce((acc, { denom, symbol }) => {
-    const isNativeAsset = !Boolean(denom.split('/')[1])
+    // denoms for non native assets are formatted like so: 'ibc/27394...'
+    const isNativeAsset = !denom.split('/')[1]
     const isOsmo = denom === 'uosmo'
 
     let assetNamespace
