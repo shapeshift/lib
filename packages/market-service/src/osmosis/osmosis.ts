@@ -54,14 +54,7 @@ export class OsmosisMarketService implements MarketService {
       )
       const marketData = data[0]
 
-      if (!marketData) {
-        return {
-          price: '',
-          marketCap: '',
-          volume: '',
-          changePercent24Hr: 0
-        }
-      }
+      if (!marketData) return null
 
       return {
         price: marketData.price.toString(),
