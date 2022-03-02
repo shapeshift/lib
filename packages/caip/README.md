@@ -67,7 +67,7 @@ const caip19 = 'eip155:1/slip44:60'
 const { chain, network, contractType, tokenId } = fromCAIP19(caip19)
 expect(chain).toEqual(ChainTypes.Ethereum)
 expect(network).toEqual(NetworkTypes.MAINNET)
-expect(contractType).toEqual(AssetNamespace.Slip4)
+expect(contractType).toEqual(AssetNamespace.Slip44)
 expect(tokenId).toEqual(AssetReference.Ethereum)
 ```
 
