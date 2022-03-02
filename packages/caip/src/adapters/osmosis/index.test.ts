@@ -1,6 +1,6 @@
 import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 
-import { AssetNamespace } from '../../caip19/caip19'
+import { AssetNamespace, AssetReference } from '../../caip19/caip19'
 import { toCAIP19 } from './../../caip19/caip19'
 import { CAIP19ToOsmosis, osmosisToCAIP19 } from '.'
 
@@ -27,7 +27,9 @@ describe('osmosis adapter', () => {
     it('can get CAIP19 id for native asset (osmo)', () => {
       const chain = ChainTypes.Osmosis
       const network = NetworkTypes.OSMOSIS_MAINNET
-      const caip19 = toCAIP19({ chain, network })
+      const assetNamespace = AssetNamespace.Slip44
+      const assetReference = AssetReference.Osmosis.toString()
+      const caip19 = toCAIP19({ chain, network, assetNamespace, assetReference })
       expect(osmosisToCAIP19('OSMO')).toEqual(caip19)
     })
   })
@@ -54,7 +56,9 @@ describe('osmosis adapter', () => {
     it('can get osmosis id for native osmosis CAIP19 (osmo)', () => {
       const chain = ChainTypes.Osmosis
       const network = NetworkTypes.OSMOSIS_MAINNET
-      const caip19 = toCAIP19({ chain, network })
+      const assetNamespace = AssetNamespace.Slip44
+      const assetReference = AssetReference.Osmosis.toString()
+      const caip19 = toCAIP19({ chain, network, assetNamespace, assetReference })
       expect(CAIP19ToOsmosis(caip19)).toEqual('OSMO')
     })
   })
