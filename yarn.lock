@@ -2623,6 +2623,16 @@
     rxjs "^6.4.0"
     type-assertions "^1.1.0"
 
+"@shapeshiftoss/hdwallet-core@^1.19.0":
+  version "1.19.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/hdwallet-core/-/hdwallet-core-1.19.0.tgz#7eeae9be9f90fff53887611c6ac02c334781baa3"
+  integrity sha512-Dht99dolYQLDuunKsyQXuNcZH20MrgNrIcb4qG2XLrwuwMUsUOXguQ0MBxi6fFl81hz3G8481v83gOYA5L5tGw==
+  dependencies:
+    eventemitter2 "^5.0.1"
+    lodash "^4.17.21"
+    rxjs "^6.4.0"
+    type-assertions "^1.1.0"
+
 "@shapeshiftoss/hdwallet-native@^1.18.2":
   version "1.18.4"
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/hdwallet-native/-/hdwallet-native-1.18.4.tgz#b0f37ea5f51dd81ae1aecedd5be69d333544f6f6"

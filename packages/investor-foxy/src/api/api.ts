@@ -120,115 +120,142 @@ export class FoxyApi {
       amountDesired,
       accountNumber = 0,
       dryRun = false,
-      tokenContractAddress,
       contractAddress,
       userAddress,
       wallet
     } = input
     if (!wallet || !contractAddress) throw new Error('Missing inputs')
     const estimatedGas: BigNumber = await this.estimateDepositGas(input)
-    return "not implemented"
-    // const tokenChecksum = this.web3.utils.toChecksumAddress(tokenContractAddress)
-    // const userChecksum = this.web3.utils.toChecksumAddress(userAddress)
-    // const vaultIndex = await this.getVaultId({ tokenContractAddress, vaultAddress })
-    // const data: string = await this.ssRouterContract.methods
-    //   .deposit(tokenChecksum, userChecksum, amountDesired.toString(), vaultIndex)
-    //   .encodeABI({
-    //     value: 0,
-    //     from: userChecksum
-    //   })
-    // const nonce = await this.web3.eth.getTransactionCount(userAddress)
-    // const gasPrice = await this.web3.eth.getGasPrice()
 
-    // const txToSign = buildTxToSign({
-    //   bip44Params: this.adapter.buildBIP44Params({ accountNumber }),
-    //   chainId: 1,
-    //   data,
-    //   estimatedGas: estimatedGas.toString(),
-    //   gasPrice,
-    //   nonce: String(nonce),
-    //   to: ssRouterContractAddress,
-    //   value: '0'
-    // })
-    // if (wallet.supportsOfflineSigning()) {
-    //   const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
-    //   if (dryRun) return signedTx
-    //   return this.adapter.broadcastTransaction(signedTx)
-    // } else if (wallet.supportsBroadcast() && this.adapter.signAndBroadcastTransaction) {
-    //   if (dryRun) {
-    //     throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
-    //   }
-    //   return this.adapter.signAndBroadcastTransaction({ txToSign, wallet })
-    // } else {
-    //   throw new Error('Invalid HDWallet configuration ')
-    // }
+    const userChecksum = this.web3.utils.toChecksumAddress(userAddress)
+    const data: string = await this.foxyStakingContract.methods
+      .stake(amountDesired.toString())
+      .encodeABI({
+        value: 0,
+        from: userChecksum
+      })
+    const nonce = await this.web3.eth.getTransactionCount(userAddress)
+    const gasPrice = await this.web3.eth.getGasPrice()
+
+    const txToSign = buildTxToSign({
+      bip44Params: this.adapter.buildBIP44Params({ accountNumber }),
+      chainId: 1,
+      data,
+      estimatedGas: estimatedGas.toString(),
+      gasPrice,
+      nonce: String(nonce),
+      to: foxyStakingContractAddress,
+      value: '0'
+    })
+    if (wallet.supportsOfflineSigning()) {
+      const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
+      if (dryRun) return signedTx
+      return this.adapter.broadcastTransaction(signedTx)
+    } else if (wallet.supportsBroadcast() && this.adapter.signAndBroadcastTransaction) {
+      if (dryRun) {
+        throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
+      }
+      return this.adapter.signAndBroadcastTransaction({ txToSign, wallet })
+    } else {
+      throw new Error('Invalid HDWallet configuration ')
+    }
   }
 
-  // Withdraws are done through the vault contract itself, there is no need to go through the SS
-  // router contract, so we estimate the gas from the vault itself.
   async estimateWithdrawGas(input: EstimateGasTxInput): Promise<BigNumber> {
-    const { amountDesired, userAddress, contractAddress } = input
-    // const vaultContract = new this.web3.eth.Contract(yv2VaultAbi, contractAddress)
-    // const estimatedGas = await vaultContract.methods
-    //   .withdraw(amountDesired.toString(), userAddress)
-    //   .estimateGas({
-    //     from: userAddress
-    //   })
-    // return bnOrZero(estimatedGas)
-    throw new Error('Not implemented')
+    const { amountDesired, userAddress } = input
+    const estimatedGas = await this.foxyStakingContract.methods
+      .unstake(amountDesired.toString(), userAddress)
+      .estimateGas({
+        from: userAddress
+      })
+    return bnOrZero(estimatedGas)
   }
 
-  // async withdraw(input: TxInput): Promise<string> {
-  //   const {
-  //     amountDesired,
-  //     accountNumber = 0,
-  //     dryRun = false,
-  //     vaultAddress,
-  //     userAddress,
-  //     wallet
-  //   } = input
-  //   if (!wallet || !vaultAddress) throw new Error('Missing inputs')
-  //   const estimatedGas: BigNumber = await this.estimateWithdrawGas(input)
+  async withdraw(input: TxInput): Promise<string> {
+    const {
+      amountDesired,
+      accountNumber = 0,
+      dryRun = false,
+      contractAddress,
+      userAddress,
+      wallet
+    } = input
+    if (!wallet || !contractAddress) throw new Error('Missing inputs')
+    const estimatedGas: BigNumber = await this.estimateWithdrawGas(input)
 
-  //   // const vaultContract: Contract = new this.web3.eth.Contract(yv2VaultAbi, vaultAddress)
-  //   // const data: string = vaultContract.methods
-  //   //   .withdraw(amountDesired.toString(), userAddress)
-  //   //   .encodeABI({
-  //   //     from: userAddress
-  //   //   })
-  //   // const nonce = await this.web3.eth.getTransactionCount(userAddress)
-  //   // const gasPrice = await this.web3.eth.getGasPrice()
+    const data: string = this.foxyStakingContract.methods
+      .unstake(amountDesired.toString(), true)
+      .encodeABI({
+        from: userAddress
+      })
+    const nonce = await this.web3.eth.getTransactionCount(userAddress)
+    const gasPrice = await this.web3.eth.getGasPrice()
 
-  //   // const txToSign = buildTxToSign({
-  //   //   bip44Params: this.adapter.buildBIP44Params({ accountNumber }),
-  //   //   chainId: 1,
-  //   //   data,
-  //   //   estimatedGas: estimatedGas.toString(),
-  //   //   gasPrice,
-  //   //   nonce: String(nonce),
-  //   //   to: vaultAddress,
-  //   //   value: '0'
-  //   // })
-  //   // if (wallet.supportsOfflineSigning()) {
-  //   //   const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
-  //   //   if (dryRun) return signedTx
-  //   //   return this.adapter.broadcastTransaction(signedTx)
-  //   // } else if (wallet.supportsBroadcast() && this.adapter.signAndBroadcastTransaction) {
-  //   //   if (dryRun) {
-  //   //     throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
-  //   //   }
-  //   //   return this.adapter.signAndBroadcastTransaction({ txToSign, wallet })
-  //   // } else {
-  //   //   throw new Error('Invalid HDWallet configuration ')
-  //   // }
-  // }
+    const txToSign = buildTxToSign({
+      bip44Params: this.adapter.buildBIP44Params({ accountNumber }),
+      chainId: 1,
+      data,
+      estimatedGas: estimatedGas.toString(),
+      gasPrice,
+      nonce: String(nonce),
+      to: foxyStakingContractAddress,
+      value: '0'
+    })
+    if (wallet.supportsOfflineSigning()) {
+      const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
+      if (dryRun) return signedTx
+      return this.adapter.broadcastTransaction(signedTx)
+    } else if (wallet.supportsBroadcast() && this.adapter.signAndBroadcastTransaction) {
+      if (dryRun) {
+        throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
+      }
+      return this.adapter.signAndBroadcastTransaction({ txToSign, wallet })
+    } else {
+      throw new Error('Invalid HDWallet configuration ')
+    }
+  }
+
+  async instantWithdraw(input: TxInput): Promise<string> {
+    const { accountNumber = 0, dryRun = false, contractAddress, userAddress, wallet } = input
+    if (!wallet || !contractAddress) throw new Error('Missing inputs')
+    const estimatedGas: BigNumber = await this.estimateWithdrawGas(input)
+
+    const data: string = this.foxyStakingContract.methods.instantUnstake(true).encodeABI({
+      from: userAddress
+    })
+    const nonce = await this.web3.eth.getTransactionCount(userAddress)
+    const gasPrice = await this.web3.eth.getGasPrice()
+
+    const txToSign = buildTxToSign({
+      bip44Params: this.adapter.buildBIP44Params({ accountNumber }),
+      chainId: 1,
+      data,
+      estimatedGas: estimatedGas.toString(),
+      gasPrice,
+      nonce: String(nonce),
+      to: foxyStakingContractAddress,
+      value: '0'
+    })
+    if (wallet.supportsOfflineSigning()) {
+      const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
+      if (dryRun) return signedTx
+      return this.adapter.broadcastTransaction(signedTx)
+    } else if (wallet.supportsBroadcast() && this.adapter.signAndBroadcastTransaction) {
+      if (dryRun) {
+        throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
+      }
+      return this.adapter.signAndBroadcastTransaction({ txToSign, wallet })
+    } else {
+      throw new Error('Invalid HDWallet configuration ')
+    }
+  }
 
   async balance(input: BalanceInput): Promise<BigNumber> {
     const { contractAddress, userAddress } = input
     const contract = new this.web3.eth.Contract(erc20Abi, contractAddress)
     const balance = await contract.methods.balanceOf(userAddress).call()
     return bnOrZero(balance)
-    }
+  }
 
   async totalSupply({ contractAddress }: { contractAddress: string }): Promise<BigNumber> {
     const contract = new this.web3.eth.Contract(erc20Abi, contractAddress)
