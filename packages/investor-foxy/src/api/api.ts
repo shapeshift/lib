@@ -7,7 +7,7 @@ import Web3 from 'web3'
 import { HttpProvider, TransactionReceipt } from 'web3-core/types'
 import { Contract } from 'web3-eth-contract'
 
-import { erc20Abi, MAX_ALLOWANCE, foxyAbi, foxyContractAddress } from '../constants'
+import { erc20Abi, MAX_ALLOWANCE, foxyAbi, foxyStakingContractAddress } from '../constants'
 import { bnOrZero, buildTxToSign } from '../utils'
 import {
   Allowanceinput,
@@ -16,7 +16,8 @@ import {
   BalanceInput,
   EstimateGasApproveInput,
   EstimateGasTxInput,
-  TokenInput
+  TokenInput,
+  TxInput
 } from './foxy-types'
 
 export type ConstructorArgs = {
@@ -25,19 +26,19 @@ export type ConstructorArgs = {
   network?: 1 | 250 | 1337 | 42161 // 1: 'ethereum', 250: 'fantom', 1337: 'ethereum', 42161: 'arbitrum'
 }
 
-export class FoxyVaultApi {
+export class FoxyApi {
   public adapter: ChainAdapter<ChainTypes.Ethereum>
   public provider: HttpProvider
   public jsonRpcProvider: JsonRpcProvider
   public web3: Web3
-  private foxyContract: Contract
+  private foxyStakingContract: Contract
 
   constructor({ adapter, providerUrl, network = 1 }: ConstructorArgs) {
     this.adapter = adapter
     this.provider = new Web3.providers.HttpProvider(providerUrl)
     this.jsonRpcProvider = new JsonRpcProvider(providerUrl)
     this.web3 = new Web3(this.provider)
-    this.foxyContract = new this.web3.eth.Contract(foxyAbi, foxyContractAddress)
+    this.foxyStakingContract = new this.web3.eth.Contract(foxyAbi, foxyStakingContractAddress)
   }
 
   async getGasPrice() {
@@ -57,7 +58,7 @@ export class FoxyVaultApi {
     const { userAddress, tokenContractAddress } = input
     const depositTokenContract = new this.web3.eth.Contract(erc20Abi, tokenContractAddress)
     const estimatedGas = await depositTokenContract.methods
-      .approve(foxyContractAddress, MAX_ALLOWANCE)
+      .approve(foxyStakingContractAddress, MAX_ALLOWANCE)
       .estimateGas({
         from: userAddress
       })
@@ -70,7 +71,7 @@ export class FoxyVaultApi {
     const estimatedGas: BigNumber = await this.estimateApproveGas(input)
     const depositTokenContract = new this.web3.eth.Contract(erc20Abi, tokenContractAddress)
     const data: string = depositTokenContract.methods
-      .approve(foxyContractAddress, MAX_ALLOWANCE)
+      .approve(foxyStakingContractAddress, MAX_ALLOWANCE)
       .encodeABI({
         from: userAddress
       })
@@ -107,7 +108,7 @@ export class FoxyVaultApi {
       erc20Abi,
       tokenContractAddress
     )
-    return depositTokenContract.methods.allowance(userAddress, foxyContractAddress).call()
+    return depositTokenContract.methods.allowance(userAddress, foxyStakingContractAddress).call()
   }
 
   async estimateDepositGas(input: EstimateGasTxInput): Promise<BigNumber> {
@@ -120,13 +121,13 @@ export class FoxyVaultApi {
       accountNumber = 0,
       dryRun = false,
       tokenContractAddress,
-      vaultAddress,
+      contractAddress,
       userAddress,
       wallet
     } = input
-    if (!wallet || !vaultAddress) throw new Error('Missing inputs')
+    if (!wallet || !contractAddress) throw new Error('Missing inputs')
     const estimatedGas: BigNumber = await this.estimateDepositGas(input)
-
+    return "not implemented"
     // const tokenChecksum = this.web3.utils.toChecksumAddress(tokenContractAddress)
     // const userChecksum = this.web3.utils.toChecksumAddress(userAddress)
     // const vaultIndex = await this.getVaultId({ tokenContractAddress, vaultAddress })
@@ -166,8 +167,8 @@ export class FoxyVaultApi {
   // Withdraws are done through the vault contract itself, there is no need to go through the SS
   // router contract, so we estimate the gas from the vault itself.
   async estimateWithdrawGas(input: EstimateGasTxInput): Promise<BigNumber> {
-    // const { amountDesired, userAddress, vaultAddress } = input
-    // const vaultContract = new this.web3.eth.Contract(yv2VaultAbi, vaultAddress)
+    const { amountDesired, userAddress, contractAddress } = input
+    // const vaultContract = new this.web3.eth.Contract(yv2VaultAbi, contractAddress)
     // const estimatedGas = await vaultContract.methods
     //   .withdraw(amountDesired.toString(), userAddress)
     //   .estimateGas({
@@ -177,50 +178,50 @@ export class FoxyVaultApi {
     throw new Error('Not implemented')
   }
 
-  async withdraw(input: TxInput): Promise<string> {
-    const {
-      amountDesired,
-      accountNumber = 0,
-      dryRun = false,
-      vaultAddress,
-      userAddress,
-      wallet
-    } = input
-    if (!wallet || !vaultAddress) throw new Error('Missing inputs')
-    const estimatedGas: BigNumber = await this.estimateWithdrawGas(input)
+  // async withdraw(input: TxInput): Promise<string> {
+  //   const {
+  //     amountDesired,
+  //     accountNumber = 0,
+  //     dryRun = false,
+  //     vaultAddress,
+  //     userAddress,
+  //     wallet
+  //   } = input
+  //   if (!wallet || !vaultAddress) throw new Error('Missing inputs')
+  //   const estimatedGas: BigNumber = await this.estimateWithdrawGas(input)
 
-    // const vaultContract: Contract = new this.web3.eth.Contract(yv2VaultAbi, vaultAddress)
-    // const data: string = vaultContract.methods
-    //   .withdraw(amountDesired.toString(), userAddress)
-    //   .encodeABI({
-    //     from: userAddress
-    //   })
-    // const nonce = await this.web3.eth.getTransactionCount(userAddress)
-    // const gasPrice = await this.web3.eth.getGasPrice()
+  //   // const vaultContract: Contract = new this.web3.eth.Contract(yv2VaultAbi, vaultAddress)
+  //   // const data: string = vaultContract.methods
+  //   //   .withdraw(amountDesired.toString(), userAddress)
+  //   //   .encodeABI({
+  //   //     from: userAddress
+  //   //   })
+  //   // const nonce = await this.web3.eth.getTransactionCount(userAddress)
+  //   // const gasPrice = await this.web3.eth.getGasPrice()
 
-    // const txToSign = buildTxToSign({
-    //   bip44Params: this.adapter.buildBIP44Params({ accountNumber }),
-    //   chainId: 1,
-    //   data,
-    //   estimatedGas: estimatedGas.toString(),
-    //   gasPrice,
-    //   nonce: String(nonce),
-    //   to: vaultAddress,
-    //   value: '0'
-    // })
-    // if (wallet.supportsOfflineSigning()) {
-    //   const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
-    //   if (dryRun) return signedTx
-    //   return this.adapter.broadcastTransaction(signedTx)
-    // } else if (wallet.supportsBroadcast() && this.adapter.signAndBroadcastTransaction) {
-    //   if (dryRun) {
-    //     throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
-    //   }
-    //   return this.adapter.signAndBroadcastTransaction({ txToSign, wallet })
-    // } else {
-    //   throw new Error('Invalid HDWallet configuration ')
-    // }
-  }
+  //   // const txToSign = buildTxToSign({
+  //   //   bip44Params: this.adapter.buildBIP44Params({ accountNumber }),
+  //   //   chainId: 1,
+  //   //   data,
+  //   //   estimatedGas: estimatedGas.toString(),
+  //   //   gasPrice,
+  //   //   nonce: String(nonce),
+  //   //   to: vaultAddress,
+  //   //   value: '0'
+  //   // })
+  //   // if (wallet.supportsOfflineSigning()) {
+  //   //   const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
+  //   //   if (dryRun) return signedTx
+  //   //   return this.adapter.broadcastTransaction(signedTx)
+  //   // } else if (wallet.supportsBroadcast() && this.adapter.signAndBroadcastTransaction) {
+  //   //   if (dryRun) {
+  //   //     throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
+  //   //   }
+  //   //   return this.adapter.signAndBroadcastTransaction({ txToSign, wallet })
+  //   // } else {
+  //   //   throw new Error('Invalid HDWallet configuration ')
+  //   // }
+  // }
 
   async balance(input: BalanceInput): Promise<BigNumber> {
     const { contractAddress, userAddress } = input

@@ -21,14 +21,14 @@ export type TxInput = {
   dryRun?: boolean
   tokenContractAddress: string
   userAddress: string
-  vaultAddress: string
+  contractAddress: string
   wallet: HDWallet
   amountDesired: BigNumber
 }
 
 export type EstimateGasTxInput = Pick<
   TxInput,
-  'tokenContractAddress' | 'vaultAddress' | 'userAddress' | 'amountDesired'
+  'tokenContractAddress' | 'contractAddress' | 'userAddress' | 'amountDesired'
 >
 
 export type BalanceInput = {

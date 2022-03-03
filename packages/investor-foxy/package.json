@@ -22,7 +22,8 @@
     "clean": "rm -rf dist",
     "dev": "tsc --watch",
     "prepare": "yarn clean && yarn build",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "cli": "yarn build && node ./dist/foxycli.js"
   },
   "dependencies": {
     "@ethersproject/providers": "^5.5.3",
