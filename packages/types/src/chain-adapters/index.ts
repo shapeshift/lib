@@ -38,22 +38,6 @@ type ChainSpecificTransaction<T> = ChainSpecific<
   }
 >
 
-export type Transaction<T extends ChainTypes> = {
-  network: NetworkTypes
-  chain: T
-  symbol: string
-  txid: string
-  status: string
-  from: string
-  to?: string
-  blockHash?: string
-  blockHeight?: number
-  confirmations?: number
-  timestamp?: number
-  value: string
-  fee: string
-} & ChainSpecificTransaction<T>
-
 export enum FeeDataKey {
   Slow = 'slow',
   Average = 'average',
@@ -129,7 +113,7 @@ export enum TxStatus {
   Unknown = 'unknown'
 }
 
-export type SubscribeTxsMessage<T extends ChainTypes> = {
+export type Transaction<T extends ChainTypes> = {
   address: string
   blockHash?: string
   blockHeight: number
@@ -174,9 +158,7 @@ export type SubscribeError = {
 }
 
 export type TxHistoryResponse<T extends ChainTypes> = {
-  page: number
-  totalPages: number
-  txs: number
+  cursor: string
   transactions: Array<Transaction<T>>
 }
 
@@ -212,10 +194,9 @@ export type SignTxInput<TxType> = {
 }
 
 export interface TxHistoryInput {
+  readonly cursor?: string
   readonly pubkey: string
-  readonly page?: number
   readonly pageSize?: number
-  readonly contract?: string
 }
 
 export type GetAddressInputBase = {
