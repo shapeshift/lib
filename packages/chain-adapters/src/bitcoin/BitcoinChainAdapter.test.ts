@@ -10,6 +10,7 @@ import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { BIP44Params, chainAdapters, ChainTypes, UtxoAccountType } from '@shapeshiftoss/types'
 
+import { ChainAdapterArgs } from '../utxo/UTXOBaseAdapter'
 import * as bitcoin from './BitcoinChainAdapter'
 
 const testMnemonic = 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle'
@@ -132,7 +133,7 @@ const getNetworkFeesMockedResponse = {
 }
 
 describe('BitcoinChainAdapter', () => {
-  let args: bitcoin.ChainAdapterArgs = {} as any
+  let args: ChainAdapterArgs = {} as any
 
   beforeEach(() => {
     args = {
@@ -215,7 +216,7 @@ describe('BitcoinChainAdapter', () => {
 
       const adapter = new bitcoin.ChainAdapter(args)
       await expect(adapter.getAccount('')).rejects.toThrow(
-        'BitcoinChainAdapter: pubkey parameter is not defined'
+        'UTXOBaseAdapter: pubkey parameter is not defined'
       )
     })
   })
