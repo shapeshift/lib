@@ -33,7 +33,7 @@ export type EstimateGasTxInput = Pick<
 
 export type BalanceInput = {
   userAddress: string
-  vaultAddress: string
+  contractAddress: string
 }
 
 export type TokenInput = {
