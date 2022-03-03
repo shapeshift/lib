@@ -24,6 +24,12 @@ export interface ChainAdapterArgs {
   chainId?: CAIP2
 }
 
+/**
+ * Base chain adapter for all UTXO chains. When extending please add your ChainType to the
+ * UTXOChainTypes. For example:
+ *
+ * `export type UTXOChainTypes = ChainTypes.Bitcoin | ChainTypes.Litecoin`
+ */
 export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChainAdapter<T> {
   protected chainId: CAIP2
   protected coinName: string
@@ -42,6 +48,8 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
     this.providers = args.providers
   }
 
+  /* Abstract Methods */
+
   abstract subscribeTxs(
     input: chainAdapters.SubscribeTxsInput,
     onMessage: (msg: chainAdapters.SubscribeTxsMessage<T>) => void,
@@ -50,6 +58,26 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
   abstract unsubscribeTxs(input?: chainAdapters.SubscribeTxsInput): void
   abstract closeTxs(): void
   abstract getType(): T
+
+  abstract getTxHistory(
+    input: chainAdapters.TxHistoryInput
+  ): Promise<chainAdapters.TxHistoryResponse<T>>
+
+  abstract buildSendTransaction(
+    tx: chainAdapters.BuildSendTxInput<T>
+  ): Promise<{ txToSign: chainAdapters.ChainTxType<T> }>
+
+  abstract getAddress(input: chainAdapters.GetAddressInput): Promise<string>
+
+  abstract getFeeData(
+    input: Partial<chainAdapters.GetFeeDataInput<T>>
+  ): Promise<chainAdapters.FeeDataEstimate<T>>
+
+  abstract signTransaction(
+    signTxInput: chainAdapters.SignTxInput<chainAdapters.ChainTxType<T>>
+  ): Promise<string>
+
+  /* public methods */
 
   getCaip2(): CAIP2 {
     return this.chainId
@@ -93,28 +121,6 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
     }
   }
 
-  buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
-    return { ...UTXOBaseAdapter.defaultBIP44Params, ...params }
-  }
-
-  abstract getTxHistory(
-    input: chainAdapters.TxHistoryInput
-  ): Promise<chainAdapters.TxHistoryResponse<T>>
-
-  abstract buildSendTransaction(
-    tx: chainAdapters.BuildSendTxInput<T>
-  ): Promise<{ txToSign: chainAdapters.ChainTxType<T> }>
-
-  abstract getAddress(input: chainAdapters.GetAddressInput): Promise<string>
-
-  abstract getFeeData(
-    input: Partial<chainAdapters.GetFeeDataInput<T>>
-  ): Promise<chainAdapters.FeeDataEstimate<T>>
-
-  abstract signTransaction(
-    signTxInput: chainAdapters.SignTxInput<chainAdapters.ChainTxType<T>>
-  ): Promise<string>
-
   async broadcastTransaction(hex: string): Promise<string> {
     const { data } = await this.providers.http.sendTx({
       sendTxBody: { hex }
@@ -128,6 +134,11 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
     return { valid: false, result: chainAdapters.ValidAddressResultType.Invalid }
   }
 
+  buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
+    return { ...UTXOBaseAdapter.defaultBIP44Params, ...params }
+  }
+
+  /* protected / private methods */
   protected async getPublicKey(
     wallet: HDWallet,
     bip44Params: BIP44Params,
