@@ -116,23 +116,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
   }: ethereum.api.V1ApiGetTxHistoryRequest): Promise<
     chainAdapters.TxHistoryResponse<ChainTypes.Ethereum>
   > {
-    try {
-      const { data } = await this.providers.http.getTxHistory({ pubkey })
-
-      return {
-        page: data.page,
-        totalPages: data.totalPages,
-        transactions: data.transactions.map((tx) => ({
-          ...tx,
-          chain: ChainTypes.Ethereum,
-          network: NetworkTypes.MAINNET,
-          symbol: 'ETH'
-        })),
-        txs: data.txs
-      }
-    } catch (err) {
-      return ErrorHandler(err)
-    }
+    throw new Error("Method not implemented.")
   }
 
   async buildSendTransaction(tx: chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>): Promise<{
@@ -353,7 +337,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
 
   async subscribeTxs(
     input: chainAdapters.SubscribeTxsInput,
-    onMessage: (msg: chainAdapters.SubscribeTxsMessage<ChainTypes.Ethereum>) => void,
+    onMessage: (msg: chainAdapters.Transaction<ChainTypes.Ethereum>) => void,
     onError: (err: chainAdapters.SubscribeError) => void
   ): Promise<void> {
     const { wallet, bip44Params = ChainAdapter.defaultBIP44Params } = input

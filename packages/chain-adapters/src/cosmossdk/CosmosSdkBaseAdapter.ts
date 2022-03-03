@@ -4,11 +4,13 @@ import { AssetNamespace, CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
 import { CosmosSignTx } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 import { cosmos } from '@shapeshiftoss/unchained-client'
+import { cosmos as cosmosTxParser } from '@shapeshiftoss/unchained-tx-parser'
 import WAValidator from 'multicoin-address-validator'
 
 import { ChainAdapter as IChainAdapter } from '../api'
 import { ChainAdapter } from '../bitcoin'
 import { ErrorHandler } from '../error/ErrorHandler'
+import { getType } from '../utils'
 
 export type CosmosChainTypes = ChainTypes.Cosmos | ChainTypes.Osmosis
 
@@ -28,6 +30,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
   protected readonly providers: {
     http: cosmos.api.V1Api
   }
+  protected readonly txParser: cosmosTxParser.TransactionParser
 
   public static readonly defaultBIP44Params: BIP44Params = {
     purpose: 44,
@@ -40,6 +43,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
       this.chainId = args.chainId
     }
     this.providers = args.providers
+    this.txParser = new cosmosTxParser.TransactionParser({ rpcUrl: '' })
   }
 
   abstract getType(): T
@@ -91,27 +95,41 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
   ): Promise<chainAdapters.TxHistoryResponse<T>> {
     try {
       const { data } = await this.providers.http.getTxHistory({
-        pubkey: input.pubkey
+        pubkey: input.pubkey,
+        pageSize: input.pageSize,
+        cursor: input.cursor
       })
 
-      throw new Error('Method not implemented.')
-      // return {
-      //   page: data.page,
-      //   totalPages: data.totalPages,
-      //   transactions: data.txs.map((tx) => ({
-      //     /*
-      //     missing properties from cosmos.api.Tx
-      //       status: string
-      //       from: string
-      //       to?: string
-      //       confirmations?: number
-      //      */
-      //     chain: caip2.fromCAIP2(this.getCaip2()).chain,
-      //     network: caip2.fromCAIP2(this.getCaip2()).network,
-      //     coinName: this.coinName
-      //   })),
-      //   txs: data.txs.length
-      // }
+      const ret: chainAdapters.TxHistoryResponse<T> = {
+        cursor: data.cursor,
+        transactions: await Promise.all(
+          data.txs.map<chainAdapters.Transaction<T>>(async (tx) => {
+            const parsedTx = await this.txParser.parse(tx, input.pubkey)
+            return {
+              address: input.pubkey,
+              blockHash: parsedTx.blockHash,
+              blockHeight: parsedTx.blockHeight,
+              blockTime: parsedTx.blockTime,
+              chain: caip2.fromCAIP2(this.getCaip2()).chain,
+              caip2: this.getCaip2(),
+              confirmations: parsedTx.confirmations,
+              txid: tx.txid,
+              fee: tx.fee,
+              status: parsedTx.status,
+              tradeDetails: parsedTx.trade,
+              transfers: parsedTx.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
+                caip19: transfer.caip19,
+                from: transfer.from,
+                to: transfer.to,
+                type: getType(transfer.type),
+                value: transfer.totalValue
+              })),
+              data: parsedTx.data
+            }
+          })
+        )
+      }
+      return ret
     } catch (err) {
       return ErrorHandler(err)
     }
@@ -133,7 +151,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
 
   async broadcastTransaction(hex: string): Promise<string> {
     const { data } = await this.providers.http.sendTx({
-      body: { hex }
+      body: { rawTx: hex }
     })
     return data
   }
@@ -150,7 +168,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
 
   async subscribeTxs(
     input: chainAdapters.SubscribeTxsInput,
-    onMessage: (msg: chainAdapters.SubscribeTxsMessage<T>) => void,
+    onMessage: (msg: chainAdapters.Transaction<T>) => void,
     onError?: (err: chainAdapters.SubscribeError) => void
   ): Promise<void> {
     throw new Error('Method not implemented.')
@@ -162,7 +180,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
     // await this.providers.ws.subscribeTxs(
     //   subscriptionId,
     //   { topic: 'txs', addresses: [address] },
-    //   (msg: chainAdapters.SubscribeTxsMessage<T>) => {
+    //   (msg: chainAdapters.Transaction<T>) => {
     //     const transfers = msg.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
     //       caip19: transfer.caip19,
     //       from: transfer.from,

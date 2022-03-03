@@ -25,6 +25,7 @@
     "type-check": "tsc --project ./tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@shapeshiftoss/unchained-tx-parser": "^5.2.0",
     "axios": "^0.26.0",
     "bignumber.js": "^9.0.1",
     "bitcoinjs-lib": "^5.2.0",

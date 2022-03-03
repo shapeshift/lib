@@ -147,29 +147,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
   async getTxHistory(
     input: chainAdapters.TxHistoryInput
   ): Promise<chainAdapters.TxHistoryResponse<ChainTypes.Bitcoin>> {
-    const { pubkey } = input
 
-    if (!pubkey) return ErrorHandler('pubkey parameter is not defined')
-
-    try {
-      const { data } = await this.providers.http.getTxHistory(input)
-      return {
-        page: data.page,
-        totalPages: data.totalPages,
-        transactions: data.transactions.map((tx) => ({
-          ...tx,
-          chain: ChainTypes.Bitcoin,
-          network: NetworkTypes.MAINNET,
-          symbol: 'BTC',
-          chainSpecific: {
-            opReturnData: ''
-          }
-        })),
-        txs: data.txs
-      }
-    } catch (err) {
-      return ErrorHandler(err)
-    }
+    throw new Error("Method not implemented.")
   }
 
   async buildSendTransaction(tx: chainAdapters.BuildSendTxInput<ChainTypes.Bitcoin>): Promise<{
@@ -423,7 +402,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
 
   async subscribeTxs(
     input: chainAdapters.SubscribeTxsInput,
-    onMessage: (msg: chainAdapters.SubscribeTxsMessage<ChainTypes.Bitcoin>) => void,
+    onMessage: (msg: chainAdapters.Transaction<ChainTypes.Bitcoin>) => void,
     onError: (err: chainAdapters.SubscribeError) => void
   ): Promise<void> {
     const {
