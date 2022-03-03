@@ -41,20 +41,14 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
   protected constructor(args: ChainAdapterArgs) {
     this.providers = args.providers
   }
-  subscribeTxs(
+
+  abstract subscribeTxs(
     input: chainAdapters.SubscribeTxsInput,
     onMessage: (msg: chainAdapters.SubscribeTxsMessage<T>) => void,
     onError?: (err: chainAdapters.SubscribeError) => void
-  ): Promise<void> {
-    throw new Error('Method not implemented.')
-  }
-  unsubscribeTxs(input?: chainAdapters.SubscribeTxsInput): void {
-    throw new Error('Method not implemented.')
-  }
-  closeTxs(): void {
-    throw new Error('Method not implemented.')
-  }
-
+  ): Promise<void>
+  abstract unsubscribeTxs(input?: chainAdapters.SubscribeTxsInput): void
+  abstract closeTxs(): void
   abstract getType(): T
 
   getCaip2(): CAIP2 {
@@ -103,19 +97,9 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
     return { ...UTXOBaseAdapter.defaultBIP44Params, ...params }
   }
 
-  async getTxHistory(
+  abstract getTxHistory(
     input: chainAdapters.TxHistoryInput
-  ): Promise<chainAdapters.TxHistoryResponse<T>> {
-    try {
-      const { data } = await this.providers.http.getTxHistory({
-        pubkey: input.pubkey
-      })
-
-      throw new Error('Method not implemented.')
-    } catch (err) {
-      return ErrorHandler(err)
-    }
-  }
+  ): Promise<chainAdapters.TxHistoryResponse<T>>
 
   abstract buildSendTransaction(
     tx: chainAdapters.BuildSendTxInput<T>
