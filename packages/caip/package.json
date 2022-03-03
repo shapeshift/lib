@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/caip",
-  "version": "1.12.0",
+  "version": "2.0.1",
   "description": "CAIP Implementation",
   "homepage": "",
   "license": "MIT",
@@ -23,16 +23,17 @@
     "generate-coingecko": "yarn build && node dist/adapters/coingecko/generate.js",
     "generate-coincap": "yarn build && node dist/adapters/coincap/generate.js",
     "generate-yearn": "yarn build && node dist/adapters/yearn/generate.js",
-    "generate": "yarn build && node dist/adapters/coingecko/generate.js && node dist/adapters/coincap/generate.js && node dist/adapters/yearn/generate.js",
+    "generate-osmosis": "yarn build && node dist/adapters/osmosis/generate.js",
+    "generate": "yarn build && node dist/adapters/coingecko/generate.js && node dist/adapters/coincap/generate.js && node dist/adapters/yearn/generate.js && node dist/adapters/osmosis/generate.js",
     "test": "jest test",
     "type-check": "tsc --project ./tsconfig.json --noEmit"
   },
   "dependencies": {},
   "peerDependencies": {
-    "@shapeshiftoss/types": "^1.23.0"
+    "@shapeshiftoss/types": "^2.0.0"
   },
   "devDependencies": {
-    "@shapeshiftoss/types": "^1.23.0",
+    "@shapeshiftoss/types": "^2.0.0",
     "@yfi/sdk": "^1.0.27",
     "axios": "^0.26.0"
   }
