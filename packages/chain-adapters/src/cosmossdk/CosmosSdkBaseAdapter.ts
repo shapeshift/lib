@@ -91,6 +91,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
   ): Promise<chainAdapters.TxHistoryResponse<T>> {
     try {
       const { data } = await this.providers.http.getTxHistory({ pubkey: input.pubkey })
+      console.warn(data)
       throw new Error('Method not implemented.')
     } catch (err) {
       return ErrorHandler(err)
