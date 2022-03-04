@@ -1,8 +1,15 @@
 import realFs from 'fs'
 
-import { makeBtcData, parseData, parseEthData, writeFiles } from './utils'
+import {
+  makeBtcData,
+  makeCosmosHubData,
+  makeOsmosisData,
+  parseData,
+  parseEthData,
+  writeFiles
+} from './utils'
 
-const eth = {
+const makeEthMockCoingeckoResponse = () => ({
   id: 'ethereum',
   symbol: 'eth',
   name: 'Ethereum',
@@ -16,23 +23,39 @@ const eth = {
     'optimistic-ethereum': '0x4200000000000000000000000000000000000006',
     tomochain: '0x2eaa73bd0db20c64f53febea7b5f5e5bccc7fb8b'
   }
-}
+})
 
-const fox = {
+const makeFoxMockCoingeckoResponse = () => ({
   id: 'shapeshift-fox-token',
   symbol: 'fox',
   name: 'ShapeShift FOX Token',
   platforms: {
     ethereum: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
   }
-}
+})
 
-const btc = {
+const makeBtcMockCoingeckoResponse = () => ({
   id: 'bitcoin',
   symbol: 'btc',
   name: 'Bitcoin',
   platforms: {}
-}
+})
+
+const makeCosmosMockCoingeckoResponse = () => ({
+  id: 'cosmos',
+  symbol: 'atom',
+  name: 'Cosmos',
+  platforms: {
+    osmosis: 'IBC/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2'
+  }
+})
+
+const makeOsmosisMockCoingeckoResponse = () => ({
+  id: 'osmosis',
+  symbol: 'osmo',
+  name: 'osmosis',
+  platforms: {}
+})
 
 jest.mock('fs', () => ({
   promises: {
@@ -40,63 +63,89 @@ jest.mock('fs', () => ({
   }
 }))
 
-describe('parseEthData', () => {
-  it('can parse eth data', async () => {
-    const result = parseEthData([eth, fox])
-    const expected = {
-      'eip155:1/slip44:60': 'ethereum',
-      'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d': 'shapeshift-fox-token'
-    }
-    expect(result).toEqual(expected)
-  })
-
-  it('can parse btc data', async () => {
-    const result = makeBtcData()
-    const expected = { 'bip122:000000000019d6689c085ae165831e93/slip44:0': 'bitcoin' }
-    expect(result).toEqual(expected)
-  })
-})
-
-describe('parseData', () => {
-  it('can parse all data', async () => {
-    const result = parseData([eth, fox, btc])
-    const expected = {
-      'bip122:000000000019d6689c085ae165831e93': {
-        'bip122:000000000019d6689c085ae165831e93/slip44:0': 'bitcoin'
-      },
-      'eip155:1': {
+describe('adapters:coingecko:utils', () => {
+  describe('parseEthData', () => {
+    it('can parse eth data', async () => {
+      const result = parseEthData([makeEthMockCoingeckoResponse(), makeFoxMockCoingeckoResponse()])
+      const expected = {
         'eip155:1/slip44:60': 'ethereum',
         'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d': 'shapeshift-fox-token'
       }
-    }
-    expect(result).toEqual(expected)
-  })
-})
+      expect(result).toEqual(expected)
+    })
 
-describe('writeFiles', () => {
-  it('can writeFiles', async () => {
-    const data = {
-      foo: {
-        caip19abc: 'bitcorn',
-        caip19def: 'efferium'
-      },
-      bar: {
-        caip19ghi: 'fox',
-        caip19jkl: 'shib'
+    it('can parse btc data', async () => {
+      const result = makeBtcData()
+      const expected = { 'bip122:000000000019d6689c085ae165831e93/slip44:0': 'bitcoin' }
+      expect(result).toEqual(expected)
+    })
+
+    it('can parse cosmos data', async () => {
+      const result = makeCosmosHubData()
+      const expected = { 'cosmos:cosmoshub-4/slip44:118': 'cosmos' }
+      expect(result).toEqual(expected)
+    })
+
+    it('can parse osmosis data', async () => {
+      const result = makeOsmosisData()
+      const expected = { 'cosmos:osmosis-1/slip44:118': 'osmosis' }
+      expect(result).toEqual(expected)
+    })
+  })
+
+  describe('parseData', () => {
+    it('can parse all data', async () => {
+      const result = parseData([
+        makeEthMockCoingeckoResponse(),
+        makeFoxMockCoingeckoResponse(),
+        makeBtcMockCoingeckoResponse(),
+        makeCosmosMockCoingeckoResponse(),
+        makeOsmosisMockCoingeckoResponse()
+      ])
+      const expected = {
+        'bip122:000000000019d6689c085ae165831e93': {
+          'bip122:000000000019d6689c085ae165831e93/slip44:0': 'bitcoin'
+        },
+        'cosmos:cosmoshub-4': {
+          'cosmos:cosmoshub-4/slip44:118': 'cosmos'
+        },
+        'cosmos:osmosis-1': {
+          'cosmos:osmosis-1/slip44:118': 'osmosis'
+        },
+        'eip155:1': {
+          'eip155:1/slip44:60': 'ethereum',
+          'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d': 'shapeshift-fox-token'
+        }
       }
-    }
-    const fooCaips = JSON.stringify(data.foo)
-    const barCaips = JSON.stringify(data.bar)
-    console.info = jest.fn()
-    await writeFiles(data)
-    expect(realFs.promises.writeFile).toBeCalledWith(
-      './src/adapters/coingecko/generated/foo/adapter.json',
-      fooCaips
-    )
-    expect(realFs.promises.writeFile).toBeCalledWith(
-      './src/adapters/coingecko/generated/bar/adapter.json',
-      barCaips
-    )
-    expect(console.info).toBeCalledWith('Generated CoinGecko CAIP19 adapter data.')
+      expect(result).toEqual(expected)
+    })
+  })
+
+  describe('writeFiles', () => {
+    it('can writeFiles', async () => {
+      const data = {
+        foo: {
+          caip19abc: 'bitcorn',
+          caip19def: 'efferium'
+        },
+        bar: {
+          caip19ghi: 'fox',
+          caip19jkl: 'shib'
+        }
+      }
+      const fooCaips = JSON.stringify(data.foo)
+      const barCaips = JSON.stringify(data.bar)
+      console.info = jest.fn()
+      await writeFiles(data)
+      expect(realFs.promises.writeFile).toBeCalledWith(
+        './src/adapters/coingecko/generated/foo/adapter.json',
+        fooCaips
+      )
+      expect(realFs.promises.writeFile).toBeCalledWith(
+        './src/adapters/coingecko/generated/bar/adapter.json',
+        barCaips
+      )
+      expect(console.info).toBeCalledWith('Generated CoinGecko CAIP19 adapter data.')
+    })
   })
 })

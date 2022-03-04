@@ -1,5 +1,4 @@
 import { adapters } from '@shapeshiftoss/caip'
-import { fromCAIP19 } from '@shapeshiftoss/caip/dist/caip19/caip19'
 import {
   FindAllMarketArgs,
   HistoryData,
@@ -9,14 +8,17 @@ import {
   MarketDataArgs,
   PriceHistoryArgs
 } from '@shapeshiftoss/types'
-import axios from 'axios'
 import dayjs from 'dayjs'
 import omit from 'lodash/omit'
 
 import { MarketService } from '../api'
+import { RATE_LIMIT_THRESHOLDS_PER_MINUTE } from '../config'
 import { bn, bnOrZero } from '../utils/bignumber'
 import { isValidDate } from '../utils/isValidDate'
+import { rateLimitedAxios } from '../utils/rateLimiters'
 import { CoinCapMarketCap } from './coincap-types'
+
+const axios = rateLimitedAxios(RATE_LIMIT_THRESHOLDS_PER_MINUTE.COINCAP)
 
 export class CoinCapMarketService implements MarketService {
   baseUrl = 'https://api.coincap.io/v2'
@@ -71,8 +73,7 @@ export class CoinCapMarketService implements MarketService {
   findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData | null> => {
     if (!adapters.CAIP19ToCoinCap(caip19)) return null
     try {
-      const { tokenId } = fromCAIP19(caip19)
-      const id = tokenId ? 'ethereum' : adapters.CAIP19ToCoinCap(caip19)
+      const id = adapters.CAIP19ToCoinCap(caip19)
 
       const { data } = await axios.get(`${this.baseUrl}/assets/${id}`)
 
@@ -94,8 +95,7 @@ export class CoinCapMarketService implements MarketService {
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
     if (!adapters.CAIP19ToCoinCap(caip19)) return []
-    const { tokenId } = fromCAIP19(caip19)
-    const id = tokenId ? 'ethereum' : adapters.CAIP19ToCoinCap(caip19)
+    const id = adapters.CAIP19ToCoinCap(caip19)
 
     const end = dayjs().startOf('minute')
     let start
@@ -132,8 +132,7 @@ export class CoinCapMarketService implements MarketService {
     try {
       const from = start.valueOf()
       const to = end.valueOf()
-      const contract = tokenId ? `/contract/${tokenId}` : ''
-      const url = `${this.baseUrl}/assets/${id}${contract}/history`
+      const url = `${this.baseUrl}/assets/${id}/history`
       type CoincapHistoryData = {
         data: {
           priceUsd: number

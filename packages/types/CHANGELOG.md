@@ -1,3 +1,85 @@
+# [@shapeshiftoss/types-v2.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v1.26.0...@shapeshiftoss/types-v2.0.0) (2022-03-03)
+
+
+### Code Refactoring
+
+* remove contract types and  make assetnamespace and assetreference required fields ([#410](https://github.com/shapeshift/lib/issues/410)) ([b12bbf3](https://github.com/shapeshift/lib/commit/b12bbf39f55e5d87775def96c2ca7ce05abff2ee))
+
+
+### BREAKING CHANGES
+
+* remove ContractTypes
+
+For CAIP19 we will use AssetNamespace instead
+
+* refactor(swapper): use AssetNamespace instead of ContractTypes
+
+* feat(caip): caip19 requires assetNamespace and assetReference
+* removed contractType and tokenId
+
+assetNamespace and assetReference are used instead and are required
+
+* refactor(asset-service): use AssetNamespace instead of ContractTypes
+
+* refactor(chain-adapters): use assetNamespace and assetReference
+
+For CAIP19, stop relying on default assets
+
+* refactor(swapper): use assetReference instead of tokenId
+
+* refactor(market-data): use assetReference instead of tokenId
+
+* Update packages/caip/README.md
+
+Co-authored-by: 0xdef1cafe <88504456+0xdef1cafe@users.noreply.github.com>
+
+* refactor(asset-service): updated ERC20 strings to lowercase
+
+Co-authored-by: Chris Thompson <chris@thompson-web.org>
+Co-authored-by: 0xdef1cafe <88504456+0xdef1cafe@users.noreply.github.com>
+
+# [@shapeshiftoss/types-v1.26.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v1.25.0...@shapeshiftoss/types-v1.26.0) (2022-02-28)
+
+
+### Features
+
+* add Cosmos based chain adapters ([#397](https://github.com/shapeshift/lib/issues/397)) ([a0690d7](https://github.com/shapeshift/lib/commit/a0690d700f924d5ff095cfeae072d204e4016708)), closes [#291](https://github.com/shapeshift/lib/issues/291)
+
+# [@shapeshiftoss/types-v1.25.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v1.24.0...@shapeshiftoss/types-v1.25.0) (2022-02-28)
+
+
+### Features
+
+* add "Contract" TxType ([#405](https://github.com/shapeshift/lib/issues/405)) ([df0d303](https://github.com/shapeshift/lib/commit/df0d3038a516fb8164181f26a838b6fcecfd0c60))
+
+# [@shapeshiftoss/types-v1.24.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v1.23.1...@shapeshiftoss/types-v1.24.0) (2022-02-25)
+
+
+### Features
+
+* add metadata to transaction WebSocket messages ([#396](https://github.com/shapeshift/lib/issues/396)) ([7f6ccf3](https://github.com/shapeshift/lib/commit/7f6ccf35c9f31044e74cb77c869e0126618f4fb9))
+
+# [@shapeshiftoss/types-v1.23.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v1.23.0...@shapeshiftoss/types-v1.23.1) (2022-02-25)
+
+
+### Bug Fixes
+
+* caip support for Osmosis ([#398](https://github.com/shapeshift/lib/issues/398)) ([e0edc67](https://github.com/shapeshift/lib/commit/e0edc673732df2810dae32c5a49014cd174bad5a))
+
+# [@shapeshiftoss/types-v1.23.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v1.22.0...@shapeshiftoss/types-v1.23.0) (2022-02-16)
+
+
+### Features
+
+* add isTrusted to description of asset service ([#357](https://github.com/shapeshift/lib/issues/357)) ([49b002f](https://github.com/shapeshift/lib/commit/49b002f240ab29f3e6e85cfa7ef324bd16c7c3e3))
+
+# [@shapeshiftoss/types-v1.22.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v1.21.1...@shapeshiftoss/types-v1.22.0) (2022-02-16)
+
+
+### Features
+
+* caip2/caip19 for Cosmos SDK ([#371](https://github.com/shapeshift/lib/issues/371)) ([24d8f03](https://github.com/shapeshift/lib/commit/24d8f034348e4e6f11da7bdba035312924a0fe9d))
+
 # [@shapeshiftoss/types-v1.21.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v1.21.0...@shapeshiftoss/types-v1.21.1) (2022-02-07)
 
 

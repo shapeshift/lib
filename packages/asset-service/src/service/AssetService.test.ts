@@ -1,10 +1,5 @@
-import {
-  Asset,
-  AssetDataSource,
-  ChainTypes,
-  ContractTypes,
-  NetworkTypes
-} from '@shapeshiftoss/types'
+import { AssetNamespace } from '@shapeshiftoss/caip'
+import { Asset, AssetDataSource, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import axios from 'axios'
 
 import { AssetService, flattenAssetData, indexAssetData } from './AssetService'
@@ -38,7 +33,7 @@ const EthAsset: Asset = {
 jest.mock(
   './descriptions.json',
   () => ({
-    'eip155:3/slip44:60': 'overriden description'
+    'eip155:3/slip44:60': 'overridden description'
   }),
   { virtual: true }
 )
@@ -145,9 +140,10 @@ describe('AssetService', () => {
     it('should return the overridden description if it exists', async () => {
       const assetService = new AssetService(assetFileUrl)
 
-      await expect(assetService.description({ asset: EthAsset })).resolves.toEqual(
-        'overriden description'
-      )
+      await expect(assetService.description({ asset: EthAsset })).resolves.toEqual({
+        description: 'overridden description',
+        isTrusted: true
+      })
     })
 
     it('should return a string if found', async () => {
@@ -157,14 +153,16 @@ describe('AssetService', () => {
       const assetService = new AssetService(assetFileUrl)
       const description = { en: 'a blue fox' }
       mockedAxios.get.mockResolvedValue({ data: { description } })
-      await expect(assetService.description({ asset: EthAsset })).resolves.toEqual(description.en)
+      await expect(assetService.description({ asset: EthAsset })).resolves.toEqual({
+        description: description.en
+      })
     })
 
     it('should throw if not found', async () => {
       const assetService = new AssetService(assetFileUrl)
       mockedAxios.get.mockRejectedValue({ data: null })
       const chain = ChainTypes.Ethereum
-      const tokenData = {
+      const tokenData: Asset = {
         caip19: 'eip155:3/erc20:0x1da00b6fc705f2ce4c25d7e7add25a3cc045e54a',
         caip2: 'eip155:3',
         chain: ChainTypes.Ethereum,
@@ -175,7 +173,7 @@ describe('AssetService', () => {
         name: 'Test Token',
         precision: 18,
         tokenId: '0x1da00b6fc705f2ce4c25d7e7add25a3cc045e54a',
-        contractType: ContractTypes.ERC20,
+        contractType: AssetNamespace.ERC20,
         color: '#FFFFFF',
         dataSource: AssetDataSource.CoinGecko,
         secondaryColor: '#FFFFFF',

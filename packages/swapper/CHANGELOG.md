@@ -1,3 +1,63 @@
+# [@shapeshiftoss/swapper-v2.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v2.0.0...@shapeshiftoss/swapper-v2.0.1) (2022-03-03)
+
+# [@shapeshiftoss/swapper-v2.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.16.0...@shapeshiftoss/swapper-v2.0.0) (2022-03-03)
+
+
+### Code Refactoring
+
+* remove contract types and  make assetnamespace and assetreference required fields ([#410](https://github.com/shapeshift/lib/issues/410)) ([b12bbf3](https://github.com/shapeshift/lib/commit/b12bbf39f55e5d87775def96c2ca7ce05abff2ee))
+
+
+### BREAKING CHANGES
+
+* remove ContractTypes
+
+For CAIP19 we will use AssetNamespace instead
+
+* refactor(swapper): use AssetNamespace instead of ContractTypes
+
+* feat(caip): caip19 requires assetNamespace and assetReference
+* removed contractType and tokenId
+
+assetNamespace and assetReference are used instead and are required
+
+* refactor(asset-service): use AssetNamespace instead of ContractTypes
+
+* refactor(chain-adapters): use assetNamespace and assetReference
+
+For CAIP19, stop relying on default assets
+
+* refactor(swapper): use assetReference instead of tokenId
+
+* refactor(market-data): use assetReference instead of tokenId
+
+* Update packages/caip/README.md
+
+Co-authored-by: 0xdef1cafe <88504456+0xdef1cafe@users.noreply.github.com>
+
+* refactor(asset-service): updated ERC20 strings to lowercase
+
+Co-authored-by: Chris Thompson <chris@thompson-web.org>
+Co-authored-by: 0xdef1cafe <88504456+0xdef1cafe@users.noreply.github.com>
+
+# [@shapeshiftoss/swapper-v1.16.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.15.5...@shapeshiftoss/swapper-v1.16.0) (2022-02-28)
+
+
+### Features
+
+* add Cosmos based chain adapters ([#397](https://github.com/shapeshift/lib/issues/397)) ([a0690d7](https://github.com/shapeshift/lib/commit/a0690d700f924d5ff095cfeae072d204e4016708)), closes [#291](https://github.com/shapeshift/lib/issues/291)
+
+# [@shapeshiftoss/swapper-v1.15.5](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.15.4...@shapeshiftoss/swapper-v1.15.5) (2022-02-18)
+
+# [@shapeshiftoss/swapper-v1.15.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.15.3...@shapeshiftoss/swapper-v1.15.4) (2022-02-17)
+
+# [@shapeshiftoss/swapper-v1.15.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.15.2...@shapeshiftoss/swapper-v1.15.3) (2022-02-16)
+
+
+### Bug Fixes
+
+* incorrect usd rate for multiple assets ([#372](https://github.com/shapeshift/lib/issues/372)) ([70221f1](https://github.com/shapeshift/lib/commit/70221f11c03a95143db64cd711ea5c00f7b5957d))
+
 # [@shapeshiftoss/swapper-v1.15.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.15.1...@shapeshiftoss/swapper-v1.15.2) (2022-02-10)
 
 # [@shapeshiftoss/swapper-v1.15.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v1.15.0...@shapeshiftoss/swapper-v1.15.1) (2022-01-07)

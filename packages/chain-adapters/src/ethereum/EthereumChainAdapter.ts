@@ -1,5 +1,5 @@
 import { Contract } from '@ethersproject/contracts'
-import { CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
+import { AssetNamespace, AssetReference, CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import { ethereum } from '@shapeshiftoss/unchained-client'
@@ -12,7 +12,7 @@ import { ChainAdapter as IChainAdapter } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
 import {
   bnOrZero,
-  getContractType,
+  getAssetNamespace,
   getStatus,
   getType,
   toPath,
@@ -25,6 +25,7 @@ export interface ChainAdapterArgs {
     http: ethereum.api.V1Api
     ws: ethereum.ws.Client
   }
+  chainId?: CAIP2
 }
 
 async function getErc20Data(to: string, value: string, contractAddress?: string) {
@@ -45,7 +46,20 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     accountNumber: 0
   }
 
+  private readonly chainId: CAIP2 = 'eip155:1'
+
   constructor(args: ChainAdapterArgs) {
+    if (args.chainId) {
+      try {
+        const { chain } = caip2.fromCAIP2(args.chainId)
+        if (chain !== ChainTypes.Ethereum) {
+          throw new Error()
+        }
+        this.chainId = args.chainId
+      } catch (e) {
+        throw new Error(`The ChainID ${args.chainId} is not supported`)
+      }
+    }
     this.providers = args.providers
   }
 
@@ -53,28 +67,17 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     return ChainTypes.Ethereum
   }
 
-  async getCaip2(): Promise<CAIP2> {
-    try {
-      const { data } = await this.providers.http.getInfo()
+  getCaip2(): CAIP2 {
+    return this.chainId
+  }
 
-      switch (data.network) {
-        case 'mainnet':
-          return caip2.toCAIP2({ chain: ChainTypes.Ethereum, network: NetworkTypes.MAINNET })
-        case 'ropsten':
-          return caip2.toCAIP2({ chain: ChainTypes.Ethereum, network: NetworkTypes.ETH_ROPSTEN })
-        case 'rinkeby':
-          return caip2.toCAIP2({ chain: ChainTypes.Ethereum, network: NetworkTypes.ETH_RINKEBY })
-        default:
-          throw new Error(`EthereumChainAdapter: network is not supported: ${data.network}`)
-      }
-    } catch (err) {
-      return ErrorHandler(err)
-    }
+  getChainId(): CAIP2 {
+    return this.chainId
   }
 
   async getAccount(pubkey: string): Promise<chainAdapters.Account<ChainTypes.Ethereum>> {
     try {
-      const caip = await this.getCaip2()
+      const caip = this.getCaip2()
       const { chain, network } = caip2.fromCAIP2(caip)
       const { data } = await this.providers.http.getAccount({ pubkey })
 
@@ -83,7 +86,12 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       return {
         balance: balance.toString(),
         caip2: caip,
-        caip19: caip19.toCAIP19({ chain, network }),
+        caip19: caip19.toCAIP19({
+          chain,
+          network,
+          assetNamespace: AssetNamespace.Slip44,
+          assetReference: AssetReference.Ethereum
+        }),
         chain: ChainTypes.Ethereum,
         chainSpecific: {
           nonce: data.nonce,
@@ -92,8 +100,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
             caip19: caip19.toCAIP19({
               chain,
               network,
-              contractType: getContractType(token.type),
-              tokenId: token.contract
+              assetNamespace: getAssetNamespace(token.type),
+              assetReference: token.contract
             })
           }))
         },
@@ -162,7 +170,9 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
         if (isErc20Send) {
           if (!erc20ContractAddress) throw new Error('no token address')
           const erc20Balance = account?.chainSpecific?.tokens?.find((token) => {
-            return caip19.fromCAIP19(token.caip19).tokenId === erc20ContractAddress.toLowerCase()
+            return (
+              caip19.fromCAIP19(token.caip19).assetReference === erc20ContractAddress.toLowerCase()
+            )
           })?.balance
           if (!erc20Balance) throw new Error('no balance')
           tx.value = erc20Balance
@@ -246,8 +256,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     if (sendMax && isErc20Send && contractAddress) {
       const account = await this.getAccount(from)
       const erc20Balance = account?.chainSpecific?.tokens?.find((token) => {
-        const { tokenId } = caip19.fromCAIP19(token.caip19)
-        return tokenId === contractAddress.toLowerCase()
+        const { assetReference } = caip19.fromCAIP19(token.caip19)
+        return assetReference === contractAddress.toLowerCase()
       })?.balance
       if (!erc20Balance) throw new Error('no balance')
       value = erc20Balance
@@ -382,7 +392,13 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           status: getStatus(msg.status),
           tradeDetails: msg.trade,
           transfers,
-          txid: msg.txid
+          txid: msg.txid,
+          ...(msg.data && {
+            data: {
+              method: msg.data.method,
+              parser: msg.data.parser ?? 'unknown'
+            }
+          })
         })
       },
       (err) => onError({ message: err.message })

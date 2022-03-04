@@ -1,3 +1,91 @@
+# [@shapeshiftoss/caip-v2.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v2.0.0...@shapeshiftoss/caip-v2.0.1) (2022-03-03)
+
+# [@shapeshiftoss/caip-v2.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v1.13.0...@shapeshiftoss/caip-v2.0.0) (2022-03-03)
+
+
+### Code Refactoring
+
+* remove contract types and  make assetnamespace and assetreference required fields ([#410](https://github.com/shapeshift/lib/issues/410)) ([b12bbf3](https://github.com/shapeshift/lib/commit/b12bbf39f55e5d87775def96c2ca7ce05abff2ee))
+
+
+### BREAKING CHANGES
+
+* remove ContractTypes
+
+For CAIP19 we will use AssetNamespace instead
+
+* refactor(swapper): use AssetNamespace instead of ContractTypes
+
+* feat(caip): caip19 requires assetNamespace and assetReference
+* removed contractType and tokenId
+
+assetNamespace and assetReference are used instead and are required
+
+* refactor(asset-service): use AssetNamespace instead of ContractTypes
+
+* refactor(chain-adapters): use assetNamespace and assetReference
+
+For CAIP19, stop relying on default assets
+
+* refactor(swapper): use assetReference instead of tokenId
+
+* refactor(market-data): use assetReference instead of tokenId
+
+* Update packages/caip/README.md
+
+Co-authored-by: 0xdef1cafe <88504456+0xdef1cafe@users.noreply.github.com>
+
+* refactor(asset-service): updated ERC20 strings to lowercase
+
+Co-authored-by: Chris Thompson <chris@thompson-web.org>
+Co-authored-by: 0xdef1cafe <88504456+0xdef1cafe@users.noreply.github.com>
+
+# [@shapeshiftoss/caip-v1.13.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v1.12.1...@shapeshiftoss/caip-v1.13.0) (2022-03-03)
+
+
+### Features
+
+* osmosis market service ([#394](https://github.com/shapeshift/lib/issues/394)) ([cd613e1](https://github.com/shapeshift/lib/commit/cd613e133f76c00324b5d35fe75ba1ee164f82d7))
+
+# [@shapeshiftoss/caip-v1.12.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v1.12.0...@shapeshiftoss/caip-v1.12.1) (2022-03-01)
+
+
+### Bug Fixes
+
+* support slip44 for Cosmos in toCAIP2 ([#409](https://github.com/shapeshift/lib/issues/409)) ([370a8d6](https://github.com/shapeshift/lib/commit/370a8d6530262d78c74cf490fba8061d2fd1331b))
+
+# [@shapeshiftoss/caip-v1.12.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v1.11.4...@shapeshiftoss/caip-v1.12.0) (2022-02-28)
+
+
+### Features
+
+* add Cosmos based chain adapters ([#397](https://github.com/shapeshift/lib/issues/397)) ([a0690d7](https://github.com/shapeshift/lib/commit/a0690d700f924d5ff095cfeae072d204e4016708)), closes [#291](https://github.com/shapeshift/lib/issues/291)
+
+# [@shapeshiftoss/caip-v1.11.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v1.11.3...@shapeshiftoss/caip-v1.11.4) (2022-02-25)
+
+
+### Bug Fixes
+
+* caip support for Osmosis ([#398](https://github.com/shapeshift/lib/issues/398)) ([e0edc67](https://github.com/shapeshift/lib/commit/e0edc673732df2810dae32c5a49014cd174bad5a))
+
+# [@shapeshiftoss/caip-v1.11.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v1.11.2...@shapeshiftoss/caip-v1.11.3) (2022-02-18)
+
+
+### Bug Fixes
+
+* update fromCaip19 ([#389](https://github.com/shapeshift/lib/issues/389)) ([5ee728f](https://github.com/shapeshift/lib/commit/5ee728fe69c09d8a2d0459ebd020aa4d4f871929))
+
+# [@shapeshiftoss/caip-v1.11.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v1.11.1...@shapeshiftoss/caip-v1.11.2) (2022-02-18)
+
+# [@shapeshiftoss/caip-v1.11.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v1.11.0...@shapeshiftoss/caip-v1.11.1) (2022-02-17)
+
+# [@shapeshiftoss/caip-v1.11.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v1.10.2...@shapeshiftoss/caip-v1.11.0) (2022-02-16)
+
+
+### Features
+
+* caip2/caip19 for Cosmos SDK ([#371](https://github.com/shapeshift/lib/issues/371)) ([24d8f03](https://github.com/shapeshift/lib/commit/24d8f034348e4e6f11da7bdba035312924a0fe9d))
+
 # [@shapeshiftoss/caip-v1.10.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v1.10.1...@shapeshiftoss/caip-v1.10.2) (2022-02-16)
 
 # [@shapeshiftoss/caip-v1.10.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v1.10.0...@shapeshiftoss/caip-v1.10.1) (2022-02-09)

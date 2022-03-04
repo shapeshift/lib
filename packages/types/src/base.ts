@@ -12,23 +12,22 @@ export type BIP44Params = {
   index?: number
 }
 
-export enum ContractTypes {
-  ERC20 = 'ERC20',
-  ERC721 = 'ERC721',
-  OTHER = 'OTHER',
-  NONE = 'NONE'
-}
-
 export enum ChainTypes {
   Ethereum = 'ethereum',
-  Bitcoin = 'bitcoin'
+  Bitcoin = 'bitcoin',
+  Cosmos = 'cosmos',
+  Osmosis = 'osmosis'
 }
 
 export enum NetworkTypes {
   MAINNET = 'MAINNET',
   TESTNET = 'TESTNET', // BTC, LTC, etc...
   ETH_ROPSTEN = 'ETH_ROPSTEN',
-  ETH_RINKEBY = 'ETH_RINKEBY'
+  ETH_RINKEBY = 'ETH_RINKEBY',
+  COSMOSHUB_MAINNET = 'COSMOSHUB_MAINNET',
+  COSMOSHUB_VEGA = 'COSMOSHUB_VEGA',
+  OSMOSIS_MAINNET = 'OSMOSIS_MAINNET',
+  OSMOSIS_TESTNET = 'OSMOSIS_TESTNET'
 }
 
 export enum UtxoAccountType {
@@ -51,6 +50,7 @@ type AbstractAsset = {
   caip2: string
   chain: ChainTypes
   description?: string
+  isTrustedDescription?: boolean
   dataSource: AssetDataSource
   network: NetworkTypes
   symbol: string
@@ -76,7 +76,7 @@ type OmittedTokenAssetFields =
   | 'explorerAddressLink'
 type TokenAssetFields = {
   tokenId: string
-  contractType: ContractTypes
+  contractType: 'erc20' | 'erc721' // Don't want to import caip here to prevent circular dependencies
 }
 export type TokenAsset = Omit<AbstractAsset, OmittedTokenAssetFields> & TokenAssetFields
 export type BaseAsset = AbstractAsset & { tokens?: TokenAsset[] }

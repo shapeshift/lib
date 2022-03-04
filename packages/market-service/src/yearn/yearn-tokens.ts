@@ -1,8 +1,6 @@
-import { adapters } from '@shapeshiftoss/caip'
-import { toCAIP19 } from '@shapeshiftoss/caip/dist/caip19/caip19'
+import { adapters, AssetNamespace, caip19 } from '@shapeshiftoss/caip'
 import {
   ChainTypes,
-  ContractTypes,
   FindAllMarketArgs,
   HistoryData,
   MarketCapResult,
@@ -14,7 +12,11 @@ import { ChainId, Token, Yearn } from '@yfi/sdk'
 import uniqBy from 'lodash/uniqBy'
 
 import { MarketService } from '../api'
+import { RATE_LIMIT_THRESHOLDS_PER_MINUTE } from '../config'
 import { bnOrZero } from '../utils/bignumber'
+import { createRateLimiter } from '../utils/rateLimiters'
+
+const rateLimiter = createRateLimiter(RATE_LIMIT_THRESHOLDS_PER_MINUTE.YEARN)
 
 type YearnTokenMarketCapServiceArgs = {
   yearnSdk: Yearn<ChainId>
@@ -38,9 +40,9 @@ export class YearnTokenMarketCapService implements MarketService {
     try {
       const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
       const response = await Promise.allSettled([
-        this.yearnSdk.ironBank.tokens(),
-        this.yearnSdk.tokens.supported(),
-        this.yearnSdk.vaults.tokens()
+        rateLimiter(() => this.yearnSdk.ironBank.tokens()),
+        rateLimiter(() => this.yearnSdk.tokens.supported()),
+        rateLimiter(() => this.yearnSdk.vaults.tokens())
       ])
       const [ironBankResponse, zapperResponse, underlyingTokensResponse] = response
 
@@ -54,13 +56,13 @@ export class YearnTokenMarketCapService implements MarketService {
       const tokens = uniqueTokens.slice(0, argsToUse.count)
 
       return tokens.reduce((acc, token) => {
-        const caip19: string = toCAIP19({
+        const _caip19: string = caip19.toCAIP19({
           chain: ChainTypes.Ethereum,
           network: NetworkTypes.MAINNET,
-          contractType: ContractTypes.ERC20,
-          tokenId: token.address
+          assetNamespace: AssetNamespace.ERC20,
+          assetReference: token.address
         })
-        acc[caip19] = {
+        acc[_caip19] = {
           price: bnOrZero(token.priceUsdc).div(`1e+${USDC_PRECISION}`).toString(),
           // TODO: figure out how to get these values.
           marketCap: '0',
@@ -76,8 +78,8 @@ export class YearnTokenMarketCapService implements MarketService {
     }
   }
 
-  findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData | null> => {
-    const address = adapters.CAIP19ToYearn(caip19)
+  findByCaip19 = async ({ caip19: _caip19 }: MarketDataArgs): Promise<MarketData | null> => {
+    const address = adapters.CAIP19ToYearn(_caip19)
     if (!address) return null
     try {
       // the yearnSdk caches the response to all of these calls and returns the cache if found.
@@ -86,9 +88,9 @@ export class YearnTokenMarketCapService implements MarketService {
       // the price to web. Doing allSettled so that one rejection does not interfere with the other
       // calls.
       const response = await Promise.allSettled([
-        this.yearnSdk.ironBank.tokens(),
-        this.yearnSdk.tokens.supported(),
-        this.yearnSdk.vaults.tokens()
+        rateLimiter(() => this.yearnSdk.ironBank.tokens()),
+        rateLimiter(() => this.yearnSdk.tokens.supported()),
+        rateLimiter(() => this.yearnSdk.vaults.tokens())
       ])
       const [ironBankResponse, zapperResponse, underlyingTokensResponse] = response
 

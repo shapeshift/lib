@@ -1,8 +1,6 @@
-import { adapters } from '@shapeshiftoss/caip'
-import { toCAIP19 } from '@shapeshiftoss/caip/dist/caip19/caip19'
+import { adapters, AssetNamespace, caip19 } from '@shapeshiftoss/caip'
 import {
   ChainTypes,
-  ContractTypes,
   FindAllMarketArgs,
   HistoryData,
   HistoryTimeframe,
@@ -16,10 +14,14 @@ import { ChainId, Yearn } from '@yfi/sdk'
 import head from 'lodash/head'
 
 import { MarketService } from '../api'
+import { RATE_LIMIT_THRESHOLDS_PER_MINUTE } from '../config'
 import { bn, bnOrZero } from '../utils/bignumber'
 import { isValidDate } from '../utils/isValidDate'
+import { createRateLimiter } from '../utils/rateLimiters'
 import { ACCOUNT_HISTORIC_EARNINGS } from './gql-queries'
 import { VaultDayDataGQLResponse } from './yearn-types'
+
+const rateLimiter = createRateLimiter(RATE_LIMIT_THRESHOLDS_PER_MINUTE.YEARN)
 
 type YearnVaultMarketCapServiceArgs = {
   yearnSdk: Yearn<ChainId>
@@ -42,7 +44,7 @@ export class YearnVaultMarketCapService implements MarketService {
   findAll = async (args?: FindAllMarketArgs) => {
     try {
       const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
-      const response = await this.yearnSdk.vaults.get()
+      const response = await rateLimiter(() => this.yearnSdk.vaults.get())
       const vaults = response.slice(0, argsToUse.count)
 
       return vaults
@@ -52,15 +54,15 @@ export class YearnVaultMarketCapService implements MarketService {
             : -1
         )
         .reduce((acc, yearnItem) => {
-          const caip19: string = toCAIP19({
+          const assetId = caip19.toCAIP19({
             chain: ChainTypes.Ethereum,
             network: NetworkTypes.MAINNET,
-            contractType: ContractTypes.ERC20,
-            tokenId: yearnItem.address
+            assetNamespace: AssetNamespace.ERC20,
+            assetReference: yearnItem.address
           })
           // if amountUsdc of a yearn asset is 0, the asset has not price or value
           if (bnOrZero(yearnItem.underlyingTokenBalance.amountUsdc).eq(0)) {
-            acc[caip19] = {
+            acc[assetId] = {
               price: '0',
               marketCap: '0',
               volume: '0',
@@ -106,7 +108,7 @@ export class YearnVaultMarketCapService implements MarketService {
                 .toNumber() || 0
           }
 
-          acc[caip19] = {
+          acc[assetId] = {
             price,
             marketCap,
             volume: volume.abs().toString(),
@@ -121,11 +123,11 @@ export class YearnVaultMarketCapService implements MarketService {
     }
   }
 
-  findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData | null> => {
-    const id = adapters.CAIP19ToYearn(caip19)
+  findByCaip19 = async ({ caip19: assetId }: MarketDataArgs): Promise<MarketData | null> => {
+    const id = adapters.CAIP19ToYearn(assetId)
     if (!id) return null
     try {
-      const vaults = await this.yearnSdk.vaults.get([id])
+      const vaults = await rateLimiter(() => this.yearnSdk.vaults.get([id]))
       if (!vaults || !vaults.length) return null
       const vault = head(vaults)
       if (!vault) return null
@@ -193,10 +195,10 @@ export class YearnVaultMarketCapService implements MarketService {
   }
 
   findPriceHistoryByCaip19 = async ({
-    caip19,
+    caip19: assetId,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
-    const id = adapters.CAIP19ToYearn(caip19)
+    const id = adapters.CAIP19ToYearn(assetId)
     if (!id) return []
     try {
       let daysAgo
@@ -223,18 +225,18 @@ export class YearnVaultMarketCapService implements MarketService {
           daysAgo = 1
       }
 
-      const vaults = await this.yearnSdk.vaults.get([id])
+      const vaults = await rateLimiter(() => this.yearnSdk.vaults.get([id]))
       if (!vaults || !vaults.length) return []
       const decimals = vaults[0].decimals
 
-      const response: VaultDayDataGQLResponse = (await this.yearnSdk.services.subgraph.fetchQuery(
-        ACCOUNT_HISTORIC_EARNINGS,
-        {
-          id,
-          shareToken: id,
-          fromDate: this.getDate(daysAgo).getTime().toString(),
-          toDate: this.getDate(0).getTime().toString()
-        }
+      const params = {
+        id,
+        shareToken: id,
+        fromDate: this.getDate(daysAgo).getTime().toString(),
+        toDate: this.getDate(0).getTime().toString()
+      }
+      const response: VaultDayDataGQLResponse = (await rateLimiter(() =>
+        this.yearnSdk.services.subgraph.fetchQuery(ACCOUNT_HISTORIC_EARNINGS, params)
       )) as VaultDayDataGQLResponse
 
       type VaultDayData = {

@@ -1,3 +1,72 @@
+# [@shapeshiftoss/market-service-v2.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v2.0.0...@shapeshiftoss/market-service-v2.0.1) (2022-03-03)
+
+# [@shapeshiftoss/market-service-v2.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.13.0...@shapeshiftoss/market-service-v2.0.0) (2022-03-03)
+
+
+### Code Refactoring
+
+* remove contract types and  make assetnamespace and assetreference required fields ([#410](https://github.com/shapeshift/lib/issues/410)) ([b12bbf3](https://github.com/shapeshift/lib/commit/b12bbf39f55e5d87775def96c2ca7ce05abff2ee))
+
+
+### BREAKING CHANGES
+
+* remove ContractTypes
+
+For CAIP19 we will use AssetNamespace instead
+
+* refactor(swapper): use AssetNamespace instead of ContractTypes
+
+* feat(caip): caip19 requires assetNamespace and assetReference
+* removed contractType and tokenId
+
+assetNamespace and assetReference are used instead and are required
+
+* refactor(asset-service): use AssetNamespace instead of ContractTypes
+
+* refactor(chain-adapters): use assetNamespace and assetReference
+
+For CAIP19, stop relying on default assets
+
+* refactor(swapper): use assetReference instead of tokenId
+
+* refactor(market-data): use assetReference instead of tokenId
+
+* Update packages/caip/README.md
+
+Co-authored-by: 0xdef1cafe <88504456+0xdef1cafe@users.noreply.github.com>
+
+* refactor(asset-service): updated ERC20 strings to lowercase
+
+Co-authored-by: Chris Thompson <chris@thompson-web.org>
+Co-authored-by: 0xdef1cafe <88504456+0xdef1cafe@users.noreply.github.com>
+
+# [@shapeshiftoss/market-service-v1.13.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.12.0...@shapeshiftoss/market-service-v1.13.0) (2022-03-03)
+
+
+### Features
+
+* osmosis market service ([#394](https://github.com/shapeshift/lib/issues/394)) ([cd613e1](https://github.com/shapeshift/lib/commit/cd613e133f76c00324b5d35fe75ba1ee164f82d7))
+
+# [@shapeshiftoss/market-service-v1.12.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.11.3...@shapeshiftoss/market-service-v1.12.0) (2022-02-24)
+
+
+### Features
+
+* market service rate limiter ([#392](https://github.com/shapeshift/lib/issues/392)) ([3e425f8](https://github.com/shapeshift/lib/commit/3e425f82d8df2c95851dd82af1d83c2b8ad1b92f))
+
+# [@shapeshiftoss/market-service-v1.11.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.11.2...@shapeshiftoss/market-service-v1.11.3) (2022-02-22)
+
+# [@shapeshiftoss/market-service-v1.11.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.11.1...@shapeshiftoss/market-service-v1.11.2) (2022-02-18)
+
+# [@shapeshiftoss/market-service-v1.11.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.11.0...@shapeshiftoss/market-service-v1.11.1) (2022-02-17)
+
+# [@shapeshiftoss/market-service-v1.11.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.10.2...@shapeshiftoss/market-service-v1.11.0) (2022-02-16)
+
+
+### Features
+
+* add isTrusted to description of asset service ([#357](https://github.com/shapeshift/lib/issues/357)) ([49b002f](https://github.com/shapeshift/lib/commit/49b002f240ab29f3e6e85cfa7ef324bd16c7c3e3))
+
 # [@shapeshiftoss/market-service-v1.10.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.10.1...@shapeshiftoss/market-service-v1.10.2) (2022-02-09)
 
 # [@shapeshiftoss/market-service-v1.10.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.10.0...@shapeshiftoss/market-service-v1.10.1) (2022-02-07)
