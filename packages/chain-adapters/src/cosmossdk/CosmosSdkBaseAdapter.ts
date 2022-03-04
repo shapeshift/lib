@@ -1,14 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// no-unused-vars is temporarily disabled until more functions are implemented
 import { AssetNamespace, CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
 import { CosmosSignTx } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
-import { cosmos } from '@shapeshiftoss/unchained-client'
-import { cosmos as cosmosTxParser } from '@shapeshiftoss/unchained-tx-parser'
+import * as unchained from '@shapeshiftoss/unchained-client'
+import * as parser from '@shapeshiftoss/unchained-tx-parser'
 import WAValidator from 'multicoin-address-validator'
 
 import { ChainAdapter as IChainAdapter } from '../api'
-import { ChainAdapter } from '../bitcoin'
 import { ErrorHandler } from '../error/ErrorHandler'
 import { getStatus, getType } from '../utils'
 
@@ -17,7 +14,7 @@ export type CosmosChainTypes = ChainTypes.Cosmos | ChainTypes.Osmosis
 export interface ChainAdapterArgs {
   chainId?: CAIP2
   providers: {
-    http: cosmos.api.V1Api
+    http: unchained.cosmos.api.V1Api
     // unchained-client 5.1.1 does not have a websocket client for cosmos
   }
   coinName: string
@@ -28,9 +25,11 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
   protected readonly supportedChainIds: CAIP2[]
   protected readonly coinName: string
   protected readonly providers: {
-    http: cosmos.api.V1Api
+    http: unchained.cosmos.api.V1Api
   }
   protected txParser: cosmosTxParser.TransactionParser
+
+  protected parser: parser.cosmos.TransactionParser
 
   public static readonly defaultBIP44Params: BIP44Params = {
     purpose: 44,
@@ -86,7 +85,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
   }
 
   buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
-    return { ...ChainAdapter.defaultBIP44Params, ...params }
+    return { ...CosmosSdkBaseAdapter.defaultBIP44Params, ...params }
   }
 
   async getTxHistory(
@@ -172,54 +171,13 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
     onMessage: (msg: chainAdapters.Transaction<T>) => void,
     onError?: (err: chainAdapters.SubscribeError) => void
   ): Promise<void> {
+    console.warn(input, onMessage, onError)
     throw new Error('Method not implemented.')
-    // const { wallet, bip44Params = ChainAdapter.defaultBIP44Params } = input
-    //
-    // const address = await this.getAddress({ wallet, bip44Params })
-    // const subscriptionId = toRootDerivationPath(bip44Params)
-    //
-    // await this.providers.ws.subscribeTxs(
-    //   subscriptionId,
-    //   { topic: 'txs', addresses: [address] },
-    //   (msg: chainAdapters.Transaction<T>) => {
-    //     const transfers = msg.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
-    //       caip19: transfer.caip19,
-    //       from: transfer.from,
-    //       to: transfer.to,
-    //       type: transfer.type,
-    //       value: transfer.value
-    //     }))
-    //
-    //     onMessage({
-    //       address: msg.address,
-    //       blockHash: msg.blockHash,
-    //       blockHeight: msg.blockHeight,
-    //       blockTime: msg.blockTime,
-    //       caip2: msg.caip2,
-    //       chain: this.getType(),
-    //       confirmations: msg.confirmations,
-    //       fee: msg.fee,
-    //       status: msg.status,
-    //       tradeDetails: msg.tradeDetails,
-    //       transfers,
-    //       txid: msg.txid
-    //     })
-    //   },
-    //   (err: chainAdapters.SubscribeError) => onError?.({ message: err.message })
-    // )
   }
 
   unsubscribeTxs(input?: chainAdapters.SubscribeTxsInput): void {
+    console.warn(input)
     throw new Error('Method not implemented.')
-    // if (!input) return this.providers.ws.unsubscribeTxs()
-    //
-    // const { bip44Params = ChainAdapter.defaultBIP44Params } = input
-    // const subscriptionId = toRootDerivationPath(bip44Params)
-    //
-    // this.providers.ws.unsubscribeTxs(subscriptionId, {
-    //   topic: 'txs',
-    //   addresses: []
-    // })
   }
 
   closeTxs(): void {
