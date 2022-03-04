@@ -1,5 +1,6 @@
 export type BuildTxInput = {
   gas: string
+  memo: string
 }
 
 export type Account = {

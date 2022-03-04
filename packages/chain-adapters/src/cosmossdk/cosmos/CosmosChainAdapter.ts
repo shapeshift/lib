@@ -83,6 +83,7 @@ export class ChainAdapter
         bip44Params = CosmosSdkBaseAdapter.defaultBIP44Params,
         chainSpecific: { gas },
         sendMax = false,
+        memo,
         value
       } = tx
 
@@ -92,6 +93,7 @@ export class ChainAdapter
       const path = toPath(bip44Params)
       const addressNList = bip32ToAddressNList(path)
       const from = await this.getAddress({ bip44Params, wallet })
+      const account = bip44Params.accountNumber.toString()
 
       if (sendMax) {
         const account = await this.getAccount(from)
@@ -124,15 +126,15 @@ export class ChainAdapter
           }
         ],
         signatures: [],
-        memo: ''
+        memo: memo
       }
 
       const txToSign: CosmosSignTx = {
         addressNList,
         tx: utx,
         chain_id: caip2.ChainReference.CosmosHubMainnet,
-        account_number: '',
-        sequence: tx.account.sequence
+        account_number: account,
+        sequence: ''
       }
       return { txToSign }
     } catch (err) {

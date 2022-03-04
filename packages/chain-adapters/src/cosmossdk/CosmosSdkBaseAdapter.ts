@@ -133,7 +133,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
 
   async broadcastTransaction(hex: string): Promise<string> {
     const { data } = await this.providers.http.sendTx({
-      body: { hex }
+      body: { rawTx: hex }
     })
     return data
   }
