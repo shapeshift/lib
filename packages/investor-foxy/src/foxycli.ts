@@ -1,12 +1,13 @@
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { ChainTypes } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 import dotenv from 'dotenv'
 import readline from 'readline-sync'
 import Web3 from 'web3'
+
 import { FoxyApi } from './api'
 import { erc20Abi, foxyContractAddress } from './constants'
-import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 
 dotenv.config()
 
@@ -53,7 +54,7 @@ const main = async (): Promise<void> => {
 
   const foxyContract = new web3.eth.Contract(erc20Abi, foxyContractAddress)
   const userAddress = await adapterManager.byChain(ChainTypes.Ethereum).getAddress({ wallet })
-  console.log('talking from ', userAddress)
+  console.info('talking from ', userAddress)
 
   //   const totalSupply = await api.totalSupply({ contractAddress: foxyContractAddress })
   //   console.log('total', totalSupply)
@@ -70,10 +71,9 @@ const main = async (): Promise<void> => {
       userAddress,
       wallet
     })
-    console.log('approve', approve)
-
+    console.info('approve', approve)
   } catch (e) {
-    console.log('e', e)
+    console.error('e', e)
   }
 
   //   const answer = readline.question(

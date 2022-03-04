@@ -7,7 +7,7 @@ import Web3 from 'web3'
 import { HttpProvider, TransactionReceipt } from 'web3-core/types'
 import { Contract } from 'web3-eth-contract'
 
-import { erc20Abi, MAX_ALLOWANCE, foxyAbi, foxyStakingContractAddress } from '../constants'
+import { erc20Abi, foxyAbi, foxyStakingContractAddress, MAX_ALLOWANCE } from '../constants'
 import { bnOrZero, buildTxToSign } from '../utils'
 import {
   Allowanceinput,
@@ -16,7 +16,6 @@ import {
   BalanceInput,
   EstimateGasApproveInput,
   EstimateGasTxInput,
-  TokenInput,
   TxInput
 } from './foxy-types'
 
