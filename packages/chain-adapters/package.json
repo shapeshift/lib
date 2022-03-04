@@ -25,7 +25,7 @@
     "type-check": "tsc --project ./tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@shapeshiftoss/unchained-tx-parser": "^5.3.0",
+    "@shapeshiftoss/unchained-tx-parser": "^5.4.0",
     "axios": "^0.26.0",
     "bignumber.js": "^9.0.1",
     "bitcoinjs-lib": "^5.2.0",
@@ -36,11 +36,11 @@
   },
   "peerDependencies": {
     "@shapeshiftoss/caip": "^2.0.0",
-    "@shapeshiftoss/hdwallet-core": "^1.18.2",
-    "@shapeshiftoss/hdwallet-native": "^1.18.2",
+    "@shapeshiftoss/hdwallet-core": "^1.19.0",
+    "@shapeshiftoss/hdwallet-native": "^1.19.0",
     "@shapeshiftoss/types": "^2.0.0",
-    "@shapeshiftoss/unchained-client": "^5.3.0",
-    "@shapeshiftoss/unchained-tx-parser": "^5.3.0",
+    "@shapeshiftoss/unchained-client": "^5.4.0",
+    "@shapeshiftoss/unchained-tx-parser": "^5.4.0",
     "bs58check": "^2.0.0"
   },
   "devDependencies": {
@@ -48,8 +48,8 @@
     "@shapeshiftoss/hdwallet-core": "^1.19.0",
     "@shapeshiftoss/hdwallet-native": "^1.19.0",
     "@shapeshiftoss/types": "^2.0.0",
-    "@shapeshiftoss/unchained-client": "^5.3.0",
-    "@shapeshiftoss/unchained-tx-parser": "^5.3.0",
+    "@shapeshiftoss/unchained-client": "^5.4.0",
+    "@shapeshiftoss/unchained-tx-parser": "^5.4.0",
     "@types/bs58check": "^2.1.0",
     "@types/multicoin-address-validator": "^0.5.0"
   }
