@@ -132,7 +132,7 @@ export class ChainAdapter
         tx: utx,
         chain_id: caip2.ChainReference.CosmosHubMainnet,
         account_number: '',
-        sequence: ''
+        sequence: tx.account.sequence
       }
       return { txToSign }
     } catch (err) {
