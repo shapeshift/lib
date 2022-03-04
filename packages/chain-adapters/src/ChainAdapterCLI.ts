@@ -164,13 +164,13 @@ const main = async () => {
     const cosmosBip44Params: BIP44Params = { purpose: 44, coinType: 118, accountNumber: 0 }
     console.log(cosmosChainAdapter)
 
-    const cosmosAddress = await cosmosChainAdapter.getAddress({
-      wallet,
-      bip44Params: cosmosBip44Params
-    })
-    console.log('cosmosAddress:', cosmosAddress)
+    // const cosmosAddress = await cosmosChainAdapter.getAddress({
+    //   wallet,
+    //   bip44Params: cosmosBip44Params
+    // })
+    // console.log('cosmosAddress:', cosmosAddress)
 
-    const cosmosAccount = await cosmosChainAdapter.getAccount(cosmosAddress)
+    const cosmosAccount = await cosmosChainAdapter.getAccount('cosmos1zjk9dkhzz2waxmtvtl3hnnl0t3ac0k5urlyk7s')
     console.log(cosmosAccount)
 
     const txHistory = await cosmosChainAdapter.getTxHistory({

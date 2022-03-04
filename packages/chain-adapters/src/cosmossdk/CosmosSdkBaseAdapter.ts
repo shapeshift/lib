@@ -30,7 +30,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
   protected readonly providers: {
     http: cosmos.api.V1Api
   }
-  protected readonly txParser: cosmosTxParser.TransactionParser
+  protected txParser: cosmosTxParser.TransactionParser
 
   public static readonly defaultBIP44Params: BIP44Params = {
     purpose: 44,
@@ -43,7 +43,6 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
       this.chainId = args.chainId
     }
     this.providers = args.providers
-    this.txParser = new cosmosTxParser.TransactionParser({ rpcUrl: '' })
   }
 
   abstract getType(): T
@@ -110,7 +109,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
             blockHeight: parsedTx.blockHeight,
             blockTime: parsedTx.blockTime,
             caip2: this.getCaip2(),
-            chain: caip2.fromCAIP2(this.getCaip2()).chain as ChainTypes,
+            chain: this.getType(),
             confirmations: parsedTx.confirmations,
             txid: tx.txid,
             fee: parsedTx.fee,

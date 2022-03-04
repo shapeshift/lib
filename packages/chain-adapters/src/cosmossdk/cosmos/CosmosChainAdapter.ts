@@ -6,6 +6,7 @@ import {
   supportsCosmos
 } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
+import { cosmos as cosmosTxParser } from '@shapeshiftoss/unchained-tx-parser'
 import BigNumber from 'bignumber.js'
 
 import { ChainAdapter as IChainAdapter } from '../../api'
@@ -27,6 +28,7 @@ export class ChainAdapter
 
   constructor(args: ChainAdapterArgs) {
     super(args)
+    this.txParser = new cosmosTxParser.TransactionParser({ rpcUrl: '' })
   }
 
   getType(): ChainTypes.Cosmos {
