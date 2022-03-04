@@ -246,30 +246,7 @@ describe('BitcoinChainAdapter', () => {
 
       const adapter = new bitcoin.ChainAdapter(args)
       const pubkey = '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx'
-      await expect(adapter.getTxHistory({ pubkey })).rejects.toThrow(
-        'Method not implemented.'
-      )
-      // await expect(adapter.getTxHistory({ pubkey })).resolves.toStrictEqual({
-      //   page: 1,
-      //   totalPages: 1,
-      //   txs: 1,
-      //   transactions: [
-      //     {
-      //       network: 'MAINNET',
-      //       chain: 'bitcoin',
-      //       symbol: 'BTC',
-      //       txid: '123',
-      //       status: 'confirmed',
-      //       from: 'abc',
-      //       value: '1337',
-      //       fee: '1',
-      //       chainSpecific: {
-      //         opReturnData: ''
-      //       }
-      //     }
-      //   ]
-      // })
-      // expect(args.providers.http.getTxHistory).toHaveBeenCalledTimes(1)
+      await expect(adapter.getTxHistory({ pubkey })).rejects.toThrow('Method not implemented.')
     })
 
     it('should fail for an unspecified address', async () => {
@@ -281,9 +258,7 @@ describe('BitcoinChainAdapter', () => {
 
       const adapter = new bitcoin.ChainAdapter(args)
       const pubkey = ''
-      await expect(adapter.getTxHistory({ pubkey })).rejects.toThrow(
-        'Method not implemented.'
-      )
+      await expect(adapter.getTxHistory({ pubkey })).rejects.toThrow('Method not implemented.')
     })
   })
 
