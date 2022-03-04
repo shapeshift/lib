@@ -27,7 +27,6 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
   protected readonly providers: {
     http: unchained.cosmos.api.V1Api
   }
-  protected txParser: cosmosTxParser.TransactionParser
 
   protected parser: parser.cosmos.TransactionParser
 
@@ -100,7 +99,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
 
       const txs = await Promise.all(
         data.txs.map(async (tx) => {
-          const parsedTx = await this.txParser.parse(tx, input.pubkey)
+          const parsedTx = await this.parser.parse(tx, input.pubkey)
 
           return {
             address: input.pubkey,
