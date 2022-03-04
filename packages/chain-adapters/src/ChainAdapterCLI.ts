@@ -181,6 +181,7 @@ const main = async () => {
     const cosmosTxHistory = await cosmosChainAdapter.getTxHistory({
       pubkey: 'cosmos1zjk9dkhzz2waxmtvtl3hnnl0t3ac0k5urlyk7s'
     })
+    console.log('cosmosTxHistory: ', cosmosTxHistory)
 
     await cosmosChainAdapter.subscribeTxs(
       { wallet, bip44Params: cosmosBip44Params },

@@ -82,7 +82,6 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
     }
   }
 
-
   buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
     return { ...CosmosSdkBaseAdapter.defaultBIP44Params, ...params }
   }
