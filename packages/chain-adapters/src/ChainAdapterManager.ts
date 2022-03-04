@@ -46,9 +46,10 @@ export class ChainAdapterManager {
             const http = new unchained.cosmos.api.V1Api(
               new unchained.cosmos.api.Configuration({ basePath: httpUrl })
             )
+            const ws = new unchained.ws.Client<unchained.cosmos.Tx>(wsUrl)
             return this.addChain(
               type,
-              () => new cosmos.ChainAdapter({ providers: { http }, coinName: 'Cosmos' })
+              () => new cosmos.ChainAdapter({ providers: { http, ws }, coinName: 'Cosmos' })
             )
           }
           default:
