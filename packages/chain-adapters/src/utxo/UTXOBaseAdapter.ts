@@ -15,6 +15,11 @@ import {
 
 export type UTXOChainTypes = ChainTypes.Bitcoin // to be extended in the future to include other UTXOs
 
+/**
+ * Currently, we don't have a generic interact for UTXO providers, but will in the future.
+ * Leaving this as-is for now, but will replace in the future with a more generic UTXO api and client
+ * interface.
+ */
 export interface ChainAdapterArgs {
   providers: {
     http: bitcoin.api.V1Api //?
@@ -38,15 +43,10 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
     ws: bitcoin.ws.Client
   }
 
-  public static readonly defaultBIP44Params: BIP44Params = {
-    purpose: 84, // segwit native
-    coinType: 0,
-    accountNumber: 0
-  }
-
   protected constructor(args: ChainAdapterArgs) {
     this.providers = args.providers
   }
+  
 
   /* Abstract Methods */
 
@@ -62,6 +62,8 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
   abstract getTxHistory(
     input: chainAdapters.TxHistoryInput
   ): Promise<chainAdapters.TxHistoryResponse<T>>
+
+  abstract buildBIP44Params(params: Partial<BIP44Params>): BIP44Params 
 
   abstract buildSendTransaction(
     tx: chainAdapters.BuildSendTxInput<T>
@@ -132,10 +134,6 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
     const isValidAddress = WAValidator.validate(address, this.getType())
     if (isValidAddress) return { valid: true, result: chainAdapters.ValidAddressResultType.Valid }
     return { valid: false, result: chainAdapters.ValidAddressResultType.Invalid }
-  }
-
-  buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
-    return { ...UTXOBaseAdapter.defaultBIP44Params, ...params }
   }
 
   /* protected / private methods */

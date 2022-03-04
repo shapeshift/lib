@@ -7,7 +7,7 @@ import {
   BTCSignTxOutput,
   supportsBTC
 } from '@shapeshiftoss/hdwallet-core'
-import { chainAdapters, ChainTypes, NetworkTypes, UtxoAccountType } from '@shapeshiftoss/types'
+import { BIP44Params, chainAdapters, ChainTypes, NetworkTypes, UtxoAccountType } from '@shapeshiftoss/types'
 import { bitcoin } from '@shapeshiftoss/unchained-client'
 import coinSelect from 'coinselect'
 import split from 'coinselect/split'
@@ -28,6 +28,12 @@ export class ChainAdapter
   extends UTXOBaseAdapter<ChainTypes.Bitcoin>
   implements IChainAdapter<ChainTypes.Bitcoin>
 {
+  public static readonly defaultBIP44Params: BIP44Params = {
+    purpose: 84, // segwit native
+    coinType: 0,
+    accountNumber: 0
+  }
+
   constructor(args: ChainAdapterArgs) {
     super(args)
     if (args.chainId) {
@@ -179,6 +185,10 @@ export class ChainAdapter
     } catch (err) {
       return ErrorHandler(err)
     }
+  }
+
+  buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
+    return { ...ChainAdapter.defaultBIP44Params, ...params }
   }
 
   async signTransaction(
