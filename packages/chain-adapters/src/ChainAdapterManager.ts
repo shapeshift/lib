@@ -48,7 +48,7 @@ export class ChainAdapterManager {
             )
             return this.addChain(
               type,
-              () => new cosmos.ChainAdapter({ providers: { http }, coinName: 'Cosmos'})
+              () => new cosmos.ChainAdapter({ providers: { http }, coinName: 'Cosmos' })
             )
           }
           default:

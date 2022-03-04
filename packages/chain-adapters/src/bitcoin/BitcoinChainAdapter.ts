@@ -9,13 +9,7 @@ import {
   PublicKey,
   supportsBTC
 } from '@shapeshiftoss/hdwallet-core'
-import {
-  BIP44Params,
-  chainAdapters,
-  ChainTypes,
-  NetworkTypes,
-  UtxoAccountType
-} from '@shapeshiftoss/types'
+import { BIP44Params, chainAdapters, ChainTypes, UtxoAccountType } from '@shapeshiftoss/types'
 import { bitcoin } from '@shapeshiftoss/unchained-client'
 import coinSelect from 'coinselect'
 import split from 'coinselect/split'
@@ -150,10 +144,10 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
   }
 
   async getTxHistory(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     input: chainAdapters.TxHistoryInput
   ): Promise<chainAdapters.TxHistoryResponse<ChainTypes.Bitcoin>> {
-
-    throw new Error("Method not implemented.")
+    throw new Error('Method not implemented.')
   }
 
   async buildSendTransaction(tx: chainAdapters.BuildSendTxInput<ChainTypes.Bitcoin>): Promise<{

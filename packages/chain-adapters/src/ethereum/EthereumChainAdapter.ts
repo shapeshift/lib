@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import { AssetNamespace, AssetReference, CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, chainAdapters, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
+import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 import { ethereum } from '@shapeshiftoss/unchained-client'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
@@ -117,11 +117,12 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
   }
 
   async getTxHistory({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     pubkey
   }: ethereum.api.V1ApiGetTxHistoryRequest): Promise<
     chainAdapters.TxHistoryResponse<ChainTypes.Ethereum>
   > {
-    throw new Error("Method not implemented.")
+    throw new Error('Method not implemented.')
   }
 
   async buildSendTransaction(tx: chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>): Promise<{

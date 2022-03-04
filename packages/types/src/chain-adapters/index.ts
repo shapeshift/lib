@@ -1,6 +1,6 @@
 import { BTCSignTx, CosmosSignTx, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 
-import { BIP44Params, ChainTypes, NetworkTypes, SwapperType, UtxoAccountType } from '../base'
+import { BIP44Params, ChainTypes, SwapperType, UtxoAccountType } from '../base'
 import { ChainAndSwapperSpecific, ChainSpecific } from '../utility'
 import * as bitcoin from './bitcoin'
 import * as cosmos from './cosmos'
@@ -31,6 +31,7 @@ export type AssetBalance = {
   caip19: string
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type ChainSpecificTransaction<T> = ChainSpecific<
   T,
   {

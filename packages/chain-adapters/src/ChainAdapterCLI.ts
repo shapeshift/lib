@@ -174,7 +174,9 @@ const main = async () => {
     })
     console.log('cosmosAddress:', cosmosAddress)
 
-    const cosmosAccount = await cosmosChainAdapter.getAccount('cosmos1zjk9dkhzz2waxmtvtl3hnnl0t3ac0k5urlyk7s')
+    const cosmosAccount = await cosmosChainAdapter.getAccount(
+      'cosmos1zjk9dkhzz2waxmtvtl3hnnl0t3ac0k5urlyk7s'
+    )
     console.log(cosmosAccount)
 
     const txHistory = await cosmosChainAdapter.getTxHistory({
