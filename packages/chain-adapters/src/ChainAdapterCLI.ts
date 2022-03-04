@@ -38,6 +38,12 @@ const main = async () => {
   try {
     const chainAdapterManager = new ChainAdapterManager(unchainedUrls)
     const wallet = await getWallet()
+    await wallet.wipe()
+    await wallet.loadDevice({
+      mnemonic: 'all all all all all all all all all all all all',
+      label: 'test',
+      skipChecksum: true
+    })
 
     /** BITCOIN CLI */
     const btcChainAdapter = chainAdapterManager.byChain(ChainTypes.Bitcoin)
@@ -161,7 +167,7 @@ const main = async () => {
     /** COSMOS CLI */
     const cosmosChainAdapter = chainAdapterManager.byChain(ChainTypes.Cosmos)
     const cosmosBip44Params: BIP44Params = { purpose: 44, coinType: 118, accountNumber: 0 }
-    console.log(cosmosChainAdapter)
+    console.log('cosmosChainAdapter: ', cosmosChainAdapter)
 
     const cosmosAddress = await cosmosChainAdapter.getAddress({
       wallet,
@@ -172,11 +178,15 @@ const main = async () => {
     const cosmosAccount = await cosmosChainAdapter.getAccount(cosmosAddress)
     console.log(cosmosAccount)
 
-    // await cosmosChainAdapter.subscribeTxs(
-    //   { wallet, bip44Params: cosmosBip44Params },
-    //   (msg) => console.log(msg),
-    //   (err) => console.log(err)
-    // )
+    const cosmosTxHistory = await cosmosChainAdapter.getTxHistory({
+      pubkey: 'cosmos1zjk9dkhzz2waxmtvtl3hnnl0t3ac0k5urlyk7s'
+    })
+
+    await cosmosChainAdapter.subscribeTxs(
+      { wallet, bip44Params: cosmosBip44Params },
+      (msg) => console.log(msg),
+      (err) => console.log(err)
+    )
 
     // send cosmos example
     try {
@@ -185,13 +195,14 @@ const main = async () => {
         value: '1',
         wallet,
         bip44Params: cosmosBip44Params,
-        chainSpecific: { gas: '0' }
+        chainSpecific: { gas: '10000', memo: '' }
       })
+      console.log(JSON.stringify(cosmosUnsignedTx, null, 2))
       const cosmosSignedTx = await cosmosChainAdapter.signTransaction({
         wallet,
         txToSign: cosmosUnsignedTx.txToSign
       })
-      console.log('cosmosSignedTx:', cosmosSignedTx)
+      console.log('cosmosSignedTx:', JSON.stringify(cosmosSignedTx, null, 2))
 
       // const cosmosTxID = await cosmosChainAdapter.broadcastTransaction(cosmosSignedTx)
       // console.log('cosmosTxID:', cosmosTxID)
