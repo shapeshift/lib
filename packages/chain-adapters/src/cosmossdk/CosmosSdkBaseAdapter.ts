@@ -10,7 +10,7 @@ import WAValidator from 'multicoin-address-validator'
 import { ChainAdapter as IChainAdapter } from '../api'
 import { ChainAdapter } from '../bitcoin'
 import { ErrorHandler } from '../error/ErrorHandler'
-import { getType } from '../utils'
+import { getStatus, getType } from '../utils'
 
 export type CosmosChainTypes = ChainTypes.Cosmos | ChainTypes.Osmosis
 
@@ -100,36 +100,38 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
         cursor: input.cursor
       })
 
-      const ret: chainAdapters.TxHistoryResponse<T> = {
+      const txs = await Promise.all(
+        data.txs.map(async (tx) => {
+          const parsedTx = await this.txParser.parse(tx, input.pubkey)
+
+          return {
+            address: input.pubkey,
+            blockHash: parsedTx.blockHash,
+            blockHeight: parsedTx.blockHeight,
+            blockTime: parsedTx.blockTime,
+            caip2: this.getCaip2(),
+            chain: caip2.fromCAIP2(this.getCaip2()).chain as ChainTypes,
+            confirmations: parsedTx.confirmations,
+            txid: tx.txid,
+            fee: parsedTx.fee,
+            status: getStatus(parsedTx.status),
+            tradeDetails: parsedTx.trade,
+            transfers: parsedTx.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
+              caip19: transfer.caip19,
+              from: transfer.from,
+              to: transfer.to,
+              type: getType(transfer.type),
+              value: transfer.totalValue
+            })),
+            data: parsedTx.data
+          }
+        })
+      )
+
+      return {
         cursor: data.cursor,
-        transactions: await Promise.all(
-          data.txs.map<chainAdapters.Transaction<T>>(async (tx) => {
-            const parsedTx = await this.txParser.parse(tx, input.pubkey)
-            return {
-              address: input.pubkey,
-              blockHash: parsedTx.blockHash,
-              blockHeight: parsedTx.blockHeight,
-              blockTime: parsedTx.blockTime,
-              chain: caip2.fromCAIP2(this.getCaip2()).chain,
-              caip2: this.getCaip2(),
-              confirmations: parsedTx.confirmations,
-              txid: tx.txid,
-              fee: tx.fee,
-              status: parsedTx.status,
-              tradeDetails: parsedTx.trade,
-              transfers: parsedTx.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
-                caip19: transfer.caip19,
-                from: transfer.from,
-                to: transfer.to,
-                type: getType(transfer.type),
-                value: transfer.totalValue
-              })),
-              data: parsedTx.data
-            }
-          })
-        )
+        transactions: txs
       }
-      return ret
     } catch (err) {
       return ErrorHandler(err)
     }
