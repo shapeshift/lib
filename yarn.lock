@@ -2772,6 +2772,19 @@
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/caip/-/caip-1.13.0.tgz#8c9b2d07223cb2e94e5b9f2b5cec49b77d606cfd"
   integrity sha512-dvp+DFrl05PA0J2VmuuH7rjTMz6HREIVinWzL4pKRDkZ2zrt9nuqAbSehQoiJOd1XZzTd2viSu6LmogFUQdSFg==
 
+"@shapeshiftoss/chain-adapters@^1.31.1":
+  version "1.36.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/chain-adapters/-/chain-adapters-1.36.0.tgz#f9993599eae20d68cdc4e04e71de89fb82567e34"
+  integrity sha512-hk3wmEnw4yGB8p5ZFspCVeOzuGYb+GrLDYmR3PQgOgjG/LTY05rf/KwsHQujdqr3m2c8B0qONxNuuIZVHO4tdQ==
+  dependencies:
+    axios "^0.26.0"
+    bignumber.js "^9.0.1"
+    bitcoinjs-lib "^5.2.0"
+    coinselect "^3.1.12"
+    ethers "^5.4.7"
+    multicoin-address-validator "^0.5.2"
+    web3-utils "^1.6.0"
+
 "@shapeshiftoss/fiojs@1.0.1-shapeshift.2":
   version "1.0.1-shapeshift.2"
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/fiojs/-/fiojs-1.0.1-shapeshift.2.tgz#d439c542b627f5a79ffa3a4ab0c5804c8d3a5452"
@@ -2866,7 +2879,7 @@
     bignumber.js "^9.0.1"
     ethers "^5.5.3"
 
-"@shapeshiftoss/types@^1.23.0":
+"@shapeshiftoss/types@^1.21.1", "@shapeshiftoss/types@^1.23.0":
   version "1.26.0"
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/types/-/types-1.26.0.tgz#ceed3c05a1137b39e84cfb868a7154220874f356"
   integrity sha512-ed8fXewDYXdoiAzfiBSLAWrSVu79FHdCLHQQIqwB5kdIkSnH3Nf2j7K5IAFWhB2ndnlXvP3sAF3lfKQzDNElxQ==
