@@ -1,5 +1,5 @@
 import { chainAdapters, ContractTypes } from '@shapeshiftoss/types'
-import { Status, TransferType } from '@shapeshiftoss/unchained-tx-parser'
+import { Status, TransferType } from '@shapeshiftoss/unchained-client'
 
 export * from './bip44'
 export * from './utxoUtils'

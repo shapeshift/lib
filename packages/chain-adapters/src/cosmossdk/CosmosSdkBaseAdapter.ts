@@ -2,7 +2,6 @@ import { AssetNamespace, CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
 import { CosmosSignTx } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
-import * as parser from '@shapeshiftoss/unchained-tx-parser'
 import WAValidator from 'multicoin-address-validator'
 
 import { ChainAdapter as IChainAdapter } from '../api'
@@ -14,8 +13,8 @@ export type CosmosChainTypes = ChainTypes.Cosmos | ChainTypes.Osmosis
 export interface ChainAdapterArgs {
   chainId?: CAIP2
   providers: {
-    http: unchained.cosmos.api.V1Api
-    ws: unchained.cosmos.ws.Client<unchained.cosmos.Tx>
+    http: unchained.cosmos.V1Api
+    ws: unchained.ws.Client<unchained.cosmos.Tx>
   }
   coinName: string
 }
@@ -25,8 +24,8 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
   protected readonly supportedChainIds: CAIP2[]
   protected readonly coinName: string
   protected readonly providers: {
-    http: unchained.cosmos.api.V1Api
-    ws: unchained.cosmos.ws.Client<unchained.cosmos.Tx>
+    http: unchained.cosmos.V1Api
+    ws: unchained.ws.Client<unchained.cosmos.Tx>
   }
 
   static readonly defaultBIP44Params: BIP44Params = {
@@ -35,7 +34,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
     accountNumber: 0
   }
 
-  protected parser: parser.cosmos.TransactionParser
+  protected parser: unchained.cosmos.TransactionParser
 
   protected constructor(args: ChainAdapterArgs) {
     if (args.chainId && this.supportedChainIds.includes(args.chainId)) {
@@ -168,7 +167,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
       subscriptionId,
       { topic: 'txs', addresses: [address] },
       async (msg) => {
-        const tx = await this.parser.parse(msg, address)
+        const tx = await this.parser.parse(msg.data, msg.address)
 
         const transfers = tx.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
           caip19: transfer.caip19,
