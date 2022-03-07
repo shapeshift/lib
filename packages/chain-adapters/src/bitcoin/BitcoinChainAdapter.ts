@@ -7,7 +7,13 @@ import {
   BTCSignTxOutput,
   supportsBTC
 } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, chainAdapters, ChainTypes, NetworkTypes, UtxoAccountType } from '@shapeshiftoss/types'
+import {
+  BIP44Params,
+  chainAdapters,
+  ChainTypes,
+  NetworkTypes,
+  UtxoAccountType
+} from '@shapeshiftoss/types'
 import { bitcoin } from '@shapeshiftoss/unchained-client'
 import coinSelect from 'coinselect'
 import split from 'coinselect/split'
@@ -47,11 +53,10 @@ export class ChainAdapter
         throw new Error(`The ChainID ${args.chainId} is not supported`)
       }
     } else {
-      // use default chain id
-      this.chainId = 'bip122:000000000019d6689c085ae165831e93'
+      throw new Error('The ChainID must be supplied in constructor args')
     }
 
-    this.coinName = args.coinName // TODO fix me
+    this.coinName = args.coinName
   }
 
   getType(): ChainTypes.Bitcoin {

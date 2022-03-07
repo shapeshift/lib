@@ -18,7 +18,7 @@ export type UTXOChainTypes = ChainTypes.Bitcoin // to be extended in the future 
 /**
  * Currently, we don't have a generic interact for UTXO providers, but will in the future.
  * Leaving this as-is for now, but we will need to test in the future when we have additional
- * UTXO chains implemented in unchained. 
+ * UTXO chains implemented in unchained.
  */
 export interface ChainAdapterArgs {
   providers: {
@@ -46,7 +46,6 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
   protected constructor(args: ChainAdapterArgs) {
     this.providers = args.providers
   }
-  
 
   /* Abstract Methods */
 
@@ -63,7 +62,7 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
     input: chainAdapters.TxHistoryInput
   ): Promise<chainAdapters.TxHistoryResponse<T>>
 
-  abstract buildBIP44Params(params: Partial<BIP44Params>): BIP44Params 
+  abstract buildBIP44Params(params: Partial<BIP44Params>): BIP44Params
 
   abstract buildSendTransaction(
     tx: chainAdapters.BuildSendTxInput<T>

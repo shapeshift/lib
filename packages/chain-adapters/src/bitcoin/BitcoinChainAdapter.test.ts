@@ -141,7 +141,8 @@ describe('BitcoinChainAdapter', () => {
         http: {} as any,
         ws: {} as any
       },
-      coinName: 'Bitcoin'
+      coinName: 'Bitcoin',
+      chainId: 'bip122:000000000019d6689c085ae165831e93'
     }
   })
 
@@ -160,6 +161,12 @@ describe('BitcoinChainAdapter', () => {
     it('should throw if called with invalid chainId', () => {
       args.chainId = 'INVALID_CHAINID'
       expect(() => new bitcoin.ChainAdapter(args)).toThrow(/The ChainID (.+) is not supported/)
+    })
+    it('should throw if called with no chainId', () => {
+      args.chainId = undefined
+      expect(() => new bitcoin.ChainAdapter(args)).toThrow(
+        /The ChainID must be supplied in constructor args/
+      )
     })
   })
 
