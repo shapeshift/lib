@@ -92,30 +92,9 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
     input: chainAdapters.TxHistoryInput
   ): Promise<chainAdapters.TxHistoryResponse<T>> {
     try {
-      const { data } = await this.providers.http.getTxHistory({
-        pubkey: input.pubkey
-      })
-
+      const { data } = await this.providers.http.getTxHistory({ pubkey: input.pubkey })
       console.warn(data)
-
       throw new Error('Method not implemented.')
-      // return {
-      //   page: data.page,
-      //   totalPages: data.totalPages,
-      //   transactions: data.txs.map((tx) => ({
-      //     /*
-      //     missing properties from cosmos.api.Tx
-      //       status: string
-      //       from: string
-      //       to?: string
-      //       confirmations?: number
-      //      */
-      //     chain: caip2.fromCAIP2(this.getCaip2()).chain,
-      //     network: caip2.fromCAIP2(this.getCaip2()).network,
-      //     coinName: this.coinName
-      //   })),
-      //   txs: data.txs.length
-      // }
     } catch (err) {
       return ErrorHandler(err)
     }
@@ -136,9 +115,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
   ): Promise<string>
 
   async broadcastTransaction(hex: string): Promise<string> {
-    const { data } = await this.providers.http.sendTx({
-      body: { rawTx: hex }
-    })
+    const { data } = await this.providers.http.sendTx({ body: { rawTx: hex } })
     return data
   }
 
@@ -199,15 +176,6 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
   unsubscribeTxs(input?: chainAdapters.SubscribeTxsInput): void {
     console.warn(input)
     throw new Error('Method not implemented.')
-    // if (!input) return this.providers.ws.unsubscribeTxs()
-    //
-    // const { bip44Params = ChainAdapter.defaultBIP44Params } = input
-    // const subscriptionId = toRootDerivationPath(bip44Params)
-    //
-    // this.providers.ws.unsubscribeTxs(subscriptionId, {
-    //   topic: 'txs',
-    //   addresses: []
-    // })
   }
 
   closeTxs(): void {

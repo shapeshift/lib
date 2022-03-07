@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/market-service",
-  "version": "1.12.0",
+  "version": "2.0.1",
   "description": "ShapeShift market data service",
   "homepage": "",
   "license": "MIT",
@@ -34,12 +34,12 @@
     "p-ratelimit": "^1.0.1"
   },
   "peerDependencies": {
-    "@shapeshiftoss/caip": "^1.11.0",
-    "@shapeshiftoss/types": "^1.23.0"
+    "@shapeshiftoss/caip": "^2.0.0",
+    "@shapeshiftoss/types": "^2.0.0"
   },
   "devDependencies": {
-    "@shapeshiftoss/caip": "^1.11.0",
-    "@shapeshiftoss/types": "^1.23.0",
+    "@shapeshiftoss/caip": "^2.0.0",
+    "@shapeshiftoss/types": "^2.0.0",
     "limiter": "^2.1.0"
   }
 }
