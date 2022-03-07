@@ -109,11 +109,11 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
             caip2: this.getCaip2(),
             chain: this.getType(),
             confirmations: parsedTx.confirmations,
-            txid: tx.txid,
+            txid: parsedTx.txid,
             fee: parsedTx.fee,
             status: getStatus(parsedTx.status),
             tradeDetails: parsedTx.trade,
-            transfers: parsedTx.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
+            transfers: parsedTx.transfers.map((transfer) => ({
               caip19: transfer.caip19,
               from: transfer.from,
               to: transfer.to,
@@ -127,6 +127,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
 
       return {
         cursor: data.cursor,
+        pubkey: input.pubkey,
         transactions: txs
       }
     } catch (err) {

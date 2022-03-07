@@ -31,14 +31,6 @@ export type AssetBalance = {
   caip19: string
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-type ChainSpecificTransaction<T> = ChainSpecific<
-  T,
-  {
-    [ChainTypes.Bitcoin]: bitcoin.TransactionSpecific
-  }
->
-
 export enum FeeDataKey {
   Slow = 'slow',
   Average = 'average',
@@ -160,6 +152,7 @@ export type SubscribeError = {
 
 export type TxHistoryResponse<T extends ChainTypes> = {
   cursor: string
+  pubkey: string
   transactions: Array<Transaction<T>>
 }
 
