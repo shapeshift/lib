@@ -34,6 +34,8 @@ export type ConstructorArgs = {
   network?: 1 | 250 | 1337 | 42161 // 1: 'ethereum', 250: 'fantom', 1337: 'ethereum', 42161: 'arbitrum'
 }
 
+export type YearnVault = Vault
+
 export class YearnVaultApi {
   public adapter: ChainAdapter<ChainTypes.Ethereum>
   public provider: HttpProvider
