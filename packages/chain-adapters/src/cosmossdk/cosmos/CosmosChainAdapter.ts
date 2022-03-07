@@ -130,7 +130,7 @@ export class ChainAdapter
           }
         ],
         signatures: [],
-        memo: memo
+        memo: memo || ''
       }
 
       const txToSign: CosmosSignTx = {

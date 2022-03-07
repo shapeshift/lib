@@ -70,6 +70,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
         }),
         chain: this.getType(),
         chainSpecific: {
+          account: data.accountNumber,
           sequence: data.sequence
         },
         pubkey: data.pubkey
