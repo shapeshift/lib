@@ -1,2 +1,2 @@
-export const foxyStakingContractAddress = '0x4f4eEde85FabfF71f32a537A8780aC17C32a67bA'
+export const foxyStakingContractAddress = '0x88167bEb4869910e90a8a845886EB98bc12d58e5'
 export const foxyContractAddress = '0x0A3d1A2175ff17E0FAEBB408FEEbBa2641aE9691'

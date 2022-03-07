@@ -20,10 +20,10 @@ import { bnOrZero, buildTxToSign } from '../utils'
 import {
   Allowanceinput,
   ApproveInput,
-  APYInput,
   BalanceInput,
   EstimateGasApproveInput,
   EstimateGasTxInput,
+  TVLInput,
   TxInput
 } from './foxy-types'
 
@@ -34,6 +34,7 @@ export type ConstructorArgs = {
     | ChainReference.EthereumMainnet
     | ChainReference.EthereumRinkeby
     | ChainReference.EthereumRopsten
+    | 1337
 }
 
 export const transformVault = (vault: any): any => {
@@ -112,7 +113,7 @@ export class FoxyApi {
 
     const txToSign = buildTxToSign({
       bip44Params: this.adapter.buildBIP44Params({ accountNumber }),
-      chainId: 1,
+      chainId: 1337, // TODO: Fix chainID
       data,
       estimatedGas: estimatedGas.toString(),
       gasPrice,
@@ -123,7 +124,10 @@ export class FoxyApi {
     if (wallet.supportsOfflineSigning()) {
       const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
       if (dryRun) return signedTx
-      return this.adapter.broadcastTransaction(signedTx)
+      // TODO: change back to broadcastTransaction
+      //return this.adapter.broadcastTransaction(signedTx)
+      const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
+      return sendSignedTx?.blockHash
     } else if (wallet.supportsBroadcast() && this.adapter.signAndBroadcastTransaction) {
       if (dryRun) {
         throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
@@ -144,8 +148,17 @@ export class FoxyApi {
   }
 
   async estimateDepositGas(input: EstimateGasTxInput): Promise<BigNumber> {
-    throw new Error('Not implemented')
-  }
+    const { amountDesired, userAddress, contractAddress } = input
+    const stakingContract = this.foxyStakingContracts.find(
+      (item) => toLower(item.options.address) === toLower(contractAddress)
+    )
+    if (!stakingContract) throw new Error('Not a valid contract address')
+    const estimatedGas = await stakingContract.methods
+      .stake(amountDesired.toString(), userAddress)
+      .estimateGas({
+        from: userAddress
+      })
+    return bnOrZero(estimatedGas)  }
 
   async deposit(input: TxInput): Promise<string> {
     const {
@@ -183,7 +196,10 @@ export class FoxyApi {
     if (wallet.supportsOfflineSigning()) {
       const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
       if (dryRun) return signedTx
-      return this.adapter.broadcastTransaction(signedTx)
+      // TODO: change back to broadcastTransaction
+      //return this.adapter.broadcastTransaction(signedTx)
+      const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
+      return sendSignedTx?.blockHash
     } else if (wallet.supportsBroadcast() && this.adapter.signAndBroadcastTransaction) {
       if (dryRun) {
         throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
@@ -201,7 +217,7 @@ export class FoxyApi {
     )
     if (!stakingContract) throw new Error('Not a valid contract address')
     const estimatedGas = await stakingContract.methods
-      .unstake(amountDesired.toString(), userAddress)
+      .unstake(amountDesired.toString())
       .estimateGas({
         from: userAddress
       })
@@ -223,12 +239,10 @@ export class FoxyApi {
       (item) => toLower(item.options.address) === toLower(contractAddress)
     )
     if (!stakingContract) throw new Error('Not a valid contract address')
-    
-    const data: string = stakingContract.methods
-      .unstake(amountDesired.toString(), true)
-      .encodeABI({
-        from: userAddress
-      })
+
+    const data: string = stakingContract.methods.unstake(amountDesired.toString(), true).encodeABI({
+      from: userAddress
+    })
     const nonce = await this.web3.eth.getTransactionCount(userAddress)
     const gasPrice = await this.web3.eth.getGasPrice()
 
@@ -296,20 +310,31 @@ export class FoxyApi {
   }
 
   async balance(input: BalanceInput): Promise<BigNumber> {
-    const { contractAddress, userAddress } = input
-    const contract = new this.web3.eth.Contract(erc20Abi, contractAddress)
+    const { tokenContractAddress, userAddress } = input
+    const contract = new this.web3.eth.Contract(erc20Abi, tokenContractAddress)
     const balance = await contract.methods.balanceOf(userAddress).call()
     return bnOrZero(balance)
   }
 
-  async totalSupply({ contractAddress }: { contractAddress: string }): Promise<BigNumber> {
-    const contract = new this.web3.eth.Contract(erc20Abi, contractAddress)
+  async totalSupply({
+    tokenContractAddress
+  }: {
+    tokenContractAddress: string
+  }): Promise<BigNumber> {
+    const contract = new this.web3.eth.Contract(erc20Abi, tokenContractAddress)
     const totalSupply = await contract.methods.totalSupply().call()
     return bnOrZero(totalSupply)
   }
 
   // estimated apy
-  async apy(input: APYInput): Promise<string> {
+  async apy(): Promise<string> {
     return '.2'
+  }
+
+  async tvl(input: TVLInput): Promise<BigNumber> {
+    const { tokenContractAddress } = input
+    const contract = new this.web3.eth.Contract(erc20Abi, tokenContractAddress)
+    const balance = await contract.methods.circulatingSupply().call()
+    return bnOrZero(balance)
   }
 }

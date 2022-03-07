@@ -7,7 +7,7 @@ import readline from 'readline-sync'
 import Web3 from 'web3'
 
 import { FoxyApi } from './api'
-import { erc20Abi, foxyContractAddress } from './constants'
+import { erc20Abi, foxyContractAddress, foxyStakingContractAddress } from './constants'
 
 dotenv.config()
 
@@ -56,11 +56,11 @@ const main = async (): Promise<void> => {
   const userAddress = await adapterManager.byChain(ChainTypes.Ethereum).getAddress({ wallet })
   console.info('talking from ', userAddress)
 
-  const totalSupply = await api.totalSupply({ contractAddress: foxyContractAddress })
+  const totalSupply = await api.totalSupply({ tokenContractAddress: foxyContractAddress })
   console.log('total', totalSupply)
 
   const balance = await api.balance({
-    contractAddress: foxyContractAddress,
+    tokenContractAddress: foxyContractAddress,
     userAddress
   })
   console.log('balance', balance)
@@ -72,6 +72,18 @@ const main = async (): Promise<void> => {
       wallet
     })
     console.info('approve', approve)
+  } catch (e) {
+    console.error('e', e)
+  }
+
+  try {
+    const deposit = await api.deposit({
+      contractAddress: foxyStakingContractAddress,
+      amountDesired: new BigNumber(100),
+      userAddress,
+      wallet
+    })
+    console.info('deposit', deposit)
   } catch (e) {
     console.error('e', e)
   }

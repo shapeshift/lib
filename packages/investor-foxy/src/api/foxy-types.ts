@@ -19,7 +19,7 @@ export type EstimateGasApproveInput = Pick<ApproveInput, 'userAddress' | 'tokenC
 export type TxInput = {
   accountNumber?: number
   dryRun?: boolean
-  tokenContractAddress: string
+  tokenContractAddress?: string
   userAddress: string
   contractAddress: string
   wallet: HDWallet
@@ -33,13 +33,9 @@ export type EstimateGasTxInput = Pick<
 
 export type BalanceInput = {
   userAddress: string
-  contractAddress: string
+  tokenContractAddress: string
 }
 
-export type TokenInput = {
-  vaultAddress: string
-}
-
-export type APYInput = {
-  vaultAddress: string
+export type TVLInput = {
+  tokenContractAddress: string
 }
