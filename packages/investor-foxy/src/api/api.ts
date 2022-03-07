@@ -7,7 +7,7 @@ import Web3 from 'web3'
 import { HttpProvider, TransactionReceipt } from 'web3-core/types'
 import { Contract } from 'web3-eth-contract'
 
-import { erc20Abi, foxyAbi, foxyStakingContractAddress, MAX_ALLOWANCE } from '../constants'
+import { DefiProvider, erc20Abi, foxyAbi, foxyStakingContractAddress, MAX_ALLOWANCE } from '../constants'
 import { bnOrZero, buildTxToSign } from '../utils'
 import {
   Allowanceinput,
@@ -22,7 +22,21 @@ import {
 export type ConstructorArgs = {
   adapter: ChainAdapter<ChainTypes.Ethereum>
   providerUrl: string
-  network?: 1 | 250 | 1337 | 42161 // 1: 'ethereum', 250: 'fantom', 1337: 'ethereum', 42161: 'arbitrum'
+  network?: 1 | 250 | 1337 | 42161 // 1: 'ethereum', 250: 'fantom', 1337: 'ethereum', 42161: 'arbitrum' // TODO: pull from caip package
+}
+
+export const transformVault = (vault: any): any => {
+  return {
+    ...vault,
+    vaultAddress: toLower(vault.address),
+    name: `${vault.name} ${vault.version}`,
+    symbol: vault.symbol,
+    tokenAddress: toLower(vault.token),
+    chain: ChainTypes.Ethereum,
+    provider: DefiProvider.Foxy,
+    type: DefiType.Vault,
+    expired: vault.metadata.depositsDisabled || bnOrZero(vault.metadata.depositLimit).lte(0)
+  }
 }
 
 export class FoxyApi {
@@ -30,14 +44,23 @@ export class FoxyApi {
   public provider: HttpProvider
   public jsonRpcProvider: JsonRpcProvider
   public web3: Web3
-  private foxyStakingContract: Contract
+  private foxyStakingContracts: Contract[]
+  private foxyContract: Contract
 
   constructor({ adapter, providerUrl, network = 1 }: ConstructorArgs) {
     this.adapter = adapter
     this.provider = new Web3.providers.HttpProvider(providerUrl)
     this.jsonRpcProvider = new JsonRpcProvider(providerUrl)
     this.web3 = new Web3(this.provider)
-    this.foxyStakingContract = new this.web3.eth.Contract(foxyAbi, foxyStakingContractAddress)
+    this.foxyStakingContracts = [new this.web3.eth.Contract(foxyAbi, foxyStakingContractAddress)]
+  }
+
+  findDataByContractAddress(contractAddress: string) {
+    const stakingContract = this.foxyStakingContracts.find(
+      (item) => toLower(item.options.address) === toLower(contractAddress)
+    )
+    if (!stakingContract) return null
+    return stakingContract // transformVault(vault)
   }
 
   async getGasPrice() {
@@ -125,9 +148,12 @@ export class FoxyApi {
     } = input
     if (!wallet || !contractAddress) throw new Error('Missing inputs')
     const estimatedGas: BigNumber = await this.estimateDepositGas(input)
-
+    const stakingContract = this.foxyStakingContracts.find(
+      (item) => toLower(item.options.address) === toLower(contractAddress)
+    )
+    if(!stakingContract) throw new Error("Not a valid contract address")
     const userChecksum = this.web3.utils.toChecksumAddress(userAddress)
-    const data: string = await this.foxyStakingContract.methods
+    const data: string = await stakingContract.methods
       .stake(amountDesired.toString())
       .encodeABI({
         value: 0,
@@ -161,8 +187,12 @@ export class FoxyApi {
   }
 
   async estimateWithdrawGas(input: EstimateGasTxInput): Promise<BigNumber> {
-    const { amountDesired, userAddress } = input
-    const estimatedGas = await this.foxyStakingContract.methods
+    const { amountDesired, userAddress, contractAddress } = input
+    const stakingContract = this.foxyStakingContracts.find(
+      (item) => toLower(item.options.address) === toLower(contractAddress)
+    )
+    if(!stakingContract) throw new Error("Not a valid contract address")
+    const estimatedGas = await stakingContract.methods
       .unstake(amountDesired.toString(), userAddress)
       .estimateGas({
         from: userAddress
@@ -182,7 +212,7 @@ export class FoxyApi {
     if (!wallet || !contractAddress) throw new Error('Missing inputs')
     const estimatedGas: BigNumber = await this.estimateWithdrawGas(input)
 
-    const data: string = this.foxyStakingContract.methods
+    const data: string = this.foxyStakingContracts.methods
       .unstake(amountDesired.toString(), true)
       .encodeABI({
         from: userAddress
@@ -218,8 +248,12 @@ export class FoxyApi {
     const { accountNumber = 0, dryRun = false, contractAddress, userAddress, wallet } = input
     if (!wallet || !contractAddress) throw new Error('Missing inputs')
     const estimatedGas: BigNumber = await this.estimateWithdrawGas(input)
+    const stakingContract = this.foxyStakingContracts.find(
+      (item) => toLower(item.options.address) === toLower(contractAddress)
+    )
+    if(!stakingContract) throw new Error("Not a valid contract address")
 
-    const data: string = this.foxyStakingContract.methods.instantUnstake(true).encodeABI({
+    const data: string = stakingContract.methods.instantUnstake(true).encodeABI({
       from: userAddress
     })
     const nonce = await this.web3.eth.getTransactionCount(userAddress)
@@ -262,6 +296,7 @@ export class FoxyApi {
     return bnOrZero(totalSupply)
   }
 
+  // estimated apy
   async apy(input: APYInput): Promise<string> {
     return '.2'
   }

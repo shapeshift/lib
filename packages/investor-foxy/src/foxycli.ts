@@ -56,14 +56,14 @@ const main = async (): Promise<void> => {
   const userAddress = await adapterManager.byChain(ChainTypes.Ethereum).getAddress({ wallet })
   console.info('talking from ', userAddress)
 
-  //   const totalSupply = await api.totalSupply({ contractAddress: foxyContractAddress })
-  //   console.log('total', totalSupply)
+  const totalSupply = await api.totalSupply({ contractAddress: foxyContractAddress })
+  console.log('total', totalSupply)
 
-  //   const balance = await api.balance({
-  //     contractAddress: foxyContractAddress,
-  //     userAddress
-  //   })
-  //   console.log('balance', balance)
+  const balance = await api.balance({
+    contractAddress: foxyContractAddress,
+    userAddress
+  })
+  console.log('balance', balance)
 
   try {
     const approve = await api.approve({
