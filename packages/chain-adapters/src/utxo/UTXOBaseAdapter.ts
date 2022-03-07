@@ -17,8 +17,8 @@ export type UTXOChainTypes = ChainTypes.Bitcoin // to be extended in the future 
 
 /**
  * Currently, we don't have a generic interact for UTXO providers, but will in the future.
- * Leaving this as-is for now, but will replace in the future with a more generic UTXO api and client
- * interface.
+ * Leaving this as-is for now, but we will need to test in the future when we have additional
+ * UTXO chains implemented in unchained. 
  */
 export interface ChainAdapterArgs {
   providers: {
