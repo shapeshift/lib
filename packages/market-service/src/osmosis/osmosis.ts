@@ -127,21 +127,20 @@ export class OsmosisMarketService implements MarketService {
       // return the correct range of data points for each timeframe
       const tapperedData = data.slice(start)
 
-      return tapperedData
-        .reduce<HistoryData[]>((acc, current) => {
-          // convert timestamp from seconds to milliseconds
-          const date = bnOrZero(current.time).times(1000).toNumber()
-          if (!isValidDate(date)) {
-            console.error('Osmosis asset history data has invalid date')
-            return acc
-          }
-          const price = bnOrZero(current.close)
-          acc.push({
-            date,
-            price: price.toNumber()
-          })
+      return tapperedData.reduce<HistoryData[]>((acc, current) => {
+        // convert timestamp from seconds to milliseconds
+        const date = bnOrZero(current.time).times(1000).toNumber()
+        if (!isValidDate(date)) {
+          console.error('Osmosis asset history data has invalid date')
           return acc
-        }, [])
+        }
+        const price = bnOrZero(current.close)
+        acc.push({
+          date,
+          price: price.toNumber()
+        })
+        return acc
+      }, [])
     } catch (e) {
       console.warn(e)
       throw new Error('MarketService(findPriceHistoryByCaip19): error fetching price history')
