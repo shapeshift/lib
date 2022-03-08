@@ -92,7 +92,7 @@ export class FoxyApi {
       (item) => toLower(item.options.address) === toLower(contractAddress)
     )
     if (!stakingContract) throw new Error('Not a valid contract address')
-    console.log('amountDesired', amountDesired)
+
     const estimatedGas = await stakingContract.methods
       .unstake(amountDesired.toString(), true)
       .estimateGas({
@@ -266,7 +266,7 @@ export class FoxyApi {
       (item) => toLower(item.options.address) === toLower(contractAddress)
     )
     if (!stakingContract) throw new Error('Not a valid contract address')
-    console.log('estimatedGas', estimatedGas)
+
     const data: string = stakingContract.methods.unstake(amountDesired.toString(), true).encodeABI({
       from: userAddress
     })
@@ -315,7 +315,7 @@ export class FoxyApi {
     })
     const nonce = await this.web3.eth.getTransactionCount(userAddress)
     const gasPrice = await this.web3.eth.getGasPrice()
-    console.log('estimatedGas', estimatedGas)
+
     const txToSign = buildTxToSign({
       bip44Params: this.adapter.buildBIP44Params({ accountNumber }),
       chainId: 1,
