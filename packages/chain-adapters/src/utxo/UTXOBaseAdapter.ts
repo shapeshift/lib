@@ -1,4 +1,4 @@
-import { AssetNamespace, AssetReference, CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
+import { CAIP2, CAIP19 } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, HDWallet, PublicKey } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes, UtxoAccountType } from '@shapeshiftoss/types'
 import { bitcoin } from '@shapeshiftoss/unchained-client'
@@ -37,6 +37,7 @@ export interface ChainAdapterArgs {
  */
 export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChainAdapter<T> {
   protected chainId: CAIP2
+  protected assetId: CAIP19
   protected coinName: string
   protected readonly providers: {
     http: bitcoin.api.V1Api
@@ -84,8 +85,16 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
     return this.chainId
   }
 
+  getCaip19(): CAIP19 {
+    return this.assetId
+  }
+
   getChainId(): CAIP2 {
     return this.chainId
+  }
+
+  getAssetId(): CAIP19 {
+    return this.assetId
   }
 
   async getAccount(pubkey: string): Promise<chainAdapters.Account<T>> {
@@ -95,7 +104,6 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
 
     try {
       const caip = await this.getCaip2()
-      const { chain, network } = caip2.fromCAIP2(caip)
       const { data } = await this.providers.http.getAccount({ pubkey: pubkey })
 
       const balance = bnOrZero(data.balance).plus(bnOrZero(data.unconfirmedBalance))
@@ -104,12 +112,7 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
         balance: balance.toString(),
         chain: this.getType(),
         caip2: caip,
-        caip19: caip19.toCAIP19({
-          chain,
-          network,
-          assetNamespace: AssetNamespace.Slip44,
-          assetReference: AssetReference.Bitcoin
-        }),
+        caip19: this.getCaip19(),
         chainSpecific: {
           addresses: data.addresses,
           nextChangeAddressIndex: data.nextChangeAddressIndex,

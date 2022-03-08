@@ -1,4 +1,4 @@
-import { caip2 } from '@shapeshiftoss/caip'
+import { AssetNamespace, AssetReference, caip2, caip19 } from '@shapeshiftoss/caip'
 import {
   bip32ToAddressNList,
   BTCOutputAddressType,
@@ -45,12 +45,18 @@ export class ChainAdapter
     if (!args.chainId) {
       throw new Error('chainId required')
     }
-    const { chain } = caip2.fromCAIP2(args.chainId)
+    const { chain, network } = caip2.fromCAIP2(args.chainId)
     if (chain !== ChainTypes.Bitcoin) {
       throw new Error('chainId must be a bitcoin chain type')
     }
     this.chainId = args.chainId
     this.coinName = args.coinName
+    this.assetId = caip19.toCAIP19({
+      chain,
+      network,
+      assetNamespace: AssetNamespace.Slip44,
+      assetReference: AssetReference.Bitcoin
+    })
   }
 
   getType(): ChainTypes.Bitcoin {

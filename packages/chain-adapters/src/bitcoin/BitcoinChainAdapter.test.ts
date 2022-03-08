@@ -15,6 +15,7 @@ import * as bitcoin from './BitcoinChainAdapter'
 
 const testMnemonic = 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle'
 const VALID_CHAIN_ID = 'bip122:000000000019d6689c085ae165831e93'
+const VALID_ASSET_ID = 'bip122:000000000019d6689c085ae165831e93/slip44:0'
 
 const getWallet = async (): Promise<HDWallet> => {
   const nativeAdapterArgs: NativeAdapterArgs = {
@@ -147,7 +148,7 @@ describe('BitcoinChainAdapter', () => {
   })
 
   describe('constructor', () => {
-    it('should return chainAdapter with default Bitcoin chainId if called with no chainId', () => {
+    it('should return chainAdapter with Bitcoin chainId', () => {
       const adapter = new bitcoin.ChainAdapter(args)
       const chainId = adapter.getChainId()
       expect(chainId).toEqual(VALID_CHAIN_ID)
@@ -157,6 +158,13 @@ describe('BitcoinChainAdapter', () => {
       const adapter = new bitcoin.ChainAdapter(args)
       const chainId = adapter.getChainId()
       expect(chainId).toEqual('bip122:000000000933ea01ad0ee984209779ba')
+    })
+    it('should return chainAdapter with Bitcoin caip19 / assetId', () => {
+      const adapter = new bitcoin.ChainAdapter(args)
+      const assetId = adapter.getAssetId()
+      const caip19 = adapter.getCaip19()
+      expect(assetId).toEqual(caip19)
+      expect(assetId).toEqual(VALID_ASSET_ID)
     })
     it('should throw if called with invalid chainId', () => {
       args.chainId = 'INVALID_CHAINID'
