@@ -105,12 +105,14 @@ export class OsmosisMarketService implements MarketService {
         start = -8760
         break
       case HistoryTimeframe.ALL:
-        range = 'all'
+        // TODO: currently the 'all' range for v2 is returning 500. Using 1y for the time being.
+        // We need to revisit this at a later date to see if it works in the future
+        range = '1y'
         isV1 = true
         start = 0
         break
       default:
-        range = 'all'
+        range = '1y'
         isV1 = true
         start = 0
     }
