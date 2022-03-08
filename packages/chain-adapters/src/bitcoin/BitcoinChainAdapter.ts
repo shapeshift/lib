@@ -10,7 +10,7 @@ import {
   supportsBTC
 } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes, UtxoAccountType } from '@shapeshiftoss/types'
-import { bitcoin } from '@shapeshiftoss/unchained-client'
+import * as unchained from '@shapeshiftoss/unchained-client'
 import coinSelect from 'coinselect'
 import split from 'coinselect/split'
 import WAValidator from 'multicoin-address-validator'
@@ -30,8 +30,8 @@ import {
 
 export interface ChainAdapterArgs {
   providers: {
-    http: bitcoin.api.V1Api
-    ws: bitcoin.ws.Client
+    http: unchained.bitcoin.V1Api
+    ws: unchained.ws.Client<unchained.SequencedTx>
   }
   coinName: string
   chainId?: CAIP2
@@ -39,8 +39,8 @@ export interface ChainAdapterArgs {
 
 export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
   private readonly providers: {
-    http: bitcoin.api.V1Api
-    ws: bitcoin.ws.Client
+    http: unchained.bitcoin.V1Api
+    ws: unchained.ws.Client<unchained.SequencedTx>
   }
 
   public static readonly defaultBIP44Params: BIP44Params = {
@@ -180,7 +180,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
 
       const account = await this.getAccount(pubkey.xpub)
 
-      type MappedUtxos = Omit<bitcoin.api.Utxo, 'value'> & { value: number }
+      type MappedUtxos = Omit<unchained.bitcoin.Utxo, 'value'> & { value: number }
       const mappedUtxos: MappedUtxos[] = utxos.map((x) => ({ ...x, value: Number(x.value) }))
 
       let coinSelectResult
@@ -300,7 +300,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
       pubkey
     })
 
-    type MappedUtxos = Omit<bitcoin.api.Utxo, 'value'> & { value: number }
+    type MappedUtxos = Omit<unchained.bitcoin.Utxo, 'value'> & { value: number }
     const mappedUtxos: MappedUtxos[] = utxos.map((x) => ({ ...x, value: Number(x.value) }))
 
     let fastFee
@@ -418,8 +418,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
     await this.providers.ws.subscribeTxs(
       subscriptionId,
       { topic: 'txs', addresses },
-      (msg) => {
-        const transfers = msg.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
+      ({ data: tx }) => {
+        const transfers = tx.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
           caip19: transfer.caip19,
           from: transfer.from,
           to: transfer.to,
@@ -428,18 +428,18 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Bitcoin> {
         }))
 
         onMessage({
-          address: msg.address,
-          blockHash: msg.blockHash,
-          blockHeight: msg.blockHeight,
-          blockTime: msg.blockTime,
-          caip2: msg.caip2,
+          address: tx.address,
+          blockHash: tx.blockHash,
+          blockHeight: tx.blockHeight,
+          blockTime: tx.blockTime,
+          caip2: tx.caip2,
           chain: ChainTypes.Bitcoin,
-          confirmations: msg.confirmations,
-          fee: msg.fee,
-          status: getStatus(msg.status),
-          tradeDetails: msg.trade,
+          confirmations: tx.confirmations,
+          fee: tx.fee,
+          status: getStatus(tx.status),
+          tradeDetails: tx.trade,
           transfers,
-          txid: msg.txid
+          txid: tx.txid
         })
       },
       (err) => onError({ message: err.message })

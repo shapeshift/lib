@@ -174,15 +174,12 @@ const main = async () => {
     })
     console.log('cosmosAddress:', cosmosAddress)
 
-    const cosmosAccount = await cosmosChainAdapter.getAccount(
-      'cosmos1zjk9dkhzz2waxmtvtl3hnnl0t3ac0k5urlyk7s'
-    )
-    console.log(cosmosAccount)
+    const cosmosAccount = await cosmosChainAdapter.getAccount(cosmosAddress)
+    console.log('cosmosAccount:', cosmosAccount)
 
-    const txHistory = await cosmosChainAdapter.getTxHistory({
-      pubkey: 'cosmos1zjk9dkhzz2waxmtvtl3hnnl0t3ac0k5urlyk7s'
-    })
-    console.log(txHistory)
+    const cosmosTxHistory = await cosmosChainAdapter.getTxHistory({ pubkey: cosmosAddress })
+    console.log('cosmosTxHistory:', cosmosTxHistory)
+
     await cosmosChainAdapter.subscribeTxs(
       { wallet, bip44Params: cosmosBip44Params },
       (msg) => console.log(msg),
