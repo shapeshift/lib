@@ -10,11 +10,15 @@ export type ApproveInput = {
   accountNumber?: number
   dryRun?: boolean
   tokenContractAddress: string
+  contractAddress: string
   userAddress: string
   wallet: HDWallet
 }
 
-export type EstimateGasApproveInput = Pick<ApproveInput, 'userAddress' | 'tokenContractAddress'>
+export type EstimateGasApproveInput = Pick<
+  ApproveInput,
+  'userAddress' | 'tokenContractAddress' | 'contractAddress'
+>
 
 export type TxInput = {
   accountNumber?: number

@@ -4,20 +4,18 @@ import { ChainTypes } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 import dotenv from 'dotenv'
 import readline from 'readline-sync'
-import Web3 from 'web3'
 
 import { FoxyApi } from './api'
-import { erc20Abi, foxyContractAddress, foxyStakingContractAddress } from './constants'
+import {
+  foxContractAddress,
+  foxyContractAddress,
+  foxyStakingContractAddress,
+  liquidityReserveContractAddress
+} from './constants'
 
 dotenv.config()
 
-const {
-  UNCHAINED_HTTP_API = 'http://localhost:31300',
-  UNCHAINED_WS_API = 'wss://localhost:31300',
-  ETH_NODE_URL = 'http://localhost:3000',
-  DEVICE_ID = 'device123',
-  MNEMONIC = 'salon adapt foil saddle orient make page zero cheese marble test catalog'
-} = process.env
+const { DEVICE_ID = 'device123', MNEMONIC } = process.env
 
 const getWallet = async (): Promise<NativeHDWallet> => {
   if (!MNEMONIC) {
@@ -34,8 +32,6 @@ const getWallet = async (): Promise<NativeHDWallet> => {
 }
 
 const main = async (): Promise<void> => {
-  const [, , ...args] = process.argv
-
   const unchainedUrls = {
     [ChainTypes.Ethereum]: {
       httpUrl: 'https://api.ethereum.shapeshift.com',
@@ -43,8 +39,6 @@ const main = async (): Promise<void> => {
     }
   }
   const adapterManager = new ChainAdapterManager(unchainedUrls)
-  const web3Provider = new Web3.providers.HttpProvider('http://127.0.0.1:8545')
-  const web3 = new Web3(web3Provider)
   const wallet = await getWallet()
 
   const api = new FoxyApi({
@@ -52,51 +46,171 @@ const main = async (): Promise<void> => {
     providerUrl: 'http://127.0.0.1:8545'
   })
 
-  const foxyContract = new web3.eth.Contract(erc20Abi, foxyContractAddress)
   const userAddress = await adapterManager.byChain(ChainTypes.Ethereum).getAddress({ wallet })
   console.info('talking from ', userAddress)
 
-  const totalSupply = await api.totalSupply({ tokenContractAddress: foxyContractAddress })
-  console.log('total', totalSupply)
-
-  const balance = await api.balance({
-    tokenContractAddress: foxyContractAddress,
-    userAddress
-  })
-  console.log('balance', balance)
-
-  try {
-    const approve = await api.approve({
-      tokenContractAddress: foxyContractAddress,
-      userAddress,
-      wallet
-    })
-    console.info('approve', approve)
-  } catch (e) {
-    console.error('e', e)
+  const totalSupply = async () => {
+    try {
+      const supply = await api.totalSupply({ tokenContractAddress: foxyContractAddress })
+      console.info('totalSupply', supply.toString())
+    } catch (e) {
+      console.error('Total Supply Error:', e)
+    }
   }
 
-  try {
-    const deposit = await api.deposit({
-      contractAddress: foxyStakingContractAddress,
-      amountDesired: new BigNumber(100),
-      userAddress,
-      wallet
-    })
-    console.info('deposit', deposit)
-  } catch (e) {
-    console.error('e', e)
+  const stakingTokenBalance = async () => {
+    try {
+      const balance = await api.balance({
+        tokenContractAddress: foxContractAddress,
+        userAddress
+      })
+      console.info('balance', balance.toString())
+    } catch (e) {
+      console.error('Staking Balance Error:', e)
+    }
   }
 
-  //   const answer = readline.question(
-  //     `Swap ${sellAmount} ${sellAsset.symbol} for ${buyAmount} ${
-  //       buyAsset.symbol
-  //     } on ${swapper.getType()}? (y/n): `
-  //   )
-  //   if (answer === 'y') {
-  //     const txid = await swapper.executeQuote({ quote, wallet })
-  //     console.info('broadcast tx with id: ', txid)
-  //   }
+  const rewardTokenBalance = async () => {
+    try {
+      const balance = await api.balance({
+        tokenContractAddress: foxyContractAddress,
+        userAddress
+      })
+      console.info('balance', balance.toString())
+    } catch (e) {
+      console.error('Reward Balance Error:', e)
+    }
+  }
+
+  const approve = async (tokenContractAddress: string, contractAddress: string) => {
+    try {
+      const approve = await api.approve({
+        tokenContractAddress,
+        contractAddress,
+        userAddress,
+        wallet
+      })
+      console.info('approve', approve)
+    } catch (e) {
+      console.error('Approve Error:', e)
+    }
+  }
+
+  const stake = async (amount: string) => {
+    try {
+      console.info('staking...')
+      const stake = await api.deposit({
+        contractAddress: foxyStakingContractAddress,
+        tokenContractAddress: foxContractAddress,
+        amountDesired: new BigNumber(amount),
+        userAddress,
+        wallet
+      })
+      console.info('stake', stake)
+    } catch (e) {
+      console.error('Stake Error:', e)
+    }
+  }
+
+  const unstake = async (amount: string) => {
+    try {
+      const unstake = await api.withdraw({
+        contractAddress: foxyStakingContractAddress,
+        tokenContractAddress: foxContractAddress,
+        amountDesired: new BigNumber(amount),
+        userAddress,
+        wallet
+      })
+      console.info('unstake', unstake)
+    } catch (e) {
+      console.error('Unstake Error:', e)
+    }
+  }
+
+  const instantUnstake = async () => {
+    try {
+      const deposit = await api.instantWithdraw({
+        contractAddress: foxyStakingContractAddress,
+        tokenContractAddress: foxContractAddress,
+        userAddress,
+        wallet
+      })
+      console.info('deposit', deposit)
+    } catch (e) {
+      console.error('Deposit Error:', e)
+    }
+  }
+
+  const options = [
+    'Approve StakingContract',
+    'Approve LiquidityReserve',
+    'Stake',
+    'Unstake',
+    'Instant Unstake',
+    'Reward Token Balance',
+    'Staking Token Balance',
+    'Total Supply'
+    // 'Circulating Supply (TVL),
+    // 'Mine Blocks To Next Cycle',
+    // 'Claim Withdraw'
+  ]
+  const contracts = ['Staking Token', 'Reward Token']
+
+  let index = readline.keyInSelect(options, 'Select an action.\n')
+
+  while (index !== -1) {
+    let amount = '0'
+    let tokenContract
+    switch (index) {
+      case 0:
+        tokenContract = readline.keyInSelect(contracts, 'Which contract do you want to approve.\n')
+        switch (tokenContract) {
+          case 0:
+            await approve(foxContractAddress, foxyStakingContractAddress)
+            break
+          case 1:
+            await approve(foxyContractAddress, foxyStakingContractAddress)
+            break
+          default:
+            break
+        }
+        break
+      case 1:
+        tokenContract = readline.keyInSelect(contracts, 'Which contract do you want to approve.\n')
+        switch (tokenContract) {
+          case 0:
+            await approve(foxContractAddress, liquidityReserveContractAddress)
+            break
+          case 1:
+            await approve(foxyContractAddress, liquidityReserveContractAddress)
+            break
+          default:
+            break
+        }
+        break
+      case 2:
+        amount = readline.question('How much do you want to stake?\n')
+        await stake(amount)
+        break
+      case 3:
+        amount = readline.question('How much do you want to unstake?\n')
+        await unstake(amount)
+        break
+      case 4:
+        await instantUnstake()
+        break
+      case 5:
+        await rewardTokenBalance()
+        break
+      case 6:
+        await stakingTokenBalance()
+        break
+      case 7:
+        await totalSupply()
+        break
+    }
+    index = readline.keyInSelect(options, 'Select an action.\n')
+  }
 }
 
-main().then(() => console.info('Done'))
+main().then(() => console.info('Exit'))
