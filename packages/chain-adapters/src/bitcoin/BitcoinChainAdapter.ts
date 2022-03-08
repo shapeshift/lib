@@ -42,20 +42,14 @@ export class ChainAdapter
 
   constructor(args: ChainAdapterArgs) {
     super(args)
-    if (args.chainId) {
-      try {
-        const { chain } = caip2.fromCAIP2(args.chainId)
-        if (chain !== ChainTypes.Bitcoin) {
-          throw new Error()
-        }
-        this.chainId = args.chainId
-      } catch (e) {
-        throw new Error(`The ChainID ${args.chainId} is not supported`)
-      }
-    } else {
-      throw new Error('The ChainID must be supplied in constructor args')
+    if (!args.chainId) {
+      throw new Error('chainId required')
     }
-
+    const { chain } = caip2.fromCAIP2(args.chainId)
+    if (chain !== ChainTypes.Bitcoin) {
+      throw new Error('chainId must be a bitcoin chain type')
+    }
+    this.chainId = args.chainId
     this.coinName = args.coinName
   }
 
