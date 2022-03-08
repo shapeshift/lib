@@ -77,42 +77,42 @@ export class OsmosisMarketService implements MarketService {
 
     let range
     let isV1
-    let slice
+    let start
     switch (timeframe) {
       case HistoryTimeframe.HOUR:
         range = '5'
         isV1 = false
-        slice = -12
+        start = -12
         break
       case HistoryTimeframe.DAY:
         range = '60'
         isV1 = false
-        slice = -24
+        start = -24
         break
       case HistoryTimeframe.WEEK:
         range = '7d'
         isV1 = true
-        slice = -168
+        start = -168
         break
       case HistoryTimeframe.MONTH:
         range = '1mo'
         isV1 = true
-        slice = -720
+        start = -720
         break
       case HistoryTimeframe.YEAR:
         range = '1y'
         isV1 = true
-        slice = -8760
+        start = -8760
         break
       case HistoryTimeframe.ALL:
         range = 'all'
         isV1 = true
-        slice = 0
+        start = 0
         break
       default:
         range = 'all'
         isV1 = true
-        slice = 0
+        start = 0
     }
 
     try {
@@ -125,7 +125,7 @@ export class OsmosisMarketService implements MarketService {
       const { data } = await axios.get<OsmosisHistoryData[]>(url)
 
       // return the correct range of data points for each timeframe
-      const tapperedData = data.slice(slice)
+      const tapperedData = data.slice(start)
 
       return tapperedData
         .reduce<HistoryData[]>((acc, current) => {
