@@ -169,7 +169,7 @@ const main = async () => {
     console.log('cosmosAddress:', cosmosAddress)
 
     const cosmosAccount = await cosmosChainAdapter.getAccount(cosmosAddress)
-    console.log(cosmosAccount)
+    console.log('cosmosAccount:', cosmosAccount)
 
     /** The previously derived cosmos address is used as the default pubkey in the call below.
      * Make sure to edit the seed phrase in the local .env file to ensure that the pubkey used
