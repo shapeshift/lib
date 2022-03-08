@@ -1,7 +1,7 @@
 import { CAIP2, CAIP19 } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, HDWallet, PublicKey } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes, UtxoAccountType } from '@shapeshiftoss/types'
-import { bitcoin } from '@shapeshiftoss/unchained-client'
+import * as unchained from '@shapeshiftoss/unchained-client'
 import WAValidator from 'multicoin-address-validator'
 
 import { ChainAdapter as IChainAdapter } from '../api'
@@ -22,8 +22,8 @@ export type UTXOChainTypes = ChainTypes.Bitcoin // to be extended in the future 
  */
 export interface ChainAdapterArgs {
   providers: {
-    http: bitcoin.api.V1Api //?
-    ws: bitcoin.ws.Client
+    http: unchained.bitcoin.V1Api
+    ws: unchained.ws.Client<unchained.SequencedTx>
   }
   coinName: string
   chainId?: CAIP2
@@ -40,8 +40,8 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
   protected assetId: CAIP19
   protected coinName: string
   protected readonly providers: {
-    http: bitcoin.api.V1Api
-    ws: bitcoin.ws.Client
+    http: unchained.bitcoin.V1Api
+    ws: unchained.ws.Client<unchained.SequencedTx>
   }
 
   protected constructor(args: ChainAdapterArgs) {

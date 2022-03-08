@@ -14,7 +14,7 @@ import {
   NetworkTypes,
   UtxoAccountType
 } from '@shapeshiftoss/types'
-import { bitcoin } from '@shapeshiftoss/unchained-client'
+import * as unchained from '@shapeshiftoss/unchained-client'
 import coinSelect from 'coinselect'
 import split from 'coinselect/split'
 
