@@ -77,38 +77,46 @@ export class OsmosisMarketService implements MarketService {
 
     let range
     let isV1
+    let slice
     switch (timeframe) {
       case HistoryTimeframe.HOUR:
         range = '5'
         isV1 = false
+        slice = -12
         break
       case HistoryTimeframe.DAY:
         range = '60'
         isV1 = false
+        slice = -24
         break
       case HistoryTimeframe.WEEK:
         range = '7d'
         isV1 = true
+        slice = -168
         break
       case HistoryTimeframe.MONTH:
         range = '1mo'
         isV1 = true
+        slice = -720
         break
       case HistoryTimeframe.YEAR:
         range = '1y'
         isV1 = true
+        slice = -8760
         break
       case HistoryTimeframe.ALL:
         range = 'all'
         isV1 = true
+        slice = 0
         break
       default:
         range = 'all'
         isV1 = true
+        slice = 0
     }
 
     try {
-      // Historical timeframe data from the v2 endpoint does not support ranges greater than 1 month
+      // Historical timeframe data from the v2 endpoint currently does not support ranges greater than 1 month
       // and v1 doesn't support ranges less than 7 week, so we use both to get all ranges.
       const url = `${this.baseUrl}/tokens/${isV1 ? 'v1' : 'v2'}/historical/${symbol}/chart?${
         isV1 ? 'range' : 'tf'
@@ -116,20 +124,24 @@ export class OsmosisMarketService implements MarketService {
 
       const { data } = await axios.get<OsmosisHistoryData[]>(url)
 
-      return data.reduce<HistoryData[]>((acc, current) => {
-        // convert timestamp from seconds to milliseconds
-        const date = bnOrZero(current.time).times(1000).toNumber()
-        if (!isValidDate(date)) {
-          console.error('Osmosis asset history data has invalid date')
+      // return the correct range of data points for each timeframe
+      const tapperedData = data.slice(slice)
+
+      return tapperedData
+        .reduce<HistoryData[]>((acc, current) => {
+          // convert timestamp from seconds to milliseconds
+          const date = bnOrZero(current.time).times(1000).toNumber()
+          if (!isValidDate(date)) {
+            console.error('Osmosis asset history data has invalid date')
+            return acc
+          }
+          const price = bnOrZero(current.close)
+          acc.push({
+            date,
+            price: price.toNumber()
+          })
           return acc
-        }
-        const price = bnOrZero(current.close)
-        acc.push({
-          date,
-          price: price.toNumber()
-        })
-        return acc
-      }, [])
+        }, [])
     } catch (e) {
       console.warn(e)
       throw new Error('MarketService(findPriceHistoryByCaip19): error fetching price history')
