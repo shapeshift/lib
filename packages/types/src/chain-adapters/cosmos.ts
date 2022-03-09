@@ -4,7 +4,6 @@ export type BuildTxInput = {
 }
 
 export type Account = {
-  account: number
   sequence: number
 }
 

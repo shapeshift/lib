@@ -97,7 +97,7 @@ export class ChainAdapter
       const from = await this.getAddress({ bip44Params, wallet })
       const {
         balance,
-        chainSpecific: { account, sequence }
+        chainSpecific: { sequence }
       } = await this.getAccount(from)
 
       if (sendMax) {
@@ -137,7 +137,7 @@ export class ChainAdapter
         addressNList,
         tx: utx,
         chain_id: caip2.ChainReference.CosmosHubMainnet,
-        account_number: account.toString(),
+        account_number: bip44Params.accountNumber.toString(),
         sequence: sequence.toString()
       }
       return { txToSign }
