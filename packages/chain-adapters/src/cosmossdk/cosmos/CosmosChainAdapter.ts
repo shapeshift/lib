@@ -101,7 +101,15 @@ export class ChainAdapter
       } = await this.getAccount(from)
 
       if (sendMax) {
-        tx.value = new BigNumber(balance).minus(gas).toString()
+        try {
+          const val = new BigNumber(balance).minus(gas)
+          if (!isFinite(val.toNumber()) || val.toNumber() < 0) {
+            throw new Error('CosmosChainAdapter: transaction value is invalid')
+          }
+          tx.value = val.toString()
+        } catch (error) {
+          return ErrorHandler(error)
+        }
       }
 
       const utx: CosmosTx = {
@@ -120,7 +128,7 @@ export class ChainAdapter
             value: {
               amount: [
                 {
-                  amount: new BigNumber(value).toString(),
+                  amount: new BigNumber(tx.value).toString(),
                   denom: 'uatom'
                 }
               ],
@@ -137,8 +145,8 @@ export class ChainAdapter
         addressNList,
         tx: utx,
         chain_id: caip2.ChainReference.CosmosHubMainnet,
-        account_number: bip44Params.accountNumber.toString(),
-        sequence: sequence.toString()
+        account_number: String(bip44Params.accountNumber),
+        sequence: String(sequence)
       }
       return { txToSign }
     } catch (err) {
