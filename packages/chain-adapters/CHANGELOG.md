@@ -1,3 +1,17 @@
+# [@shapeshiftoss/chain-adapters-v2.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.1.0...@shapeshiftoss/chain-adapters-v2.2.0) (2022-03-08)
+
+
+### Features
+
+* utxo chain adapter refactor ([#411](https://github.com/shapeshift/lib/issues/411)) ([c6d1b31](https://github.com/shapeshift/lib/commit/c6d1b311eefa3b7f48e24ef763b41eab27045191))
+
+# [@shapeshiftoss/chain-adapters-v2.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.0.2...@shapeshiftoss/chain-adapters-v2.1.0) (2022-03-08)
+
+
+### Features
+
+* cosmos `subscribeTxs` ([#415](https://github.com/shapeshift/lib/issues/415)) ([77fd091](https://github.com/shapeshift/lib/commit/77fd091a3f8a7927d90956c466c6dad002216db9))
+
 # [@shapeshiftoss/chain-adapters-v2.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.0.1...@shapeshiftoss/chain-adapters-v2.0.2) (2022-03-04)
 
 # [@shapeshiftoss/chain-adapters-v2.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.0.0...@shapeshiftoss/chain-adapters-v2.0.1) (2022-03-03)
