@@ -38,6 +38,12 @@ const main = async () => {
   try {
     const chainAdapterManager = new ChainAdapterManager(unchainedUrls)
     const wallet = await getWallet()
+    await wallet.wipe()
+    await wallet.loadDevice({
+      mnemonic: 'all all all all all all all all all all all all',
+      label: 'test',
+      skipChecksum: true
+    })
 
     /** BITCOIN CLI */
     const btcChainAdapter = chainAdapterManager.byChain(ChainTypes.Bitcoin)
@@ -175,10 +181,8 @@ const main = async () => {
      * Make sure to edit the seed phrase in the local .env file to ensure that the pubkey used
      * has a transaction history to show!
      */
-    const cosmosTxHistory = await cosmosChainAdapter.getTxHistory({
-      pubkey: cosmosAddress
-    })
-    console.log('cosmosTxHistory: ', cosmosTxHistory)
+    const cosmosTxHistory = await cosmosChainAdapter.getTxHistory({ pubkey: cosmosAddress })
+    console.log('cosmosTxHistory:', cosmosTxHistory)
 
     await cosmosChainAdapter.subscribeTxs(
       { wallet, bip44Params: cosmosBip44Params },
