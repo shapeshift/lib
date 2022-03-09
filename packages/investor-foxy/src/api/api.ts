@@ -12,10 +12,11 @@ import {
   DefiProvider,
   DefiType,
   erc20Abi,
-  foxyAbi,
+  foxyStakingAbi,
   foxyStakingContractAddress,
   MAX_ALLOWANCE
 } from '../constants'
+import { foxyAbi } from '../constants/foxy-abi'
 import { bnOrZero, buildTxToSign } from '../utils'
 import {
   Allowanceinput,
@@ -62,7 +63,7 @@ export class FoxyApi {
     this.provider = new Web3.providers.HttpProvider(providerUrl)
     this.jsonRpcProvider = new JsonRpcProvider(providerUrl)
     this.web3 = new Web3(this.provider)
-    this.foxyStakingContracts = [new this.web3.eth.Contract(foxyAbi, foxyStakingContractAddress)]
+    this.foxyStakingContracts = [new this.web3.eth.Contract(foxyStakingAbi, foxyStakingContractAddress)]
   }
 
   findDataByContractAddress(contractAddress: string) {
@@ -84,6 +85,21 @@ export class FoxyApi {
 
   checksumAddress(address: string): string {
     return this.web3.utils.toChecksumAddress(address)
+  }
+
+  async estimateClaimWithdrawGas(
+    input: Pick<EstimateGasTxInput, Exclude<keyof EstimateGasTxInput, 'amountDesired'>>
+  ): Promise<BigNumber> {
+    const { userAddress, contractAddress } = input
+    const stakingContract = this.foxyStakingContracts.find(
+      (item) => toLower(item.options.address) === toLower(contractAddress)
+    )
+    if (!stakingContract) throw new Error('Not a valid contract address')
+
+    const estimatedGas = await stakingContract.methods.claimWithdraw(userAddress).estimateGas({
+      from: userAddress
+    })
+    return bnOrZero(estimatedGas)
   }
 
   async estimateWithdrawGas(input: EstimateGasTxInput): Promise<BigNumber> {
@@ -203,7 +219,6 @@ export class FoxyApi {
       accountNumber = 0,
       dryRun = false,
       contractAddress,
-      tokenContractAddress,
       userAddress,
       wallet
     } = input
@@ -343,49 +358,93 @@ export class FoxyApi {
     }
   }
 
-  // async claimWithdraw(
-  //   input: Pick<TxInput, Exclude<keyof TxInput, 'amountDesired'>>
-  // ): Promise<string> {
-  //   const { accountNumber = 0, dryRun = false, contractAddress, userAddress, wallet } = input
-  //   if (!wallet || !contractAddress) throw new Error('Missing inputs')
-  //   const estimatedGas: BigNumber = await this.estimateInstantWithdrawGas(input)
-  //   const stakingContract = this.foxyStakingContracts.find(
-  //     (item) => toLower(item.options.address) === toLower(contractAddress)
-  //   )
-  //   if (!stakingContract) throw new Error('Not a valid contract address')
+  async claimWithdraw(
+    input: Pick<TxInput, Exclude<keyof TxInput, 'amountDesired'>>
+  ): Promise<string> {
+    const { accountNumber = 0, dryRun = false, contractAddress, userAddress, wallet } = input
+    if (!wallet || !contractAddress) throw new Error('Missing inputs')
+    const estimatedGas: BigNumber = await this.estimateClaimWithdrawGas(input)
+    const stakingContract = this.foxyStakingContracts.find(
+      (item) => toLower(item.options.address) === toLower(contractAddress)
+    )
+    if (!stakingContract) throw new Error('Not a valid contract address')
 
-  //   const data: string = stakingContract.methods.instantUnstake(true).encodeABI({
-  //     from: userAddress
-  //   })
-  //   const nonce = await this.web3.eth.getTransactionCount(userAddress)
-  //   const gasPrice = await this.web3.eth.getGasPrice()
+    const data: string = stakingContract.methods.claimWithdraw(userAddress).encodeABI({
+      from: userAddress
+    })
+    const nonce = await this.web3.eth.getTransactionCount(userAddress)
+    const gasPrice = await this.web3.eth.getGasPrice()
 
-  //   const txToSign = buildTxToSign({
-  //     bip44Params: this.adapter.buildBIP44Params({ accountNumber }),
-  //     chainId: 1,
-  //     data,
-  //     estimatedGas: estimatedGas.toString(),
-  //     gasPrice,
-  //     nonce: String(nonce),
-  //     to: foxyStakingContractAddress,
-  //     value: '0'
-  //   })
-  //   if (wallet.supportsOfflineSigning()) {
-  //     const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
-  //     if (dryRun) return signedTx
-  //     // TODO: change back to broadcastTransaction
-  //     //return this.adapter.broadcastTransaction(signedTx)
-  //     const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
-  //     return sendSignedTx?.blockHash
-  //   } else if (wallet.supportsBroadcast() && this.adapter.signAndBroadcastTransaction) {
-  //     if (dryRun) {
-  //       throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
-  //     }
-  //     return this.adapter.signAndBroadcastTransaction({ txToSign, wallet })
-  //   } else {
-  //     throw new Error('Invalid HDWallet configuration ')
-  //   }
-  // }
+    const txToSign = buildTxToSign({
+      bip44Params: this.adapter.buildBIP44Params({ accountNumber }),
+      chainId: 1,
+      data,
+      estimatedGas: estimatedGas.toString(),
+      gasPrice,
+      nonce: String(nonce),
+      to: foxyStakingContractAddress,
+      value: '0'
+    })
+    if (wallet.supportsOfflineSigning()) {
+      const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
+      if (dryRun) return signedTx
+      // TODO: change back to broadcastTransaction
+      //return this.adapter.broadcastTransaction(signedTx)
+      const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
+      return sendSignedTx?.blockHash
+    } else if (wallet.supportsBroadcast() && this.adapter.signAndBroadcastTransaction) {
+      if (dryRun) {
+        throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
+      }
+      return this.adapter.signAndBroadcastTransaction({ txToSign, wallet })
+    } else {
+      throw new Error('Invalid HDWallet configuration ')
+    }
+  }
+
+  async sendWithdrawalRequests(
+    input: Pick<TxInput, Exclude<keyof TxInput, 'amountDesired'>>
+  ): Promise<string> {
+    const { accountNumber = 0, dryRun = false, contractAddress, userAddress, wallet } = input
+    if (!wallet || !contractAddress) throw new Error('Missing inputs')
+    const estimatedGas: BigNumber = await this.estimateClaimWithdrawGas(input)
+    const stakingContract = this.foxyStakingContracts.find(
+      (item) => toLower(item.options.address) === toLower(contractAddress)
+    )
+    if (!stakingContract) throw new Error('Not a valid contract address')
+
+    const data: string = stakingContract.methods.claimWithdraw(userAddress).encodeABI({
+      from: userAddress
+    })
+    const nonce = await this.web3.eth.getTransactionCount(userAddress)
+    const gasPrice = await this.web3.eth.getGasPrice()
+
+    const txToSign = buildTxToSign({
+      bip44Params: this.adapter.buildBIP44Params({ accountNumber }),
+      chainId: 1,
+      data,
+      estimatedGas: estimatedGas.toString(),
+      gasPrice,
+      nonce: String(nonce),
+      to: foxyStakingContractAddress,
+      value: '0'
+    })
+    if (wallet.supportsOfflineSigning()) {
+      const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
+      if (dryRun) return signedTx
+      // TODO: change back to broadcastTransaction
+      //return this.adapter.broadcastTransaction(signedTx)
+      const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
+      return sendSignedTx?.blockHash
+    } else if (wallet.supportsBroadcast() && this.adapter.signAndBroadcastTransaction) {
+      if (dryRun) {
+        throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
+      }
+      return this.adapter.signAndBroadcastTransaction({ txToSign, wallet })
+    } else {
+      throw new Error('Invalid HDWallet configuration ')
+    }
+  }
 
   async balance(input: BalanceInput): Promise<BigNumber> {
     const { tokenContractAddress, userAddress } = input
@@ -411,7 +470,7 @@ export class FoxyApi {
 
   async tvl(input: TVLInput): Promise<BigNumber> {
     const { tokenContractAddress } = input
-    const contract = new this.web3.eth.Contract(erc20Abi, tokenContractAddress)
+    const contract = new this.web3.eth.Contract(foxyAbi, tokenContractAddress)
     const balance = await contract.methods.circulatingSupply().call()
     return bnOrZero(balance)
   }

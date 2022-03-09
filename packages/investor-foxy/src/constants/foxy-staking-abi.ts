@@ -1,7 +1,7 @@
 import { AbiItem } from 'web3-utils'
 
 /* eslint-disable */
-export const foxyAbi: AbiItem[] = [
+export const foxyStakingAbi: AbiItem[] = [
   {
     inputs: [
       {

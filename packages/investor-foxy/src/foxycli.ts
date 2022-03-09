@@ -49,6 +49,15 @@ const main = async (): Promise<void> => {
   const userAddress = await adapterManager.byChain(ChainTypes.Ethereum).getAddress({ wallet })
   console.info('talking from ', userAddress)
 
+  const circulatingSupply = async () => {
+    try {
+      const supply = await api.tvl({ tokenContractAddress: foxyContractAddress })
+      console.info('circulatingSupply', supply.toString())
+    } catch (e) {
+      console.error('Circulating Supply Error:', e)
+    }
+  }
+
   const totalSupply = async () => {
     try {
       const supply = await api.totalSupply({ tokenContractAddress: foxyContractAddress })
@@ -114,6 +123,7 @@ const main = async (): Promise<void> => {
 
   const unstake = async (amount: string) => {
     try {
+      console.info('unstaking...')
       const unstake = await api.withdraw({
         contractAddress: foxyStakingContractAddress,
         tokenContractAddress: foxContractAddress,
@@ -129,15 +139,31 @@ const main = async (): Promise<void> => {
 
   const instantUnstake = async () => {
     try {
-      const deposit = await api.instantWithdraw({
+      console.info('instantUnstaking...')
+      const instantUnstake = await api.instantWithdraw({
         contractAddress: foxyStakingContractAddress,
         tokenContractAddress: foxContractAddress,
         userAddress,
         wallet
       })
-      console.info('deposit', deposit)
+      console.info('instantUnstake', instantUnstake)
     } catch (e) {
-      console.error('Deposit Error:', e)
+      console.error('InstantUnstake Error:', e)
+    }
+  }
+
+  const claimWithdraw = async () => {
+    try {
+      console.info('claiming withdraw...')
+      const claimWithdraw = await api.claimWithdraw({
+        contractAddress: foxyStakingContractAddress,
+        tokenContractAddress: foxContractAddress,
+        userAddress,
+        wallet
+      })
+      console.info('claimWithdraw', claimWithdraw)
+    } catch (e) {
+      console.error('ClaimWithdraw Error:', e)
     }
   }
 
@@ -147,12 +173,11 @@ const main = async (): Promise<void> => {
     'Stake',
     'Unstake',
     'Instant Unstake',
+    'Claim Withdraw',
     'Reward Token Balance',
     'Staking Token Balance',
-    'Total Supply'
-    // 'Circulating Supply (TVL),
-    // 'Mine Blocks To Next Cycle',
-    // 'Claim Withdraw'
+    'Total Supply',
+    'Circulating Supply (TVL)'
   ]
   const contracts = ['Staking Token', 'Reward Token']
 
@@ -200,13 +225,19 @@ const main = async (): Promise<void> => {
         await instantUnstake()
         break
       case 5:
-        await rewardTokenBalance()
+        await claimWithdraw()
         break
       case 6:
-        await stakingTokenBalance()
+        await rewardTokenBalance()
         break
       case 7:
+        await stakingTokenBalance()
+        break
+      case 8:
         await totalSupply()
+        break
+      case 9:
+        await circulatingSupply()
         break
     }
     index = readline.keyInSelect(options, 'Select an action.\n')
