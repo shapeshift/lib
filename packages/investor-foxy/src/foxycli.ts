@@ -3,6 +3,7 @@ import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-nativ
 import { ChainTypes } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 import dotenv from 'dotenv'
+import { Http2ServerRequest } from 'http2'
 import readline from 'readline-sync'
 
 import { FoxyApi } from './api'
@@ -32,10 +33,24 @@ const getWallet = async (): Promise<NativeHDWallet> => {
 }
 
 const main = async (): Promise<void> => {
+  const XHR = require('xhr2-cookies').XMLHttpRequest
+
+  // gets rid of Invalid JSON RPC "" Error
+  XHR.prototype._onHttpRequestError = function (request: any, error: any) {
+    if (this._request !== request) {
+      return
+    }
+    console.log(error, 'request')
+    this._setError()
+    request.abort()
+    this._setReadyState(XHR.DONE)
+    this._dispatchProgress('error')
+    this._dispatchProgress('loadend')
+  }
   const unchainedUrls = {
     [ChainTypes.Ethereum]: {
-      httpUrl: 'https://api.ethereum.shapeshift.com',
-      wsUrl: 'wss://api.ethereum.shapeshift.com'
+      httpUrl: 'http://api.ethereum.shapeshift.com',
+      wsUrl: 'ws://api.ethereum.shapeshift.com'
     }
   }
   const adapterManager = new ChainAdapterManager(unchainedUrls)
@@ -152,12 +167,13 @@ const main = async (): Promise<void> => {
     }
   }
 
-  const claimWithdraw = async () => {
+  const claimWithdraw = async (claimAddress: string) => {
     try {
       console.info('claiming withdraw...')
       const response = await api.claimWithdraw({
         contractAddress: foxyStakingContractAddress,
         tokenContractAddress: foxContractAddress,
+        claimAddress,
         userAddress,
         wallet
       })
@@ -180,12 +196,14 @@ const main = async (): Promise<void> => {
     'Circulating Supply (TVL)'
   ]
   const contracts = ['Staking Token', 'Reward Token']
+  const addresses = ['User Address', 'Liquidity Reserve Address']
 
   let index = readline.keyInSelect(options, 'Select an action.\n')
 
   while (index !== -1) {
     let amount = '0'
     let tokenContract
+    let claimAddress
     switch (index) {
       case 0:
         tokenContract = readline.keyInSelect(contracts, 'Which contract do you want to approve.\n')
@@ -225,7 +243,17 @@ const main = async (): Promise<void> => {
         await instantUnstake()
         break
       case 5:
-        await claimWithdraw()
+        claimAddress = readline.keyInSelect(addresses, 'Which address do you want to claim.\n')
+        switch (claimAddress) {
+          case 0:
+            await claimWithdraw(userAddress)
+            break
+          case 1:
+            await claimWithdraw(liquidityReserveContractAddress)
+            break
+          default:
+            break
+        }
         break
       case 6:
         await rewardTokenBalance()

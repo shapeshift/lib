@@ -83,17 +83,21 @@ export class FoxyApi {
   }
 
   async estimateClaimWithdrawGas(
-    input: Pick<EstimateGasTxInput, Exclude<keyof EstimateGasTxInput, 'amountDesired'>>
+    input: Pick<EstimateGasTxInput, Exclude<keyof EstimateGasTxInput, 'amountDesired'>> & {
+      claimAddress?: string
+    }
   ): Promise<BigNumber> {
-    const { userAddress, contractAddress } = input
+    const { claimAddress, userAddress, contractAddress } = input
     const stakingContract = this.foxyStakingContracts.find(
       (item) => toLower(item.options.address) === toLower(contractAddress)
     )
     if (!stakingContract) throw new Error('Not a valid contract address')
 
-    const estimatedGas = await stakingContract.methods.claimWithdraw(userAddress).estimateGas({
-      from: userAddress
-    })
+    const estimatedGas = await stakingContract.methods
+      .claimWithdraw(claimAddress ?? userAddress)
+      .estimateGas({
+        from: userAddress
+      })
     return bnOrZero(estimatedGas)
   }
 
@@ -354,9 +358,16 @@ export class FoxyApi {
   }
 
   async claimWithdraw(
-    input: Pick<TxInput, Exclude<keyof TxInput, 'amountDesired'>>
+    input: Pick<TxInput, Exclude<keyof TxInput, 'amountDesired'>> & { claimAddress?: string }
   ): Promise<string> {
-    const { accountNumber = 0, dryRun = false, contractAddress, userAddress, wallet } = input
+    const {
+      accountNumber = 0,
+      dryRun = false,
+      contractAddress,
+      userAddress,
+      claimAddress,
+      wallet
+    } = input
     if (!wallet || !contractAddress) throw new Error('Missing inputs')
     const estimatedGas: BigNumber = await this.estimateClaimWithdrawGas(input)
     const stakingContract = this.foxyStakingContracts.find(
@@ -364,9 +375,11 @@ export class FoxyApi {
     )
     if (!stakingContract) throw new Error('Not a valid contract address')
 
-    const data: string = stakingContract.methods.claimWithdraw(userAddress).encodeABI({
-      from: userAddress
-    })
+    const data: string = stakingContract.methods
+      .claimWithdraw(claimAddress ?? userAddress)
+      .encodeABI({
+        from: userAddress
+      })
     const nonce = await this.web3.eth.getTransactionCount(userAddress)
     const gasPrice = await this.web3.eth.getGasPrice()
 
