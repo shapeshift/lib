@@ -182,6 +182,36 @@ const main = async (): Promise<void> => {
     }
   }
 
+  const addLiquidity = async (amount: string) => {
+    try {
+      console.info('adding liquidity...')
+      const response = await api.addLiquidity({
+        contractAddress: liquidityReserveContractAddress,
+        userAddress,
+        amountDesired: new BigNumber(amount),
+        wallet
+      })
+      console.info('addLiquidity', response)
+    } catch (e) {
+      console.error('addLiquidity Error:', e)
+    }
+  }
+
+  const removeLiquidity = async (amount: string) => {
+    try {
+      console.info('removing liquidity...')
+      const response = await api.removeLiquidity({
+        contractAddress: liquidityReserveContractAddress,
+        userAddress,
+        amountDesired: new BigNumber(amount),
+        wallet
+      })
+      console.info('removeLiquidity', response)
+    } catch (e) {
+      console.error('removeLiquidity Error:', e)
+    }
+  }
+
   const coolDownInfo = async () => {
     try {
       console.info('getting coolDownInfo...')
@@ -207,7 +237,9 @@ const main = async (): Promise<void> => {
     'Staking Token Balance',
     'Total Supply',
     'Circulating Supply (TVL)',
-    'Cool Down Info'
+    'Cool Down Info',
+    'Add Liquidity',
+    'Remove Liquidity'
   ]
   const contracts = ['Staking Token', 'Reward Token']
   const addresses = ['User Address', 'Liquidity Reserve Address']
@@ -283,6 +315,14 @@ const main = async (): Promise<void> => {
         break
       case 10:
         await coolDownInfo()
+        break
+      case 11:
+        amount = readline.question('How much liqidity do you want to add?\n')
+        await addLiquidity(amount)
+        break
+      case 12:
+        amount = readline.question('How much liquidity do you want to remove?\n')
+        await removeLiquidity(amount)
         break
     }
     index = readline.keyInSelect(options, 'Select an action.\n')
