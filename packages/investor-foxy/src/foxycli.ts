@@ -73,7 +73,7 @@ const main = async (): Promise<void> => {
         tokenContractAddress: foxContractAddress,
         userAddress
       })
-      console.info('balance', balance.toString())
+      console.info('Staking Balance', balance.toString())
     } catch (e) {
       console.error('Staking Balance Error:', e)
     }
@@ -85,7 +85,7 @@ const main = async (): Promise<void> => {
         tokenContractAddress: foxyContractAddress,
         userAddress
       })
-      console.info('balance', balance.toString())
+      console.info('Reward Balance', balance.toString())
     } catch (e) {
       console.error('Reward Balance Error:', e)
     }

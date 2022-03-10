@@ -35,11 +35,13 @@
     "web3-utils": "^1.7.0"
   },
   "peerDependencies": {
+    "@shapeshiftoss/caip": "^2.0.1",
     "@shapeshiftoss/chain-adapters": "^1.31.1",
     "@shapeshiftoss/hdwallet-core": "^1.18.4",
     "@shapeshiftoss/types": "^1.21.1"
   },
   "devDependencies": {
+    "@shapeshiftoss/caip": "^2.0.1",
     "@shapeshiftoss/chain-adapters": "^1.31.1",
     "@shapeshiftoss/hdwallet-core": "^1.19.0",
     "@shapeshiftoss/types": "^1.21.1"
