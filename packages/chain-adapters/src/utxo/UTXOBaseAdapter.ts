@@ -39,12 +39,16 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
   protected chainId: CAIP2
   protected assetId: CAIP19
   protected coinName: string
+  protected readonly supportedChainIds: CAIP2[]
   protected readonly providers: {
     http: unchained.bitcoin.V1Api
     ws: unchained.ws.Client<unchained.SequencedTx>
   }
 
   protected constructor(args: ChainAdapterArgs) {
+    if (args.chainId && this.supportedChainIds.includes(args.chainId)) {
+      this.chainId = args.chainId
+    }
     this.providers = args.providers
   }
 
@@ -52,7 +56,7 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
 
   abstract subscribeTxs(
     input: chainAdapters.SubscribeTxsInput,
-    onMessage: (msg: chainAdapters.SubscribeTxsMessage<T>) => void,
+    onMessage: (msg: chainAdapters.Transaction<T>) => void,
     onError?: (err: chainAdapters.SubscribeError) => void
   ): Promise<void>
   abstract unsubscribeTxs(input?: chainAdapters.SubscribeTxsInput): void

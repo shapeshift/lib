@@ -1,4 +1,4 @@
-import { AssetNamespace, AssetReference, caip2, caip19 } from '@shapeshiftoss/caip'
+import { AssetNamespace, AssetReference, CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
 import {
   bip32ToAddressNList,
   BTCOutputAddressType,
@@ -33,17 +33,15 @@ export class ChainAdapter
     coinType: 0,
     accountNumber: 0
   }
+  protected readonly supportedChainIds: CAIP2[] = ['bip122:000000000019d6689c085ae165831e93']
+  protected readonly chainId: CAIP2 = this.supportedChainIds[0]
 
   constructor(args: ChainAdapterArgs) {
     super(args)
-    if (!args.chainId) {
-      throw new Error('chainId required')
-    }
-    const { chain, network } = caip2.fromCAIP2(args.chainId)
+    const { chain, network } = caip2.fromCAIP2(this.chainId)
     if (chain !== ChainTypes.Bitcoin) {
       throw new Error('chainId must be a bitcoin chain type')
     }
-    this.chainId = args.chainId
     this.coinName = args.coinName
     this.assetId = caip19.toCAIP19({
       chain,
