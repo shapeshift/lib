@@ -454,6 +454,24 @@ export class FoxyApi {
     }
   }
 
+  async coolDownInfo(
+    input: Pick<TxInput, Exclude<keyof TxInput, 'amountDesired'>>
+  ): Promise<boolean> {
+    console.log('start')
+    const { contractAddress, userAddress } = input
+    const stakingContract = this.foxyStakingContracts.find(
+      (item) => toLower(item.options.address) === toLower(contractAddress)
+    )
+    if (!stakingContract) throw new Error('Not a valid contract address')
+
+    const coolDown = await stakingContract.methods.coolDownInfo(userAddress).call()
+    const epoch = await stakingContract.methods.epoch().call()
+    console.log('coolDown', coolDown)
+    console.log('epoch', epoch)
+
+    return true // TODO: change
+  }
+
   async balance(input: BalanceInput): Promise<BigNumber> {
     const { tokenContractAddress, userAddress } = input
     const contract = new this.web3.eth.Contract(erc20Abi, tokenContractAddress)

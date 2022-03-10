@@ -3,7 +3,6 @@ import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-nativ
 import { ChainTypes } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 import dotenv from 'dotenv'
-import { Http2ServerRequest } from 'http2'
 import readline from 'readline-sync'
 
 import { FoxyApi } from './api'
@@ -62,7 +61,7 @@ const main = async (): Promise<void> => {
   })
 
   const userAddress = await adapterManager.byChain(ChainTypes.Ethereum).getAddress({ wallet })
-  console.info('talking from ', userAddress)
+  console.info('current user address ', userAddress)
 
   const circulatingSupply = async () => {
     try {
@@ -183,6 +182,20 @@ const main = async (): Promise<void> => {
     }
   }
 
+  const coolDownInfo = async () => {
+    try {
+      console.info('getting coolDownInfo...')
+      const response = await api.coolDownInfo({
+        contractAddress: foxyStakingContractAddress,
+        userAddress,
+        wallet
+      })
+      console.info('coolDownInfo', response)
+    } catch (e) {
+      console.error('ClaimWithdraw Error:', e)
+    }
+  }
+
   const options = [
     'Approve StakingContract',
     'Approve LiquidityReserve',
@@ -193,7 +206,8 @@ const main = async (): Promise<void> => {
     'Reward Token Balance',
     'Staking Token Balance',
     'Total Supply',
-    'Circulating Supply (TVL)'
+    'Circulating Supply (TVL)',
+    'Cool Down Info'
   ]
   const contracts = ['Staking Token', 'Reward Token']
   const addresses = ['User Address', 'Liquidity Reserve Address']
@@ -266,6 +280,9 @@ const main = async (): Promise<void> => {
         break
       case 9:
         await circulatingSupply()
+        break
+      case 10:
+        await coolDownInfo()
         break
     }
     index = readline.keyInSelect(options, 'Select an action.\n')
