@@ -8,14 +8,7 @@ import Web3 from 'web3'
 import { HttpProvider, TransactionReceipt } from 'web3-core/types'
 import { Contract } from 'web3-eth-contract'
 
-import {
-  DefiProvider,
-  DefiType,
-  erc20Abi,
-  foxyStakingAbi,
-  foxyStakingContractAddress,
-  MAX_ALLOWANCE
-} from '../constants'
+import { erc20Abi, foxyStakingAbi, foxyStakingContractAddress, MAX_ALLOWANCE } from '../constants'
 import { foxyAbi } from '../constants/foxy-abi'
 import { bnOrZero, buildTxToSign } from '../utils'
 import {
@@ -37,19 +30,19 @@ export type ConstructorArgs = {
     | ChainReference.EthereumRopsten
 }
 
-export const transformVault = (vault: any): any => {
-  return {
-    ...vault,
-    vaultAddress: toLower(vault.address),
-    name: `${vault.name} ${vault.version}`,
-    symbol: vault.symbol,
-    tokenAddress: toLower(vault.token),
-    chain: ChainTypes.Ethereum,
-    provider: DefiProvider.Foxy,
-    type: DefiType.TokenStaking,
-    expired: vault.metadata.depositsDisabled || bnOrZero(vault.metadata.depositLimit).lte(0)
-  }
-}
+// export const transformVault = (vault: any): any => {
+//   return {
+//     ...vault,
+//     vaultAddress: toLower(vault.address),
+//     name: `${vault.name} ${vault.version}`,
+//     symbol: vault.symbol,
+//     tokenAddress: toLower(vault.token),
+//     chain: ChainTypes.Ethereum,
+//     provider: DefiProvider.Foxy,
+//     type: DefiType.TokenStaking,
+//     expired: vault.metadata.depositsDisabled || bnOrZero(vault.metadata.depositLimit).lte(0)
+//   }
+// }
 
 export class FoxyApi {
   public adapter: ChainAdapter<ChainTypes.Ethereum>
@@ -63,7 +56,9 @@ export class FoxyApi {
     this.provider = new Web3.providers.HttpProvider(providerUrl)
     this.jsonRpcProvider = new JsonRpcProvider(providerUrl)
     this.web3 = new Web3(this.provider)
-    this.foxyStakingContracts = [new this.web3.eth.Contract(foxyStakingAbi, foxyStakingContractAddress)]
+    this.foxyStakingContracts = [
+      new this.web3.eth.Contract(foxyStakingAbi, foxyStakingContractAddress)
+    ]
   }
 
   findDataByContractAddress(contractAddress: string) {

@@ -3,5 +3,5 @@ export enum DefiProvider {
 }
 
 export enum DefiType {
-  TokenStaking = 'token-staking',
+  TokenStaking = 'token-staking'
 }

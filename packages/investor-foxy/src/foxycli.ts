@@ -93,13 +93,13 @@ const main = async (): Promise<void> => {
 
   const approve = async (tokenContractAddress: string, contractAddress: string) => {
     try {
-      const approve = await api.approve({
+      const response = await api.approve({
         tokenContractAddress,
         contractAddress,
         userAddress,
         wallet
       })
-      console.info('approve', approve)
+      console.info('approve', response)
     } catch (e) {
       console.error('Approve Error:', e)
     }
@@ -108,14 +108,14 @@ const main = async (): Promise<void> => {
   const stake = async (amount: string) => {
     try {
       console.info('staking...')
-      const stake = await api.deposit({
+      const response = await api.deposit({
         contractAddress: foxyStakingContractAddress,
         tokenContractAddress: foxContractAddress,
         amountDesired: new BigNumber(amount),
         userAddress,
         wallet
       })
-      console.info('stake', stake)
+      console.info('stake', response)
     } catch (e) {
       console.error('Stake Error:', e)
     }
@@ -124,14 +124,14 @@ const main = async (): Promise<void> => {
   const unstake = async (amount: string) => {
     try {
       console.info('unstaking...')
-      const unstake = await api.withdraw({
+      const response = await api.withdraw({
         contractAddress: foxyStakingContractAddress,
         tokenContractAddress: foxContractAddress,
         amountDesired: new BigNumber(amount),
         userAddress,
         wallet
       })
-      console.info('unstake', unstake)
+      console.info('unstake', response)
     } catch (e) {
       console.error('Unstake Error:', e)
     }
@@ -140,13 +140,13 @@ const main = async (): Promise<void> => {
   const instantUnstake = async () => {
     try {
       console.info('instantUnstaking...')
-      const instantUnstake = await api.instantWithdraw({
+      const response = await api.instantWithdraw({
         contractAddress: foxyStakingContractAddress,
         tokenContractAddress: foxContractAddress,
         userAddress,
         wallet
       })
-      console.info('instantUnstake', instantUnstake)
+      console.info('instantUnstake', response)
     } catch (e) {
       console.error('InstantUnstake Error:', e)
     }
@@ -155,13 +155,13 @@ const main = async (): Promise<void> => {
   const claimWithdraw = async () => {
     try {
       console.info('claiming withdraw...')
-      const claimWithdraw = await api.claimWithdraw({
+      const response = await api.claimWithdraw({
         contractAddress: foxyStakingContractAddress,
         tokenContractAddress: foxContractAddress,
         userAddress,
         wallet
       })
-      console.info('claimWithdraw', claimWithdraw)
+      console.info('claimWithdraw', response)
     } catch (e) {
       console.error('ClaimWithdraw Error:', e)
     }
