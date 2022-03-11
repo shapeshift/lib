@@ -2,7 +2,7 @@ import { AssetBalance } from '.'
 
 export type Account = {
   nonce: number
-  tokens?: Array<AssetBalance>
+  tokens: Array<AssetBalance>
 }
 
 export type FeeData = {

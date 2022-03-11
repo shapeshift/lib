@@ -1,4 +1,4 @@
-import { ChainTypes } from '@shapeshiftoss/types'
+import { CAIP2 } from '@shapeshiftoss/caip'
 
 import { transformVault } from '../utils'
 import { YearnVault } from './api'
@@ -9,7 +9,7 @@ export type SupportedYearnVault = YearnVault & {
   name: string
   symbol: string
   tokenAddress: string
-  chain: ChainTypes
+  chainId: CAIP2
   provider: string
   type: string
   expired: boolean

@@ -1,8 +1,9 @@
-import { ChainTypes, GetQuoteInput, MinMaxOutput, QuoteResponse } from '@shapeshiftoss/types'
+import { caip19, WellKnownChain } from '@shapeshiftoss/caip'
+import { GetQuoteInput, MinMaxOutput, QuoteResponse } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 
 import { MAX_ZRX_TRADE } from '../utils/constants'
-import { getUsdRate, normalizeAmount } from '../utils/helpers/helpers'
+import { getUsdRate, getZrxToken, normalizeAmount } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
 import { ZrxError } from '../ZrxSwapper'
 
@@ -11,16 +12,14 @@ export const getZrxMinMax = async (
 ): Promise<MinMaxOutput> => {
   const { sellAsset, buyAsset } = input
 
-  if (sellAsset.chain !== ChainTypes.Ethereum || buyAsset.chain !== ChainTypes.Ethereum) {
+  if (
+    caip19.fromCAIP19(sellAsset.assetId).chainId !== WellKnownChain.EthereumMainnet ||
+    caip19.fromCAIP19(buyAsset.assetId).chainId !== WellKnownChain.EthereumMainnet
+  ) {
     throw new ZrxError('getZrxMinMax - must be eth assets')
   }
-  const buyToken = buyAsset.tokenId || buyAsset.symbol
-  const sellToken = sellAsset.tokenId || sellAsset.symbol
 
-  const usdRate = await getUsdRate({
-    symbol: sellAsset.symbol,
-    tokenId: sellAsset.tokenId
-  })
+  const usdRate = await getUsdRate(sellAsset)
 
   const minimumWeiAmount = new BigNumber(1)
     .dividedBy(new BigNumber(usdRate))
@@ -29,8 +28,8 @@ export const getZrxMinMax = async (
   const minimum = new BigNumber(1).dividedBy(new BigNumber(usdRate)).toString()
   const minimumPriceResult = await zrxService.get<QuoteResponse>('/swap/v1/price', {
     params: {
-      sellToken,
-      buyToken,
+      sellToken: getZrxToken(sellAsset),
+      buyToken: getZrxToken(buyAsset),
       sellAmount: normalizeAmount(minimumWeiAmount.toString())
     }
   })

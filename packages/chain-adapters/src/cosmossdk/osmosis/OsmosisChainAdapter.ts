@@ -1,16 +1,20 @@
+import { CAIP2, WellKnownChain } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, OsmosisSignTx, supportsOsmosis } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
+import { BIP44Params, chainAdapters, ChainAdapterType } from '@shapeshiftoss/types'
 
 import { ChainAdapter as IChainAdapter } from '../../api'
 import { ErrorHandler } from '../../error/ErrorHandler'
 import { toPath } from '../../utils'
 import { ChainAdapterArgs, CosmosSdkBaseAdapter } from '../CosmosSdkBaseAdapter'
+
 export class ChainAdapter
-  extends CosmosSdkBaseAdapter<ChainTypes.Osmosis>
-  implements IChainAdapter<ChainTypes.Osmosis>
+  extends CosmosSdkBaseAdapter<ChainAdapterType.Osmosis>
+  implements IChainAdapter<ChainAdapterType.Osmosis>
 {
-  protected readonly supportedChainIds = ['cosmos:osmosis-1', 'cosmos:osmo-testnet-1']
-  protected readonly chainId = this.supportedChainIds[0]
+  protected static readonly supportedChainIds: CAIP2[] = [
+    WellKnownChain.OsmosisMainnet,
+    WellKnownChain.OsmosisTestnet
+  ]
 
   public static readonly defaultBIP44Params: BIP44Params = {
     purpose: 44,
@@ -19,11 +23,11 @@ export class ChainAdapter
   }
 
   constructor(args: ChainAdapterArgs) {
-    super(args)
+    super(ChainAdapter.supportedChainIds, args)
   }
 
-  getType(): ChainTypes.Osmosis {
-    return ChainTypes.Osmosis
+  getType(): ChainAdapterType.Osmosis {
+    return ChainAdapterType.Osmosis
   }
 
   async getAddress(input: chainAdapters.GetAddressInput): Promise<string> {
@@ -67,15 +71,15 @@ export class ChainAdapter
 
   async buildSendTransaction(
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars -- Disable no-unused-vars lint rule for unimplemented methods */
-    tx: chainAdapters.BuildSendTxInput<ChainTypes.Osmosis>
-  ): Promise<{ txToSign: chainAdapters.ChainTxType<ChainTypes.Osmosis> }> {
+    tx: chainAdapters.BuildSendTxInput<ChainAdapterType.Osmosis>
+  ): Promise<{ txToSign: chainAdapters.ChainTxType<ChainAdapterType.Osmosis> }> {
     throw new Error('Method not implemented.')
   }
 
   async getFeeData(
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars -- Disable no-unused-vars lint rule for unimplemented methods */
-    input: Partial<chainAdapters.GetFeeDataInput<ChainTypes.Osmosis>>
-  ): Promise<chainAdapters.FeeDataEstimate<ChainTypes.Osmosis>> {
+    input: Partial<chainAdapters.GetFeeDataInput<ChainAdapterType.Osmosis>>
+  ): Promise<chainAdapters.FeeDataEstimate<ChainAdapterType.Osmosis>> {
     throw new Error('Method not implemented.')
   }
 

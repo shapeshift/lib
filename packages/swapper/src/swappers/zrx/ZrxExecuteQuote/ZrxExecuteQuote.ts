@@ -1,4 +1,10 @@
-import { ChainTypes, ExecQuoteInput, ExecQuoteOutput, SwapperType } from '@shapeshiftoss/types'
+import { caip19 } from '@shapeshiftoss/caip'
+import {
+  ChainAdapterType,
+  ExecQuoteInput,
+  ExecQuoteOutput,
+  SwapperType
+} from '@shapeshiftoss/types'
 import { numberToHex } from 'web3-utils'
 
 import { SwapError } from '../../../api'
@@ -6,7 +12,7 @@ import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function ZrxExecuteQuote(
   { adapterManager }: ZrxSwapperDeps,
-  { quote, wallet }: ExecQuoteInput<ChainTypes.Ethereum, SwapperType>
+  { quote, wallet }: ExecQuoteInput<ChainAdapterType.Ethereum, SwapperType>
 ): Promise<ExecQuoteOutput> {
   const { sellAsset } = quote
 
@@ -14,10 +20,8 @@ export async function ZrxExecuteQuote(
     throw new SwapError('ZrxSwapper:ZrxExecuteQuote Cannot execute a failed quote')
   }
 
-  if (!sellAsset.network || !sellAsset.symbol) {
-    throw new SwapError(
-      'ZrxSwapper:ZrxExecuteQuote sellAssetNetwork and sellAssetSymbol are required'
-    )
+  if (!sellAsset.symbol) {
+    throw new SwapError('ZrxSwapper:ZrxExecuteQuote sellAssetSymbol is required')
   }
 
   if (!quote.sellAssetAccountId) {
@@ -34,7 +38,8 @@ export async function ZrxExecuteQuote(
 
   // value is 0 for erc20s
   const value = sellAsset.symbol === 'ETH' ? quote.sellAmount : '0'
-  const adapter = adapterManager.byChain(sellAsset.chain)
+  const { chainId: sellAssetChainId } = caip19.fromCAIP19(sellAsset.assetId)
+  const adapter = await adapterManager.byChainId(sellAssetChainId)
   const bip44Params = adapter.buildBIP44Params({
     accountNumber: Number(quote.sellAssetAccountId)
   })

@@ -1,5 +1,4 @@
-import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { ChainTypes, ExecQuoteInput, SwapperType } from '@shapeshiftoss/types'
+import type { HDWallet } from '@shapeshiftoss/hdwallet-core'
 
 import { setupQuote } from '../utils/test-data/setupSwapQuote'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
@@ -12,7 +11,7 @@ describe('ZrxExecuteQuote', () => {
     supportsOfflineSigning: jest.fn(() => true)
   } as unknown as HDWallet
   const adapterManager = {
-    byChain: jest.fn(() => ({
+    byChainId: jest.fn(async () => ({
       buildBIP44Params: jest.fn(() => ({ purpose: 44, coinType: 60, accountNumber: 0 })),
       buildSendTransaction: jest.fn(() => Promise.resolve({ txToSign: '0000000000000000' })),
       signTransaction: jest.fn(() => Promise.resolve('0000000000000000000')),
@@ -32,23 +31,13 @@ describe('ZrxExecuteQuote', () => {
     )
   })
 
-  it('throws an error if sellAsset.network is not provided', async () => {
-    const args = {
-      quote: { ...quoteInput, sellAsset: { ...sellAsset, network: '' } },
-      wallet
-    } as unknown as ExecQuoteInput<ChainTypes, SwapperType>
-    await expect(ZrxExecuteQuote(deps, args)).rejects.toThrow(
-      'ZrxSwapper:ZrxExecuteQuote sellAssetNetwork and sellAssetSymbol are required'
-    )
-  })
-
   it('throws an error if sellAsset.symbol is not provided', async () => {
     const args = {
       quote: { ...quoteInput, sellAsset: { ...sellAsset, symbol: '' } },
       wallet
     }
     await expect(ZrxExecuteQuote(deps, args)).rejects.toThrow(
-      'ZrxSwapper:ZrxExecuteQuote sellAssetNetwork and sellAssetSymbol are required'
+      'ZrxSwapper:ZrxExecuteQuote sellAssetSymbol is required'
     )
   })
 

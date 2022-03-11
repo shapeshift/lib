@@ -1,7 +1,7 @@
 import { CAIP2 } from '@shapeshiftoss/caip'
-import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
+import { BIP44Params, chainAdapters, ChainAdapterType } from '@shapeshiftoss/types'
 
-export type ChainAdapter<T extends ChainTypes> = {
+export type ChainAdapter<T extends ChainAdapterType> = {
   /**
    * Get type of adapter
    */

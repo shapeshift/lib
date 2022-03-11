@@ -1,4 +1,4 @@
-import { adapters } from '@shapeshiftoss/caip'
+import { adapters, WellKnownAsset } from '@shapeshiftoss/caip'
 import { HistoryTimeframe } from '@shapeshiftoss/types'
 import axios from 'axios'
 
@@ -139,7 +139,7 @@ describe('coingecko market service', () => {
 
   describe('findByCaip19', () => {
     const args = {
-      caip19: 'eip155:1/slip44:60'
+      caip19: WellKnownAsset.ETH
     }
 
     it('should return market data for ETH', async () => {
@@ -176,7 +176,7 @@ describe('coingecko market service', () => {
 
   describe('findPriceHistoryByCaip19', () => {
     const args = {
-      caip19: 'eip155:1/slip44:60',
+      caip19: WellKnownAsset.ETH,
       timeframe: HistoryTimeframe.HOUR
     }
 

@@ -1,6 +1,7 @@
+import type { CAIP2, CAIP19 } from '@shapeshiftoss/caip'
 import { BTCSignTx, CosmosSignTx, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 
-import { BIP44Params, ChainTypes, NetworkTypes, SwapperType, UtxoAccountType } from '../base'
+import { BIP44Params, ChainAdapterType, SwapperType, UtxoAccountType } from '../base'
 import { ChainAndSwapperSpecific, ChainSpecific } from '../utility'
 import * as bitcoin from './bitcoin'
 import * as cosmos from './cosmos'
@@ -11,36 +12,38 @@ export { bitcoin, cosmos, ethereum }
 type ChainSpecificAccount<T> = ChainSpecific<
   T,
   {
-    [ChainTypes.Ethereum]: ethereum.Account
-    [ChainTypes.Bitcoin]: bitcoin.Account
-    [ChainTypes.Cosmos]: cosmos.Account
-    [ChainTypes.Osmosis]: osmosis.Account
+    [ChainAdapterType.Ethereum]: ethereum.Account
+    [ChainAdapterType.Bitcoin]: bitcoin.Account
+    [ChainAdapterType.Cosmos]: cosmos.Account
+    [ChainAdapterType.Osmosis]: osmosis.Account
   }
 >
 
-export type Account<T extends ChainTypes> = {
+export type Account<T extends ChainAdapterType> = {
   balance: string
+  /***
+   * This is misnamed, and actually holds the "account specifier"; an xpub for UTXOs,
+   * or an address for account-based coins.
+   */
   pubkey: string
-  caip2: string
-  caip19: string
-  chain: T
+  assetId: CAIP19
+  chainType: T
 } & ChainSpecificAccount<T>
 
 export type AssetBalance = {
   balance: string
-  caip19: string
+  assetId: CAIP19
 }
 
 type ChainSpecificTransaction<T> = ChainSpecific<
   T,
   {
-    [ChainTypes.Bitcoin]: bitcoin.TransactionSpecific
+    [ChainAdapterType.Bitcoin]: bitcoin.TransactionSpecific
   }
 >
 
-export type Transaction<T extends ChainTypes> = {
-  network: NetworkTypes
-  chain: T
+export type Transaction<T extends ChainAdapterType> = {
+  chainType: T
   symbol: string
   txid: string
   status: string
@@ -63,7 +66,7 @@ export enum FeeDataKey {
 type ChainSpecificQuoteFeeData<T1, T2> = ChainAndSwapperSpecific<
   T1,
   {
-    [ChainTypes.Ethereum]: ethereum.QuoteFeeData
+    [ChainAdapterType.Ethereum]: ethereum.QuoteFeeData
   },
   T2,
   {
@@ -76,29 +79,29 @@ type ChainSpecificQuoteFeeData<T1, T2> = ChainAndSwapperSpecific<
 type ChainSpecificFeeData<T> = ChainSpecific<
   T,
   {
-    [ChainTypes.Ethereum]: ethereum.FeeData
-    [ChainTypes.Bitcoin]: bitcoin.FeeData
-    [ChainTypes.Cosmos]: cosmos.FeeData
+    [ChainAdapterType.Ethereum]: ethereum.FeeData
+    [ChainAdapterType.Bitcoin]: bitcoin.FeeData
+    [ChainAdapterType.Cosmos]: cosmos.FeeData
   }
 >
 
-export type QuoteFeeData<T1 extends ChainTypes, T2 extends SwapperType> = {
+export type QuoteFeeData<T1 extends ChainAdapterType, T2 extends SwapperType> = {
   fee: string
 } & ChainSpecificQuoteFeeData<T1, T2>
 
-// ChainTypes.Ethereum:
+// ChainAdapterType.Ethereum:
 // feePerUnit = gasPrice
 // feePerTx = estimateGas (estimated transaction cost)
 // feeLimit = gasLimit (max gas willing to pay)
 
-// ChainTypes.Bitcoin:
+// ChainAdapterType.Bitcoin:
 // feePerUnit = sats/kbyte
 
-export type FeeData<T extends ChainTypes> = {
+export type FeeData<T extends ChainAdapterType> = {
   txFee: string
 } & ChainSpecificFeeData<T>
 
-export type FeeDataEstimate<T extends ChainTypes> = {
+export type FeeDataEstimate<T extends ChainAdapterType> = {
   [FeeDataKey.Slow]: FeeData<T>
   [FeeDataKey.Average]: FeeData<T>
   [FeeDataKey.Fast]: FeeData<T>
@@ -111,7 +114,7 @@ export type SubscribeTxsInput = {
 }
 
 export type TxFee = {
-  caip19: string
+  assetId: CAIP19
   value: string
 }
 
@@ -129,13 +132,13 @@ export enum TxStatus {
   Unknown = 'unknown'
 }
 
-export type SubscribeTxsMessage<T extends ChainTypes> = {
+export type SubscribeTxsMessage<T extends ChainAdapterType> = {
   address: string
   blockHash?: string
   blockHeight: number
   blockTime: number
-  chain: T
-  caip2: string
+  chainType: T
+  chainId: CAIP2
   confirmations: number
   txid: string
   fee?: TxFee
@@ -162,7 +165,7 @@ export interface TxMetadata {
 }
 
 export type TxTransfer = {
-  caip19: string
+  assetId: CAIP19
   from: string
   to: string
   type: TxType
@@ -173,7 +176,7 @@ export type SubscribeError = {
   message: string
 }
 
-export type TxHistoryResponse<T extends ChainTypes> = {
+export type TxHistoryResponse<T extends ChainAdapterType> = {
   page: number
   totalPages: number
   txs: number
@@ -181,14 +184,14 @@ export type TxHistoryResponse<T extends ChainTypes> = {
 }
 
 type ChainTxTypeInner = {
-  [ChainTypes.Ethereum]: ETHSignTx
-  [ChainTypes.Bitcoin]: BTCSignTx
-  [ChainTypes.Cosmos]: CosmosSignTx
+  [ChainAdapterType.Ethereum]: ETHSignTx
+  [ChainAdapterType.Bitcoin]: BTCSignTx
+  [ChainAdapterType.Cosmos]: CosmosSignTx
 }
 
 export type ChainTxType<T> = T extends keyof ChainTxTypeInner ? ChainTxTypeInner[T] : never
 
-export type BuildSendTxInput<T extends ChainTypes> = {
+export type BuildSendTxInput<T extends ChainAdapterType> = {
   to: string
   value: string
   wallet: HDWallet
@@ -199,10 +202,10 @@ export type BuildSendTxInput<T extends ChainTypes> = {
 type ChainSpecificBuildTxData<T> = ChainSpecific<
   T,
   {
-    [ChainTypes.Ethereum]: ethereum.BuildTxInput
-    [ChainTypes.Bitcoin]: bitcoin.BuildTxInput
-    [ChainTypes.Cosmos]: cosmos.BuildTxInput
-    [ChainTypes.Osmosis]: cosmos.BuildTxInput
+    [ChainAdapterType.Ethereum]: ethereum.BuildTxInput
+    [ChainAdapterType.Bitcoin]: bitcoin.BuildTxInput
+    [ChainAdapterType.Cosmos]: cosmos.BuildTxInput
+    [ChainAdapterType.Osmosis]: cosmos.BuildTxInput
   }
 >
 
@@ -232,11 +235,11 @@ export type GetAddressInput = GetAddressInputBase | bitcoin.GetAddressInput
 type ChainSpecificGetFeeDataInput<T> = ChainSpecific<
   T,
   {
-    [ChainTypes.Ethereum]: ethereum.GetFeeDataInput
-    [ChainTypes.Bitcoin]: bitcoin.GetFeeDataInput
+    [ChainAdapterType.Ethereum]: ethereum.GetFeeDataInput
+    [ChainAdapterType.Bitcoin]: bitcoin.GetFeeDataInput
   }
 >
-export type GetFeeDataInput<T extends ChainTypes> = {
+export type GetFeeDataInput<T extends ChainAdapterType> = {
   to: string
   value: string
   sendMax?: boolean

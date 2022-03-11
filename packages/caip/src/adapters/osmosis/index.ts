@@ -14,5 +14,5 @@ const generatedOsmosisToCAIP19Map: Record<string, string> = invert(generatedCAIP
 
 export const osmosisToCAIP19 = (id: string): string | undefined => generatedOsmosisToCAIP19Map[id]
 
-export const CAIP19ToOsmosis = (caip19: string): string | undefined =>
+export const caip19ToOsmosis = (caip19: string): string | undefined =>
   generatedCAIP19ToOsmosisMap[caip19]

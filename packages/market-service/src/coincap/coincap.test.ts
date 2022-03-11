@@ -1,4 +1,4 @@
-import { adapters } from '@shapeshiftoss/caip'
+import { adapters, WellKnownAsset } from '@shapeshiftoss/caip'
 import { HistoryTimeframe } from '@shapeshiftoss/types'
 import axios from 'axios'
 
@@ -108,7 +108,7 @@ describe('coincap market service', () => {
 
   describe('findByCaip19', () => {
     const args = {
-      caip19: 'eip155:1/slip44:60'
+      caip19: WellKnownAsset.ETH
     }
 
     const eth: CoinCapMarketCap = {
@@ -148,7 +148,7 @@ describe('coincap market service', () => {
 
   describe('findPriceHistoryByCaip19', () => {
     const args = {
-      caip19: 'eip155:1/slip44:60',
+      caip19: WellKnownAsset.ETH,
       timeframe: HistoryTimeframe.HOUR
     }
 

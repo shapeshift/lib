@@ -1,4 +1,4 @@
-import { CAIP19 } from '@shapeshiftoss/caip'
+import { CAIP19, caip19, WellKnownChain } from '@shapeshiftoss/caip'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import {
   ApprovalNeededInput,
@@ -6,7 +6,7 @@ import {
   ApproveInfiniteInput,
   Asset,
   BuildQuoteTxInput,
-  ChainTypes,
+  ChainAdapterType,
   ExecQuoteInput,
   ExecQuoteOutput,
   GetQuoteInput,
@@ -26,6 +26,7 @@ import { ZrxApprovalNeeded } from './ZrxApprovalNeeded/ZrxApprovalNeeded'
 import { ZrxApproveInfinite } from './ZrxApproveInfinite/ZrxApproveInfinite'
 import { ZrxBuildQuoteTx } from './ZrxBuildQuoteTx/ZrxBuildQuoteTx'
 import { ZrxExecuteQuote } from './ZrxExecuteQuote/ZrxExecuteQuote'
+
 export type ZrxSwapperDeps = {
   adapterManager: ChainAdapterManager
   web3: Web3
@@ -50,16 +51,16 @@ export class ZrxSwapper implements Swapper {
     return SwapperType.Zrx
   }
 
-  async buildQuoteTx(args: BuildQuoteTxInput): Promise<Quote<ChainTypes, SwapperType>> {
+  async buildQuoteTx(args: BuildQuoteTxInput): Promise<Quote<ChainAdapterType, SwapperType>> {
     return ZrxBuildQuoteTx(this.deps, args)
   }
 
-  async getQuote(input: GetQuoteInput): Promise<Quote<ChainTypes, SwapperType>> {
+  async getQuote(input: GetQuoteInput): Promise<Quote<ChainAdapterType, SwapperType>> {
     return getZrxQuote(input)
   }
 
-  async getUsdRate(input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string> {
-    return getUsdRate(input)
+  async getUsdRate(asset: Asset): Promise<string> {
+    return getUsdRate(asset)
   }
 
   async getMinMax(input: GetQuoteInput): Promise<MinMaxOutput> {
@@ -67,7 +68,10 @@ export class ZrxSwapper implements Swapper {
   }
 
   getAvailableAssets(assets: Asset[]): Asset[] {
-    return assets.filter((asset) => asset.chain === ChainTypes.Ethereum)
+    return assets.filter((asset) => {
+      const { chainId } = caip19.fromCAIP19(asset.assetId)
+      return chainId === WellKnownChain.EthereumMainnet
+    })
   }
 
   canTradePair(sellAsset: Asset, buyAsset: Asset): boolean {
@@ -81,17 +85,21 @@ export class ZrxSwapper implements Swapper {
     return [ETH, FOX]
   }
 
-  async executeQuote(args: ExecQuoteInput<ChainTypes, SwapperType>): Promise<ExecQuoteOutput> {
+  async executeQuote(
+    args: ExecQuoteInput<ChainAdapterType, SwapperType>
+  ): Promise<ExecQuoteOutput> {
     return ZrxExecuteQuote(this.deps, args)
   }
 
   async approvalNeeded(
-    args: ApprovalNeededInput<ChainTypes, SwapperType>
+    args: ApprovalNeededInput<ChainAdapterType, SwapperType>
   ): Promise<ApprovalNeededOutput> {
     return ZrxApprovalNeeded(this.deps, args)
   }
 
-  async approveInfinite(args: ApproveInfiniteInput<ChainTypes, SwapperType>): Promise<string> {
+  async approveInfinite(
+    args: ApproveInfiniteInput<ChainAdapterType, SwapperType>
+  ): Promise<string> {
     return ZrxApproveInfinite(this.deps, args)
   }
 

@@ -1,6 +1,6 @@
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { chainAdapters, ChainTypes, GetQuoteInput, Quote, SwapperType } from '@shapeshiftoss/types'
+import { chainAdapters, ChainAdapterType, GetQuoteInput, Quote, SwapperType } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import { ZrxError } from '../..'
@@ -47,7 +47,7 @@ jest.mock('./getZrxSendMaxAmount/getZrxSendMaxAmount', () => ({
 
 describe('ZrxSwapper', () => {
   const input = <GetQuoteInput>{}
-  const quote = <Quote<ChainTypes, SwapperType>>{}
+  const quote = <Quote<ChainAdapterType, SwapperType>>{}
   const wallet = <HDWallet>{}
   const web3 = <Web3>{}
   const adapterManager = <ChainAdapterManager>{}
@@ -102,7 +102,7 @@ describe('ZrxSwapper', () => {
     const ethCAIP19 = 'eip155:1/slip44:60'
     expect(pair).toHaveLength(2)
     expect(pair[0]).toEqual(ethCAIP19)
-    expect(pair[1]).toEqual(FOX.caip19)
+    expect(pair[1]).toEqual(FOX.assetId)
   })
   it('calls getUsdRate on swapper.getUsdRate', async () => {
     const swapper = new ZrxSwapper(zrxSwapperDeps)

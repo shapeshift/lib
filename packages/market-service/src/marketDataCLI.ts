@@ -1,4 +1,5 @@
 // import { JsonRpcProvider } from '@ethersproject/providers'
+import { WellKnownAsset } from '@shapeshiftoss/caip'
 import { HistoryTimeframe } from '@shapeshiftoss/types'
 
 // import { HistoryTimeframe } from '@shapeshiftoss/types'
@@ -15,9 +16,9 @@ const main = async (): Promise<void> => {
   // const caip19 = 'eip155:1/erc20:0xa696a63cc78dffa1a63e9e50587c197387ff6c7e' // BTC Vault
   // const caip19 = 'eip155:1/erc20:0x93ed140172ff226dad1f7f3650489b8daa07ae7f' // Zapper Token
   // const caip19 = 'eip155:1/erc20:0x3f1b0278a9ee595635b61817630cc19de792f506' // Zapper Token
-  const caip19 = 'cosmos:osmosis-1/slip44:118' // Osmosis
+  const caip19 = WellKnownAsset.OSMO
   const timeframe = HistoryTimeframe.YEAR
-  // const caip19 = 'bip122:000000000019d6689c085ae165831e93/slip44:0' // BTC
+  // const caip19 = WellKnownAsset.BTC
   // const provider = new JsonRpcProvider('https://dev-api.ethereum.shapeshift.com')
   // const yearnSdk = new Yearn(1, { provider, disableAllowlist: true })
   // const yearnMarketService = new YearnTokenMarketCapService({ yearnSdk })

@@ -17,5 +17,5 @@ const generatedCoingeckoToCAIP19Map: Record<string, string> = invert(generatedCA
 export const coingeckoToCAIP19 = (id: string): string | undefined =>
   generatedCoingeckoToCAIP19Map[id]
 
-export const CAIP19ToCoingecko = (caip19: string): string | undefined =>
+export const caip19ToCoingecko = (caip19: string): string | undefined =>
   generatedCAIP19ToCoingeckoMap[toLower(caip19)]

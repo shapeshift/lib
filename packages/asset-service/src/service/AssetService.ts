@@ -1,4 +1,5 @@
-import { Asset, AssetDataSource, BaseAsset, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
+import { CAIP2, CAIP19, caip19, WellKnownChain } from '@shapeshiftoss/caip'
+import { Asset, AssetDataSource, BaseAsset, OmittedTokenAssetFields } from '@shapeshiftoss/types'
 import axios from 'axios'
 
 import assetsDescriptions from './descriptions.json'
@@ -13,14 +14,15 @@ export const flattenAssetData = (assetData: BaseAsset[]): Asset[] => {
     flatAssetData.push(newAsset)
     if (baseAsset.tokens) {
       for (const tokenAsset of baseAsset.tokens) {
-        flatAssetData.push({
-          ...tokenAsset,
-          chain: baseAsset.chain,
-          network: baseAsset.network,
+        const omittedFields: OmittedTokenAssetFields = {
           slip44: baseAsset.slip44,
           explorer: baseAsset.explorer,
           explorerAddressLink: baseAsset.explorerAddressLink,
           explorerTxLink: baseAsset.explorerTxLink
+        }
+        flatAssetData.push({
+          ...tokenAsset,
+          ...omittedFields
         })
       }
     }
@@ -28,25 +30,32 @@ export const flattenAssetData = (assetData: BaseAsset[]): Asset[] => {
   return flatAssetData
 }
 
-const getDataIndexKey = (chain: ChainTypes, network: NetworkTypes, tokenId?: string): string => {
-  return chain + '_' + network + (tokenId ? '_' + tokenId : '')
-}
-
 export const indexAssetData = (flatAssetData: Asset[]): IndexedAssetData => {
-  return flatAssetData.reduce<IndexedAssetData>((acc, val) => {
-    acc[getDataIndexKey(val.chain, val.network, val.tokenId)] = val
-    return acc
-  }, {})
+  return flatAssetData.reduce<IndexedAssetData>(
+    (acc, val) => {
+      acc.byAssetId.set(val.assetId, val)
+      const { chainId } = caip19.fromCAIP19(val.assetId)
+      const byChainId = (() => {
+        let out = acc.byChainId.get(chainId)
+        if (!out) {
+          out = new Set()
+          acc.byChainId.set(chainId, out)
+        }
+        return out
+      })()
+      byChainId.add(val)
+      return acc
+    },
+    {
+      byChainId: new Map(),
+      byAssetId: new Map()
+    }
+  )
 }
 
 export type IndexedAssetData = {
-  [k: string]: Asset
-}
-
-type ByTokenIdArgs = {
-  chain: ChainTypes
-  network?: NetworkTypes
-  tokenId?: string
+  byAssetId: Map<CAIP19, Asset>
+  byChainId: Map<CAIP2, Set<Asset>>
 }
 
 type DescriptionData = Readonly<{
@@ -57,26 +66,24 @@ type DescriptionData = Readonly<{
 export class AssetService {
   private assetFileUrl?: string
 
+  private initialized = false
   private assetData: BaseAsset[]
-  private flatAssetData: Asset[]
   private indexedAssetData: IndexedAssetData
 
   constructor(assetFileUrl?: string) {
     this.assetFileUrl = assetFileUrl
   }
 
-  get isInitialized(): boolean {
-    return Array.isArray(this.assetData) && Array.isArray(this.flatAssetData)
-  }
-
   private checkInitialized() {
-    if (!this.isInitialized) throw new Error('Asset service not initialized')
+    if (!this.initialized) throw new Error('Asset service not initialized')
   }
 
   /**
    * Get asset data from assetFileUrl and flatten it for easier use
    */
   async initialize() {
+    if (this.initialized) return
+
     try {
       if (!this.assetFileUrl) throw new Error('No assetFileUrl')
       const { data } = await axios.get<BaseAsset[]>(this.assetFileUrl)
@@ -85,49 +92,32 @@ export class AssetService {
       }
       this.assetData = data
     } catch (err) {
-      this.assetData = localAssetData as BaseAsset[]
+      this.assetData = localAssetData as unknown as BaseAsset[]
     }
 
-    this.flatAssetData = flattenAssetData(this.assetData)
-    this.indexedAssetData = indexAssetData(this.flatAssetData)
+    this.indexedAssetData = indexAssetData(flattenAssetData(this.assetData))
+    this.initialized = true
   }
 
-  /**
-   * Get list of all assets on a given network (mainnet, ropsten, etc) or all assets across all networks
-   * @param network mainnet, testnet, eth ropsten, etc
-   * @returns base coins (ETH, BNB, etc...) along with their supported tokens in a flattened list
-   */
-  byNetwork(network?: NetworkTypes): Asset[] {
-    this.checkInitialized()
-    return network
-      ? this.flatAssetData.filter((asset) => asset.network == network)
-      : this.flatAssetData
+  async byChainId(chainId: CAIP2): Promise<Set<Asset>> {
+    const out = this.indexedAssetData.byChainId.get(chainId)
+    if (!out) return new Set()
+    return out
   }
 
-  /**
-   * Find an asset by chain, network and tokenId
-   * @param chain blockchain to look up by (btc, eth, etc...)
-   * @param network mainnet, testnet, eth ropsten, etc
-   * @param tokenId token identifier (contract address on eth)
-   * @returns First asset found
-   */
-  byTokenId({ chain, network, tokenId }: ByTokenIdArgs): Asset {
-    this.checkInitialized()
-    const index = getDataIndexKey(chain, network ?? NetworkTypes.MAINNET, tokenId)
-    const result = this.indexedAssetData[index]
-    if (!result) {
-      throw new Error(`AssetService:byTokenId: could not find tokenId ${tokenId}`)
-    }
-    return result
+  async byAssetId(assetId: CAIP19): Promise<Asset> {
+    const out = this.indexedAssetData.byAssetId.get(assetId)
+    if (!out) throw new Error(`no asset data matching assetId ${assetId}`)
+    return out
   }
 
   async description({ asset }: { asset: Asset }): Promise<DescriptionData> {
     const descriptions: Record<string, string> = assetsDescriptions
 
     // Return overridden asset description if it exists and add isTrusted for description links
-    if (descriptions[asset.caip19]) {
+    if (descriptions[asset.assetId]) {
       return {
-        description: descriptions[asset.caip19],
+        description: descriptions[asset.assetId],
         isTrusted: true
       }
     }
@@ -136,9 +126,29 @@ export class AssetService {
       return { description: '' }
     }
 
-    const contractUrl =
-      typeof asset.tokenId === 'string' ? `/contract/${asset.tokenId?.toLowerCase()}` : ''
-    const errorMessage = `AssetService:description: no description availble for ${asset.tokenId} on chain ${asset.chain}`
+    const { chainId, assetReference: tokenId } = caip19.fromCAIP19(asset.assetId)
+    const contractUrl = typeof tokenId === 'string' ? `/contract/${tokenId}` : ''
+
+    const coingeckoCoinId = (() => {
+      switch (chainId) {
+        case WellKnownChain.BitcoinMainnet:
+        case WellKnownChain.BitcoinTestnet:
+          return 'bitcoin'
+        case WellKnownChain.EthereumMainnet:
+        case WellKnownChain.EthereumRopsten:
+        case WellKnownChain.EthereumRinkeby:
+        case WellKnownChain.EthereumKovan:
+          return 'ethereum'
+        case WellKnownChain.CosmosHubMainnet:
+        case WellKnownChain.CosmosHubVega:
+          return 'cosmos'
+        case WellKnownChain.OsmosisMainnet:
+        case WellKnownChain.OsmosisTestnet:
+          return 'osmosis'
+        default:
+          throw new Error(`coingecko doesn't support chainId ${chainId}`)
+      }
+    })()
 
     try {
       type CoinData = {
@@ -147,12 +157,14 @@ export class AssetService {
         }
       }
       const { data } = await axios.get<CoinData>(
-        `https://api.coingecko.com/api/v3/coins/${asset.chain}${contractUrl}`
+        `https://api.coingecko.com/api/v3/coins/${coingeckoCoinId}${contractUrl}`
       )
 
       return { description: data?.description?.en ?? '' }
     } catch (e) {
-      throw new Error(errorMessage)
+      throw new Error(
+        `AssetService:description: no description available for ${tokenId} on chain ${coingeckoCoinId}`
+      )
     }
   }
 

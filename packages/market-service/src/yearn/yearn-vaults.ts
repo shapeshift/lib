@@ -1,13 +1,11 @@
-import { adapters, AssetNamespace, caip19 } from '@shapeshiftoss/caip'
+import { adapters, AssetNamespace, caip19, WellKnownChain } from '@shapeshiftoss/caip'
 import {
-  ChainTypes,
   FindAllMarketArgs,
   HistoryData,
   HistoryTimeframe,
   MarketCapResult,
   MarketData,
   MarketDataArgs,
-  NetworkTypes,
   PriceHistoryArgs
 } from '@shapeshiftoss/types'
 import { ChainId, Yearn } from '@yfi/sdk'
@@ -55,8 +53,7 @@ export class YearnVaultMarketCapService implements MarketService {
         )
         .reduce((acc, yearnItem) => {
           const assetId = caip19.toCAIP19({
-            chain: ChainTypes.Ethereum,
-            network: NetworkTypes.MAINNET,
+            chainId: WellKnownChain.EthereumMainnet,
             assetNamespace: AssetNamespace.ERC20,
             assetReference: yearnItem.address
           })

@@ -1,4 +1,4 @@
-import { AssetNamespace, AssetReference, caip2, caip19 } from '@shapeshiftoss/caip'
+import { CAIP2, WellKnownChain } from '@shapeshiftoss/caip'
 import {
   bip32ToAddressNList,
   BTCOutputAddressType,
@@ -7,13 +7,7 @@ import {
   BTCSignTxOutput,
   supportsBTC
 } from '@shapeshiftoss/hdwallet-core'
-import {
-  BIP44Params,
-  chainAdapters,
-  ChainTypes,
-  NetworkTypes,
-  UtxoAccountType
-} from '@shapeshiftoss/types'
+import { BIP44Params, chainAdapters, ChainAdapterType, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import coinSelect from 'coinselect'
 import split from 'coinselect/split'
@@ -31,9 +25,13 @@ import {
 import { ChainAdapterArgs, UTXOBaseAdapter } from '../utxo/UTXOBaseAdapter'
 
 export class ChainAdapter
-  extends UTXOBaseAdapter<ChainTypes.Bitcoin>
-  implements IChainAdapter<ChainTypes.Bitcoin>
+  extends UTXOBaseAdapter<ChainAdapterType.Bitcoin>
+  implements IChainAdapter<ChainAdapterType.Bitcoin>
 {
+  protected static readonly supportedChainIds: CAIP2[] = [
+    WellKnownChain.BitcoinMainnet,
+    WellKnownChain.BitcoinTestnet
+  ]
   public static readonly defaultBIP44Params: BIP44Params = {
     purpose: 84, // segwit native
     coinType: 0,
@@ -41,31 +39,16 @@ export class ChainAdapter
   }
 
   constructor(args: ChainAdapterArgs) {
-    super(args)
-    if (!args.chainId) {
-      throw new Error('chainId required')
-    }
-    const { chain, network } = caip2.fromCAIP2(args.chainId)
-    if (chain !== ChainTypes.Bitcoin) {
-      throw new Error('chainId must be a bitcoin chain type')
-    }
-    this.chainId = args.chainId
-    this.coinName = args.coinName
-    this.assetId = caip19.toCAIP19({
-      chain,
-      network,
-      assetNamespace: AssetNamespace.Slip44,
-      assetReference: AssetReference.Bitcoin
-    })
+    super(ChainAdapter.supportedChainIds, args)
   }
 
-  getType(): ChainTypes.Bitcoin {
-    return ChainTypes.Bitcoin
+  getType(): ChainAdapterType.Bitcoin {
+    return ChainAdapterType.Bitcoin
   }
 
   async getTxHistory(
     input: chainAdapters.TxHistoryInput
-  ): Promise<chainAdapters.TxHistoryResponse<ChainTypes.Bitcoin>> {
+  ): Promise<chainAdapters.TxHistoryResponse<ChainAdapterType.Bitcoin>> {
     const { pubkey } = input
 
     if (!pubkey) return ErrorHandler('pubkey parameter is not defined')
@@ -77,8 +60,7 @@ export class ChainAdapter
         totalPages: data.totalPages,
         transactions: data.transactions.map((tx) => ({
           ...tx,
-          chain: ChainTypes.Bitcoin,
-          network: NetworkTypes.MAINNET,
+          chainType: ChainAdapterType.Bitcoin,
           symbol: 'BTC',
           chainSpecific: {
             opReturnData: ''
@@ -91,8 +73,10 @@ export class ChainAdapter
     }
   }
 
-  async buildSendTransaction(tx: chainAdapters.BuildSendTxInput<ChainTypes.Bitcoin>): Promise<{
-    txToSign: chainAdapters.ChainTxType<ChainTypes.Bitcoin>
+  async buildSendTransaction(
+    tx: chainAdapters.BuildSendTxInput<ChainAdapterType.Bitcoin>
+  ): Promise<{
+    txToSign: chainAdapters.ChainTxType<ChainAdapterType.Bitcoin>
   }> {
     try {
       const {
@@ -197,7 +181,7 @@ export class ChainAdapter
   }
 
   async signTransaction(
-    signTxInput: chainAdapters.SignTxInput<chainAdapters.ChainTxType<ChainTypes.Bitcoin>>
+    signTxInput: chainAdapters.SignTxInput<chainAdapters.ChainTxType<ChainAdapterType.Bitcoin>>
   ): Promise<string> {
     try {
       const { txToSign, wallet } = signTxInput
@@ -218,8 +202,8 @@ export class ChainAdapter
     value,
     chainSpecific: { pubkey },
     sendMax = false
-  }: chainAdapters.GetFeeDataInput<ChainTypes.Bitcoin>): Promise<
-    chainAdapters.FeeDataEstimate<ChainTypes.Bitcoin>
+  }: chainAdapters.GetFeeDataInput<ChainAdapterType.Bitcoin>): Promise<
+    chainAdapters.FeeDataEstimate<ChainAdapterType.Bitcoin>
   > {
     const feeData = await this.providers.http.getNetworkFees()
 
@@ -335,7 +319,7 @@ export class ChainAdapter
 
   async subscribeTxs(
     input: chainAdapters.SubscribeTxsInput,
-    onMessage: (msg: chainAdapters.SubscribeTxsMessage<ChainTypes.Bitcoin>) => void,
+    onMessage: (msg: chainAdapters.SubscribeTxsMessage<ChainAdapterType.Bitcoin>) => void,
     onError: (err: chainAdapters.SubscribeError) => void
   ): Promise<void> {
     const {
@@ -354,7 +338,7 @@ export class ChainAdapter
       { topic: 'txs', addresses },
       ({ data: tx }) => {
         const transfers = tx.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
-          caip19: transfer.caip19,
+          assetId: transfer.caip19,
           from: transfer.from,
           to: transfer.to,
           type: getType(transfer.type),
@@ -366,10 +350,15 @@ export class ChainAdapter
           blockHash: tx.blockHash,
           blockHeight: tx.blockHeight,
           blockTime: tx.blockTime,
-          caip2: tx.caip2,
-          chain: ChainTypes.Bitcoin,
+          chainId: tx.caip2,
+          chainType: ChainAdapterType.Bitcoin,
           confirmations: tx.confirmations,
-          fee: tx.fee,
+          fee: tx.fee
+            ? {
+                assetId: tx.fee.caip19,
+                value: tx.fee.value
+              }
+            : undefined,
           status: getStatus(tx.status),
           tradeDetails: tx.trade,
           transfers,

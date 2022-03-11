@@ -1,4 +1,4 @@
-import { CAIP2, ChainNamespace, isCAIP2 } from './../caip2/caip2'
+import { CAIP2, isCAIP2 } from './../caip2/caip2'
 
 export type CAIP10 = string
 
@@ -22,8 +22,8 @@ export const toCAIP10: ToCAIP10 = ({ caip2, account }) => {
 
   // we lowercase eth accounts as per the draft spec
   // it's not explicit, but cHecKsUM can be recovered from lowercase eth accounts
-  // we don't lowercase bitcoin addresses as they'll fail checksum
-  const outputAccount = namespace === ChainNamespace.Ethereum ? account.toLowerCase() : account
+  // we don't lowercase bitcoin addresses because capitalization is part of the base58 encoding
+  const outputAccount = namespace === 'eip155' ? account.toLowerCase() : account
 
   return `${caip2}:${outputAccount}`
 }
@@ -57,7 +57,7 @@ export const fromCAIP10: FromCAIP10 = (caip10) => {
   // we lowercase eth accounts as per the draft spec
   // it's not explicit, but cHecKsUM can be recovered from lowercase eth accounts
   // we don't lowercase bitcoin addresses as they'll fail checksum
-  const outputAccount = namespace === ChainNamespace.Ethereum ? account.toLowerCase() : account
+  const outputAccount = namespace === 'eip155' ? account.toLowerCase() : account
 
   return { caip2, account: outputAccount }
 }

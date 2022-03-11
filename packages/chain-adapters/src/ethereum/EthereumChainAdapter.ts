@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
-import { AssetNamespace, AssetReference, CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
+import { CAIP2, caip2, CAIP19, caip19, WellKnownChain } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, chainAdapters, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
+import { BIP44Params, chainAdapters, ChainAdapterType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
@@ -25,7 +25,8 @@ export interface ChainAdapterArgs {
     http: unchained.ethereum.V1Api
     ws: unchained.ws.Client<unchained.SequencedTx>
   }
-  chainId?: CAIP2
+  chainId: CAIP2
+  assetId: CAIP19
 }
 
 async function getErc20Data(to: string, value: string, contractAddress?: string) {
@@ -35,7 +36,7 @@ async function getErc20Data(to: string, value: string, contractAddress?: string)
   return callData || ''
 }
 
-export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
+export class ChainAdapter implements IChainAdapter<ChainAdapterType.Ethereum> {
   private readonly providers: {
     http: unchained.ethereum.V1Api
     ws: unchained.ws.Client<unchained.SequencedTx>
@@ -46,25 +47,30 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     accountNumber: 0
   }
 
-  private readonly chainId: CAIP2 = 'eip155:1'
+  private readonly chainId: CAIP2
+  private readonly assetId: CAIP19
 
   constructor(args: ChainAdapterArgs) {
-    if (args.chainId) {
-      try {
-        const { chain } = caip2.fromCAIP2(args.chainId)
-        if (chain !== ChainTypes.Ethereum) {
-          throw new Error()
-        }
-        this.chainId = args.chainId
-      } catch (e) {
-        throw new Error(`The ChainID ${args.chainId} is not supported`)
-      }
+    if (
+      !caip2.isCAIP2(args.chainId) ||
+      !(
+        [
+          WellKnownChain.EthereumMainnet,
+          WellKnownChain.EthereumRopsten,
+          WellKnownChain.EthereumRinkeby,
+          WellKnownChain.EthereumKovan
+        ] as string[]
+      ).includes(args.chainId)
+    ) {
+      throw new Error(`The ChainID ${args.chainId} is not supported`)
     }
+    this.chainId = args.chainId
+    this.assetId = args.assetId
     this.providers = args.providers
   }
 
-  getType(): ChainTypes.Ethereum {
-    return ChainTypes.Ethereum
+  getType(): ChainAdapterType.Ethereum {
+    return ChainAdapterType.Ethereum
   }
 
   getCaip2(): CAIP2 {
@@ -75,31 +81,27 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     return this.chainId
   }
 
-  async getAccount(pubkey: string): Promise<chainAdapters.Account<ChainTypes.Ethereum>> {
+  getAssetId(): CAIP19 {
+    return this.assetId
+  }
+
+  async getAccount(pubkey: string): Promise<chainAdapters.Account<ChainAdapterType.Ethereum>> {
     try {
-      const caip = this.getCaip2()
-      const { chain, network } = caip2.fromCAIP2(caip)
+      const chainId = this.getChainId()
       const { data } = await this.providers.http.getAccount({ pubkey })
 
       const balance = bnOrZero(data.balance).plus(bnOrZero(data.unconfirmedBalance))
 
       return {
         balance: balance.toString(),
-        caip2: caip,
-        caip19: caip19.toCAIP19({
-          chain,
-          network,
-          assetNamespace: AssetNamespace.Slip44,
-          assetReference: AssetReference.Ethereum
-        }),
-        chain: ChainTypes.Ethereum,
+        assetId: this.assetId,
+        chainType: ChainAdapterType.Ethereum,
         chainSpecific: {
           nonce: data.nonce,
           tokens: data.tokens.map((token) => ({
             balance: token.balance,
-            caip19: caip19.toCAIP19({
-              chain,
-              network,
+            assetId: caip19.toCAIP19({
+              chainId,
               assetNamespace: getAssetNamespace(token.type),
               assetReference: token.contract
             })
@@ -119,7 +121,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
   async getTxHistory({
     pubkey
   }: unchained.ethereum.V1ApiGetTxHistoryRequest): Promise<
-    chainAdapters.TxHistoryResponse<ChainTypes.Ethereum>
+    chainAdapters.TxHistoryResponse<ChainAdapterType.Ethereum>
   > {
     try {
       const { data } = await this.providers.http.getTxHistory({ pubkey })
@@ -129,8 +131,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
         totalPages: data.totalPages,
         transactions: data.transactions.map((tx) => ({
           ...tx,
-          chain: ChainTypes.Ethereum,
-          network: NetworkTypes.MAINNET,
+          chainType: ChainAdapterType.Ethereum,
           symbol: 'ETH'
         })),
         txs: data.txs
@@ -140,7 +141,9 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     }
   }
 
-  async buildSendTransaction(tx: chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>): Promise<{
+  async buildSendTransaction(
+    tx: chainAdapters.BuildSendTxInput<ChainAdapterType.Ethereum>
+  ): Promise<{
     txToSign: ETHSignTx
   }> {
     try {
@@ -171,7 +174,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           if (!erc20ContractAddress) throw new Error('no token address')
           const erc20Balance = account?.chainSpecific?.tokens?.find((token) => {
             return (
-              caip19.fromCAIP19(token.caip19).assetReference === erc20ContractAddress.toLowerCase()
+              caip19.fromCAIP19(token.assetId).assetReference === erc20ContractAddress.toLowerCase()
             )
           })?.balance
           if (!erc20Balance) throw new Error('no balance')
@@ -238,8 +241,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     value,
     chainSpecific: { contractAddress, from, contractData },
     sendMax = false
-  }: chainAdapters.GetFeeDataInput<ChainTypes.Ethereum>): Promise<
-    chainAdapters.FeeDataEstimate<ChainTypes.Ethereum>
+  }: chainAdapters.GetFeeDataInput<ChainAdapterType.Ethereum>): Promise<
+    chainAdapters.FeeDataEstimate<ChainAdapterType.Ethereum>
   > {
     const { data: responseData } = await axios.get<chainAdapters.ZrxGasApiResponse>(
       'https://gas.api.0x.org/'
@@ -256,7 +259,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     if (sendMax && isErc20Send && contractAddress) {
       const account = await this.getAccount(from)
       const erc20Balance = account?.chainSpecific?.tokens?.find((token) => {
-        const { assetReference } = caip19.fromCAIP19(token.caip19)
+        const { assetReference } = caip19.fromCAIP19(token.assetId)
         return assetReference === contractAddress.toLowerCase()
       })?.balance
       if (!erc20Balance) throw new Error('no balance')
@@ -360,7 +363,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
 
   async subscribeTxs(
     input: chainAdapters.SubscribeTxsInput,
-    onMessage: (msg: chainAdapters.SubscribeTxsMessage<ChainTypes.Ethereum>) => void,
+    onMessage: (msg: chainAdapters.SubscribeTxsMessage<ChainAdapterType.Ethereum>) => void,
     onError: (err: chainAdapters.SubscribeError) => void
   ): Promise<void> {
     const { wallet, bip44Params = ChainAdapter.defaultBIP44Params } = input
@@ -373,7 +376,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       { topic: 'txs', addresses: [address] },
       ({ data: tx }) => {
         const transfers = tx.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
-          caip19: transfer.caip19,
+          assetId: transfer.caip19,
           from: transfer.from,
           to: transfer.to,
           type: getType(transfer.type),
@@ -385,10 +388,15 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           blockHash: tx.blockHash,
           blockHeight: tx.blockHeight,
           blockTime: tx.blockTime,
-          caip2: tx.caip2,
-          chain: ChainTypes.Ethereum,
+          chainId: tx.caip2,
+          chainType: ChainAdapterType.Ethereum,
           confirmations: tx.confirmations,
-          fee: tx.fee,
+          fee: tx.fee
+            ? {
+                assetId: tx.fee.caip19,
+                value: tx.fee.value
+              }
+            : undefined,
           status: getStatus(tx.status),
           tradeDetails: tx.trade,
           transfers,

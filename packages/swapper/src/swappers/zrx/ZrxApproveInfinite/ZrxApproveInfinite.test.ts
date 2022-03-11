@@ -8,7 +8,8 @@ import { ZrxApproveInfinite } from '../ZrxApproveInfinite/ZrxApproveInfinite'
 
 jest.mock('web3')
 jest.mock('../utils/helpers/helpers', () => ({
-  grantAllowance: jest.fn(() => 'grantAllowanceTxId')
+  grantAllowance: jest.fn(() => 'grantAllowanceTxId'),
+  getZrxToken: jest.requireActual('../utils/helpers/helpers')['getZrxToken']
 }))
 jest.mock('axios', () => ({
   create: () => ({

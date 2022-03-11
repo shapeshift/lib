@@ -1,5 +1,6 @@
+import { WellKnownAsset } from '@shapeshiftoss/caip'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { chainAdapters } from '@shapeshiftoss/types'
+import { Asset, chainAdapters, ChainAdapterType } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 
 import { ETH_FEE_ESTIMATE_PADDING } from '../utils/constants'
@@ -23,16 +24,18 @@ describe('getZrxSendMaxAmount', () => {
   it('should throw an error if no erc20 asset balance is found', async () => {
     const balance = undefined
     const args = {
-      quote: { ...quote, sellAsset: { ...quote.sellAsset, tokenId: 'contractAddress' } },
+      quote: { ...quote, sellAsset: { ...quote.sellAsset } },
       wallet,
       sellAssetAccountId: quote.sellAssetAccountId
     }
-    ;(adapterManager.byChain as jest.Mock<unknown>).mockReturnValue({
-      ...chainAdapterMockFuncs,
-      getAccount: jest.fn().mockResolvedValue({
-        chainSpecific: { tokens: [{ caip19: 'eip155:1/erc20:contractAddress', balance }] }
+    ;(adapterManager.byChainId as jest.Mock<unknown>).mockReturnValue(
+      Promise.resolve({
+        ...chainAdapterMockFuncs,
+        getAccount: jest.fn().mockResolvedValue({
+          chainSpecific: { tokens: [{ assetId: 'eip155:1/erc20:contractAddress', balance }] }
+        })
       })
-    })
+    )
 
     await expect(getZrxSendMaxAmount(deps, args)).rejects.toThrow(
       `No balance found for ${quote.sellAsset.symbol}`
@@ -41,16 +44,23 @@ describe('getZrxSendMaxAmount', () => {
 
   it('should throw an error if no ETH balance is found', async () => {
     const args = {
-      quote: { ...quote, sellAsset: { ...quote.sellAsset, tokenId: undefined } },
+      quote: { ...quote, sellAsset: { assetId: WellKnownAsset.ETH, symbol: 'ETH' } as Asset },
       wallet,
       sellAssetAccountId: quote.sellAssetAccountId
     }
-    ;(adapterManager.byChain as jest.Mock<unknown>).mockReturnValue({
-      ...chainAdapterMockFuncs,
-      getAccount: jest.fn().mockResolvedValue({
-        balance: undefined
+    ;(adapterManager.byChainId as jest.Mock<unknown>).mockReturnValue(
+      Promise.resolve({
+        ...chainAdapterMockFuncs,
+        getAccount: jest.fn().mockResolvedValue({
+          balance: undefined,
+          chainType: ChainAdapterType.Ethereum,
+          chainSpecific: {
+            nonce: 0,
+            tokens: []
+          }
+        })
       })
-    })
+    )
 
     await expect(getZrxSendMaxAmount(deps, args)).rejects.toThrow(`No balance found for ETH`)
   })
@@ -59,19 +69,26 @@ describe('getZrxSendMaxAmount', () => {
     const ethBalance = '100'
     const txFee = '1000'
     const args = {
-      quote: { ...quote, sellAsset: { ...quote.sellAsset, tokenId: undefined }, txData: 'txData' },
+      quote: { ...quote, sellAsset: { assetId: WellKnownAsset.ETH } as Asset, txData: 'txData' },
       wallet,
       sellAssetAccountId: quote.sellAssetAccountId
     }
-    ;(adapterManager.byChain as jest.Mock<unknown>).mockReturnValue({
-      ...chainAdapterMockFuncs,
-      getAccount: jest.fn().mockResolvedValue({
-        balance: ethBalance
-      }),
-      getFeeData: jest.fn().mockResolvedValue({
-        [chainAdapters.FeeDataKey.Average]: { txFee }
+    ;(adapterManager.byChainId as jest.Mock<unknown>).mockReturnValue(
+      Promise.resolve({
+        ...chainAdapterMockFuncs,
+        getAccount: jest.fn().mockResolvedValue({
+          balance: ethBalance,
+          chainType: ChainAdapterType.Ethereum,
+          chainSpecific: {
+            nonce: 0,
+            tokens: []
+          }
+        }),
+        getFeeData: jest.fn().mockResolvedValue({
+          [chainAdapters.FeeDataKey.Average]: { txFee }
+        })
       })
-    })
+    )
 
     await expect(getZrxSendMaxAmount(deps, args)).rejects.toThrow(
       'ETH balance is less than estimated fee'
@@ -82,19 +99,26 @@ describe('getZrxSendMaxAmount', () => {
     const ethBalance = '100'
     const txFee = '1000'
     const args = {
-      quote: { ...quote, txData: '', sellAsset: { ...quote.sellAsset, tokenId: undefined } },
+      quote: { ...quote, txData: '', sellAsset: { assetId: WellKnownAsset.ETH } as Asset },
       wallet,
       sellAssetAccountId: quote.sellAssetAccountId
     }
-    ;(adapterManager.byChain as jest.Mock<unknown>).mockReturnValue({
-      ...chainAdapterMockFuncs,
-      getAccount: jest.fn().mockResolvedValue({
-        balance: ethBalance
-      }),
-      getFeeData: jest.fn().mockResolvedValue({
-        [chainAdapters.FeeDataKey.Average]: { txFee }
+    ;(adapterManager.byChainId as jest.Mock<unknown>).mockReturnValue(
+      Promise.resolve({
+        ...chainAdapterMockFuncs,
+        getAccount: jest.fn().mockResolvedValue({
+          balance: ethBalance,
+          chainType: ChainAdapterType.Ethereum,
+          chainSpecific: {
+            nonce: 0,
+            tokens: []
+          }
+        }),
+        getFeeData: jest.fn().mockResolvedValue({
+          [chainAdapters.FeeDataKey.Average]: { txFee }
+        })
       })
-    })
+    )
 
     await expect(getZrxSendMaxAmount(deps, args)).rejects.toThrow(
       'quote.txData is required to get correct fee estimate'
@@ -104,18 +128,20 @@ describe('getZrxSendMaxAmount', () => {
   it('should return max erc20 asset balance if tokenId is provided', async () => {
     const erc20Balance = '100'
     const args = {
-      quote: { ...quote, sellAsset: { ...quote.sellAsset, tokenId: 'contractAddress' } },
+      quote,
       wallet,
       sellAssetAccountId: quote.sellAssetAccountId
     }
-    ;(adapterManager.byChain as jest.Mock<unknown>).mockReturnValue({
-      ...chainAdapterMockFuncs,
-      getAccount: jest.fn().mockResolvedValue({
-        chainSpecific: {
-          tokens: [{ caip19: 'eip155:1/erc20:contractAddress', balance: erc20Balance }]
-        }
+    ;(adapterManager.byChainId as jest.Mock<unknown>).mockReturnValue(
+      Promise.resolve({
+        ...chainAdapterMockFuncs,
+        getAccount: jest.fn().mockResolvedValue({
+          chainSpecific: {
+            tokens: [{ assetId: quote.sellAsset.assetId, balance: erc20Balance }]
+          }
+        })
       })
-    })
+    )
 
     await expect(getZrxSendMaxAmount(deps, args)).resolves.toEqual(erc20Balance)
   })
@@ -125,19 +151,26 @@ describe('getZrxSendMaxAmount', () => {
     const txFee = '100'
     const paddedFee = createPaddedFee(txFee)
     const args = {
-      quote: { ...quote, sellAsset: { ...quote.sellAsset, tokenId: undefined }, txData: 'txData' },
+      quote: { ...quote, sellAsset: { assetId: WellKnownAsset.ETH } as Asset, txData: 'txData' },
       wallet,
       sellAssetAccountId: quote.sellAssetAccountId
     }
-    ;(adapterManager.byChain as jest.Mock<unknown>).mockReturnValue({
-      ...chainAdapterMockFuncs,
-      getAccount: jest.fn().mockResolvedValue({
-        balance: ethBalance
-      }),
-      getFeeData: jest.fn().mockResolvedValue({
-        [chainAdapters.FeeDataKey.Average]: { txFee }
+    ;(adapterManager.byChainId as jest.Mock<unknown>).mockReturnValue(
+      Promise.resolve({
+        ...chainAdapterMockFuncs,
+        getAccount: jest.fn().mockResolvedValue({
+          balance: ethBalance,
+          chainType: ChainAdapterType.Ethereum,
+          chainSpecific: {
+            nonce: 0,
+            tokens: []
+          }
+        }),
+        getFeeData: jest.fn().mockResolvedValue({
+          [chainAdapters.FeeDataKey.Average]: { txFee }
+        })
       })
-    })
+    )
 
     await expect(getZrxSendMaxAmount(deps, args)).resolves.toEqual(
       new BigNumber(ethBalance).minus(paddedFee).toString()
@@ -149,20 +182,27 @@ describe('getZrxSendMaxAmount', () => {
     const txFee = '500'
     const paddedFee = createPaddedFee(txFee)
     const args = {
-      quote: { ...quote, sellAsset: { ...quote.sellAsset, tokenId: undefined }, txData: 'txData' },
+      quote: { ...quote, sellAsset: { assetId: WellKnownAsset.ETH } as Asset, txData: 'txData' },
       wallet,
       sellAssetAccountId: quote.sellAssetAccountId,
       feeEstimateKey: chainAdapters.FeeDataKey.Fast
     }
-    ;(adapterManager.byChain as jest.Mock<unknown>).mockReturnValue({
-      ...chainAdapterMockFuncs,
-      getAccount: jest.fn().mockResolvedValue({
-        balance: ethBalance
-      }),
-      getFeeData: jest.fn().mockResolvedValue({
-        [chainAdapters.FeeDataKey.Fast]: { txFee }
+    ;(adapterManager.byChainId as jest.Mock<unknown>).mockReturnValue(
+      Promise.resolve({
+        ...chainAdapterMockFuncs,
+        getAccount: jest.fn().mockResolvedValue({
+          balance: ethBalance,
+          chainType: ChainAdapterType.Ethereum,
+          chainSpecific: {
+            nonce: 0,
+            tokens: []
+          }
+        }),
+        getFeeData: jest.fn().mockResolvedValue({
+          [chainAdapters.FeeDataKey.Fast]: { txFee }
+        })
       })
-    })
+    )
 
     await expect(getZrxSendMaxAmount(deps, args)).resolves.toEqual(
       new BigNumber(ethBalance).minus(paddedFee).toString()

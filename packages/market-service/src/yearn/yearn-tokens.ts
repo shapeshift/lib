@@ -1,12 +1,10 @@
-import { adapters, AssetNamespace, caip19 } from '@shapeshiftoss/caip'
+import { adapters, AssetNamespace, caip19, WellKnownChain } from '@shapeshiftoss/caip'
 import {
-  ChainTypes,
   FindAllMarketArgs,
   HistoryData,
   MarketCapResult,
   MarketData,
-  MarketDataArgs,
-  NetworkTypes
+  MarketDataArgs
 } from '@shapeshiftoss/types'
 import { ChainId, Token, Yearn } from '@yfi/sdk'
 import uniqBy from 'lodash/uniqBy'
@@ -56,13 +54,12 @@ export class YearnTokenMarketCapService implements MarketService {
       const tokens = uniqueTokens.slice(0, argsToUse.count)
 
       return tokens.reduce((acc, token) => {
-        const _caip19: string = caip19.toCAIP19({
-          chain: ChainTypes.Ethereum,
-          network: NetworkTypes.MAINNET,
+        const assetId: string = caip19.toCAIP19({
+          chainId: WellKnownChain.EthereumMainnet,
           assetNamespace: AssetNamespace.ERC20,
           assetReference: token.address
         })
-        acc[_caip19] = {
+        acc[assetId] = {
           price: bnOrZero(token.priceUsdc).div(`1e+${USDC_PRECISION}`).toString(),
           // TODO: figure out how to get these values.
           marketCap: '0',
@@ -78,8 +75,8 @@ export class YearnTokenMarketCapService implements MarketService {
     }
   }
 
-  findByCaip19 = async ({ caip19: _caip19 }: MarketDataArgs): Promise<MarketData | null> => {
-    const address = adapters.CAIP19ToYearn(_caip19)
+  findByCaip19 = async ({ caip19: assetId }: MarketDataArgs): Promise<MarketData | null> => {
+    const address = adapters.CAIP19ToYearn(assetId)
     if (!address) return null
     try {
       // the yearnSdk caches the response to all of these calls and returns the cache if found.

@@ -12,22 +12,11 @@ export type BIP44Params = {
   index?: number
 }
 
-export enum ChainTypes {
+export enum ChainAdapterType {
   Ethereum = 'ethereum',
   Bitcoin = 'bitcoin',
   Cosmos = 'cosmos',
   Osmosis = 'osmosis'
-}
-
-export enum NetworkTypes {
-  MAINNET = 'MAINNET',
-  TESTNET = 'TESTNET', // BTC, LTC, etc...
-  ETH_ROPSTEN = 'ETH_ROPSTEN',
-  ETH_RINKEBY = 'ETH_RINKEBY',
-  COSMOSHUB_MAINNET = 'COSMOSHUB_MAINNET',
-  COSMOSHUB_VEGA = 'COSMOSHUB_VEGA',
-  OSMOSIS_MAINNET = 'OSMOSIS_MAINNET',
-  OSMOSIS_TESTNET = 'OSMOSIS_TESTNET'
 }
 
 export enum UtxoAccountType {
@@ -46,13 +35,10 @@ export enum AssetDataSource {
 // asset-service
 
 type AbstractAsset = {
-  caip19: string
-  caip2: string
-  chain: ChainTypes
+  assetId: string
   description?: string
   isTrustedDescription?: boolean
   dataSource: AssetDataSource
-  network: NetworkTypes
   symbol: string
   name: string
   precision: number
@@ -67,20 +53,13 @@ type AbstractAsset = {
   receiveSupport: boolean
 }
 
-type OmittedTokenAssetFields =
-  | 'chain'
-  | 'network'
-  | 'slip44'
-  | 'explorer'
-  | 'explorerTxLink'
-  | 'explorerAddressLink'
-type TokenAssetFields = {
-  tokenId: string
-  contractType: 'erc20' | 'erc721' // Don't want to import caip here to prevent circular dependencies
-}
-export type TokenAsset = Omit<AbstractAsset, OmittedTokenAssetFields> & TokenAssetFields
+export type OmittedTokenAssetFields = Pick<
+  AbstractAsset,
+  'slip44' | 'explorer' | 'explorerTxLink' | 'explorerAddressLink'
+>
+export type TokenAsset = Omit<AbstractAsset, keyof OmittedTokenAssetFields>
 export type BaseAsset = AbstractAsset & { tokens?: TokenAsset[] }
-export type Asset = AbstractAsset & Partial<TokenAssetFields>
+export type Asset = AbstractAsset
 
 // swapper
 
@@ -127,7 +106,7 @@ export type ThorVaultInfo = {
 
 export type BuildThorTradeOutput = SignTxInput<unknown> & ThorVaultInfo
 
-export type Quote<C extends ChainTypes, S extends SwapperType> = {
+export type Quote<C extends ChainAdapterType, S extends SwapperType> = {
   success: boolean
   statusCode?: number
   statusReason?: string
@@ -175,7 +154,7 @@ export type BuildQuoteTxInput = {
   wallet: HDWallet
 }
 
-export type ExecQuoteInput<C extends ChainTypes, S extends SwapperType> = {
+export type ExecQuoteInput<C extends ChainAdapterType, S extends SwapperType> = {
   quote: Quote<C, S>
   wallet: HDWallet
 }
@@ -184,7 +163,7 @@ export type ExecQuoteOutput = {
   txid: string
 }
 
-export type ApprovalNeededInput<C extends ChainTypes, S extends SwapperType> = {
+export type ApprovalNeededInput<C extends ChainAdapterType, S extends SwapperType> = {
   quote: Quote<C, S>
   wallet: HDWallet
 }
@@ -195,14 +174,14 @@ export type ApprovalNeededOutput = {
   gasPrice?: string
 }
 
-export type ApproveInfiniteInput<C extends ChainTypes, S extends SwapperType> = {
+export type ApproveInfiniteInput<C extends ChainAdapterType, S extends SwapperType> = {
   quote: Quote<C, S>
   wallet: HDWallet
 }
 
 export type SendMaxAmountInput = {
   wallet: HDWallet
-  quote: Quote<ChainTypes, SwapperType>
+  quote: Quote<ChainAdapterType, SwapperType>
   sellAssetAccountId: string
   feeEstimateKey?: FeeDataKey // fee estimate speed
 }

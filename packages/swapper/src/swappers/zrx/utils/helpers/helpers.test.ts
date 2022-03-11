@@ -1,5 +1,7 @@
+import { AssetNamespace, caip19, WellKnownChain } from '@shapeshiftoss/caip'
+import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { ChainTypes } from '@shapeshiftoss/types'
+import { Asset, ChainAdapterType } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 
@@ -35,35 +37,37 @@ Web3.mockImplementation(() => ({
   }
 }))
 
-const setup = () => {
-  const { web3Instance, adapterManager } = setupZrxDeps()
-  const adapter = adapterManager.byChain(ChainTypes.Ethereum)
-
-  return { web3Instance, adapter }
-}
-
 describe('utils', () => {
   const { quoteInput, sellAsset } = setupQuote()
-  const { web3Instance, adapter } = setup()
+  let web3Instance: Web3
+  let adapter: ChainAdapter<ChainAdapterType.Ethereum>
+
+  beforeAll(async () => {
+    const deps = setupZrxDeps()
+    web3Instance = deps.web3Instance
+    adapter = await deps.adapterManager.byChainId(WellKnownChain.EthereumMainnet)
+  })
 
   describe('getUsdRate', () => {
     it('getUsdRate gets the usd rate of the symbol', async () => {
       ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
         Promise.resolve({ data: { price: '2' } })
       )
-      const rate = await getUsdRate({ symbol: 'FOX' })
+      const rate = await getUsdRate({
+        assetId: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
+      } as Asset)
       expect(rate).toBe('0.5')
       expect(zrxService.get).toHaveBeenCalledWith('/swap/v1/price', {
         params: {
           buyToken: 'USDC',
           buyAmount: '1000000000',
-          sellToken: 'FOX'
+          sellToken: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
         }
       })
     })
     it('getUsdRate fails', async () => {
       ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data: {} }))
-      await expect(getUsdRate({ symbol: 'WETH', tokenId: '0x0001' })).rejects.toThrow(
+      await expect(getUsdRate({ assetId: 'eip155:1/erc20:0x0001' } as Asset)).rejects.toThrow(
         'getUsdRate - Failed to get price data'
       )
     })
@@ -174,7 +178,13 @@ describe('utils', () => {
     it('should throw if sellAsset.tokenId is not provided', async () => {
       const quote = {
         ...quoteInput,
-        sellAsset: { ...sellAsset, tokenId: '' }
+        sellAsset: {
+          ...sellAsset,
+          assetId: caip19.toCAIP19({
+            ...caip19.fromCAIP19(sellAsset.assetId),
+            assetNamespace: AssetNamespace.ERC721
+          })
+        }
       }
       ;(web3Instance.eth.Contract as jest.Mock<unknown>).mockImplementation(() => ({
         methods: {
@@ -188,7 +198,7 @@ describe('utils', () => {
 
       await expect(
         grantAllowance({ quote, wallet, adapter, erc20Abi, web3: web3Instance })
-      ).rejects.toThrow('sellAsset.tokenId is required')
+      ).rejects.toThrowErrorMatchingInlineSnapshot(`"unsupported asset namespace erc721"`)
     })
 
     it('should return a txid', async () => {

@@ -8,7 +8,7 @@
 
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { BIP44Params, chainAdapters, ChainTypes, UtxoAccountType } from '@shapeshiftoss/types'
+import { BIP44Params, chainAdapters, ChainAdapterType, UtxoAccountType } from '@shapeshiftoss/types'
 
 import { ChainAdapterArgs } from '../utxo/UTXOBaseAdapter'
 import * as bitcoin from './BitcoinChainAdapter'
@@ -54,10 +54,8 @@ const getUtxosMockResponse = {
 const getAccountMockResponse = {
   data: {
     balance: '33559',
-    chain: 'bitcoin',
     nextChangeAddressIndex: 0,
     nextReceiveAddressIndex: 2,
-    network: 'MAINNET',
     pubkey:
       'zpub6qSSRL9wLd6LNee7qjDEuULWccP5Vbm5nuX4geBu8zMCQBWsF5Jo5UswLVxFzcbCMr2yQPG27ZhDs1cUGKVH1RmqkG1PFHkEXyHG7EV3ogY',
     symbol: 'BTC'
@@ -143,7 +141,8 @@ describe('BitcoinChainAdapter', () => {
         ws: {} as any
       },
       coinName: 'Bitcoin',
-      chainId: 'bip122:000000000019d6689c085ae165831e93'
+      chainId: 'bip122:000000000019d6689c085ae165831e93',
+      assetId: 'bip122:000000000019d6689c085ae165831e93/slip44:0'
     }
   })
 
@@ -168,25 +167,23 @@ describe('BitcoinChainAdapter', () => {
     })
     it('should throw if called with invalid chainId', () => {
       args.chainId = 'INVALID_CHAINID'
-      expect(() => new bitcoin.ChainAdapter(args)).toThrow(
-        /fromCAIP19: error parsing caip19, chain: (.+), network: undefined/
+      expect(() => new bitcoin.ChainAdapter(args)).toThrowErrorMatchingInlineSnapshot(
+        `"The ChainID INVALID_CHAINID is not supported"`
       )
     })
     it('should throw if called with non bitcoin chainId', () => {
       args.chainId = 'eip155:1'
-      expect(() => new bitcoin.ChainAdapter(args)).toThrow(/chainId must be a bitcoin chain type/)
-    })
-    it('should throw if called with no chainId', () => {
-      args.chainId = undefined
-      expect(() => new bitcoin.ChainAdapter(args)).toThrow(/chainId required/)
+      expect(() => new bitcoin.ChainAdapter(args)).toThrowErrorMatchingInlineSnapshot(
+        `"The ChainID eip155:1 is not supported"`
+      )
     })
   })
 
   describe('getType', () => {
-    it('should return ChainTypes.Bitcoin', async () => {
+    it('should return ChainAdapterType.Bitcoin', async () => {
       const adapter = new bitcoin.ChainAdapter(args)
       const type = adapter.getType()
-      expect(type).toEqual(ChainTypes.Bitcoin)
+      expect(type).toEqual(ChainAdapterType.Bitcoin)
     })
   })
 
@@ -207,12 +204,11 @@ describe('BitcoinChainAdapter', () => {
       } as any
 
       const adapter = new bitcoin.ChainAdapter(args)
-      const expected: chainAdapters.Account<ChainTypes.Bitcoin> = {
+      const expected: chainAdapters.Account<ChainAdapterType.Bitcoin> = {
         pubkey: '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx',
-        chain: ChainTypes.Bitcoin,
+        chainType: ChainAdapterType.Bitcoin,
         balance: '150',
-        caip2: 'bip122:000000000019d6689c085ae165831e93',
-        caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
+        assetId: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
         chainSpecific: {
           addresses: [],
           nextChangeAddressIndex: 0,
@@ -250,8 +246,6 @@ describe('BitcoinChainAdapter', () => {
             txs: 1,
             transactions: [
               {
-                network: 'MAINNET',
-                chain: 'bitcoin',
                 symbol: 'BTC',
                 txid: '123',
                 status: 'confirmed',
@@ -272,8 +266,7 @@ describe('BitcoinChainAdapter', () => {
         txs: 1,
         transactions: [
           {
-            network: 'MAINNET',
-            chain: 'bitcoin',
+            chainType: 'bitcoin',
             symbol: 'BTC',
             txid: '123',
             status: 'confirmed',
@@ -325,7 +318,7 @@ describe('BitcoinChainAdapter', () => {
         isChange: false
       }
 
-      const txInput: chainAdapters.BuildSendTxInput<ChainTypes.Bitcoin> = {
+      const txInput: chainAdapters.BuildSendTxInput<ChainAdapterType.Bitcoin> = {
         bip44Params,
         to: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4',
         value: '400',
@@ -393,7 +386,7 @@ describe('BitcoinChainAdapter', () => {
         isChange: false
       }
 
-      const txInput: chainAdapters.BuildSendTxInput<ChainTypes.Bitcoin> = {
+      const txInput: chainAdapters.BuildSendTxInput<ChainAdapterType.Bitcoin> = {
         bip44Params,
         to: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4',
         value: '400',

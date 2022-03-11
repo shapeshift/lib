@@ -1,6 +1,7 @@
+import { caip19, WellKnownChain } from '@shapeshiftoss/caip'
 import {
   BuildQuoteTxInput,
-  ChainTypes,
+  ChainAdapterType,
   Quote,
   QuoteResponse,
   SwapperType
@@ -19,14 +20,14 @@ import {
   DEFAULT_SOURCE,
   MAX_SLIPPAGE
 } from '../utils/constants'
-import { getAllowanceRequired, normalizeAmount } from '../utils/helpers/helpers'
+import { getAllowanceRequired, getZrxToken, normalizeAmount } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function ZrxBuildQuoteTx(
   { adapterManager, web3 }: ZrxSwapperDeps,
   { input, wallet }: BuildQuoteTxInput
-): Promise<Quote<ChainTypes, SwapperType>> {
+): Promise<Quote<ChainAdapterType, SwapperType>> {
   const {
     sellAsset,
     buyAsset,
@@ -50,26 +51,17 @@ export async function ZrxBuildQuoteTx(
     )
   }
 
-  const buyToken = buyAsset.tokenId || buyAsset.symbol || buyAsset.network
-  const sellToken = sellAsset.tokenId || sellAsset.symbol || sellAsset.network
-  if (!buyToken) {
+  const buyToken = getZrxToken(buyAsset)
+  const sellToken = getZrxToken(sellAsset)
+
+  const { chainId: buyAssetChainId } = caip19.fromCAIP19(buyAsset.assetId)
+  if (buyAssetChainId !== WellKnownChain.EthereumMainnet) {
     throw new SwapError(
-      'ZrxSwapper:ZrxBuildQuoteTx One of buyAssetContract or buyAssetSymbol or buyAssetNetwork are required'
-    )
-  }
-  if (!sellToken) {
-    throw new SwapError(
-      'ZrxSwapper:ZrxBuildQuoteTx One of sellAssetContract or sellAssetSymbol or sellAssetNetwork are required'
+      `ZrxSwapper:ZrxBuildQuoteTx buyAsset must be on chain [${WellKnownChain.EthereumMainnet}]`
     )
   }
 
-  if (buyAsset.chain !== ChainTypes.Ethereum) {
-    throw new SwapError(
-      `ZrxSwapper:ZrxBuildQuoteTx buyAsset must be on chain [${ChainTypes.Ethereum}]`
-    )
-  }
-
-  const adapter = adapterManager.byChain(buyAsset.chain)
+  const adapter = await adapterManager.byChainId(buyAssetChainId)
   const bip44Params = adapter.buildBIP44Params({ accountNumber: Number(buyAssetAccountId) })
   const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 
@@ -128,7 +120,7 @@ export async function ZrxBuildQuoteTx(
     const { data } = quoteResponse
 
     const estimatedGas = new BigNumber(data.gas || 0)
-    const quote: Quote<ChainTypes.Ethereum, SwapperType> = {
+    const quote: Quote<ChainAdapterType.Ethereum, SwapperType> = {
       sellAsset,
       buyAsset,
       sellAssetAccountId,

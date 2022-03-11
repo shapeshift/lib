@@ -1,9 +1,8 @@
-import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import axios from 'axios'
 import fs from 'fs'
 
-import { toCAIP2 } from '../../caip2/caip2'
-import { AssetNamespace, AssetReference, toCAIP19 } from './../../caip19/caip19'
+import { WellKnownChain } from '../../caip2/caip2'
+import { AssetNamespace, toCAIP19, WellKnownAsset } from './../../caip19/caip19'
 
 export type OsmosisCoin = {
   price: number
@@ -28,42 +27,34 @@ export const writeFiles = async (data: Record<string, Record<string, string>>) =
 
 export const fetchData = async (URL: string) => (await axios.get<OsmosisCoin[]>(URL)).data
 
+const parseIbcRegex = /^ibc\/([0-9A-F]{64})$/
 export const parseOsmosisData = (data: OsmosisCoin[]) => {
-  const results = data.reduce((acc, { denom, symbol }) => {
-    // denoms for non native assets are formatted like so: 'ibc/27394...'
-    const isNativeAsset = !denom.split('/')[1]
-    const isOsmo = denom === 'uosmo'
-
-    let assetNamespace
-    let assetReference
-
-    if (isNativeAsset) {
-      // TODO(ryankk): remove `toString` when AssetReferences are changed to strings
-      assetReference = isOsmo ? AssetReference.Osmosis.toString() : denom
-      assetNamespace = isOsmo ? AssetNamespace.Slip44 : AssetNamespace.NATIVE
-    } else {
-      assetReference = denom.split('/')[1]
-      assetNamespace = AssetNamespace.IBC
-    }
-
-    const chain = ChainTypes.Osmosis
-    const network = NetworkTypes.OSMOSIS_MAINNET
-    const caip19 = toCAIP19({ chain, network, assetNamespace, assetReference })
-
-    acc[caip19] = symbol
+  return data.reduce<Record<string, string>>((acc, { denom, symbol }) => {
+    acc[
+      (() => {
+        if (denom === 'uosmo') return WellKnownAsset.OSMO
+        const result = parseIbcRegex.exec(denom)
+        if (result) {
+          return toCAIP19({
+            chainId: WellKnownChain.OsmosisMainnet,
+            assetNamespace: AssetNamespace.IBC,
+            assetReference: result[1]
+          })
+        } else if (denom.includes('/')) {
+          throw new Error(`osmosis denom ${denom} not recognized`)
+        } else {
+          return toCAIP19({
+            chainId: WellKnownChain.OsmosisMainnet,
+            assetNamespace: AssetNamespace.NATIVE,
+            assetReference: denom
+          })
+        }
+      })()
+    ] = symbol
     return acc
-  }, {} as Record<string, string>)
-
-  return results
+  }, {})
 }
 
-export const parseData = (d: OsmosisCoin[]) => {
-  const osmosisMainnet = toCAIP2({
-    chain: ChainTypes.Osmosis,
-    network: NetworkTypes.OSMOSIS_MAINNET
-  })
-
-  return {
-    [osmosisMainnet]: parseOsmosisData(d)
-  }
-}
+export const parseData = (d: OsmosisCoin[]) => ({
+  [WellKnownChain.OsmosisMainnet]: parseOsmosisData(d)
+})

@@ -1,20 +1,23 @@
+import { WellKnownChain } from '@shapeshiftoss/caip'
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
-import { ApproveInfiniteInput, ChainTypes, QuoteResponse, SwapperType } from '@shapeshiftoss/types'
+import { ApproveInfiniteInput, ChainAdapterType, QuoteResponse, SwapperType } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 
 import { SwapError } from '../../../api'
 import { erc20Abi } from '../utils/abi/erc20-abi'
 import { bnOrZero } from '../utils/bignumber'
 import { AFFILIATE_ADDRESS, DEFAULT_SLIPPAGE, MAX_ALLOWANCE } from '../utils/constants'
-import { grantAllowance } from '../utils/helpers/helpers'
+import { getZrxToken, grantAllowance } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function ZrxApproveInfinite(
   { adapterManager, web3 }: ZrxSwapperDeps,
-  { quote, wallet }: ApproveInfiniteInput<ChainTypes, SwapperType>
+  { quote, wallet }: ApproveInfiniteInput<ChainAdapterType, SwapperType>
 ) {
-  const adapter: ChainAdapter<ChainTypes.Ethereum> = adapterManager.byChain(ChainTypes.Ethereum)
+  const adapter: ChainAdapter<ChainAdapterType.Ethereum> = await adapterManager.byChainId(
+    WellKnownChain.EthereumMainnet
+  )
   const bip44Params = adapter.buildBIP44Params({
     accountNumber: bnOrZero(quote.sellAssetAccountId).toNumber()
   }) // TODO: Add account number
@@ -34,7 +37,7 @@ export async function ZrxApproveInfinite(
     {
       params: {
         buyToken: 'ETH',
-        sellToken: quote.sellAsset.tokenId || quote.sellAsset.symbol || quote.sellAsset.network,
+        sellToken: getZrxToken(quote.sellAsset),
         buyAmount: '100000000000000000', // A valid buy amount - 0.1 ETH
         takerAddress: receiveAddress,
         slippagePercentage: DEFAULT_SLIPPAGE,

@@ -1,6 +1,6 @@
-import { AssetNamespace, CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
+import { AssetNamespace, CAIP2, caip2, CAIP19, caip19 } from '@shapeshiftoss/caip'
 import { CosmosSignTx } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
+import { BIP44Params, chainAdapters, ChainAdapterType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import WAValidator from 'multicoin-address-validator'
 
@@ -8,21 +8,20 @@ import { ChainAdapter as IChainAdapter } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
 import { getStatus, getType, toRootDerivationPath } from '../utils'
 
-export type CosmosChainTypes = ChainTypes.Cosmos | ChainTypes.Osmosis
+export type CosmosChainTypes = ChainAdapterType.Cosmos | ChainAdapterType.Osmosis
 
 export interface ChainAdapterArgs {
-  chainId?: CAIP2
+  chainId: CAIP2
+  assetId: CAIP19
   providers: {
     http: unchained.cosmos.V1Api
     ws: unchained.ws.Client<unchained.cosmos.Tx>
   }
-  coinName: string
 }
 
 export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implements IChainAdapter<T> {
   protected readonly chainId: CAIP2
-  protected readonly supportedChainIds: CAIP2[]
-  protected readonly coinName: string
+  protected readonly assetId: CAIP19
   protected readonly providers: {
     http: unchained.cosmos.V1Api
     ws: unchained.ws.Client<unchained.cosmos.Tx>
@@ -36,9 +35,11 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
     accountNumber: 0
   }
 
-  protected constructor(args: ChainAdapterArgs) {
-    if (args.chainId && this.supportedChainIds.includes(args.chainId)) {
-      this.chainId = args.chainId
+  protected constructor(supportedChainIds: CAIP2[], args: ChainAdapterArgs) {
+    this.chainId = args.chainId
+    this.assetId = args.assetId
+    if (!caip2.isCAIP2(this.chainId) || !supportedChainIds.includes(this.chainId)) {
+      throw new Error(`The ChainID ${this.chainId} is not supported`)
     }
     this.providers = args.providers
   }
@@ -53,23 +54,18 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
     return this.chainId
   }
 
+  getAssetId(): CAIP19 {
+    return this.assetId
+  }
+
   async getAccount(pubkey: string): Promise<chainAdapters.Account<T>> {
     try {
-      const caip = this.getCaip2()
-      const { chain, network } = caip2.fromCAIP2(caip)
       const { data } = await this.providers.http.getAccount({ pubkey })
 
       return {
         balance: data.balance,
-        caip2: caip,
-        // This is the caip19 for native token on the chain (ATOM/OSMO/etc)
-        caip19: caip19.toCAIP19({
-          chain,
-          network,
-          assetNamespace: AssetNamespace.Slip44,
-          assetReference: '118'
-        }),
-        chain: this.getType(),
+        assetId: this.assetId,
+        chainType: this.getType(),
         chainSpecific: {
           sequence: data.sequence
         },
@@ -149,14 +145,19 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
           blockHash: tx.blockHash,
           blockHeight: tx.blockHeight,
           blockTime: tx.blockTime,
-          caip2: tx.caip2,
-          chain: this.getType(),
+          chainId: tx.caip2,
+          chainType: this.getType(),
           confirmations: tx.confirmations,
-          fee: tx.fee,
+          fee: tx.fee
+            ? {
+                assetId: tx.fee.caip19,
+                value: tx.fee.value
+              }
+            : undefined,
           status: getStatus(tx.status),
           tradeDetails: tx.trade,
           transfers: tx.transfers.map((transfer) => ({
-            caip19: transfer.caip19,
+            assetId: transfer.caip19,
             from: transfer.from,
             to: transfer.to,
             type: getType(transfer.type),

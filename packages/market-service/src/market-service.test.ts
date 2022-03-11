@@ -1,3 +1,4 @@
+import { WellKnownAsset } from '@shapeshiftoss/caip'
 import { HistoryTimeframe } from '@shapeshiftoss/types'
 
 import {
@@ -112,7 +113,7 @@ describe('market service', () => {
 
   describe('findByCaip19', () => {
     const args = {
-      caip19: 'eip155:1/slip44:60'
+      caip19: WellKnownAsset.ETH
     }
     it('can return from first market service and skip the next', async () => {
       const result = await findByCaip19(args)

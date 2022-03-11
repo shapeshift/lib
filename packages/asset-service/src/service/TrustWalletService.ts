@@ -1,20 +1,32 @@
-import { ChainTypes } from '@shapeshiftoss/types'
+import { AssetNamespace, CAIP19, caip19, WellKnownAsset, WellKnownChain } from '@shapeshiftoss/caip'
 import Web3 from 'web3'
 
-type TrustWalletServiceProps = {
-  chain: ChainTypes
-  tokenId: string
-}
-export const generateTrustWalletUrl = ({ chain, tokenId }: TrustWalletServiceProps) => {
-  let url = `https://rawcdn.githack.com/trustwallet/assets/master/blockchains/${chain}`
-  if (tokenId) {
-    url += `/assets/`
-    switch (chain) {
-      case ChainTypes.Ethereum:
-        url += Web3.utils.toChecksumAddress(tokenId)
-        break
+export const generateTrustWalletUrl = (assetId: CAIP19) => {
+  const url = `https://rawcdn.githack.com/trustwallet/assets/master/blockchains/${(() => {
+    switch (assetId) {
+      case WellKnownAsset.BTC:
+        return 'bitcoin'
+      case WellKnownAsset.ETH:
+        return 'ethereum'
+      case WellKnownAsset.ATOM:
+        return 'cosmos'
+      case WellKnownAsset.OSMO:
+        return 'osmosis'
+      default: {
+        const { chainId, assetNamespace, assetReference } = caip19.fromCAIP19(assetId)
+        switch (chainId) {
+          case WellKnownChain.EthereumMainnet: {
+            switch (assetNamespace) {
+              case AssetNamespace.ERC20:
+                return `ethereum/assets/${Web3.utils.toChecksumAddress(assetReference)}`
+            }
+          }
+        }
+        throw new Error(`trustwallet doesn't support assetId ${assetId}`)
+      }
     }
-  }
+  })()}`
+
   return {
     info: `${url}/info.json`,
     icon: `${url}/logo.png`

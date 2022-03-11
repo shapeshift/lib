@@ -1,7 +1,12 @@
-import { adapters } from '@shapeshiftoss/caip'
-import { fromCAIP19 } from '@shapeshiftoss/caip/dist/caip19/caip19'
 import {
-  ChainTypes,
+  adapters,
+  AssetNamespace,
+  CAIP19,
+  caip19,
+  WellKnownAsset,
+  WellKnownChain
+} from '@shapeshiftoss/caip'
+import {
   FindAllMarketArgs,
   HistoryData,
   HistoryTimeframe,
@@ -24,7 +29,6 @@ const axios = rateLimitedAxios(RATE_LIMIT_THRESHOLDS_PER_MINUTE.COINGECKO)
 
 // tons more params here: https://www.coingecko.com/en/api/documentation
 type CoinGeckoAssetData = {
-  chain: ChainTypes
   market_data: {
     current_price: { [key: string]: string }
     market_cap: { [key: string]: string }
@@ -38,13 +42,13 @@ type CoinGeckoAssetData = {
 }
 
 export class CoinGeckoMarketService implements MarketService {
-  baseUrl = 'https://api.coingecko.com/api/v3'
+  readonly baseUrl = 'https://api.coingecko.com/api/v3'
 
   private readonly defaultGetByMarketCapArgs: FindAllMarketArgs = {
     count: 2500
   }
 
-  findAll = async (args?: FindAllMarketArgs) => {
+  async findAll(args?: FindAllMarketArgs) {
     const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
     const { count } = argsToUse
     const perPage = count > 250 ? 250 : count
@@ -68,10 +72,10 @@ export class CoinGeckoMarketService implements MarketService {
         .reduce((acc, cur) => {
           const { id } = cur
           try {
-            const caip19 = adapters.coingeckoToCAIP19(id)
-            if (!caip19) return acc
+            const assetId = adapters.coingeckoToCAIP19(id)
+            if (!assetId) return acc
             const curWithoutId = omit(cur, 'id') // don't leak this through to clients
-            acc[caip19] = {
+            acc[assetId] = {
               price: curWithoutId.current_price.toString(),
               marketCap: curWithoutId.market_cap.toString(),
               volume: curWithoutId.total_volume.toString(),
@@ -87,17 +91,28 @@ export class CoinGeckoMarketService implements MarketService {
     }
   }
 
-  findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData | null> => {
-    try {
-      if (!adapters.CAIP19ToCoingecko(caip19)) return null
-      const { chain, assetReference } = fromCAIP19(caip19)
-      const isToken = chain === ChainTypes.Ethereum && assetReference.startsWith('0x')
-      const id = isToken ? 'ethereum' : adapters.CAIP19ToCoingecko(caip19)
-      const contractUrl = isToken ? `/contract/${assetReference}` : ''
+  protected coinUrlByCaip19(assetId: CAIP19): string | null {
+    const coingeckoId = adapters.caip19ToCoingecko(assetId)
+    if (!coingeckoId) return null
 
-      const { data }: { data: CoinGeckoAssetData } = await axios.get(
-        `${this.baseUrl}/coins/${id}${contractUrl}`
-      )
+    return `${this.baseUrl}/coins/${(() => {
+      if (assetId === WellKnownAsset.ETH) return 'ethereum'
+      const { chainId, assetNamespace, assetReference } = caip19.fromCAIP19(assetId)
+      if (
+        chainId === WellKnownChain.EthereumMainnet &&
+        [AssetNamespace.ERC20, AssetNamespace.ERC721].includes(assetNamespace)
+      ) {
+        return `ethereum/contract/${assetReference}`
+      }
+      return coingeckoId
+    })()}`
+  }
+
+  async findByCaip19({ caip19: assetId }: MarketDataArgs): Promise<MarketData | null> {
+    const url = this.coinUrlByCaip19(assetId)
+    if (!url) return null
+    try {
+      const { data }: { data: CoinGeckoAssetData } = await axios.get(url)
 
       // TODO: get correct localizations
       const currency = 'usd'
@@ -114,54 +129,49 @@ export class CoinGeckoMarketService implements MarketService {
     }
   }
 
-  findPriceHistoryByCaip19 = async ({
-    caip19,
+  async findPriceHistoryByCaip19({
+    caip19: assetId,
     timeframe
-  }: PriceHistoryArgs): Promise<HistoryData[]> => {
-    if (!adapters.CAIP19ToCoingecko(caip19)) return []
+  }: PriceHistoryArgs): Promise<HistoryData[]> {
+    const id = adapters.caip19ToCoingecko(assetId)
+    const url = this.coinUrlByCaip19(assetId)
+    if (!id || !url) return []
+
+    const end = dayjs().startOf('minute')
+    let start
+    switch (timeframe) {
+      case HistoryTimeframe.HOUR:
+        start = end.subtract(1, 'hour')
+        break
+      case HistoryTimeframe.DAY:
+        start = end.subtract(1, 'day')
+        break
+      case HistoryTimeframe.WEEK:
+        start = end.subtract(1, 'week')
+        break
+      case HistoryTimeframe.MONTH:
+        start = end.subtract(1, 'month')
+        break
+      case HistoryTimeframe.YEAR:
+        start = end.subtract(1, 'year')
+        break
+      case HistoryTimeframe.ALL:
+        start = end.subtract(20, 'years')
+        break
+      default:
+        start = end
+    }
+
+    const from = start.valueOf() / 1000
+    const to = end.valueOf() / 1000
+
+    // TODO: change vs_currency to localized currency
+    const currency = 'usd'
+
     try {
-      const { chain, assetReference } = fromCAIP19(caip19)
-      const isToken = chain === ChainTypes.Ethereum && assetReference.startsWith('0x')
-      const id = isToken ? 'ethereum' : adapters.CAIP19ToCoingecko(caip19)
-      const contract = isToken ? `/contract/${assetReference}` : ''
-
-      const end = dayjs().startOf('minute')
-      let start
-      switch (timeframe) {
-        case HistoryTimeframe.HOUR:
-          start = end.subtract(1, 'hour')
-          break
-        case HistoryTimeframe.DAY:
-          start = end.subtract(1, 'day')
-          break
-        case HistoryTimeframe.WEEK:
-          start = end.subtract(1, 'week')
-          break
-        case HistoryTimeframe.MONTH:
-          start = end.subtract(1, 'month')
-          break
-        case HistoryTimeframe.YEAR:
-          start = end.subtract(1, 'year')
-          break
-        case HistoryTimeframe.ALL:
-          start = end.subtract(20, 'years')
-          break
-        default:
-          start = end
-      }
-
-      const from = start.valueOf() / 1000
-      const to = end.valueOf() / 1000
-      const url = `${this.baseUrl}/coins/${id}${contract}`
-      type CoinGeckoHistoryData = {
+      const { data: historyData } = await axios.get<{
         prices: [number, number][]
-      }
-
-      // TODO: change vs_currency to localized currency
-      const currency = 'usd'
-      const { data: historyData } = await axios.get<CoinGeckoHistoryData>(
-        `${url}/market_chart/range?id=${id}&vs_currency=${currency}&from=${from}&to=${to}`
-      )
+      }>(`${url}/market_chart/range?id=${id}&vs_currency=${currency}&from=${from}&to=${to}`)
       return historyData?.prices?.reduce<HistoryData[]>((acc, data) => {
         const date = data[0]
         if (!isValidDate(date)) {

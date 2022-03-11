@@ -1,5 +1,6 @@
+import { AssetNamespace, caip19, WellKnownAsset, WellKnownChain } from '@shapeshiftoss/caip'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import { ChainTypes } from '@shapeshiftoss/types'
+import { Asset } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 
@@ -97,7 +98,7 @@ describe('getZrxQuote', () => {
     expect(quote?.slippage).toBeFalsy()
   })
   it('fails on non ethereum chain for buyAsset', async () => {
-    const { quoteInput, buyAsset } = setupQuote()
+    const { quoteInput } = setupQuote()
     const swapper = new ZrxSwapper(zrxSwapperDeps)
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: { success: false } })
@@ -105,12 +106,12 @@ describe('getZrxQuote', () => {
     await expect(
       swapper.getQuote({
         ...quoteInput,
-        buyAsset: { ...buyAsset, chain: ChainTypes.Bitcoin }
+        buyAsset: { assetId: WellKnownAsset.BTC } as Asset
       })
     ).rejects.toThrow('ZrxError:getQuote - Both assets need to be on the Ethereum chain to use Zrx')
   })
   it('fails on non ethereum chain for sellAsset', async () => {
-    const { quoteInput, sellAsset } = setupQuote()
+    const { quoteInput } = setupQuote()
     const swapper = new ZrxSwapper(zrxSwapperDeps)
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: { success: false } })
@@ -118,11 +119,11 @@ describe('getZrxQuote', () => {
     await expect(
       swapper.getQuote({
         ...quoteInput,
-        sellAsset: { ...sellAsset, chain: ChainTypes.Bitcoin }
+        sellAsset: { assetId: WellKnownAsset.BTC } as Asset
       })
     ).rejects.toThrow('ZrxError:getQuote - Both assets need to be on the Ethereum chain to use Zrx')
   })
-  it('uses symbol when weth tokenId is undefined', async () => {
+  it('uses symbol when weth assetNamespace is not ERC20', async () => {
     const { quoteInput, buyAsset } = setupQuote()
     const swapper = new ZrxSwapper(zrxSwapperDeps)
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
@@ -130,12 +131,17 @@ describe('getZrxQuote', () => {
     )
     const quote = await swapper.getQuote({
       ...quoteInput,
-      buyAsset: { ...buyAsset, tokenId: undefined }
+      buyAsset: {
+        ...buyAsset,
+        assetId: caip19.toCAIP19({
+          ...caip19.fromCAIP19(buyAsset.assetId),
+          assetNamespace: AssetNamespace.ERC721
+        })
+      }
     })
     expect(quote?.success).toBeTruthy()
-    expect(quote?.buyAsset.tokenId).toBeFalsy()
   })
-  it('uses symbol when fox tokenId is undefined', async () => {
+  it('uses symbol when fox assetNamespace is not ERC20', async () => {
     const { quoteInput, sellAsset } = setupQuote()
     const swapper = new ZrxSwapper(zrxSwapperDeps)
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
@@ -143,10 +149,15 @@ describe('getZrxQuote', () => {
     )
     const quote = await swapper.getQuote({
       ...quoteInput,
-      sellAsset: { ...sellAsset, tokenId: undefined }
+      sellAsset: {
+        ...sellAsset,
+        assetId: caip19.toCAIP19({
+          ...caip19.fromCAIP19(sellAsset.assetId),
+          assetNamespace: AssetNamespace.ERC721,
+        })
+      }
     })
     expect(quote?.success).toBeTruthy()
-    expect(quote?.sellAsset.tokenId).toBeFalsy()
   })
   it('use minQuoteSellAmount when sellAmount is 0', async () => {
     const { quoteInput, sellAsset } = setupQuote()

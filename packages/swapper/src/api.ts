@@ -6,7 +6,7 @@ import {
   ApproveInfiniteInput,
   Asset,
   BuildQuoteTxInput,
-  ChainTypes,
+  ChainAdapterType,
   ExecQuoteInput,
   ExecQuoteOutput,
   GetQuoteInput,
@@ -25,12 +25,12 @@ export interface Swapper {
   /**
    * Get a Quote along with an unsigned transaction that can be signed and broadcast to execute the swap
    **/
-  buildQuoteTx(args: BuildQuoteTxInput): Promise<Quote<ChainTypes, SwapperType>>
+  buildQuoteTx(args: BuildQuoteTxInput): Promise<Quote<ChainAdapterType, SwapperType>>
 
   /**
    * Get a basic quote (rate) for a trading pair
    */
-  getQuote(input: GetQuoteInput, wallet?: HDWallet): Promise<Quote<ChainTypes, SwapperType>>
+  getQuote(input: GetQuoteInput, wallet?: HDWallet): Promise<Quote<ChainAdapterType, SwapperType>>
 
   /**
    * Get a list of available assets based on the array of assets you send it
@@ -45,7 +45,7 @@ export interface Swapper {
   /**
    * Get the usd rate from either the assets symbol or tokenId
    */
-  getUsdRate(input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string>
+  getUsdRate(asset: Asset): Promise<string>
 
   /**
    * Get the default pair of the swapper
@@ -60,17 +60,17 @@ export interface Swapper {
   /**
    * Execute a quote built with buildQuoteTx by signing and broadcasting
    */
-  executeQuote(args: ExecQuoteInput<ChainTypes, SwapperType>): Promise<ExecQuoteOutput>
+  executeQuote(args: ExecQuoteInput<ChainAdapterType, SwapperType>): Promise<ExecQuoteOutput>
 
   /**
    * Get a boolean if a quote needs approval
    */
-  approvalNeeded(args: ApprovalNeededInput<ChainTypes, SwapperType>): Promise<ApprovalNeededOutput>
+  approvalNeeded(args: ApprovalNeededInput<ChainAdapterType, SwapperType>): Promise<ApprovalNeededOutput>
 
   /**
    * Get the txid of an approve infinite transaction
    */
-  approveInfinite(args: ApproveInfiniteInput<ChainTypes, SwapperType>): Promise<string>
+  approveInfinite(args: ApproveInfiniteInput<ChainAdapterType, SwapperType>): Promise<string>
 
   /**
    * Get max swap balance (minus fees) for sell asset

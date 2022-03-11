@@ -1,7 +1,6 @@
-import { AssetNamespace, caip2, caip19 } from '@shapeshiftoss/caip'
-import { AssetDataSource, ChainTypes, NetworkTypes, TokenAsset } from '@shapeshiftoss/types'
+import { AssetNamespace, caip19, WellKnownChain } from '@shapeshiftoss/caip'
+import { AssetDataSource, TokenAsset } from '@shapeshiftoss/types'
 import { Token, Vault } from '@yfi/sdk'
-import toLower from 'lodash/toLower'
 
 import { yearnSdk } from './yearnSdk'
 
@@ -11,7 +10,6 @@ export const getYearnVaults = async (): Promise<TokenAsset[]> => {
   return vaults.map((vault: Vault) => {
     return {
       color: '#276BDB', // yearn.finance blue
-      contractType: AssetNamespace.ERC20,
       dataSource: AssetDataSource.YearnFinance,
       icon: vault.metadata.displayIcon,
       name: vault.name,
@@ -20,14 +18,8 @@ export const getYearnVaults = async (): Promise<TokenAsset[]> => {
       secondaryColor: '#276BDB',
       sendSupport: true,
       symbol: vault.symbol,
-      tokenId: toLower(vault.address),
-      caip2: caip2.toCAIP2({
-        chain: ChainTypes.Ethereum,
-        network: NetworkTypes.MAINNET
-      }),
-      caip19: caip19.toCAIP19({
-        chain: ChainTypes.Ethereum,
-        network: NetworkTypes.MAINNET,
+      assetId: caip19.toCAIP19({
+        chainId: WellKnownChain.EthereumMainnet,
         assetNamespace: AssetNamespace.ERC20,
         assetReference: vault.address
       })
@@ -40,7 +32,6 @@ export const getIronBankTokens = async (): Promise<TokenAsset[]> => {
   return ironBankTokens.map((token: Token) => {
     return {
       color: '#276BDB', // yearn.finance blue
-      contractType: AssetNamespace.ERC20,
       dataSource: AssetDataSource.YearnFinance,
       icon: token.icon ?? '',
       name: token.name,
@@ -49,14 +40,8 @@ export const getIronBankTokens = async (): Promise<TokenAsset[]> => {
       secondaryColor: '#276BDB',
       sendSupport: true,
       symbol: token.symbol,
-      tokenId: toLower(token.address),
-      caip2: caip2.toCAIP2({
-        chain: ChainTypes.Ethereum,
-        network: NetworkTypes.MAINNET
-      }),
-      caip19: caip19.toCAIP19({
-        chain: ChainTypes.Ethereum,
-        network: NetworkTypes.MAINNET,
+      assetId: caip19.toCAIP19({
+        chainId: WellKnownChain.EthereumMainnet,
         assetNamespace: AssetNamespace.ERC20,
         assetReference: token.address
       })
@@ -69,7 +54,6 @@ export const getZapperTokens = async (): Promise<TokenAsset[]> => {
   return zapperTokens.map((token: Token) => {
     return {
       color: '#7057F5', // zapper protocol purple
-      contractType: AssetNamespace.ERC20,
       dataSource: AssetDataSource.YearnFinance,
       icon: token.icon ?? '',
       name: token.name,
@@ -78,14 +62,8 @@ export const getZapperTokens = async (): Promise<TokenAsset[]> => {
       secondaryColor: '#7057F5',
       sendSupport: true,
       symbol: token.symbol,
-      tokenId: toLower(token.address),
-      caip2: caip2.toCAIP2({
-        chain: ChainTypes.Ethereum,
-        network: NetworkTypes.MAINNET
-      }),
-      caip19: caip19.toCAIP19({
-        chain: ChainTypes.Ethereum,
-        network: NetworkTypes.MAINNET,
+      assetId: caip19.toCAIP19({
+        chainId: WellKnownChain.EthereumMainnet,
         assetNamespace: AssetNamespace.ERC20,
         assetReference: token.address
       })
@@ -98,7 +76,6 @@ export const getUnderlyingVaultTokens = async (): Promise<TokenAsset[]> => {
   return underlyingTokens.map((token: Token) => {
     return {
       color: '#FFFFFF',
-      contractType: AssetNamespace.ERC20,
       dataSource: AssetDataSource.YearnFinance,
       icon: token.icon ?? '',
       name: token.name,
@@ -107,14 +84,8 @@ export const getUnderlyingVaultTokens = async (): Promise<TokenAsset[]> => {
       secondaryColor: '#FFFFFF',
       sendSupport: true,
       symbol: token.symbol,
-      tokenId: toLower(token.address),
-      caip2: caip2.toCAIP2({
-        chain: ChainTypes.Ethereum,
-        network: NetworkTypes.MAINNET
-      }),
-      caip19: caip19.toCAIP19({
-        chain: ChainTypes.Ethereum,
-        network: NetworkTypes.MAINNET,
+      assetId: caip19.toCAIP19({
+        chainId: WellKnownChain.EthereumMainnet,
         assetNamespace: AssetNamespace.ERC20,
         assetReference: token.address
       })

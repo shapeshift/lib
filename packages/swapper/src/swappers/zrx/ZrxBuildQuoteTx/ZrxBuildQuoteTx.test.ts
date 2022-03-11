@@ -1,7 +1,7 @@
-import { AssetNamespace } from '@shapeshiftoss/caip'
+import { AssetNamespace, caip10, caip19, WellKnownChain } from '@shapeshiftoss/caip'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { ChainTypes, GetQuoteInput } from '@shapeshiftoss/types'
+import { GetQuoteInput } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 
@@ -44,25 +44,20 @@ const mockQuoteResponse = {
   allowanceGrantRequired: true,
   buyAmount: undefined,
   buyAsset: {
-    caip19: 'eip155:1/erc20:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-    caip2: 'eip155:1',
-    chain: 'ethereum',
+    assetId: 'eip155:1/erc20:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
     color: '#FFFFFF',
-    contractType: AssetNamespace.ERC20,
     dataSource: 'coingecko',
     explorer: 'https://etherscan.io',
     explorerTxLink: 'https://etherscan.io/tx/',
     explorerAddressLink: 'https://etherscan.io/address/',
     icon: 'https://assets.coingecko.com/coins/images/2518/thumb/weth.png?1628852295',
     name: 'WETH',
-    network: 'MAINNET',
     precision: 18,
     slip44: 60,
     receiveSupport: true,
     secondaryColor: '#FFFFFF',
     sendSupport: true,
-    symbol: 'WETH',
-    tokenId: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
+    symbol: 'WETH'
   },
   buyAssetAccountId: '0',
   depositAddress: undefined,
@@ -80,11 +75,8 @@ const mockQuoteResponse = {
   receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
   sellAmount: '1000000000000000000',
   sellAsset: {
-    caip19: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
-    caip2: 'eip155:1',
-    chain: 'ethereum',
+    assetId: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
     color: '#FFFFFF',
-    contractType: AssetNamespace.ERC20,
     dataSource: 'coingecko',
     icon: 'https://assets.coincap.io/assets/icons/fox@2x.png',
     name: 'FOX',
@@ -92,13 +84,11 @@ const mockQuoteResponse = {
     explorer: 'https://etherscan.io',
     explorerTxLink: 'https://etherscan.io/tx/',
     explorerAddressLink: 'https://etherscan.io/address/',
-    network: 'MAINNET',
     precision: 18,
     receiveSupport: true,
     secondaryColor: '#FFFFFF',
     sendSupport: true,
-    symbol: 'FOX',
-    tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
+    symbol: 'FOX'
   },
   sellAssetAccountId: '0',
   slippage: DEFAULT_SLIPPAGE,
@@ -110,7 +100,7 @@ const mockQuoteResponse = {
 
 const setup = () => {
   const unchainedUrls = {
-    [ChainTypes.Ethereum]: {
+    [WellKnownChain.EthereumMainnet]: {
       httpUrl: 'http://localhost:31300',
       wsUrl: 'ws://localhost:31300'
     }
@@ -176,35 +166,43 @@ describe('ZrxBuildQuoteTx', () => {
     )
   })
 
-  it('should throw error if tokenId, symbol and network are not provided for buyAsset', async () => {
+  it('should throw error if assetNamespace is unrecognized and symbol is missing for buyAsset', async () => {
     const input = {
       ...quoteInput,
       buyAsset: {
         ...buyAsset,
-        tokenId: '',
-        symbol: '',
-        network: ''
+        assetId: caip19.toCAIP19({
+          ...caip19.fromCAIP19(buyAsset.assetId),
+          assetNamespace: AssetNamespace.ERC721
+        }),
+        symbol: ''
       }
     } as unknown as GetQuoteInput
 
-    await expect(ZrxBuildQuoteTx(deps, { input, wallet })).rejects.toThrow(
-      'ZrxSwapper:ZrxBuildQuoteTx One of buyAssetContract or buyAssetSymbol or buyAssetNetwork are required'
+    await expect(
+      ZrxBuildQuoteTx(deps, { input, wallet })
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"getZrxToken - unsupported asset eip155:1/erc721:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"`
     )
   })
 
-  it('should throw error if tokenId, symbol and network are not provided for sellAsset', async () => {
+  it('should throw error if assetNamespace is unrecognized and symbol is missing for sellAsset', async () => {
     const input = {
       ...quoteInput,
       sellAsset: {
         ...sellAsset,
-        tokenId: '',
-        symbol: '',
-        network: ''
+        assetId: caip19.toCAIP19({
+          ...caip19.fromCAIP19(sellAsset.assetId),
+          assetNamespace: AssetNamespace.ERC721
+        }),
+        symbol: ''
       }
     } as unknown as GetQuoteInput
 
-    await expect(ZrxBuildQuoteTx(deps, { input, wallet })).rejects.toThrow(
-      'ZrxSwapper:ZrxBuildQuoteTx One of sellAssetContract or sellAssetSymbol or sellAssetNetwork are required'
+    await expect(
+      ZrxBuildQuoteTx(deps, { input, wallet })
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"getZrxToken - unsupported asset eip155:1/erc721:0xc770eefad204b5180df6a14ee197d99d808ee52d"`
     )
   })
 

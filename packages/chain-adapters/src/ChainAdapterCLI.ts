@@ -1,5 +1,6 @@
+import { WellKnownChain } from '@shapeshiftoss/caip'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { BIP44Params, ChainTypes, UtxoAccountType } from '@shapeshiftoss/types'
+import { BIP44Params, UtxoAccountType } from '@shapeshiftoss/types'
 import dotenv from 'dotenv'
 
 import { ChainAdapterManager } from './ChainAdapterManager'
@@ -20,15 +21,15 @@ const getWallet = async (): Promise<NativeHDWallet> => {
 }
 
 const unchainedUrls = {
-  [ChainTypes.Bitcoin]: {
+  [WellKnownChain.BitcoinMainnet]: {
     httpUrl: 'https://dev-api.bitcoin.shapeshift.com',
     wsUrl: 'wss://dev-api.bitcoin.shapeshift.com'
   },
-  [ChainTypes.Ethereum]: {
+  [WellKnownChain.EthereumMainnet]: {
     httpUrl: 'https://dev-api.ethereum.shapeshift.com',
     wsUrl: 'wss://dev-api.ethereum.shapeshift.com'
   },
-  [ChainTypes.Cosmos]: {
+  [WellKnownChain.CosmosHubMainnet]: {
     httpUrl: 'https://dev-api.cosmos.shapeshift.com',
     wsUrl: 'wss://dev-api.cosmos.shapeshift.com'
   }
@@ -40,7 +41,7 @@ const main = async () => {
     const wallet = await getWallet()
 
     /** BITCOIN CLI */
-    const btcChainAdapter = chainAdapterManager.byChain(ChainTypes.Bitcoin)
+    const btcChainAdapter = await chainAdapterManager.byChainId(WellKnownChain.BitcoinMainnet)
     const btcBip44Params: BIP44Params = {
       purpose: 84,
       coinType: 0,
@@ -87,7 +88,7 @@ const main = async () => {
     }
 
     /** ETHEREUM CLI */
-    const ethChainAdapter = chainAdapterManager.byChain(ChainTypes.Ethereum)
+    const ethChainAdapter = await chainAdapterManager.byChainId(WellKnownChain.EthereumMainnet)
     const ethBip44Params: BIP44Params = { purpose: 44, coinType: 60, accountNumber: 0 }
 
     const ethAddress = await ethChainAdapter.getAddress({ wallet, bip44Params: ethBip44Params })
@@ -159,7 +160,7 @@ const main = async () => {
     }
 
     /** COSMOS CLI */
-    const cosmosChainAdapter = chainAdapterManager.byChain(ChainTypes.Cosmos)
+    const cosmosChainAdapter = await chainAdapterManager.byChainId(WellKnownChain.CosmosHubMainnet)
     const cosmosBip44Params: BIP44Params = { purpose: 44, coinType: 118, accountNumber: 0 }
 
     const cosmosAddress = await cosmosChainAdapter.getAddress({

@@ -16,5 +16,5 @@ const generatedCoinCapToCAIP19Map: Record<string, string> = invert(generatedCAIP
 
 export const coincapToCAIP19 = (id: string): string | undefined => generatedCoinCapToCAIP19Map[id]
 
-export const CAIP19ToCoinCap = (caip19: string): string | undefined =>
+export const caip19ToCoinCap = (caip19: string): string | undefined =>
   generatedCAIP19ToCoinCapMap[toLower(caip19)]

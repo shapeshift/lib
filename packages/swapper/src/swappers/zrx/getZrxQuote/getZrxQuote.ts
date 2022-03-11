@@ -1,5 +1,6 @@
+import { AssetNamespace, caip19, WellKnownChain } from '@shapeshiftoss/caip'
 import {
-  ChainTypes,
+  ChainAdapterType,
   GetQuoteInput,
   Quote,
   QuoteResponse,
@@ -10,13 +11,13 @@ import { AxiosResponse } from 'axios'
 import BigNumber from 'bignumber.js'
 
 import { APPROVAL_GAS_LIMIT, DEFAULT_SOURCE, MAX_ZRX_TRADE } from '../utils/constants'
-import { normalizeAmount } from '../utils/helpers/helpers'
+import { getZrxToken, normalizeAmount } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
 import { ZrxError } from '../ZrxSwapper'
 
 export async function getZrxQuote(
   input: GetQuoteInput
-): Promise<Quote<ChainTypes.Ethereum, SwapperType>> {
+): Promise<Quote<ChainAdapterType.Ethereum, SwapperType>> {
   const {
     sellAsset,
     buyAsset,
@@ -32,24 +33,29 @@ export async function getZrxQuote(
   if (!sellAsset) {
     throw new ZrxError('getQuote - Missing sellAsset')
   }
-  if (buyAsset.chain !== ChainTypes.Ethereum || sellAsset.chain !== ChainTypes.Ethereum) {
+  const { chainId: buyAssetChainId } = caip19.fromCAIP19(buyAsset.assetId)
+  const { chainId: sellAssetChainId, assetNamespace: sellAssetAssetNamespace } = caip19.fromCAIP19(
+    sellAsset.assetId
+  )
+  const sellAssetIsToken = sellAssetAssetNamespace === AssetNamespace.ERC20
+
+  if (
+    buyAssetChainId !== WellKnownChain.EthereumMainnet ||
+    sellAssetChainId !== WellKnownChain.EthereumMainnet
+  ) {
     throw new ZrxError('getQuote - Both assets need to be on the Ethereum chain to use Zrx')
   }
   if (!sellAmount && !buyAmount) {
     throw new ZrxError('getQuote - sellAmount or buyAmount amount is required')
   }
 
+  const minQuoteSellAmountWei = minQuoteSellAmount
+    ? new BigNumber(minQuoteSellAmount as string).times(
+        new BigNumber(10).exponentiatedBy(sellAsset.precision)
+      )
+    : null
+
   const useSellAmount = !!sellAmount
-  const buyToken = buyAsset.tokenId || buyAsset.symbol
-  const sellToken = sellAsset.tokenId || sellAsset.symbol
-
-  let minQuoteSellAmountWei = null
-  if (minQuoteSellAmount) {
-    minQuoteSellAmountWei = new BigNumber(minQuoteSellAmount as string).times(
-      new BigNumber(10).exponentiatedBy(sellAsset.precision)
-    )
-  }
-
   const amount = useSellAmount ? { sellAmount } : { buyAmount }
   const amountKey = Object.keys(amount)[0]
   const amountValue = Object.values(amount)[0]
@@ -78,8 +84,8 @@ export async function getZrxQuote(
       '/swap/v1/price',
       {
         params: {
-          sellToken,
-          buyToken,
+          sellToken: getZrxToken(sellAsset),
+          buyToken: getZrxToken(buyAsset),
           slippagePercentage,
           [amountKey]: normalizedAmount
         }
@@ -116,9 +122,9 @@ export async function getZrxQuote(
         chainSpecific: {
           estimatedGas: estimatedGas.toString(),
           gasPrice: data.gasPrice,
-          approvalFee:
-            sellAsset.tokenId &&
-            new BigNumber(APPROVAL_GAS_LIMIT).multipliedBy(data.gasPrice || 0).toString()
+          approvalFee: sellAssetIsToken
+            ? new BigNumber(APPROVAL_GAS_LIMIT).multipliedBy(data.gasPrice || 0).toString()
+            : undefined
         }
       },
       sellAmount: data.sellAmount,

@@ -1,13 +1,6 @@
 import realFs from 'fs'
 
-import {
-  makeBtcData,
-  makeCosmosHubData,
-  makeOsmosisData,
-  parseData,
-  parseEthData,
-  writeFiles
-} from './utils'
+import { parseData, parseEthData, writeFiles } from './utils'
 
 const makeEthMockCoincapResponse = () => ({
   id: 'ethereum',
@@ -97,26 +90,6 @@ describe('adapters:coincap:utils', () => {
       const expected = {
         'eip155:1/slip44:60': 'ethereum',
         'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d': 'fox-token'
-      }
-      expect(result).toEqual(expected)
-    })
-
-    it('can parse btc data', async () => {
-      const result = makeBtcData()
-      const expected = { 'bip122:000000000019d6689c085ae165831e93/slip44:0': 'bitcoin' }
-      expect(result).toEqual(expected)
-    })
-
-    it('can parse cosmos data', async () => {
-      const result = makeCosmosHubData()
-      const expected = { 'cosmos:cosmoshub-4/slip44:118': 'cosmos' }
-      expect(result).toEqual(expected)
-    })
-
-    it('can parse osmosis data', async () => {
-      const result = makeOsmosisData()
-      const expected = {
-        'cosmos:osmosis-1/slip44:118': 'osmosis'
       }
       expect(result).toEqual(expected)
     })

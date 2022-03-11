@@ -1,5 +1,6 @@
+import { caip19, WellKnownAsset, WellKnownChain } from '@shapeshiftoss/caip'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { ChainTypes } from '@shapeshiftoss/types'
+import { Asset } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import { APPROVAL_GAS_LIMIT } from '../utils/constants'
@@ -48,8 +49,11 @@ describe('ZrxApprovalNeeded', () => {
   })
 
   it('throws an error if sellAsset chain is not ETH', async () => {
+    const btcSellAsset = {
+      assetId: WellKnownAsset.BTC
+    } as Asset
     const input = {
-      quote: { ...quoteInput, sellAsset: { ...sellAsset, chain: ChainTypes.Bitcoin } },
+      quote: { ...quoteInput, sellAsset: btcSellAsset },
       wallet
     }
 

@@ -1,11 +1,10 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import { Token, Vault, Yearn } from '@yfi/sdk'
 import fs from 'fs'
 import toLower from 'lodash/toLower'
 import uniqBy from 'lodash/uniqBy'
 
-import { toCAIP2 } from '../../caip2/caip2'
+import { WellKnownChain } from '../../caip2/caip2'
 import { AssetNamespace, toCAIP19 } from '../../caip19/caip19'
 
 const network = 1 // 1 for mainnet
@@ -33,17 +32,13 @@ export const fetchData = async () => {
 }
 
 export const parseEthData = (data: (Token | Vault)[]) => {
-  const chain = ChainTypes.Ethereum
-  const assetNamespace = AssetNamespace.ERC20
-
   return data.reduce((acc, datum) => {
     const { address } = datum
     const id = address
     const assetReference = toLower(address)
     const caip19 = toCAIP19({
-      chain,
-      network: NetworkTypes.MAINNET,
-      assetNamespace,
+      chainId: WellKnownChain.EthereumMainnet,
+      assetNamespace: AssetNamespace.ERC20,
       assetReference
     })
     acc[caip19] = id
@@ -51,7 +46,6 @@ export const parseEthData = (data: (Token | Vault)[]) => {
   }, {} as Record<string, string>)
 }
 
-export const parseData = (d: (Token | Vault)[]) => {
-  const ethMainnet = toCAIP2({ chain: ChainTypes.Ethereum, network: NetworkTypes.MAINNET })
-  return { [ethMainnet]: parseEthData(d) }
-}
+export const parseData = (d: (Token | Vault)[]) => ({
+  [WellKnownChain.EthereumMainnet]: parseEthData(d)
+})

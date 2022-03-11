@@ -1,7 +1,8 @@
+import { AssetNamespace, caip19, WellKnownChain } from '@shapeshiftoss/caip'
 import {
   ApprovalNeededInput,
   ApprovalNeededOutput,
-  ChainTypes,
+  ChainAdapterType,
   QuoteResponse,
   SwapperType
 } from '@shapeshiftoss/types'
@@ -16,13 +17,13 @@ import {
   APPROVAL_GAS_LIMIT,
   DEFAULT_SLIPPAGE
 } from '../utils/constants'
-import { getERC20Allowance } from '../utils/helpers/helpers'
+import { getERC20Allowance, getZrxToken } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function ZrxApprovalNeeded(
   { adapterManager, web3 }: ZrxSwapperDeps,
-  { quote, wallet }: ApprovalNeededInput<ChainTypes, SwapperType>
+  { quote, wallet }: ApprovalNeededInput<ChainAdapterType, SwapperType>
 ): Promise<ApprovalNeededOutput> {
   const { sellAsset } = quote
 
@@ -30,13 +31,14 @@ export async function ZrxApprovalNeeded(
     return { approvalNeeded: false }
   }
 
-  if (sellAsset.chain !== ChainTypes.Ethereum) {
+  const { chainId: sellAssetChainId } = caip19.fromCAIP19(sellAsset.assetId)
+  if (sellAssetChainId !== WellKnownChain.EthereumMainnet) {
     throw new SwapError('ZrxSwapper:ZrxApprovalNeeded only Ethereum chain type is supported')
   }
 
   const accountNumber = quote.sellAssetAccountId ? Number(quote.sellAssetAccountId) : 0
 
-  const adapter = adapterManager.byChain(sellAsset.chain)
+  const adapter = await adapterManager.byChainId(sellAssetChainId)
   const bip44Params = adapter.buildBIP44Params({ accountNumber })
   const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 
@@ -54,7 +56,7 @@ export async function ZrxApprovalNeeded(
     {
       params: {
         buyToken: 'ETH',
-        sellToken: quote.sellAsset.tokenId || quote.sellAsset.symbol || quote.sellAsset.chain,
+        sellToken: getZrxToken(quote.sellAsset),
         buyAmount: APPROVAL_BUY_AMOUNT,
         takerAddress: receiveAddress,
         slippagePercentage: DEFAULT_SLIPPAGE,
@@ -65,13 +67,17 @@ export async function ZrxApprovalNeeded(
   )
   const { data } = quoteResponse
 
-  if (!quote.sellAsset.tokenId || !data.allowanceTarget) {
-    throw new SwapError('ZrxApprovalNeeded - tokenId and allowanceTarget are required')
+  if (!data.allowanceTarget) {
+    throw new SwapError('ZrxApprovalNeeded - allowanceTarget is required')
+  }
+  const { assetNamespace, assetReference } = caip19.fromCAIP19(quote.sellAsset.assetId)
+  if (assetNamespace !== AssetNamespace.ERC20) {
+    throw new SwapError('ZrxApprovalNeeded - asset must be an ERC20')
   }
   const allowanceResult = await getERC20Allowance({
     web3,
     erc20AllowanceAbi,
-    tokenId: quote.sellAsset.tokenId,
+    tokenId: assetReference,
     spenderAddress: data.allowanceTarget,
     ownerAddress: receiveAddress
   })

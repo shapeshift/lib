@@ -1,5 +1,5 @@
-import { caip19 } from '@shapeshiftoss/caip'
-import { chainAdapters, ChainTypes, SendMaxAmountInput } from '@shapeshiftoss/types'
+import { AssetNamespace, caip19, WellKnownChain } from '@shapeshiftoss/caip'
+import { chainAdapters, SendMaxAmountInput } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 
 import { SwapError } from '../../../api'
@@ -16,7 +16,7 @@ export async function getZrxSendMaxAmount(
     feeEstimateKey = chainAdapters.FeeDataKey.Average
   }: SendMaxAmountInput
 ): Promise<string> {
-  const adapter = adapterManager.byChain<ChainTypes.Ethereum>(ChainTypes.Ethereum)
+  const adapter = await adapterManager.byChainId(WellKnownChain.EthereumMainnet)
   const bip44Params = adapter.buildBIP44Params({
     accountNumber: bnOrZero(sellAssetAccountId).toNumber()
   })
@@ -28,23 +28,25 @@ export async function getZrxSendMaxAmount(
     throw new SwapError('quote.sellAsset is required')
   }
 
-  const tokenId = quote.sellAsset?.tokenId
+  const { assetNamespace } = caip19.fromCAIP19(quote.sellAsset.assetId)
+  const isToken = assetNamespace === AssetNamespace.ERC20
 
-  let balance: string | undefined
-  if (tokenId) {
-    balance = account.chainSpecific.tokens?.find((token: chainAdapters.AssetBalance) => {
-      return caip19.fromCAIP19(token.caip19).assetReference === tokenId.toLowerCase()
-    })?.balance
-  } else {
-    balance = account.balance
-  }
-
+  const balance = (() => {
+    if (isToken) {
+      const out = account.chainSpecific.tokens.find((x) => {
+        return x.assetId === quote.sellAsset.assetId
+      })?.balance
+      return out
+    } else {
+      return account.balance
+    }
+  })()
   if (!balance) {
-    throw new SwapError(`No balance found for ${tokenId ? quote.sellAsset.symbol : 'ETH'}`)
+    throw new SwapError(`No balance found for ${quote.sellAsset.symbol ?? quote.sellAsset.assetId}`)
   }
 
   // return the erc20 token balance. No need to subtract the fee.
-  if (tokenId && new BigNumber(balance).gt(0)) {
+  if (isToken && new BigNumber(balance).gt(0)) {
     return balance
   }
 

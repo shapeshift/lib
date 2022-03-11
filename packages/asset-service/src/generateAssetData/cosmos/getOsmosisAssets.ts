@@ -1,4 +1,4 @@
-import { Asset, AssetDataSource, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
+import { Asset, AssetDataSource } from '@shapeshiftoss/types'
 import axios from 'axios'
 
 import { getRenderedIdenticonBase64, IdenticonOptions } from '../../service/GenerateAssetIcon'
@@ -48,12 +48,9 @@ export const getOsmosisAssets = async (): Promise<Asset[]> => {
       assetReference = current.base.split('/')[1]
     }
 
-    const assetDatum = {
-      caip19: `cosmos:osmosis-1/${assetNamespace}:${assetReference}`,
-      caip2: 'cosmos:osmosis-1',
-      chain: ChainTypes.Cosmos,
+    const assetDatum: Asset = {
+      assetId: `cosmos:osmosis-1/${assetNamespace}:${assetReference}`,
       dataSource: AssetDataSource.CoinGecko,
-      network: NetworkTypes.OSMOSIS_MAINNET,
       symbol: current.symbol,
       name: current.name,
       precision,
@@ -80,7 +77,7 @@ export const getOsmosisAssets = async (): Promise<Asset[]> => {
         }
       }
       assetDatum.icon = getRenderedIdenticonBase64(
-        assetDatum.caip19,
+        assetDatum.assetId,
         assetDatum.symbol.substring(0, 3),
         options
       )

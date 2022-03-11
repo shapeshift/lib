@@ -1,6 +1,6 @@
-import { CAIP2, CAIP19 } from '@shapeshiftoss/caip'
-import { bip32ToAddressNList, HDWallet, PublicKey } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, chainAdapters, ChainTypes, UtxoAccountType } from '@shapeshiftoss/types'
+import { CAIP2, caip2, CAIP19, WellKnownAsset, WellKnownChain } from '@shapeshiftoss/caip'
+import { bip32ToAddressNList, Coin, HDWallet, PublicKey } from '@shapeshiftoss/hdwallet-core'
+import { BIP44Params, chainAdapters, ChainAdapterType, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import WAValidator from 'multicoin-address-validator'
 
@@ -13,7 +13,7 @@ import {
   toRootDerivationPath
 } from '../utils'
 
-export type UTXOChainTypes = ChainTypes.Bitcoin // to be extended in the future to include other UTXOs
+export type UTXOChainTypes = ChainAdapterType.Bitcoin // to be extended in the future to include other UTXOs
 
 /**
  * Currently, we don't have a generic interact for UTXO providers, but will in the future.
@@ -25,26 +25,33 @@ export interface ChainAdapterArgs {
     http: unchained.bitcoin.V1Api
     ws: unchained.ws.Client<unchained.SequencedTx>
   }
-  coinName: string
-  chainId?: CAIP2
+  coinName: Coin // TODO(MrNerdHair): move caip-to-hdwallet-coin-name logic into hdwallet
+  chainId: CAIP2
+  assetId: CAIP19
 }
 
 /**
- * Base chain adapter for all UTXO chains. When extending please add your ChainType to the
+ * Base chain adapter for all UTXO chains. When extending please add your ChainAdapterType to the
  * UTXOChainTypes. For example:
  *
- * `export type UTXOChainTypes = ChainTypes.Bitcoin | ChainTypes.Litecoin`
+ * `export type UTXOChainTypes = ChainAdapterType.Bitcoin | ChainAdapterType.Litecoin`
  */
 export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChainAdapter<T> {
-  protected chainId: CAIP2
-  protected assetId: CAIP19
-  protected coinName: string
+  protected readonly chainId: CAIP2
+  protected readonly assetId: CAIP19
+  protected readonly coinName: Coin
   protected readonly providers: {
     http: unchained.bitcoin.V1Api
     ws: unchained.ws.Client<unchained.SequencedTx>
   }
 
-  protected constructor(args: ChainAdapterArgs) {
+  protected constructor(supportedChainIds: CAIP2[], args: ChainAdapterArgs) {
+    this.chainId = args.chainId
+    if (!caip2.isCAIP2(this.chainId) || !supportedChainIds.includes(this.chainId)) {
+      throw new Error(`The ChainID ${this.chainId} is not supported`)
+    }
+    this.coinName = args.coinName
+    this.assetId = args.assetId
     this.providers = args.providers
   }
 
@@ -103,22 +110,18 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
     }
 
     try {
-      const caip = await this.getCaip2()
       const { data } = await this.providers.http.getAccount({ pubkey: pubkey })
 
-      const balance = bnOrZero(data.balance).plus(bnOrZero(data.unconfirmedBalance))
-
       return {
-        balance: balance.toString(),
-        chain: this.getType(),
-        caip2: caip,
-        caip19: this.getCaip19(),
+        balance: bnOrZero(data.balance).plus(bnOrZero(data.unconfirmedBalance)).toString(),
+        pubkey: data.pubkey,
+        assetId: this.getAssetId(),
+        chainType: this.getType(),
         chainSpecific: {
           addresses: data.addresses,
           nextChangeAddressIndex: data.nextChangeAddressIndex,
           nextReceiveAddressIndex: data.nextReceiveAddressIndex
-        },
-        pubkey: data.pubkey
+        }
       } as chainAdapters.Account<T>
     } catch (err) {
       return ErrorHandler(err)
@@ -149,7 +152,7 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
       {
         coin: this.coinName,
         addressNList: bip32ToAddressNList(path),
-        curve: 'secp256k1', // TODO(0xdef1cafe): from constant?
+        curve: 'secp256k1',
         scriptType: accountTypeToScriptType[accountType]
       }
     ])

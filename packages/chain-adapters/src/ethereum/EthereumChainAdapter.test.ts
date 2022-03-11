@@ -4,9 +4,10 @@
  * Test EthereumChainAdapter
  * @group unit
  */
+import { WellKnownAsset, WellKnownChain } from '@shapeshiftoss/caip'
 import { ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { chainAdapters, ChainTypes } from '@shapeshiftoss/types'
+import { chainAdapters, ChainAdapterType } from '@shapeshiftoss/types'
 import unchained from '@shapeshiftoss/unchained-client'
 import { merge } from 'lodash'
 import { numberToHex } from 'web3-utils'
@@ -100,7 +101,7 @@ describe('EthereumChainAdapter', () => {
       nonce: 2,
       tokens: [
         {
-          caip19: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
+          assetId: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
           balance: balance.erc20Balance,
           type: 'ERC20',
           contract: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
@@ -118,7 +119,9 @@ describe('EthereumChainAdapter', () => {
         providers: {
           http: {} as unknown as unchained.ethereum.V1Api,
           ws: {} as unchained.ws.Client<unchained.SequencedTx>
-        }
+        },
+        chainId: WellKnownChain.EthereumMainnet,
+        assetId: WellKnownAsset.ETH
       },
       overrideArgs
     )
@@ -422,7 +425,7 @@ describe('EthereumChainAdapter', () => {
         wallet: await getWallet(),
         value,
         chainSpecific: makeChainSpecific({ erc20ContractAddress })
-      } as unknown as chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>
+      } as unknown as chainAdapters.BuildSendTxInput<ChainAdapterType.Ethereum>
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow(
         'EthereumChainAdapter: to is required'
       )
@@ -446,7 +449,7 @@ describe('EthereumChainAdapter', () => {
         to: ENS_NAME,
         value,
         chainSpecific: makeChainSpecific({ erc20ContractAddress })
-      } as unknown as chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>
+      } as unknown as chainAdapters.BuildSendTxInput<ChainAdapterType.Ethereum>
 
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow(
         /a provider or signer is needed to resolve ENS names/
@@ -461,7 +464,7 @@ describe('EthereumChainAdapter', () => {
         wallet: await getWallet(),
         to: EOA_ADDRESS,
         chainSpecific: makeChainSpecific()
-      } as unknown as chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>
+      } as unknown as chainAdapters.BuildSendTxInput<ChainAdapterType.Ethereum>
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow(
         'EthereumChainAdapter: value is required'
       )
@@ -483,7 +486,7 @@ describe('EthereumChainAdapter', () => {
         to: EOA_ADDRESS,
         value,
         chainSpecific: makeChainSpecific()
-      } as unknown as chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>
+      } as unknown as chainAdapters.BuildSendTxInput<ChainAdapterType.Ethereum>
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
           addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
@@ -515,7 +518,7 @@ describe('EthereumChainAdapter', () => {
         value,
         chainSpecific: makeChainSpecific(),
         sendMax: true
-      } as unknown as chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>
+      } as unknown as chainAdapters.BuildSendTxInput<ChainAdapterType.Ethereum>
 
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow('no balance')
       expect(args.providers.http.getAccount).toHaveBeenCalledTimes(2)
@@ -541,7 +544,7 @@ describe('EthereumChainAdapter', () => {
         value,
         chainSpecific: makeChainSpecific(),
         sendMax: true
-      } as unknown as chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>
+      } as unknown as chainAdapters.BuildSendTxInput<ChainAdapterType.Ethereum>
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
           addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
@@ -574,7 +577,7 @@ describe('EthereumChainAdapter', () => {
         to: ZERO_ADDRESS,
         value,
         chainSpecific: makeChainSpecific({ erc20ContractAddress })
-      } as unknown as chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>
+      } as unknown as chainAdapters.BuildSendTxInput<ChainAdapterType.Ethereum>
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
           addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
@@ -608,7 +611,7 @@ describe('EthereumChainAdapter', () => {
         value,
         chainSpecific: makeChainSpecific({ erc20ContractAddress }),
         sendMax: true
-      } as unknown as chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>
+      } as unknown as chainAdapters.BuildSendTxInput<ChainAdapterType.Ethereum>
 
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
@@ -644,7 +647,7 @@ describe('EthereumChainAdapter', () => {
         value,
         chainSpecific: makeChainSpecific({ erc20ContractAddress }),
         sendMax: true
-      } as unknown as chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>
+      } as unknown as chainAdapters.BuildSendTxInput<ChainAdapterType.Ethereum>
 
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow('no balance')
 

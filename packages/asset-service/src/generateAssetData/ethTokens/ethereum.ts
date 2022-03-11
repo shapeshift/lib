@@ -33,15 +33,14 @@ export const addTokensToEth = async (): Promise<BaseAsset> => {
     ...zapperTokens,
     ...underlyingTokens
   ]
-  const uniqueTokens = orderBy(uniqBy(tokens, 'caip19'), 'caip19') // Remove dups and order for PR readability
+  const uniqueTokens = orderBy(uniqBy(tokens, 'assetId'), 'assetId') // Remove dups and order for PR readability
   const batchSize = 100 // tune this to keep rate limiting happy
   const tokenBatches = chunk(uniqueTokens, batchSize)
   let modifiedTokens: TokenAsset[] = []
   for (const [i, batch] of tokenBatches.entries()) {
     console.info(`processing batch ${i + 1} of ${tokenBatches.length}`)
     const promises = batch.map(async (token) => {
-      const { chain } = caip19.fromCAIP19(token.caip19)
-      const { info } = generateTrustWalletUrl({ chain, tokenId: token.tokenId })
+      const { info } = generateTrustWalletUrl(token.assetId)
       return axios.head(info) // return promise
     })
     const result = await Promise.allSettled(promises)
@@ -60,15 +59,14 @@ export const addTokensToEth = async (): Promise<BaseAsset> => {
             }
           }
           uniqueTokens[key].icon = getRenderedIdenticonBase64(
-            uniqueTokens[key].caip19,
+            uniqueTokens[key].assetId,
             uniqueTokens[key].symbol.substring(0, 3),
             options
           )
         }
         return uniqueTokens[key] // token without modified icon
       } else {
-        const { chain } = caip19.fromCAIP19(uniqueTokens[key].caip19)
-        const { icon } = generateTrustWalletUrl({ chain, tokenId: uniqueTokens[key].tokenId })
+        const { icon } = generateTrustWalletUrl(uniqueTokens[key].assetId)
         return { ...uniqueTokens[key], icon }
       }
     })
