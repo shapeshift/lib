@@ -83,9 +83,9 @@ export class FoxyApi {
 
   async broadcastTx(signedTx: string) {
     // TODO: change back to broadcastTransaction
-    //return this.adapter.broadcastTransaction(signedTx)
-    const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
-    return sendSignedTx?.blockHash
+    return this.adapter.broadcastTransaction(signedTx)
+    // const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
+    // return sendSignedTx?.blockHash
   }
 
   async getGasPrice() {
