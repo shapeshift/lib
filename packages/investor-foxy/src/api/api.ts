@@ -8,13 +8,7 @@ import Web3 from 'web3'
 import { HttpProvider, TransactionReceipt } from 'web3-core/types'
 import { Contract } from 'web3-eth-contract'
 
-import {
-  DefiType,
-  erc20Abi,
-  foxyStakingAbi,
-  foxyAddresses,
-  MAX_ALLOWANCE,
-} from '../constants'
+import { DefiType, erc20Abi, foxyStakingAbi, foxyAddresses, MAX_ALLOWANCE } from '../constants'
 import { foxyAbi } from '../constants/foxy-abi'
 import { liquidityReserveAbi } from '../constants/liquidity-reserve-abi'
 import { bnOrZero, buildTxToSign } from '../utils'
@@ -71,21 +65,26 @@ export class FoxyApi {
   }
 
   async getFoxyOpportunities() {
-    const opportunities = await Promise.all(foxyAddresses.map(async (addresses) => {
-      const stakingContract = this.foxyStakingContracts.find(
-        (item) => toLower(item.options.address) === toLower(addresses.staking)
-      )
-      const expired = await stakingContract?.methods.pauseStaking().call()
-      const tvl = await this.tvl({ tokenContractAddress: addresses.foxy })
-      const apy = await this.apy()
+    const opportunities = await Promise.all(
+      foxyAddresses.map(async (addresses) => {
+        const stakingContract = this.foxyStakingContracts.find(
+          (item) => toLower(item.options.address) === toLower(addresses.staking)
+        )
+        const expired = await stakingContract?.methods.pauseStaking().call()
+        const tvl = await this.tvl({ tokenContractAddress: addresses.foxy })
+        const apy = await this.apy()
 
-      return transformData({ ...addresses, tvl: tvl.toString(), apy, expired })
-    }))
+        return transformData({ ...addresses, tvl: tvl.toString(), apy, expired })
+      })
+    )
     return opportunities
   }
 
-  async broadcastTx(signedTx: string){
-
+  async broadcastTx(signedTx: string) {
+    // TODO: change back to broadcastTransaction
+    //return this.adapter.broadcastTransaction(signedTx)
+    const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
+    return sendSignedTx?.blockHash
   }
 
   async getGasPrice() {
@@ -237,10 +236,7 @@ export class FoxyApi {
     if (wallet.supportsOfflineSigning()) {
       const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
       if (dryRun) return signedTx
-      // TODO: change back to broadcastTransaction
-      //return this.adapter.broadcastTransaction(signedTx)
-      const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
-      return sendSignedTx?.blockHash
+      return this.broadcastTx(signedTx)
     } else if (wallet.supportsBroadcast() && this.adapter.signAndBroadcastTransaction) {
       if (dryRun) {
         throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
@@ -299,10 +295,7 @@ export class FoxyApi {
     if (wallet.supportsOfflineSigning()) {
       const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
       if (dryRun) return signedTx
-      // TODO: change back to broadcastTransaction
-      //return this.adapter.broadcastTransaction(signedTx)
-      const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
-      return sendSignedTx?.blockHash
+      return this.broadcastTx(signedTx)
     } else if (wallet.supportsBroadcast() && this.adapter.signAndBroadcastTransaction) {
       if (dryRun) {
         throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
@@ -347,10 +340,7 @@ export class FoxyApi {
     if (wallet.supportsOfflineSigning()) {
       const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
       if (dryRun) return signedTx
-      // TODO: change back to broadcastTransaction
-      //return this.adapter.broadcastTransaction(signedTx)
-      const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
-      return sendSignedTx?.blockHash
+      return this.broadcastTx(signedTx)
     } else if (wallet.supportsBroadcast() && this.adapter.signAndBroadcastTransaction) {
       if (dryRun) {
         throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
@@ -391,10 +381,7 @@ export class FoxyApi {
     if (wallet.supportsOfflineSigning()) {
       const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
       if (dryRun) return signedTx
-      // TODO: change back to broadcastTransaction
-      //return this.adapter.broadcastTransaction(signedTx)
-      const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
-      return sendSignedTx?.blockHash
+      return this.broadcastTx(signedTx)
     } else if (wallet.supportsBroadcast() && this.adapter.signAndBroadcastTransaction) {
       if (dryRun) {
         throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
@@ -444,10 +431,7 @@ export class FoxyApi {
     if (wallet.supportsOfflineSigning()) {
       const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
       if (dryRun) return signedTx
-      // TODO: change back to broadcastTransaction
-      //return this.adapter.broadcastTransaction(signedTx)
-      const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
-      return sendSignedTx?.blockHash
+      return this.broadcastTx(signedTx)
     } else if (wallet.supportsBroadcast() && this.adapter.signAndBroadcastTransaction) {
       if (dryRun) {
         throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
@@ -488,10 +472,7 @@ export class FoxyApi {
     if (wallet.supportsOfflineSigning()) {
       const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
       if (dryRun) return signedTx
-      // TODO: change back to broadcastTransaction
-      //return this.adapter.broadcastTransaction(signedTx)
-      const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
-      return sendSignedTx?.blockHash
+      return this.broadcastTx(signedTx)
     } else if (wallet.supportsBroadcast() && this.adapter.signAndBroadcastTransaction) {
       if (dryRun) {
         throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
@@ -538,10 +519,7 @@ export class FoxyApi {
     if (wallet.supportsOfflineSigning()) {
       const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
       if (dryRun) return signedTx
-      // TODO: change back to broadcastTransaction
-      //return this.adapter.broadcastTransaction(signedTx)
-      const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
-      return sendSignedTx?.blockHash
+      return this.broadcastTx(signedTx)
     } else if (wallet.supportsBroadcast() && this.adapter.signAndBroadcastTransaction) {
       if (dryRun) {
         throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
@@ -588,10 +566,7 @@ export class FoxyApi {
     if (wallet.supportsOfflineSigning()) {
       const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
       if (dryRun) return signedTx
-      // TODO: change back to broadcastTransaction
-      //return this.adapter.broadcastTransaction(signedTx)
-      const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
-      return sendSignedTx?.blockHash
+      return this.broadcastTx(signedTx)
     } else if (wallet.supportsBroadcast() && this.adapter.signAndBroadcastTransaction) {
       if (dryRun) {
         throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
