@@ -37,7 +37,8 @@ export const transformData = (contractData: any): any => {
     provider: 'ShapeShift',
     version: '1',
     contractAddress: contractData.staking,
-    tokenAddress: contractData.foxy,
+    foxyAddress: contractData.foxy,
+    foxAddress: contractData.fox,
     chain: ChainTypes.Ethereum,
     ...contractData
   }
