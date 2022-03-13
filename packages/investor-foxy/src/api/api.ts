@@ -9,11 +9,11 @@ import { HttpProvider, TransactionReceipt } from 'web3-core/types'
 import { Contract } from 'web3-eth-contract'
 
 import {
+  DefiType,
   erc20Abi,
   foxyStakingAbi,
-  foxyStakingContractAddress,
-  liquidityReserveContractAddress,
-  MAX_ALLOWANCE
+  foxyAddresses,
+  MAX_ALLOWANCE,
 } from '../constants'
 import { foxyAbi } from '../constants/foxy-abi'
 import { liquidityReserveAbi } from '../constants/liquidity-reserve-abi'
@@ -37,19 +37,17 @@ export type ConstructorArgs = {
     | ChainReference.EthereumRopsten
 }
 
-// export const transformVault = (vault: any): any => {
-//   return {
-//     ...vault,
-//     vaultAddress: toLower(vault.address),
-//     name: `${vault.name} ${vault.version}`,
-//     symbol: vault.symbol,
-//     tokenAddress: toLower(vault.token),
-//     chain: ChainTypes.Ethereum,
-//     provider: DefiProvider.Foxy,
-//     type: DefiType.TokenStaking,
-//     expired: vault.metadata.depositsDisabled || bnOrZero(vault.metadata.depositLimit).lte(0)
-//   }
-// }
+export const transformData = (contractData: any): any => {
+  return {
+    type: DefiType.TokenStaking,
+    provider: 'ShapeShift',
+    version: '1',
+    contractAddress: contractData.staking,
+    tokenAddress: contractData.foxy,
+    chain: ChainTypes.Ethereum,
+    ...contractData
+  }
+}
 
 export class FoxyApi {
   public adapter: ChainAdapter<ChainTypes.Ethereum>
@@ -64,20 +62,30 @@ export class FoxyApi {
     this.provider = new Web3.providers.HttpProvider(providerUrl)
     this.jsonRpcProvider = new JsonRpcProvider(providerUrl)
     this.web3 = new Web3(this.provider)
-    this.foxyStakingContracts = [
-      new this.web3.eth.Contract(foxyStakingAbi, foxyStakingContractAddress)
-    ]
-    this.liquidityReserveContracts = [
-      new this.web3.eth.Contract(liquidityReserveAbi, liquidityReserveContractAddress)
-    ]
+    this.foxyStakingContracts = foxyAddresses.map(
+      (addresses) => new this.web3.eth.Contract(foxyStakingAbi, addresses.staking)
+    )
+    this.liquidityReserveContracts = foxyAddresses.map(
+      (addresses) => new this.web3.eth.Contract(liquidityReserveAbi, addresses.liquidityReserve)
+    )
   }
 
-  findDataByContractAddress(contractAddress: string) {
-    const stakingContract = this.foxyStakingContracts.find(
-      (item) => toLower(item.options.address) === toLower(contractAddress)
-    )
-    if (!stakingContract) return null
-    return stakingContract // transformVault(vault)
+  async getFoxyOpportunities() {
+    const opportunities = await Promise.all(foxyAddresses.map(async (addresses) => {
+      const stakingContract = this.foxyStakingContracts.find(
+        (item) => toLower(item.options.address) === toLower(addresses.staking)
+      )
+      const expired = await stakingContract?.methods.pauseStaking().call()
+      const tvl = await this.tvl({ tokenContractAddress: addresses.foxy })
+      const apy = await this.apy()
+
+      return transformData({ ...addresses, tvl: tvl.toString(), apy, expired })
+    }))
+    return opportunities
+  }
+
+  async broadcastTx(signedTx: string){
+
   }
 
   async getGasPrice() {
@@ -244,12 +252,12 @@ export class FoxyApi {
   }
 
   async allowance(input: Allowanceinput): Promise<string> {
-    const { userAddress, tokenContractAddress } = input
+    const { userAddress, tokenContractAddress, contractAddress } = input
     const depositTokenContract: Contract = new this.web3.eth.Contract(
       erc20Abi,
       tokenContractAddress
     )
-    return depositTokenContract.methods.allowance(userAddress, foxyStakingContractAddress).call()
+    return depositTokenContract.methods.allowance(userAddress, contractAddress).call()
   }
 
   async deposit(input: TxInput): Promise<string> {
@@ -285,7 +293,7 @@ export class FoxyApi {
       estimatedGas: estimatedGas.toString(),
       gasPrice,
       nonce: String(nonce),
-      to: foxyStakingContractAddress,
+      to: contractAddress,
       value: '0'
     })
     if (wallet.supportsOfflineSigning()) {
@@ -333,7 +341,7 @@ export class FoxyApi {
       estimatedGas: estimatedGas.toString(),
       gasPrice,
       nonce: String(nonce),
-      to: foxyStakingContractAddress,
+      to: contractAddress,
       value: '0'
     })
     if (wallet.supportsOfflineSigning()) {
@@ -377,7 +385,7 @@ export class FoxyApi {
       estimatedGas: estimatedGas.toString(),
       gasPrice,
       nonce: String(nonce),
-      to: foxyStakingContractAddress,
+      to: contractAddress,
       value: '0'
     })
     if (wallet.supportsOfflineSigning()) {
@@ -430,7 +438,7 @@ export class FoxyApi {
       estimatedGas: estimatedGas.toString(),
       gasPrice,
       nonce: String(nonce),
-      to: foxyStakingContractAddress,
+      to: contractAddress,
       value: '0'
     })
     if (wallet.supportsOfflineSigning()) {
@@ -474,7 +482,7 @@ export class FoxyApi {
       estimatedGas: estimatedGas.toString(),
       gasPrice,
       nonce: String(nonce),
-      to: foxyStakingContractAddress,
+      to: contractAddress,
       value: '0'
     })
     if (wallet.supportsOfflineSigning()) {
@@ -524,7 +532,7 @@ export class FoxyApi {
       estimatedGas: estimatedGas.toString(),
       gasPrice,
       nonce: String(nonce),
-      to: liquidityReserveContractAddress,
+      to: contractAddress,
       value: '0'
     })
     if (wallet.supportsOfflineSigning()) {
@@ -574,7 +582,7 @@ export class FoxyApi {
       estimatedGas: estimatedGas.toString(),
       gasPrice,
       nonce: String(nonce),
-      to: liquidityReserveContractAddress,
+      to: contractAddress,
       value: '0'
     })
     if (wallet.supportsOfflineSigning()) {
@@ -640,3 +648,84 @@ export class FoxyApi {
     return bnOrZero(balance)
   }
 }
+
+// functions for claiming TOKE
+
+// /**
+//       @notice claim TOKE from Tokemak
+//       @param _amount uint
+//       @param _v uint
+//       @param _r bytes
+//       @param _s bytes
+//    */
+//       function claimFromTokemak(
+//         uint256 _amount,
+//         uint8 _v,
+//         bytes32 _r,
+//         bytes32 _s
+//     ) external {
+//         // cannot claim 0
+//         require(_amount > 0, "Must enter valid amount");
+
+//         ITokeReward tokeRewardContract = ITokeReward(TOKE_REWARD);
+//         ITokeRewardHash iTokeRewardHash = ITokeRewardHash(TOKE_REWARD_HASH);
+
+//         uint256 latestCycleIndex = iTokeRewardHash.latestCycleIndex();
+//         Recipient memory recipient = Recipient({
+//             chainId: 1,
+//             cycle: latestCycleIndex,
+//             wallet: address(this),
+//             amount: _amount
+//         });
+//         tokeRewardContract.claim(recipient, _v, _r, _s);
+//     }
+
+//     /**
+//         @notice get claimable amount of TOKE from Tokemak
+//         @param _amount uint
+//         @return uint
+//      */
+//     function getClaimableAmountTokemak(uint256 _amount)
+//         external
+//         view
+//         returns (uint256)
+//     {
+//         ITokeReward tokeRewardContract = ITokeReward(tokeReward);
+//         ITokeRewardHash iTokeRewardHash = ITokeRewardHash(tokeRewardHash);
+
+//         uint256 latestCycleIndex = iTokeRewardHash.latestCycleIndex();
+
+//         Recipient memory recipient = Recipient({
+//             chainId: 1,
+//             cycle: latestCycleIndex,
+//             wallet: address(this),
+//             amount: _amount
+//         });
+//         uint256 claimableAmount = tokeRewardContract.getClaimableAmount(
+//             recipient
+//         );
+
+//         return claimableAmount;
+//     }
+
+//     struct CycleHash {
+//         string latestClaimable;
+//         string cycle;
+//     }
+
+//     /**
+//         @notice get latest ipfs info from Tokemak
+//      */
+//     function getTokemakIpfsInfo() external view returns (CycleHash memory) {
+//         ITokeRewardHash iTokeRewardHash = ITokeRewardHash(tokeRewardHash);
+//         uint256 latestCycleIndex = iTokeRewardHash.latestCycleIndex();
+//         (string memory latestClaimable, string memory cycle) = iTokeRewardHash
+//             .cycleHashes(latestCycleIndex);
+
+//         CycleHash memory info = CycleHash({
+//             latestClaimable: latestClaimable,
+//             cycle: cycle
+//         });
+
+//         return info;
+//     }

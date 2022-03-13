@@ -3,6 +3,7 @@ import { BigNumber } from 'bignumber.js'
 
 export type Allowanceinput = {
   tokenContractAddress: string
+  contractAddress: string
   userAddress: string
 }
 

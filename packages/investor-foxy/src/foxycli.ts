@@ -6,12 +6,7 @@ import dotenv from 'dotenv'
 import readline from 'readline-sync'
 
 import { FoxyApi } from './api'
-import {
-  foxContractAddress,
-  foxyContractAddress,
-  foxyStakingContractAddress,
-  liquidityReserveContractAddress
-} from './constants'
+import { foxyAddresses } from './constants'
 
 dotenv.config()
 
@@ -33,8 +28,7 @@ const getWallet = async (): Promise<NativeHDWallet> => {
 
 const main = async (): Promise<void> => {
   const XHR = require('xhr2-cookies').XMLHttpRequest
-
-  // gets rid of Invalid JSON RPC "" Error
+  // gives better message for Invalid JSON RPC "" Error
   XHR.prototype._onHttpRequestError = function (request: any, error: any) {
     if (this._request !== request) {
       return
@@ -46,6 +40,7 @@ const main = async (): Promise<void> => {
     this._dispatchProgress('error')
     this._dispatchProgress('loadend')
   }
+
   const unchainedUrls = {
     [ChainTypes.Ethereum]: {
       httpUrl: 'http://api.ethereum.shapeshift.com',
@@ -55,10 +50,17 @@ const main = async (): Promise<void> => {
   const adapterManager = new ChainAdapterManager(unchainedUrls)
   const wallet = await getWallet()
 
+  // using 0 value array since only one contract subset exists
+  const foxyContractAddress = foxyAddresses[0].foxy
+  const foxContractAddress = foxyAddresses[0].fox
+  const foxyStakingContractAddress = foxyAddresses[0].staking
+  const liquidityReserveContractAddress = foxyAddresses[0].liquidityReserve
+
   const api = new FoxyApi({
     adapter: adapterManager.byChain(ChainTypes.Ethereum), // adapter is an ETH @shapeshiftoss/chain-adapters
     providerUrl: 'http://127.0.0.1:8545'
   })
+  await api.getFoxyOpportunities()
 
   const userAddress = await adapterManager.byChain(ChainTypes.Ethereum).getAddress({ wallet })
   console.info('current user address ', userAddress)
