@@ -127,9 +127,9 @@ export class OsmosisMarketService implements MarketService {
       const { data } = await axios.get<OsmosisHistoryData[]>(url)
 
       // return the correct range of data points for each timeframe
-      const tapperedData = data.slice(-start)
+      const taperedData = data.slice(-start)
 
-      return tapperedData.reduce<HistoryData[]>((acc, current) => {
+      return taperedData.reduce<HistoryData[]>((acc, current) => {
         // convert timestamp from seconds to milliseconds
         const date = bnOrZero(current.time).times(1000).toNumber()
         if (!isValidDate(date)) {
