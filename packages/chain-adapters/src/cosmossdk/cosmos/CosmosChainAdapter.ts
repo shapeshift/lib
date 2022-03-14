@@ -154,7 +154,7 @@ export class ChainAdapter
     signTxInput: chainAdapters.SignTxInput<CosmosSignTx>
   ): Promise<string> {
     const signedTx = await this.signTransaction(signTxInput)
-    const { data } = await this.providers.http.sendTx({ sendTxBody: {  hex: signedTx  }})
+    const { data } = await this.providers.http.sendTx({ body: { rawTx: signedTx } })
     return data
   }
 }
