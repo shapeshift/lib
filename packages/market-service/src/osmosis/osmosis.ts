@@ -82,30 +82,30 @@ export class OsmosisMarketService implements MarketService {
       case HistoryTimeframe.HOUR:
         range = '5'
         isV1 = false
-        start = -12
+        start = 12
         break
       case HistoryTimeframe.DAY:
         range = '60'
         isV1 = false
-        start = -24
+        start = 24
         break
       case HistoryTimeframe.WEEK:
         range = '7d'
         isV1 = true
-        start = -168
+        start = bnOrZero(24).times(7).toNumber()
         break
       case HistoryTimeframe.MONTH:
         range = '1mo'
         isV1 = true
-        start = -720
+        start = bnOrZero(24).times(30).toNumber()
         break
       case HistoryTimeframe.YEAR:
         range = '1y'
         isV1 = true
-        start = -8760
+        start = bnOrZero(24).times(365).toNumber()
         break
       case HistoryTimeframe.ALL:
-        // TODO: currently the 'all' range for v2 is returning 500. Using 1y for the time being.
+        // TODO: currently the 'all' range for v2 is returning 500 errors. Using 1y for the time being.
         // We need to revisit this at a later date to see if it works in the future
         range = '1y'
         isV1 = true
@@ -127,7 +127,7 @@ export class OsmosisMarketService implements MarketService {
       const { data } = await axios.get<OsmosisHistoryData[]>(url)
 
       // return the correct range of data points for each timeframe
-      const tapperedData = data.slice(start)
+      const tapperedData = data.slice(-start)
 
       return tapperedData.reduce<HistoryData[]>((acc, current) => {
         // convert timestamp from seconds to milliseconds
