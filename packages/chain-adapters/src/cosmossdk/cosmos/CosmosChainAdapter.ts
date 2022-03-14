@@ -151,9 +151,10 @@ export class ChainAdapter
   }
 
   async signAndBroadcastTransaction(
-    /* eslint-disable-next-line @typescript-eslint/no-unused-vars -- Disable no-unused-vars lint rule for unimplemented methods */
     signTxInput: chainAdapters.SignTxInput<CosmosSignTx>
   ): Promise<string> {
-    throw new Error('Method not implemented.')
+    const signedTx = await this.signTransaction(signTxInput)
+    const { data } = await this.providers.http.sendTx({ sendTxBody: {  hex: signedTx  }})
+    return data
   }
 }
