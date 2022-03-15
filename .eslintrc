@@ -35,6 +35,7 @@
           "warn",
           "error",
           "info",
+          "debug",
           "group",
           "groupEnd"
         ]
