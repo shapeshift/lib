@@ -37,7 +37,9 @@
           "info",
           "debug",
           "group",
-          "groupEnd"
+          "groupEnd",
+          "time",
+          "timeEnd"
         ]
       }
     ],
