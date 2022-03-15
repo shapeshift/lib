@@ -33,11 +33,21 @@ export class ChainAdapter
     coinType: 0,
     accountNumber: 0
   }
-  protected readonly supportedChainIds: CAIP2[] = ['bip122:000000000019d6689c085ae165831e93']
-  protected readonly chainId: CAIP2 = this.supportedChainIds[0]
+  protected readonly supportedChainIds: CAIP2[] = [
+    'bip122:000000000019d6689c085ae165831e93',
+    'bip122:000000000933ea01ad0ee984209779ba'
+  ]
+  chainId = this.supportedChainIds[0]
 
   constructor(args: ChainAdapterArgs) {
     super(args)
+    if (args.chainId && !this.supportedChainIds.includes(args.chainId))
+      throw new Error(`Bitcoin chainId ${args.chainId} not supported`)
+    if (args.chainId) {
+      this.chainId = args.chainId
+    } else {
+      this.chainId = this.supportedChainIds[0]
+    }
     const { chain, network } = caip2.fromCAIP2(this.chainId)
     if (chain !== ChainTypes.Bitcoin) {
       throw new Error('chainId must be a bitcoin chain type')

@@ -46,9 +46,6 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
   }
 
   protected constructor(args: ChainAdapterArgs) {
-    if (args.chainId && this.supportedChainIds.includes(args.chainId)) {
-      this.chainId = args.chainId
-    }
     this.providers = args.providers
   }
 
