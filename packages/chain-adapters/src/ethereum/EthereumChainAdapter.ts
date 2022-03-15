@@ -133,10 +133,9 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
         to,
         wallet,
         bip44Params = ChainAdapter.defaultBIP44Params,
-        chainSpecific: { erc20ContractAddress, gasPrice, gasLimit },
+        chainSpecific: { erc20ContractAddress, maxFeePerGas, maxPriorityFeePerGas, gasPrice, gasLimit },
         sendMax = false
       } = tx
-
       if (!to) throw new Error('EthereumChainAdapter: to is required')
       if (!tx?.value) throw new Error('EthereumChainAdapter: value is required')
 
@@ -171,14 +170,16 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       const data = await getErc20Data(to, tx?.value, erc20ContractAddress)
 
       const txToSign: ETHSignTx = {
-        addressNList,
         value: numberToHex(isErc20Send ? '0' : tx?.value),
         to: destAddress,
         chainId: 1, // TODO: implement for multiple chains
         data,
         nonce: numberToHex(chainSpecific.nonce),
-        gasPrice: numberToHex(gasPrice),
-        gasLimit: numberToHex(gasLimit)
+        gasLimit: numberToHex(gasLimit),
+        maxFeePerGas: numberToHex(maxFeePerGas),
+        maxPriorityFeePerGas: numberToHex(maxPriorityFeePerGas),
+        accessList: [],
+        type: "0x02"
       }
       return { txToSign }
     } catch (err) {
