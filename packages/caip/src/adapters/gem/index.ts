@@ -1,7 +1,7 @@
 import toLower from 'lodash/toLower'
 
 const CAIP19ToGemAssetIdMap = {
-  'bip122:000000000019d6689c085ae165831e93/slip44:0': 'binance-coin',
+  'bip122:000000000019d6689c085ae165831e93/slip44:0': 'bitcoin',
   'eip155:1/slip44:60': 'ethereum',
   'eip155:1/erc20:0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9': 'aave',
   'eip155:1/erc20:0x0d8775f648430679a709e98d2b0cb6250d2887ef': 'basic-attention-token',
@@ -9,7 +9,7 @@ const CAIP19ToGemAssetIdMap = {
   'eip155:1/erc20:0xc00e94cb662c3520282e6f5717214004a7f26888': 'compound-coin',
   'eip155:1/erc20:0xd533a949740bb3306d119cc777fa900ba034cd52': 'curve-dao',
   'eip155:1/erc20:0x6b175474e89094c44da98b954eedeac495271d0f': 'dai',
-  'erc20:0x056fd409e1d7a124bd7017459dfea2f387b6d5cd': 'gemini-dollar',
+  'eip155:1/erc20:0x056fd409e1d7a124bd7017459dfea2f387b6d5cd': 'gemini-dollar',
   'eip155:1/erc20:0x514910771af9ca656af840dff83e8264ecf986ca': 'chainlink',
   'eip155:1/erc20:0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2': 'maker',
   'eip155:1/erc20:0x75231f58b43240c9718dd58b4967c5114342a86c': 'okb',
