@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/caip",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "CAIP Implementation",
   "homepage": "",
   "license": "MIT",
@@ -30,11 +30,11 @@
   },
   "dependencies": {},
   "peerDependencies": {
-    "@shapeshiftoss/types": "^2.0.0"
+    "@shapeshiftoss/types": "^2.1.0"
   },
   "devDependencies": {
-    "@shapeshiftoss/types": "^2.0.0",
-    "@yfi/sdk": "^1.0.27",
+    "@shapeshiftoss/types": "^2.1.0",
+    "@yfi/sdk": "^1.0.30",
     "axios": "^0.26.0"
   }
 }

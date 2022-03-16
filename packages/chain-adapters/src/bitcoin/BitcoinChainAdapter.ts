@@ -1,4 +1,4 @@
-import { AssetNamespace, AssetReference, caip2, caip19 } from '@shapeshiftoss/caip'
+import { AssetNamespace, AssetReference, CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
 import {
   bip32ToAddressNList,
   BTCOutputAddressType,
@@ -33,17 +33,27 @@ export class ChainAdapter
     coinType: 0,
     accountNumber: 0
   }
+  public static readonly defaultUtxoAccountType: UtxoAccountType = UtxoAccountType.SegwitNative
+
+  protected readonly supportedChainIds: CAIP2[] = [
+    'bip122:000000000019d6689c085ae165831e93',
+    'bip122:000000000933ea01ad0ee984209779ba'
+  ]
+  chainId = this.supportedChainIds[0]
 
   constructor(args: ChainAdapterArgs) {
     super(args)
-    if (!args.chainId) {
-      throw new Error('chainId required')
+    if (args.chainId && !this.supportedChainIds.includes(args.chainId))
+      throw new Error(`Bitcoin chainId ${args.chainId} not supported`)
+    if (args.chainId) {
+      this.chainId = args.chainId
+    } else {
+      this.chainId = this.supportedChainIds[0]
     }
-    const { chain, network } = caip2.fromCAIP2(args.chainId)
+    const { chain, network } = caip2.fromCAIP2(this.chainId)
     if (chain !== ChainTypes.Bitcoin) {
       throw new Error('chainId must be a bitcoin chain type')
     }
-    this.chainId = args.chainId
     this.coinName = args.coinName
     this.assetId = caip19.toCAIP19({
       chain,
@@ -275,7 +285,7 @@ export class ChainAdapter
   async getAddress({
     wallet,
     bip44Params = ChainAdapter.defaultBIP44Params,
-    accountType = UtxoAccountType.SegwitP2sh,
+    accountType = ChainAdapter.defaultUtxoAccountType,
     showOnDevice = false
   }: chainAdapters.bitcoin.GetAddressInput): Promise<string> {
     if (!supportsBTC(wallet)) {
@@ -314,7 +324,7 @@ export class ChainAdapter
     const {
       wallet,
       bip44Params = ChainAdapter.defaultBIP44Params,
-      accountType = UtxoAccountType.SegwitNative
+      accountType = ChainAdapter.defaultUtxoAccountType
     } = input
 
     const { xpub } = await this.getPublicKey(wallet, bip44Params, accountType)
@@ -358,7 +368,7 @@ export class ChainAdapter
 
     const {
       bip44Params = ChainAdapter.defaultBIP44Params,
-      accountType = UtxoAccountType.SegwitNative
+      accountType = ChainAdapter.defaultUtxoAccountType
     } = input
     const subscriptionId = `${toRootDerivationPath(bip44Params)}/${accountType}`
 
