@@ -612,8 +612,12 @@ export class FoxyApi {
     return bnOrZero(totalSupply)
   }
 
+  pricePerShare(): BigNumber {
+    return bnOrZero(1)
+  }
+
   // estimated apy
-  async apy(): Promise<string> {
+  apy(): string {
     return '.2'
   }
 
