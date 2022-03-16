@@ -32,9 +32,9 @@ export type ConstructorArgs = {
 }
 
 type FoxyOpportunityInputData = {
-  tvl: BigNumber
-  apy: string
-  expired: boolean
+  tvl?: BigNumber
+  apy?: string
+  expired?: boolean
   staking: string
   foxy: string
   fox: string
@@ -87,7 +87,7 @@ export class FoxyApi {
         const tvl = await this.tvl({ tokenContractAddress: addresses.foxy })
         const apy = this.apy()
 
-        return transformData({ ...addresses, tvl, apy, expired })
+        return transformData({ ...addresses, expired, tvl, apy })
       })
     )
     return opportunities
@@ -111,7 +111,7 @@ export class FoxyApi {
 
   private async broadcastTx(signedTx: string) {
     return this.adapter.broadcastTransaction(signedTx)
-    // for local/cli testing
+    // TODO: add if statement for local/cli testing
     // const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
     // return sendSignedTx?.blockHash
   }
@@ -606,21 +606,22 @@ export class FoxyApi {
     }
   }
 
-  async coolDownInfo(
+  async getTimeUntilClaim(
     input: Pick<TxInput, Exclude<keyof TxInput, 'amountDesired'>>
-  ): Promise<boolean> {
+  ): Promise<string> {
     const { contractAddress, userAddress } = input
     const stakingContract = this.foxyStakingContracts.find(
       (item) => toLower(item.options.address) === toLower(contractAddress)
     )
     if (!stakingContract) throw new Error('Not a valid contract address')
 
-    const coolDown = await stakingContract.methods.coolDownInfo(userAddress).call()
-    const epoch = await stakingContract.methods.epoch().call()
-    console.log('coolDown', coolDown)
-    console.log('epoch', epoch)
+    // const coolDown = await stakingContract.methods.coolDownInfo(userAddress).call()
+    // const epoch = await stakingContract.methods.epoch().call()
+    // console.info('coolDown', coolDown)
+    // console.log('epoch', epoch)
 
-    return true // TODO: change
+    // TODO: calculate time left from expiry
+    return '10000000'
   }
 
   async balance(input: BalanceInput): Promise<BigNumber> {

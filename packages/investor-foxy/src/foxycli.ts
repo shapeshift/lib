@@ -58,14 +58,14 @@ const main = async (): Promise<void> => {
 
   const api = new FoxyApi({
     adapter: adapterManager.byChain(ChainTypes.Ethereum), // adapter is an ETH @shapeshiftoss/chain-adapters
-    providerUrl: 'http://127.0.0.1:8545'
+    providerUrl: 'https://dev-api.ethereum.shapeshift.com'
   })
-  const hey = await api.getFoxyOpportunityByStakingAddress(
-    '0x88167bEb4869910e90a8a845886EB98bc12d58e5'
-  )
-  console.log('hey', hey)
+
   const userAddress = await adapterManager.byChain(ChainTypes.Ethereum).getAddress({ wallet })
   console.info('current user address ', userAddress)
+
+  const hey = await api.getFoxyOpportunities()
+  console.log('hey', hey)
 
   const circulatingSupply = async () => {
     try {
@@ -216,10 +216,10 @@ const main = async (): Promise<void> => {
     }
   }
 
-  const coolDownInfo = async () => {
+  const getTimeUntilClaim = async () => {
     try {
       console.info('getting coolDownInfo...')
-      const response = await api.coolDownInfo({
+      const response = await api.getTimeUntilClaim({
         contractAddress: foxyStakingContractAddress,
         userAddress,
         wallet
@@ -318,7 +318,7 @@ const main = async (): Promise<void> => {
         await circulatingSupply()
         break
       case 10:
-        await coolDownInfo()
+        await getTimeUntilClaim()
         break
       case 11:
         amount = readline.question('How much liqidity do you want to add?\n')
