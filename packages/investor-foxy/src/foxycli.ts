@@ -60,8 +60,10 @@ const main = async (): Promise<void> => {
     adapter: adapterManager.byChain(ChainTypes.Ethereum), // adapter is an ETH @shapeshiftoss/chain-adapters
     providerUrl: 'http://127.0.0.1:8545'
   })
-  await api.getFoxyOpportunities()
-
+  const hey = await api.getFoxyOpportunityByStakingAddress(
+    '0x88167bEb4869910e90a8a845886EB98bc12d58e5'
+  )
+  console.log('hey', hey)
   const userAddress = await adapterManager.byChain(ChainTypes.Ethereum).getAddress({ wallet })
   console.info('current user address ', userAddress)
 

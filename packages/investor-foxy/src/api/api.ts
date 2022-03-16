@@ -31,7 +31,17 @@ export type ConstructorArgs = {
     | ChainReference.EthereumRopsten
 }
 
-export const transformData = (contractData: any): any => {
+type FoxyOpportunityInputData = {
+  tvl: BigNumber
+  apy: string
+  expired: boolean
+  staking: string
+  foxy: string
+  fox: string
+  liquidityReserve: string
+}
+
+export const transformData = ({ tvl, apy, expired, ...contractData }: FoxyOpportunityInputData) => {
   return {
     type: DefiType.TokenStaking,
     provider: 'ShapeShift',
@@ -40,7 +50,9 @@ export const transformData = (contractData: any): any => {
     foxyAddress: contractData.foxy,
     foxAddress: contractData.fox,
     chain: ChainTypes.Ethereum,
-    ...contractData
+    tvl,
+    apy,
+    expired
   }
 }
 
@@ -73,17 +85,33 @@ export class FoxyApi {
         )
         const expired = await stakingContract?.methods.pauseStaking().call()
         const tvl = await this.tvl({ tokenContractAddress: addresses.foxy })
-        const apy = await this.apy()
+        const apy = this.apy()
 
-        return transformData({ ...addresses, tvl: tvl.toString(), apy, expired })
+        return transformData({ ...addresses, tvl, apy, expired })
       })
     )
     return opportunities
   }
 
-  async broadcastTx(signedTx: string) {
-    // TODO: change back to broadcastTransaction
+  async getFoxyOpportunityByStakingAddress(stakingAddress: string) {
+    const addresses = foxyAddresses.find(async (item) => {
+      return item.staking === stakingAddress
+    })
+
+    if (!addresses) throw new Error('Not a valid staking contract address')
+
+    const stakingContract = this.foxyStakingContracts.find(
+      (item) => toLower(item.options.address) === toLower(addresses.staking)
+    )
+    const expired = await stakingContract?.methods.pauseStaking().call()
+    const tvl = await this.tvl({ tokenContractAddress: addresses.foxy })
+    const apy = this.apy()
+    return transformData({ ...addresses, tvl, apy, expired })
+  }
+
+  private async broadcastTx(signedTx: string) {
     return this.adapter.broadcastTransaction(signedTx)
+    // for local/cli testing
     // const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
     // return sendSignedTx?.blockHash
   }
