@@ -1,3 +1,36 @@
+# [@shapeshiftoss/chain-adapters-v2.4.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.4.1...@shapeshiftoss/chain-adapters-v2.4.2) (2022-03-16)
+
+
+### Bug Fixes
+
+* update json rpc ([#442](https://github.com/shapeshift/lib/issues/442)) ([abfb16c](https://github.com/shapeshift/lib/commit/abfb16c3d28fa40bbb20e9834d95dca9d13e008a))
+
+# [@shapeshiftoss/chain-adapters-v2.4.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.4.0...@shapeshiftoss/chain-adapters-v2.4.1) (2022-03-15)
+
+
+### Bug Fixes
+
+* removed error from required chainId and set on class ([#426](https://github.com/shapeshift/lib/issues/426)) ([8693d21](https://github.com/shapeshift/lib/commit/8693d217ed75f3f99882e8174653d5b95c9cfe97))
+
+# [@shapeshiftoss/chain-adapters-v2.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.3.0...@shapeshiftoss/chain-adapters-v2.4.0) (2022-03-14)
+
+
+### Features
+
+* cosmos unsubscribeTxs and closeTxs ([#434](https://github.com/shapeshift/lib/issues/434)) ([95e4ee1](https://github.com/shapeshift/lib/commit/95e4ee1ffc92a1d66348435937cef0401796d2d9))
+
+# [@shapeshiftoss/chain-adapters-v2.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.2.0...@shapeshiftoss/chain-adapters-v2.3.0) (2022-03-10)
+
+
+### Bug Fixes
+
+* update argument type ([#428](https://github.com/shapeshift/lib/issues/428)) ([08feb5e](https://github.com/shapeshift/lib/commit/08feb5e4e80c5329f4a34d84715086eea6beb722))
+
+
+### Features
+
+* cosmos tx history support ([#416](https://github.com/shapeshift/lib/issues/416)) ([94f24eb](https://github.com/shapeshift/lib/commit/94f24ebfe83f36bf0802d99bdcf7626905b82432))
+
 # [@shapeshiftoss/chain-adapters-v2.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.1.0...@shapeshiftoss/chain-adapters-v2.2.0) (2022-03-08)
 
 
