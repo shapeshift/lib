@@ -31,6 +31,16 @@ export type TxInput = {
   amountDesired: BigNumber
 }
 
+export type FoxyOpportunityInputData = {
+  tvl: BigNumber
+  apy: string
+  expired: boolean
+  staking: string
+  foxy: string
+  fox: string
+  liquidityReserve: string
+}
+
 export type EstimateGasTxInput = Pick<
   TxInput,
   'tokenContractAddress' | 'contractAddress' | 'userAddress' | 'amountDesired'

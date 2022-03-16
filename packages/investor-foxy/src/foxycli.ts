@@ -27,20 +27,6 @@ const getWallet = async (): Promise<NativeHDWallet> => {
 }
 
 const main = async (): Promise<void> => {
-  const XHR = require('xhr2-cookies').XMLHttpRequest
-  // gives better message for Invalid JSON RPC "" Error
-  XHR.prototype._onHttpRequestError = function (request: any, error: any) {
-    if (this._request !== request) {
-      return
-    }
-    console.log(error, 'request')
-    this._setError()
-    request.abort()
-    this._setReadyState(XHR.DONE)
-    this._dispatchProgress('error')
-    this._dispatchProgress('loadend')
-  }
-
   const unchainedUrls = {
     [ChainTypes.Ethereum]: {
       httpUrl: 'http://api.ethereum.shapeshift.com',

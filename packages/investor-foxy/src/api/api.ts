@@ -18,6 +18,7 @@ import {
   BalanceInput,
   EstimateGasApproveInput,
   EstimateGasTxInput,
+  FoxyOpportunityInputData,
   TVLInput,
   TxInput
 } from './foxy-types'
@@ -29,16 +30,6 @@ export type ConstructorArgs = {
     | ChainReference.EthereumMainnet
     | ChainReference.EthereumRinkeby
     | ChainReference.EthereumRopsten
-}
-
-type FoxyOpportunityInputData = {
-  tvl?: BigNumber
-  apy?: string
-  expired?: boolean
-  staking: string
-  foxy: string
-  fox: string
-  liquidityReserve: string
 }
 
 export const transformData = ({ tvl, apy, expired, ...contractData }: FoxyOpportunityInputData) => {
@@ -142,6 +133,25 @@ export class FoxyApi {
 
     const estimatedGas = await stakingContract.methods
       .claimWithdraw(claimAddress ?? userAddress)
+      .estimateGas({
+        from: userAddress
+      })
+    return bnOrZero(estimatedGas)
+  }
+
+  async estimateSendWithdrawalRequestsGas(
+    input: Pick<EstimateGasTxInput, Exclude<keyof EstimateGasTxInput, 'amountDesired'>> & {
+      claimAddress?: string
+    }
+  ): Promise<BigNumber> {
+    const { claimAddress, userAddress, contractAddress } = input
+    const stakingContract = this.foxyStakingContracts.find(
+      (item) => toLower(item.options.address) === toLower(contractAddress)
+    )
+    if (!stakingContract) throw new Error('Not a valid contract address')
+
+    const estimatedGas = await stakingContract.methods
+      .sendWithdrawalRequests(claimAddress ?? userAddress)
       .estimateGas({
         from: userAddress
       })
@@ -439,6 +449,8 @@ export class FoxyApi {
     )
     if (!stakingContract) throw new Error('Not a valid contract address')
 
+    // TODO: check if can claimWithdraw and throw an error if can't
+
     const data: string = stakingContract.methods
       .claimWithdraw(claimAddress ?? userAddress)
       .encodeABI({
@@ -476,13 +488,15 @@ export class FoxyApi {
   ): Promise<string> {
     const { accountNumber = 0, dryRun = false, contractAddress, userAddress, wallet } = input
     if (!wallet || !contractAddress) throw new Error('Missing inputs')
-    const estimatedGas: BigNumber = await this.estimateClaimWithdrawGas(input)
+    const estimatedGas: BigNumber = await this.estimateSendWithdrawalRequestsGas(input)
     const stakingContract = this.foxyStakingContracts.find(
       (item) => toLower(item.options.address) === toLower(contractAddress)
     )
     if (!stakingContract) throw new Error('Not a valid contract address')
 
-    const data: string = stakingContract.methods.claimWithdraw(userAddress).encodeABI({
+    // TODO: check if can sendWithdrawalRequests and throw an error if can't
+
+    const data: string = stakingContract.methods.sendWithdrawalRequests().encodeABI({
       from: userAddress
     })
     const nonce = await this.web3.eth.getTransactionCount(userAddress)
@@ -606,7 +620,7 @@ export class FoxyApi {
     }
   }
 
-  async getTimeUntilClaim(
+  async getTimeUntilClaimable(
     input: Pick<TxInput, Exclude<keyof TxInput, 'amountDesired'>>
   ): Promise<string> {
     const { contractAddress, userAddress } = input
@@ -657,84 +671,3 @@ export class FoxyApi {
     return bnOrZero(balance)
   }
 }
-
-// functions for claiming TOKE
-
-// /**
-//       @notice claim TOKE from Tokemak
-//       @param _amount uint
-//       @param _v uint
-//       @param _r bytes
-//       @param _s bytes
-//    */
-//       function claimFromTokemak(
-//         uint256 _amount,
-//         uint8 _v,
-//         bytes32 _r,
-//         bytes32 _s
-//     ) external {
-//         // cannot claim 0
-//         require(_amount > 0, "Must enter valid amount");
-
-//         ITokeReward tokeRewardContract = ITokeReward(TOKE_REWARD);
-//         ITokeRewardHash iTokeRewardHash = ITokeRewardHash(TOKE_REWARD_HASH);
-
-//         uint256 latestCycleIndex = iTokeRewardHash.latestCycleIndex();
-//         Recipient memory recipient = Recipient({
-//             chainId: 1,
-//             cycle: latestCycleIndex,
-//             wallet: address(this),
-//             amount: _amount
-//         });
-//         tokeRewardContract.claim(recipient, _v, _r, _s);
-//     }
-
-//     /**
-//         @notice get claimable amount of TOKE from Tokemak
-//         @param _amount uint
-//         @return uint
-//      */
-//     function getClaimableAmountTokemak(uint256 _amount)
-//         external
-//         view
-//         returns (uint256)
-//     {
-//         ITokeReward tokeRewardContract = ITokeReward(tokeReward);
-//         ITokeRewardHash iTokeRewardHash = ITokeRewardHash(tokeRewardHash);
-
-//         uint256 latestCycleIndex = iTokeRewardHash.latestCycleIndex();
-
-//         Recipient memory recipient = Recipient({
-//             chainId: 1,
-//             cycle: latestCycleIndex,
-//             wallet: address(this),
-//             amount: _amount
-//         });
-//         uint256 claimableAmount = tokeRewardContract.getClaimableAmount(
-//             recipient
-//         );
-
-//         return claimableAmount;
-//     }
-
-//     struct CycleHash {
-//         string latestClaimable;
-//         string cycle;
-//     }
-
-//     /**
-//         @notice get latest ipfs info from Tokemak
-//      */
-//     function getTokemakIpfsInfo() external view returns (CycleHash memory) {
-//         ITokeRewardHash iTokeRewardHash = ITokeRewardHash(tokeRewardHash);
-//         uint256 latestCycleIndex = iTokeRewardHash.latestCycleIndex();
-//         (string memory latestClaimable, string memory cycle) = iTokeRewardHash
-//             .cycleHashes(latestCycleIndex);
-
-//         CycleHash memory info = CycleHash({
-//             latestClaimable: latestClaimable,
-//             cycle: cycle
-//         });
-
-//         return info;
-//     }
