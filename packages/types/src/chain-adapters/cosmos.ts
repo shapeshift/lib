@@ -3,7 +3,8 @@ export type BuildTxInput = {
 }
 
 export type Account = {
-  sequence: number
+  sequence: string
+  accountNumber: string
 }
 
 export type FeeData = {

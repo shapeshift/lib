@@ -7,11 +7,10 @@ import {
 } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
-import BigNumber from 'bignumber.js'
 
 import { ChainAdapter as IChainAdapter } from '../../api'
 import { ErrorHandler } from '../../error/ErrorHandler'
-import { toPath } from '../../utils'
+import { toPath, bnOrZero, } from '../../utils'
 import { ChainAdapterArgs, CosmosSdkBaseAdapter } from '../CosmosSdkBaseAdapter'
 
 export class ChainAdapter
@@ -96,16 +95,17 @@ export class ChainAdapter
       const addressNList = bip32ToAddressNList(path)
       const from = await this.getAddress({ bip44Params, wallet })
 
+      const account = await this.getAccount(from)
+
       if (sendMax) {
-        const account = await this.getAccount(from)
-        tx.value = new BigNumber(account.balance).minus(gas).toString()
+        tx.value = bnOrZero(account.balance).minus(gas).toString()
       }
 
       const utx: CosmosTx = {
         fee: {
           amount: [
             {
-              amount: new BigNumber(gas).toString(),
+              amount: bnOrZero(gas).toString(),
               denom: 'uatom'
             }
           ],
@@ -117,7 +117,7 @@ export class ChainAdapter
             value: {
               amount: [
                 {
-                  amount: new BigNumber(value).toString(),
+                  amount: bnOrZero(value).toString(),
                   denom: 'uatom'
                 }
               ],
@@ -134,8 +134,8 @@ export class ChainAdapter
         addressNList,
         tx: utx,
         chain_id: caip2.ChainReference.CosmosHubMainnet,
-        account_number: '',
-        sequence: ''
+        account_number: account.chainSpecific.accountNumber,
+        sequence: account.chainSpecific.sequence
       }
       return { txToSign }
     } catch (err) {
@@ -153,8 +153,19 @@ export class ChainAdapter
   async signAndBroadcastTransaction(
     signTxInput: chainAdapters.SignTxInput<CosmosSignTx>
   ): Promise<string> {
-    const signedTx = await this.signTransaction(signTxInput)
-    const { data } = await this.providers.http.sendTx({ body: { rawTx: signedTx } })
-    return data
+    const { wallet } = signTxInput
+    try {
+      if (supportsCosmos(wallet)) {
+        const signedTx = await this.signTransaction(signTxInput)
+        console.log({ signedTx, from: 'signAndBroadcastTransaction' })
+        const { data } = await this.providers.http.sendTx({ body: { rawTx: signedTx } })
+        return data
+      } else {
+        throw new Error('Wallet does not support Cosmos.')
+      }
+    } catch (error) {
+      console.dir(error.response.data, { color: true, depth: 4 })
+      return ErrorHandler(error)
+    }
   }
 }
