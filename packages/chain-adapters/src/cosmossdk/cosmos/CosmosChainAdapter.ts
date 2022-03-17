@@ -143,11 +143,27 @@ export class ChainAdapter
     }
   }
 
-  async getFeeData(
-    /* eslint-disable-next-line @typescript-eslint/no-unused-vars -- Disable no-unused-vars lint rule for unimplemented methods */
-    input: Partial<chainAdapters.GetFeeDataInput<ChainTypes.Cosmos>>
-  ): Promise<chainAdapters.FeeDataEstimate<ChainTypes.Cosmos>> {
-    throw new Error('Method not implemented.')
+  async getFeeData({
+    sendMax
+  }: Partial<chainAdapters.GetFeeDataInput<ChainTypes.Cosmos>>): Promise<
+    chainAdapters.FeeDataEstimate<ChainTypes.Cosmos>
+  > {
+    // We currently don't have a way to query validators to get dynamic fees, so they are hard coded.
+    // When we find a strategy to make this more dynamic, we can use 'sendMax' to define max amount.
+    return {
+      [chainAdapters.FeeDataKey.Fast]: {
+        txFee: '5000',
+        chainSpecific: { gasLimit: '250000' }
+      },
+      [chainAdapters.FeeDataKey.Average]: {
+        txFee: '3500',
+        chainSpecific: { gasLimit: '250000' }
+      },
+      [chainAdapters.FeeDataKey.Slow]: {
+        txFee: '2500',
+        chainSpecific: { gasLimit: '250000' }
+      }
+    }
   }
 
   async signAndBroadcastTransaction(

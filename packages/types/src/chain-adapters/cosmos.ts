@@ -1,5 +1,6 @@
 export type BuildTxInput = {
   gas: string
+  fee: string
 }
 
 export type Account = {
@@ -8,5 +9,5 @@ export type Account = {
 }
 
 export type FeeData = {
-  value: string
+  gasLimit: string
 }
