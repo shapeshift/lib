@@ -15,23 +15,26 @@ import {
   getYearnVaults,
   getZapperTokens
 } from './yearnVaults'
+import { getFoxyToken } from './foxy'
 
 export const addTokensToEth = async (): Promise<BaseAsset> => {
   const baseAsset = ethereum
-  const [ethTokens, yearnVaults, ironBankTokens, zapperTokens, underlyingTokens] =
+  const [ethTokens, yearnVaults, ironBankTokens, zapperTokens, underlyingTokens, foxyToken] =
     await Promise.all([
       getUniswapTokens(),
       getYearnVaults(),
       getIronBankTokens(),
       getZapperTokens(),
-      getUnderlyingVaultTokens()
+      getUnderlyingVaultTokens(),
+      getFoxyToken()
     ])
   const tokens = [
     ...ethTokens,
     ...yearnVaults,
     ...ironBankTokens,
     ...zapperTokens,
-    ...underlyingTokens
+    ...underlyingTokens,
+    ...foxyToken
   ]
   const uniqueTokens = orderBy(uniqBy(tokens, 'caip19'), 'caip19') // Remove dups and order for PR readability
   const batchSize = 100 // tune this to keep rate limiting happy
