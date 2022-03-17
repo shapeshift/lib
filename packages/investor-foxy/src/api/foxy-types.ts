@@ -1,10 +1,6 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { BigNumber } from 'bignumber.js'
-
-export enum WithdrawType {
-  DELAYED,
-  INSTANT
-}
+import { WithdrawType } from '../constants'
 
 export type Allowanceinput = {
   tokenContractAddress: string
