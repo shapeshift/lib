@@ -636,7 +636,8 @@ export class FoxyApi {
     const epoch = await stakingContract.methods.epoch().call()
     const currentBlock = await this.web3.eth.getBlockNumber()
     const epochsLeft = coolDownInfo.expiry - epoch.number - 1
-    const blocksUntilClaimable = epoch.endBlock > currentBlock ? epoch.endBlock - currentBlock : 0 + epochsLeft * epoch.length
+    const blocksUntilClaimable =
+      epoch.endBlock > currentBlock ? epoch.endBlock - currentBlock : 0 + epochsLeft * epoch.length
     const timeUntilClaimable = blocksUntilClaimable * 13 // average block time is 13 seconds
 
     return timeUntilClaimable.toString()
