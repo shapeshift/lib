@@ -95,13 +95,14 @@ export class FoxyApi {
     const addresses = foxyAddresses.find(async (item) => {
       return item.staking === stakingAddress
     })
-
-    if (!addresses) throw new Error('Not a valid staking contract address')
+    if (!addresses) throw new Error('Not a valid address')
 
     const stakingContract = this.foxyStakingContracts.find(
       (item) => toLower(item.options.address) === toLower(addresses.staking)
     )
-    const expired = await stakingContract?.methods.pauseStaking().call()
+    if (!stakingContract) throw new Error('Not a valid staking contract address')
+
+    const expired = await stakingContract.methods.pauseStaking().call()
     const tvl = await this.tvl({ tokenContractAddress: addresses.foxy })
     const apy = this.apy()
     return transformData({ ...addresses, tvl, apy, expired })
@@ -217,12 +218,11 @@ export class FoxyApi {
   }
 
   async estimateDepositGas(input: EstimateGasTxInput): Promise<BigNumber> {
-    const { amountDesired, userAddress, contractAddress, tokenContractAddress } = input
+    const { amountDesired, userAddress, contractAddress } = input
     const stakingContract = this.foxyStakingContracts.find(
       (item) => toLower(item.options.address) === toLower(contractAddress)
     )
     if (!stakingContract) throw new Error('Not a valid contract address')
-    if (!tokenContractAddress) throw new Error('Not a valid contract address')
     const estimatedGas = await stakingContract.methods
       .stake(amountDesired.toString(), userAddress)
       .estimateGas({
@@ -309,6 +309,7 @@ export class FoxyApi {
     const stakingContract = this.foxyStakingContracts.find(
       (item) => toLower(item.options.address) === toLower(contractAddress)
     )
+
     if (!stakingContract) throw new Error('Not a valid contract address')
     const userChecksum = this.web3.utils.toChecksumAddress(userAddress)
 
@@ -621,6 +622,7 @@ export class FoxyApi {
   }
 
   // returns time in seconds until withdraw request is claimable
+  // dependent on rebases happening when epoch.expiry block is reached
   async getTimeUntilClaimable(
     input: Pick<TxInput, Exclude<keyof TxInput, 'amountDesired'>>
   ): Promise<string> {
@@ -630,12 +632,14 @@ export class FoxyApi {
     )
     if (!stakingContract) throw new Error('Not a valid contract address')
 
-    const coolDown = await stakingContract.methods.coolDownInfo(userAddress).call()
-    // const epoch = await stakingContract.methods.epoch().call()
-    // console.info('coolDown', coolDown)
-    // console.log('epoch', epoch)
+    const coolDownInfo = await stakingContract.methods.coolDownInfo(userAddress).call()
+    const epoch = await stakingContract.methods.epoch().call()
+    const currentBlock = await this.web3.eth.getBlockNumber()
+    const epochsLeft = coolDownInfo.expiry - epoch.number - 1
+    const blocksUntilClaimable = epoch.endBlock > currentBlock ? epoch.endBlock - currentBlock : 0 + epochsLeft * epoch.length
+    const timeUntilClaimable = blocksUntilClaimable * 13 // average block time is 13 seconds
 
-    return '10000000'
+    return timeUntilClaimable.toString()
   }
 
   async balance(input: BalanceInput): Promise<BigNumber> {
