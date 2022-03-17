@@ -10,7 +10,7 @@ import * as unchained from '@shapeshiftoss/unchained-client'
 
 import { ChainAdapter as IChainAdapter } from '../../api'
 import { ErrorHandler } from '../../error/ErrorHandler'
-import { toPath, bnOrZero } from '../../utils'
+import { bnOrZero, toPath } from '../../utils'
 import { ChainAdapterArgs, CosmosSdkBaseAdapter } from '../CosmosSdkBaseAdapter'
 
 export class ChainAdapter
@@ -144,6 +144,7 @@ export class ChainAdapter
   }
 
   async getFeeData({
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars -- Disable no-unused-vars lint rule for unimplemented variable */
     sendMax
   }: Partial<chainAdapters.GetFeeDataInput<ChainTypes.Cosmos>>): Promise<
     chainAdapters.FeeDataEstimate<ChainTypes.Cosmos>

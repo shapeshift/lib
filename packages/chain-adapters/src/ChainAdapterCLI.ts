@@ -211,7 +211,6 @@ const main = async () => {
         txToSign: cosmosUnsignedTx.txToSign
       })
       console.log('broadcastedTx:', broadcastedTx)
-
     } catch (err) {
       console.log('cosmosTx error:', err.message)
     }
