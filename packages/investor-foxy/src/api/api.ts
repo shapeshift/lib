@@ -72,10 +72,10 @@ export class FoxyApi {
   }
 
   private async broadcastTx(signedTx: string) {
-    // return this.adapter.broadcastTransaction(signedTx)
+    return this.adapter.broadcastTransaction(signedTx)
     // TODO: add if statement for local/cli testing
-    const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
-    return sendSignedTx?.blockHash
+    // const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
+    // return sendSignedTx?.blockHash
   }
 
   async getFoxyOpportunities() {
