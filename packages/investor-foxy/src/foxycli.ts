@@ -202,7 +202,7 @@ const main = async (): Promise<void> => {
   const getTimeUntilClaim = async () => {
     try {
       console.info('getting coolDownInfo...')
-      const response = await api.getTimeUntilClaim({
+      const response = await api.getTimeUntilClaimable({
         contractAddress: foxyStakingContractAddress,
         userAddress,
         wallet
