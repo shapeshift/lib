@@ -38,6 +38,12 @@ const main = async () => {
   try {
     const chainAdapterManager = new ChainAdapterManager(unchainedUrls)
     const wallet = await getWallet()
+    await wallet.wipe()
+    await wallet.loadDevice({
+      mnemonic: 'all all all all all all all all all all all all',
+      label: 'test',
+      skipChecksum: true
+    })
 
     /** BITCOIN CLI */
     const btcChainAdapter = chainAdapterManager.byChain(ChainTypes.Bitcoin)
@@ -161,7 +167,6 @@ const main = async () => {
     /** COSMOS CLI */
     const cosmosChainAdapter = chainAdapterManager.byChain(ChainTypes.Cosmos)
     const cosmosBip44Params: BIP44Params = { purpose: 44, coinType: 118, accountNumber: 0 }
-    console.log(cosmosChainAdapter)
 
     const cosmosAddress = await cosmosChainAdapter.getAddress({
       wallet,
@@ -170,13 +175,16 @@ const main = async () => {
     console.log('cosmosAddress:', cosmosAddress)
 
     const cosmosAccount = await cosmosChainAdapter.getAccount(cosmosAddress)
-    console.log(cosmosAccount)
+    console.log('cosmosAccount:', cosmosAccount)
 
-    // await cosmosChainAdapter.subscribeTxs(
-    //   { wallet, bip44Params: cosmosBip44Params },
-    //   (msg) => console.log(msg),
-    //   (err) => console.log(err)
-    // )
+    const cosmosTxHistory = await cosmosChainAdapter.getTxHistory({ pubkey: cosmosAddress })
+    console.log('cosmosTxHistory:', cosmosTxHistory)
+
+    await cosmosChainAdapter.subscribeTxs(
+      { wallet, bip44Params: cosmosBip44Params },
+      (msg) => console.log(msg),
+      (err) => console.log(err)
+    )
 
     // send cosmos example
     try {

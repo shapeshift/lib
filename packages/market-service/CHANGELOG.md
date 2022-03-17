@@ -1,3 +1,26 @@
+# [@shapeshiftoss/market-service-v2.0.5](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v2.0.4...@shapeshiftoss/market-service-v2.0.5) (2022-03-17)
+
+# [@shapeshiftoss/market-service-v2.0.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v2.0.3...@shapeshiftoss/market-service-v2.0.4) (2022-03-16)
+
+
+### Bug Fixes
+
+* update json rpc ([#442](https://github.com/shapeshift/lib/issues/442)) ([abfb16c](https://github.com/shapeshift/lib/commit/abfb16c3d28fa40bbb20e9834d95dca9d13e008a))
+
+# [@shapeshiftoss/market-service-v2.0.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v2.0.2...@shapeshiftoss/market-service-v2.0.3) (2022-03-14)
+
+
+### Bug Fixes
+
+* osmosis chart range data ([#423](https://github.com/shapeshift/lib/issues/423)) ([d202cee](https://github.com/shapeshift/lib/commit/d202cee9b3b807eaa3a5d5a8df2d27d1835a19c6))
+
+# [@shapeshiftoss/market-service-v2.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v2.0.1...@shapeshiftoss/market-service-v2.0.2) (2022-03-07)
+
+
+### Bug Fixes
+
+* fix osmosis charts ([#422](https://github.com/shapeshift/lib/issues/422)) ([0b4f5c4](https://github.com/shapeshift/lib/commit/0b4f5c4a97d5489ef03c253376e0170489ba4f5f))
+
 # [@shapeshiftoss/market-service-v2.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v2.0.0...@shapeshiftoss/market-service-v2.0.1) (2022-03-03)
 
 # [@shapeshiftoss/market-service-v2.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v1.13.0...@shapeshiftoss/market-service-v2.0.0) (2022-03-03)
