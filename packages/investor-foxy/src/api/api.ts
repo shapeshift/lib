@@ -18,9 +18,12 @@ import {
   BalanceInput,
   EstimateGasApproveInput,
   EstimateGasTxInput,
+  EstimateWithdrawGasTxInput,
   FoxyOpportunityInputData,
   TVLInput,
-  TxInput
+  TxInput,
+  WithdrawInput,
+  WithdrawType
 } from './foxy-types'
 
 export type ConstructorArgs = {
@@ -188,32 +191,21 @@ export class FoxyApi {
     return bnOrZero(estimatedGas)
   }
 
-  async estimateWithdrawGas(input: EstimateGasTxInput): Promise<BigNumber> {
-    const { amountDesired, userAddress, contractAddress } = input
+  async estimateWithdrawGas(input: EstimateWithdrawGasTxInput): Promise<BigNumber> {
+    const { amountDesired, userAddress, contractAddress, type } = input
     const stakingContract = this.foxyStakingContracts.find(
       (item) => toLower(item.options.address) === toLower(contractAddress)
     )
     if (!stakingContract) throw new Error('Not a valid contract address')
 
-    const estimatedGas = await stakingContract.methods
-      .unstake(amountDesired.toString(), true)
-      .estimateGas({
-        from: userAddress
-      })
-    return bnOrZero(estimatedGas)
-  }
-
-  async estimateInstantWithdrawGas(
-    input: Pick<EstimateGasTxInput, Exclude<keyof EstimateGasTxInput, 'amountDesired'>>
-  ): Promise<BigNumber> {
-    const { userAddress, contractAddress } = input
-    const stakingContract = this.foxyStakingContracts.find(
-      (item) => toLower(item.options.address) === toLower(contractAddress)
-    )
-    if (!stakingContract) throw new Error('Not a valid contract address')
-    const estimatedGas = await stakingContract.methods.instantUnstake(true).estimateGas({
-      from: userAddress
-    })
+    const estimatedGas =
+      type === WithdrawType.DELAYED
+        ? await stakingContract.methods.unstake(amountDesired.toString(), true).estimateGas({
+            from: userAddress
+          })
+        : await stakingContract.methods.instantUnstake(true).estimateGas({
+            from: userAddress
+          })
     return bnOrZero(estimatedGas)
   }
 
@@ -346,13 +338,14 @@ export class FoxyApi {
     }
   }
 
-  async withdraw(input: TxInput): Promise<string> {
+  async withdraw(input: WithdrawInput): Promise<string> {
     const {
       amountDesired,
       accountNumber = 0,
       dryRun = false,
       contractAddress,
       userAddress,
+      type,
       wallet
     } = input
     if (!wallet || !contractAddress) throw new Error('Missing inputs')
@@ -362,52 +355,16 @@ export class FoxyApi {
     )
     if (!stakingContract) throw new Error('Not a valid contract address')
 
-    const data: string = stakingContract.methods.unstake(amountDesired.toString(), true).encodeABI({
-      from: userAddress
-    })
+    const isDelayed = type === WithdrawType.DELAYED
+    const data: string = isDelayed
+      ? stakingContract.methods.unstake(amountDesired.toString(), true).encodeABI({
+          from: userAddress
+        })
+      : stakingContract.methods.instantUnstake(true).encodeABI({
+          from: userAddress
+        })
     const nonce = await this.web3.eth.getTransactionCount(userAddress)
     const gasPrice = await this.web3.eth.getGasPrice()
-    const txToSign = buildTxToSign({
-      bip44Params: this.adapter.buildBIP44Params({ accountNumber }),
-      chainId: 1,
-      data,
-      estimatedGas: estimatedGas.toString(),
-      gasPrice,
-      nonce: String(nonce),
-      to: contractAddress,
-      value: '0'
-    })
-    if (wallet.supportsOfflineSigning()) {
-      const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
-      if (dryRun) return signedTx
-      return this.broadcastTx(signedTx)
-    } else if (wallet.supportsBroadcast() && this.adapter.signAndBroadcastTransaction) {
-      if (dryRun) {
-        throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
-      }
-      return this.adapter.signAndBroadcastTransaction({ txToSign, wallet })
-    } else {
-      throw new Error('Invalid HDWallet configuration ')
-    }
-  }
-
-  async instantWithdraw(
-    input: Pick<TxInput, Exclude<keyof TxInput, 'amountDesired'>>
-  ): Promise<string> {
-    const { accountNumber = 0, dryRun = false, contractAddress, userAddress, wallet } = input
-    if (!wallet || !contractAddress) throw new Error('Missing inputs')
-    const estimatedGas: BigNumber = await this.estimateInstantWithdrawGas(input)
-    const stakingContract = this.foxyStakingContracts.find(
-      (item) => toLower(item.options.address) === toLower(contractAddress)
-    )
-    if (!stakingContract) throw new Error('Not a valid contract address')
-
-    const data: string = stakingContract.methods.instantUnstake(true).encodeABI({
-      from: userAddress
-    })
-    const nonce = await this.web3.eth.getTransactionCount(userAddress)
-    const gasPrice = await this.web3.eth.getGasPrice()
-
     const txToSign = buildTxToSign({
       bip44Params: this.adapter.buildBIP44Params({ accountNumber }),
       chainId: 1,
@@ -635,7 +592,7 @@ export class FoxyApi {
     const coolDownInfo = await stakingContract.methods.coolDownInfo(userAddress).call()
     const epoch = await stakingContract.methods.epoch().call()
     const currentBlock = await this.web3.eth.getBlockNumber()
-    const epochsLeft = coolDownInfo.expiry - epoch.number - 1
+    const epochsLeft = coolDownInfo.expiry - epoch.number - 1 // epochs left after the current one
     const blocksUntilClaimable =
       epoch.endBlock > currentBlock ? epoch.endBlock - currentBlock : 0 + epochsLeft * epoch.length
     const timeUntilClaimable = blocksUntilClaimable * 13 // average block time is 13 seconds
@@ -644,6 +601,13 @@ export class FoxyApi {
   }
 
   async balance(input: BalanceInput): Promise<BigNumber> {
+    const { tokenContractAddress, userAddress } = input
+    const contract = new this.web3.eth.Contract(erc20Abi, tokenContractAddress)
+    const balance = await contract.methods.balanceOf(userAddress).call()
+    return bnOrZero(balance)
+  }
+
+  async instantUnstakeFee(input: BalanceInput): Promise<BigNumber> {
     const { tokenContractAddress, userAddress } = input
     const contract = new this.web3.eth.Contract(erc20Abi, tokenContractAddress)
     const balance = await contract.methods.balanceOf(userAddress).call()

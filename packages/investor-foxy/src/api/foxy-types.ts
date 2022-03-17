@@ -1,6 +1,11 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { BigNumber } from 'bignumber.js'
 
+export enum WithdrawType {
+  DELAYED,
+  INSTANT
+}
+
 export type Allowanceinput = {
   tokenContractAddress: string
   contractAddress: string
@@ -31,6 +36,8 @@ export type TxInput = {
   amountDesired: BigNumber
 }
 
+export type WithdrawInput = TxInput & { type: WithdrawType }
+
 export type FoxyOpportunityInputData = {
   tvl: BigNumber
   apy: string
@@ -45,6 +52,8 @@ export type EstimateGasTxInput = Pick<
   TxInput,
   'tokenContractAddress' | 'contractAddress' | 'userAddress' | 'amountDesired'
 >
+
+export type EstimateWithdrawGasTxInput = EstimateGasTxInput & { type: WithdrawType }
 
 export type BalanceInput = {
   userAddress: string
