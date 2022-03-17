@@ -68,6 +68,13 @@ export class FoxyApi {
     )
   }
 
+  private async broadcastTx(signedTx: string) {
+    return this.adapter.broadcastTransaction(signedTx)
+    // TODO: add if statement for local/cli testing
+    // const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
+    // return sendSignedTx?.blockHash
+  }
+
   async getFoxyOpportunities() {
     const opportunities = await Promise.all(
       foxyAddresses.map(async (addresses) => {
@@ -98,13 +105,6 @@ export class FoxyApi {
     const tvl = await this.tvl({ tokenContractAddress: addresses.foxy })
     const apy = this.apy()
     return transformData({ ...addresses, tvl, apy, expired })
-  }
-
-  private async broadcastTx(signedTx: string) {
-    return this.adapter.broadcastTransaction(signedTx)
-    // TODO: add if statement for local/cli testing
-    // const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
-    // return sendSignedTx?.blockHash
   }
 
   async getGasPrice() {
@@ -620,21 +620,21 @@ export class FoxyApi {
     }
   }
 
+  // returns time in seconds until withdraw request is claimable
   async getTimeUntilClaimable(
     input: Pick<TxInput, Exclude<keyof TxInput, 'amountDesired'>>
   ): Promise<string> {
-    const { contractAddress } = input
+    const { contractAddress, userAddress } = input
     const stakingContract = this.foxyStakingContracts.find(
       (item) => toLower(item.options.address) === toLower(contractAddress)
     )
     if (!stakingContract) throw new Error('Not a valid contract address')
 
-    // const coolDown = await stakingContract.methods.coolDownInfo(userAddress).call()
+    const coolDown = await stakingContract.methods.coolDownInfo(userAddress).call()
     // const epoch = await stakingContract.methods.epoch().call()
     // console.info('coolDown', coolDown)
     // console.log('epoch', epoch)
 
-    // TODO: calculate time left from expiry
     return '10000000'
   }
 

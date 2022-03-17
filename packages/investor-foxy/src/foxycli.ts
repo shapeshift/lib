@@ -43,7 +43,7 @@ const main = async (): Promise<void> => {
   const liquidityReserveContractAddress = foxyAddresses[0].liquidityReserve
 
   const api = new FoxyApi({
-    adapter: adapterManager.byChain(ChainTypes.Ethereum), // adapter is an ETH @shapeshiftoss/chain-adapters
+    adapter: adapterManager.byChain(ChainTypes.Ethereum),
     providerUrl: 'https://dev-api.ethereum.shapeshift.com'
   })
 
@@ -111,7 +111,6 @@ const main = async (): Promise<void> => {
       console.info('staking...')
       const response = await api.deposit({
         contractAddress: foxyStakingContractAddress,
-        tokenContractAddress: foxContractAddress,
         amountDesired: new BigNumber(amount),
         userAddress,
         wallet
@@ -127,7 +126,6 @@ const main = async (): Promise<void> => {
       console.info('unstaking...')
       const response = await api.withdraw({
         contractAddress: foxyStakingContractAddress,
-        tokenContractAddress: foxContractAddress,
         amountDesired: new BigNumber(amount),
         userAddress,
         wallet
@@ -143,7 +141,6 @@ const main = async (): Promise<void> => {
       console.info('instantUnstaking...')
       const response = await api.instantWithdraw({
         contractAddress: foxyStakingContractAddress,
-        tokenContractAddress: foxContractAddress,
         userAddress,
         wallet
       })
@@ -158,7 +155,6 @@ const main = async (): Promise<void> => {
       console.info('claiming withdraw...')
       const response = await api.claimWithdraw({
         contractAddress: foxyStakingContractAddress,
-        tokenContractAddress: foxContractAddress,
         claimAddress,
         userAddress,
         wallet
