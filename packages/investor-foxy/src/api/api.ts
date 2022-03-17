@@ -8,7 +8,14 @@ import Web3 from 'web3'
 import { HttpProvider, TransactionReceipt } from 'web3-core/types'
 import { Contract } from 'web3-eth-contract'
 
-import { DefiType, erc20Abi, foxyAddresses, foxyStakingAbi, MAX_ALLOWANCE } from '../constants'
+import {
+  DefiType,
+  erc20Abi,
+  foxyAddresses,
+  foxyStakingAbi,
+  MAX_ALLOWANCE,
+  WithdrawType
+} from '../constants'
 import { foxyAbi } from '../constants/foxy-abi'
 import { liquidityReserveAbi } from '../constants/liquidity-reserve-abi'
 import { bnOrZero, buildTxToSign } from '../utils'
@@ -22,8 +29,7 @@ import {
   InstantUnstakeFeeInput,
   TVLInput,
   TxInput,
-  WithdrawInput,
-  WithdrawType
+  WithdrawInput
 } from './foxy-types'
 
 export type ConstructorArgs = {
