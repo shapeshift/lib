@@ -10,7 +10,7 @@ import * as unchained from '@shapeshiftoss/unchained-client'
 
 import { ChainAdapter as IChainAdapter } from '../../api'
 import { ErrorHandler } from '../../error/ErrorHandler'
-import { toPath, bnOrZero, } from '../../utils'
+import { toPath, bnOrZero } from '../../utils'
 import { ChainAdapterArgs, CosmosSdkBaseAdapter } from '../CosmosSdkBaseAdapter'
 
 export class ChainAdapter
@@ -83,7 +83,7 @@ export class ChainAdapter
         to,
         wallet,
         bip44Params = CosmosSdkBaseAdapter.defaultBIP44Params,
-        chainSpecific: { gas },
+        chainSpecific: { gas, fee },
         sendMax = false,
         value
       } = tx
@@ -105,7 +105,7 @@ export class ChainAdapter
         fee: {
           amount: [
             {
-              amount: bnOrZero(gas).toString(),
+              amount: bnOrZero(fee).toString(),
               denom: 'uatom'
             }
           ],
@@ -157,14 +157,12 @@ export class ChainAdapter
     try {
       if (supportsCosmos(wallet)) {
         const signedTx = await this.signTransaction(signTxInput)
-        console.log({ signedTx, from: 'signAndBroadcastTransaction' })
         const { data } = await this.providers.http.sendTx({ body: { rawTx: signedTx } })
         return data
       } else {
         throw new Error('Wallet does not support Cosmos.')
       }
     } catch (error) {
-      console.dir(error.response.data, { color: true, depth: 4 })
       return ErrorHandler(error)
     }
   }
