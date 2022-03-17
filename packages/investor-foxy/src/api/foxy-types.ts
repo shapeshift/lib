@@ -36,7 +36,10 @@ export type TxInput = {
   amountDesired: BigNumber
 }
 
-export type WithdrawInput = TxInput & { type: WithdrawType }
+export type WithdrawInput = Omit<TxInput, 'amountDesired'> & {
+  type: WithdrawType
+  amountDesired?: BigNumber
+}
 
 export type FoxyOpportunityInputData = {
   tvl: BigNumber
@@ -52,8 +55,6 @@ export type EstimateGasTxInput = Pick<
   TxInput,
   'tokenContractAddress' | 'contractAddress' | 'userAddress' | 'amountDesired'
 >
-
-export type EstimateWithdrawGasTxInput = EstimateGasTxInput & { type: WithdrawType }
 
 export type BalanceInput = {
   userAddress: string

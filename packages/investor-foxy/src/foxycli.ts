@@ -6,6 +6,7 @@ import dotenv from 'dotenv'
 import readline from 'readline-sync'
 
 import { FoxyApi } from './api'
+import { WithdrawType } from './api/foxy-types'
 import { foxyAddresses } from './constants'
 
 dotenv.config()
@@ -127,6 +128,7 @@ const main = async (): Promise<void> => {
       const response = await api.withdraw({
         contractAddress: foxyStakingContractAddress,
         amountDesired: new BigNumber(amount),
+        type: WithdrawType.DELAYED,
         userAddress,
         wallet
       })
@@ -139,8 +141,9 @@ const main = async (): Promise<void> => {
   const instantUnstake = async () => {
     try {
       console.info('instantUnstaking...')
-      const response = await api.instantWithdraw({
+      const response = await api.withdraw({
         contractAddress: foxyStakingContractAddress,
+        type: WithdrawType.INSTANT,
         userAddress,
         wallet
       })

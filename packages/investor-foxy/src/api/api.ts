@@ -18,7 +18,6 @@ import {
   BalanceInput,
   EstimateGasApproveInput,
   EstimateGasTxInput,
-  EstimateWithdrawGasTxInput,
   FoxyOpportunityInputData,
   InstantUnstakeFeeInput,
   TVLInput,
@@ -73,10 +72,10 @@ export class FoxyApi {
   }
 
   private async broadcastTx(signedTx: string) {
-    return this.adapter.broadcastTransaction(signedTx)
+    // return this.adapter.broadcastTransaction(signedTx)
     // TODO: add if statement for local/cli testing
-    // const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
-    // return sendSignedTx?.blockHash
+    const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
+    return sendSignedTx?.blockHash
   }
 
   async getFoxyOpportunities() {
@@ -192,21 +191,21 @@ export class FoxyApi {
     return bnOrZero(estimatedGas)
   }
 
-  async estimateWithdrawGas(input: EstimateWithdrawGasTxInput): Promise<BigNumber> {
+  async estimateWithdrawGas(input: WithdrawInput): Promise<BigNumber> {
     const { amountDesired, userAddress, contractAddress, type } = input
     const stakingContract = this.foxyStakingContracts.find(
       (item) => toLower(item.options.address) === toLower(contractAddress)
     )
     if (!stakingContract) throw new Error('Not a valid contract address')
 
-    const estimatedGas =
-      type === WithdrawType.DELAYED
-        ? await stakingContract.methods.unstake(amountDesired.toString(), true).estimateGas({
-            from: userAddress
-          })
-        : await stakingContract.methods.instantUnstake(true).estimateGas({
-            from: userAddress
-          })
+    const isDelayed = type === WithdrawType.DELAYED && amountDesired
+    const estimatedGas = isDelayed
+      ? await stakingContract.methods.unstake(amountDesired.toString(), true).estimateGas({
+          from: userAddress
+        })
+      : await stakingContract.methods.instantUnstake(true).estimateGas({
+          from: userAddress
+        })
     return bnOrZero(estimatedGas)
   }
 
@@ -356,7 +355,7 @@ export class FoxyApi {
     )
     if (!stakingContract) throw new Error('Not a valid contract address')
 
-    const isDelayed = type === WithdrawType.DELAYED
+    const isDelayed = type === WithdrawType.DELAYED && amountDesired
     const data: string = isDelayed
       ? stakingContract.methods.unstake(amountDesired.toString(), true).encodeABI({
           from: userAddress
