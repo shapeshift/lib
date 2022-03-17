@@ -80,10 +80,9 @@ export class ChainAdapter
   }
 
   async signAndBroadcastTransaction(
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars -- Disable no-unused-vars lint rule for unimplemented methods */
     signTxInput: chainAdapters.SignTxInput<OsmosisSignTx>
   ): Promise<string> {
-    const signedTx = await this.signTransaction(signTxInput)
-    const { data } = await this.providers.http.sendTx({ body: { rawTx: signedTx } })
-    return data
+    throw new Error('Method not implemented.')
   }
 }
