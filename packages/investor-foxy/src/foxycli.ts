@@ -50,9 +50,6 @@ const main = async (): Promise<void> => {
   const userAddress = await adapterManager.byChain(ChainTypes.Ethereum).getAddress({ wallet })
   console.info('current user address ', userAddress)
 
-  const hey = await api.getFoxyOpportunities()
-  console.log('hey', hey)
-
   const circulatingSupply = async () => {
     try {
       const supply = await api.tvl({ tokenContractAddress: foxyContractAddress })

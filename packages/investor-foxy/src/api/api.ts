@@ -8,7 +8,7 @@ import Web3 from 'web3'
 import { HttpProvider, TransactionReceipt } from 'web3-core/types'
 import { Contract } from 'web3-eth-contract'
 
-import { DefiType, erc20Abi, foxyStakingAbi, foxyAddresses, MAX_ALLOWANCE } from '../constants'
+import { DefiType, erc20Abi, foxyAddresses, foxyStakingAbi, MAX_ALLOWANCE } from '../constants'
 import { foxyAbi } from '../constants/foxy-abi'
 import { liquidityReserveAbi } from '../constants/liquidity-reserve-abi'
 import { bnOrZero, buildTxToSign } from '../utils'
@@ -623,7 +623,7 @@ export class FoxyApi {
   async getTimeUntilClaimable(
     input: Pick<TxInput, Exclude<keyof TxInput, 'amountDesired'>>
   ): Promise<string> {
-    const { contractAddress, userAddress } = input
+    const { contractAddress } = input
     const stakingContract = this.foxyStakingContracts.find(
       (item) => toLower(item.options.address) === toLower(contractAddress)
     )
