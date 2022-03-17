@@ -20,6 +20,7 @@ import {
   EstimateGasTxInput,
   EstimateWithdrawGasTxInput,
   FoxyOpportunityInputData,
+  InstantUnstakeFeeInput,
   TVLInput,
   TxInput,
   WithdrawInput,
@@ -607,11 +608,21 @@ export class FoxyApi {
     return bnOrZero(balance)
   }
 
-  async instantUnstakeFee(input: BalanceInput): Promise<BigNumber> {
-    const { tokenContractAddress, userAddress } = input
-    const contract = new this.web3.eth.Contract(erc20Abi, tokenContractAddress)
-    const balance = await contract.methods.balanceOf(userAddress).call()
-    return bnOrZero(balance)
+  async instantUnstakeFee(input: InstantUnstakeFeeInput): Promise<BigNumber> {
+    const { contractAddress } = input
+    const stakingContract = this.foxyStakingContracts.find(
+      (item) => toLower(item.options.address) === toLower(contractAddress)
+    )
+    if (!stakingContract) throw new Error('Not a valid staking contract address')
+
+    const liquidityReserveAddress = await stakingContract.methods.LIQUIDITY_RESERVE().call()
+    const liquidityReserveContract = this.liquidityReserveContracts.find(
+      (item) => toLower(item.options.address) === toLower(liquidityReserveAddress)
+    )
+    if (!liquidityReserveContract) throw new Error('Not a valid reserve contract address')
+    const feeInBasisPoints = await liquidityReserveContract.methods.fee().call()
+
+    return bnOrZero(feeInBasisPoints / 10000) // convert from basis points to decimal percentage
   }
 
   async totalSupply({

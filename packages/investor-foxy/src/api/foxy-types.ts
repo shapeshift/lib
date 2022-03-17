@@ -63,3 +63,7 @@ export type BalanceInput = {
 export type TVLInput = {
   tokenContractAddress: string
 }
+
+export type InstantUnstakeFeeInput = {
+  contractAddress: string
+}
