@@ -63,8 +63,9 @@ export class FoxyApi {
   public web3: Web3
   private foxyStakingContracts: Contract[]
   private liquidityReserveContracts: Contract[]
+  private network: ChainReference
 
-  constructor({ adapter, providerUrl }: ConstructorArgs) {
+  constructor({ adapter, providerUrl, network = ChainReference.EthereumMainnet }: ConstructorArgs) {
     this.adapter = adapter
     this.provider = new Web3.providers.HttpProvider(providerUrl)
     this.jsonRpcProvider = new JsonRpcProvider(providerUrl)
@@ -75,6 +76,7 @@ export class FoxyApi {
     this.liquidityReserveContracts = foxyAddresses.map(
       (addresses) => new this.web3.eth.Contract(liquidityReserveAbi, addresses.liquidityReserve)
     )
+    this.network = network;
   }
 
   private async broadcastTx(signedTx: string) {
@@ -262,7 +264,7 @@ export class FoxyApi {
 
     const txToSign = buildTxToSign({
       bip44Params: this.adapter.buildBIP44Params({ accountNumber }),
-      chainId: 1,
+      chainId: Number(this.network),
       data,
       estimatedGas: estimatedGas.toString(),
       gasPrice,
@@ -322,7 +324,7 @@ export class FoxyApi {
 
     const txToSign = buildTxToSign({
       bip44Params: this.adapter.buildBIP44Params({ accountNumber }),
-      chainId: 1,
+      chainId: Number(this.network),
       data,
       estimatedGas: estimatedGas.toString(),
       gasPrice,
@@ -373,7 +375,7 @@ export class FoxyApi {
     const gasPrice = await this.web3.eth.getGasPrice()
     const txToSign = buildTxToSign({
       bip44Params: this.adapter.buildBIP44Params({ accountNumber }),
-      chainId: 1,
+      chainId: Number(this.network),
       data,
       estimatedGas: estimatedGas.toString(),
       gasPrice,
@@ -425,7 +427,7 @@ export class FoxyApi {
 
     const txToSign = buildTxToSign({
       bip44Params: this.adapter.buildBIP44Params({ accountNumber }),
-      chainId: 1,
+      chainId: Number(this.network),
       data,
       estimatedGas: estimatedGas.toString(),
       gasPrice,
@@ -468,7 +470,7 @@ export class FoxyApi {
 
     const txToSign = buildTxToSign({
       bip44Params: this.adapter.buildBIP44Params({ accountNumber }),
-      chainId: 1,
+      chainId: Number(this.network),
       data,
       estimatedGas: estimatedGas.toString(),
       gasPrice,
@@ -515,7 +517,7 @@ export class FoxyApi {
     const gasPrice = await this.web3.eth.getGasPrice()
     const txToSign = buildTxToSign({
       bip44Params: this.adapter.buildBIP44Params({ accountNumber }),
-      chainId: 1,
+      chainId: Number(this.network),
       data,
       estimatedGas: estimatedGas.toString(),
       gasPrice,
@@ -562,7 +564,7 @@ export class FoxyApi {
     const gasPrice = await this.web3.eth.getGasPrice()
     const txToSign = buildTxToSign({
       bip44Params: this.adapter.buildBIP44Params({ accountNumber }),
-      chainId: 1,
+      chainId: Number(this.network),
       data,
       estimatedGas: estimatedGas.toString(),
       gasPrice,
