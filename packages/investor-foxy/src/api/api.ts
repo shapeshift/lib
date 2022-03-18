@@ -143,11 +143,7 @@ export class FoxyApi {
     return this.web3.utils.toChecksumAddress(address)
   }
 
-  async estimateClaimWithdrawGas(
-    input: Pick<EstimateGasTxInput, Exclude<keyof EstimateGasTxInput, 'amountDesired'>> & {
-      claimAddress?: string
-    }
-  ): Promise<BigNumber> {
+  async estimateClaimWithdrawGas(input: ClaimWithdrawal): Promise<BigNumber> {
     const { claimAddress, userAddress, contractAddress } = input
     const stakingContract = this.foxyStakingContracts.find(
       (item) => toLower(item.options.address) === toLower(contractAddress)
