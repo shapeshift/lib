@@ -125,7 +125,7 @@ export class FoxyApi {
   }
 
   async getTxReceipt({ txid }: { txid: string }): Promise<TransactionReceipt> {
-    return await this.web3.eth.getTransactionReceipt(txid)
+    return this.web3.eth.getTransactionReceipt(txid)
   }
 
   checksumAddress(address: string): string {
@@ -286,7 +286,7 @@ export class FoxyApi {
     }
   }
 
-  async allowance(input: Allowanceinput): Promise<string> {
+  async allowance(input: AllowanceInput): Promise<string> {
     const { userAddress, tokenContractAddress, contractAddress } = input
     const depositTokenContract: Contract = new this.web3.eth.Contract(
       erc20Abi,
