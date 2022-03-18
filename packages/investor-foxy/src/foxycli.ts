@@ -178,7 +178,7 @@ const main = async (): Promise<void> => {
       })
       console.info('addLiquidity', response)
     } catch (e) {
-      console.error('addLiquidity Error:', e)
+      console.error('AddLiquidity Error:', e)
     }
   }
 
@@ -193,21 +193,21 @@ const main = async (): Promise<void> => {
       })
       console.info('removeLiquidity', response)
     } catch (e) {
-      console.error('removeLiquidity Error:', e)
+      console.error('RemoveLiquidity Error:', e)
     }
   }
 
   const getTimeUntilClaim = async () => {
     try {
-      console.info('getting coolDownInfo...')
+      console.info('getting time until claim...')
       const response = await api.getTimeUntilClaimable({
         contractAddress: foxyStakingContractAddress,
         userAddress,
         wallet
       })
-      console.info('coolDownInfo', response)
+      console.info('getTimeUntilClaim', response)
     } catch (e) {
-      console.error('ClaimWithdraw Error:', e)
+      console.error('GetTimeUntilClaim Error:', e)
     }
   }
 
