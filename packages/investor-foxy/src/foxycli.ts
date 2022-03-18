@@ -1,6 +1,8 @@
+import { caip2 } from '@shapeshiftoss/caip'
+import { ChainReference } from '@shapeshiftoss/caip/dist/caip2/caip2'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { ChainTypes } from '@shapeshiftoss/types'
+import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import dotenv from 'dotenv'
 import readline from 'readline-sync'
 
@@ -43,11 +45,13 @@ const main = async (): Promise<void> => {
   const liquidityReserveContractAddress = foxyAddresses[0].liquidityReserve
 
   const api = new FoxyApi({
-    adapter: adapterManager.byChain(ChainTypes.Ethereum),
+    adapter: await adapterManager.byChainId(
+      caip2.toCAIP2({ chain: ChainTypes.Ethereum, network: NetworkTypes.MAINNET })
+    ),
     providerUrl: 'http://localhost:8545'
   })
 
-  const userAddress = await adapterManager.byChain(ChainTypes.Ethereum).getAddress({ wallet })
+  const userAddress = await api.adapter.getAddress({ wallet })
   console.info('current user address ', userAddress)
 
   const circulatingSupply = async () => {

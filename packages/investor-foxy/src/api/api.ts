@@ -37,7 +37,7 @@ import {
 } from './foxy-types'
 
 export type ConstructorArgs = {
-  adapter: ChainAdapter<ChainTypes.Ethereum>
+  adapter: ChainAdapter<ChainTypes>
   providerUrl: string
   network?:
     | ChainReference.EthereumMainnet
@@ -61,7 +61,7 @@ export const transformData = ({ tvl, apy, expired, ...contractData }: FoxyOpport
 }
 
 export class FoxyApi {
-  public adapter: ChainAdapter<ChainTypes.Ethereum>
+  public adapter: ChainAdapter<ChainTypes>
   public provider: HttpProvider
   private providerUrl: string
   public jsonRpcProvider: JsonRpcProvider
