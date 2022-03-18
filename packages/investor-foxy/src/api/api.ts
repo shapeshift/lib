@@ -8,14 +8,7 @@ import Web3 from 'web3'
 import { HttpProvider, TransactionReceipt } from 'web3-core/types'
 import { Contract } from 'web3-eth-contract'
 
-import {
-  DefiType,
-  erc20Abi,
-  foxyAddresses,
-  foxyStakingAbi,
-  MAX_ALLOWANCE,
-  WithdrawType
-} from '../constants'
+import { DefiType, erc20Abi, foxyStakingAbi, MAX_ALLOWANCE, WithdrawType } from '../constants'
 import { foxyAbi } from '../constants/foxy-abi'
 import { liquidityReserveAbi } from '../constants/liquidity-reserve-abi'
 import { bnOrZero, buildTxToSign } from '../utils'
@@ -26,6 +19,7 @@ import {
   ClaimWithdrawal,
   EstimateGasApproveInput,
   EstimateGasTxInput,
+  FoxyAddressesType,
   FoxyOpportunityInputData,
   InstantUnstakeFeeInput,
   TokenAddressInput,
@@ -40,6 +34,7 @@ import {
 export type ConstructorArgs = {
   adapter: ChainAdapter<ChainTypes>
   providerUrl: string
+  foxyAddresses: FoxyAddressesType
   network?:
     | ChainReference.EthereumMainnet
     | ChainReference.EthereumRinkeby
@@ -70,8 +65,14 @@ export class FoxyApi {
   private foxyStakingContracts: Contract[]
   private liquidityReserveContracts: Contract[]
   private network: ChainReference
+  private foxyAddresses: FoxyAddressesType
 
-  constructor({ adapter, providerUrl, network = ChainReference.EthereumMainnet }: ConstructorArgs) {
+  constructor({
+    adapter,
+    providerUrl,
+    foxyAddresses,
+    network = ChainReference.EthereumMainnet
+  }: ConstructorArgs) {
     this.adapter = adapter
     this.provider = new Web3.providers.HttpProvider(providerUrl)
     this.jsonRpcProvider = new JsonRpcProvider(providerUrl)
@@ -84,6 +85,7 @@ export class FoxyApi {
     )
     this.network = network
     this.providerUrl = providerUrl
+    this.foxyAddresses = foxyAddresses
   }
 
   private async broadcastTx(signedTx: string) {
@@ -115,7 +117,7 @@ export class FoxyApi {
   async getFoxyOpportunities() {
     try {
       const opportunities = await Promise.all(
-        foxyAddresses.map(async (addresses) => {
+        this.foxyAddresses.map(async (addresses) => {
           const stakingContract = this.foxyStakingContracts.find(
             (item) => toLower(item.options.address) === toLower(addresses.staking)
           )
@@ -135,7 +137,7 @@ export class FoxyApi {
   async getFoxyOpportunityByStakingAddress(stakingAddress: string) {
     this.verifyAddresses([stakingAddress])
 
-    const addresses = foxyAddresses.find(async (item) => {
+    const addresses = this.foxyAddresses.find(async (item) => {
       return item.staking === stakingAddress
     })
     if (!addresses) throw new Error('Not a valid address')

@@ -1,11 +1,3 @@
-export type FoxyAddressesType = {
-  staking: string
-  liquidityReserve: string
-  fox: string
-  foxy: string
-  version: number
-}
-
 export const foxyAddresses = [
   {
     staking: '0x21910Ea77801273918f0Ee46FFcaf06F80ec171C',

@@ -3,6 +3,14 @@ import { BigNumber } from 'bignumber.js'
 
 import { WithdrawType } from '../constants'
 
+export type FoxyAddressesType = {
+  staking: string
+  liquidityReserve: string
+  fox: string
+  foxy: string
+  version: number
+}[]
+
 export type TxReceipt = { txid: string }
 
 export type AllowanceInput = {
