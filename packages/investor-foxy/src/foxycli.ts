@@ -44,7 +44,7 @@ const main = async (): Promise<void> => {
 
   const api = new FoxyApi({
     adapter: adapterManager.byChain(ChainTypes.Ethereum),
-    providerUrl: 'http://127.0.0.1:8545'
+    providerUrl: 'http://localhost:8545'
   })
 
   const userAddress = await adapterManager.byChain(ChainTypes.Ethereum).getAddress({ wallet })

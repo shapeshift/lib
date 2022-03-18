@@ -59,6 +59,7 @@ export const transformData = ({ tvl, apy, expired, ...contractData }: FoxyOpport
 export class FoxyApi {
   public adapter: ChainAdapter<ChainTypes.Ethereum>
   public provider: HttpProvider
+  private providerUrl: string
   public jsonRpcProvider: JsonRpcProvider
   public web3: Web3
   private foxyStakingContracts: Contract[]
@@ -76,14 +77,16 @@ export class FoxyApi {
     this.liquidityReserveContracts = foxyAddresses.map(
       (addresses) => new this.web3.eth.Contract(liquidityReserveAbi, addresses.liquidityReserve)
     )
-    this.network = network;
+    this.network = network
+    this.providerUrl = providerUrl
   }
 
   private async broadcastTx(signedTx: string) {
+    if (this.providerUrl.includes('localhost')) {
+      const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
+      return sendSignedTx?.blockHash
+    }
     return this.adapter.broadcastTransaction(signedTx)
-    // TODO: add if statement for local/cli testing
-    // const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
-    // return sendSignedTx?.blockHash
   }
 
   async getFoxyOpportunities() {
