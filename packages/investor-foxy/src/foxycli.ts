@@ -202,8 +202,7 @@ const main = async (): Promise<void> => {
       console.info('getting time until claim...')
       const response = await api.getTimeUntilClaimable({
         contractAddress: foxyStakingContractAddress,
-        userAddress,
-        wallet
+        userAddress
       })
       console.info('getTimeUntilClaim', response)
     } catch (e) {
