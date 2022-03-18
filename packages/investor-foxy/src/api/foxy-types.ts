@@ -65,5 +65,3 @@ export type TVLInput = {
 export type InstantUnstakeFeeInput = {
   contractAddress: string
 }
-
-export type RebaseBalanceHistory = { userAddress: string; tokenContractAddress: string }

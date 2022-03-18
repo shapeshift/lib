@@ -50,12 +50,6 @@ const main = async (): Promise<void> => {
   const userAddress = await adapterManager.byChain(ChainTypes.Ethereum).getAddress({ wallet })
   console.info('current user address ', userAddress)
 
-  const eyy = await api.rebaseBalanceHistory({
-    userAddress,
-    tokenContractAddress: '0x61FcaBB591d63D00E897A67C64658D376FeAd816'
-  })
-  console.log('eey', eyy)
-
   const circulatingSupply = async () => {
     try {
       const supply = await api.tvl({ tokenContractAddress: foxyContractAddress })
