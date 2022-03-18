@@ -6,8 +6,7 @@ import dotenv from 'dotenv'
 import readline from 'readline-sync'
 
 import { FoxyApi } from './api'
-import { WithdrawType } from './api/foxy-types'
-import { foxyAddresses } from './constants'
+import { foxyAddresses, WithdrawType } from './constants'
 
 dotenv.config()
 
@@ -50,6 +49,12 @@ const main = async (): Promise<void> => {
 
   const userAddress = await adapterManager.byChain(ChainTypes.Ethereum).getAddress({ wallet })
   console.info('current user address ', userAddress)
+
+  const eyy = await api.rebaseBalanceHistory({
+    userAddress,
+    tokenContractAddress: '0x61FcaBB591d63D00E897A67C64658D376FeAd816'
+  })
+  console.log('eey', eyy)
 
   const circulatingSupply = async () => {
     try {

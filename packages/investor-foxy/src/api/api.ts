@@ -27,6 +27,7 @@ import {
   EstimateGasTxInput,
   FoxyOpportunityInputData,
   InstantUnstakeFeeInput,
+  RebaseBalanceHistory,
   TVLInput,
   TxInput,
   WithdrawInput
