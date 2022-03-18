@@ -8,10 +8,10 @@ export type FoxyAddressesType = {
 
 export const foxyAddresses = [
   {
-    staking: '0x21910Ea77801273918f0Ee46FFcaf06F80ec171C',
-    liquidityReserve: '0xf46Dae26dF78274a35Ec2545e012dCe5e9C516D0',
+    staking: '0x88167bEb4869910e90a8a845886EB98bc12d58e5',
+    liquidityReserve: '0x3C3200F82C878670fC991Ea50d1C6299e0A546b5',
     fox: '0xc770EEfAd204B5180dF6a14Ee197D99d808ee52d',
-    foxy: '0x61FcaBB591d63D00E897A67C64658D376FeAd816',
+    foxy: '0x0A3d1A2175ff17E0FAEBB408FEEbBa2641aE9691',
     version: 1
   }
 ]

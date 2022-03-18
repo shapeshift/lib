@@ -92,8 +92,8 @@ export class FoxyApi {
         return sendSignedTx?.blockHash
       }
       return this.adapter.broadcastTransaction(signedTx)
-    } catch {
-      throw new Error('Failed to broadcast')
+    } catch (e) {
+      throw new Error(`Failed to broadcast: ${e}`)
     }
   }
 
@@ -107,7 +107,7 @@ export class FoxyApi {
         this.checksumAddress(address)
       })
     } catch (e) {
-      throw new Error('Invalid address passed as argument')
+      throw new Error(`Verify Address: ${e}`)
     }
   }
 
@@ -295,8 +295,8 @@ export class FoxyApi {
     let estimatedGasBN: BigNumber
     try {
       estimatedGasBN = await this.estimateApproveGas(input)
-    } catch {
-      throw new Error('Failed to estimate gas')
+    } catch (e) {
+      throw new Error(`Estimate Gas Error: ${e}`)
     }
     const depositTokenContract = new this.web3.eth.Contract(erc20Abi, tokenContractAddress)
     const data: string = depositTokenContract.methods
@@ -308,15 +308,14 @@ export class FoxyApi {
     let nonce: number
     try {
       nonce = await this.web3.eth.getTransactionCount(userAddress)
-    } catch {
-      throw new Error('Failed to get nonce')
+    } catch (e) {
+      throw new Error(`Get nonce Error: ${e}`)
     }
-
     let gasPrice: string
     try {
       gasPrice = await this.web3.eth.getGasPrice()
-    } catch {
-      throw new Error('Failed to get gasPrice')
+    } catch (e) {
+      throw new Error(`Get gasPrice Error: ${e}`)
     }
     const bip44Params = this.adapter.buildBIP44Params({ accountNumber })
     const chainId = Number(this.network)
@@ -373,8 +372,8 @@ export class FoxyApi {
     let estimatedGasBN: BigNumber
     try {
       estimatedGasBN = await this.estimateDepositGas(input)
-    } catch {
-      throw new Error('Failed to estimate gas')
+    } catch (e) {
+      throw new Error(`Estimate Gas Error: ${e}`)
     }
 
     const stakingContract = this.foxyStakingContracts.find(
@@ -390,8 +389,19 @@ export class FoxyApi {
         value: 0,
         from: userChecksum
       })
-    const nonce = await this.web3.eth.getTransactionCount(userAddress)
-    const gasPrice = await this.web3.eth.getGasPrice()
+
+    let nonce: number
+    try {
+      nonce = await this.web3.eth.getTransactionCount(userAddress)
+    } catch (e) {
+      throw new Error(`Get nonce Error: ${e}`)
+    }
+    let gasPrice: string
+    try {
+      gasPrice = await this.web3.eth.getGasPrice()
+    } catch (e) {
+      throw new Error(`Get gasPrice Error: ${e}`)
+    }
     const estimatedGas = estimatedGasBN.toString()
     const bip44Params = this.adapter.buildBIP44Params({ accountNumber })
     const chainId = Number(this.network)
@@ -437,8 +447,8 @@ export class FoxyApi {
     let estimatedGasBN: BigNumber
     try {
       estimatedGasBN = await this.estimateWithdrawGas(input)
-    } catch {
-      throw new Error('Failed to estimate gas')
+    } catch (e) {
+      throw new Error(`Estimate Gas Error: ${e}`)
     }
 
     const stakingContract = this.foxyStakingContracts.find(
@@ -456,8 +466,19 @@ export class FoxyApi {
       : stakingContract.methods.instantUnstake(true).encodeABI({
           from: userAddress
         })
-    const nonce = await this.web3.eth.getTransactionCount(userAddress)
-    const gasPrice = await this.web3.eth.getGasPrice()
+
+    let nonce: number
+    try {
+      nonce = await this.web3.eth.getTransactionCount(userAddress)
+    } catch (e) {
+      throw new Error(`Get nonce Error: ${e}`)
+    }
+    let gasPrice: string
+    try {
+      gasPrice = await this.web3.eth.getGasPrice()
+    } catch (e) {
+      throw new Error(`Get gasPrice Error: ${e}`)
+    }
     const estimatedGas = estimatedGasBN.toString()
     const bip44Params = this.adapter.buildBIP44Params({ accountNumber })
     const chainId = Number(this.network)
@@ -502,8 +523,8 @@ export class FoxyApi {
     let estimatedGasBN: BigNumber
     try {
       estimatedGasBN = await this.estimateClaimWithdrawGas(input)
-    } catch {
-      throw new Error('Failed to estimate gas')
+    } catch (e) {
+      throw new Error(`Estimate Gas Error: ${e}`)
     }
 
     const stakingContract = this.foxyStakingContracts.find(
@@ -516,8 +537,19 @@ export class FoxyApi {
     const data: string = stakingContract.methods.claimWithdraw(addressToClaim).encodeABI({
       from: userAddress
     })
-    const nonce = await this.web3.eth.getTransactionCount(userAddress)
-    const gasPrice = await this.web3.eth.getGasPrice()
+
+    let nonce: number
+    try {
+      nonce = await this.web3.eth.getTransactionCount(userAddress)
+    } catch (e) {
+      throw new Error(`Get nonce Error: ${e}`)
+    }
+    let gasPrice: string
+    try {
+      gasPrice = await this.web3.eth.getGasPrice()
+    } catch (e) {
+      throw new Error(`Get gasPrice Error: ${e}`)
+    }
     const estimatedGas = estimatedGasBN.toString()
     const bip44Params = this.adapter.buildBIP44Params({ accountNumber })
     const chainId = Number(this.network)
@@ -554,8 +586,8 @@ export class FoxyApi {
     let estimatedGasBN: BigNumber
     try {
       estimatedGasBN = await this.estimateSendWithdrawalRequestsGas(input)
-    } catch {
-      throw new Error('Failed to estimate gas')
+    } catch (e) {
+      throw new Error(`Estimate Gas Error: ${e}`)
     }
 
     const stakingContract = this.foxyStakingContracts.find(
@@ -568,8 +600,19 @@ export class FoxyApi {
     const data: string = stakingContract.methods.sendWithdrawalRequests().encodeABI({
       from: userAddress
     })
-    const nonce = await this.web3.eth.getTransactionCount(userAddress)
-    const gasPrice = await this.web3.eth.getGasPrice()
+
+    let nonce: number
+    try {
+      nonce = await this.web3.eth.getTransactionCount(userAddress)
+    } catch (e) {
+      throw new Error(`Get nonce Error: ${e}`)
+    }
+    let gasPrice: string
+    try {
+      gasPrice = await this.web3.eth.getGasPrice()
+    } catch (e) {
+      throw new Error(`Get gasPrice Error: ${e}`)
+    }
     const estimatedGas = estimatedGasBN.toString()
     const bip44Params = this.adapter.buildBIP44Params({ accountNumber })
     const chainId = Number(this.network)
@@ -615,8 +658,8 @@ export class FoxyApi {
     let estimatedGasBN: BigNumber
     try {
       estimatedGasBN = await this.estimateAddLiquidityGas(input)
-    } catch {
-      throw new Error('Failed to estimate gas')
+    } catch (e) {
+      throw new Error(`Estimate Gas Error: ${e}`)
     }
 
     const liquidityReserveContract = this.liquidityReserveContracts.find(
@@ -675,8 +718,8 @@ export class FoxyApi {
     let estimatedGasBN: BigNumber
     try {
       estimatedGasBN = await this.estimateRemoveLiquidityGas(input)
-    } catch {
-      throw new Error('Failed to estimate gas')
+    } catch (e) {
+      throw new Error(`Estimate Gas Error: ${e}`)
     }
 
     const liquidityReserveContract = this.liquidityReserveContracts.find(
