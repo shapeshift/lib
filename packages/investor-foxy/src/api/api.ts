@@ -90,19 +90,23 @@ export class FoxyApi {
   }
 
   async getFoxyOpportunities() {
-    const opportunities = await Promise.all(
-      foxyAddresses.map(async (addresses) => {
-        const stakingContract = this.foxyStakingContracts.find(
-          (item) => toLower(item.options.address) === toLower(addresses.staking)
-        )
-        const expired = await stakingContract?.methods.pauseStaking().call()
-        const tvl = await this.tvl({ tokenContractAddress: addresses.foxy })
-        const apy = this.apy()
+    try {
+      const opportunities = await Promise.all(
+        foxyAddresses.map(async (addresses) => {
+          const stakingContract = this.foxyStakingContracts.find(
+            (item) => toLower(item.options.address) === toLower(addresses.staking)
+          )
+          const expired = await stakingContract?.methods.pauseStaking().call()
+          const tvl = await this.tvl({ tokenContractAddress: addresses.foxy })
+          const apy = this.apy()
 
-        return transformData({ ...addresses, expired, tvl, apy })
-      })
-    )
-    return opportunities
+          return transformData({ ...addresses, expired, tvl, apy })
+        })
+      )
+      return opportunities
+    } catch (e) {
+      throw new Error(`Can't get opportunities ${e}`)
+    }
   }
 
   async getFoxyOpportunityByStakingAddress(stakingAddress: string) {

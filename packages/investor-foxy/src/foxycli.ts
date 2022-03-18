@@ -1,12 +1,12 @@
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { ChainTypes } from '@shapeshiftoss/types'
-import BigNumber from 'bignumber.js'
 import dotenv from 'dotenv'
 import readline from 'readline-sync'
 
 import { FoxyApi } from './api'
 import { foxyAddresses, WithdrawType } from './constants'
+import { bnOrZero } from './utils'
 
 dotenv.config()
 
@@ -111,7 +111,7 @@ const main = async (): Promise<void> => {
       console.info('staking...')
       const response = await api.deposit({
         contractAddress: foxyStakingContractAddress,
-        amountDesired: new BigNumber(amount),
+        amountDesired: bnOrZero(amount),
         userAddress,
         wallet
       })
@@ -126,7 +126,7 @@ const main = async (): Promise<void> => {
       console.info('unstaking...')
       const response = await api.withdraw({
         contractAddress: foxyStakingContractAddress,
-        amountDesired: new BigNumber(amount),
+        amountDesired: bnOrZero(amount),
         type: WithdrawType.DELAYED,
         userAddress,
         wallet
@@ -173,7 +173,7 @@ const main = async (): Promise<void> => {
       const response = await api.addLiquidity({
         contractAddress: liquidityReserveContractAddress,
         userAddress,
-        amountDesired: new BigNumber(amount),
+        amountDesired: bnOrZero(amount),
         wallet
       })
       console.info('addLiquidity', response)
@@ -188,7 +188,7 @@ const main = async (): Promise<void> => {
       const response = await api.removeLiquidity({
         contractAddress: liquidityReserveContractAddress,
         userAddress,
-        amountDesired: new BigNumber(amount),
+        amountDesired: bnOrZero(amount),
         wallet
       })
       console.info('removeLiquidity', response)
