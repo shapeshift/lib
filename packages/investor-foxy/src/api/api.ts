@@ -20,7 +20,7 @@ import { foxyAbi } from '../constants/foxy-abi'
 import { liquidityReserveAbi } from '../constants/liquidity-reserve-abi'
 import { bnOrZero, buildTxToSign } from '../utils'
 import {
-  Allowanceinput,
+  AllowanceInput,
   ApproveInput,
   BalanceInput,
   EstimateGasApproveInput,
@@ -646,7 +646,7 @@ export class FoxyApi {
   }
 
   pricePerShare(): BigNumber {
-    return bnOrZero(1)
+    return bnOrZero(1).times('1e+18')
   }
 
   // estimated apy
