@@ -1,4 +1,4 @@
-import { AssetNamespace, AssetReference, caip2, caip19 } from '@shapeshiftoss/caip'
+import { AssetNamespace, AssetReference, CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
 import {
   bip32ToAddressNList,
   BTCOutputAddressType,
@@ -7,13 +7,7 @@ import {
   BTCSignTxOutput,
   supportsBTC
 } from '@shapeshiftoss/hdwallet-core'
-import {
-  BIP44Params,
-  chainAdapters,
-  ChainTypes,
-  NetworkTypes,
-  UtxoAccountType
-} from '@shapeshiftoss/types'
+import { BIP44Params, chainAdapters, ChainTypes, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import coinSelect from 'coinselect'
 import split from 'coinselect/split'
@@ -39,17 +33,27 @@ export class ChainAdapter
     coinType: 0,
     accountNumber: 0
   }
+  public static readonly defaultUtxoAccountType: UtxoAccountType = UtxoAccountType.SegwitNative
+
+  protected readonly supportedChainIds: CAIP2[] = [
+    'bip122:000000000019d6689c085ae165831e93',
+    'bip122:000000000933ea01ad0ee984209779ba'
+  ]
+  chainId = this.supportedChainIds[0]
 
   constructor(args: ChainAdapterArgs) {
     super(args)
-    if (!args.chainId) {
-      throw new Error('chainId required')
+    if (args.chainId && !this.supportedChainIds.includes(args.chainId))
+      throw new Error(`Bitcoin chainId ${args.chainId} not supported`)
+    if (args.chainId) {
+      this.chainId = args.chainId
+    } else {
+      this.chainId = this.supportedChainIds[0]
     }
-    const { chain, network } = caip2.fromCAIP2(args.chainId)
+    const { chain, network } = caip2.fromCAIP2(this.chainId)
     if (chain !== ChainTypes.Bitcoin) {
       throw new Error('chainId must be a bitcoin chain type')
     }
-    this.chainId = args.chainId
     this.coinName = args.coinName
     this.assetId = caip19.toCAIP19({
       chain,
@@ -64,31 +68,10 @@ export class ChainAdapter
   }
 
   async getTxHistory(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     input: chainAdapters.TxHistoryInput
   ): Promise<chainAdapters.TxHistoryResponse<ChainTypes.Bitcoin>> {
-    const { pubkey } = input
-
-    if (!pubkey) return ErrorHandler('pubkey parameter is not defined')
-
-    try {
-      const { data } = await this.providers.http.getTxHistory(input)
-      return {
-        page: data.page,
-        totalPages: data.totalPages,
-        transactions: data.transactions.map((tx) => ({
-          ...tx,
-          chain: ChainTypes.Bitcoin,
-          network: NetworkTypes.MAINNET,
-          symbol: 'BTC',
-          chainSpecific: {
-            opReturnData: ''
-          }
-        })),
-        txs: data.txs
-      }
-    } catch (err) {
-      return ErrorHandler(err)
-    }
+    throw new Error('Method not implemented.')
   }
 
   async buildSendTransaction(tx: chainAdapters.BuildSendTxInput<ChainTypes.Bitcoin>): Promise<{
@@ -302,7 +285,7 @@ export class ChainAdapter
   async getAddress({
     wallet,
     bip44Params = ChainAdapter.defaultBIP44Params,
-    accountType = UtxoAccountType.SegwitP2sh,
+    accountType = ChainAdapter.defaultUtxoAccountType,
     showOnDevice = false
   }: chainAdapters.bitcoin.GetAddressInput): Promise<string> {
     if (!supportsBTC(wallet)) {
@@ -335,13 +318,13 @@ export class ChainAdapter
 
   async subscribeTxs(
     input: chainAdapters.SubscribeTxsInput,
-    onMessage: (msg: chainAdapters.SubscribeTxsMessage<ChainTypes.Bitcoin>) => void,
+    onMessage: (msg: chainAdapters.Transaction<ChainTypes.Bitcoin>) => void,
     onError: (err: chainAdapters.SubscribeError) => void
   ): Promise<void> {
     const {
       wallet,
       bip44Params = ChainAdapter.defaultBIP44Params,
-      accountType = UtxoAccountType.SegwitNative
+      accountType = ChainAdapter.defaultUtxoAccountType
     } = input
 
     const { xpub } = await this.getPublicKey(wallet, bip44Params, accountType)
@@ -385,7 +368,7 @@ export class ChainAdapter
 
     const {
       bip44Params = ChainAdapter.defaultBIP44Params,
-      accountType = UtxoAccountType.SegwitNative
+      accountType = ChainAdapter.defaultUtxoAccountType
     } = input
     const subscriptionId = `${toRootDerivationPath(bip44Params)}/${accountType}`
 

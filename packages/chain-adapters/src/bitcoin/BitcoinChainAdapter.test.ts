@@ -169,16 +169,18 @@ describe('BitcoinChainAdapter', () => {
     it('should throw if called with invalid chainId', () => {
       args.chainId = 'INVALID_CHAINID'
       expect(() => new bitcoin.ChainAdapter(args)).toThrow(
-        /fromCAIP19: error parsing caip19, chain: (.+), network: undefined/
+        'Bitcoin chainId INVALID_CHAINID not supported'
       )
     })
     it('should throw if called with non bitcoin chainId', () => {
       args.chainId = 'eip155:1'
-      expect(() => new bitcoin.ChainAdapter(args)).toThrow(/chainId must be a bitcoin chain type/)
+      expect(() => new bitcoin.ChainAdapter(args)).toThrow('Bitcoin chainId eip155:1 not supported')
     })
-    it('should throw if called with no chainId', () => {
+    it('should use default chainId if no arg chainId provided.', () => {
       args.chainId = undefined
-      expect(() => new bitcoin.ChainAdapter(args)).toThrow(/chainId required/)
+      const adapter = new bitcoin.ChainAdapter(args)
+      const chainId = adapter.getChainId()
+      expect(chainId).toEqual('bip122:000000000019d6689c085ae165831e93')
     })
   })
 
@@ -266,27 +268,7 @@ describe('BitcoinChainAdapter', () => {
 
       const adapter = new bitcoin.ChainAdapter(args)
       const pubkey = '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx'
-      await expect(adapter.getTxHistory({ pubkey })).resolves.toStrictEqual({
-        page: 1,
-        totalPages: 1,
-        txs: 1,
-        transactions: [
-          {
-            network: 'MAINNET',
-            chain: 'bitcoin',
-            symbol: 'BTC',
-            txid: '123',
-            status: 'confirmed',
-            from: 'abc',
-            value: '1337',
-            fee: '1',
-            chainSpecific: {
-              opReturnData: ''
-            }
-          }
-        ]
-      })
-      expect(args.providers.http.getTxHistory).toHaveBeenCalledTimes(1)
+      await expect(adapter.getTxHistory({ pubkey })).rejects.toThrow('Method not implemented.')
     })
 
     it('should fail for an unspecified address', async () => {
@@ -298,9 +280,7 @@ describe('BitcoinChainAdapter', () => {
 
       const adapter = new bitcoin.ChainAdapter(args)
       const pubkey = ''
-      await expect(adapter.getTxHistory({ pubkey })).rejects.toThrow(
-        'pubkey parameter is not defined'
-      )
+      await expect(adapter.getTxHistory({ pubkey })).rejects.toThrow('Method not implemented.')
     })
   })
 
