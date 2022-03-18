@@ -23,12 +23,16 @@ import {
   AllowanceInput,
   ApproveInput,
   BalanceInput,
+  ClaimWithdrawal,
   EstimateGasApproveInput,
   EstimateGasTxInput,
   FoxyOpportunityInputData,
   InstantUnstakeFeeInput,
-  TVLInput,
+  TokenAddressInput,
   TxInput,
+  TxInputWithoutAmount,
+  TxInputWithoutAmountAndWallet,
+  TxReceipt,
   WithdrawInput
 } from './foxy-types'
 
@@ -131,7 +135,7 @@ export class FoxyApi {
     return bnOrZero(gasPrice)
   }
 
-  async getTxReceipt({ txid }: { txid: string }): Promise<TransactionReceipt> {
+  async getTxReceipt({ txid }: TxReceipt): Promise<TransactionReceipt> {
     return this.web3.eth.getTransactionReceipt(txid)
   }
 
@@ -159,21 +163,17 @@ export class FoxyApi {
   }
 
   async estimateSendWithdrawalRequestsGas(
-    input: Pick<EstimateGasTxInput, Exclude<keyof EstimateGasTxInput, 'amountDesired'>> & {
-      claimAddress?: string
-    }
+    input: TxInputWithoutAmountAndWallet
   ): Promise<BigNumber> {
-    const { claimAddress, userAddress, contractAddress } = input
+    const { userAddress, contractAddress } = input
     const stakingContract = this.foxyStakingContracts.find(
       (item) => toLower(item.options.address) === toLower(contractAddress)
     )
     if (!stakingContract) throw new Error('Not a valid contract address')
 
-    const estimatedGas = await stakingContract.methods
-      .sendWithdrawalRequests(claimAddress ?? userAddress)
-      .estimateGas({
-        from: userAddress
-      })
+    const estimatedGas = await stakingContract.methods.sendWithdrawalRequests().estimateGas({
+      from: userAddress
+    })
     return bnOrZero(estimatedGas)
   }
 
@@ -404,9 +404,7 @@ export class FoxyApi {
     }
   }
 
-  async claimWithdraw(
-    input: Pick<TxInput, Exclude<keyof TxInput, 'amountDesired'>> & { claimAddress?: string }
-  ): Promise<string> {
+  async claimWithdraw(input: ClaimWithdrawal): Promise<string> {
     const {
       accountNumber = 0,
       dryRun = false,
@@ -456,9 +454,7 @@ export class FoxyApi {
     }
   }
 
-  async sendWithdrawalRequests(
-    input: Pick<TxInput, Exclude<keyof TxInput, 'amountDesired'>>
-  ): Promise<string> {
+  async sendWithdrawalRequests(input: TxInputWithoutAmount): Promise<string> {
     const { accountNumber = 0, dryRun = false, contractAddress, userAddress, wallet } = input
     if (!wallet || !contractAddress) throw new Error('Missing inputs')
     const estimatedGas: BigNumber = await this.estimateSendWithdrawalRequestsGas(input)
@@ -595,9 +591,7 @@ export class FoxyApi {
 
   // returns time in seconds until withdraw request is claimable
   // dependent on rebases happening when epoch.expiry block is reached
-  async getTimeUntilClaimable(
-    input: Pick<TxInput, Exclude<keyof TxInput, 'amountDesired'>>
-  ): Promise<string> {
+  async getTimeUntilClaimable(input: TxInputWithoutAmountAndWallet): Promise<string> {
     const { contractAddress, userAddress } = input
     const stakingContract = this.foxyStakingContracts.find(
       (item) => toLower(item.options.address) === toLower(contractAddress)
@@ -639,11 +633,7 @@ export class FoxyApi {
     return bnOrZero(feeInBasisPoints / 10000) // convert from basis points to decimal percentage
   }
 
-  async totalSupply({
-    tokenContractAddress
-  }: {
-    tokenContractAddress: string
-  }): Promise<BigNumber> {
+  async totalSupply({ tokenContractAddress }: TokenAddressInput): Promise<BigNumber> {
     const contract = new this.web3.eth.Contract(erc20Abi, tokenContractAddress)
     const totalSupply = await contract.methods.totalSupply().call()
     return bnOrZero(totalSupply)
@@ -658,7 +648,7 @@ export class FoxyApi {
     return '.2'
   }
 
-  async tvl(input: TVLInput): Promise<BigNumber> {
+  async tvl(input: TokenAddressInput): Promise<BigNumber> {
     const { tokenContractAddress } = input
     const contract = new this.web3.eth.Contract(foxyAbi, tokenContractAddress)
     const balance = await contract.methods.circulatingSupply().call()

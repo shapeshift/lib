@@ -3,6 +3,8 @@ import { BigNumber } from 'bignumber.js'
 
 import { WithdrawType } from '../constants'
 
+export type TxReceipt = { txid: string }
+
 export type AllowanceInput = {
   tokenContractAddress: string
   contractAddress: string
@@ -33,6 +35,13 @@ export type TxInput = {
   amountDesired: BigNumber
 }
 
+export type TxInputWithoutAmount = Pick<TxInput, Exclude<keyof TxInput, 'amountDesired'>>
+
+export type TxInputWithoutAmountAndWallet = Pick<
+  TxInputWithoutAmount,
+  Exclude<keyof TxInputWithoutAmount, 'wallet'>
+>
+
 export type WithdrawInput = Omit<TxInput, 'amountDesired'> & {
   type: WithdrawType
   amountDesired?: BigNumber
@@ -58,10 +67,14 @@ export type BalanceInput = {
   tokenContractAddress: string
 }
 
-export type TVLInput = {
+export type TokenAddressInput = {
   tokenContractAddress: string
 }
 
 export type InstantUnstakeFeeInput = {
   contractAddress: string
+}
+
+export type ClaimWithdrawal = TxInputWithoutAmount & {
+  claimAddress?: string
 }
