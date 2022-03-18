@@ -3,7 +3,7 @@ import { BigNumber } from 'bignumber.js'
 
 import { WithdrawType } from '../constants'
 
-export type Allowanceinput = {
+export type AllowanceInput = {
   tokenContractAddress: string
   contractAddress: string
   userAddress: string
