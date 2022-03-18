@@ -33,6 +33,7 @@ import {
   TxInputWithoutAmount,
   TxInputWithoutAmountAndWallet,
   TxReceipt,
+  WithdrawInfo,
   WithdrawInput
 } from './foxy-types'
 
@@ -836,5 +837,18 @@ export class FoxyApi {
     const contract = new this.web3.eth.Contract(foxyAbi, tokenContractAddress)
     const balance = await contract.methods.circulatingSupply().call()
     return bnOrZero(balance)
+  }
+
+  async getWithdrawInfo(input: TxInputWithoutAmountAndWallet): Promise<WithdrawInfo> {
+    const { contractAddress, userAddress } = input
+    this.verifyAddresses([userAddress, contractAddress])
+
+    const stakingContract = this.foxyStakingContracts.find(
+      (item) => toLower(item.options.address) === toLower(contractAddress)
+    )
+    if (!stakingContract) throw new Error('Not a valid contract address')
+
+    const coolDownInfo = await stakingContract.methods.coolDownInfo(userAddress).call()
+    return coolDownInfo
   }
 }

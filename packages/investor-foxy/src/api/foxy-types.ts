@@ -78,3 +78,9 @@ export type InstantUnstakeFeeInput = {
 export type ClaimWithdrawal = TxInputWithoutAmount & {
   claimAddress?: string
 }
+
+export type WithdrawInfo = {
+  amount: string
+  gons: string
+  expiry: string
+}

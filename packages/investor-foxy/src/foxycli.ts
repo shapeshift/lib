@@ -1,5 +1,4 @@
 import { caip2 } from '@shapeshiftoss/caip'
-import { ChainReference } from '@shapeshiftoss/caip/dist/caip2/caip2'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
