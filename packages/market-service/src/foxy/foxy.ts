@@ -27,6 +27,7 @@ export class FoxyMarketService implements MarketService {
     try {
       const caip19 = FOXY_CAIP19
       const marketData = await this.findByCaip19({ caip19 })
+
       return { [caip19]: marketData } as MarketCapResult
     } catch (e) {
       return {}
@@ -35,10 +36,11 @@ export class FoxyMarketService implements MarketService {
 
   findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData | null> => {
     try {
-      if (caip19 !== FOXY_CAIP19) return null
-      const { data } = await axios.get(`${this.baseUrl}/assets/${FOX_COINCAP_ID}`)
+      if (caip19.toLowerCase() !== FOXY_CAIP19.toLowerCase()) return null
 
+      const { data } = await axios.get(`${this.baseUrl}/assets/${FOX_COINCAP_ID}`)
       const marketData = data.data as CoinCapMarketCap
+
       return {
         price: marketData.priceUsd,
         marketCap: '0',
