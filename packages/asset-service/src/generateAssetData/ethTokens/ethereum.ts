@@ -8,6 +8,7 @@ import uniqBy from 'lodash/uniqBy'
 import { getRenderedIdenticonBase64, IdenticonOptions } from '../../service/GenerateAssetIcon'
 import { generateTrustWalletUrl } from '../../service/TrustWalletService'
 import { ethereum } from '../baseAssets'
+import { getFoxyToken } from './foxy'
 import { getUniswapTokens } from './uniswap'
 import {
   getIronBankTokens,
@@ -15,7 +16,6 @@ import {
   getYearnVaults,
   getZapperTokens
 } from './yearnVaults'
-import { getFoxyToken } from './foxy'
 
 export const addTokensToEth = async (): Promise<BaseAsset> => {
   const baseAsset = ethereum

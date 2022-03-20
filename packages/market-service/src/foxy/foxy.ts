@@ -9,11 +9,11 @@ import {
 import dayjs from 'dayjs'
 
 import { MarketService } from '../api'
+import { CoinCapMarketCap } from '../coincap/coincap-types'
 import { RATE_LIMIT_THRESHOLDS_PER_MINUTE } from '../config'
 import { bn } from '../utils/bignumber'
 import { isValidDate } from '../utils/isValidDate'
 import { rateLimitedAxios } from '../utils/rateLimiters'
-import { CoinCapMarketCap } from '../coincap/coincap-types'
 
 export const FOXY_CAIP19 = 'eip155:1/erc20:0x61fcabb591d63d00e897a67c64658d376fead816'
 const FOX_COINCAP_ID = 'fox-token'

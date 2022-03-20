@@ -5,6 +5,8 @@ import {
   mockCGFindByCaip19Data,
   mockCGPriceHistoryData
 } from './coingecko/coingeckoMockData'
+import { FOXY_CAIP19 } from './foxy/foxy'
+import { mockFoxyMarketData, mockFoxyPriceHistoryData } from './foxy/foxyMockData'
 import { findAll, findByCaip19, findPriceHistoryByCaip19 } from './index'
 import { MarketProviders } from './market-providers'
 import {
@@ -17,9 +19,6 @@ import {
   mockYearnPriceHistoryData,
   mockYearnServiceFindAllData
 } from './yearn/yearnMockData'
-
-import { mockFoxyMarketData, mockFoxyPriceHistoryData } from './foxy/foxyMockData'
-import { FOXY_CAIP19 } from './foxy/foxy'
 
 jest.mock('./coingecko/coingecko', () => ({
   CoinGeckoMarketService: jest.fn().mockImplementation(() => {
@@ -74,7 +73,7 @@ jest.mock('./osmosis/osmosis', () => ({
 jest.mock('./foxy/foxy', () => ({
   FoxyMarketService: jest.fn().mockImplementation(() => {
     return {
-      findAll: jest.fn(() => ({[FOXY_CAIP19]: mockFoxyMarketData})),
+      findAll: jest.fn(() => ({ [FOXY_CAIP19]: mockFoxyMarketData })),
       findByCaip19: jest.fn(() => mockFoxyMarketData),
       findPriceHistoryByCaip19: jest.fn(() => mockFoxyPriceHistoryData)
     }

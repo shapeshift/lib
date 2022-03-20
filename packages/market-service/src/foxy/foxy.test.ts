@@ -1,8 +1,8 @@
 import { HistoryTimeframe } from '@shapeshiftoss/types'
-import { fox, mockFoxyMarketData } from './foxyMockData'
 import axios from 'axios'
 
 import { FoxyMarketService } from './foxy'
+import { fox, mockFoxyMarketData } from './foxyMockData'
 
 const foxyMarketService = new FoxyMarketService()
 

@@ -3,10 +3,10 @@ import { Yearn } from '@yfi/sdk'
 
 import { CoinCapMarketService } from './coincap/coincap'
 import { CoinGeckoMarketService } from './coingecko/coingecko'
+import { FoxyMarketService } from './foxy/foxy'
 import { OsmosisMarketService } from './osmosis/osmosis'
 import { YearnTokenMarketCapService } from './yearn/yearn-tokens'
 import { YearnVaultMarketCapService } from './yearn/yearn-vaults'
-import { FoxyMarketService } from './foxy/foxy'
 // YearnVaultMarketCapService deps
 const network = 1 // 1 for mainnet
 const provider = new JsonRpcProvider(process.env.REACT_APP_ETHEREUM_NODE_URL)
