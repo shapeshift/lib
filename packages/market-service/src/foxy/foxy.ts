@@ -15,7 +15,7 @@ import { isValidDate } from '../utils/isValidDate'
 import { rateLimitedAxios } from '../utils/rateLimiters'
 import { CoinCapMarketCap } from '../coincap/coincap-types'
 
-export const FOXY_CAIP19 = 'eip155:1/erc20:0x61FcaBB591d63D00E897A67C64658D376FeAd816'
+export const FOXY_CAIP19 = 'eip155:1/erc20:0x61fcabb591d63d00e897a67c64658d376fead816'
 const FOX_COINCAP_ID = 'fox-token'
 
 const axios = rateLimitedAxios(RATE_LIMIT_THRESHOLDS_PER_MINUTE.COINGECKO)
@@ -57,7 +57,7 @@ export class FoxyMarketService implements MarketService {
     caip19,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
-    if (caip19 !== FOXY_CAIP19) return []
+    if (caip19.toLowerCase() !== FOXY_CAIP19.toLowerCase()) return []
 
     const end = dayjs().startOf('minute')
     let start
