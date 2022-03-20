@@ -2,7 +2,6 @@ import { AssetNamespace, CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
 import { CosmosSignTx } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
-import WAValidator from 'multicoin-address-validator'
 
 import { ChainAdapter as IChainAdapter } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
@@ -165,9 +164,16 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
   ): Promise<string>
 
   async validateAddress(address: string): Promise<chainAdapters.ValidAddressResult> {
-    const isValidAddress = WAValidator.validate(address, this.getType())
-    if (isValidAddress) return { valid: true, result: chainAdapters.ValidAddressResultType.Valid }
-    return { valid: false, result: chainAdapters.ValidAddressResultType.Invalid }
+    try {
+      await this.providers.http.getAccount({ pubkey: address })
+      return {
+        valid: true,
+        result: chainAdapters.ValidAddressResultType.Valid
+      }
+    } catch (err) {
+      console.error(err)
+      return { valid: false, result: chainAdapters.ValidAddressResultType.Invalid }
+    }
   }
 
   async subscribeTxs(
