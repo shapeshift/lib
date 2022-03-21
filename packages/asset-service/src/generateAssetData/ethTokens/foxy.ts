@@ -16,7 +16,7 @@ export const getFoxyToken = (): TokenAsset[] => {
     }),
     caip2: caip2.toCAIP2({ chain, network }),
     dataSource: AssetDataSource.CoinGecko,
-    name: 'FOXy',
+    name: 'FOX Yield',
     precision: 18,
     tokenId: assetReference,
     contractType: assetNamespace,
@@ -25,7 +25,7 @@ export const getFoxyToken = (): TokenAsset[] => {
     icon: 'https://raw.githubusercontent.com/shapeshift/lib/main/packages/asset-service/src/icons/foxy-icon.png',
     sendSupport: true,
     receiveSupport: true,
-    symbol: 'FOXY'
+    symbol: 'FOXy'
   }
 
   return [result]
