@@ -1,4 +1,5 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { BIP44Params } from '@shapeshiftoss/types'
 import { BigNumber } from 'bignumber.js'
 
 import { WithdrawType } from '../constants'
@@ -91,4 +92,21 @@ export type WithdrawInfo = {
   amount: string
   gons: string
   expiry: string
+}
+
+export type SignAndBroadcastPayload = {
+  bip44Params: BIP44Params
+  chainId: number
+  data: string
+  estimatedGas: string
+  gasPrice: string
+  nonce: string
+  to: string
+  value: string
+}
+
+export type SignAndBroadcastTx = {
+  payload: SignAndBroadcastPayload
+  wallet: HDWallet
+  dryRun: boolean
 }
