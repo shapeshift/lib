@@ -2,6 +2,7 @@ import { AssetNamespace, CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
 import { CosmosSignTx } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
+import * as bech32 from 'bech32'
 
 import { ChainAdapter as IChainAdapter } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
@@ -16,6 +17,11 @@ export interface ChainAdapterArgs {
     ws: unchained.ws.Client<unchained.cosmos.Tx>
   }
   coinName: string
+}
+
+const CHAIN_TO_BECH32_PREFIX_MAPPING = {
+  [ChainTypes.Cosmos]: 'cosmos',
+  [ChainTypes.Osmosis]: 'osmo'
 }
 
 export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implements IChainAdapter<T> {
@@ -164,11 +170,17 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
   ): Promise<string>
 
   async validateAddress(address: string): Promise<chainAdapters.ValidAddressResult> {
+    const chain = this.getType()
     try {
-      await this.providers.http.getAccount({ pubkey: address })
-      return {
-        valid: true,
-        result: chainAdapters.ValidAddressResultType.Valid
+      const { prefix } = bech32.decode(address)
+
+      if (CHAIN_TO_BECH32_PREFIX_MAPPING[chain] === prefix)
+        return {
+          valid: true,
+          result: chainAdapters.ValidAddressResultType.Valid
+        }
+      else {
+        throw new Error(`Invalid address ${address} for ChainType: ${chain}`)
       }
     } catch (err) {
       console.error(err)
