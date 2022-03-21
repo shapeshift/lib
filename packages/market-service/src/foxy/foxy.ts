@@ -30,6 +30,7 @@ export class FoxyMarketService implements MarketService {
 
       return { [caip19]: marketData } as MarketCapResult
     } catch (e) {
+      console.warn(e)
       return {}
     }
   }
