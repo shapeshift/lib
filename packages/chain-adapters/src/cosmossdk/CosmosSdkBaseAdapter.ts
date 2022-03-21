@@ -174,13 +174,13 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
     try {
       const { prefix } = bech32.decode(address)
 
-      if (CHAIN_TO_BECH32_PREFIX_MAPPING[chain] === prefix)
-        return {
-          valid: true,
-          result: chainAdapters.ValidAddressResultType.Valid
-        }
-      else {
+      if (CHAIN_TO_BECH32_PREFIX_MAPPING[chain] !== prefix) {
         throw new Error(`Invalid address ${address} for ChainType: ${chain}`)
+      }
+
+      return {
+        valid: true,
+        result: chainAdapters.ValidAddressResultType.Valid
       }
     } catch (err) {
       console.error(err)
