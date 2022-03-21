@@ -44,9 +44,9 @@ export class FoxyMarketService implements MarketService {
 
       return {
         price: marketData.priceUsd,
-        marketCap: '0',
+        marketCap: '0', // TODO: add marketCap once able to get foxy marketCap data
         changePercent24Hr: parseFloat(marketData.changePercent24Hr),
-        volume: '0'
+        volume: '0' // TODO: add volume once able to get foxy volume data
       }
     } catch (e) {
       console.warn(e)
