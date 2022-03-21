@@ -47,8 +47,8 @@ const main = async (): Promise<void> => {
     adapter: await adapterManager.byChainId(
       caip2.toCAIP2({ chain: ChainTypes.Ethereum, network: NetworkTypes.MAINNET })
     ),
-    providerUrl: 'https://dev-api.ethereum.shapeshift.com/docs/',
-    foxyAddresses: foxyAddresses
+    providerUrl: 'https://daemon.ethereum.shapeshift.com',
+    foxyAddresses
   })
 
   const userAddress = await api.adapter.getAddress({ wallet })

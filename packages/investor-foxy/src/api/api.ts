@@ -3,12 +3,19 @@ import { ChainReference } from '@shapeshiftoss/caip/dist/caip2/caip2'
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { ChainTypes } from '@shapeshiftoss/types'
 import { BigNumber } from 'bignumber.js'
-import { toLower } from 'lodash'
+import { toLower, merge } from 'lodash'
 import Web3 from 'web3'
 import { HttpProvider, TransactionReceipt } from 'web3-core/types'
 import { Contract } from 'web3-eth-contract'
 
-import { DefiType, erc20Abi, foxyStakingAbi, MAX_ALLOWANCE, WithdrawType } from '../constants'
+import {
+  DefiType,
+  erc20Abi,
+  foxyStakingAbi,
+  MAX_ALLOWANCE,
+  MAX_UINT256,
+  WithdrawType
+} from '../constants'
 import { foxyAbi } from '../constants/foxy-abi'
 import { liquidityReserveAbi } from '../constants/liquidity-reserve-abi'
 import { bnOrZero, buildTxToSign } from '../utils'
@@ -121,23 +128,43 @@ export class FoxyApi {
     const contract = new this.web3.eth.Contract(foxyAbi, tokenContractAddress)
     // const totalGons = await contract.methods.TOTAL_GONS();
     // console.log('total', totalGons)
-    const events = contract.getPastEvents(
-      'LogRebase',
-      {
+    const supplyEvents = await contract.getPastEvents('LogSupply', {
+      fromBlock: 14381454, // genesis rebase
+      toBlock: 'latest'
+    })
+
+    const rebaseEvents = (
+      await contract.getPastEvents('LogRebase', {
         fromBlock: 14381454, // genesis rebase
         toBlock: 'latest'
-      },
-      function (error, events) {
-        console.log(events)
-      }
-    )
-    
-    let totalAmount = 0
+      })
+    ).filter((rebase) => rebase.returnValues.rebase !== '0')
 
+    // console.log('supply', supplyEvents)
+    // console.log('rebase', rebaseEvents)
 
+    let events = [] as any
+    rebaseEvents.forEach((rebaseEvent) => {
+      events.push({
+        ...rebaseEvent.returnValues,
+        ...supplyEvents.find(
+          (supplyEvent) => supplyEvent.returnValues.epoch === rebaseEvent.returnValues.epoch
+        )?.returnValues
+      })
+    })
 
+    const initFragmentSupply = bnOrZero(5000000).times('1e+18')
+    const totalGons = bnOrZero(MAX_UINT256).minus(bnOrZero(MAX_UINT256).modulo(initFragmentSupply))
 
-    return events
+    const rebaseChartData = events?.map((event: any) => {
+      const price = totalGons.dividedBy(event.totalSupply)
+      const date = event.timestamp
+      console.log('price', price)
+      return { price, date }
+    })
+
+    console.log('rebaseChartData', rebaseChartData)
+    return rebaseChartData
   }
 
   async getFoxyOpportunities() {
