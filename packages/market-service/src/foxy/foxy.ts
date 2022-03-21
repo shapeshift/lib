@@ -62,7 +62,9 @@ export class FoxyMarketService implements MarketService {
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
     if (caip19.toLowerCase() !== FOXY_CAIP19.toLowerCase()) {
-      console.warn('FoxyMarketService(findPriceHistoryByCaip19): Failed to find price history by Caip19')
+      console.warn(
+        'FoxyMarketService(findPriceHistoryByCaip19): Failed to find price history by Caip19'
+      )
       return []
     }
 
