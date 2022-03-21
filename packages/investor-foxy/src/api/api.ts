@@ -812,7 +812,7 @@ export class FoxyApi {
     if (!liquidityReserveContract) throw new Error('Not a valid reserve contract address')
     const feeInBasisPoints = await liquidityReserveContract.methods.fee().call()
 
-    return bnOrZero(feeInBasisPoints / 10000) // convert from basis points to decimal percentage
+    return bnOrZero(feeInBasisPoints).div(10000) // convert from basis points to decimal percentage
   }
 
   async totalSupply({ tokenContractAddress }: TokenAddressInput): Promise<BigNumber> {
