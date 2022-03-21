@@ -680,7 +680,7 @@ export class FoxyApi {
   }
 
   // returns time in seconds until withdraw request is claimable
-  // dependent on rebases happening when epoch.expiry block is reached
+  // dependent on rebases happening when epoch.expiry epoch is reached
   async getTimeUntilClaimable(input: TxInputWithoutAmountAndWallet): Promise<string> {
     const { contractAddress, userAddress } = input
     this.verifyAddresses([userAddress, contractAddress])
@@ -689,7 +689,11 @@ export class FoxyApi {
 
     let coolDownInfo
     try {
-      coolDownInfo = await stakingContract.methods.coolDownInfo(userAddress).call()
+      const coolDown = await stakingContract.methods.coolDownInfo(userAddress).call()
+      coolDownInfo = {
+        ...coolDown,
+        endEpoch: coolDown.expiry
+      }
     } catch (e) {
       throw new Error(`Failed to get coolDowninfo: ${e}`)
     }
@@ -705,7 +709,7 @@ export class FoxyApi {
     } catch (e) {
       throw new Error(`Failed to get block number: ${e}`)
     }
-    const epochsLeft = coolDownInfo.expiry - epoch.number - 1 // epochs left after the current one
+    const epochsLeft = coolDownInfo.endEpoch - epoch.number - 1 // epochs left after the current one
     const blocksLeftInCurrentEpoch =
       epoch.endBlock > currentBlock ? epoch.endBlock - currentBlock : 0
     const blocksLeftInFutureEpochs = epochsLeft > 0 ? epochsLeft * epoch.length : 0
