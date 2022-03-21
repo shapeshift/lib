@@ -114,6 +114,32 @@ export class FoxyApi {
     }
   }
 
+  async getRebaseHistory(input: BalanceInput) {
+    const { tokenContractAddress, userAddress } = input
+    this.verifyAddresses([tokenContractAddress])
+
+    const contract = new this.web3.eth.Contract(foxyAbi, tokenContractAddress)
+    // const totalGons = await contract.methods.TOTAL_GONS();
+    // console.log('total', totalGons)
+    const events = contract.getPastEvents(
+      'LogRebase',
+      {
+        fromBlock: 14381454, // genesis rebase
+        toBlock: 'latest'
+      },
+      function (error, events) {
+        console.log(events)
+      }
+    )
+    
+    let totalAmount = 0
+
+
+
+
+    return events
+  }
+
   async getFoxyOpportunities() {
     try {
       const opportunities = await Promise.all(
