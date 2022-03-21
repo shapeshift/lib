@@ -18,7 +18,7 @@ import { rateLimitedAxios } from '../utils/rateLimiters'
 export const FOXY_CAIP19 = 'eip155:1/erc20:0x61fcabb591d63d00e897a67c64658d376fead816'
 const FOX_COINCAP_ID = 'fox-token'
 
-const axios = rateLimitedAxios(RATE_LIMIT_THRESHOLDS_PER_MINUTE.COINGECKO)
+const axios = rateLimitedAxios(RATE_LIMIT_THRESHOLDS_PER_MINUTE.COINCAP)
 
 export class FoxyMarketService implements MarketService {
   baseUrl = 'https://api.coincap.io/v2'
@@ -37,7 +37,10 @@ export class FoxyMarketService implements MarketService {
 
   findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData | null> => {
     try {
-      if (caip19.toLowerCase() !== FOXY_CAIP19.toLowerCase()) return null
+      if (caip19.toLowerCase() !== FOXY_CAIP19.toLowerCase()) {
+        console.warn('Failed to find by Caip19')
+        return null
+      }
 
       const { data } = await axios.get(`${this.baseUrl}/assets/${FOX_COINCAP_ID}`)
       const marketData = data.data as CoinCapMarketCap
@@ -58,7 +61,10 @@ export class FoxyMarketService implements MarketService {
     caip19,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
-    if (caip19.toLowerCase() !== FOXY_CAIP19.toLowerCase()) return []
+    if (caip19.toLowerCase() !== FOXY_CAIP19.toLowerCase()) {
+      console.warn('Failed to find price history by Caip19')
+      return []
+    }
 
     const end = dayjs().startOf('minute')
     let start
