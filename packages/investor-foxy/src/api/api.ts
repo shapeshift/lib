@@ -8,7 +8,14 @@ import Web3 from 'web3'
 import { HttpProvider, TransactionReceipt } from 'web3-core/types'
 import { Contract } from 'web3-eth-contract'
 
-import { DefiType, erc20Abi, foxyStakingAbi, MAX_ALLOWANCE, MAX_UINT256, WithdrawType } from '../constants'
+import {
+  DefiType,
+  erc20Abi,
+  foxyStakingAbi,
+  MAX_ALLOWANCE,
+  MAX_UINT256,
+  WithdrawType
+} from '../constants'
 import { foxyAbi } from '../constants/foxy-abi'
 import { liquidityReserveAbi } from '../constants/liquidity-reserve-abi'
 import { bnOrZero, buildTxToSign } from '../utils'
@@ -845,12 +852,13 @@ export class FoxyApi {
     const totalGons = bnOrZero(MAX_UINT256).minus(bnOrZero(MAX_UINT256).modulo(initFragmentSupply))
 
     const rebaseChartData = events?.map((event: any) => {
-      const price = totalGons.dividedBy(event.totalSupply)
+      const pricePerGons = totalGons.dividedBy(event.totalSupply)
       const date = event.timestamp
-      console.log('price', price)
-      return { price, date }
+      console.log('price', pricePerGons)
+      return { pricePerGons, date }
     })
 
     console.log('rebaseChartData', rebaseChartData)
     return rebaseChartData
+  }
 }

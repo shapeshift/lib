@@ -47,7 +47,7 @@ const main = async (): Promise<void> => {
     adapter: await adapterManager.byChainId(
       caip2.toCAIP2({ chain: ChainTypes.Ethereum, network: NetworkTypes.MAINNET })
     ),
-    providerUrl: 'http://localhost:8545',
+    providerUrl: 'https://daemon.ethereum.shapeshift.com',
     foxyAddresses: foxyAddresses
   })
 
