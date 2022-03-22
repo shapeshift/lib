@@ -99,7 +99,15 @@ export class ChainAdapter
       const account = await this.getAccount(from)
 
       if (sendMax) {
-        tx.value = bnOrZero(account.balance).minus(gas).toString()
+        try {
+          const val = bnOrZero(balance).minus(gas)
+          if (!isFinite(val.toNumber()) || val.toNumber() < 0) {
+            throw new Error('CosmosChainAdapter: transaction value is invalid')
+          }
+          tx.value = val.toString()
+        } catch (error) {
+          return ErrorHandler(error)
+        }
       }
 
       const utx: CosmosTx = {
