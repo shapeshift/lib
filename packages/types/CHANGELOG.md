@@ -1,3 +1,24 @@
+# [@shapeshiftoss/types-v2.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v2.2.1...@shapeshiftoss/types-v2.3.0) (2022-03-22)
+
+
+### Features
+
+* accept memo in buildSendTransaction ([#467](https://github.com/shapeshift/lib/issues/467)) ([bbbaf46](https://github.com/shapeshift/lib/commit/bbbaf46ce2003cdab86fa60747d15b708037c616))
+
+# [@shapeshiftoss/types-v2.2.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v2.2.0...@shapeshiftoss/types-v2.2.1) (2022-03-22)
+
+
+### Bug Fixes
+
+* make accountType optional in BitcoinChainAdapter getaddress ([#452](https://github.com/shapeshift/lib/issues/452)) ([42372a4](https://github.com/shapeshift/lib/commit/42372a49ca417f248fb415a5c0c07f2ea8db2c56))
+
+# [@shapeshiftoss/types-v2.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v2.1.0...@shapeshiftoss/types-v2.2.0) (2022-03-21)
+
+
+### Features
+
+* cosmos sign and broadcast tx ([#435](https://github.com/shapeshift/lib/issues/435)) ([1ba16a1](https://github.com/shapeshift/lib/commit/1ba16a1589113b3a1eb17415ec6f7e85c6d857a7))
+
 # [@shapeshiftoss/types-v2.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v2.0.0...@shapeshiftoss/types-v2.1.0) (2022-03-10)
 
 

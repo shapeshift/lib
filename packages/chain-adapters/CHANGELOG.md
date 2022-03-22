@@ -1,3 +1,26 @@
+# [@shapeshiftoss/chain-adapters-v2.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.6.2...@shapeshiftoss/chain-adapters-v2.7.0) (2022-03-22)
+
+
+### Features
+
+* accept memo in buildSendTransaction ([#467](https://github.com/shapeshift/lib/issues/467)) ([bbbaf46](https://github.com/shapeshift/lib/commit/bbbaf46ce2003cdab86fa60747d15b708037c616))
+
+# [@shapeshiftoss/chain-adapters-v2.6.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.6.1...@shapeshiftoss/chain-adapters-v2.6.2) (2022-03-21)
+
+
+### Bug Fixes
+
+* **cosmos:** actually validateAddress ([#456](https://github.com/shapeshift/lib/issues/456)) ([59bb636](https://github.com/shapeshift/lib/commit/59bb6360724ea328a23748eb0f2c57021d72b2cd))
+
+# [@shapeshiftoss/chain-adapters-v2.6.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.6.0...@shapeshiftoss/chain-adapters-v2.6.1) (2022-03-21)
+
+# [@shapeshiftoss/chain-adapters-v2.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.5.0...@shapeshiftoss/chain-adapters-v2.6.0) (2022-03-21)
+
+
+### Features
+
+* cosmos sign and broadcast tx ([#435](https://github.com/shapeshift/lib/issues/435)) ([1ba16a1](https://github.com/shapeshift/lib/commit/1ba16a1589113b3a1eb17415ec6f7e85c6d857a7))
+
 # [@shapeshiftoss/chain-adapters-v2.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.4.6...@shapeshiftoss/chain-adapters-v2.5.0) (2022-03-19)
 
 
