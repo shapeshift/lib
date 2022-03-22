@@ -100,7 +100,7 @@ export class ChainAdapter
 
       if (sendMax) {
         try {
-          const val = bnOrZero(balance).minus(gas)
+          const val = bnOrZero(account.balance).minus(gas)
           if (!isFinite(val.toNumber()) || val.toNumber() < 0) {
             throw new Error('CosmosChainAdapter: transaction value is invalid')
           }
