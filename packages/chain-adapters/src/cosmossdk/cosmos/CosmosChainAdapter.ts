@@ -104,7 +104,7 @@ export class ChainAdapter
           if (!isFinite(val.toNumber()) || val.toNumber() < 0) {
             throw new Error('CosmosChainAdapter: transaction value is invalid')
           }
-          tx.value = val.toString()
+          tx.value = String(val)
         } catch (error) {
           return ErrorHandler(error)
         }
@@ -114,7 +114,7 @@ export class ChainAdapter
         fee: {
           amount: [
             {
-              amount: bnOrZero(fee).toString(),
+              amount: String(bnOrZero(fee)),
               denom: 'uatom'
             }
           ],
@@ -126,7 +126,7 @@ export class ChainAdapter
             value: {
               amount: [
                 {
-                  amount: bnOrZero(value).toString(),
+                  amount: String(bnOrZero(value)),
                   denom: 'uatom'
                 }
               ],
@@ -143,8 +143,8 @@ export class ChainAdapter
         addressNList,
         tx: utx,
         chain_id: caip2.ChainReference.CosmosHubMainnet,
-        account_number: account.chainSpecific.accountNumber,
-        sequence: account.chainSpecific.sequence
+        account_number: String(account.chainSpecific.accountNumber),
+        sequence: String(account.chainSpecific.sequence)
       }
       return { txToSign }
     } catch (err) {
