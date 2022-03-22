@@ -104,7 +104,7 @@ export class ChainAdapter
           if (val.isFinite() || val.lte(0)) {
             throw new Error('CosmosChainAdapter: transaction value is invalid')
           }
-          tx.value = String(val)
+          tx.value = val.toString()
         } catch (error) {
           return ErrorHandler(error)
         }
@@ -114,7 +114,7 @@ export class ChainAdapter
         fee: {
           amount: [
             {
-              amount: String(bnOrZero(fee)),
+              amount: bnOrZero(fee).toString(),
               denom: 'uatom'
             }
           ],
@@ -126,7 +126,7 @@ export class ChainAdapter
             value: {
               amount: [
                 {
-                  amount: String(bnOrZero(value)),
+                  amount: bnOrZero(value).toString(),
                   denom: 'uatom'
                 }
               ],
