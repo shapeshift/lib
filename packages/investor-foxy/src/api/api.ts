@@ -852,13 +852,16 @@ export class FoxyApi {
     const totalGons = bnOrZero(MAX_UINT256).minus(bnOrZero(MAX_UINT256).modulo(initFragmentSupply))
 
     const rebaseChartData = events?.map((event: any) => {
-      const pricePerGons = totalGons.dividedBy(event.totalSupply)
+      const gonsPerFragment = totalGons.dividedBy(event.totalSupply)
       const date = event.timestamp
-      console.log('price', pricePerGons)
-      return { pricePerGons, date }
+      console.log('price', gonsPerFragment)
+      return { gonsPerFragment, date }
     })
 
     console.log('rebaseChartData', rebaseChartData)
     return rebaseChartData
+    // 2 / 2 = 1
+    // currentBal / currentIndex = rebaseAmount
+    // internalBal *
   }
 }
