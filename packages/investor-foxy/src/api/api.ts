@@ -816,13 +816,15 @@ export class FoxyApi {
     }
   }
 
-  async getRebaseHistory(input: BalanceInput) {
-    const { tokenContractAddress, userAddress } = input
+  async getRebaseHistory(input: BalanceInput & { chartHistory: any[] }) {
+    const { tokenContractAddress, chartHistory } = input
     this.verifyAddresses([tokenContractAddress])
 
     const contract = new this.web3.eth.Contract(foxyAbi, tokenContractAddress)
-    // const totalGons = await contract.methods.TOTAL_GONS();
-    // console.log('total', totalGons)
+
+    chartHistory.forEach((history) => {
+      console.log('balance', history.balance.crypto['eip155:1/erc20:0x61fcabb591d63d00e897a67c64658d376fead816'])
+    })
     const supplyEvents = await contract.getPastEvents('LogSupply', {
       fromBlock: 14381454, // genesis rebase
       toBlock: 'latest'
@@ -834,9 +836,6 @@ export class FoxyApi {
         toBlock: 'latest'
       })
     ).filter((rebase) => rebase.returnValues.rebase !== '0')
-
-    // console.log('supply', supplyEvents)
-    // console.log('rebase', rebaseEvents)
 
     let events = [] as any
     rebaseEvents.forEach((rebaseEvent) => {
