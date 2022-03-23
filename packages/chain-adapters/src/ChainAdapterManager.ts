@@ -74,8 +74,6 @@ export class ChainAdapterManager {
       throw new Error('Parameter validation error')
     }
     this.supported.set(chain, factory)
-    const adapter = factory()
-    this.instances.set(chain, adapter)
   }
 
   removeChain<T extends ChainTypes>(chain: T): void {
@@ -86,7 +84,6 @@ export class ChainAdapterManager {
       throw new Error(`ChainAdapterManager: chain ${chain} not registered`)
     }
     this.supported.delete(chain)
-    this.instances.delete(chain)
   }
 
   getSupportedChains(): Array<ChainTypes> {
