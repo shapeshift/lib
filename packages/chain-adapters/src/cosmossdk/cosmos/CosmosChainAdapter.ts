@@ -143,8 +143,8 @@ export class ChainAdapter
         addressNList,
         tx: utx,
         chain_id: caip2.ChainReference.CosmosHubMainnet,
-        account_number: String(account.chainSpecific.accountNumber),
-        sequence: String(account.chainSpecific.sequence)
+        account_number: account.chainSpecific.accountNumber,
+        sequence: account.chainSpecific.sequence
       }
       return { txToSign }
     } catch (err) {
