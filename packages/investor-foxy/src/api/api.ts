@@ -816,51 +816,54 @@ export class FoxyApi {
     }
   }
 
-  async getRebaseHistory(input: BalanceInput & { chartHistory: any[] }) {
-    const { tokenContractAddress, chartHistory } = input
+  async getRebaseHistory(input: BalanceInput) {
+    const { tokenContractAddress, userAddress } = input
     this.verifyAddresses([tokenContractAddress])
 
     const contract = new this.web3.eth.Contract(foxyAbi, tokenContractAddress)
 
-    chartHistory.forEach((history) => {
-      console.log('balance', history.balance.crypto['eip155:1/erc20:0x61fcabb591d63d00e897a67c64658d376fead816'])
-    })
+
     const supplyEvents = await contract.getPastEvents('LogSupply', {
       fromBlock: 14381454, // genesis rebase
       toBlock: 'latest'
     })
+    const balanceAtBlock = await contract.methods
+      .balanceOf("0x86c11fBfED5a45eb7f2bD64509928ff6355f1CA0")
+      .call(null, 14320111, (r: any) => console.info('result', r))
+      console.log('balance', balanceAtBlock)
 
-    const rebaseEvents = (
-      await contract.getPastEvents('LogRebase', {
-        fromBlock: 14381454, // genesis rebase
-        toBlock: 'latest'
-      })
-    ).filter((rebase) => rebase.returnValues.rebase !== '0')
+    // { index:  }
+    // const rebaseEvents = (
+    //   await contract.getPastEvents('LogRebase', {
+    //     fromBlock: 14381454, // genesis rebase
+    //     toBlock: 'latest'
+    //   })
+    // ).filter((rebase) => rebase.returnValues.rebase !== '0')
 
-    let events = [] as any
-    rebaseEvents.forEach((rebaseEvent) => {
-      events.push({
-        ...rebaseEvent.returnValues,
-        ...supplyEvents.find(
-          (supplyEvent) => supplyEvent.returnValues.epoch === rebaseEvent.returnValues.epoch
-        )?.returnValues
-      })
-    })
+    // let events = [] as any
+    // rebaseEvents.forEach((rebaseEvent) => {
+    //   events.push({
+    //     ...rebaseEvent.returnValues,
+    //     ...supplyEvents.find(
+    //       (supplyEvent) => supplyEvent.returnValues.epoch === rebaseEvent.returnValues.epoch
+    //     )?.returnValues
+    //   })
+    // })
 
-    const initFragmentSupply = bnOrZero(5000000).times('1e+18')
-    const totalGons = bnOrZero(MAX_UINT256).minus(bnOrZero(MAX_UINT256).modulo(initFragmentSupply))
+    // const initFragmentSupply = bnOrZero(5000000).times('1e+18')
+    // const totalGons = bnOrZero(MAX_UINT256).minus(bnOrZero(MAX_UINT256).modulo(initFragmentSupply))
 
-    const rebaseChartData = events?.map((event: any) => {
-      const gonsPerFragment = totalGons.dividedBy(event.totalSupply)
-      const date = event.timestamp
-      console.log('price', gonsPerFragment)
-      return { gonsPerFragment, date }
-    })
+    // const rebaseChartData = events?.map((event: any) => {
+    //   const gonsPerFragment = totalGons.dividedBy(event.totalSupply)
+    //   const date = event.timestamp
+    //   console.log('price', gonsPerFragment)
+    //   return { gonsPerFragment, date }
+    // })
 
-    console.log('rebaseChartData', rebaseChartData)
-    return rebaseChartData
+    // console.log('rebaseChartData', rebaseChartData)
+    // return rebaseChartData
     // 2 / 2 = 1
-    // currentBal / currentIndex = rebaseAmount
+    // currentBal / (previousIndex - currentIndex) = rebaseAmount
     // internalBal *
   }
 }
