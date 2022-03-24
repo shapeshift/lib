@@ -65,42 +65,46 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
       const caip = this.getCaip2()
       const { data } = await this.providers.http.getAccount({ pubkey })
 
-      const delegations = data.delegations.map<chainAdapters.cosmos.Delegation>((v) => ({
+      const delegations = data.delegations.map<chainAdapters.cosmos.Delegation>((delegation) => ({
         assetId: this.assetId,
-        amount: v.balance.amount,
+        amount: delegation.balance.amount,
         validator: {
-          address: v.validator
+          address: delegation.validator
         }
       }))
 
-      const redelegations = data.redelegations.map<chainAdapters.cosmos.Redelegation>((v) => ({
-        destinationValidator: {
-          address: v.destinationValidator
-        },
-        sourceValidator: {
-          address: v.sourceValidator
-        },
-        entries: v.entries.map<chainAdapters.cosmos.RedelegationEntry>((e) => ({
-          assetId: this.assetId,
-          completionTime: Number(e.completionTime),
-          amount: e.balance
-        }))
-      }))
+      const redelegations = data.redelegations.map<chainAdapters.cosmos.Redelegation>(
+        (redelegation) => ({
+          destinationValidator: {
+            address: redelegation.destinationValidator
+          },
+          sourceValidator: {
+            address: redelegation.sourceValidator
+          },
+          entries: redelegation.entries.map<chainAdapters.cosmos.RedelegationEntry>((entry) => ({
+            assetId: this.assetId,
+            completionTime: Number(entry.completionTime),
+            amount: entry.balance
+          }))
+        })
+      )
 
-      const undelegations = data.unbondings.map<chainAdapters.cosmos.Undelegation>((v) => ({
-        validator: {
-          address: v.validator
-        },
-        entries: v.entries.map<chainAdapters.cosmos.UndelegationEntry>((e) => ({
-          assetId: this.assetId,
-          completionTime: Number(e.completionTime),
-          amount: e.balance.amount
-        }))
-      }))
+      const undelegations = data.unbondings.map<chainAdapters.cosmos.Undelegation>(
+        (undelegation) => ({
+          validator: {
+            address: undelegation.validator
+          },
+          entries: undelegation.entries.map<chainAdapters.cosmos.UndelegationEntry>((entry) => ({
+            assetId: this.assetId,
+            completionTime: Number(entry.completionTime),
+            amount: entry.balance.amount
+          }))
+        })
+      )
 
-      const rewards = data.rewards.map<chainAdapters.cosmos.Reward>((v) => ({
+      const rewards = data.rewards.map<chainAdapters.cosmos.Reward>((reward) => ({
         assetId: this.assetId,
-        amount: v.amount
+        amount: reward.amount
       }))
 
       return {
