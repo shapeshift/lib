@@ -22,7 +22,7 @@ export type RedelegationEntry = {
 export type Redelegation = {
   destinationValidator: Validator
   sourceValidator: Validator
-  entries: Array<RedelegationEntry>
+  entries: RedelegationEntry[]
 }
 
 export type UndelegationEntry = {
@@ -33,7 +33,7 @@ export type UndelegationEntry = {
 
 export type Undelegation = {
   validator: Validator
-  entries: Array<UndelegationEntry>
+  entries: UndelegationEntry[]
 }
 
 export type Reward = {
@@ -44,10 +44,10 @@ export type Reward = {
 export type Account = {
   sequence: string
   accountNumber: string
-  delegations?: Array<Delegation>
-  redelegations?: Array<Redelegation>
-  undelegations?: Array<Undelegation>
-  rewards?: Array<Reward>
+  delegations: Delegation[]
+  redelegations: Redelegation[]
+  undelegations: Undelegation[]
+  rewards: Reward[]
 }
 
 export type FeeData = {

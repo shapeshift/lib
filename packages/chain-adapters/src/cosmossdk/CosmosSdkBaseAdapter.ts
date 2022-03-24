@@ -65,9 +65,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
       const caip = this.getCaip2()
       const { data } = await this.providers.http.getAccount({ pubkey })
 
-      const delegations = (
-        data.delegations.length ? data.delegations : undefined
-      )?.map<chainAdapters.cosmos.Delegation>((v) => ({
+      const delegations = data.delegations.map<chainAdapters.cosmos.Delegation>((v) => ({
         assetId: this.assetId,
         amount: v.balance.amount,
         validator: {
@@ -75,9 +73,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
         }
       }))
 
-      const redelegations = (
-        data.redelegations.length ? data.redelegations : undefined
-      )?.map<chainAdapters.cosmos.Redelegation>((v) => ({
+      const redelegations = data.redelegations.map<chainAdapters.cosmos.Redelegation>((v) => ({
         destinationValidator: {
           address: v.destinationValidator
         },
@@ -91,9 +87,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
         }))
       }))
 
-      const undelegations = (
-        data.unbondings.length ? data.unbondings : undefined
-      )?.map<chainAdapters.cosmos.Undelegation>((v) => ({
+      const undelegations = data.unbondings.map<chainAdapters.cosmos.Undelegation>((v) => ({
         validator: {
           address: v.validator
         },
@@ -104,9 +98,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
         }))
       }))
 
-      const rewards = (
-        data.rewards.length ? data.rewards : undefined
-      )?.map<chainAdapters.cosmos.Reward>((v) => ({
+      const rewards = data.rewards.map<chainAdapters.cosmos.Reward>((v) => ({
         assetId: this.assetId,
         amount: v.amount
       }))
