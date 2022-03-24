@@ -10,8 +10,6 @@ import { Contract } from 'web3-eth-contract'
 
 import {
   DefiType,
-  erc20Abi,
-  foxyStakingAbi,
   MAX_ALLOWANCE,
   tokeRewardHashAddress,
   WithdrawType
@@ -41,6 +39,8 @@ import {
   EstimateClaimFromTokemak
 } from './foxy-types'
 import { tokeRewardHashAbi } from '../abi/toke-reward-hash-abi'
+import { erc20Abi } from '../abi/erc20-abi'
+import { foxyStakingAbi } from '../abi/foxy-staking-abi'
 
 export type ConstructorArgs = {
   adapter: ChainAdapter<ChainTypes>
