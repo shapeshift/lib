@@ -117,7 +117,7 @@ describe('EthereumChainAdapter', () => {
       {
         providers: {
           http: {} as unknown as unchained.ethereum.V1Api,
-          ws: {} as unchained.ws.Client<unchained.cosmos.ParsedTx>
+          ws: {} as unchained.ws.Client<unchained.ethereum.ParsedTx>
         }
       },
       overrideArgs
