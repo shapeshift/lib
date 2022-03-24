@@ -1,4 +1,4 @@
-import { AssetNamespace, CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
+import { CAIP2, CAIP19 } from '@shapeshiftoss/caip'
 import { CosmosSignTx } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
@@ -26,6 +26,7 @@ const CHAIN_TO_BECH32_PREFIX_MAPPING = {
 
 export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implements IChainAdapter<T> {
   protected readonly chainId: CAIP2
+  protected readonly assetId: CAIP19 // This is the caip19 for native token on the chain (ATOM/OSMO/etc)
   protected readonly supportedChainIds: CAIP2[]
   protected readonly coinName: string
   protected readonly providers: {
@@ -62,22 +63,65 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
   async getAccount(pubkey: string): Promise<chainAdapters.Account<T>> {
     try {
       const caip = this.getCaip2()
-      const { chain, network } = caip2.fromCAIP2(caip)
       const { data } = await this.providers.http.getAccount({ pubkey })
+
+      const delegations = (
+        data.delegations.length ? data.delegations : undefined
+      )?.map<chainAdapters.cosmos.Delegation>((v) => ({
+        assetId: this.assetId,
+        amount: v.balance.amount,
+        validator: {
+          address: v.validator
+        }
+      }))
+
+      const redelegations = (
+        data.redelegations.length ? data.redelegations : undefined
+      )?.map<chainAdapters.cosmos.Redelegation>((v) => ({
+        destinationValidator: {
+          address: v.destinationValidator
+        },
+        sourceValidator: {
+          address: v.sourceValidator
+        },
+        entries: v.entries.map<chainAdapters.cosmos.RedelegationEntry>((e) => ({
+          assetId: this.assetId,
+          completionTime: Number(e.completionTime),
+          amount: e.balance
+        }))
+      }))
+
+      const undelegations = (
+        data.unbondings.length ? data.unbondings : undefined
+      )?.map<chainAdapters.cosmos.Undelegation>((v) => ({
+        validator: {
+          address: v.validator
+        },
+        entries: v.entries.map<chainAdapters.cosmos.UndelegationEntry>((e) => ({
+          assetId: this.assetId,
+          completionTime: Number(e.completionTime),
+          amount: e.balance.amount
+        }))
+      }))
+
+      const rewards = (
+        data.rewards.length ? data.rewards : undefined
+      )?.map<chainAdapters.cosmos.Reward>((v) => ({
+        assetId: this.assetId,
+        amount: v.amount
+      }))
 
       return {
         balance: data.balance,
         caip2: caip,
-        // This is the caip19 for native token on the chain (ATOM/OSMO/etc)
-        caip19: caip19.toCAIP19({
-          chain,
-          network,
-          assetNamespace: AssetNamespace.Slip44,
-          assetReference: '118'
-        }),
+        caip19: this.assetId,
         chain: this.getType(),
         chainSpecific: {
           accountNumber: data.accountNumber.toString(),
+          delegations: delegations,
+          redelegations: redelegations,
+          undelegations: undelegations,
+          rewards: rewards,
           sequence: data.sequence.toString()
         },
         pubkey: data.pubkey

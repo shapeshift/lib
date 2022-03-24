@@ -2756,10 +2756,10 @@
     varuint-bitcoin "^1.0.4"
     wif "^2.0.1"
 
-"@shapeshiftoss/blockbook@^6.2.0":
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/@shapeshiftoss/blockbook/-/blockbook-6.2.0.tgz#6bf36595bec95e2f49096c68f1cc146073e2274c"
-  integrity sha512-n4sigF4BXTq79r/SjjCRz35BMXr44/IosSwk4klfbNLp12xhfy+jA6XEQ8pavmkSQX1ctplCBgycIMMH4yUEhw==
+"@shapeshiftoss/blockbook@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/blockbook/-/blockbook-6.3.0.tgz#ff6615ee6cc0c78a7d8be961b6f8d0af445a2afb"
+  integrity sha512-o6O94lz0HHvlkOx3TiwAudtc68U2QIkbLP8vuGCPJAhFruWcN/Qk/LhcaBTIbOmpocCBpGRo+6UYpR1it0wIoA==
   dependencies:
     axios "^0.26.0"
     express "^4.17.1"
@@ -2853,12 +2853,12 @@
     google-protobuf "^3.17.0"
     long "^4.0.0"
 
-"@shapeshiftoss/unchained-client@^6.2.0":
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/@shapeshiftoss/unchained-client/-/unchained-client-6.2.0.tgz#ce0d56d1542e2fc51589ab182b640761d00ef2b4"
-  integrity sha512-SkM1KtjPv3s6A0oMjuKgjNiTkCztM/g3JmFU9/ihgWi258oKPmaum7E00Rwn+MzIhDJ00zsX5d7M0r6jJ+O9dQ==
+"@shapeshiftoss/unchained-client@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/unchained-client/-/unchained-client-6.3.0.tgz#f0b3181ddc2203f5746d8d7655b07ef0c4ea0b1f"
+  integrity sha512-E3BiF9MAV0wudsnSyRi4oLSfAfQ6WRT7h//rkXdUF0Kx5Qz59g3j5ZI936hAG/lsQG6AMoOOaNH/3Hpr5+ihxA==
   dependencies:
-    "@shapeshiftoss/blockbook" "^6.2.0"
+    "@shapeshiftoss/blockbook" "^6.3.0"
     "@shapeshiftoss/caip" "^2.0.0"
     "@shapeshiftoss/types" "^2.0.0"
     "@yfi/sdk" "^1.0.30"
@@ -3297,6 +3297,17 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
   integrity sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==
+
+"@yfi/sdk@^1.0.27":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@yfi/sdk/-/sdk-1.2.0.tgz#b0635ced261cab41c57272ebb00ea7041702d74b"
+  integrity sha512-o0GE+enTlUDwuP+W7TD7/5r5s2xuMTj93vPpUmDYePOunx3B85jwEl2FLUugTOdsku8eKhLLhLJTx6fJmSJLAw==
+  dependencies:
+    bignumber.js "9.0.1"
+    cross-fetch "3.1.4"
+    dotenv "10.0.0"
+    emittery "0.8.1"
+    type-fest "1.2.1"
 
 "@yfi/sdk@^1.0.30":
   version "1.0.30"
