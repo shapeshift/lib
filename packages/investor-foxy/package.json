@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/investor-foxy",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "An API layer for interaction with the ShapeShift FOXy contract",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -27,7 +27,6 @@
   },
   "dependencies": {
     "@ethersproject/providers": "^5.5.3",
-    "@yfi/sdk": "^1.0.30",
     "bignumber.js": "^9.0.2",
     "lodash": "^4.17.21",
     "web3": "^1.7.1",
