@@ -80,7 +80,7 @@ export type TokenAddressInput = {
   tokenContractAddress: string
 }
 
-export type InstantUnstakeFeeInput = {
+export type ContractAddressInput = {
   contractAddress: string
 }
 

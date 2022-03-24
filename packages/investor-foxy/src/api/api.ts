@@ -8,9 +8,16 @@ import Web3 from 'web3'
 import { HttpProvider, TransactionReceipt } from 'web3-core/types'
 import { Contract } from 'web3-eth-contract'
 
-import { DefiType, erc20Abi, foxyStakingAbi, MAX_ALLOWANCE, WithdrawType } from '../constants'
-import { foxyAbi } from '../constants/foxy-abi'
-import { liquidityReserveAbi } from '../constants/liquidity-reserve-abi'
+import {
+  DefiType,
+  erc20Abi,
+  foxyStakingAbi,
+  MAX_ALLOWANCE,
+  tokeRewardHashAddress,
+  WithdrawType
+} from '../constants'
+import { foxyAbi } from '../abi/foxy-abi'
+import { liquidityReserveAbi } from '../abi/liquidity-reserve-abi'
 import { bnOrZero, buildTxToSign } from '../utils'
 import {
   AllowanceInput,
@@ -21,7 +28,7 @@ import {
   EstimateGasTxInput,
   FoxyAddressesType,
   FoxyOpportunityInputData,
-  InstantUnstakeFeeInput,
+  ContractAddressInput,
   SignAndBroadcastTx,
   TokenAddressInput,
   TxInput,
@@ -31,6 +38,7 @@ import {
   WithdrawInfo,
   WithdrawInput
 } from './foxy-types'
+import { tokeRewardHashAbi } from '../abi/toke-reward-hash-abi'
 
 export type ConstructorArgs = {
   adapter: ChainAdapter<ChainTypes>
@@ -56,6 +64,8 @@ export const transformData = ({ tvl, apy, expired, ...contractData }: FoxyOpport
     expired
   }
 }
+
+const TOKE_IPFS_URL = 'https://ipfs.tokemaklabs.xyz/ipfs'
 
 export class FoxyApi {
   public adapter: ChainAdapter<ChainTypes>
@@ -732,7 +742,7 @@ export class FoxyApi {
     }
   }
 
-  async instantUnstakeFee(input: InstantUnstakeFeeInput): Promise<BigNumber> {
+  async instantUnstakeFee(input: ContractAddressInput): Promise<BigNumber> {
     const { contractAddress } = input
     this.verifyAddresses([contractAddress])
     const stakingContract = this.getStakingContract(contractAddress)
@@ -806,6 +816,36 @@ export class FoxyApi {
     return {
       ...coolDownInfo,
       releaseTime
+    }
+  }
+
+  async getTokeRewardAmount(input: ContractAddressInput): Promise<any> {
+    const { contractAddress } = input
+    const rewardHashContract = new this.web3.eth.Contract(tokeRewardHashAbi, tokeRewardHashAddress)
+    let latestCycleIndex
+    try {
+      latestCycleIndex = await rewardHashContract.methods.latestCycleIndex().call()
+    } catch (e) {
+      throw new Error(`Failed to get latestCycleIndex, ${e}`)
+    }
+    let cycleHashes
+    try {
+      cycleHashes = await rewardHashContract.methods.cycleHashes(latestCycleIndex).call()
+    } catch (e) {
+      throw new Error(`Failed to get latestCycleIndex, ${e}`)
+    }
+    console.log('latestCycleIndex', latestCycleIndex)
+    console.log('cycleHashes', cycleHashes)
+
+    let response
+    try {
+      const { latestClaimable } = cycleHashes
+      response = await fetch(
+        `${TOKE_IPFS_URL}/${latestClaimable}/${contractAddress.toLowerCase()}.json`
+      )
+      console.log('response', response.statusText)
+    } catch (e) {
+      throw new Error(`Failed to get information from Tokemak ipfs ${e}`)
     }
   }
 }
