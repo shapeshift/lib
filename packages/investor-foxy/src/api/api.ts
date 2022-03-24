@@ -36,7 +36,9 @@ import {
   TxInputWithoutAmountAndWallet,
   TxReceipt,
   WithdrawInfo,
-  WithdrawInput
+  WithdrawInput,
+  GetTokeRewardAmount,
+  EstimateClaimFromTokemak
 } from './foxy-types'
 import { tokeRewardHashAbi } from '../abi/toke-reward-hash-abi'
 
@@ -318,16 +320,13 @@ export class FoxyApi {
     }
   }
 
-  async estimateDepositGas(input: EstimateGasTxInput): Promise<BigNumber> {
-    const { amountDesired, userAddress, contractAddress } = input
-    this.verifyAddresses([userAddress, contractAddress])
-    if (!amountDesired.gt(0)) throw new Error('Must send valid amount')
-
+  async estimateClaimFromTokemakGas(input: EstimateClaimFromTokemak): Promise<BigNumber> {
+    const { contractAddress, userAddress, recipient, v, r, s } = input
     const stakingContract = this.getStakingContract(contractAddress)
 
     try {
       const estimatedGas = await stakingContract.methods
-        .stake(amountDesired.toString(), userAddress)
+        .claimFromTokemak(recipient, v, r, s)
         .estimateGas({
           from: userAddress
         })
@@ -346,6 +345,25 @@ export class FoxyApi {
     try {
       const estimatedGas = await depositTokenContract.methods
         .approve(contractAddress, MAX_ALLOWANCE)
+        .estimateGas({
+          from: userAddress
+        })
+      return bnOrZero(estimatedGas)
+    } catch (e) {
+      throw new Error(`Failed to get gas ${e}`)
+    }
+  }
+
+  async estimateDepositGas(input: EstimateGasTxInput): Promise<BigNumber> {
+    const { amountDesired, userAddress, contractAddress } = input
+    this.verifyAddresses([userAddress, contractAddress])
+    if (!amountDesired.gt(0)) throw new Error('Must send valid amount')
+
+    const stakingContract = this.getStakingContract(contractAddress)
+
+    try {
+      const estimatedGas = await stakingContract.methods
+        .stake(amountDesired.toString(), userAddress)
         .estimateGas({
           from: userAddress
         })
@@ -819,7 +837,7 @@ export class FoxyApi {
     }
   }
 
-  async getTokeRewardAmount(input: ContractAddressInput): Promise<any> {
+  async getTokeRewardAmount(input: ContractAddressInput): Promise<GetTokeRewardAmount> {
     const { contractAddress } = input
     const rewardHashContract = new this.web3.eth.Contract(tokeRewardHashAbi, tokeRewardHashAddress)
     let latestCycleIndex
@@ -847,5 +865,61 @@ export class FoxyApi {
     } catch (e) {
       throw new Error(`Failed to get information from Tokemak ipfs ${e}`)
     }
+    return {
+      latestCycleIndex,
+      claimAmount: '0', // TODO: add real amount
+      v: 0,
+      r: '0',
+      s: '0'
+    }
+  }
+
+  async claimFromTokemak(input: TxInput): Promise<string> {
+    const { contractAddress, wallet, userAddress, accountNumber = 0, dryRun = false } = input
+    this.verifyAddresses([contractAddress])
+
+    const { latestCycleIndex, claimAmount, v, r, s } = await this.getTokeRewardAmount(input)
+
+    if (!wallet) throw new Error('Missing inputs')
+
+    if (!bnOrZero(claimAmount).gt(0)) {
+      throw new Error('Must claim valid amount')
+    }
+
+    const recipient = {
+      chainId: 1,
+      cycle: latestCycleIndex,
+      wallet: contractAddress,
+      amount: claimAmount
+    }
+
+    let estimatedGasBN: BigNumber
+    try {
+      estimatedGasBN = await this.estimateClaimFromTokemakGas(input)
+    } catch (e) {
+      throw new Error(`Estimate Gas Error: ${e}`)
+    }
+
+    const stakingContract = this.getStakingContract(contractAddress)
+
+    const data: string = stakingContract.methods.claimFromTokemak(recipient, v, r, s).encodeABI({
+      from: userAddress
+    })
+
+    const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
+    const estimatedGas = estimatedGasBN.toString()
+    const bip44Params = this.adapter.buildBIP44Params({ accountNumber })
+    const chainId = Number(this.network)
+    const payload = {
+      bip44Params,
+      chainId,
+      data,
+      estimatedGas,
+      gasPrice,
+      nonce,
+      to: contractAddress,
+      value: '0'
+    }
+    return this.signAndBroadcastTx({ payload, wallet, dryRun })
   }
 }
