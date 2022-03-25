@@ -8,15 +8,11 @@ import {
 import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 
-import { ChainAdapter as IChainAdapter } from '../../api'
 import { ErrorHandler } from '../../error/ErrorHandler'
 import { bnOrZero, toPath } from '../../utils'
 import { ChainAdapterArgs, CosmosSdkBaseAdapter } from '../CosmosSdkBaseAdapter'
 
-export class ChainAdapter
-  extends CosmosSdkBaseAdapter<ChainTypes.Cosmos>
-  implements IChainAdapter<ChainTypes.Cosmos>
-{
+export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
   protected readonly supportedChainIds = ['cosmos:cosmoshub-4', 'cosmos:vega-testnet']
   protected readonly chainId = this.supportedChainIds[0]
   protected readonly assetId: CAIP19
@@ -143,6 +139,70 @@ export class ChainAdapter
               ],
               from_address: from,
               to_address: to
+            }
+          }
+        ],
+        signatures: [],
+        memo
+      }
+
+      const txToSign: CosmosSignTx = {
+        addressNList,
+        tx: utx,
+        chain_id: caip2.ChainReference.CosmosHubMainnet,
+        account_number: account.chainSpecific.accountNumber,
+        sequence: account.chainSpecific.sequence
+      }
+      return { txToSign }
+    } catch (err) {
+      return ErrorHandler(err)
+    }
+  }
+
+  async buildDelegateTransaction(
+    tx: chainAdapters.BuildDelegateTxInput<ChainTypes.Cosmos>
+  ): Promise<{ txToSign: CosmosSignTx }> {
+    try {
+      const {
+        validator,
+        wallet,
+        bip44Params = CosmosSdkBaseAdapter.defaultBIP44Params,
+        chainSpecific: { gas, fee },
+        value,
+        memo = ''
+      } = tx
+
+      if (!validator) throw new Error('CosmosChainAdapter: validator is required')
+      if (!value) throw new Error('CosmosChainAdapter: value is required')
+
+      const path = toPath(bip44Params)
+      const addressNList = bip32ToAddressNList(path)
+      const from = await this.getAddress({ bip44Params, wallet })
+
+      const account = await this.getAccount(from)
+
+      const utx: CosmosTx = {
+        fee: {
+          amount: [
+            {
+              amount: bnOrZero(fee).toString(),
+              denom: 'uatom'
+            }
+          ],
+          gas: gas
+        },
+        msg: [
+          {
+            type: 'cosmos-sdk/MsgDelegate',
+            value: {
+              amount: [
+                {
+                  amount: bnOrZero(value).toString(),
+                  denom: 'uatom'
+                }
+              ],
+              delegator_address: from,
+              validator_address: validator
             }
           }
         ],
