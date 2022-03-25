@@ -847,13 +847,10 @@ export class FoxyApi {
     } catch (e) {
       throw new Error(`Failed to get latestCycleIndex, ${e}`)
     }
-    console.log('latestCycleIndex', latestCycleIndex)
-    console.log('cycleHashes', cycleHashes)
 
-    let response
     try {
       const { latestClaimable } = cycleHashes
-      response = await fetch(
+      const response = await fetch(
         `${TOKE_IPFS_URL}/${latestClaimable}/${contractAddress.toLowerCase()}.json`
       )
       const { payload, signature } = await response.json()
