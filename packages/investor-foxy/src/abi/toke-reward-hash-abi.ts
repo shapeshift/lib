@@ -1,6 +1,5 @@
 import { AbiItem } from 'web3-utils'
 
-/* eslint-disable */
 export const tokeRewardHashAbi: AbiItem[] = [
   { inputs: [], stateMutability: 'nonpayable', type: 'constructor' },
   {
