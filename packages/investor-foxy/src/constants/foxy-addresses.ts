@@ -8,4 +8,4 @@ export const foxyAddresses = [
   }
 ]
 
-export const tokeRewardHashAddress = "0x5ec3EC6A8aC774c7d53665ebc5DDf89145d02fB6"; 
+export const tokeRewardHashAddress = '0x5ec3EC6A8aC774c7d53665ebc5DDf89145d02fB6'

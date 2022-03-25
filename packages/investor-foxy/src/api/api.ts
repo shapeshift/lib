@@ -8,20 +8,25 @@ import Web3 from 'web3'
 import { HttpProvider, TransactionReceipt } from 'web3-core/types'
 import { Contract } from 'web3-eth-contract'
 
-import { DefiType, MAX_ALLOWANCE, tokeRewardHashAddress, WithdrawType } from '../constants'
+import { erc20Abi } from '../abi/erc20-abi'
 import { foxyAbi } from '../abi/foxy-abi'
+import { foxyStakingAbi } from '../abi/foxy-staking-abi'
 import { liquidityReserveAbi } from '../abi/liquidity-reserve-abi'
+import { tokeRewardHashAbi } from '../abi/toke-reward-hash-abi'
+import { DefiType, MAX_ALLOWANCE, tokeRewardHashAddress, WithdrawType } from '../constants'
 import { bnOrZero, buildTxToSign } from '../utils'
 import {
   AllowanceInput,
   ApproveInput,
   BalanceInput,
   ClaimWithdrawal,
+  ContractAddressInput,
+  EstimateClaimFromTokemak,
   EstimateGasApproveInput,
   EstimateGasTxInput,
   FoxyAddressesType,
   FoxyOpportunityInputData,
-  ContractAddressInput,
+  GetTokeRewardAmount,
   SignAndBroadcastTx,
   TokenAddressInput,
   TxInput,
@@ -29,13 +34,8 @@ import {
   TxInputWithoutAmountAndWallet,
   TxReceipt,
   WithdrawInfo,
-  WithdrawInput,
-  GetTokeRewardAmount,
-  EstimateClaimFromTokemak
+  WithdrawInput
 } from './foxy-types'
-import { tokeRewardHashAbi } from '../abi/toke-reward-hash-abi'
-import { erc20Abi } from '../abi/erc20-abi'
-import { foxyStakingAbi } from '../abi/foxy-staking-abi'
 
 export type ConstructorArgs = {
   adapter: ChainAdapter<ChainTypes>
