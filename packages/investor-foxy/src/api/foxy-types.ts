@@ -116,3 +116,8 @@ export type RebaseEvent = {
   epoch: string
   blockNumber: number
 }
+
+export type RebaseHistory = {
+  balance: BigNumber
+  timestamp: number
+}

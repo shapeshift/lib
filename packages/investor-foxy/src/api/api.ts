@@ -23,6 +23,7 @@ import {
   FoxyOpportunityInputData,
   InstantUnstakeFeeInput,
   RebaseEvent,
+  RebaseHistory,
   SignAndBroadcastTx,
   TokenAddressInput,
   TxInput,
@@ -827,9 +828,12 @@ export class FoxyApi {
         ).filter((rebase) => rebase.returnValues.rebase !== '0')
         return events
       } catch (e) {
-        throw new Error(`Failed to get rebase events ${e}`)
+        console.error(`Failed to get rebase events ${e}`)
+        return undefined
       }
     })()
+
+    if (!rebaseEvents) return []
 
     const events: RebaseEvent[] = rebaseEvents.map((rebaseEvent) => {
       const {
@@ -842,7 +846,7 @@ export class FoxyApi {
       }
     })
 
-    const rebaseChartData = await Promise.all(
+    const results = await Promise.allSettled(
       events.map(async (event) => {
         const balance = await (async () => {
           try {
@@ -853,25 +857,33 @@ export class FoxyApi {
               .balanceOf(userAddress)
               .call(null, event.blockNumber - 1)
 
-            return bnOrZero(postRebaseBalance).minus(preRebaseBalance).toString()
+            return bnOrZero(postRebaseBalance).minus(preRebaseBalance)
           } catch (e) {
-            throw new Error(`Failed to get balance of address ${e}`)
+            console.error(`Failed to get balance of address ${e}`)
+            return bnOrZero(0)
           }
         })()
 
         const timestamp = await (async () => {
           try {
             const block = await this.web3.eth.getBlock(event.blockNumber)
-            return block.timestamp
+            return bnOrZero(block.timestamp).toNumber()
           } catch (e) {
-            throw new Error(`Failed to get timestamp of block ${e}`)
+            console.error(`Failed to get timestamp of block ${e}`)
+            return 0
           }
         })()
-
         return { balance, timestamp }
       })
     )
 
-    return rebaseChartData
+    const containsAllFulfilled = results.every((result) => result.status === 'fulfilled')
+    const actualResults = results.reduce<RebaseHistory[]>((acc, cur) => {
+      if (cur.status === 'rejected') return acc
+      acc.push(cur.value)
+      return acc
+    }, [])
+
+    return containsAllFulfilled ? actualResults : []
   }
 }
