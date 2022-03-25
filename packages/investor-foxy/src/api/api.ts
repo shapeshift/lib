@@ -8,12 +8,7 @@ import Web3 from 'web3'
 import { HttpProvider, TransactionReceipt } from 'web3-core/types'
 import { Contract } from 'web3-eth-contract'
 
-import {
-  DefiType,
-  MAX_ALLOWANCE,
-  tokeRewardHashAddress,
-  WithdrawType
-} from '../constants'
+import { DefiType, MAX_ALLOWANCE, tokeRewardHashAddress, WithdrawType } from '../constants'
 import { foxyAbi } from '../abi/foxy-abi'
 import { liquidityReserveAbi } from '../abi/liquidity-reserve-abi'
 import { bnOrZero, buildTxToSign } from '../utils'
@@ -861,16 +856,21 @@ export class FoxyApi {
       response = await fetch(
         `${TOKE_IPFS_URL}/${latestClaimable}/${contractAddress.toLowerCase()}.json`
       )
-      console.log('response', response.statusText)
+      const { payload, signature } = await response.json()
+
+      const claimAmount = bnOrZero(payload.amount)
+      const v = signature.v
+      const r = signature.r
+      const s = signature.s
+      return {
+        latestCycleIndex,
+        claimAmount,
+        v,
+        r,
+        s
+      }
     } catch (e) {
       throw new Error(`Failed to get information from Tokemak ipfs ${e}`)
-    }
-    return {
-      latestCycleIndex,
-      claimAmount: '0', // TODO: add real amount
-      v: 0,
-      r: '0',
-      s: '0'
     }
   }
 
@@ -895,7 +895,7 @@ export class FoxyApi {
 
     let estimatedGasBN: BigNumber
     try {
-      estimatedGasBN = await this.estimateClaimFromTokemakGas(input)
+      estimatedGasBN = await this.estimateClaimFromTokemakGas({ ...input, recipient, v, r, s })
     } catch (e) {
       throw new Error(`Estimate Gas Error: ${e}`)
     }

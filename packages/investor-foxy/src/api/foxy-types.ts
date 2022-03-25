@@ -114,22 +114,22 @@ export type SignAndBroadcastTx = {
 
 export type GetTokeRewardAmount = {
   latestCycleIndex: string
-  claimAmount: string
+  claimAmount: BigNumber
   v: number
   r: string
   s: string
 }
 
 export type Recipient = {
-  chainId: number,
-  cycle: string,
-  wallet: string, // address that's claiming.  Weird Tokemak naming convention
-  amount: string
+  chainId: number
+  cycle: string
+  wallet: string // address that's claiming.  Weird Tokemak naming convention
+  amount: BigNumber
 }
 
 export type EstimateClaimFromTokemak = TxInputWithoutAmountAndWallet & {
-  recipient: Recipient,
-  v: number,
-  r: string,
+  recipient: Recipient
+  v: number
+  r: string
   s: string
 }
