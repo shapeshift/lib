@@ -47,17 +47,12 @@ const main = async (): Promise<void> => {
     adapter: await adapterManager.byChainId(
       caip2.toCAIP2({ chain: ChainTypes.Ethereum, network: NetworkTypes.MAINNET })
     ),
-    providerUrl: 'https://mainnet.infura.io/v3/d734c7eebcdf400185d7eb67322a7e57',
+    providerUrl: process.env.ARCHIVE_NODE || 'http://127.0.0.1:8545/',
     foxyAddresses: foxyAddresses
   })
 
   const userAddress = await api.adapter.getAddress({ wallet })
   console.info('current user address ', userAddress)
-
-  const rebaseHistory = await api.getRebaseHistory({
-    tokenContractAddress: foxyContractAddress,
-    userAddress
-  })
 
   const circulatingSupply = async () => {
     try {

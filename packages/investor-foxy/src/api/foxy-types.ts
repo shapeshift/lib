@@ -111,3 +111,8 @@ export type SignAndBroadcastTx = {
   wallet: HDWallet
   dryRun: boolean
 }
+
+export type RebaseEvent = {
+  epoch: string
+  blockNumber: number
+}

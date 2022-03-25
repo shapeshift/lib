@@ -8,14 +8,7 @@ import Web3 from 'web3'
 import { HttpProvider, TransactionReceipt } from 'web3-core/types'
 import { Contract } from 'web3-eth-contract'
 
-import {
-  DefiType,
-  erc20Abi,
-  foxyStakingAbi,
-  MAX_ALLOWANCE,
-  MAX_UINT256,
-  WithdrawType
-} from '../constants'
+import { DefiType, erc20Abi, foxyStakingAbi, MAX_ALLOWANCE, WithdrawType } from '../constants'
 import { foxyAbi } from '../constants/foxy-abi'
 import { liquidityReserveAbi } from '../constants/liquidity-reserve-abi'
 import { bnOrZero, buildTxToSign } from '../utils'
@@ -29,6 +22,7 @@ import {
   FoxyAddressesType,
   FoxyOpportunityInputData,
   InstantUnstakeFeeInput,
+  RebaseEvent,
   SignAndBroadcastTx,
   TokenAddressInput,
   TxInput,
@@ -821,49 +815,35 @@ export class FoxyApi {
     this.verifyAddresses([tokenContractAddress])
 
     const contract = new this.web3.eth.Contract(foxyAbi, tokenContractAddress)
+    const fromBlock = 14381454 // genesis rebase
 
+    const rebaseEvents = (
+      await contract.getPastEvents('LogRebase', {
+        fromBlock,
+        toBlock: 'latest'
+      })
+    ).filter((rebase) => rebase.returnValues.rebase !== '0')
 
-    const supplyEvents = await contract.getPastEvents('LogSupply', {
-      fromBlock: 14381454, // genesis rebase
-      toBlock: 'latest'
+    const events: RebaseEvent[] = rebaseEvents.map((rebaseEvent) => {
+      const {
+        blockNumber,
+        returnValues: { epoch }
+      } = rebaseEvent
+      return {
+        blockNumber,
+        epoch
+      }
     })
-    const balanceAtBlock = await contract.methods
-      .balanceOf("0x86c11fBfED5a45eb7f2bD64509928ff6355f1CA0")
-      .call(null, 14320111, (r: any) => console.info('result', r))
-      console.log('balance', balanceAtBlock)
 
-    // { index:  }
-    // const rebaseEvents = (
-    //   await contract.getPastEvents('LogRebase', {
-    //     fromBlock: 14381454, // genesis rebase
-    //     toBlock: 'latest'
-    //   })
-    // ).filter((rebase) => rebase.returnValues.rebase !== '0')
+    const rebaseChartData = await Promise.all(
+      events.map(async (event) => {
+        const balance = await contract.methods.balanceOf(userAddress).call(null, event.blockNumber)
+        const timestamp = (await this.web3.eth.getBlock(event.blockNumber)).timestamp
 
-    // let events = [] as any
-    // rebaseEvents.forEach((rebaseEvent) => {
-    //   events.push({
-    //     ...rebaseEvent.returnValues,
-    //     ...supplyEvents.find(
-    //       (supplyEvent) => supplyEvent.returnValues.epoch === rebaseEvent.returnValues.epoch
-    //     )?.returnValues
-    //   })
-    // })
+        return { balance, timestamp }
+      })
+    )
 
-    // const initFragmentSupply = bnOrZero(5000000).times('1e+18')
-    // const totalGons = bnOrZero(MAX_UINT256).minus(bnOrZero(MAX_UINT256).modulo(initFragmentSupply))
-
-    // const rebaseChartData = events?.map((event: any) => {
-    //   const gonsPerFragment = totalGons.dividedBy(event.totalSupply)
-    //   const date = event.timestamp
-    //   console.log('price', gonsPerFragment)
-    //   return { gonsPerFragment, date }
-    // })
-
-    // console.log('rebaseChartData', rebaseChartData)
-    // return rebaseChartData
-    // 2 / 2 = 1
-    // currentBal / (previousIndex - currentIndex) = rebaseAmount
-    // internalBal *
+    return rebaseChartData
   }
 }
