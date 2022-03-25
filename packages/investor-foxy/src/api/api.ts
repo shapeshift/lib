@@ -837,19 +837,25 @@ export class FoxyApi {
 
     const rebaseChartData = await Promise.all(
       events.map(async (event) => {
-        let balance
-        try {
-          balance = await contract.methods.balanceOf(userAddress).call(null, event.blockNumber)
-        } catch (e) {
-          throw new Error(`Failed to get balance of address at block ${e}`)
-        }
+        const balance = await (async () => {
+          try {
+            const balance = await contract.methods
+              .balanceOf(userAddress)
+              .call(null, event.blockNumber)
+            return balance
+          } catch (e) {
+            throw new Error(`Failed to get balance of address at block ${e}`)
+          }
+        })()
 
-        let timestamp
-        try {
-          timestamp = (await this.web3.eth.getBlock(event.blockNumber)).timestamp
-        } catch (e) {
-          throw new Error(`Failed to get timestamp of block ${e}`)
-        }
+        const timestamp = await (async () => {
+          try {
+            const timestamp = (await this.web3.eth.getBlock(event.blockNumber)).timestamp
+            return timestamp
+          } catch (e) {
+            throw new Error(`Failed to get timestamp of block ${e}`)
+          }
+        })()
 
         return { balance, timestamp }
       })
