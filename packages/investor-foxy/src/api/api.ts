@@ -835,18 +835,20 @@ export class FoxyApi {
   async getTokeRewardAmount(input: ContractAddressInput): Promise<GetTokeRewardAmount> {
     const { contractAddress } = input
     const rewardHashContract = new this.web3.eth.Contract(tokeRewardHashAbi, tokeRewardHashAddress)
-    let latestCycleIndex
-    try {
-      latestCycleIndex = await rewardHashContract.methods.latestCycleIndex().call()
-    } catch (e) {
-      throw new Error(`Failed to get latestCycleIndex, ${e}`)
-    }
-    let cycleHashes
-    try {
-      cycleHashes = await rewardHashContract.methods.cycleHashes(latestCycleIndex).call()
-    } catch (e) {
-      throw new Error(`Failed to get latestCycleIndex, ${e}`)
-    }
+    const latestCycleIndex = await (async () => {
+      try {
+        return rewardHashContract.methods.latestCycleIndex().call()
+      } catch (e) {
+        throw new Error(`Failed to get latestCycleIndex, ${e}`)
+      }
+    })()
+    const cycleHashes = await (async () => {
+      try {
+        return rewardHashContract.methods.cycleHashes(latestCycleIndex).call()
+      } catch (e) {
+        throw new Error(`Failed to get latestCycleIndex, ${e}`)
+      }
+    })()
 
     try {
       const { latestClaimable } = cycleHashes
@@ -890,12 +892,19 @@ export class FoxyApi {
       amount: claimAmount
     }
 
-    let estimatedGasBN: BigNumber
-    try {
-      estimatedGasBN = await this.estimateClaimFromTokemakGas({ ...input, recipient, v, r, s })
-    } catch (e) {
-      throw new Error(`Estimate Gas Error: ${e}`)
-    }
+    const estimatedGasBN = (async () => {
+      try {
+        return this.estimateClaimFromTokemakGas({
+          ...input,
+          recipient,
+          v,
+          r,
+          s
+        })
+      } catch (e) {
+        throw new Error(`Estimate Gas Error: ${e}`)
+      }
+    })()
 
     const stakingContract = this.getStakingContract(contractAddress)
 
