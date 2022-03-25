@@ -817,12 +817,19 @@ export class FoxyApi {
     const contract = new this.web3.eth.Contract(foxyAbi, tokenContractAddress)
     const fromBlock = 14381454 // genesis rebase
 
-    const rebaseEvents = (
-      await contract.getPastEvents('LogRebase', {
-        fromBlock,
-        toBlock: 'latest'
-      })
-    ).filter((rebase) => rebase.returnValues.rebase !== '0')
+    const rebaseEvents = await (async () => {
+      try {
+        const rebaseEvents = (
+          await contract.getPastEvents('LogRebase', {
+            fromBlock,
+            toBlock: 'latest'
+          })
+        ).filter((rebase) => rebase.returnValues.rebase !== '0')
+        return rebaseEvents
+      } catch (e) {
+        throw new Error(`Failed to get rebase events ${e}`)
+      }
+    })()
 
     const events: RebaseEvent[] = rebaseEvents.map((rebaseEvent) => {
       const {
@@ -839,12 +846,16 @@ export class FoxyApi {
       events.map(async (event) => {
         const balance = await (async () => {
           try {
-            const balance = await contract.methods
+            const postRebaseBalance = await contract.methods
               .balanceOf(userAddress)
               .call(null, event.blockNumber)
-            return balance
+            const preRebaseBalance = await contract.methods
+              .balanceOf(userAddress)
+              .call(null, event.blockNumber - 1)
+
+            return bnOrZero(postRebaseBalance).minus(preRebaseBalance).toString()
           } catch (e) {
-            throw new Error(`Failed to get balance of address at block ${e}`)
+            throw new Error(`Failed to get balance of address ${e}`)
           }
         })()
 
