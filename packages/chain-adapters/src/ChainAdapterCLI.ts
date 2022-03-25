@@ -188,10 +188,10 @@ const main = async () => {
 
     // send cosmos example
     try {
-      const value = '100'
+      const value = '1000'
 
       const feeData = await cosmosChainAdapter.getFeeData({ sendMax: false })
-      const fee = feeData.slow.txFee
+      const fee = 10 // Increas if taking too long
       const gas = feeData.slow.chainSpecific.gasLimit
 
       // const cosmosUnsignedTx = await cosmosChainAdapter.buildSendTransaction({
@@ -203,7 +203,7 @@ const main = async () => {
       // })
 
       const cosmosUnsignedTx = await (cosmosChainAdapter as any).buildDelegateTransaction({
-        validator: 'cosmosvalcons14sk4vptumprktehmuvvf0yynarjy4gv08t64t4',
+        validator: 'cosmosvaloper199mlc7fr6ll5t54w7tts7f4s0cvnqgc59nmuxf', // ShapeShift DAO validator
         value,
         wallet,
         bip44Params: cosmosBip44Params,
@@ -211,7 +211,7 @@ const main = async () => {
       })
       if (!cosmosChainAdapter.signAndBroadcastTransaction) return
 
-      console.log('comsos unsigned tx', cosmosUnsignedTx)
+      console.log('comsos unsigned tx', JSON.stringify(cosmosUnsignedTx, null, 2))
 
       const broadcastedTx = await cosmosChainAdapter.signAndBroadcastTransaction({
         wallet,

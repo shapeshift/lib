@@ -7,6 +7,7 @@ import {
 } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
+import { bech32 } from 'bech32'
 
 import { ErrorHandler } from '../../error/ErrorHandler'
 import { bnOrZero, toPath } from '../../utils'
@@ -163,6 +164,9 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
     tx: chainAdapters.BuildDelegateTxInput<ChainTypes.Cosmos>
   ): Promise<{ txToSign: CosmosSignTx }> {
     try {
+      const CHAIN_TO_VALIDATOR_PREFIX_MAPPING = {
+        [ChainTypes.Cosmos]: 'cosmosvaloper'
+      }
       const {
         validator,
         wallet,
@@ -171,13 +175,23 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
         value,
         memo = ''
       } = tx
-
       if (!validator) throw new Error('CosmosChainAdapter: validator is required')
       if (!value) throw new Error('CosmosChainAdapter: value is required')
+      const { prefix } = bech32.decode(validator)
+      const chain = this.getType()
+      if (CHAIN_TO_VALIDATOR_PREFIX_MAPPING[chain] !== prefix)
+        throw new Error(
+          `CosmosChainAdapter:buildDelegateTransaction invalid validator address ${validator}`
+        )
 
       const path = toPath(bip44Params)
       const addressNList = bip32ToAddressNList(path)
       const from = await this.getAddress({ bip44Params, wallet })
+      const { valid } = await super.validateAddress(from)
+      if (!valid)
+        throw new Error(
+          `CosmosChainAdapter:buildDelegateTransaction invalid delegator address ${from}`
+        )
 
       const account = await this.getAccount(from)
 
@@ -195,12 +209,10 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
           {
             type: 'cosmos-sdk/MsgDelegate',
             value: {
-              amount: [
-                {
-                  amount: bnOrZero(value).toString(),
-                  denom: 'uatom'
-                }
-              ],
+              amount: {
+                amount: bnOrZero(value).toString(),
+                denom: 'uatom'
+              },
               delegator_address: from,
               validator_address: validator
             }
