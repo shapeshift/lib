@@ -188,7 +188,7 @@ const main = async () => {
 
     // send cosmos example
     try {
-      const value = '1000'
+      const value = '99000'
 
       const feeData = await cosmosChainAdapter.getFeeData({ sendMax: false })
       const fee = 10 // Increas if taking too long
@@ -202,8 +202,8 @@ const main = async () => {
       //   chainSpecific: { gas, fee }
       // })
 
-      const cosmosUnsignedTx = await (cosmosChainAdapter as any).buildDelegateTransaction({
-        validator: 'cosmosvaloper199mlc7fr6ll5t54w7tts7f4s0cvnqgc59nmuxf', // ShapeShift DAO validator
+      const cosmosUnsignedTx = await (cosmosChainAdapter as any).buildUndelegateTransaction({
+        validator: 'cosmosvaloper1g48268mu5vfp4wk7dk89r0wdrakm9p5xk0q50k', // ShapeShift DAO validator
         value,
         wallet,
         bip44Params: cosmosBip44Params,
