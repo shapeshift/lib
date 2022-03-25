@@ -819,13 +819,13 @@ export class FoxyApi {
 
     const rebaseEvents = await (async () => {
       try {
-        const rebaseEvents = (
+        const events = (
           await contract.getPastEvents('LogRebase', {
             fromBlock,
             toBlock: 'latest'
           })
         ).filter((rebase) => rebase.returnValues.rebase !== '0')
-        return rebaseEvents
+        return events
       } catch (e) {
         throw new Error(`Failed to get rebase events ${e}`)
       }
@@ -861,8 +861,8 @@ export class FoxyApi {
 
         const timestamp = await (async () => {
           try {
-            const timestamp = (await this.web3.eth.getBlock(event.blockNumber)).timestamp
-            return timestamp
+            const block = await this.web3.eth.getBlock(event.blockNumber)
+            return block.timestamp
           } catch (e) {
             throw new Error(`Failed to get timestamp of block ${e}`)
           }
