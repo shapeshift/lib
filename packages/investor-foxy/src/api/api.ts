@@ -428,12 +428,10 @@ export class FoxyApi {
     const stakingContract = this.getStakingContract(contractAddress)
     const userChecksum = this.web3.utils.toChecksumAddress(userAddress)
 
-    const data: string = await stakingContract.methods
-      .stake(amountDesired, userAddress)
-      .encodeABI({
-        value: 0,
-        from: userChecksum
-      })
+    const data: string = await stakingContract.methods.stake(amountDesired, userAddress).encodeABI({
+      value: 0,
+      from: userChecksum
+    })
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const estimatedGas = estimatedGasBN.toString()
@@ -609,11 +607,9 @@ export class FoxyApi {
 
     const liquidityReserveContract = this.getLiquidityReserveContract(contractAddress)
 
-    const data: string = liquidityReserveContract.methods
-      .addLiquidity(amountDesired)
-      .encodeABI({
-        from: userAddress
-      })
+    const data: string = liquidityReserveContract.methods.addLiquidity(amountDesired).encodeABI({
+      from: userAddress
+    })
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const estimatedGas = estimatedGasBN.toString()
@@ -656,11 +652,9 @@ export class FoxyApi {
 
     const liquidityReserveContract = this.getLiquidityReserveContract(contractAddress)
 
-    const data: string = liquidityReserveContract.methods
-      .removeLiquidity(amountDesired)
-      .encodeABI({
-        from: userAddress
-      })
+    const data: string = liquidityReserveContract.methods.removeLiquidity(amountDesired).encodeABI({
+      from: userAddress
+    })
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const estimatedGas = estimatedGasBN.toString()
