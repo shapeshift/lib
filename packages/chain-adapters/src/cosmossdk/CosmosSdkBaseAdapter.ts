@@ -24,6 +24,15 @@ const CHAIN_TO_BECH32_PREFIX_MAPPING = {
   [ChainTypes.Osmosis]: 'osmo'
 }
 
+const transformValidator = (
+  validator: unchained.cosmos.Validator
+): chainAdapters.cosmos.Validator => ({
+  address: validator.address,
+  moniker: validator.moniker,
+  commission: validator.commission.rate,
+  apr: validator.apr
+})
+
 export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implements IChainAdapter<T> {
   protected readonly chainId: CAIP2
   protected readonly assetId: CAIP19 // This is the caip19 for native token on the chain (ATOM/OSMO/etc)
@@ -68,19 +77,13 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
       const delegations = data.delegations.map<chainAdapters.cosmos.Delegation>((delegation) => ({
         assetId: this.assetId,
         amount: delegation.balance.amount,
-        validator: {
-          address: delegation.validator
-        }
+        validator: transformValidator(delegation.validator)
       }))
 
       const redelegations = data.redelegations.map<chainAdapters.cosmos.Redelegation>(
         (redelegation) => ({
-          destinationValidator: {
-            address: redelegation.destinationValidator
-          },
-          sourceValidator: {
-            address: redelegation.sourceValidator
-          },
+          destinationValidator: transformValidator(redelegation.destinationValidator),
+          sourceValidator: transformValidator(redelegation.sourceValidator),
           entries: redelegation.entries.map<chainAdapters.cosmos.RedelegationEntry>((entry) => ({
             assetId: this.assetId,
             completionTime: Number(entry.completionTime),
@@ -91,9 +94,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
 
       const undelegations = data.unbondings.map<chainAdapters.cosmos.Undelegation>(
         (undelegation) => ({
-          validator: {
-            address: undelegation.validator
-          },
+          validator: transformValidator(undelegation.validator),
           entries: undelegation.entries.map<chainAdapters.cosmos.UndelegationEntry>((entry) => ({
             assetId: this.assetId,
             completionTime: Number(entry.completionTime),
@@ -102,9 +103,12 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
         })
       )
 
-      const rewards = data.rewards.map<chainAdapters.cosmos.Reward>((reward) => ({
-        assetId: this.assetId,
-        amount: reward.amount
+      const rewards = data.rewards.map<chainAdapters.cosmos.ValidatorReward>((validatorReward) => ({
+        validator: transformValidator(validatorReward.validator),
+        rewards: validatorReward.rewards.map<chainAdapters.cosmos.Reward>((reward) => ({
+          assetId: this.assetId,
+          amount: reward.amount
+        }))
       }))
 
       return {
@@ -280,5 +284,25 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
 
   closeTxs(): void {
     this.providers.ws.close('txs')
+  }
+
+  async getValidators(): Promise<Array<chainAdapters.cosmos.Validator>> {
+    try {
+      const { data } = await this.providers.http.getValidators()
+      return data.validators.map<chainAdapters.cosmos.Validator>((validator) =>
+        transformValidator(validator)
+      )
+    } catch (err) {
+      return ErrorHandler(err)
+    }
+  }
+
+  async getValidator(address: string): Promise<chainAdapters.cosmos.Validator> {
+    try {
+      const { data: validator } = await this.providers.http.getValidator({ pubkey: address })
+      return transformValidator(validator)
+    } catch (err) {
+      return ErrorHandler(err)
+    }
   }
 }
