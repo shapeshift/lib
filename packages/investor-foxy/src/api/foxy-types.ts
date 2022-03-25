@@ -133,3 +133,13 @@ export type EstimateClaimFromTokemak = TxInputWithoutAmountAndWallet & {
   r: string
   s: string
 }
+
+export type RebaseEvent = {
+  epoch: string
+  blockNumber: number
+}
+
+export type RebaseHistory = {
+  balance: BigNumber
+  timestamp: number
+}
