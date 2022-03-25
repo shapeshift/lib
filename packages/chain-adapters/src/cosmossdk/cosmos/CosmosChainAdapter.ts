@@ -236,7 +236,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
   }
 
   async buildUndelegateTransaction(
-    tx: chainAdapters.BuildDelegateTxInput<ChainTypes.Cosmos>
+    tx: chainAdapters.BuildUndelegateTxInput<ChainTypes.Cosmos>
   ): Promise<{ txToSign: CosmosSignTx }> {
     const {
       validator,
@@ -282,6 +282,71 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
           value: {
             amount: {
               amount: bnOrZero(value).toString(),
+              denom: 'uatom'
+            },
+            delegator_address: from,
+            validator_address: validator
+          }
+        }
+      ],
+      signatures: [],
+      memo
+    }
+    const txToSign: CosmosSignTx = {
+      addressNList,
+      tx: utx,
+      chain_id: caip2.ChainReference.CosmosHubMainnet,
+      account_number: account.chainSpecific.accountNumber,
+      sequence: account.chainSpecific.sequence
+    }
+    return { txToSign }
+  }
+
+  async claimRewards(
+    tx: chainAdapters.BuildClaimRewardsTxInput<ChainTypes.Cosmos>
+  ): Promise<{ txToSign: CosmosSignTx }> {
+    const {
+      validator,
+      wallet,
+      bip44Params = CosmosSdkBaseAdapter.defaultBIP44Params,
+      chainSpecific: { gas, fee },
+      memo = ''
+    } = tx
+    if (!validator) throw new Error('CosmosChainAdapter: validator is required')
+    const { prefix } = bech32.decode(validator)
+    const chain = this.getType()
+    if (this.CHAIN_TO_VALIDATOR_PREFIX_MAPPING[chain] !== prefix)
+      throw new Error(
+        `CosmosChainAdapter:buildDelegateTransaction invalid validator address ${validator}`
+      )
+
+    const path = toPath(bip44Params)
+    const addressNList = bip32ToAddressNList(path)
+    const from = await this.getAddress({ bip44Params, wallet })
+    const { valid } = await super.validateAddress(from)
+    if (!valid)
+      throw new Error(
+        `CosmosChainAdapter:buildDelegateTransaction invalid delegator address ${from}`
+      )
+
+    const account = await this.getAccount(from)
+
+    const utx: CosmosTx = {
+      fee: {
+        amount: [
+          {
+            amount: bnOrZero(fee).toString(),
+            denom: 'uatom'
+          }
+        ],
+        gas: gas
+      },
+      msg: [
+        {
+          type: 'cosmos-sdk/MsgWithdrawDelegatorReward',
+          value: {
+            amount: {
+              amount: bnOrZero(0).toString(), // amount here is required to broadcast, but we are withdrawing ALL rewards
               denom: 'uatom'
             },
             delegator_address: from,

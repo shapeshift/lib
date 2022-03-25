@@ -202,9 +202,9 @@ const main = async () => {
       //   chainSpecific: { gas, fee }
       // })
 
-      const cosmosUnsignedTx = await (cosmosChainAdapter as any).buildUndelegateTransaction({
+      const cosmosUnsignedTx = await (cosmosChainAdapter as any).claimRewards({
         validator: 'cosmosvaloper199mlc7fr6ll5t54w7tts7f4s0cvnqgc59nmuxf', // ShapeShift DAO validator
-        value,
+        // value,
         wallet,
         bip44Params: cosmosBip44Params,
         chainSpecific: { gas, fee }
