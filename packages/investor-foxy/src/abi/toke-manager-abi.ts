@@ -1,6 +1,13 @@
-import { AbiItem } from 'web3-utils'
+import { AbiItem, AbiType } from 'web3-utils'
 
-export const tokeManagerAbi: AbiItem[] = [
+type TokeManagerAbiType = AbiType | 'receive'
+
+type TokeManagerAbi = Omit<AbiItem, 'type'> &
+  {
+    type: TokeManagerAbiType
+  }[]
+
+export const tokeManagerAbi: TokeManagerAbi = [
   {
     inputs: [
       { internalType: 'address', name: '_logic', type: 'address' },
@@ -70,6 +77,5 @@ export const tokeManagerAbi: AbiItem[] = [
     stateMutability: 'payable',
     type: 'function'
   },
-  // @ts-ignore
   { stateMutability: 'payable', type: 'receive' }
 ]
