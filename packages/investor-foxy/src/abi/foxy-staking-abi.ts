@@ -35,11 +35,6 @@ export const foxyStakingAbi: AbiItem[] = [
       },
       {
         internalType: 'address',
-        name: '_tokeRewardHash',
-        type: 'address'
-      },
-      {
-        internalType: 'address',
         name: '_liquidityReserve',
         type: 'address'
       },
@@ -193,19 +188,6 @@ export const foxyStakingAbi: AbiItem[] = [
   },
   {
     inputs: [],
-    name: 'TOKE_REWARD_HASH',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address'
-      }
-    ],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [],
     name: 'TOKE_TOKEN',
     outputs: [
       {
@@ -231,19 +213,6 @@ export const foxyStakingAbi: AbiItem[] = [
     type: 'function'
   },
   {
-    inputs: [],
-    name: '_canBatchTransactions',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool'
-      }
-    ],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
     inputs: [
       {
         internalType: 'uint256',
@@ -259,19 +228,6 @@ export const foxyStakingAbi: AbiItem[] = [
     name: 'addRewardsForStakers',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function'
-  },
-  {
-    inputs: [],
-    name: 'blocksLeftToRequestWithdrawal',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256'
-      }
-    ],
-    stateMutability: 'view',
     type: 'function'
   },
   {
@@ -422,6 +378,19 @@ export const foxyStakingAbi: AbiItem[] = [
   },
   {
     inputs: [],
+    name: 'getNewOwner',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
     name: 'getOwner',
     outputs: [
       {
@@ -514,13 +483,6 @@ export const foxyStakingAbi: AbiItem[] = [
   },
   {
     inputs: [],
-    name: 'renounceOwner',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function'
-  },
-  {
-    inputs: [],
     name: 'requestWithdrawalAmount',
     outputs: [
       {
@@ -535,19 +497,6 @@ export const foxyStakingAbi: AbiItem[] = [
   {
     inputs: [],
     name: 'sendWithdrawalRequests',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function'
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_blocks',
-        type: 'uint256'
-      }
-    ],
-    name: 'setBlocksLeftToRequestWithdrawal',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function'
@@ -574,6 +523,19 @@ export const foxyStakingAbi: AbiItem[] = [
       }
     ],
     name: 'setEpochLength',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_timestamp',
+        type: 'uint256'
+      }
+    ],
+    name: 'setTimeLeftToRequestWithdrawal',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function'
@@ -646,6 +608,19 @@ export const foxyStakingAbi: AbiItem[] = [
     name: 'stake',
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'timeLeftToRequestWithdrawal',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
     type: 'function'
   },
   {
