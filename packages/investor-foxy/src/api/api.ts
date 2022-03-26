@@ -12,8 +12,17 @@ import { erc20Abi } from '../abi/erc20-abi'
 import { foxyAbi } from '../abi/foxy-abi'
 import { foxyStakingAbi } from '../abi/foxy-staking-abi'
 import { liquidityReserveAbi } from '../abi/liquidity-reserve-abi'
+import { tokeManagerAbi } from '../abi/toke-manager-abi'
+import { tokePoolAbi } from '../abi/toke-pool-abi'
 import { tokeRewardHashAbi } from '../abi/toke-reward-hash-abi'
-import { DefiType, MAX_ALLOWANCE, tokeRewardHashAddress, WithdrawType } from '../constants'
+import {
+  DefiType,
+  MAX_ALLOWANCE,
+  tokeManagerAddress,
+  tokePoolAddress,
+  tokeRewardHashAddress,
+  WithdrawType
+} from '../constants'
 import { bnOrZero, buildTxToSign } from '../utils'
 import {
   AllowanceInput,
@@ -105,10 +114,11 @@ export class FoxyApi {
       const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
       if (dryRun) return signedTx
       try {
-        if (this.providerUrl.includes('localhost')) {
+        if (this.providerUrl.includes('localhost') || this.providerUrl.includes('127.0.0.1')) {
           const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
           return sendSignedTx?.blockHash
         }
+        console.log('wrong')
         return this.adapter.broadcastTransaction(signedTx)
       } catch (e) {
         throw new Error(`Failed to broadcast: ${e}`)
@@ -525,6 +535,70 @@ export class FoxyApi {
     return this.signAndBroadcastTx({ payload, wallet, dryRun })
   }
 
+  private async canClaimWithdraw(input: any): Promise<boolean> {
+    const { userAddress, stakingContract } = input
+    const tokeManagerContract = new this.web3.eth.Contract(tokeManagerAbi, tokeManagerAddress)
+    const tokePoolContract = new this.web3.eth.Contract(tokePoolAbi, tokePoolAddress)
+
+    const coolDownInfo = await (async () => {
+      try {
+        const coolDown = await stakingContract.methods.coolDownInfo(userAddress).call()
+        return {
+          ...coolDown,
+          endEpoch: coolDown.expiry
+        }
+      } catch (e) {
+        console.error(`Failed to get coolDowninfo: ${e}`)
+      }
+    })()
+
+    const epoch = await (async () => {
+      try {
+        return stakingContract.methods.epoch().call()
+      } catch (e) {
+        console.error(`Failed to get epoch: ${e}`)
+        return {}
+      }
+    })()
+
+    const requestedWithdrawals = await (async () => {
+      try {
+        return tokePoolContract.methods.requestedWithdrawals(stakingContract.options.address).call()
+      } catch (e) {
+        console.error(`Failed to get requestedWithdrawals: ${e}`)
+        return {}
+      }
+    })()
+
+    const currentCycleIndex = await (async () => {
+      try {
+        return tokeManagerContract.methods.getCurrentCycleIndex().call()
+      } catch (e) {
+        console.error(`Failed to get currentCycleIndex: ${e}`)
+        return 0
+      }
+    })()
+
+    const withdrawalAmount = await (async () => {
+      try {
+        return stakingContract.methods.withdrawalAmount().call()
+      } catch (e) {
+        console.error(`Failed to get currentCycleIndex: ${e}`)
+        return 0
+      }
+    })()
+
+    const epochExpired = epoch.number >= coolDownInfo.endEpoch
+    const coolDownValid =
+      !bnOrZero(coolDownInfo.endEpoch).eq(0) && !bnOrZero(coolDownInfo.amount).eq(0)
+    const validCycleAndAmount =
+      (bnOrZero(requestedWithdrawals.minCycle).lte(currentCycleIndex) &&
+        bnOrZero(requestedWithdrawals.amount).plus(withdrawalAmount).gte(coolDownInfo.amount)) ||
+      bnOrZero(withdrawalAmount).gte(coolDownInfo.amount)
+
+    return epochExpired && coolDownValid && validCycleAndAmount
+  }
+
   async claimWithdraw(input: ClaimWithdrawal): Promise<string> {
     const {
       accountNumber = 0,
@@ -547,7 +621,8 @@ export class FoxyApi {
 
     const stakingContract = this.getStakingContract(contractAddress)
 
-    // TODO: check if can claimWithdraw and throw an error if can't
+    const canClaim = await this.canClaimWithdraw({ userAddress, stakingContract })
+    if (!canClaim) throw new Error('Not ready to claim')
 
     const data: string = stakingContract.methods.claimWithdraw(addressToClaim).encodeABI({
       from: userAddress
