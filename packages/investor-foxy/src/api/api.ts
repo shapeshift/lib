@@ -536,7 +536,7 @@ export class FoxyApi {
     return this.signAndBroadcastTx({ payload, wallet, dryRun })
   }
 
-  private async canClaimWithdraw(input: StakingContractWithUser): Promise<boolean> {
+  async canClaimWithdraw(input: StakingContractWithUser): Promise<boolean> {
     const { userAddress, stakingContract } = input
     const tokeManagerContract = new this.web3.eth.Contract(tokeManagerAbi, tokeManagerAddress)
     const tokePoolContract = new this.web3.eth.Contract(tokePoolAbi, tokePoolAddress)
@@ -646,7 +646,7 @@ export class FoxyApi {
     return this.signAndBroadcastTx({ payload, wallet, dryRun })
   }
 
-  private async canSendWithdrawalRequest(input: StakingContract): Promise<boolean> {
+  async canSendWithdrawalRequest(input: StakingContract): Promise<boolean> {
     const { stakingContract } = input
     const tokeManagerContract = new this.web3.eth.Contract(tokeManagerAbi, tokeManagerAddress)
 
