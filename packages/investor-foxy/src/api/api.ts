@@ -730,7 +730,7 @@ export class FoxyApi {
 
     const stakingContract = this.getStakingContract(contractAddress)
 
-    const canSendRequest = await this.canSendWithdrawalRequest({ userAddress, stakingContract })
+    const canSendRequest = await this.canSendWithdrawalRequest({ stakingContract })
     if (!canSendRequest) throw new Error('Not ready to send request')
 
     const data: string = stakingContract.methods.sendWithdrawalRequests().encodeABI({
