@@ -39,6 +39,8 @@ import {
   RebaseEvent,
   RebaseHistory,
   SignAndBroadcastTx,
+  StakingContract,
+  StakingContractWithUser,
   TokenAddressInput,
   TxInput,
   TxInputWithoutAmount,
@@ -118,7 +120,6 @@ export class FoxyApi {
           const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
           return sendSignedTx?.blockHash
         }
-        console.log('wrong')
         return this.adapter.broadcastTransaction(signedTx)
       } catch (e) {
         throw new Error(`Failed to broadcast: ${e}`)
@@ -535,7 +536,7 @@ export class FoxyApi {
     return this.signAndBroadcastTx({ payload, wallet, dryRun })
   }
 
-  private async canClaimWithdraw(input: any): Promise<boolean> {
+  private async canClaimWithdraw(input: StakingContractWithUser): Promise<boolean> {
     const { userAddress, stakingContract } = input
     const tokeManagerContract = new this.web3.eth.Contract(tokeManagerAbi, tokeManagerAddress)
     const tokePoolContract = new this.web3.eth.Contract(tokePoolAbi, tokePoolAddress)
@@ -645,6 +646,76 @@ export class FoxyApi {
     return this.signAndBroadcastTx({ payload, wallet, dryRun })
   }
 
+  private async canSendWithdrawalRequest(input: StakingContract): Promise<boolean> {
+    const { stakingContract } = input
+    const tokeManagerContract = new this.web3.eth.Contract(tokeManagerAbi, tokeManagerAddress)
+
+    const requestWithdrawalAmount = await (async () => {
+      try {
+        return stakingContract.methods.requestWithdrawalAmount().call()
+      } catch (e) {
+        console.error(`Failed to get requestWithdrawalAmount: ${e}`)
+        return 0
+      }
+    })()
+
+    const timeLeftToRequestWithdrawal = await (async () => {
+      try {
+        return stakingContract.methods.timeLeftToRequestWithdrawal().call()
+      } catch (e) {
+        console.error(`Failed to get timeLeftToRequestWithdrawal: ${e}`)
+        return 0
+      }
+    })()
+
+    const lastTokeCycleIndex = await (async () => {
+      try {
+        return stakingContract.methods.lastTokeCycleIndex().call()
+      } catch (e) {
+        console.error(`Failed to get lastTokeCycleIndex: ${e}`)
+        return 0
+      }
+    })()
+
+    const duration = await (async () => {
+      try {
+        return tokeManagerContract.methods.getCycleDuration().call()
+      } catch (e) {
+        console.error(`Failed to get cycleDuration: ${e}`)
+        return 0
+      }
+    })()
+
+    const currentCycleIndex = await (async () => {
+      try {
+        return tokeManagerContract.methods.getCurrentCycleIndex().call()
+      } catch (e) {
+        console.error(`Failed to get currentCycleIndex: ${e}`)
+        return 0
+      }
+    })()
+
+    const currentCycleStart = await (async () => {
+      try {
+        return tokeManagerContract.methods.getCurrentCycle().call()
+      } catch (e) {
+        console.error(`Failed to get currentCycle: ${e}`)
+        return 0
+      }
+    })()
+
+    const nextCycleStart = bnOrZero(currentCycleStart).plus(duration)
+
+    const blockNumber = await this.web3.eth.getBlockNumber()
+    const timestamp = (await this.web3.eth.getBlock(blockNumber)).timestamp
+
+    const isTimeToRequest = timestamp + timeLeftToRequestWithdrawal >= nextCycleStart
+    const isCorrectIndex = bnOrZero(currentCycleIndex).gt(lastTokeCycleIndex)
+    const hasAmount = bnOrZero(requestWithdrawalAmount).gt(0)
+
+    return isTimeToRequest && isCorrectIndex && hasAmount
+  }
+
   async sendWithdrawalRequests(input: TxInputWithoutAmount): Promise<string> {
     const { accountNumber = 0, dryRun = false, contractAddress, userAddress, wallet } = input
     this.verifyAddresses([userAddress, contractAddress])
@@ -659,7 +730,8 @@ export class FoxyApi {
 
     const stakingContract = this.getStakingContract(contractAddress)
 
-    // TODO: check if can sendWithdrawalRequests and throw an error if can't
+    const canSendRequest = await this.canSendWithdrawalRequest({ userAddress, stakingContract })
+    if (!canSendRequest) throw new Error('Not ready to send request')
 
     const data: string = stakingContract.methods.sendWithdrawalRequests().encodeABI({
       from: userAddress

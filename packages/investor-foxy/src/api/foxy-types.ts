@@ -1,6 +1,7 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params } from '@shapeshiftoss/types'
 import { BigNumber } from 'bignumber.js'
+import { Contract } from 'web3-eth-contract'
 
 import { WithdrawType } from '../constants'
 
@@ -142,4 +143,12 @@ export type RebaseEvent = {
 export type RebaseHistory = {
   balance: BigNumber
   timestamp: number
+}
+
+export type StakingContract = {
+  stakingContract: Contract
+}
+
+export type StakingContractWithUser = StakingContract & {
+  userAddress: string
 }
