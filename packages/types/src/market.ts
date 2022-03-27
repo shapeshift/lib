@@ -40,3 +40,35 @@ export type FindAllMarketArgs = {
 export type MarketCapResult = {
   [k: string]: MarketData
 }
+
+export enum SupportedFiatCurrencies {
+  CNY = 'CNY',
+  USD = 'USD',
+  EUR = 'EUR',
+  JPY = 'JPY',
+  GBP = 'GBP',
+  KRW = 'KRW',
+  INR = 'INR',
+  CAD = 'CAD',
+  HKD = 'HKD',
+  AUD = 'AUD',
+  TWD = 'TWD',
+  BRL = 'BRL',
+  CHF = 'CHF',
+  THB = 'THB',
+  MXN = 'MXN',
+  RUB = 'RUB',
+  SAR = 'SAR',
+  SGD = 'SGD',
+  ILS = 'ILS',
+  IDR = 'IDR'
+}
+
+export type FiatMarketDataArgs = {
+  symbol: SupportedFiatCurrencies
+}
+
+export type FiatPriceHistoryArgs = {
+  symbol: SupportedFiatCurrencies
+  timeframe: HistoryTimeframe
+}
