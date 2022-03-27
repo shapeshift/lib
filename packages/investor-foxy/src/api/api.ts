@@ -812,13 +812,14 @@ export class FoxyApi {
     const { tokenContractAddress, userAddress } = input
     this.verifyAddresses([tokenContractAddress])
 
-    const contract = new this.web3.eth.Contract(foxyAbi, tokenContractAddress)
+    const foxyContract = new this.web3.eth.Contract(foxyAbi, tokenContractAddress)
+    const foxContract = new this.web3.eth.Contract(erc20Abi, this.foxyAddresses[0].fox)
     const fromBlock = 14381454 // genesis rebase
 
     const rebaseEvents = await (async () => {
       try {
         const events = (
-          await contract.getPastEvents('LogRebase', {
+          await foxyContract.getPastEvents('LogRebase', {
             fromBlock,
             toBlock: 'latest'
           })
@@ -831,6 +832,19 @@ export class FoxyApi {
     })()
 
     if (!rebaseEvents) return []
+
+    const transferEvents = await (async () => {
+      try {
+        const events = await foxyContract.getPastEvents('Transfer', {
+          fromBlock,
+          toBlock: 'latest'
+        })
+        return events
+      } catch (e) {
+        console.error(`Failed to get transfer events ${e}`)
+        return undefined
+      }
+    })()
 
     const events: RebaseEvent[] = rebaseEvents.map((rebaseEvent) => {
       const {
@@ -852,19 +866,32 @@ export class FoxyApi {
 
     const results = await Promise.allSettled(
       events.map(async (event) => {
-        const balanceDiff = await (async () => {
+        const { preRebaseBalance, postRebaseBalance } = await (async () => {
           try {
-            const postRebaseBalance = await contract.methods
+            // check transfer events to see if a user triggered a rebase through unstake
+            const transferInfo = transferEvents?.filter(
+              (e) => e.blockNumber === event.blockNumber && e.returnValues.from === userAddress
+            )
+            const transferAmount = transferInfo?.[0]?.returnValues?.value ?? 0
+            const postRebaseBalance = await foxyContract.methods
               .balanceOf(userAddress)
               .call(null, event.blockNumber)
-            const preRebaseBalance = await contract.methods
+            const unadjustedPreRebaseBalance = await foxyContract.methods
               .balanceOf(userAddress)
               .call(null, event.blockNumber - 1)
+              
+            // unstake events can trigger rebases, if they do, adjust the amount to not include that unstake's transfer amount
+            const preRebaseBalance = bnOrZero(unadjustedPreRebaseBalance)
+              .minus(transferAmount)
+              .toString()
 
-            return bnOrZero(postRebaseBalance).minus(preRebaseBalance).toString()
+            return { preRebaseBalance, postRebaseBalance }
           } catch (e) {
             console.error(`Failed to get balance of address ${e}`)
-            return bnOrZero(0).toString()
+            return {
+              preRebaseBalance: bnOrZero(0).toString(),
+              postRebaseBalance: bnOrZero(0).toString()
+            }
           }
         })()
 
@@ -878,15 +905,26 @@ export class FoxyApi {
           }
         })()
 
-        return { assetId, balanceDiff, blockTime }
+        return { assetId, preRebaseBalance, postRebaseBalance, blockTime }
       })
     )
 
     const containsAllFulfilled = results.every((result) => result.status === 'fulfilled')
     const actualResults = results.reduce<RebaseHistory[]>((acc, cur) => {
-      if (cur.status === 'rejected') return acc
-      if (cur.value.balanceDiff === '0') return acc // don't return rebase history with 0 balance diff
-      acc.push(cur.value)
+      if (cur.status === 'rejected') {
+        console.error('getFoxyRebaseHistory: balanceOf call failed - charts will be wrong')
+        return acc
+      }
+      if (cur.value.preRebaseBalance === '0') return acc // don't return rebase history with 0 balance diff
+
+      const balanceDiff = bnOrZero(cur.value.postRebaseBalance)
+        .minus(cur.value.preRebaseBalance)
+        .toString()
+
+      acc.push({
+        balanceDiff,
+        ...cur.value
+      })
       return acc
     }, [])
 
