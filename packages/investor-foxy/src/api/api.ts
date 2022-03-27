@@ -1,7 +1,8 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
+import { AssetNamespace, caip19 } from '@shapeshiftoss/caip'
 import { ChainReference } from '@shapeshiftoss/caip/dist/caip2/caip2'
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
-import { ChainTypes } from '@shapeshiftoss/types'
+import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import { BigNumber } from 'bignumber.js'
 import { toLower } from 'lodash'
 import Web3 from 'web3'
@@ -842,6 +843,13 @@ export class FoxyApi {
       }
     })
 
+    const chain = ChainTypes.Ethereum
+    const network = NetworkTypes.MAINNET
+    const assetNamespace = AssetNamespace.ERC20
+    const assetReference = tokenContractAddress
+    // foxy assetId
+    const assetId = caip19.toCAIP19({ chain, network, assetNamespace, assetReference })
+
     const results = await Promise.allSettled(
       events.map(async (event) => {
         const balanceDiff = await (async () => {
@@ -869,13 +877,15 @@ export class FoxyApi {
             return 0
           }
         })()
-        return { balanceDiff, blockTime }
+
+        return { assetId, balanceDiff, blockTime }
       })
     )
 
     const containsAllFulfilled = results.every((result) => result.status === 'fulfilled')
     const actualResults = results.reduce<RebaseHistory[]>((acc, cur) => {
       if (cur.status === 'rejected') return acc
+      if (cur.value.balanceDiff === '0') return acc // don't return rebase history with 0 balance diff
       acc.push(cur.value)
       return acc
     }, [])
