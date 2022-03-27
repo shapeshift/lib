@@ -118,6 +118,6 @@ export type RebaseEvent = {
 }
 
 export type RebaseHistory = {
-  balance: BigNumber
+  balanceDiff: string
   timestamp: number
 }

@@ -34,6 +34,8 @@ import {
   WithdrawInput
 } from './foxy-types'
 
+export * from './foxy-types'
+
 export type ConstructorArgs = {
   adapter: ChainAdapter<ChainTypes>
   providerUrl: string
@@ -842,7 +844,7 @@ export class FoxyApi {
 
     const results = await Promise.allSettled(
       events.map(async (event) => {
-        const balance = await (async () => {
+        const balanceDiff = await (async () => {
           try {
             const postRebaseBalance = await contract.methods
               .balanceOf(userAddress)
@@ -851,10 +853,12 @@ export class FoxyApi {
               .balanceOf(userAddress)
               .call(null, event.blockNumber - 1)
 
-            return bnOrZero(postRebaseBalance).minus(preRebaseBalance)
+            console.info('preRebaseBalance', preRebaseBalance)
+            console.info('postRebaseBalance', postRebaseBalance)
+            return bnOrZero(postRebaseBalance).minus(preRebaseBalance).toString()
           } catch (e) {
             console.error(`Failed to get balance of address ${e}`)
-            return bnOrZero(0)
+            return bnOrZero(0).toString()
           }
         })()
 
@@ -867,7 +871,7 @@ export class FoxyApi {
             return 0
           }
         })()
-        return { balance, timestamp }
+        return { balanceDiff, timestamp }
       })
     )
 
