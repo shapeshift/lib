@@ -813,7 +813,6 @@ export class FoxyApi {
     this.verifyAddresses([tokenContractAddress])
 
     const foxyContract = new this.web3.eth.Contract(foxyAbi, tokenContractAddress)
-    const foxContract = new this.web3.eth.Contract(erc20Abi, this.foxyAddresses[0].fox)
     const fromBlock = 14381454 // genesis rebase
 
     const rebaseEvents = await (async () => {
@@ -873,19 +872,22 @@ export class FoxyApi {
               (e) => e.blockNumber === event.blockNumber && e.returnValues.from === userAddress
             )
             const transferAmount = transferInfo?.[0]?.returnValues?.value ?? 0
-            const postRebaseBalance = await foxyContract.methods
+            const postRebaseBalanceResult = await foxyContract.methods
               .balanceOf(userAddress)
               .call(null, event.blockNumber)
             const unadjustedPreRebaseBalance = await foxyContract.methods
               .balanceOf(userAddress)
               .call(null, event.blockNumber - 1)
-              
+
             // unstake events can trigger rebases, if they do, adjust the amount to not include that unstake's transfer amount
-            const preRebaseBalance = bnOrZero(unadjustedPreRebaseBalance)
+            const preRebaseBalanceResult = bnOrZero(unadjustedPreRebaseBalance)
               .minus(transferAmount)
               .toString()
 
-            return { preRebaseBalance, postRebaseBalance }
+            return {
+              preRebaseBalance: preRebaseBalanceResult,
+              postRebaseBalance: postRebaseBalanceResult
+            }
           } catch (e) {
             console.error(`Failed to get balance of address ${e}`)
             return {
