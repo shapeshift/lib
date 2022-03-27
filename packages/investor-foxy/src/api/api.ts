@@ -853,8 +853,6 @@ export class FoxyApi {
               .balanceOf(userAddress)
               .call(null, event.blockNumber - 1)
 
-            console.info('preRebaseBalance', preRebaseBalance)
-            console.info('postRebaseBalance', postRebaseBalance)
             return bnOrZero(postRebaseBalance).minus(preRebaseBalance).toString()
           } catch (e) {
             console.error(`Failed to get balance of address ${e}`)
@@ -862,7 +860,7 @@ export class FoxyApi {
           }
         })()
 
-        const timestamp = await (async () => {
+        const blockTime = await (async () => {
           try {
             const block = await this.web3.eth.getBlock(event.blockNumber)
             return bnOrZero(block.timestamp).toNumber()
@@ -871,7 +869,7 @@ export class FoxyApi {
             return 0
           }
         })()
-        return { balanceDiff, timestamp }
+        return { balanceDiff, blockTime }
       })
     )
 

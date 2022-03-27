@@ -119,5 +119,5 @@ export type RebaseEvent = {
 
 export type RebaseHistory = {
   balanceDiff: string
-  timestamp: number
+  blockTime: number
 }
