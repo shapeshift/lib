@@ -869,8 +869,11 @@ export class FoxyApi {
           try {
             // check transfer events to see if a user triggered a rebase through unstake
             const transferInfo = transferEvents?.filter(
-              (e) => e.blockNumber === event.blockNumber && e.returnValues.from === userAddress
+              (e) =>
+                e.blockNumber === event.blockNumber &&
+                e.returnValues.from.toLowerCase() === userAddress
             )
+            console.log('transferInfo', transferInfo)
             const transferAmount = transferInfo?.[0]?.returnValues?.value ?? 0
             const postRebaseBalanceResult = await foxyContract.methods
               .balanceOf(userAddress)
