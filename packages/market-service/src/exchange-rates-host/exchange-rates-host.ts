@@ -13,7 +13,7 @@ import { isValidDate } from '../utils/isValidDate'
 import { rateLimitedAxios } from '../utils/rateLimiters'
 import { ExchangeRateHostHistoryData, ExchangeRateHostRate } from './exchange-rates-host-types'
 
-const axios = rateLimitedAxios(RATE_LIMIT_THRESHOLDS_PER_MINUTE.COINCAP)
+const axios = rateLimitedAxios(RATE_LIMIT_THRESHOLDS_PER_MINUTE.DEFAULT)
 const baseCurrency = 'USD'
 const baseUrl = 'https://api.exchangerate.host'
 
