@@ -790,7 +790,7 @@ export class FoxyApi {
 
       const percentageIndex = foxRow?.search('%')
       if (bnOrZero(percentageIndex).lt(2)) throw new Error('Failed to find percentage index')
-      
+
       const percentage = foxRow.slice(percentageIndex - 2, percentageIndex)
 
       return bnOrZero(percentage).div(100).toString() // convert to decimal
