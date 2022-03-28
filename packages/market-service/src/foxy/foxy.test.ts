@@ -33,7 +33,7 @@ describe('foxy market service', () => {
 
   describe('findByCaip19', () => {
     const args = {
-      caip19: 'eip155:1/erc20:0x61FcaBB591d63D00E897A67C64658D376FeAd816'
+      caip19: 'eip155:1/erc20:0xDc49108ce5C57bc3408c3A5E95F3d864eC386Ed3'
     }
 
     it('should return market data for FOXy', async () => {
@@ -52,7 +52,7 @@ describe('foxy market service', () => {
 
   describe('findPriceHistoryByCaip19', () => {
     const args = {
-      caip19: 'eip155:1/erc20:0x61FcaBB591d63D00E897A67C64658D376FeAd816',
+      caip19: 'eip155:1/erc20:0xDc49108ce5C57bc3408c3A5E95F3d864eC386Ed3',
       timeframe: HistoryTimeframe.HOUR
     }
 

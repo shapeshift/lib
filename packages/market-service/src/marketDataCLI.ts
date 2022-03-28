@@ -17,7 +17,7 @@ const main = async (): Promise<void> => {
   // const caip19 = 'eip155:1/erc20:0x93ed140172ff226dad1f7f3650489b8daa07ae7f' // Zapper Token
   // const caip19 = 'eip155:1/erc20:0x3f1b0278a9ee595635b61817630cc19de792f506' // Zapper Token
   // const caip19 = 'cosmos:osmosis-1/slip44:118' // Osmosis
-  const caip19 = 'eip155:1/erc20:0x61FcaBB591d63D00E897A67C64658D376FeAd816' // FOXy
+  const caip19 = 'eip155:1/erc20:0xDc49108ce5C57bc3408c3A5E95F3d864eC386Ed3' // FOXy
   const timeframe = HistoryTimeframe.YEAR
   // const caip19 = 'bip122:000000000019d6689c085ae165831e93/slip44:0' // BTC
   // const provider = new JsonRpcProvider('https://daemon.ethereum.shapeshift.com')
