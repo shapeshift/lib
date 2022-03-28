@@ -31,9 +31,9 @@ import {
   TxInputWithoutAmount,
   TxInputWithoutAmountAndWallet,
   TxReceipt,
+  WithdrawEstimateGasInput,
   WithdrawInfo,
-  WithdrawInput,
-  WithdrawEstimateGasInput
+  WithdrawInput
 } from './foxy-types'
 
 export * from './foxy-types'
