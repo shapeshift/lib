@@ -17,7 +17,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
   protected readonly supportedChainIds = ['cosmos:cosmoshub-4', 'cosmos:vega-testnet']
   protected readonly chainId = this.supportedChainIds[0]
   protected readonly assetId: CAIP19
-  protected readonly CHAIN_TO_VALIDATOR_PREFIX_MAPPING = {
+  protected readonly CHAIN_VALIDATOR_PREFIX_MAPPING = {
     [ChainTypes.Cosmos]: 'cosmosvaloper'
   }
 
@@ -179,7 +179,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
       if (!value) throw new Error('CosmosChainAdapter: value is required')
       const { prefix } = bech32.decode(validator)
       const chain = this.getType()
-      if (this.CHAIN_TO_VALIDATOR_PREFIX_MAPPING[chain] !== prefix)
+      if (this.CHAIN_VALIDATOR_PREFIX_MAPPING[chain] !== prefix)
         throw new Error(
           `CosmosChainAdapter:buildDelegateTransaction invalid validator address ${validator}`
         )
@@ -250,7 +250,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
     if (!value) throw new Error('CosmosChainAdapter: value is required')
     const { prefix } = bech32.decode(validator)
     const chain = this.getType()
-    if (this.CHAIN_TO_VALIDATOR_PREFIX_MAPPING[chain] !== prefix)
+    if (this.CHAIN_VALIDATOR_PREFIX_MAPPING[chain] !== prefix)
       throw new Error(
         `CosmosChainAdapter:buildDelegateTransaction invalid validator address ${validator}`
       )
@@ -302,7 +302,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
     return { txToSign }
   }
 
-  async claimRewards(
+  async buildClaimRewardsTransaction(
     tx: chainAdapters.BuildClaimRewardsTxInput<ChainTypes.Cosmos>
   ): Promise<{ txToSign: CosmosSignTx }> {
     const {
@@ -315,7 +315,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
     if (!validator) throw new Error('CosmosChainAdapter: validator is required')
     const { prefix } = bech32.decode(validator)
     const chain = this.getType()
-    if (this.CHAIN_TO_VALIDATOR_PREFIX_MAPPING[chain] !== prefix)
+    if (this.CHAIN_VALIDATOR_PREFIX_MAPPING[chain] !== prefix)
       throw new Error(
         `CosmosChainAdapter:buildDelegateTransaction invalid validator address ${validator}`
       )
@@ -365,6 +365,85 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
       sequence: account.chainSpecific.sequence
     }
     return { txToSign }
+  }
+
+  async buildRedelegateTransaction(
+    tx: chainAdapters.BuildRedelegateTxInput<ChainTypes.Cosmos>
+  ): Promise<{ txToSign: CosmosSignTx }> {
+    try {
+      const {
+        wallet,
+        bip44Params = CosmosSdkBaseAdapter.defaultBIP44Params,
+        chainSpecific: { gas, fee },
+        value,
+        memo = '',
+        fromValidator,
+        toValidator
+      } = tx
+      if (!toValidator) throw new Error('CosmosChainAdapter: toValidator is required')
+      if (!fromValidator) throw new Error('CosmosChainAdapter: fromValidator is required')
+      if (!value) throw new Error('CosmosChainAdapter: value is required')
+      const { prefix: toPrefix } = bech32.decode(toValidator)
+      const { prefix: fromPrefix } = bech32.decode(fromValidator)
+      const chain = this.getType()
+      if (
+        this.CHAIN_VALIDATOR_PREFIX_MAPPING[chain] !== toPrefix ||
+        this.CHAIN_VALIDATOR_PREFIX_MAPPING[chain] !== fromPrefix
+      )
+        throw new Error(
+          `CosmosChainAdapter:buildDelegateTransaction invalid toValidator or fromValidator address ${toValidator} ${fromValidator}`
+        )
+
+      const path = toPath(bip44Params)
+      const addressNList = bip32ToAddressNList(path)
+      const from = await this.getAddress({ bip44Params, wallet })
+      const { valid } = await super.validateAddress(from)
+      if (!valid)
+        throw new Error(
+          `CosmosChainAdapter:buildRedelegateTransaction invalid delegator address ${from}`
+        )
+
+      const account = await this.getAccount(from)
+
+      const utx: CosmosTx = {
+        fee: {
+          amount: [
+            {
+              amount: bnOrZero(fee).toString(),
+              denom: 'uatom'
+            }
+          ],
+          gas: gas
+        },
+        msg: [
+          {
+            type: 'cosmos-sdk/MsgBeginRedelegate',
+            value: {
+              amount: {
+                amount: bnOrZero(value).toString(),
+                denom: 'uatom'
+              },
+              delegator_address: from,
+              validator_src_address: fromValidator,
+              validator_dst_address: toValidator
+            }
+          }
+        ],
+        signatures: [],
+        memo
+      }
+
+      const txToSign: CosmosSignTx = {
+        addressNList,
+        tx: utx,
+        chain_id: caip2.ChainReference.CosmosHubMainnet,
+        account_number: account.chainSpecific.accountNumber,
+        sequence: account.chainSpecific.sequence
+      }
+      return { txToSign }
+    } catch (err) {
+      return ErrorHandler(err)
+    }
   }
 
   async getFeeData({
