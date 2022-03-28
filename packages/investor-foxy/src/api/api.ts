@@ -4,6 +4,7 @@ import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { ChainTypes } from '@shapeshiftoss/types'
 import { BigNumber } from 'bignumber.js'
 import { toLower } from 'lodash'
+import puppeteer from 'puppeteer'
 import Web3 from 'web3'
 import { HttpProvider, TransactionReceipt } from 'web3-core/types'
 import { Contract } from 'web3-eth-contract'
@@ -172,7 +173,7 @@ export class FoxyApi {
           try {
             const expired = await stakingContract?.methods.pauseStaking().call()
             const tvl = await this.tvl({ tokenContractAddress: addresses.foxy })
-            const apy = this.apy()
+            const apy = await this.apy()
             return transformData({ ...addresses, expired, tvl, apy })
           } catch (e) {
             throw new Error(`Failed to get contract data ${e}`)
@@ -197,7 +198,7 @@ export class FoxyApi {
     try {
       const expired = await stakingContract.methods.pauseStaking().call()
       const tvl = await this.tvl({ tokenContractAddress: addresses.foxy })
-      const apy = this.apy()
+      const apy = await this.apy()
       return transformData({ ...addresses, tvl, apy, expired })
     } catch (e) {
       throw new Error(`Failed to get contract data ${e}`)
@@ -294,7 +295,7 @@ export class FoxyApi {
     const stakingContract = this.getStakingContract(contractAddress)
 
     const isDelayed = type === WithdrawType.DELAYED && amountDesired
-    if (isDelayed && !amountDesired.gt(0)) throw new Error('Must send valid amount')
+    if (isDelayed && !amountDesired?.gt(0)) throw new Error('Must send valid amount')
 
     try {
       const estimatedGas = isDelayed
@@ -475,7 +476,7 @@ export class FoxyApi {
     const stakingContract = this.getStakingContract(contractAddress)
 
     const isDelayed = type === WithdrawType.DELAYED && amountDesired
-    if (isDelayed && !amountDesired.gt(0)) throw new Error('Must send valid amount')
+    if (isDelayed && !amountDesired?.gt(0)) throw new Error('Must send valid amount')
 
     const data: string = isDelayed
       ? stakingContract.methods.unstake(amountDesired, true).encodeABI({
@@ -764,9 +765,42 @@ export class FoxyApi {
     return bnOrZero(1).times('1e+18')
   }
 
-  // estimated apy
-  apy(): string {
-    return '.2'
+  async apy(): Promise<string> {
+    // need to scrape tokemak.xyz for the apy because it isn't
+    // exposed on an api and can fluctuate often.
+    // this should be updated when we have a better way to calculate apy
+    const browser = await puppeteer.launch()
+    const page = await browser.newPage()
+    await page.goto('https://www.tokemak.xyz/')
+
+    try {
+      await page.$eval('.enterreactor', (a) => a.textContent)
+      await page.click('.enterreactor')
+    } catch (err) {
+      console.error(`Failed to get past landing page ${err}`)
+    }
+
+    try {
+      await page.waitForSelector('.animate-pulse', { hidden: true })
+      const rows = await page.evaluate(() =>
+        Array.from(document.querySelectorAll('.rounded-t-lg'), (element) => element.textContent)
+      )
+      const foxRow = rows.filter((row) => row?.includes('FOX'))?.[0]
+      if (!foxRow) throw new Error('Failed to find FOX row')
+
+      const percentageIndex = foxRow?.search('%')
+      if (bnOrZero(percentageIndex).lt(2)) throw new Error('Failed to find percentage index')
+      
+      const percentage = foxRow.slice(percentageIndex - 2, percentageIndex)
+
+      return bnOrZero(percentage).div(100).toString() // convert to decimal
+    } catch (err) {
+      console.error(`Failed to get rows ${err}`)
+      // if the web scraping fails default to 20% APR
+      return '.2'
+    } finally {
+      await browser.close()
+    }
   }
 
   async tvl(input: TokenAddressInput): Promise<BigNumber> {
