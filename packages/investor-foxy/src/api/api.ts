@@ -22,6 +22,8 @@ import {
   FoxyAddressesType,
   FoxyOpportunityInputData,
   InstantUnstakeFeeInput,
+  RebaseEvent,
+  RebaseHistory,
   SignAndBroadcastTx,
   TokenAddressInput,
   TxInput,
@@ -256,7 +258,7 @@ export class FoxyApi {
 
     try {
       const estimatedGas = await liquidityReserveContract.methods
-        .addLiquidity(amountDesired.toString())
+        .addLiquidity(amountDesired)
         .estimateGas({
           from: userAddress
         })
@@ -275,7 +277,7 @@ export class FoxyApi {
 
     try {
       const estimatedGas = await liquidityReserveContract.methods
-        .removeLiquidity(amountDesired.toString())
+        .removeLiquidity(amountDesired)
         .estimateGas({
           from: userAddress
         })
@@ -296,7 +298,7 @@ export class FoxyApi {
 
     try {
       const estimatedGas = isDelayed
-        ? await stakingContract.methods.unstake(amountDesired.toString(), true).estimateGas({
+        ? await stakingContract.methods.unstake(amountDesired, true).estimateGas({
             from: userAddress
           })
         : await stakingContract.methods.instantUnstake(true).estimateGas({
@@ -317,7 +319,7 @@ export class FoxyApi {
 
     try {
       const estimatedGas = await stakingContract.methods
-        .stake(amountDesired.toString(), userAddress)
+        .stake(amountDesired, userAddress)
         .estimateGas({
           from: userAddress
         })
@@ -428,12 +430,10 @@ export class FoxyApi {
     const stakingContract = this.getStakingContract(contractAddress)
     const userChecksum = this.web3.utils.toChecksumAddress(userAddress)
 
-    const data: string = await stakingContract.methods
-      .stake(amountDesired.toString(), userAddress)
-      .encodeABI({
-        value: 0,
-        from: userChecksum
-      })
+    const data: string = await stakingContract.methods.stake(amountDesired, userAddress).encodeABI({
+      value: 0,
+      from: userChecksum
+    })
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const estimatedGas = estimatedGasBN.toString()
@@ -478,7 +478,7 @@ export class FoxyApi {
     if (isDelayed && !amountDesired.gt(0)) throw new Error('Must send valid amount')
 
     const data: string = isDelayed
-      ? stakingContract.methods.unstake(amountDesired.toString(), true).encodeABI({
+      ? stakingContract.methods.unstake(amountDesired, true).encodeABI({
           from: userAddress
         })
       : stakingContract.methods.instantUnstake(true).encodeABI({
@@ -609,11 +609,9 @@ export class FoxyApi {
 
     const liquidityReserveContract = this.getLiquidityReserveContract(contractAddress)
 
-    const data: string = liquidityReserveContract.methods
-      .addLiquidity(amountDesired.toString())
-      .encodeABI({
-        from: userAddress
-      })
+    const data: string = liquidityReserveContract.methods.addLiquidity(amountDesired).encodeABI({
+      from: userAddress
+    })
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const estimatedGas = estimatedGasBN.toString()
@@ -656,11 +654,9 @@ export class FoxyApi {
 
     const liquidityReserveContract = this.getLiquidityReserveContract(contractAddress)
 
-    const data: string = liquidityReserveContract.methods
-      .removeLiquidity(amountDesired.toString())
-      .encodeABI({
-        from: userAddress
-      })
+    const data: string = liquidityReserveContract.methods.removeLiquidity(amountDesired).encodeABI({
+      from: userAddress
+    })
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const estimatedGas = estimatedGasBN.toString()
@@ -807,5 +803,81 @@ export class FoxyApi {
       ...coolDownInfo,
       releaseTime
     }
+  }
+
+  async getRebaseHistory(input: BalanceInput) {
+    const { tokenContractAddress, userAddress } = input
+    this.verifyAddresses([tokenContractAddress])
+
+    const contract = new this.web3.eth.Contract(foxyAbi, tokenContractAddress)
+    const fromBlock = 14381454 // genesis rebase
+
+    const rebaseEvents = await (async () => {
+      try {
+        const events = (
+          await contract.getPastEvents('LogRebase', {
+            fromBlock,
+            toBlock: 'latest'
+          })
+        ).filter((rebase) => rebase.returnValues.rebase !== '0')
+        return events
+      } catch (e) {
+        console.error(`Failed to get rebase events ${e}`)
+        return undefined
+      }
+    })()
+
+    if (!rebaseEvents) return []
+
+    const events: RebaseEvent[] = rebaseEvents.map((rebaseEvent) => {
+      const {
+        blockNumber,
+        returnValues: { epoch }
+      } = rebaseEvent
+      return {
+        blockNumber,
+        epoch
+      }
+    })
+
+    const results = await Promise.allSettled(
+      events.map(async (event) => {
+        const balance = await (async () => {
+          try {
+            const postRebaseBalance = await contract.methods
+              .balanceOf(userAddress)
+              .call(null, event.blockNumber)
+            const preRebaseBalance = await contract.methods
+              .balanceOf(userAddress)
+              .call(null, event.blockNumber - 1)
+
+            return bnOrZero(postRebaseBalance).minus(preRebaseBalance)
+          } catch (e) {
+            console.error(`Failed to get balance of address ${e}`)
+            return bnOrZero(0)
+          }
+        })()
+
+        const timestamp = await (async () => {
+          try {
+            const block = await this.web3.eth.getBlock(event.blockNumber)
+            return bnOrZero(block.timestamp).toNumber()
+          } catch (e) {
+            console.error(`Failed to get timestamp of block ${e}`)
+            return 0
+          }
+        })()
+        return { balance, timestamp }
+      })
+    )
+
+    const containsAllFulfilled = results.every((result) => result.status === 'fulfilled')
+    const actualResults = results.reduce<RebaseHistory[]>((acc, cur) => {
+      if (cur.status === 'rejected') return acc
+      acc.push(cur.value)
+      return acc
+    }, [])
+
+    return containsAllFulfilled ? actualResults : []
   }
 }
