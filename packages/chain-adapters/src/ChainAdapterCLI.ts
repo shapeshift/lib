@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { BIP44Params, ChainTypes, UtxoAccountType } from '@shapeshiftoss/types'
 import dotenv from 'dotenv'
@@ -6,7 +8,7 @@ import { ChainAdapterManager } from './ChainAdapterManager'
 
 dotenv.config()
 
-const foxContractAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
+// const foxContractAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
 
 const getWallet = async (): Promise<NativeHDWallet> => {
   const nativeAdapterArgs: NativeAdapterArgs = {
@@ -188,7 +190,7 @@ const main = async () => {
 
     // send cosmos example
     try {
-      const value = '99000'
+      // const value = '99000'
 
       const feeData = await cosmosChainAdapter.getFeeData({ sendMax: false })
       const fee = 10 // Increas if taking too long
