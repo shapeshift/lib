@@ -54,12 +54,6 @@ const main = async (): Promise<void> => {
   const userAddress = await api.adapter.getAddress({ wallet })
   console.info('current user address ', userAddress)
 
-  const rebases = await api.getRebaseHistory({
-    tokenContractAddress: foxyContractAddress,
-    userAddress: '0x86c11fBfED5a45eb7f2bD64509928ff6355f1CA0'
-  })
-  console.info('rebases', rebases)
-
   const circulatingSupply = async () => {
     try {
       const supply = await api.tvl({ tokenContractAddress: foxyContractAddress })

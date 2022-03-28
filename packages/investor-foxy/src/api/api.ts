@@ -867,14 +867,20 @@ export class FoxyApi {
       events.map(async (event) => {
         const { preRebaseBalance, postRebaseBalance } = await (async () => {
           try {
-            // check transfer events to see if a user triggered a rebase through unstake
-            const transferInfo = transferEvents?.filter(
+            // check transfer events to see if a user triggered a rebase through unstake or stake
+            const unstakedTransferInfo = transferEvents?.filter(
               (e) =>
                 e.blockNumber === event.blockNumber &&
                 e.returnValues.from.toLowerCase() === userAddress
             )
-            console.log('transferInfo', transferInfo)
-            const transferAmount = transferInfo?.[0]?.returnValues?.value ?? 0
+            const unstakedTransferAmount = unstakedTransferInfo?.[0]?.returnValues?.value ?? 0
+            const stakedTransferInfo = transferEvents?.filter(
+              (e) =>
+                e.blockNumber === event.blockNumber &&
+                e.returnValues.to.toLowerCase() === userAddress
+            )
+            const stakedTransferAmount = stakedTransferInfo?.[0]?.returnValues?.value ?? 0
+
             const postRebaseBalanceResult = await foxyContract.methods
               .balanceOf(userAddress)
               .call(null, event.blockNumber)
@@ -884,7 +890,8 @@ export class FoxyApi {
 
             // unstake events can trigger rebases, if they do, adjust the amount to not include that unstake's transfer amount
             const preRebaseBalanceResult = bnOrZero(unadjustedPreRebaseBalance)
-              .minus(transferAmount)
+              .minus(unstakedTransferAmount)
+              .plus(stakedTransferAmount)
               .toString()
 
             return {
