@@ -24,10 +24,9 @@ export const findByFiatSymbol = async ({
     const { data } = await axios.get<ExchangeRateHostRate>(
       `${baseUrl}/latest?base=${baseCurrency}&symbols=${symbol}`
     )
-    const result = data as ExchangeRateHostRate
     // we only need the price key in the `web`
     return {
-      price: result.rates[symbol].toString(),
+      price: data.rates[symbol].toString(),
       marketCap: '0',
       changePercent24Hr: 0,
       volume: '0'
@@ -72,30 +71,26 @@ export const findPriceHistoryByFiatSymbol = async ({
     const to = end.startOf('day').format('YYYY-MM-DD')
     const url = `${baseUrl}/timeseries?base=${baseCurrency}&symbols=${symbol}&start_date=${from}&end_date=${to}`
 
-    const { data } = await axios.get(url)
+    const { data } = await axios.get<ExchangeRateHostHistoryData>(url)
 
-    const result = data as ExchangeRateHostHistoryData
-    return Object.entries(result.rates).reduce<HistoryData[]>(
-      (acc, [formattedDate, ratesObject]) => {
-        const date = dayjs(formattedDate, 'YYYY-MM-DD').startOf('day').valueOf()
-        if (!isValidDate(date)) {
-          console.error('ExchangeRateHost fiat history data has invalid date')
-          return acc
-        }
-        const price = bnOrZero(ratesObject[symbol])
-        if (price.isNaN()) {
-          console.error('ExchangeRateHost fiat history data has invalid price')
-          return acc
-        }
-        // add to beginning of the array because api results are sorted incrementally
-        acc.unshift({
-          date,
-          price: price.toNumber()
-        })
+    return Object.entries(data.rates).reduce<HistoryData[]>((acc, [formattedDate, ratesObject]) => {
+      const date = dayjs(formattedDate, 'YYYY-MM-DD').startOf('day').valueOf()
+      if (!isValidDate(date)) {
+        console.error('ExchangeRateHost fiat history data has invalid date')
         return acc
-      },
-      []
-    )
+      }
+      const price = bnOrZero(ratesObject[symbol])
+      if (price.isNaN()) {
+        console.error('ExchangeRateHost fiat history data has invalid price')
+        return acc
+      }
+      // add to beginning of the array because api results are sorted incrementally
+      acc.unshift({
+        date,
+        price: price.toNumber()
+      })
+      return acc
+    }, [])
   } catch (e) {
     console.warn(e)
     throw new Error('ExchangeRateHost(findPriceHistoryByFiatSymbol): error fetching price history')
