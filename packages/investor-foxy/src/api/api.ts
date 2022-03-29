@@ -592,10 +592,15 @@ export class FoxyApi {
     const epochExpired = epoch.number >= coolDownInfo.endEpoch
     const coolDownValid =
       !bnOrZero(coolDownInfo.endEpoch).eq(0) && !bnOrZero(coolDownInfo.amount).eq(0)
+
+    const pastTokeCycleIndex = bnOrZero(requestedWithdrawals.minCycle).lte(currentCycleIndex)
+    const stakingTokenAvailableWithTokemak = bnOrZero(requestedWithdrawals.amount).plus(
+      withdrawalAmount
+    )
+    const stakingTokenAvailable = bnOrZero(withdrawalAmount).gte(coolDownInfo.amount)
     const validCycleAndAmount =
-      (bnOrZero(requestedWithdrawals.minCycle).lte(currentCycleIndex) &&
-        bnOrZero(requestedWithdrawals.amount).plus(withdrawalAmount).gte(coolDownInfo.amount)) ||
-      bnOrZero(withdrawalAmount).gte(coolDownInfo.amount)
+      (pastTokeCycleIndex && stakingTokenAvailableWithTokemak.gte(coolDownInfo.amount)) ||
+      stakingTokenAvailable
 
     return epochExpired && coolDownValid && validCycleAndAmount
   }
