@@ -1,4 +1,4 @@
-import { HistoryTimeframe, SupportedFiatCurrencies } from '@shapeshiftoss/types'
+import { FiatMarketDataArgs, FiatPriceHistoryArgs, HistoryTimeframe } from '@shapeshiftoss/types'
 import axios from 'axios'
 import dayjs from 'dayjs'
 
@@ -11,8 +11,8 @@ const mockedAxios = axios as jest.Mocked<typeof axios>
 
 describe('ExchangeRateHostService', () => {
   describe('findByFiatSymbol', () => {
-    const args = {
-      symbol: SupportedFiatCurrencies.EUR
+    const args: FiatMarketDataArgs = {
+      symbol: 'EUR'
     }
 
     const eurRate: ExchangeRateHostRate = {
@@ -23,9 +23,9 @@ describe('ExchangeRateHostService', () => {
 
     const mockERHFindByFiatSymbol = {
       changePercent24Hr: 0,
-      marketCap: '',
+      marketCap: '0',
       price: '0.91',
-      volume: ''
+      volume: '0'
     }
 
     it('should return fiat market data for EUR', async () => {
@@ -43,8 +43,8 @@ describe('ExchangeRateHostService', () => {
   })
 
   describe('findPriceHistoryByFiatSymbol', () => {
-    const args = {
-      symbol: SupportedFiatCurrencies.EUR,
+    const args: FiatPriceHistoryArgs = {
+      symbol: 'EUR',
       timeframe: HistoryTimeframe.WEEK
     }
 

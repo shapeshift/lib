@@ -41,28 +41,27 @@ export type MarketCapResult = {
   [k: string]: MarketData
 }
 
-export enum SupportedFiatCurrencies {
-  CNY = 'CNY',
-  USD = 'USD',
-  EUR = 'EUR',
-  JPY = 'JPY',
-  GBP = 'GBP',
-  KRW = 'KRW',
-  INR = 'INR',
-  CAD = 'CAD',
-  HKD = 'HKD',
-  AUD = 'AUD',
-  TWD = 'TWD',
-  BRL = 'BRL',
-  CHF = 'CHF',
-  THB = 'THB',
-  MXN = 'MXN',
-  RUB = 'RUB',
-  SAR = 'SAR',
-  SGD = 'SGD',
-  ILS = 'ILS',
-  IDR = 'IDR'
-}
+export type SupportedFiatCurrencies =
+  | 'CNY'
+  | 'USD'
+  | 'EUR'
+  | 'JPY'
+  | 'GBP'
+  | 'KRW'
+  | 'INR'
+  | 'CAD'
+  | 'HKD'
+  | 'AUD'
+  | 'TWD'
+  | 'BRL'
+  | 'CHF'
+  | 'THB'
+  | 'MXN'
+  | 'RUB'
+  | 'SAR'
+  | 'SGD'
+  | 'ILS'
+  | 'IDR'
 
 export type FiatMarketDataArgs = {
   symbol: SupportedFiatCurrencies

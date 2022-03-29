@@ -28,9 +28,9 @@ export const findByFiatSymbol = async ({
     // we only need the price key in the `web`
     return {
       price: result.rates[symbol].toString(),
-      marketCap: '',
+      marketCap: '0',
       changePercent24Hr: 0,
-      volume: ''
+      volume: '0'
     }
   } catch (e) {
     console.warn(e)
