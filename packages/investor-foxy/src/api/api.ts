@@ -719,7 +719,9 @@ export class FoxyApi {
     const blockNumber = await this.web3.eth.getBlockNumber()
     const timestamp = (await this.web3.eth.getBlock(blockNumber)).timestamp
 
-    const isTimeToRequest = timestamp + timeLeftToRequestWithdrawal >= nextCycleStart
+    const isTimeToRequest = bnOrZero(timestamp)
+      .plus(timeLeftToRequestWithdrawal)
+      .gte(nextCycleStart)
     const isCorrectIndex = bnOrZero(currentCycleIndex).gt(lastTokeCycleIndex)
     const hasAmount = bnOrZero(requestWithdrawalAmount).gt(0)
 
