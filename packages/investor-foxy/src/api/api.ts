@@ -1027,8 +1027,9 @@ export class FoxyApi {
 
   async claimFromTokemak(input: TxInput): Promise<string> {
     const { contractAddress, wallet, userAddress, accountNumber = 0, dryRun = false } = input
-    this.verifyAddresses([contractAddress])
     if (!wallet) throw new Error('Missing inputs')
+
+    this.verifyAddresses([contractAddress])
 
     const { latestCycleIndex, claimAmount, v, r, s } = await this.getTokeRewardAmount(input)
 
