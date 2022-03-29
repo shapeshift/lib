@@ -2,6 +2,7 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { ChainReference } from '@shapeshiftoss/caip/dist/caip2/caip2'
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { ChainTypes } from '@shapeshiftoss/types'
+import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
 import { toLower } from 'lodash'
 import Web3 from 'web3'
@@ -41,6 +42,7 @@ import {
   SignAndBroadcastTx,
   StakingContract,
   StakingContractWithUser,
+  TokeClaimIpfs,
   TokenAddressInput,
   TxInput,
   TxInputWithoutAmount,
@@ -1000,10 +1002,12 @@ export class FoxyApi {
 
     try {
       const { latestClaimable } = cycleHashes
-      const response = await fetch(
+      const response = await axios.get<TokeClaimIpfs>(
         `${TOKE_IPFS_URL}/${latestClaimable}/${contractAddress.toLowerCase()}.json`
       )
-      const { payload, signature } = await response.json()
+      const {
+        data: { payload, signature }
+      } = response
 
       const claimAmount = bnOrZero(payload.amount)
       const v = signature.v
@@ -1024,10 +1028,9 @@ export class FoxyApi {
   async claimFromTokemak(input: TxInput): Promise<string> {
     const { contractAddress, wallet, userAddress, accountNumber = 0, dryRun = false } = input
     this.verifyAddresses([contractAddress])
+    if (!wallet) throw new Error('Missing inputs')
 
     const { latestCycleIndex, claimAmount, v, r, s } = await this.getTokeRewardAmount(input)
-
-    if (!wallet) throw new Error('Missing inputs')
 
     if (!bnOrZero(claimAmount).gt(0)) {
       throw new Error('Must claim valid amount')
@@ -1040,7 +1043,7 @@ export class FoxyApi {
       amount: claimAmount
     }
 
-    const estimatedGasBN = (async () => {
+    const estimatedGasBN = await (async () => {
       try {
         return this.estimateClaimFromTokemakGas({
           ...input,

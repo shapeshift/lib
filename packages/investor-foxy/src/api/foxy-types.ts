@@ -113,12 +113,20 @@ export type SignAndBroadcastTx = {
   dryRun: boolean
 }
 
-export type GetTokeRewardAmount = {
-  latestCycleIndex: string
-  claimAmount: BigNumber
+export type Signature = {
   v: number
   r: string
   s: string
+}
+
+export type GetTokeRewardAmount = Signature & {
+  latestCycleIndex: string
+  claimAmount: BigNumber
+}
+
+export type TokeClaimIpfs = {
+  payload: { amount: string }
+  signature: Signature
 }
 
 export type Recipient = {
