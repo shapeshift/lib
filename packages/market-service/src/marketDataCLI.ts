@@ -7,7 +7,7 @@ import { HistoryTimeframe } from '@shapeshiftoss/types'
 // import { YearnVaultMarketCapService } from './yearn/yearn-vaults'
 // import { YearnTokenMarketCapService } from './yearn/yearn-tokens'
 // import { OsmosisMarketService } from './osmosis/osmosis'
-import { FoxyMarketService, FOXY_CAIP19 } from './foxy/foxy'
+import { FOXY_CAIP19, FoxyMarketService } from './foxy/foxy'
 
 const main = async (): Promise<void> => {
   // const caip19 = 'eip155:1/erc20:0xa258c4606ca8206d8aa700ce2143d7db854d168c' // WETH Vault
