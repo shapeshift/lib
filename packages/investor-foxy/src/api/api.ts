@@ -295,7 +295,7 @@ export class FoxyApi {
     const stakingContract = this.getStakingContract(contractAddress)
 
     const isDelayed = type === WithdrawType.DELAYED && amountDesired
-    if (isDelayed && !amountDesired?.gt(0)) throw new Error('Must send valid amount')
+    if (isDelayed && !amountDesired.gt(0)) throw new Error('Must send valid amount')
 
     try {
       const estimatedGas = isDelayed
@@ -476,7 +476,7 @@ export class FoxyApi {
     const stakingContract = this.getStakingContract(contractAddress)
 
     const isDelayed = type === WithdrawType.DELAYED && amountDesired
-    if (isDelayed && !amountDesired?.gt(0)) throw new Error('Must send valid amount')
+    if (isDelayed && !amountDesired.gt(0)) throw new Error('Must send valid amount')
 
     const data: string = isDelayed
       ? stakingContract.methods.unstake(amountDesired, true).encodeABI({
