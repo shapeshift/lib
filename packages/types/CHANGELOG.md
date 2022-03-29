@@ -1,3 +1,17 @@
+# [@shapeshiftoss/types-v2.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v2.6.0...@shapeshiftoss/types-v2.7.0) (2022-03-29)
+
+
+### Features
+
+* move withdraw type to types package ([#498](https://github.com/shapeshift/lib/issues/498)) ([6a7e7d1](https://github.com/shapeshift/lib/commit/6a7e7d17a025691e37769f5807fa144c8d872b1e))
+
+# [@shapeshiftoss/types-v2.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v2.5.0...@shapeshiftoss/types-v2.6.0) (2022-03-28)
+
+
+### Features
+
+* delegate, undelegate and withdraw transactions ([#499](https://github.com/shapeshift/lib/issues/499)) ([239c216](https://github.com/shapeshift/lib/commit/239c2169f1d09e155abc941dd03bc76f6ce26861))
+
 # [@shapeshiftoss/types-v2.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v2.4.0...@shapeshiftoss/types-v2.5.0) (2022-03-28)
 
 

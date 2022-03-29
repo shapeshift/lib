@@ -1,7 +1,8 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
+import { AssetNamespace, caip19 } from '@shapeshiftoss/caip'
 import { ChainReference } from '@shapeshiftoss/caip/dist/caip2/caip2'
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
-import { ChainTypes } from '@shapeshiftoss/types'
+import { ChainTypes, NetworkTypes, WithdrawType } from '@shapeshiftoss/types'
 import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
 import { toLower } from 'lodash'
@@ -21,8 +22,7 @@ import {
   MAX_ALLOWANCE,
   tokeManagerAddress,
   tokePoolAddress,
-  tokeRewardHashAddress,
-  WithdrawType
+  tokeRewardHashAddress
 } from '../constants'
 import { bnOrZero, buildTxToSign } from '../utils'
 import {
@@ -48,9 +48,12 @@ import {
   TxInputWithoutAmount,
   TxInputWithoutAmountAndWallet,
   TxReceipt,
+  WithdrawEstimateGasInput,
   WithdrawInfo,
   WithdrawInput
 } from './foxy-types'
+
+export * from './foxy-types'
 
 export type ConstructorArgs = {
   adapter: ChainAdapter<ChainTypes>
@@ -307,7 +310,7 @@ export class FoxyApi {
     }
   }
 
-  async estimateWithdrawGas(input: WithdrawInput): Promise<BigNumber> {
+  async estimateWithdrawGas(input: WithdrawEstimateGasInput): Promise<BigNumber> {
     const { amountDesired, userAddress, contractAddress, type } = input
     this.verifyAddresses([userAddress, contractAddress])
 
@@ -1085,13 +1088,13 @@ export class FoxyApi {
     const { tokenContractAddress, userAddress } = input
     this.verifyAddresses([tokenContractAddress])
 
-    const contract = new this.web3.eth.Contract(foxyAbi, tokenContractAddress)
+    const foxyContract = new this.web3.eth.Contract(foxyAbi, tokenContractAddress)
     const fromBlock = 14381454 // genesis rebase
 
     const rebaseEvents = await (async () => {
       try {
         const events = (
-          await contract.getPastEvents('LogRebase', {
+          await foxyContract.getPastEvents('LogRebase', {
             fromBlock,
             toBlock: 'latest'
           })
@@ -1105,6 +1108,19 @@ export class FoxyApi {
 
     if (!rebaseEvents) return []
 
+    const transferEvents = await (async () => {
+      try {
+        const events = await foxyContract.getPastEvents('Transfer', {
+          fromBlock,
+          toBlock: 'latest'
+        })
+        return events
+      } catch (e) {
+        console.error(`Failed to get transfer events ${e}`)
+        return undefined
+      }
+    })()
+
     const events: RebaseEvent[] = rebaseEvents.map((rebaseEvent) => {
       const {
         blockNumber,
@@ -1116,25 +1132,58 @@ export class FoxyApi {
       }
     })
 
+    const chain = ChainTypes.Ethereum
+    const network = NetworkTypes.MAINNET
+    const assetNamespace = AssetNamespace.ERC20
+    const assetReference = tokenContractAddress
+    // foxy assetId
+    const assetId = caip19.toCAIP19({ chain, network, assetNamespace, assetReference })
+
     const results = await Promise.allSettled(
       events.map(async (event) => {
-        const balance = await (async () => {
+        const { preRebaseBalance, postRebaseBalance } = await (async () => {
           try {
-            const postRebaseBalance = await contract.methods
+            // check transfer events to see if a user triggered a rebase through unstake or stake
+            const unstakedTransferInfo = transferEvents?.filter(
+              (e) =>
+                e.blockNumber === event.blockNumber &&
+                e.returnValues.from.toLowerCase() === userAddress
+            )
+            const unstakedTransferAmount = unstakedTransferInfo?.[0]?.returnValues?.value ?? 0
+            const stakedTransferInfo = transferEvents?.filter(
+              (e) =>
+                e.blockNumber === event.blockNumber &&
+                e.returnValues.to.toLowerCase() === userAddress
+            )
+            const stakedTransferAmount = stakedTransferInfo?.[0]?.returnValues?.value ?? 0
+
+            const postRebaseBalanceResult = await foxyContract.methods
               .balanceOf(userAddress)
               .call(null, event.blockNumber)
-            const preRebaseBalance = await contract.methods
+            const unadjustedPreRebaseBalance = await foxyContract.methods
               .balanceOf(userAddress)
               .call(null, event.blockNumber - 1)
 
-            return bnOrZero(postRebaseBalance).minus(preRebaseBalance)
+            // unstake events can trigger rebases, if they do, adjust the amount to not include that unstake's transfer amount
+            const preRebaseBalanceResult = bnOrZero(unadjustedPreRebaseBalance)
+              .minus(unstakedTransferAmount)
+              .plus(stakedTransferAmount)
+              .toString()
+
+            return {
+              preRebaseBalance: preRebaseBalanceResult,
+              postRebaseBalance: postRebaseBalanceResult
+            }
           } catch (e) {
             console.error(`Failed to get balance of address ${e}`)
-            return bnOrZero(0)
+            return {
+              preRebaseBalance: bnOrZero(0).toString(),
+              postRebaseBalance: bnOrZero(0).toString()
+            }
           }
         })()
 
-        const timestamp = await (async () => {
+        const blockTime = await (async () => {
           try {
             const block = await this.web3.eth.getBlock(event.blockNumber)
             return bnOrZero(block.timestamp).toNumber()
@@ -1143,14 +1192,27 @@ export class FoxyApi {
             return 0
           }
         })()
-        return { balance, timestamp }
+
+        return { assetId, preRebaseBalance, postRebaseBalance, blockTime }
       })
     )
 
     const containsAllFulfilled = results.every((result) => result.status === 'fulfilled')
     const actualResults = results.reduce<RebaseHistory[]>((acc, cur) => {
-      if (cur.status === 'rejected') return acc
-      acc.push(cur.value)
+      if (cur.status === 'rejected') {
+        console.error('getFoxyRebaseHistory: balanceOf call failed - charts will be wrong')
+        return acc
+      }
+      if (cur.value.preRebaseBalance === '0') return acc // don't return rebase history with 0 balance diff
+
+      const balanceDiff = bnOrZero(cur.value.postRebaseBalance)
+        .minus(cur.value.preRebaseBalance)
+        .toString()
+
+      acc.push({
+        balanceDiff,
+        ...cur.value
+      })
       return acc
     }, [])
 

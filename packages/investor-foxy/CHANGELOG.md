@@ -1,3 +1,19 @@
+# [@shapeshiftoss/investor-foxy-v1.2.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v1.2.0...@shapeshiftoss/investor-foxy-v1.2.1) (2022-03-29)
+
+# [@shapeshiftoss/investor-foxy-v1.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v1.1.1...@shapeshiftoss/investor-foxy-v1.2.0) (2022-03-29)
+
+
+### Features
+
+* move withdraw type to types package ([#498](https://github.com/shapeshift/lib/issues/498)) ([6a7e7d1](https://github.com/shapeshift/lib/commit/6a7e7d17a025691e37769f5807fa144c8d872b1e))
+
+# [@shapeshiftoss/investor-foxy-v1.1.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v1.1.0...@shapeshiftoss/investor-foxy-v1.1.1) (2022-03-28)
+
+
+### Bug Fixes
+
+* foxy rebase logic and types ([#497](https://github.com/shapeshift/lib/issues/497)) ([d680050](https://github.com/shapeshift/lib/commit/d680050525eeaff0bec1c54eca5f1e506fae5e7b))
+
 # [@shapeshiftoss/investor-foxy-v1.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v1.0.3...@shapeshiftoss/investor-foxy-v1.1.0) (2022-03-25)
 
 

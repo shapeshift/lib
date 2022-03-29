@@ -1,9 +1,8 @@
+import { CAIP19 } from '@shapeshiftoss/caip/src/caip19/caip19'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params } from '@shapeshiftoss/types'
+import { BIP44Params, WithdrawType } from '@shapeshiftoss/types'
 import { BigNumber } from 'bignumber.js'
 import { Contract } from 'web3-eth-contract'
-
-import { WithdrawType } from '../constants'
 
 export type FoxyAddressesType = {
   staking: string
@@ -56,6 +55,8 @@ export type WithdrawInput = Omit<TxInput, 'amountDesired'> & {
   type: WithdrawType
   amountDesired?: BigNumber
 }
+
+export type WithdrawEstimateGasInput = Omit<WithdrawInput, 'wallet'>
 
 export type FoxyOpportunityInputData = {
   tvl: BigNumber
@@ -149,8 +150,9 @@ export type RebaseEvent = {
 }
 
 export type RebaseHistory = {
-  balance: BigNumber
-  timestamp: number
+  assetId: CAIP19
+  balanceDiff: string
+  blockTime: number
 }
 
 export type StakingContract = {
