@@ -117,14 +117,17 @@ export class FoxyApi {
   private async signAndBroadcastTx(input: SignAndBroadcastTx): Promise<string> {
     const { payload, wallet, dryRun } = input
     const txToSign = buildTxToSign(payload)
+    console.log('txToSign', txToSign)
     if (wallet.supportsOfflineSigning()) {
       const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
       if (dryRun) return signedTx
+
       try {
         if (this.providerUrl.includes('localhost') || this.providerUrl.includes('127.0.0.1')) {
           const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
           return sendSignedTx?.blockHash
         }
+
         return this.adapter.broadcastTransaction(signedTx)
       } catch (e) {
         throw new Error(`Failed to broadcast: ${e}`)
@@ -171,6 +174,7 @@ export class FoxyApi {
 
   private async getGasPriceAndNonce(userAddress: string) {
     let nonce: number
+    console.log('user', userAddress)
     try {
       nonce = await this.web3.eth.getTransactionCount(userAddress)
     } catch (e) {
@@ -235,6 +239,23 @@ export class FoxyApi {
   async getTxReceipt({ txid }: TxReceipt): Promise<TransactionReceipt> {
     if (!txid) throw new Error('Must pass txid')
     return this.web3.eth.getTransactionReceipt(txid)
+  }
+
+  async estimateTransferTokeGas(input: ClaimWithdrawal): Promise<BigNumber> {
+    const { claimAddress, userAddress, contractAddress } = input
+    const addressToClaim = claimAddress ?? userAddress
+    this.verifyAddresses([addressToClaim, userAddress, contractAddress])
+
+    const stakingContract = this.getStakingContract(contractAddress)
+
+    try {
+      const estimatedGas = await stakingContract.methods.transferToke(addressToClaim).estimateGas({
+        from: userAddress
+      })
+      return bnOrZero(estimatedGas)
+    } catch (e) {
+      throw new Error(`Failed to get gas ${e}`)
+    }
   }
 
   async estimateClaimWithdrawGas(input: ClaimWithdrawal): Promise<BigNumber> {
@@ -343,6 +364,7 @@ export class FoxyApi {
         .estimateGas({
           from: userAddress
         })
+
       return bnOrZero(estimatedGas)
     } catch (e) {
       throw new Error(`Failed to get gas ${e}`)
@@ -987,7 +1009,7 @@ export class FoxyApi {
     }
   }
 
-  async getTokeRewardAmount(input: ContractAddressInput): Promise<GetTokeRewardAmount> {
+  async getTokeRewardAmount(input: ContractAddressInput): Promise<any> {
     const { contractAddress } = input
     const rewardHashContract = new this.web3.eth.Contract(tokeRewardHashAbi, tokeRewardHashAddress)
     const latestCycleIndex = await (async () => {
@@ -1013,40 +1035,33 @@ export class FoxyApi {
       const {
         data: { payload, signature }
       } = response
-
       const claimAmount = bnOrZero(payload.amount)
+
       const v = signature.v
       const r = signature.r
       const s = signature.s
       return {
-        latestCycleIndex,
         claimAmount,
         v,
         r,
-        s
+        s,
+        recipient: payload
       }
     } catch (e) {
       throw new Error(`Failed to get information from Tokemak ipfs ${e}`)
     }
   }
 
-  async claimFromTokemak(input: TxInput): Promise<string> {
+  async claimFromTokemak(input: TxInputWithoutAmount): Promise<string> {
     const { contractAddress, wallet, userAddress, accountNumber = 0, dryRun = false } = input
     if (!wallet) throw new Error('Missing inputs')
 
     this.verifyAddresses([contractAddress])
 
-    const { latestCycleIndex, claimAmount, v, r, s } = await this.getTokeRewardAmount(input)
+    const { claimAmount, v, r, s, recipient } = await this.getTokeRewardAmount(input)
 
     if (!bnOrZero(claimAmount).gt(0)) {
-      throw new Error('Must claim valid amount')
-    }
-
-    const recipient = {
-      chainId: 1,
-      cycle: latestCycleIndex,
-      wallet: contractAddress,
-      amount: claimAmount
+      throw new Error('No rewards to claim')
     }
 
     const estimatedGasBN = await (async () => {
@@ -1069,6 +1084,50 @@ export class FoxyApi {
       from: userAddress
     })
 
+    const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
+    const estimatedGas = estimatedGasBN.toString()
+    const bip44Params = this.adapter.buildBIP44Params({ accountNumber })
+    const chainId = Number(this.network)
+    const payload = {
+      bip44Params,
+      chainId,
+      data,
+      estimatedGas,
+      gasPrice,
+      nonce,
+      to: contractAddress,
+      value: '0'
+    }
+    return this.signAndBroadcastTx({ payload, wallet, dryRun })
+  }
+
+  async transferToke(input: ClaimWithdrawal): Promise<string> {
+    const {
+      claimAddress,
+      contractAddress,
+      wallet,
+      userAddress,
+      accountNumber = 0,
+      dryRun = false
+    } = input
+    if (!wallet) throw new Error('Missing inputs')
+    this.verifyAddresses([contractAddress])
+
+    const addressToClaim = claimAddress ?? userAddress
+
+    const estimatedGasBN = await (async () => {
+      try {
+        return this.estimateTransferTokeGas(input)
+      } catch (e) {
+        throw new Error(`Estimate Gas Error: ${e}`)
+      }
+    })()
+
+    const stakingContract = this.getStakingContract(contractAddress)
+
+    const data: string = stakingContract.methods.transferToke(addressToClaim).encodeABI({
+      from: userAddress
+    })
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const estimatedGas = estimatedGasBN.toString()
     const bip44Params = this.adapter.buildBIP44Params({ accountNumber })

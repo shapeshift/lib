@@ -134,7 +134,7 @@ export type Recipient = {
   chainId: number
   cycle: string
   wallet: string // address that's claiming.  Weird Tokemak naming convention
-  amount: BigNumber
+  amount: string
 }
 
 export type EstimateClaimFromTokemak = TxInputWithoutAmountAndWallet & {
