@@ -117,17 +117,14 @@ export class FoxyApi {
   private async signAndBroadcastTx(input: SignAndBroadcastTx): Promise<string> {
     const { payload, wallet, dryRun } = input
     const txToSign = buildTxToSign(payload)
-    console.log('txToSign', txToSign)
     if (wallet.supportsOfflineSigning()) {
       const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
       if (dryRun) return signedTx
-
       try {
         if (this.providerUrl.includes('localhost') || this.providerUrl.includes('127.0.0.1')) {
           const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
           return sendSignedTx?.blockHash
         }
-
         return this.adapter.broadcastTransaction(signedTx)
       } catch (e) {
         throw new Error(`Failed to broadcast: ${e}`)
@@ -174,7 +171,6 @@ export class FoxyApi {
 
   private async getGasPriceAndNonce(userAddress: string) {
     let nonce: number
-    console.log('user', userAddress)
     try {
       nonce = await this.web3.eth.getTransactionCount(userAddress)
     } catch (e) {
