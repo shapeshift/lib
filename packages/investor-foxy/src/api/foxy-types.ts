@@ -121,18 +121,18 @@ export type Signature = {
 }
 
 export type GetTokeRewardAmount = Signature & {
-  latestCycleIndex: string
+  recipient: Recipient
   claimAmount: BigNumber
 }
 
 export type TokeClaimIpfs = {
-  payload: { amount: string }
+  payload: { amount: string; wallet: string; cycle: number; chainId: number }
   signature: Signature
 }
 
 export type Recipient = {
   chainId: number
-  cycle: string
+  cycle: number
   wallet: string // address that's claiming.  Weird Tokemak naming convention
   amount: string
 }

@@ -1005,7 +1005,7 @@ export class FoxyApi {
     }
   }
 
-  async getTokeRewardAmount(input: ContractAddressInput): Promise<any> {
+  async getTokeRewardAmount(input: ContractAddressInput): Promise<GetTokeRewardAmount> {
     const { contractAddress } = input
     const rewardHashContract = new this.web3.eth.Contract(tokeRewardHashAbi, tokeRewardHashAddress)
     const latestCycleIndex = await (async () => {
