@@ -24,7 +24,7 @@ import {
   tokePoolAddress,
   tokeRewardHashAddress
 } from '../constants'
-import { bnOrZero, buildTxToSign, normalizeAmount } from '../utils'
+import { bnOrZero, buildTxToSign } from '../utils'
 import {
   AllowanceInput,
   ApproveInput,
@@ -112,6 +112,15 @@ export class FoxyApi {
     this.network = network
     this.providerUrl = providerUrl
     this.foxyAddresses = foxyAddresses
+  }
+
+  /**
+   * Very large amounts like those found in ERC20s with a precision of 18 get converted
+   * to exponential notation ('1.6e+21') in javascript.
+   * @param amount
+   */
+  private normalizeAmount(amount: BigNumber) {
+    return this.web3.utils.toBN(amount.toFixed())
   }
 
   private async signAndBroadcastTx(input: SignAndBroadcastTx): Promise<string> {
@@ -281,7 +290,7 @@ export class FoxyApi {
 
     try {
       const estimatedGas = await liquidityReserveContract.methods
-        .addLiquidity(amountDesired)
+        .addLiquidity(this.normalizeAmount(amountDesired))
         .estimateGas({
           from: userAddress
         })
@@ -300,7 +309,7 @@ export class FoxyApi {
 
     try {
       const estimatedGas = await liquidityReserveContract.methods
-        .removeLiquidity(amountDesired)
+        .removeLiquidity(this.normalizeAmount(amountDesired))
         .estimateGas({
           from: userAddress
         })
@@ -321,9 +330,11 @@ export class FoxyApi {
 
     try {
       const estimatedGas = isDelayed
-        ? await stakingContract.methods.unstake(amountDesired, true).estimateGas({
-            from: userAddress
-          })
+        ? await stakingContract.methods
+            .unstake(this.normalizeAmount(amountDesired), true)
+            .estimateGas({
+              from: userAddress
+            })
         : await stakingContract.methods.instantUnstake(true).estimateGas({
             from: userAddress
           })
@@ -376,7 +387,7 @@ export class FoxyApi {
 
     try {
       const estimatedGas = await stakingContract.methods
-        .stake(this.web3.utils.toBN(amountDesired.toFixed()), userAddress)
+        .stake(this.normalizeAmount(amountDesired), userAddress)
         .estimateGas({
           from: userAddress
         })
@@ -470,7 +481,7 @@ export class FoxyApi {
     const userChecksum = this.web3.utils.toChecksumAddress(userAddress)
 
     const data: string = await stakingContract.methods
-      .stake(this.web3.utils.toBN(amountDesired.toFixed()), userAddress)
+      .stake(this.normalizeAmount(amountDesired), userAddress)
       .encodeABI({
         value: 0,
         from: userChecksum
@@ -519,7 +530,7 @@ export class FoxyApi {
     if (isDelayed && !amountDesired.gt(0)) throw new Error('Must send valid amount')
 
     const data: string = isDelayed
-      ? stakingContract.methods.unstake(amountDesired, true).encodeABI({
+      ? stakingContract.methods.unstake(this.normalizeAmount(amountDesired), true).encodeABI({
           from: userAddress
         })
       : stakingContract.methods.instantUnstake(true).encodeABI({
@@ -793,9 +804,11 @@ export class FoxyApi {
 
     const liquidityReserveContract = this.getLiquidityReserveContract(contractAddress)
 
-    const data: string = liquidityReserveContract.methods.addLiquidity(amountDesired).encodeABI({
-      from: userAddress
-    })
+    const data: string = liquidityReserveContract.methods
+      .addLiquidity(this.normalizeAmount(amountDesired))
+      .encodeABI({
+        from: userAddress
+      })
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const estimatedGas = estimatedGasBN.toString()
@@ -838,9 +851,11 @@ export class FoxyApi {
 
     const liquidityReserveContract = this.getLiquidityReserveContract(contractAddress)
 
-    const data: string = liquidityReserveContract.methods.removeLiquidity(amountDesired).encodeABI({
-      from: userAddress
-    })
+    const data: string = liquidityReserveContract.methods
+      .removeLiquidity(this.normalizeAmount(amountDesired))
+      .encodeABI({
+        from: userAddress
+      })
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const estimatedGas = estimatedGasBN.toString()
