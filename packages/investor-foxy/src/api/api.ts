@@ -24,7 +24,7 @@ import {
   tokePoolAddress,
   tokeRewardHashAddress
 } from '../constants'
-import { bnOrZero, buildTxToSign } from '../utils'
+import { bnOrZero, buildTxToSign, normalizeAmount } from '../utils'
 import {
   AllowanceInput,
   ApproveInput,
@@ -376,7 +376,7 @@ export class FoxyApi {
 
     try {
       const estimatedGas = await stakingContract.methods
-        .stake(amountDesired, userAddress)
+        .stake(this.web3.utils.toBN(amountDesired.toFixed()), userAddress)
         .estimateGas({
           from: userAddress
         })
@@ -469,10 +469,12 @@ export class FoxyApi {
     const stakingContract = this.getStakingContract(contractAddress)
     const userChecksum = this.web3.utils.toChecksumAddress(userAddress)
 
-    const data: string = await stakingContract.methods.stake(amountDesired, userAddress).encodeABI({
-      value: 0,
-      from: userChecksum
-    })
+    const data: string = await stakingContract.methods
+      .stake(this.web3.utils.toBN(amountDesired.toFixed()), userAddress)
+      .encodeABI({
+        value: 0,
+        from: userChecksum
+      })
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const estimatedGas = estimatedGasBN.toString()
