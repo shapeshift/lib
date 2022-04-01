@@ -1,5 +1,4 @@
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 
 export type BN = BigNumber
 
@@ -9,5 +8,3 @@ export const bnOrZero = (n: BigNumber.Value | null | undefined): BN => {
   const value = bn(n || 0)
   return value.isNaN() ? bn(0) : value
 }
-
-
