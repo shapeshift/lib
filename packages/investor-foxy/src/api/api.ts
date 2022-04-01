@@ -874,8 +874,7 @@ export class FoxyApi {
     return this.signAndBroadcastTx({ payload, wallet, dryRun })
   }
 
-  // returns time in seconds until withdraw request is claimable
-  // dependent on rebases happening when epoch.expiry epoch is reached
+  // returns time when the users withdraw request is claimable
   async getTimeUntilClaimable(input: TxInputWithoutAmountAndWallet): Promise<string> {
     const { contractAddress, userAddress } = input
     this.verifyAddresses([userAddress, contractAddress])
@@ -909,9 +908,11 @@ export class FoxyApi {
       epoch.endBlock > currentBlock ? epoch.endBlock - currentBlock : 0
     const blocksLeftInFutureEpochs = epochsLeft > 0 ? epochsLeft * epoch.length : 0
     const blocksUntilClaimable = bnOrZero(blocksLeftInCurrentEpoch).plus(blocksLeftInFutureEpochs)
-    const timeUntilClaimable = blocksUntilClaimable.times(13) // average block time is 13 seconds
+    const secondsUntilClaimable = blocksUntilClaimable.times(13) // average block time is 13 seconds
+    const currentDate = new Date()
+    currentDate.setSeconds(secondsUntilClaimable.plus(currentDate.getSeconds()).toNumber())
 
-    return timeUntilClaimable.toString()
+    return currentDate.toString()
   }
 
   async balance(input: BalanceInput): Promise<BigNumber> {
