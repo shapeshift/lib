@@ -908,7 +908,7 @@ export class FoxyApi {
       epochsLeft.gt(0) && epoch.endBlock > currentBlock ? epoch.endBlock - currentBlock : 0 // calculate time remaining in current epoch
     const blocksLeftInFutureEpochs = epochsLeft.minus(1).gt(0) ? epochsLeft.times(epoch.length) : 0 // don't count current epoch
     const blocksUntilClaimable = bnOrZero(blocksLeftInCurrentEpoch).plus(blocksLeftInFutureEpochs) // total blocks left until can claim
-    const secondsUntilClaimable = blocksUntilClaimable.times(13) // average block time is 13 seconds to get seconds
+    const secondsUntilClaimable = blocksUntilClaimable.times(13) // average block time is 13 seconds to get total seconds
     const currentDate = new Date()
     currentDate.setSeconds(secondsUntilClaimable.plus(currentDate.getSeconds()).toNumber())
 
