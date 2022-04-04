@@ -966,7 +966,7 @@ export class FoxyApi {
 
   // estimated apy
   apy(): string {
-    return '.2'
+    return process.env.APY ?? '.2'
   }
 
   async tvl(input: TokenAddressInput): Promise<BigNumber> {

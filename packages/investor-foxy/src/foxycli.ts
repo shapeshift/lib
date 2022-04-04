@@ -54,6 +54,9 @@ const main = async (): Promise<void> => {
   const userAddress = await api.adapter.getAddress({ wallet })
   console.info('current user address ', userAddress)
 
+  const apy = api.apy()
+  console.log('apy', apy)
+
   const circulatingSupply = async () => {
     try {
       const supply = await api.tvl({ tokenContractAddress: foxyContractAddress })
