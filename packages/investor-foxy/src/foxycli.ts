@@ -55,7 +55,7 @@ const main = async (): Promise<void> => {
   console.info('current user address ', userAddress)
 
   const apy = api.apy()
-  console.log('apy', apy)
+  console.info('apy', apy)
 
   const circulatingSupply = async () => {
     try {
