@@ -289,13 +289,13 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           gasLimit,
           gasPrice: String(fees.instant),
           maxFeePerGas: new BigNumber(feeData.maxFeePerGas)
-              .times(normalizationConstants.instant)
-              .toFixed(0, BigNumber.ROUND_CEIL)
-              .toString(),
+            .times(normalizationConstants.instant)
+            .toFixed(0, BigNumber.ROUND_CEIL)
+            .toString(),
           maxPriorityFeePerGas: new BigNumber(feeData.maxPriorityFeePerGas)
-              .times(normalizationConstants.instant)
-              .toFixed(0, BigNumber.ROUND_CEIL)
-              .toString()
+            .times(normalizationConstants.instant)
+            .toFixed(0, BigNumber.ROUND_CEIL)
+            .toString()
         }
       },
       average: {
@@ -304,13 +304,13 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           gasLimit,
           gasPrice: String(fees.fast),
           maxFeePerGas: new BigNumber(feeData.maxFeePerGas)
-              .times(normalizationConstants.average)
-              .toFixed(0, BigNumber.ROUND_CEIL)
-              .toString(),
+            .times(normalizationConstants.average)
+            .toFixed(0, BigNumber.ROUND_CEIL)
+            .toString(),
           maxPriorityFeePerGas: new BigNumber(feeData.maxPriorityFeePerGas)
-              .times(normalizationConstants.average)
-              .toFixed(0, BigNumber.ROUND_CEIL)
-              .toString()
+            .times(normalizationConstants.average)
+            .toFixed(0, BigNumber.ROUND_CEIL)
+            .toString()
         }
       },
       slow: {
@@ -319,13 +319,13 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           gasLimit,
           gasPrice: String(fees.low),
           maxFeePerGas: new BigNumber(feeData.maxFeePerGas)
-              .times(normalizationConstants.slow)
-              .toFixed(0, BigNumber.ROUND_CEIL)
-              .toString(),
+            .times(normalizationConstants.slow)
+            .toFixed(0, BigNumber.ROUND_CEIL)
+            .toString(),
           maxPriorityFeePerGas: new BigNumber(feeData.maxPriorityFeePerGas)
-              .times(normalizationConstants.slow)
-              .toFixed(0, BigNumber.ROUND_CEIL)
-              .toString()
+            .times(normalizationConstants.slow)
+            .toFixed(0, BigNumber.ROUND_CEIL)
+            .toString()
         }
       }
     }
