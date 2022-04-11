@@ -226,7 +226,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
     signTxInput: chainAdapters.SignTxInput<CosmosSignTx>
   ): Promise<string>
 
-  async validateAddress(address: string): Promise<chainAdapters.ValidAddressResult> {
+  validateAddress(address: string): chainAdapters.ValidAddressResult {
     const chain = this.getType()
     try {
       const { prefix } = bech32.decode(address)

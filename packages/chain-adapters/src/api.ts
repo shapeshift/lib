@@ -39,7 +39,7 @@ export type ChainAdapter<T extends ChainTypes> = {
 
   broadcastTransaction(hex: string): Promise<string>
 
-  validateAddress(address: string): Promise<chainAdapters.ValidAddressResult>
+  validateAddress(address: string): chainAdapters.ValidAddressResult
 
   subscribeTxs(
     input: chainAdapters.SubscribeTxsInput,
