@@ -350,13 +350,17 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
 
   validateAddress(address: string): chainAdapters.ValidAddressResult {
     const valid = WAValidator.validate(address, this.getType())
-    const result = valid ? chainAdapters.ValidAddressResultType.Valid : chainAdapters.ValidAddressResultType.Invalid
+    const result = valid
+      ? chainAdapters.ValidAddressResultType.Valid
+      : chainAdapters.ValidAddressResultType.Invalid
     return { valid, result }
   }
 
   validateEnsAddress(address: string): chainAdapters.ValidAddressResult {
     const valid = /^([0-9A-Z]([-0-9A-Z]*[0-9A-Z])?\.)+eth$/i.test(address)
-    const result = valid ? chainAdapters.ValidAddressResultType.Valid : chainAdapters.ValidAddressResultType.Invalid
+    const result = valid
+      ? chainAdapters.ValidAddressResultType.Valid
+      : chainAdapters.ValidAddressResultType.Invalid
     return { valid, result }
   }
 

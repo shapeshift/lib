@@ -135,7 +135,9 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
 
   validateAddress(address: string): chainAdapters.ValidAddressResult {
     const valid = WAValidator.validate(address, this.getType())
-    const result = valid ? chainAdapters.ValidAddressResultType.Valid : chainAdapters.ValidAddressResultType.Invalid
+    const result = valid
+      ? chainAdapters.ValidAddressResultType.Valid
+      : chainAdapters.ValidAddressResultType.Invalid
     return { valid, result }
   }
 
