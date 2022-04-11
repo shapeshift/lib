@@ -277,9 +277,9 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
 
     const feeData = (await this.providers.http.getGasFees()).data
     const normalizationConstants = {
-      instant: new BigNumber(fees.instant).dividedBy(fees.fast).toString(),
+      instant: bnOrZero(fees.instant).dividedBy(fees.fast).toString(),
       average: String(1),
-      slow: new BigNumber(fees.low).dividedBy(fees.fast).toString()
+      slow: bnOrZero(fees.low).dividedBy(fees.fast).toString()
     }
 
     return {
@@ -288,11 +288,11 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
         chainSpecific: {
           gasLimit,
           gasPrice: String(fees.instant),
-          maxFeePerGas: new BigNumber(feeData.maxFeePerGas)
+          maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
             .times(normalizationConstants.instant)
             .toFixed(0, BigNumber.ROUND_CEIL)
             .toString(),
-          maxPriorityFeePerGas: new BigNumber(feeData.maxPriorityFeePerGas)
+          maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
             .times(normalizationConstants.instant)
             .toFixed(0, BigNumber.ROUND_CEIL)
             .toString()
@@ -303,11 +303,11 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
         chainSpecific: {
           gasLimit,
           gasPrice: String(fees.fast),
-          maxFeePerGas: new BigNumber(feeData.maxFeePerGas)
+          maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
             .times(normalizationConstants.average)
             .toFixed(0, BigNumber.ROUND_CEIL)
             .toString(),
-          maxPriorityFeePerGas: new BigNumber(feeData.maxPriorityFeePerGas)
+          maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
             .times(normalizationConstants.average)
             .toFixed(0, BigNumber.ROUND_CEIL)
             .toString()
@@ -318,11 +318,11 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
         chainSpecific: {
           gasLimit,
           gasPrice: String(fees.low),
-          maxFeePerGas: new BigNumber(feeData.maxFeePerGas)
+          maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
             .times(normalizationConstants.slow)
             .toFixed(0, BigNumber.ROUND_CEIL)
             .toString(),
-          maxPriorityFeePerGas: new BigNumber(feeData.maxPriorityFeePerGas)
+          maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
             .times(normalizationConstants.slow)
             .toFixed(0, BigNumber.ROUND_CEIL)
             .toString()
