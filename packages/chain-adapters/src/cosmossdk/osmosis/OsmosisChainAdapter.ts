@@ -83,6 +83,30 @@ export class ChainAdapter
     throw new Error('Method not implemented.')
   }
 
+  async buildDelegateTransaction(
+    tx: chainAdapters.BuildDelegateTxInput<ChainTypes.Osmosis>
+  ): Promise<{ txToSign: OsmosisSignTx }> {
+    throw new Error('Method not implemented.')
+  }
+
+  async buildUndelegateTransaction(
+    tx: chainAdapters.BuildUndelegateTxInput<ChainTypes.Osmosis>
+  ): Promise<{ txToSign: OsmosisSignTx }> {
+    throw new Error('Method not implemented.')
+  }
+
+  async buildClaimRewardsTransaction(
+    tx: chainAdapters.BuildClaimRewardsTxInput<ChainTypes.Osmosis>
+  ): Promise<{ txToSign: OsmosisSignTx }> {
+    throw new Error('Method not implemented.')
+  }
+
+  async buildRedelegateTransaction(
+    tx: chainAdapters.BuildRedelegateTxInput<ChainTypes.Osmosis>
+  ): Promise<{ txToSign: OsmosisSignTx }> {
+    throw new Error('Method not implemented.')
+  }
+
   async getFeeData(
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars -- Disable no-unused-vars lint rule for unimplemented methods */
     input: Partial<chainAdapters.GetFeeDataInput<ChainTypes.Osmosis>>
