@@ -1,3 +1,4 @@
+// TODO rename this file to cosmoSdk.ts. It applies to all cosmos chains
 export type BuildTxInput = {
   gas: string
   fee: string

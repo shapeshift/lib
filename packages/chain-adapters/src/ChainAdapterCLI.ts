@@ -243,7 +243,6 @@ const main = async () => {
     //   console.log('cosmosTx error:', err.message)
     // }
 
-
     /** OSMOSIS CLI */
     const osmosisChainAdapter = chainAdapterManager.byChain(ChainTypes.Osmosis)
     const osmosisBip44Params: BIP44Params = { purpose: 44, coinType: 118, accountNumber: 0 }
@@ -255,10 +254,10 @@ const main = async () => {
     console.log('osmosisAddress:', osmosisAddress)
 
     const osmosisAccount = await osmosisChainAdapter.getAccount(osmosisAddress)
-    console.log('cosmosAccount:', osmosisAccount)
+    console.log('oosmosAccount:', osmosisAccount)
 
     const osmosisTxHistory = await osmosisChainAdapter.getTxHistory({ pubkey: osmosisAddress })
-    console.log('cosmosTxHistory:', osmosisTxHistory)
+    console.log('oosmosTxHistory:', osmosisTxHistory)
 
     const osmosisShapeShiftValidator = await (
       osmosisChainAdapter as cosmossdk.osmosis.ChainAdapter
