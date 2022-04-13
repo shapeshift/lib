@@ -1,6 +1,7 @@
 import { AssetNamespace, AssetReference, caip2, CAIP19, caip19 } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, OsmosisSignTx, supportsOsmosis } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
+import * as unchained from '@shapeshiftoss/unchained-client'
 
 import { ChainAdapter as IChainAdapter } from '../../api'
 import { ErrorHandler } from '../../error/ErrorHandler'
@@ -31,6 +32,8 @@ export class ChainAdapter
       assetNamespace: AssetNamespace.Slip44,
       assetReference: AssetReference.Osmosis
     })
+
+    this.parser = new unchained.osmosis.TransactionParser({ chainId: this.chainId })
   }
 
   getType(): ChainTypes.Osmosis {

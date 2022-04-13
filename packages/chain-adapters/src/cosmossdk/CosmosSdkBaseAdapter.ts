@@ -88,6 +88,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
       const caip = this.getCaip2()
       const { data } = await this.providers.http.getAccount({ pubkey })
 
+      console.log('data', data)
       const delegations = data.delegations.map<chainAdapters.cosmos.Delegation>((delegation) => ({
         assetId: this.assetId,
         amount: delegation.balance.amount,
@@ -156,6 +157,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
   async getTxHistory(
     input: chainAdapters.TxHistoryInput
   ): Promise<chainAdapters.TxHistoryResponse<T>> {
+    console.log('getTxHistory')
     try {
       const { data } = await this.providers.http.getTxHistory({
         pubkey: input.pubkey,
@@ -197,6 +199,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
         transactions: txs
       }
     } catch (err) {
+      console.log('err', err)
       return ErrorHandler(err)
     }
   }
