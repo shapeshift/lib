@@ -32,12 +32,12 @@ const unchainedUrls = {
     wsUrl: 'wss://dev-api.ethereum.shapeshift.com'
   },
   [ChainTypes.Cosmos]: {
-    httpUrl: 'http://dev-api.cosmos.localhost',
-    wsUrl: 'ws://dev-api.cosmos.localhost'
+    httpUrl: 'http://api.cosmos.localhost',
+    wsUrl: 'ws://api.cosmos.localhost'
   },
   [ChainTypes.Osmosis]: {
-    httpUrl: 'http://dev-api.osmosis.localhost',
-    wsUrl: 'ws://dev-api.osmosis.localhost'
+    httpUrl: 'http://api.osmosis.localhost',
+    wsUrl: 'ws://api.osmosis.localhost'
   }
 }
 

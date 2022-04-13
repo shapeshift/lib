@@ -84,6 +84,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
 
   async getAccount(pubkey: string): Promise<chainAdapters.Account<T>> {
     try {
+      console.log('getAccount', pubkey)
       const caip = this.getCaip2()
       const { data } = await this.providers.http.getAccount({ pubkey })
 
@@ -143,6 +144,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
            for the reader. */
       } as chainAdapters.Account<T>
     } catch (err) {
+      console.log('err', err)
       return ErrorHandler(err)
     }
   }
