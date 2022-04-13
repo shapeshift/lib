@@ -1,27 +1,27 @@
 import ErrorWithDetails from './ErrorWithDetails'
 
 describe('ErrorWithDetails', () => {
-  it('should create an error with no mesasge', () => {
+  it('should create an error with no message', () => {
     const e = new ErrorWithDetails()
     expect(e).toBeInstanceOf(ErrorWithDetails)
     expect(e.message).toBe('')
     expect(e.cause).toBeUndefined()
   })
 
-  it('should create an error with a mesasge', () => {
+  it('should create an error with a message', () => {
     const e = new ErrorWithDetails('test message')
     expect(e.message).toBe('test message')
     expect(e.cause).toBeUndefined()
   })
 
-  it('should create an error with a mesasge and a cause', () => {
+  it('should create an error with a message and a cause', () => {
     const cause = new TypeError('cause')
     const e = new ErrorWithDetails('test message', { cause })
     expect(e.message).toBe('test message')
     expect(e.cause).toBe(cause)
   })
 
-  it('should create an error with a mesasge and details', () => {
+  it('should create an error with a message and details', () => {
     const details = { prop: true }
     const e = new ErrorWithDetails('test message', { details })
     expect(e.message).toBe('test message')

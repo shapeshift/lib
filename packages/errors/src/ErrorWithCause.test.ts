@@ -1,20 +1,20 @@
 import ErrorWithCause from './ErrorWithCause'
 
 describe('ErrorWithCause', () => {
-  it('should create an error with no mesasge', () => {
+  it('should create an error with no message', () => {
     const e = new ErrorWithCause()
     expect(e).toBeInstanceOf(ErrorWithCause)
     expect(e.message).toBe('')
     expect(e.cause).toBeUndefined()
   })
 
-  it('should create an error with a mesasge', () => {
+  it('should create an error with a message', () => {
     const e = new ErrorWithCause('test message')
     expect(e.message).toBe('test message')
     expect(e.cause).toBeUndefined()
   })
 
-  it('should create an error with a mesasge and a cause', () => {
+  it('should create an error with a message and a cause', () => {
     const cause = new TypeError('cause')
     const e = new ErrorWithCause('test message', { cause })
     expect(e.message).toBe('test message')
@@ -49,29 +49,3 @@ describe('ErrorWithCause', () => {
     expect(Object.getOwnPropertyNames(e)).toStrictEqual(['stack', 'message', 'name', 'cause'])
   })
 })
-
-/*
-
-const b = new ErrorWithCause('test')
-b.cause
-const c = new ErrorWithCause<{ cause: string }>('test', {})
-c.cause
-const d = new ErrorWithCause<{ cause: string }>('test', { cause: 'hi' })
-d.cause
-const e = new ErrorWithCause('test', { cause: 'hi' })
-e.cause
-const f = new ErrorWithCause('test', { details: 'test' })
-f.cause
-
-const foo = new ErrorWithCause<undefined>('bar')
-const foo2 = new ErrorWithCause<string>('bar')
-const foo3 = new ErrorWithCause<string>('bar', {})
-const foo4 = new ErrorWithCause<string>('bar', { cause: undefined })
-const foo5 = new ErrorWithCause<string>('bar', { cause: 'bar' })
-
-const foo6 = new ErrorWithCause('baz')
-const foo7 = new ErrorWithCause('baz', {})
-const foo8 = new ErrorWithCause('baz', { cause: undefined })
-const foo9 = new ErrorWithCause('baz', { cause: 'bar' })
-
- */

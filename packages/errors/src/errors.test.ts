@@ -14,27 +14,27 @@ describe.each`
   ${UnauthorizedError}
   ${ValidationError}
 `('$TestError.name', ({ TestError }) => {
-  it('should create an error with no mesasge', () => {
+  it('should create an error with no message', () => {
     const e = new TestError()
     expect(e).toBeInstanceOf(TestError)
     expect(e.message).toBe('')
     expect(e.cause).toBeUndefined()
   })
 
-  it('should create an error with a mesasge', () => {
+  it('should create an error with a message', () => {
     const e = new TestError('test message')
     expect(e.message).toBe('test message')
     expect(e.cause).toBeUndefined()
   })
 
-  it('should create an error with a mesasge and a cause', () => {
+  it('should create an error with a message and a cause', () => {
     const cause = new TypeError('cause')
     const e = new TestError('test message', { cause })
     expect(e.message).toBe('test message')
     expect(e.cause).toBe(cause)
   })
 
-  it('should create an error with a mesasge and details', () => {
+  it('should create an error with a message and details', () => {
     const details = { prop: true }
     const e = new TestError('test message', { details })
     expect(e.message).toBe('test message')
