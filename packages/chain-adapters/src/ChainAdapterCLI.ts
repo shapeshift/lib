@@ -253,22 +253,43 @@ const main = async () => {
     })
     console.log('osmosisAddress:', osmosisAddress)
 
-    const osmosisAccount = await osmosisChainAdapter.getAccount(osmosisAddress)
-    console.log('oosmosAccount:', osmosisAccount)
+    // const osmosisAccount = await osmosisChainAdapter.getAccount(osmosisAddress)
+    // console.log('oosmosAccount:', osmosisAccount)
 
-    const osmosisTxHistory = await osmosisChainAdapter.getTxHistory({ pubkey: osmosisAddress })
-    console.log('oosmosTxHistory:', osmosisTxHistory)
+    // const osmosisTxHistory = await osmosisChainAdapter.getTxHistory({ pubkey: osmosisAddress })
+    // console.log('oosmosTxHistory:', osmosisTxHistory)
 
-    const osmosisShapeShiftValidator = await (
-      osmosisChainAdapter as cosmossdk.osmosis.ChainAdapter
-    ).getValidator('osmovaloper1dpwecca283m0c20dmsfzztp4mma8h9ajxwvx52')
-    console.log('samurai:', osmosisShapeShiftValidator)
+    // const osmosisShapeShiftValidator = await (
+    //   osmosisChainAdapter as cosmossdk.osmosis.ChainAdapter
+    // ).getValidator('osmovaloper1dpwecca283m0c20dmsfzztp4mma8h9ajxwvx52')
+    // console.log('samurai:', osmosisShapeShiftValidator)
 
-    await osmosisChainAdapter.subscribeTxs(
-      { wallet, bip44Params: osmosisBip44Params },
-      (msg) => console.log(msg),
-      (err) => console.log(err)
-    )
+    // await osmosisChainAdapter.subscribeTxs(
+    //   { wallet, bip44Params: osmosisBip44Params },
+    //   (msg) => console.log(msg),
+    //   (err) => console.log(err)
+    // )
+
+    const feeData = await osmosisChainAdapter.getFeeData({ sendMax: false })
+    const fee = '10' // Increas if taking too long
+    const gas = feeData.slow.chainSpecific.gasLimit
+
+    const cosmosUnsignedTx = await osmosisChainAdapter.buildSendTransaction({
+      to: 'osmo1fx4jwv3aalxqwmrpymn34l582lnehr3eg40jnt',
+      value: '1000',
+      wallet,
+      bip44Params: osmosisBip44Params,
+      chainSpecific: { gas, fee }
+    })
+    console.log('unsignedTx', cosmosUnsignedTx)
+
+    if (!osmosisChainAdapter.signAndBroadcastTransaction) return
+
+    const broadcastedTx = await osmosisChainAdapter.signAndBroadcastTransaction({
+      wallet,
+      txToSign: cosmosUnsignedTx.txToSign
+    })
+    console.log('broadcastedTx:', broadcastedTx)
   } catch (err) {
     console.error(err)
   }
