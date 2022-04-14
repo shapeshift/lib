@@ -203,12 +203,11 @@ const main = async (): Promise<void> => {
 
   const claimToke = async () => {
     try {
-      console.info('Building unsigned tx...')
-      const response = await api.claimFromTokemak({
-        contractAddress: foxyStakingContractAddress,
-        userAddress
+      console.info('Getting claimFromTokemak arguments...')
+      const response = await api.getClaimFromTokemakArgs({
+        contractAddress: foxyStakingContractAddress
       })
-      console.info('unsigned', response)
+      console.info('claimFromTokemak: ', response)
     } catch (e) {
       console.error('RemoveLiquidity Error:', e)
     }

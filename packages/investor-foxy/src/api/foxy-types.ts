@@ -95,10 +95,6 @@ export type ClaimWithdrawal = TxInputWithoutAmount & {
   claimAddress?: string
 }
 
-export type ClaimWithdrawalUnsigned = TxInputWithoutAmountUnsigned & {
-  claimAddress?: string
-}
-
 export type WithdrawInfo = {
   amount: string
   gons: string
@@ -131,7 +127,6 @@ export type Signature = {
 
 export type GetTokeRewardAmount = Signature & {
   recipient: Recipient
-  claimAmount: BigNumber
 }
 
 export type TokeClaimIpfs = {

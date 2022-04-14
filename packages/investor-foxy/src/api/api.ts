@@ -2,7 +2,6 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { AssetNamespace, caip19 } from '@shapeshiftoss/caip'
 import { ChainReference } from '@shapeshiftoss/caip/dist/caip2/caip2'
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
-import { ETHSignTx } from '@shapeshiftoss/hdwallet-core'
 import { ChainTypes, NetworkTypes, WithdrawType } from '@shapeshiftoss/types'
 import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
@@ -31,9 +30,7 @@ import {
   ApproveInput,
   BalanceInput,
   ClaimWithdrawal,
-  ClaimWithdrawalUnsigned,
   ContractAddressInput,
-  EstimateClaimFromTokemak,
   EstimateGasApproveInput,
   EstimateGasTxInput,
   FoxyAddressesType,
@@ -49,7 +46,6 @@ import {
   TxInput,
   TxInputWithoutAmount,
   TxInputWithoutAmountAndWallet,
-  TxInputWithoutAmountUnsigned,
   TxReceipt,
   WithdrawEstimateGasInput,
   WithdrawInfo,
@@ -249,23 +245,6 @@ export class FoxyApi {
     return this.web3.eth.getTransactionReceipt(txid)
   }
 
-  async estimateTransferTokeGas(input: ClaimWithdrawalUnsigned): Promise<BigNumber> {
-    const { claimAddress, userAddress, contractAddress } = input
-    const addressToClaim = claimAddress ?? userAddress
-    this.verifyAddresses([addressToClaim, userAddress, contractAddress])
-
-    const stakingContract = this.getStakingContract(contractAddress)
-
-    try {
-      const estimatedGas = await stakingContract.methods.transferToke(addressToClaim).estimateGas({
-        from: userAddress
-      })
-      return bnOrZero(estimatedGas)
-    } catch (e) {
-      throw new Error(`Failed to get gas ${e}`)
-    }
-  }
-
   async estimateClaimWithdrawGas(input: ClaimWithdrawal): Promise<BigNumber> {
     const { claimAddress, userAddress, contractAddress } = input
     const addressToClaim = claimAddress ?? userAddress
@@ -358,23 +337,6 @@ export class FoxyApi {
         : await stakingContract.methods.instantUnstake(true).estimateGas({
             from: userAddress
           })
-      return bnOrZero(estimatedGas)
-    } catch (e) {
-      throw new Error(`Failed to get gas ${e}`)
-    }
-  }
-
-  async estimateClaimFromTokemakGas(input: EstimateClaimFromTokemak): Promise<BigNumber> {
-    const { contractAddress, userAddress, recipient, v, r, s } = input
-    const stakingContract = this.getStakingContract(contractAddress)
-
-    try {
-      const estimatedGas = await stakingContract.methods
-        .claimFromTokemak(recipient, v, r, s)
-        .estimateGas({
-          from: userAddress
-        })
-
       return bnOrZero(estimatedGas)
     } catch (e) {
       throw new Error(`Failed to get gas ${e}`)
@@ -987,7 +949,7 @@ export class FoxyApi {
     return bnOrZero(1).times('1e+18')
   }
 
-  // estimated apy
+  // TODO: use tokemak's api to get apy when they build it
   apy(): string {
     return '.15'
   }
@@ -1028,7 +990,7 @@ export class FoxyApi {
     }
   }
 
-  async getTokeRewardAmount(input: ContractAddressInput): Promise<GetTokeRewardAmount> {
+  async getClaimFromTokemakArgs(input: ContractAddressInput): Promise<GetTokeRewardAmount> {
     const { contractAddress } = input
     const rewardHashContract = new this.web3.eth.Contract(tokeRewardHashAbi, tokeRewardHashAddress)
     const latestCycleIndex = await (async () => {
@@ -1054,13 +1016,11 @@ export class FoxyApi {
       const {
         data: { payload, signature }
       } = response
-      const claimAmount = bnOrZero(payload.amount)
 
       const v = signature.v
       const r = signature.r
       const s = signature.s
       return {
-        claimAmount,
         v,
         r,
         s,
@@ -1069,90 +1029,6 @@ export class FoxyApi {
     } catch (e) {
       throw new Error(`Failed to get information from Tokemak ipfs ${e}`)
     }
-  }
-
-  async claimFromTokemak(input: TxInputWithoutAmountUnsigned): Promise<ETHSignTx> {
-    const { contractAddress, userAddress, accountNumber = 0 } = input
-
-    this.verifyAddresses([contractAddress])
-
-    const { claimAmount, v, r, s, recipient } = await this.getTokeRewardAmount(input)
-
-    if (!bnOrZero(claimAmount).gt(0)) {
-      throw new Error('No rewards to claim')
-    }
-
-    const estimatedGasBN = await (async () => {
-      try {
-        return this.estimateClaimFromTokemakGas({
-          ...input,
-          recipient,
-          v,
-          r,
-          s
-        })
-      } catch (e) {
-        throw new Error(`Estimate Gas Error: ${e}`)
-      }
-    })()
-
-    const stakingContract = this.getStakingContract(contractAddress)
-
-    const data: string = stakingContract.methods.claimFromTokemak(recipient, v, r, s).encodeABI({
-      from: userAddress
-    })
-
-    const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
-    const estimatedGas = estimatedGasBN.toString()
-    const bip44Params = this.adapter.buildBIP44Params({ accountNumber })
-    const chainId = Number(this.network)
-    const payload = {
-      bip44Params,
-      chainId,
-      data,
-      estimatedGas,
-      gasPrice,
-      nonce,
-      to: contractAddress,
-      value: '0'
-    }
-    return buildTxToSign(payload)
-  }
-
-  async transferToke(input: ClaimWithdrawalUnsigned): Promise<ETHSignTx> {
-    const { claimAddress, contractAddress, userAddress, accountNumber = 0 } = input
-    this.verifyAddresses([contractAddress])
-
-    const addressToClaim = claimAddress ?? userAddress
-
-    const estimatedGasBN = await (async () => {
-      try {
-        return this.estimateTransferTokeGas(input)
-      } catch (e) {
-        throw new Error(`Estimate Gas Error: ${e}`)
-      }
-    })()
-
-    const stakingContract = this.getStakingContract(contractAddress)
-
-    const data: string = stakingContract.methods.transferToke(addressToClaim).encodeABI({
-      from: userAddress
-    })
-    const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
-    const estimatedGas = estimatedGasBN.toString()
-    const bip44Params = this.adapter.buildBIP44Params({ accountNumber })
-    const chainId = Number(this.network)
-    const payload = {
-      bip44Params,
-      chainId,
-      data,
-      estimatedGas,
-      gasPrice,
-      nonce,
-      to: contractAddress,
-      value: '0'
-    }
-    return buildTxToSign(payload)
   }
 
   async getRebaseHistory(input: BalanceInput) {
