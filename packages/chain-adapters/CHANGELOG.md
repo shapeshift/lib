@@ -1,3 +1,17 @@
+# [@shapeshiftoss/chain-adapters-v2.13.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.12.0...@shapeshiftoss/chain-adapters-v2.13.0) (2022-04-10)
+
+
+### Features
+
+* add Cosmos delegated tokens to Validator ([#514](https://github.com/shapeshift/lib/issues/514)) ([113ad35](https://github.com/shapeshift/lib/commit/113ad356f0a2fdf49bbe7638f5b08531baed8cd3))
+
+# [@shapeshiftoss/chain-adapters-v2.12.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.11.0...@shapeshiftoss/chain-adapters-v2.12.0) (2022-04-04)
+
+
+### Features
+
+* support eip-1159 in buildSendTransaction ([#440](https://github.com/shapeshift/lib/issues/440)) ([c50e503](https://github.com/shapeshift/lib/commit/c50e503f5dc4ef7074ef0a431f5451d78ecb0fd9))
+
 # [@shapeshiftoss/chain-adapters-v2.11.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.10.0...@shapeshiftoss/chain-adapters-v2.11.0) (2022-03-28)
 
 

@@ -114,6 +114,15 @@ export class FoxyApi {
     this.foxyAddresses = foxyAddresses
   }
 
+  /**
+   * Very large amounts like those found in ERC20s with a precision of 18 get converted
+   * to exponential notation ('1.6e+21') in javascript.
+   * @param amount
+   */
+  private normalizeAmount(amount: BigNumber) {
+    return this.web3.utils.toBN(amount.toFixed())
+  }
+
   private async signAndBroadcastTx(input: SignAndBroadcastTx): Promise<string> {
     const { payload, wallet, dryRun } = input
     const txToSign = buildTxToSign(payload)
@@ -298,7 +307,7 @@ export class FoxyApi {
 
     try {
       const estimatedGas = await liquidityReserveContract.methods
-        .addLiquidity(amountDesired)
+        .addLiquidity(this.normalizeAmount(amountDesired))
         .estimateGas({
           from: userAddress
         })
@@ -317,7 +326,7 @@ export class FoxyApi {
 
     try {
       const estimatedGas = await liquidityReserveContract.methods
-        .removeLiquidity(amountDesired)
+        .removeLiquidity(this.normalizeAmount(amountDesired))
         .estimateGas({
           from: userAddress
         })
@@ -338,9 +347,11 @@ export class FoxyApi {
 
     try {
       const estimatedGas = isDelayed
-        ? await stakingContract.methods.unstake(amountDesired, true).estimateGas({
-            from: userAddress
-          })
+        ? await stakingContract.methods
+            .unstake(this.normalizeAmount(amountDesired), true)
+            .estimateGas({
+              from: userAddress
+            })
         : await stakingContract.methods.instantUnstake(true).estimateGas({
             from: userAddress
           })
@@ -394,7 +405,7 @@ export class FoxyApi {
 
     try {
       const estimatedGas = await stakingContract.methods
-        .stake(amountDesired.toString(), userAddress)
+        .stake(this.normalizeAmount(amountDesired), userAddress)
         .estimateGas({
           from: userAddress
         })
@@ -487,10 +498,12 @@ export class FoxyApi {
     const stakingContract = this.getStakingContract(contractAddress)
     const userChecksum = this.web3.utils.toChecksumAddress(userAddress)
 
-    const data: string = await stakingContract.methods.stake(amountDesired, userAddress).encodeABI({
-      value: 0,
-      from: userChecksum
-    })
+    const data: string = await stakingContract.methods
+      .stake(this.normalizeAmount(amountDesired), userAddress)
+      .encodeABI({
+        value: 0,
+        from: userChecksum
+      })
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const estimatedGas = estimatedGasBN.toString()
@@ -535,7 +548,7 @@ export class FoxyApi {
     if (isDelayed && !amountDesired.gt(0)) throw new Error('Must send valid amount')
 
     const data: string = isDelayed
-      ? stakingContract.methods.unstake(amountDesired, true).encodeABI({
+      ? stakingContract.methods.unstake(this.normalizeAmount(amountDesired), true).encodeABI({
           from: userAddress
         })
       : stakingContract.methods.instantUnstake(true).encodeABI({
@@ -809,9 +822,11 @@ export class FoxyApi {
 
     const liquidityReserveContract = this.getLiquidityReserveContract(contractAddress)
 
-    const data: string = liquidityReserveContract.methods.addLiquidity(amountDesired).encodeABI({
-      from: userAddress
-    })
+    const data: string = liquidityReserveContract.methods
+      .addLiquidity(this.normalizeAmount(amountDesired))
+      .encodeABI({
+        from: userAddress
+      })
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const estimatedGas = estimatedGasBN.toString()
@@ -854,9 +869,11 @@ export class FoxyApi {
 
     const liquidityReserveContract = this.getLiquidityReserveContract(contractAddress)
 
-    const data: string = liquidityReserveContract.methods.removeLiquidity(amountDesired).encodeABI({
-      from: userAddress
-    })
+    const data: string = liquidityReserveContract.methods
+      .removeLiquidity(this.normalizeAmount(amountDesired))
+      .encodeABI({
+        from: userAddress
+      })
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const estimatedGas = estimatedGasBN.toString()
@@ -875,8 +892,7 @@ export class FoxyApi {
     return this.signAndBroadcastTx({ payload, wallet, dryRun })
   }
 
-  // returns time in seconds until withdraw request is claimable
-  // dependent on rebases happening when epoch.expiry epoch is reached
+  // returns time when the users withdraw request is claimable
   async getTimeUntilClaimable(input: TxInputWithoutAmountAndWallet): Promise<string> {
     const { contractAddress, userAddress } = input
     this.verifyAddresses([userAddress, contractAddress])
@@ -905,14 +921,18 @@ export class FoxyApi {
     } catch (e) {
       throw new Error(`Failed to get block number: ${e}`)
     }
-    const epochsLeft = coolDownInfo.endEpoch - epoch.number - 1 // epochs left after the current one
+    const epochsLeft = bnOrZero(coolDownInfo.endEpoch).minus(epoch.number) // epochs left until can claim
     const blocksLeftInCurrentEpoch =
-      epoch.endBlock > currentBlock ? epoch.endBlock - currentBlock : 0
-    const blocksLeftInFutureEpochs = epochsLeft > 0 ? epochsLeft * epoch.length : 0
-    const blocksUntilClaimable = bnOrZero(blocksLeftInCurrentEpoch).plus(blocksLeftInFutureEpochs)
-    const timeUntilClaimable = blocksUntilClaimable.times(13) // average block time is 13 seconds
+      epochsLeft.gt(0) && epoch.endBlock > currentBlock ? epoch.endBlock - currentBlock : 0 // calculate time remaining in current epoch
+    const blocksLeftInFutureEpochs = epochsLeft.minus(1).gt(0)
+      ? epochsLeft.minus(1).times(epoch.length)
+      : 0 // don't count current epoch
+    const blocksUntilClaimable = bnOrZero(blocksLeftInCurrentEpoch).plus(blocksLeftInFutureEpochs) // total blocks left until can claim
+    const secondsUntilClaimable = blocksUntilClaimable.times(13) // average block time is 13 seconds to get total seconds
+    const currentDate = new Date()
+    currentDate.setSeconds(secondsUntilClaimable.plus(currentDate.getSeconds()).toNumber())
 
-    return timeUntilClaimable.toString()
+    return currentDate.toString()
   }
 
   async balance(input: BalanceInput): Promise<BigNumber> {
@@ -966,7 +986,7 @@ export class FoxyApi {
 
   // estimated apy
   apy(): string {
-    return '.2'
+    return '.15'
   }
 
   async tvl(input: TokenAddressInput): Promise<BigNumber> {

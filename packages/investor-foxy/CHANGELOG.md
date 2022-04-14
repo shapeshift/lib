@@ -1,3 +1,24 @@
+# [@shapeshiftoss/investor-foxy-v1.3.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v1.3.2...@shapeshiftoss/investor-foxy-v1.3.3) (2022-04-05)
+
+
+### Bug Fixes
+
+* time to claim ([#511](https://github.com/shapeshift/lib/issues/511)) ([447ee11](https://github.com/shapeshift/lib/commit/447ee11306aa502b92b08bce344a627cb489e02b))
+
+# [@shapeshiftoss/investor-foxy-v1.3.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v1.3.1...@shapeshiftoss/investor-foxy-v1.3.2) (2022-04-01)
+
+
+### Bug Fixes
+
+* bignumber error ([#507](https://github.com/shapeshift/lib/issues/507)) ([a9ca964](https://github.com/shapeshift/lib/commit/a9ca964a430193cc7ba2e9d7687da9aafdc25fa6))
+
+# [@shapeshiftoss/investor-foxy-v1.3.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v1.3.0...@shapeshiftoss/investor-foxy-v1.3.1) (2022-03-31)
+
+
+### Bug Fixes
+
+* toString causing error on big numbers ([#506](https://github.com/shapeshift/lib/issues/506)) ([d9f3cad](https://github.com/shapeshift/lib/commit/d9f3cad7e21e2088a19616230940addd552de903))
+
 # [@shapeshiftoss/investor-foxy-v1.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v1.2.1...@shapeshiftoss/investor-foxy-v1.3.0) (2022-03-29)
 
 
