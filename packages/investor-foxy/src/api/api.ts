@@ -2,6 +2,7 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { AssetNamespace, caip19 } from '@shapeshiftoss/caip'
 import { ChainReference } from '@shapeshiftoss/caip/dist/caip2/caip2'
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
+import { ETHSignTx } from '@shapeshiftoss/hdwallet-core'
 import { ChainTypes, NetworkTypes, WithdrawType } from '@shapeshiftoss/types'
 import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
@@ -30,6 +31,7 @@ import {
   ApproveInput,
   BalanceInput,
   ClaimWithdrawal,
+  ClaimWithdrawalUnsigned,
   ContractAddressInput,
   EstimateClaimFromTokemak,
   EstimateGasApproveInput,
@@ -47,6 +49,7 @@ import {
   TxInput,
   TxInputWithoutAmount,
   TxInputWithoutAmountAndWallet,
+  TxInputWithoutAmountUnsigned,
   TxReceipt,
   WithdrawEstimateGasInput,
   WithdrawInfo,
@@ -246,7 +249,7 @@ export class FoxyApi {
     return this.web3.eth.getTransactionReceipt(txid)
   }
 
-  async estimateTransferTokeGas(input: ClaimWithdrawal): Promise<BigNumber> {
+  async estimateTransferTokeGas(input: ClaimWithdrawalUnsigned): Promise<BigNumber> {
     const { claimAddress, userAddress, contractAddress } = input
     const addressToClaim = claimAddress ?? userAddress
     this.verifyAddresses([addressToClaim, userAddress, contractAddress])
@@ -1068,9 +1071,8 @@ export class FoxyApi {
     }
   }
 
-  async claimFromTokemak(input: TxInputWithoutAmount): Promise<string> {
-    const { contractAddress, wallet, userAddress, accountNumber = 0, dryRun = false } = input
-    if (!wallet) throw new Error('Missing inputs')
+  async claimFromTokemak(input: TxInputWithoutAmountUnsigned): Promise<ETHSignTx> {
+    const { contractAddress, userAddress, accountNumber = 0 } = input
 
     this.verifyAddresses([contractAddress])
 
@@ -1114,19 +1116,11 @@ export class FoxyApi {
       to: contractAddress,
       value: '0'
     }
-    return this.signAndBroadcastTx({ payload, wallet, dryRun })
+    return buildTxToSign(payload)
   }
 
-  async transferToke(input: ClaimWithdrawal): Promise<string> {
-    const {
-      claimAddress,
-      contractAddress,
-      wallet,
-      userAddress,
-      accountNumber = 0,
-      dryRun = false
-    } = input
-    if (!wallet) throw new Error('Missing inputs')
+  async transferToke(input: ClaimWithdrawalUnsigned): Promise<ETHSignTx> {
+    const { claimAddress, contractAddress, userAddress, accountNumber = 0 } = input
     this.verifyAddresses([contractAddress])
 
     const addressToClaim = claimAddress ?? userAddress
@@ -1158,7 +1152,7 @@ export class FoxyApi {
       to: contractAddress,
       value: '0'
     }
-    return this.signAndBroadcastTx({ payload, wallet, dryRun })
+    return buildTxToSign(payload)
   }
 
   async getRebaseHistory(input: BalanceInput) {

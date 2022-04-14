@@ -201,6 +201,19 @@ const main = async (): Promise<void> => {
     }
   }
 
+  const claimToke = async () => {
+    try {
+      console.info('Building unsigned tx...')
+      const response = await api.claimFromTokemak({
+        contractAddress: foxyStakingContractAddress,
+        userAddress
+      })
+      console.info('unsigned', response)
+    } catch (e) {
+      console.error('RemoveLiquidity Error:', e)
+    }
+  }
+
   const getTimeUntilClaim = async () => {
     try {
       console.info('getting time until claim...')
@@ -227,7 +240,8 @@ const main = async (): Promise<void> => {
     'Circulating Supply (TVL)',
     'Cool Down Info',
     'Add Liquidity',
-    'Remove Liquidity'
+    'Remove Liquidity',
+    'Claim From Tokemak'
   ]
   const contracts = ['Staking Token', 'Reward Token']
   const addresses = ['User Address', 'Liquidity Reserve Address']
@@ -311,6 +325,9 @@ const main = async (): Promise<void> => {
       case 12:
         amount = readline.question('How much liquidity do you want to remove?\n')
         await removeLiquidity(amount)
+        break
+      case 13:
+        await claimToke()
         break
     }
     index = readline.keyInSelect(options, 'Select an action.\n')

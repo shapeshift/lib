@@ -46,6 +46,11 @@ export type TxInput = {
 
 export type TxInputWithoutAmount = Pick<TxInput, Exclude<keyof TxInput, 'amountDesired'>>
 
+export type TxInputWithoutAmountUnsigned = Pick<
+  TxInputWithoutAmount,
+  Exclude<keyof TxInputWithoutAmount, 'wallet' | 'dryRun'>
+>
+
 export type TxInputWithoutAmountAndWallet = Pick<
   TxInputWithoutAmount,
   Exclude<keyof TxInputWithoutAmount, 'wallet'>
@@ -87,6 +92,10 @@ export type ContractAddressInput = {
 }
 
 export type ClaimWithdrawal = TxInputWithoutAmount & {
+  claimAddress?: string
+}
+
+export type ClaimWithdrawalUnsigned = TxInputWithoutAmountUnsigned & {
   claimAddress?: string
 }
 
