@@ -16,6 +16,10 @@ import {
   SwapperType
 } from '@shapeshiftoss/types'
 
+type SupportedAssetInput = {
+  assets: CAIP19[]
+}
+
 export class SwapError extends Error {}
 
 export interface Swapper {
@@ -76,4 +80,14 @@ export interface Swapper {
    * Get max swap balance (minus fees) for sell asset
    */
   getSendMaxAmount(args: SendMaxAmountInput): Promise<string>
+
+  /**
+   * Gets all supported assets
+   */
+  getSupportedAssets(): CAIP19[]
+
+  /**
+   * Get a boolean if swapper supports an asset
+   */
+  isSupportedAssets(args: SupportedAssetInput): boolean
 }

@@ -81,6 +81,10 @@ export class ZrxSwapper implements Swapper {
     return [ETH, FOX]
   }
 
+  getSupportedAssets(): CAIP19[] {
+
+  }
+
   async executeQuote(args: ExecQuoteInput<ChainTypes, SwapperType>): Promise<ExecQuoteOutput> {
     return ZrxExecuteQuote(this.deps, args)
   }

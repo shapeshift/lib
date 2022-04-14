@@ -95,4 +95,27 @@ describe('SwapperManager', () => {
       )
     })
   })
+
+  // TODO: implement this
+  describe('getSwapperByPair', () => {
+    it('should return swapper(s) that support all assets given', () => {
+      const sellAsset = ''
+      const buyAsset = ''
+      const swapper = new SwapperManager()
+      swapper
+        .addSwapper(SwapperType.Zrx, new ZrxSwapper())
+        .addSwapper(SwapperType.Thorchain, new ThorchainSwapper())
+
+      expect(() => swapper.getSwapperByPair({ sellAsset, buyAsset })).toThrow(
+        `SwapperError:getSwapper - ${SwapperType.Zrx} doesn't exist`
+      )
+    })
+
+    it("should throw an error if swapper isn't set", () => {
+      const swapper = new SwapperManager()
+      expect(() => swapper.removeSwapper(SwapperType.Zrx)).toThrow(
+        `SwapperError:removeSwapper - ${SwapperType.Zrx} doesn't exist`
+      )
+    })
+  })
 })

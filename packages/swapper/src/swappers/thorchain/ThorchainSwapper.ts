@@ -64,4 +64,8 @@ export class ThorchainSwapper implements Swapper {
   async getSendMaxAmount(): Promise<string> {
     throw new Error('ThorchainSwapper: getSendMaxAmount unimplemented')
   }
+
+  getSupportedAssets(): CAIP19[] {
+    throw new Error('ThorchainSwapper: getSendMaxAmount unimplemented')
+  }
 }
