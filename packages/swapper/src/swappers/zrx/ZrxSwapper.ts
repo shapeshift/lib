@@ -21,12 +21,12 @@ import { SupportedAssetInput, Swapper } from '../../api'
 import { getZrxMinMax } from './getZrxMinMax/getZrxMinMax'
 import { getZrxQuote } from './getZrxQuote/getZrxQuote'
 import { getZrxSendMaxAmount } from './getZrxSendMaxAmount/getZrxSendMaxAmount'
+import { getZrxSupportedAssets } from './getZrxSupportedAssets/getZrxSupportedAssets'
 import { getUsdRate } from './utils/helpers/helpers'
 import { ZrxApprovalNeeded } from './ZrxApprovalNeeded/ZrxApprovalNeeded'
 import { ZrxApproveInfinite } from './ZrxApproveInfinite/ZrxApproveInfinite'
 import { ZrxBuildQuoteTx } from './ZrxBuildQuoteTx/ZrxBuildQuoteTx'
 import { ZrxExecuteQuote } from './ZrxExecuteQuote/ZrxExecuteQuote'
-import { getZrxSupportedAssets } from './getZrxSupportedAssets/getZrxSupportedAssets'
 
 export type ZrxSwapperDeps = {
   adapterManager: ChainAdapterManager
