@@ -80,3 +80,7 @@ export type FiatPriceHistoryArgs = {
   symbol: SupportedFiatCurrencies
   timeframe: HistoryTimeframe
 }
+
+export type FindByFiatMarketType = (args: FiatMarketDataArgs) => Promise<MarketData | null>
+
+export type FiatPriceHistoryType = (args: FiatPriceHistoryArgs) => Promise<HistoryData[]>

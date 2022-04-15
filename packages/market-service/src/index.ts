@@ -1,2 +1,2 @@
 export * from './market-service-manager'
-export * from './exchange-rates-host/exchange-rates-host'
+export * from './fiat-market-service-manager'
