@@ -26,6 +26,8 @@ import { ZrxApprovalNeeded } from './ZrxApprovalNeeded/ZrxApprovalNeeded'
 import { ZrxApproveInfinite } from './ZrxApproveInfinite/ZrxApproveInfinite'
 import { ZrxBuildQuoteTx } from './ZrxBuildQuoteTx/ZrxBuildQuoteTx'
 import { ZrxExecuteQuote } from './ZrxExecuteQuote/ZrxExecuteQuote'
+import { getZrxSupportedAssets } from './getZrxSupportedAssets/getZrxSupportedAssets'
+
 export type ZrxSwapperDeps = {
   adapterManager: ChainAdapterManager
   web3: Web3
@@ -82,11 +84,7 @@ export class ZrxSwapper implements Swapper {
   }
 
   getSupportedAssets(): CAIP19[] {
-    // TODO: Implement this somehow. Should we return caip19 or caip2? assetNamespace?
-    return [
-      'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
-      'eip155:1/erc20:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
-    ]
+    return getZrxSupportedAssets()
   }
 
   isSupportedAssets(args: SupportedAssetInput): boolean {
