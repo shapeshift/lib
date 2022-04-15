@@ -17,7 +17,7 @@ import {
 } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
-import { Swapper } from '../../api'
+import { SupportedAssetInput, Swapper } from '../../api'
 import { getZrxMinMax } from './getZrxMinMax/getZrxMinMax'
 import { getZrxQuote } from './getZrxQuote/getZrxQuote'
 import { getZrxSendMaxAmount } from './getZrxSendMaxAmount/getZrxSendMaxAmount'
@@ -82,7 +82,18 @@ export class ZrxSwapper implements Swapper {
   }
 
   getSupportedAssets(): CAIP19[] {
+    // TODO: Implement this somehow. Should we return caip19 or caip2? assetNamespace?
+    return [
+      'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
+      'eip155:1/erc20:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+    ]
+  }
 
+  isSupportedAssets(args: SupportedAssetInput): boolean {
+    const { assetIds } = args
+
+    const supportedAssets = this.getSupportedAssets()
+    return assetIds.every((assetId: CAIP19) => supportedAssets.includes(assetId))
   }
 
   async executeQuote(args: ExecQuoteInput<ChainTypes, SwapperType>): Promise<ExecQuoteOutput> {

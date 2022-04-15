@@ -96,26 +96,31 @@ describe('SwapperManager', () => {
     })
   })
 
-  // TODO: implement this
   describe('getSwapperByPair', () => {
     it('should return swapper(s) that support all assets given', () => {
-      const sellAsset = ''
-      const buyAsset = ''
-      const swapper = new SwapperManager()
-      swapper
-        .addSwapper(SwapperType.Zrx, new ZrxSwapper())
+      const sellAssetId = 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d' // FOX
+      const buyAssetId = 'eip155:1/erc20:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' // USDC
+      const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
+      const swapperManager = new SwapperManager()
+
+      swapperManager
+        .addSwapper(SwapperType.Zrx, zrxSwapper)
         .addSwapper(SwapperType.Thorchain, new ThorchainSwapper())
 
-      expect(() => swapper.getSwapperByPair({ sellAsset, buyAsset })).toThrow(
-        `SwapperError:getSwapper - ${SwapperType.Zrx} doesn't exist`
-      )
+      expect(swapperManager.getSwapperByPair({ sellAssetId, buyAssetId })).toEqual([zrxSwapper])
     })
 
-    it("should throw an error if swapper isn't set", () => {
-      const swapper = new SwapperManager()
-      expect(() => swapper.removeSwapper(SwapperType.Zrx)).toThrow(
-        `SwapperError:removeSwapper - ${SwapperType.Zrx} doesn't exist`
-      )
+    it('should return an empty array if no swapper is found', () => {
+      const sellAssetId = 'randomAssetId'
+      const buyAssetId = 'randomAssetId2'
+      const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
+      const swapperManager = new SwapperManager()
+
+      swapperManager
+        .addSwapper(SwapperType.Zrx, zrxSwapper)
+        .addSwapper(SwapperType.Thorchain, new ThorchainSwapper())
+
+      expect(swapperManager.getSwapperByPair({ sellAssetId, buyAssetId })).toEqual([])
     })
   })
 })

@@ -1,12 +1,9 @@
 import { GetQuoteInput, SwapperType } from '@shapeshiftoss/types'
-import { CAIP19 } from '@shapeshiftoss/caip'
 
-import { Swapper } from '..'
-return this.swappers
-  .values()
-  .filter((swapper: Swapper) => swapper.isSupportedAsset([sellAset, buyAsset]))
+import { ByPairInput, Swapper } from '..'
+
 export class SwapperError extends Error {
-      .values())
+  constructor(message: string) {
     super(message)
     this.message = `SwapperError:${message}`
   }
@@ -62,15 +59,25 @@ export class SwapperManager {
     return this
   }
 
+  /**
+   *
+   * @param quoteParams type {GetQuoteInput}
+   * @returns {SwapperType}
+   */
   async getBestSwapper(quoteParams: GetQuoteInput): Promise<SwapperType> {
     quoteParams // noop to shut up linter
     return SwapperType.Zrx // TODO: implement getBestSwapper
   }
 
-  getSwapperByPair(pair: { sellAset: CAIP19; buyAsset: CAIP19 }): Swapper[] {
-    const { sellAset, buyAsset } = pair
-    return Array.from(this.swappers.values()).filter((swapper) =>
-      swapper.isSupportedAssets({ assets: [sellAset, buyAsset] })
+  /**
+   *
+   * @param pair type {GetQuoteInput}
+   * @returns {SwapperType}
+   */
+  getSwapperByPair(pair: ByPairInput): Swapper[] {
+    const { sellAssetId, buyAssetId } = pair
+    return Array.from(this.swappers.values()).filter((swapper: Swapper) =>
+      swapper.isSupportedAssets({ assetIds: [sellAssetId, buyAssetId] })
     )
   }
 }
