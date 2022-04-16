@@ -266,25 +266,6 @@
     "receiveSupport": true
   },
   {
-    "caip19": "cosmos:osmosis-1/ibc:41999DF04D9441DAC0DF5D8291DF4333FBCBA810FFD63FDCE34FDF41EF37B6F7",
-    "caip2": "cosmos:osmosis-1",
-    "chain": "osmosis",
-    "dataSource": "coingecko",
-    "network": "OSMOSIS_MAINNET",
-    "symbol": "CRBRUS",
-    "name": "Cerberus on Osmosis",
-    "precision": 6,
-    "slip44": 60,
-    "color": "#FFFFFF",
-    "secondaryColor": "#FFFFFF",
-    "icon": "https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/crbrus.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/cosmos/account",
-    "explorerTxLink": "https://mintscan.io/cosmos/txs/",
-    "sendSupport": true,
-    "receiveSupport": true
-  },
-  {
     "caip19": "cosmos:osmosis-1/ibc:46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED",
     "caip2": "cosmos:osmosis-1",
     "chain": "osmosis",
@@ -361,25 +342,6 @@
     "receiveSupport": true
   },
   {
-    "caip19": "cosmos:osmosis-1/ibc:655BCEF3CDEBE32863FF281DBBE3B06160339E9897DC9C9C9821932A5F8BA6F8",
-    "caip2": "cosmos:osmosis-1",
-    "chain": "osmosis",
-    "dataSource": "coingecko",
-    "network": "OSMOSIS_MAINNET",
-    "symbol": "TICK",
-    "name": "Microtick on Osmosis",
-    "precision": 6,
-    "slip44": 60,
-    "color": "#FFFFFF",
-    "secondaryColor": "#FFFFFF",
-    "icon": "https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/tick.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/cosmos/account",
-    "explorerTxLink": "https://mintscan.io/cosmos/txs/",
-    "sendSupport": true,
-    "receiveSupport": true
-  },
-  {
     "caip19": "cosmos:osmosis-1/ibc:67795E528DF67C5606FC20F824EA39A6EF55BA133F4DC79C90A8C47A0901E17C",
     "caip2": "cosmos:osmosis-1",
     "chain": "osmosis",
@@ -392,25 +354,6 @@
     "color": "#FFFFFF",
     "secondaryColor": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/umee.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/cosmos/account",
-    "explorerTxLink": "https://mintscan.io/cosmos/txs/",
-    "sendSupport": true,
-    "receiveSupport": true
-  },
-  {
-    "caip19": "cosmos:osmosis-1/ibc:770D676475E63F10FF9AB47AFA994C6299B71EBE2CF69B7993414BDAFDA2732A",
-    "caip2": "cosmos:osmosis-1",
-    "chain": "osmosis",
-    "dataSource": "coingecko",
-    "network": "OSMOSIS_MAINNET",
-    "symbol": "FET",
-    "name": "Fetch.ai on Osmosis",
-    "precision": 18,
-    "slip44": 60,
-    "color": "#FFFFFF",
-    "secondaryColor": "#FFFFFF",
-    "icon": "https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/fet.png",
     "explorer": "https://mintscan.io",
     "explorerAddressLink": "https://mintscan.io/cosmos/account",
     "explorerTxLink": "https://mintscan.io/cosmos/txs/",
@@ -703,25 +646,6 @@
     "receiveSupport": true
   },
   {
-    "caip19": "cosmos:osmosis-1/ibc:C2A2E9CA95DDD4828B75124B5E27B8401C7D8493BC48353D418CBFC04565899B",
-    "caip2": "cosmos:osmosis-1",
-    "chain": "osmosis",
-    "dataSource": "coingecko",
-    "network": "OSMOSIS_MAINNET",
-    "symbol": "HOPE",
-    "name": "Hope Galaxy on Osmosis",
-    "precision": 6,
-    "slip44": 60,
-    "color": "#FFFFFF",
-    "secondaryColor": "#FFFFFF",
-    "icon": "https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/hope.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/cosmos/account",
-    "explorerTxLink": "https://mintscan.io/cosmos/txs/",
-    "sendSupport": true,
-    "receiveSupport": true
-  },
-  {
     "caip19": "cosmos:osmosis-1/ibc:D805F1DA50D31B96E4282C1D4181EDDFB1A44A598BFF5666F4B43E4B8BEA95A5",
     "caip2": "cosmos:osmosis-1",
     "chain": "osmosis",
@@ -829,25 +753,6 @@
     "color": "#FFFFFF",
     "secondaryColor": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/dsm.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/cosmos/account",
-    "explorerTxLink": "https://mintscan.io/cosmos/txs/",
-    "sendSupport": true,
-    "receiveSupport": true
-  },
-  {
-    "caip19": "cosmos:osmosis-1/ibc:ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518",
-    "caip2": "cosmos:osmosis-1",
-    "chain": "osmosis",
-    "dataSource": "coingecko",
-    "network": "OSMOSIS_MAINNET",
-    "symbol": "EVMOS",
-    "name": "Evmos on Osmosis",
-    "precision": 18,
-    "slip44": 60,
-    "color": "#FFFFFF",
-    "secondaryColor": "#FFFFFF",
-    "icon": "https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/evmos.png",
     "explorer": "https://mintscan.io",
     "explorerAddressLink": "https://mintscan.io/cosmos/account",
     "explorerTxLink": "https://mintscan.io/cosmos/txs/",
@@ -1766,21 +1671,6 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "QLT"
-      },
-      {
-        "caip19": "eip155:1/erc20:0x017b584acfd16d767541ae9e80cdc702f4527b0b",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "ASYAGRO",
-        "precision": 18,
-        "tokenId": "0x017b584acfd16d767541ae9e80cdc702f4527b0b",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/10632/thumb/c0Q4z8HJ_400x400.jpg?1581203764",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "ASY"
       },
       {
         "color": "#7057F5",
@@ -3898,19 +3788,19 @@
         "symbol": "N0031"
       },
       {
-        "caip19": "eip155:1/erc20:0x07597255910a51509ca469568b048f2597e72504",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "Uptrennd",
-        "precision": 18,
-        "tokenId": "0x07597255910a51509ca469568b048f2597e72504",
+        "color": "#7057F5",
         "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
+        "dataSource": "yearnfinance",
         "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0x07597255910a51509CA469568B048F2597E72504/logo.png",
-        "sendSupport": true,
+        "name": "1UP",
+        "precision": 18,
         "receiveSupport": true,
-        "symbol": "1UP"
+        "secondaryColor": "#7057F5",
+        "sendSupport": true,
+        "symbol": "1UP",
+        "tokenId": "0x07597255910a51509ca469568b048f2597e72504",
+        "caip2": "eip155:1",
+        "caip19": "eip155:1/erc20:0x07597255910a51509ca469568b048f2597e72504"
       },
       {
         "color": "#7057F5",
@@ -5098,21 +4988,6 @@
         "symbol": "UAC"
       },
       {
-        "caip19": "eip155:1/erc20:0x0afee744b6d9ff2b78f76fe10b3e0199c413fd34",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "Store of Value Token",
-        "precision": 18,
-        "tokenId": "0x0afee744b6d9ff2b78f76fe10b3e0199c413fd34",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/17870/thumb/SOVcoin.png?1629692413",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "SOV"
-      },
-      {
         "caip19": "eip155:1/erc20:0x0affa06e7fbe5bc9a764c979aa66e8256a631f02",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
@@ -5681,21 +5556,6 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "DFM"
-      },
-      {
-        "caip19": "eip155:1/erc20:0x0cd022dde27169b20895e0e2b2b8a33b25e63579",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "EverRise",
-        "precision": 18,
-        "tokenId": "0x0cd022dde27169b20895e0e2b2b8a33b25e63579",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0x0cD022ddE27169b20895e0e2B2B8A33B25e63579/logo.png",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "RISE"
       },
       {
         "caip19": "eip155:1/erc20:0x0cd6c8161f1638485a1a2f5bf1a0127e45913c2f",
@@ -6491,21 +6351,6 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "JEUR"
-      },
-      {
-        "caip19": "eip155:1/erc20:0x0f1ed66c251bcb52ecf7e67ac64bb72482048adb",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "Seer",
-        "precision": 18,
-        "tokenId": "0x0f1ed66c251bcb52ecf7e67ac64bb72482048adb",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0x0f1Ed66c251BcB52ecF7E67ac64Bb72482048aDB/logo.png",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "SEER"
       },
       {
         "caip19": "eip155:1/erc20:0x0f2d719407fdbeff09d87557abb7232601fd9f29",
@@ -7846,7 +7691,7 @@
         "caip19": "eip155:1/erc20:0x12f649a9e821f90bb143089a6e56846945892ffb",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
-        "name": "Hyprr  Howdoo ",
+        "name": "Hyprr",
         "precision": 18,
         "tokenId": "0x12f649a9e821f90bb143089a6e56846945892ffb",
         "contractType": "erc20",
@@ -8426,6 +8271,21 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "DPI"
+      },
+      {
+        "caip19": "eip155:1/erc20:0x14a32f050facf226ec60882398a9bf36d91dbac2",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "Kyoko",
+        "precision": 18,
+        "tokenId": "0x14a32f050facf226ec60882398a9bf36d91dbac2",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/24454/thumb/kyoko.png?1649576935",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "KYOKO"
       },
       {
         "color": "#7057F5",
@@ -9311,6 +9171,21 @@
         "tokenId": "0x16b1eb8b8e9058800bf0ba3684f805a6711a1d2c",
         "caip2": "eip155:1",
         "caip19": "eip155:1/erc20:0x16b1eb8b8e9058800bf0ba3684f805a6711a1d2c"
+      },
+      {
+        "caip19": "eip155:1/erc20:0x16b3e050e9e2f0ac4f1bea1b3e4fdc43d7f062dd",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "Sombra",
+        "precision": 9,
+        "tokenId": "0x16b3e050e9e2f0ac4f1bea1b3e4fdc43d7f062dd",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/17884/thumb/sombra-200.png?1629710204",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "SMBR"
       },
       {
         "caip19": "eip155:1/erc20:0x16ba8efe847ebdfef99d399902ec29397d403c30",
@@ -10243,6 +10118,21 @@
         "symbol": "WPP"
       },
       {
+        "caip19": "eip155:1/erc20:0x195e1d3cdae91b17fdf7f5276addf258ed9afbc4",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "Libcoin",
+        "precision": 18,
+        "tokenId": "0x195e1d3cdae91b17fdf7f5276addf258ed9afbc4",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/24955/thumb/lib.png?1649508885",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "LIB"
+      },
+      {
         "caip19": "eip155:1/erc20:0x1961b3331969ed52770751fc718ef530838b6dee",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
@@ -10348,6 +10238,21 @@
         "symbol": "ASTETH"
       },
       {
+        "caip19": "eip155:1/erc20:0x198d14f2ad9ce69e76ea330b374de4957c3f850a",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "APENFT",
+        "precision": 6,
+        "tokenId": "0x198d14f2ad9ce69e76ea330b374de4957c3f850a",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0x198d14F2Ad9CE69E76ea330B374DE4957C3F850a/logo.png",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "NFT"
+      },
+      {
         "caip19": "eip155:1/erc20:0x1997830b5beb723f5089bb8fc38766d419a0444d",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
@@ -10376,21 +10281,6 @@
         "tokenId": "0x19a2cf2a1b2f76e52e2b0c572bd80a95b4fa8643",
         "caip2": "eip155:1",
         "caip19": "eip155:1/erc20:0x19a2cf2a1b2f76e52e2b0c572bd80a95b4fa8643"
-      },
-      {
-        "caip19": "eip155:1/erc20:0x19a4a9eff50ddafd9faefd0b8d1f2d79ac8183f4",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "Usopp Inu",
-        "precision": 9,
-        "tokenId": "0x19a4a9eff50ddafd9faefd0b8d1f2d79ac8183f4",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/19058/thumb/usopp.jpg?1634265926",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "USOPP"
       },
       {
         "caip19": "eip155:1/erc20:0x19ac2659599fd01c853de846919544276ad26f50",
@@ -10976,6 +10866,21 @@
         "tokenId": "0x1b7c4d4f226ccf3211b0f99c4fdfb84a2606bf8e",
         "caip2": "eip155:1",
         "caip19": "eip155:1/erc20:0x1b7c4d4f226ccf3211b0f99c4fdfb84a2606bf8e"
+      },
+      {
+        "caip19": "eip155:1/erc20:0x1b7f2801b029d374b6e84ff9dd5b75aaf1281209",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "Artube",
+        "precision": 18,
+        "tokenId": "0x1b7f2801b029d374b6e84ff9dd5b75aaf1281209",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/14302/thumb/logo_%2810%29.png?1615352753",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "ATT"
       },
       {
         "caip19": "eip155:1/erc20:0x1b8568fbb47708e9e9d31ff303254f748805bf21",
@@ -12037,7 +11942,7 @@
         "contractType": "erc20",
         "color": "#FFFFFF",
         "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/21484/thumb/6168135b36da4560d493f4d3_Group_242.png?1639362680",
+        "icon": "https://assets.coingecko.com/coins/images/21484/thumb/logo-sm-wb.png?1649993895",
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "ALLUO"
@@ -12187,7 +12092,7 @@
         "contractType": "erc20",
         "color": "#FFFFFF",
         "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/16170/thumb/Image_from_iOS.jpg?1636631258",
+        "icon": "https://assets.coingecko.com/coins/images/16170/thumb/shield_logo.png?1649525643",
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "SLD"
@@ -12913,6 +12818,21 @@
         "symbol": "DFD"
       },
       {
+        "caip19": "eip155:1/erc20:0x20cd2e7ec8f5d8b337fe46a4f565ccef1561b9a9",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "ESG",
+        "precision": 18,
+        "tokenId": "0x20cd2e7ec8f5d8b337fe46a4f565ccef1561b9a9",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/24932/thumb/esg.png?1649397514",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "ESG"
+      },
+      {
         "caip19": "eip155:1/erc20:0x20d4db1946859e2adb0e5acc2eac58047ad41395",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
@@ -13558,19 +13478,19 @@
         "symbol": "GSC"
       },
       {
-        "caip19": "eip155:1/erc20:0x229b239b7d00aa2a41c8b74b1db50a821f58d31a",
+        "caip19": "eip155:1/erc20:0x22987407fd1fc5a971e3fda3b3e74c88666cda91",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
-        "name": "Fruits",
-        "precision": 8,
-        "tokenId": "0x229b239b7d00aa2a41c8b74b1db50a821f58d31a",
+        "name": "Smart Reward Token",
+        "precision": 18,
+        "tokenId": "0x22987407fd1fc5a971e3fda3b3e74c88666cda91",
         "contractType": "erc20",
         "color": "#FFFFFF",
         "secondaryColor": "#FFFFFF",
-        "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0x229B239b7d00AA2A41C8B74B1dB50a821f58D31a/logo.png",
+        "icon": "https://assets.coingecko.com/coins/images/25035/thumb/me-44EyS_400x400.jpg?1649852504",
         "sendSupport": true,
         "receiveSupport": true,
-        "symbol": "FRTS"
+        "symbol": "SRT"
       },
       {
         "color": "#7057F5",
@@ -13586,6 +13506,21 @@
         "tokenId": "0x22acaee85ddb83a3a33b7f0928a0e2c3bfdb6a4f",
         "caip2": "eip155:1",
         "caip19": "eip155:1/erc20:0x22acaee85ddb83a3a33b7f0928a0e2c3bfdb6a4f"
+      },
+      {
+        "caip19": "eip155:1/erc20:0x22b59a7387f7d25fe2b1c692ee825e1802e6e3d5",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "CoinViewCap",
+        "precision": 9,
+        "tokenId": "0x22b59a7387f7d25fe2b1c692ee825e1802e6e3d5",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/25044/thumb/coinviewcap1.png?1649918021",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "CVC"
       },
       {
         "caip19": "eip155:1/erc20:0x22b6c31c2beb8f2d0d5373146eed41ab9ede3caf",
@@ -15358,19 +15293,19 @@
         "symbol": "JPAW"
       },
       {
-        "caip19": "eip155:1/erc20:0x27460aac4b005de72e2326bd8391c27fb41780f8",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "JustBet",
-        "precision": 18,
-        "tokenId": "0x27460aac4b005de72e2326bd8391c27fb41780f8",
+        "color": "#7057F5",
         "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/12886/thumb/WINR.png?1603270935",
-        "sendSupport": true,
+        "dataSource": "yearnfinance",
+        "icon": "https://assets.yearn.network/tokens/ethereum/0x27460aac4b005de72e2326bd8391c27fb41780f8.png",
+        "name": "WINR",
+        "precision": 18,
         "receiveSupport": true,
-        "symbol": "WINR"
+        "secondaryColor": "#7057F5",
+        "sendSupport": true,
+        "symbol": "WINR",
+        "tokenId": "0x27460aac4b005de72e2326bd8391c27fb41780f8",
+        "caip2": "eip155:1",
+        "caip19": "eip155:1/erc20:0x27460aac4b005de72e2326bd8391c27fb41780f8"
       },
       {
         "caip19": "eip155:1/erc20:0x275b69aa7c8c1d648a0557656bce1c286e69a29d",
@@ -16063,6 +15998,21 @@
         "symbol": "LONDON"
       },
       {
+        "caip19": "eip155:1/erc20:0x296233e84c1d7bff11121bf6d60f0ffa39c3f0cf",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "No One",
+        "precision": 9,
+        "tokenId": "0x296233e84c1d7bff11121bf6d60f0ffa39c3f0cf",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/19393/thumb/logo-200x200_%289%29.png?1635150101",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "NOONE"
+      },
+      {
         "caip19": "eip155:1/erc20:0x297d33e17e61c2ddd812389c2105193f8348188a",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
@@ -16121,6 +16071,21 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "FMG"
+      },
+      {
+        "caip19": "eip155:1/erc20:0x299698b4b44bd6d023981a7317798dee12860834",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "New Frontier Presents",
+        "precision": 9,
+        "tokenId": "0x299698b4b44bd6d023981a7317798dee12860834",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/24989/thumb/NFPLogoCoin.png?1649917308",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "NFP"
       },
       {
         "caip19": "eip155:1/erc20:0x29a5c1db7321c5c9eae57f9366ee8eef00ca11fb",
@@ -18253,19 +18218,19 @@
         "symbol": "NOFACE"
       },
       {
-        "caip19": "eip155:1/erc20:0x309627af60f0926daa6041b8279484312f2bf060",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "USD Bancor",
-        "precision": 18,
-        "tokenId": "0x309627af60f0926daa6041b8279484312f2bf060",
+        "color": "#7057F5",
         "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
+        "dataSource": "yearnfinance",
         "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0x309627af60F0926daa6041B8279484312f2bf060/logo.png",
-        "sendSupport": true,
+        "name": "USDB",
+        "precision": 18,
         "receiveSupport": true,
-        "symbol": "USDB"
+        "secondaryColor": "#7057F5",
+        "sendSupport": true,
+        "symbol": "USDB",
+        "tokenId": "0x309627af60f0926daa6041b8279484312f2bf060",
+        "caip2": "eip155:1",
+        "caip19": "eip155:1/erc20:0x309627af60f0926daa6041b8279484312f2bf060"
       },
       {
         "caip19": "eip155:1/erc20:0x309c1b3282c49e4dc6796644417f8c76b7c8233c",
@@ -18868,19 +18833,19 @@
         "symbol": "FOXX"
       },
       {
-        "caip19": "eip155:1/erc20:0x31d4eb09a216e181ec8a43ce79226a487d6f0ba9",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
+        "color": "#7057F5",
+        "contractType": "erc20",
+        "dataSource": "yearnfinance",
+        "icon": "https://raw.githack.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x31d4Eb09a216e181eC8a43ce79226A487D6F0BA9/logo-128.png",
         "name": "USDM",
         "precision": 18,
-        "tokenId": "0x31d4eb09a216e181ec8a43ce79226a487d6f0ba9",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/18898/thumb/USDM.png?1633817090",
-        "sendSupport": true,
         "receiveSupport": true,
-        "symbol": "USDM"
+        "secondaryColor": "#7057F5",
+        "sendSupport": true,
+        "symbol": "USDM",
+        "tokenId": "0x31d4eb09a216e181ec8a43ce79226a487d6f0ba9",
+        "caip2": "eip155:1",
+        "caip19": "eip155:1/erc20:0x31d4eb09a216e181ec8a43ce79226a487d6f0ba9"
       },
       {
         "caip19": "eip155:1/erc20:0x31d939dc09a6bb55642fcbf9d56166ebc0bdec9a",
@@ -19153,6 +19118,21 @@
         "symbol": "GUSDT"
       },
       {
+        "caip19": "eip155:1/erc20:0x32462ba310e447ef34ff0d15bce8613aa8c4a244",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "Dohrnii",
+        "precision": 18,
+        "tokenId": "0x32462ba310e447ef34ff0d15bce8613aa8c4a244",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/24966/thumb/dhn.png?1649586405",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "DHN"
+      },
+      {
         "caip19": "eip155:1/erc20:0x324af2d5353f2dd138e234b359d30d67c64b1b20",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
@@ -19331,6 +19311,21 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "BTBS"
+      },
+      {
+        "caip19": "eip155:1/erc20:0x32ea3dc70e2962334864a9665254d2433e4ddbfd",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "Sportzchain",
+        "precision": 18,
+        "tokenId": "0x32ea3dc70e2962334864a9665254d2433e4ddbfd",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/24915/thumb/Copy_of_Sportzchain_-_Final_logo_guide_SPORTZCHAIN_-_HORIZONTAL_VERTICAL_-_OB.png?1649342763",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "SPN"
       },
       {
         "caip19": "eip155:1/erc20:0x32fb2a84af5515f77515806ea5addb54c923237d",
@@ -19543,6 +19538,21 @@
         "symbol": "INDI"
       },
       {
+        "caip19": "eip155:1/erc20:0x33b4fe5e40e4903a0849ca97b3292eac3eb0aa36",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "Honey  Fancy Bears Metaverse ",
+        "precision": 18,
+        "tokenId": "0x33b4fe5e40e4903a0849ca97b3292eac3eb0aa36",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/24949/thumb/Gold.png?1649504050",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "HONEY"
+      },
+      {
         "caip19": "eip155:1/erc20:0x33bfd20660eeaf952e8d5bc3236e1918701f17d0",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
@@ -19601,6 +19611,21 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "RAMP"
+      },
+      {
+        "caip19": "eip155:1/erc20:0x33d203fa03bb30b133de0fe2d6533c268ba286b6",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "MandoX",
+        "precision": 9,
+        "tokenId": "0x33d203fa03bb30b133de0fe2d6533c268ba286b6",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/24968/thumb/NmqN8g7.png?1649917431",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "MANDOX"
       },
       {
         "caip19": "eip155:1/erc20:0x33d20575f20c6a1881f8ab08e69f6fbaffaeedf2",
@@ -20173,19 +20198,19 @@
         "symbol": "ARW"
       },
       {
-        "caip19": "eip155:1/erc20:0x3521c85c3000bff57eac04489eb05bbd3193a531",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "MetaWhale BTC",
-        "precision": 18,
-        "tokenId": "0x3521c85c3000bff57eac04489eb05bbd3193a531",
+        "color": "#7057F5",
         "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/13926/thumb/mwBTC-gecko-light_1.png?1617276456",
-        "sendSupport": true,
+        "dataSource": "yearnfinance",
+        "icon": "https://assets.yearn.network/tokens/ethereum/0x3521c85c3000bff57eac04489eb05bbd3193a531.png",
+        "name": "MWBTC",
+        "precision": 18,
         "receiveSupport": true,
-        "symbol": "MWBTC"
+        "secondaryColor": "#7057F5",
+        "sendSupport": true,
+        "symbol": "MWBTC",
+        "tokenId": "0x3521c85c3000bff57eac04489eb05bbd3193a531",
+        "caip2": "eip155:1",
+        "caip19": "eip155:1/erc20:0x3521c85c3000bff57eac04489eb05bbd3193a531"
       },
       {
         "caip19": "eip155:1/erc20:0x3533a53bf6490596d97f9b39d94dbdfcf1ab3dcb",
@@ -20291,21 +20316,6 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "INVI"
-      },
-      {
-        "caip19": "eip155:1/erc20:0x358286b9573e76d44a78948341e2ab5f69cfac3a",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "GameoneToken",
-        "precision": 18,
-        "tokenId": "0x358286b9573e76d44a78948341e2ab5f69cfac3a",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/18934/thumb/GFpV-u_-_400x400.jpg?1633945662",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "GAMEONE"
       },
       {
         "caip19": "eip155:1/erc20:0x35872fea6a4843facbcdbce99e3b69596a3680b8",
@@ -21386,6 +21396,21 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "HDRN"
+      },
+      {
+        "caip19": "eip155:1/erc20:0x382a1667c9062f0621362f49076ef6e4fe4c9ec7",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "RushCoin",
+        "precision": 18,
+        "tokenId": "0x382a1667c9062f0621362f49076ef6e4fe4c9ec7",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/25053/thumb/Kax1yBSz_400x400.png?1649979044",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "RUSH"
       },
       {
         "caip19": "eip155:1/erc20:0x382f0160c24f5c515a19f155bac14d479433a407",
@@ -23113,21 +23138,6 @@
         "caip19": "eip155:1/erc20:0x3c5df3077bcf800640b5dae8c91106575a4826e6"
       },
       {
-        "caip19": "eip155:1/erc20:0x3c6a7ab47b5f058be0e7c7fe1a4b7925b8aca40e",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "Cajutel",
-        "precision": 18,
-        "tokenId": "0x3c6a7ab47b5f058be0e7c7fe1a4b7925b8aca40e",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0x3C6A7aB47B5F058Be0e7C7fE1A4b7925B8aCA40e/logo.png",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "CAJ"
-      },
-      {
         "caip19": "eip155:1/erc20:0x3c6da7763caa0e4b684bbc733f04a8ec08af3762",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
@@ -23261,6 +23271,21 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "BOR"
+      },
+      {
+        "caip19": "eip155:1/erc20:0x3cbb7f5d7499af626026e96a2f05df806f2200dc",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "PandaDAO",
+        "precision": 18,
+        "tokenId": "0x3cbb7f5d7499af626026e96a2f05df806f2200dc",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/24926/thumb/PandaDAO_logo_512.png?1649388983",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "PANDA"
       },
       {
         "caip19": "eip155:1/erc20:0x3cbc780d2934d55a06069e837fabd3e6fc23dab0",
@@ -24746,6 +24771,21 @@
         "tokenId": "0x40ce0a1d8f4999807b92ec266a025f071814b15d",
         "caip2": "eip155:1",
         "caip19": "eip155:1/erc20:0x40ce0a1d8f4999807b92ec266a025f071814b15d"
+      },
+      {
+        "caip19": "eip155:1/erc20:0x40cf9f8b652efe6bfb9d5cfcdb12e3a8a8b4c2c3",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "United Emirate",
+        "precision": 9,
+        "tokenId": "0x40cf9f8b652efe6bfb9d5cfcdb12e3a8a8b4c2c3",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/24977/thumb/zcbFg-Az_400x400.jpg?1649654476",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "UEC"
       },
       {
         "caip19": "eip155:1/erc20:0x40d1f63b5d2048e67e9bedb1b4c2f1a9fb4b6817",
@@ -26261,6 +26301,21 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "SOLVE"
+      },
+      {
+        "caip19": "eip155:1/erc20:0x446f2a8a39cc730ef378be759a3c57f1a3fe824c",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "NanoByte",
+        "precision": 18,
+        "tokenId": "0x446f2a8a39cc730ef378be759a3c57f1a3fe824c",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/23698/thumb/WpcmdLW.png?1645080885",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "NBT"
       },
       {
         "caip19": "eip155:1/erc20:0x44709a920fccf795fbc57baa433cc3dd53c44dbe",
@@ -28993,21 +29048,6 @@
         "symbol": "BYN"
       },
       {
-        "caip19": "eip155:1/erc20:0x4bc831111b480f07b7f74dbe90726f3b11201033",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "WENWEN USDN",
-        "precision": 18,
-        "tokenId": "0x4bc831111b480f07b7f74dbe90726f3b11201033",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/19017/thumb/Ezbu7Ld.png?1634183069",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "USDN"
-      },
-      {
         "caip19": "eip155:1/erc20:0x4bcea5e4d0f6ed53cf45e7a28febb2d3621d7438",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
@@ -29767,7 +29807,7 @@
         "contractType": "erc20",
         "color": "#FFFFFF",
         "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/23091/thumb/4TbgjVDHWKLnMFs.png?1643181994",
+        "icon": "https://assets.coingecko.com/coins/images/23091/thumb/pico.png?1649573468",
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "PICO"
@@ -31241,6 +31281,21 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "TSHP"
+      },
+      {
+        "caip19": "eip155:1/erc20:0x525a8f6f3ba4752868cde25164382bfbae3990e1",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "Nym",
+        "precision": 6,
+        "tokenId": "0x525a8f6f3ba4752868cde25164382bfbae3990e1",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/24488/thumb/NYM_Token.png?1649926353",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "NYM"
       },
       {
         "caip19": "eip155:1/erc20:0x525ef76138bf76118d786dbedeae5f87aabf4a81",
@@ -34378,6 +34433,21 @@
         "symbol": "CART"
       },
       {
+        "caip19": "eip155:1/erc20:0x5ca135cb8527d76e932f34b5145575f9d8cbe08e",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "Frax Price Index",
+        "precision": 18,
+        "tokenId": "0x5ca135cb8527d76e932f34b5145575f9d8cbe08e",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/24945/thumb/fpi.png?1649485834",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "FPI"
+      },
+      {
         "caip19": "eip155:1/erc20:0x5ca381bbfb58f0092df149bd3d243b08b9a8386e",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
@@ -34391,6 +34461,21 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "MXC"
+      },
+      {
+        "caip19": "eip155:1/erc20:0x5ca5a5efb57dbaf4462edbd15da889448b1919ed",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "RocketToken",
+        "precision": 18,
+        "tokenId": "0x5ca5a5efb57dbaf4462edbd15da889448b1919ed",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/25052/thumb/5F8FyJDt_400x400.jpg?1649925450",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "RKTN"
       },
       {
         "caip19": "eip155:1/erc20:0x5ca9a71b1d01849c0a95490cc00559717fcf0d1d",
@@ -34466,21 +34551,6 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "BIPS"
-      },
-      {
-        "caip19": "eip155:1/erc20:0x5cb9b847fba8aadb8a943fe19c1cc8439d7e00c5",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "Honey Defi",
-        "precision": 2,
-        "tokenId": "0x5cb9b847fba8aadb8a943fe19c1cc8439d7e00c5",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/18065/thumb/HONEYlogo200x200circle.png?1630374256",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "HONEY"
       },
       {
         "color": "#7057F5",
@@ -35617,7 +35687,7 @@
         "contractType": "erc20",
         "color": "#FFFFFF",
         "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/24597/thumb/btz.png?1648360185",
+        "icon": "https://assets.coingecko.com/coins/images/24597/thumb/BTZ_Logo_%28200x200%29.png?1649777047",
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "BTZ"
@@ -35827,7 +35897,7 @@
         "contractType": "erc20",
         "color": "#FFFFFF",
         "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/21696/thumb/musk-icon-200x200.png?1639721837",
+        "icon": "https://assets.coingecko.com/coins/images/21696/thumb/musk-icon-200x200.png?1649329802",
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "MUSK"
@@ -37016,6 +37086,21 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "JREX"
+      },
+      {
+        "caip19": "eip155:1/erc20:0x638f24096ff33e047e05e59fabc76325207090dc",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "SquishiVerse",
+        "precision": 18,
+        "tokenId": "0x638f24096ff33e047e05e59fabc76325207090dc",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/25004/thumb/19481.png?1649759045",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "SLIME"
       },
       {
         "caip19": "eip155:1/erc20:0x6393e822874728f8afa7e1c9944e417d37ca5878",
@@ -42868,21 +42953,6 @@
         "symbol": "PLOT"
       },
       {
-        "caip19": "eip155:1/erc20:0x7333cbf5b0b843b4129e234f791b0058347f671a",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "Digies Coin",
-        "precision": 9,
-        "tokenId": "0x7333cbf5b0b843b4129e234f791b0058347f671a",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/17148/thumb/Digs.png?1626665918",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "DIGS"
-      },
-      {
         "caip19": "eip155:1/erc20:0x73374ea518de7addd4c2b624c0e8b113955ee041",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
@@ -44096,21 +44166,6 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "NIFTSY"
-      },
-      {
-        "caip19": "eip155:1/erc20:0x772c316e0a7ab5f1de6de5199a22c951254c5cd3",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "WENWEN SHAREN",
-        "precision": 18,
-        "tokenId": "0x772c316e0a7ab5f1de6de5199a22c951254c5cd3",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/19019/thumb/j8I6NuN.png?1634183500",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "SHAREN"
       },
       {
         "caip19": "eip155:1/erc20:0x773258b03c730f84af10dfcb1bfaa7487558b8ac",
@@ -46933,21 +46988,6 @@
         "symbol": "AAVE"
       },
       {
-        "caip19": "eip155:1/erc20:0x7fe4fbad1fee10d6cf8e08198608209a9275944c",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "Infinity Token",
-        "precision": 9,
-        "tokenId": "0x7fe4fbad1fee10d6cf8e08198608209a9275944c",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/17565/thumb/rxkOJRFE_400x400.jpg?1628346196",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "IT"
-      },
-      {
         "caip19": "eip155:1/erc20:0x7fe8dac51394157811c71bbf74c133a224a9ff44",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
@@ -47666,6 +47706,21 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "NM"
+      },
+      {
+        "caip19": "eip155:1/erc20:0x823556202e86763853b40e9cde725f412e294689",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "Altered State Token",
+        "precision": 18,
+        "tokenId": "0x823556202e86763853b40e9cde725f412e294689",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/24893/thumb/ASTO.png?1649303806",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "ASTO"
       },
       {
         "caip19": "eip155:1/erc20:0x824e35f7a75324f99300afac75ecf7354e17ea26",
@@ -49676,21 +49731,6 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "DGW"
-      },
-      {
-        "caip19": "eip155:1/erc20:0x87befc1d367190f2b9cbe9b689e0e5ca658e3b71",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "GLOBALTRUSTFUND TOKEN",
-        "precision": 8,
-        "tokenId": "0x87befc1d367190f2b9cbe9b689e0e5ca658e3b71",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/11817/thumb/gtf.png?1594679456",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "GTF"
       },
       {
         "color": "#7057F5",
@@ -53368,19 +53408,19 @@
         "symbol": "BDOG"
       },
       {
-        "caip19": "eip155:1/erc20:0x9248c485b0b80f76da451f167a8db30f33c70907",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "Debase",
-        "precision": 18,
-        "tokenId": "0x9248c485b0b80f76da451f167a8db30f33c70907",
+        "color": "#7057F5",
         "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
+        "dataSource": "yearnfinance",
         "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0x9248c485b0B80f76DA451f167A8db30F33C70907/logo.png",
-        "sendSupport": true,
+        "name": "DEBASE",
+        "precision": 18,
         "receiveSupport": true,
-        "symbol": "DEBASE"
+        "secondaryColor": "#7057F5",
+        "sendSupport": true,
+        "symbol": "DEBASE",
+        "tokenId": "0x9248c485b0b80f76da451f167a8db30f33c70907",
+        "caip2": "eip155:1",
+        "caip19": "eip155:1/erc20:0x9248c485b0b80f76da451f167a8db30f33c70907"
       },
       {
         "caip19": "eip155:1/erc20:0x9250e33f8ae7b9fe02fb9af97a0c55b42a5ad9d8",
@@ -54703,19 +54743,19 @@
         "caip19": "eip155:1/erc20:0x95daaab98046846bf4b2853e23cba236fa394a31"
       },
       {
-        "caip19": "eip155:1/erc20:0x95dfdc8161832e4ff7816ac4b6367ce201538253",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
+        "color": "#276BDB",
+        "contractType": "erc20",
+        "dataSource": "yearnfinance",
+        "icon": "https://raw.githack.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x95dFDC8161832e4fF7816aC4B6367CE201538253/logo-128.png",
         "name": "Iron Bank KRW",
         "precision": 18,
-        "tokenId": "0x95dfdc8161832e4ff7816ac4b6367ce201538253",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/18574/thumb/logo-128.png?1632469018",
-        "sendSupport": true,
         "receiveSupport": true,
-        "symbol": "IBKRW"
+        "secondaryColor": "#276BDB",
+        "sendSupport": true,
+        "symbol": "ibKRW",
+        "tokenId": "0x95dfdc8161832e4ff7816ac4b6367ce201538253",
+        "caip2": "eip155:1",
+        "caip19": "eip155:1/erc20:0x95dfdc8161832e4ff7816ac4b6367ce201538253"
       },
       {
         "caip19": "eip155:1/erc20:0x95e40e065afb3059dcabe4aaf404c1f92756603a",
@@ -54731,21 +54771,6 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "KDAG"
-      },
-      {
-        "caip19": "eip155:1/erc20:0x95e91a76f225612995043ab26a98e6a4e3e1999b",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "WENWEN JPYN",
-        "precision": 18,
-        "tokenId": "0x95e91a76f225612995043ab26a98e6a4e3e1999b",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/19016/thumb/YKMQO82.png?1634182934",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "JPYN"
       },
       {
         "caip19": "eip155:1/erc20:0x95efd1fe6099f65a7ed524def487483221094947",
@@ -55076,21 +55101,6 @@
         "tokenId": "0x96d62cdcd1cc49cb6ee99c867cb8812bea86b9fa",
         "caip2": "eip155:1",
         "caip19": "eip155:1/erc20:0x96d62cdcd1cc49cb6ee99c867cb8812bea86b9fa"
-      },
-      {
-        "caip19": "eip155:1/erc20:0x96dc9e0fe87eef0b48f88d6ac541ba4f9992aac6",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "WENWEN EURN",
-        "precision": 18,
-        "tokenId": "0x96dc9e0fe87eef0b48f88d6ac541ba4f9992aac6",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/19018/thumb/rTuKxuC.png?1634183353",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "EURN"
       },
       {
         "caip19": "eip155:1/erc20:0x96e61422b6a9ba0e068b6c5add4ffabc6a4aae27",
@@ -55591,7 +55601,7 @@
         "caip19": "eip155:1/erc20:0x98b69ebb4ce228145463d7c08aa71fbb6791fe86",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
-        "name": "RocketToken",
+        "name": "RocketToken  OLD ",
         "precision": 18,
         "tokenId": "0x98b69ebb4ce228145463d7c08aa71fbb6791fe86",
         "contractType": "erc20",
@@ -56351,6 +56361,21 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "IZI"
+      },
+      {
+        "caip19": "eip155:1/erc20:0x9ae380f0272e2162340a5bb646c354271c0f5cfc",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "Conic",
+        "precision": 18,
+        "tokenId": "0x9ae380f0272e2162340a5bb646c354271c0f5cfc",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/24747/thumb/MJEDO-OY_400x400.png?1648785199",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "CNC"
       },
       {
         "caip19": "eip155:1/erc20:0x9aeb50f542050172359a0e1a25a9933bc8c01259",
@@ -57266,6 +57291,21 @@
         "tokenId": "0x9d24364b97270961b2948734afe8d58832efd43a",
         "caip2": "eip155:1",
         "caip19": "eip155:1/erc20:0x9d24364b97270961b2948734afe8d58832efd43a"
+      },
+      {
+        "caip19": "eip155:1/erc20:0x9d37f31a4e8c6af7f64f1ce6241d24f5cacd391c",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "Viral",
+        "precision": 18,
+        "tokenId": "0x9d37f31a4e8c6af7f64f1ce6241d24f5cacd391c",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/25036/thumb/4iT-NXVI_400x400.jpg?1649853009",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "VIRAL"
       },
       {
         "caip19": "eip155:1/erc20:0x9d38f670d15c14716be1f109a4f453e966a2b6d4",
@@ -59098,6 +59138,21 @@
         "symbol": "POLI"
       },
       {
+        "caip19": "eip155:1/erc20:0xa1a4e303e9c56962f201c5e834abc1e677a3c4f3",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "CVNX",
+        "precision": 18,
+        "tokenId": "0xa1a4e303e9c56962f201c5e834abc1e677a3c4f3",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/862/thumb/CVNX-logo.png?1649528798",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "CVNX"
+      },
+      {
         "caip19": "eip155:1/erc20:0xa1a88cea335edaf30ce90f103f1434a773ea46bd",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
@@ -59812,7 +59867,7 @@
         "contractType": "erc20",
         "color": "#FFFFFF",
         "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/22365/thumb/16987.png?1641762707",
+        "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA392c35EC6900346aDEc720Abe50413F48Ee5143/logo.png",
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "GENRE"
@@ -60191,6 +60246,21 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "MUTE"
+      },
+      {
+        "caip19": "eip155:1/erc20:0xa4b032895bcb6b11ec7d21380f557919d448fd04",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "Bright Risk Index",
+        "precision": 18,
+        "tokenId": "0xa4b032895bcb6b11ec7d21380f557919d448fd04",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/24920/thumb/BRI_Token.png?1649376367",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "BRI"
       },
       {
         "caip19": "eip155:1/erc20:0xa4bbe66f151b22b167127c770016b15ff97dd35c",
@@ -60776,6 +60846,21 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "GOKU"
+      },
+      {
+        "caip19": "eip155:1/erc20:0xa6586e19ef681b1ac0ed3d46413d199a555dbb95",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "Lets Go Brandon",
+        "precision": 18,
+        "tokenId": "0xa6586e19ef681b1ac0ed3d46413d199a555dbb95",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/24034/thumb/3zKU0T83_400x400.jpeg?1646117523",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "LETSGO"
       },
       {
         "caip19": "eip155:1/erc20:0xa6610ed604047e7b76c1da288172d15bcda57596",
@@ -63643,6 +63728,21 @@
         "caip19": "eip155:1/erc20:0xaea8e1b6cb5c05d1dac618551c76bcd578ea3524"
       },
       {
+        "caip19": "eip155:1/erc20:0xaeb813653bb20d5fa4798dc4fc63af9cad4f3f67",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "The Commission",
+        "precision": 18,
+        "tokenId": "0xaeb813653bb20d5fa4798dc4fc63af9cad4f3f67",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/24993/thumb/pGaXc6eB_400x400.jpg?1649719689",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "CMSN"
+      },
+      {
         "caip19": "eip155:1/erc20:0xaec2e87e0a235266d9c5adc9deb4b2e29b54d009",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
@@ -63776,21 +63876,6 @@
         "tokenId": "0xaf20b44c1c651d1d29cfb916ee2a0630b828eb7a",
         "caip2": "eip155:1",
         "caip19": "eip155:1/erc20:0xaf20b44c1c651d1d29cfb916ee2a0630b828eb7a"
-      },
-      {
-        "caip19": "eip155:1/erc20:0xaf43fd1cbc516229cd6dfeb04e6e9f0e34e0df8c",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "Nico Robin Inu",
-        "precision": 9,
-        "tokenId": "0xaf43fd1cbc516229cd6dfeb04e6e9f0e34e0df8c",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/18965/thumb/84LW_JDl_400x400.jpg?1634026724",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "ROBIN"
       },
       {
         "caip19": "eip155:1/erc20:0xaf4dce16da2877f8c9e00544c93b62ac40631f16",
@@ -63941,21 +64026,6 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "RFUEL"
-      },
-      {
-        "caip19": "eip155:1/erc20:0xafbf03181833ab4e8dec24d708a2a24c2baaa4a4",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "MandoX",
-        "precision": 9,
-        "tokenId": "0xafbf03181833ab4e8dec24d708a2a24c2baaa4a4",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/20954/thumb/JYSDP9N.png?1638139268",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "MANDOX"
       },
       {
         "color": "#7057F5",
@@ -64756,7 +64826,7 @@
         "caip19": "eip155:1/erc20:0xb2a63a5dd36c91ec2da59b188ff047f66fac122a",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
-        "name": "Follow Token",
+        "name": "Alpha Impact",
         "precision": 18,
         "tokenId": "0xb2a63a5dd36c91ec2da59b188ff047f66fac122a",
         "contractType": "erc20",
@@ -65317,7 +65387,7 @@
         "contractType": "erc20",
         "color": "#FFFFFF",
         "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/24772/thumb/TAT2.jpg?1648821223",
+        "icon": "https://assets.coingecko.com/coins/images/24772/thumb/logo_200x200.png?1649835408",
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "TAT2"
@@ -65726,6 +65796,21 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "BCASH"
+      },
+      {
+        "caip19": "eip155:1/erc20:0xb5be7557fe8f69a2b5707d25fa0aee80dfda512e",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "POLYSPORTS",
+        "precision": 18,
+        "tokenId": "0xb5be7557fe8f69a2b5707d25fa0aee80dfda512e",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/25070/thumb/L-T2x_cG_400x400.jpg?1650024620",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "PS1"
       },
       {
         "caip19": "eip155:1/erc20:0xb5c578947de0fd71303f71f2c3d41767438bd0de",
@@ -66431,6 +66516,21 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "REALTOKEN-S-11078-W"
+      },
+      {
+        "caip19": "eip155:1/erc20:0xb840d10d840ef47c233fec1fd040f5b145a6dfa5",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "STREETH",
+        "precision": 18,
+        "tokenId": "0xb840d10d840ef47c233fec1fd040f5b145a6dfa5",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/24954/thumb/streeth.png?1649507723",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "STREETH"
       },
       {
         "caip19": "eip155:1/erc20:0xb8647e90c0645152fccf4d9abb6b59eb4aa99052",
@@ -69808,6 +69908,21 @@
         "symbol": "TRXBULL"
       },
       {
+        "caip19": "eip155:1/erc20:0xc17c30e98541188614df99239cabd40280810ca3",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "EverRise",
+        "precision": 18,
+        "tokenId": "0xc17c30e98541188614df99239cabd40280810ca3",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC17c30e98541188614dF99239cABD40280810cA3/logo.png",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "RISE"
+      },
+      {
         "caip19": "eip155:1/erc20:0xc17fbe1d709ddf6c0b6665dd0591046815ac7554",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
@@ -70061,6 +70176,21 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "ECO"
+      },
+      {
+        "caip19": "eip155:1/erc20:0xc2544a32872a91f4a553b404c6950e89de901fdb",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "Frax Price Index Share",
+        "precision": 18,
+        "tokenId": "0xc2544a32872a91f4a553b404c6950e89de901fdb",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/24944/thumb/fpis.png?1649485832",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "FPIS"
       },
       {
         "caip19": "eip155:1/erc20:0xc25a3a3b969415c80451098fa907ec722572917f",
@@ -70661,6 +70791,21 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "MBT"
+      },
+      {
+        "caip19": "eip155:1/erc20:0xc43420dbaf53b1a6c607c6a561ac60afb16b05fd",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "Shinjiro",
+        "precision": 9,
+        "tokenId": "0xc43420dbaf53b1a6c607c6a561ac60afb16b05fd",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/25018/thumb/Shinjiro_200x200.png?1649830769",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "SHINJIRO"
       },
       {
         "caip19": "eip155:1/erc20:0xc434b27736a6882d33094d34792999702860a13c",
@@ -71351,6 +71496,21 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "GLDX"
+      },
+      {
+        "caip19": "eip155:1/erc20:0xc631be100f6cf9a7012c23de5a6ccb990eafc133",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "Banana Task Force Ape",
+        "precision": 9,
+        "tokenId": "0xc631be100f6cf9a7012c23de5a6ccb990eafc133",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/25032/thumb/ZZpipp8e_400x400.jpg?1649851881",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "BTFA"
       },
       {
         "caip19": "eip155:1/erc20:0xc64500dd7b0f1794807e67802f8abbf5f8ffb054",
@@ -74308,19 +74468,19 @@
         "symbol": "SDG"
       },
       {
-        "caip19": "eip155:1/erc20:0xcf8f9555d55ce45a3a33a81d6ef99a2a2e71dee2",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "CBI Index 7",
-        "precision": 18,
-        "tokenId": "0xcf8f9555d55ce45a3a33a81d6ef99a2a2e71dee2",
+        "color": "#7057F5",
         "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
+        "dataSource": "yearnfinance",
         "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0xCf8f9555D55CE45a3A33a81D6eF99a2a2E71Dee2/logo.png",
-        "sendSupport": true,
+        "name": "CBIX7",
+        "precision": 18,
         "receiveSupport": true,
-        "symbol": "CBIX7"
+        "secondaryColor": "#7057F5",
+        "sendSupport": true,
+        "symbol": "CBIX7",
+        "tokenId": "0xcf8f9555d55ce45a3a33a81d6ef99a2a2e71dee2",
+        "caip2": "eip155:1",
+        "caip19": "eip155:1/erc20:0xcf8f9555d55ce45a3a33a81d6ef99a2a2e71dee2"
       },
       {
         "caip19": "eip155:1/erc20:0xcf9c692f7e62af3c571d4173fd4abf9a3e5330d0",
@@ -75643,21 +75803,6 @@
         "symbol": "TMED"
       },
       {
-        "caip19": "eip155:1/erc20:0xd32ed17bc769c7a252a64bd915d6db8f70ca5113",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "Sasuke Inu",
-        "precision": 18,
-        "tokenId": "0xd32ed17bc769c7a252a64bd915d6db8f70ca5113",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/18994/thumb/cute-corgi-dog-eating-bone-cartoon_138676-2534_%282%29.png?1634126111",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "SINU"
-      },
-      {
         "caip19": "eip155:1/erc20:0xd33526068d116ce69f19a9ee46f0bd304f21a51f",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
@@ -75973,19 +76118,19 @@
         "symbol": "CQT"
       },
       {
-        "color": "#7057F5",
-        "contractType": "erc20",
-        "dataSource": "yearnfinance",
-        "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0xd42debE4eDc92Bd5a3FBb4243e1ecCf6d63A4A5d/logo.png",
-        "name": "C8",
-        "precision": 18,
-        "receiveSupport": true,
-        "secondaryColor": "#7057F5",
-        "sendSupport": true,
-        "symbol": "C8",
-        "tokenId": "0xd42debe4edc92bd5a3fbb4243e1eccf6d63a4a5d",
+        "caip19": "eip155:1/erc20:0xd42debe4edc92bd5a3fbb4243e1eccf6d63a4a5d",
         "caip2": "eip155:1",
-        "caip19": "eip155:1/erc20:0xd42debe4edc92bd5a3fbb4243e1eccf6d63a4a5d"
+        "dataSource": "coingecko",
+        "name": "Carboneum",
+        "precision": 18,
+        "tokenId": "0xd42debe4edc92bd5a3fbb4243e1eccf6d63a4a5d",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0xd42debE4eDc92Bd5a3FBb4243e1ecCf6d63A4A5d/logo.png",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "C8"
       },
       {
         "caip19": "eip155:1/erc20:0xd432e8611377e307d3e5710132515be1e6aa6156",
@@ -76141,13 +76286,13 @@
         "caip19": "eip155:1/erc20:0xd47bdf574b4f76210ed503e0efe81b58aa061f3d",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
-        "name": "DTravel",
+        "name": "TRVL",
         "precision": 18,
         "tokenId": "0xd47bdf574b4f76210ed503e0efe81b58aa061f3d",
         "contractType": "erc20",
         "color": "#FFFFFF",
         "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/20911/thumb/trvl.png?1637922141",
+        "icon": "https://assets.coingecko.com/coins/images/20911/thumb/trvl.jpeg?1649390006",
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "TRVL"
@@ -78388,21 +78533,6 @@
         "symbol": "AGS"
       },
       {
-        "caip19": "eip155:1/erc20:0xdb33d49b5a41a97d296b7242a96ebd8ac77b3bb8",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "CY Finance",
-        "precision": 18,
-        "tokenId": "0xdb33d49b5a41a97d296b7242a96ebd8ac77b3bb8",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/12579/thumb/logocyf200.jpg?1600915999",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "CYF"
-      },
-      {
         "caip19": "eip155:1/erc20:0xdb5c3c46e28b53a39c255aa39a411dd64e5fed9c",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
@@ -78566,6 +78696,21 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "CRWNY"
+      },
+      {
+        "caip19": "eip155:1/erc20:0xdc0327d50e6c73db2f8117760592c8bbf1cdcf38",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "Stronger",
+        "precision": 18,
+        "tokenId": "0xdc0327d50e6c73db2f8117760592c8bbf1cdcf38",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/24922/thumb/spJQ8BU3_400x400.png?1649384187",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "STRNGR"
       },
       {
         "caip19": "eip155:1/erc20:0xdc0804ed9aba9202e2b976c031d3144bb63a7990",
@@ -79048,19 +79193,19 @@
         "symbol": "COTI"
       },
       {
-        "caip19": "eip155:1/erc20:0xddce093888c8dc636677cd29bc6c68d35cfdac33",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "Paper",
-        "precision": 18,
-        "tokenId": "0xddce093888c8dc636677cd29bc6c68d35cfdac33",
+        "color": "#7057F5",
         "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/14369/thumb/paper.png?1621827513",
-        "sendSupport": true,
+        "dataSource": "yearnfinance",
+        "icon": "https://assets.yearn.network/tokens/ethereum/0xddce093888c8dc636677cd29bc6c68d35cfdac33.png",
+        "name": "PAPER",
+        "precision": 18,
         "receiveSupport": true,
-        "symbol": "PAPER"
+        "secondaryColor": "#7057F5",
+        "sendSupport": true,
+        "symbol": "PAPER",
+        "tokenId": "0xddce093888c8dc636677cd29bc6c68d35cfdac33",
+        "caip2": "eip155:1",
+        "caip19": "eip155:1/erc20:0xddce093888c8dc636677cd29bc6c68d35cfdac33"
       },
       {
         "caip19": "eip155:1/erc20:0xddd460bbd9f79847ea08681563e8a9696867210c",
@@ -79492,7 +79637,7 @@
         "contractType": "erc20",
         "color": "#FFFFFF",
         "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/24384/thumb/COW-token-1024x1024.png?1647488013",
+        "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0xDEf1CA1fb7FBcDC777520aa7f396b4E015F497aB/logo.png",
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "COW"
@@ -79976,6 +80121,21 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "RESTAURANTS"
+      },
+      {
+        "caip19": "eip155:1/erc20:0xe00639a1f59b52773b7d39d9f9bef07f6248dbae",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "The DAOX Index",
+        "precision": 18,
+        "tokenId": "0xe00639a1f59b52773b7d39d9f9bef07f6248dbae",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/25042/thumb/200px-DAOx.png?1649911875",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "DAOX"
       },
       {
         "caip19": "eip155:1/erc20:0xe04491d64eaa464ec8fdf53c7a4c92bf5b2278cd",
@@ -81971,21 +82131,6 @@
         "tokenId": "0xe5dada80aa6477e85d09747f2842f7993d0df71c",
         "caip2": "eip155:1",
         "caip19": "eip155:1/erc20:0xe5dada80aa6477e85d09747f2842f7993d0df71c"
-      },
-      {
-        "caip19": "eip155:1/erc20:0xe5db2c3e2ceff742e5306bcfc12622f5e2d14e98",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "ClienteleCoin",
-        "precision": 9,
-        "tokenId": "0xe5db2c3e2ceff742e5306bcfc12622f5e2d14e98",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/17299/thumb/EqQdxWB.png?1627267158",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "CLT"
       },
       {
         "caip19": "eip155:1/erc20:0xe5ef42d0e5e4aa6b36c613d00db8dad303d505f3",
@@ -84208,6 +84353,21 @@
         "symbol": "PRE"
       },
       {
+        "caip19": "eip155:1/erc20:0xec4325f0518584f0774b483c215f65474eabd27f",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "Stable BTC",
+        "precision": 18,
+        "tokenId": "0xec4325f0518584f0774b483c215f65474eabd27f",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0xEc4325F0518584F0774b483c215F65474EAbD27F/logo.png",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "ONEBTC"
+      },
+      {
         "caip19": "eip155:1/erc20:0xec5483804e637d45cde22fa0869656b64b5ab1ab",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
@@ -84386,6 +84546,21 @@
         "tokenId": "0xecd5e75afb02efa118af914515d6521aabd189f1",
         "caip2": "eip155:1",
         "caip19": "eip155:1/erc20:0xecd5e75afb02efa118af914515d6521aabd189f1"
+      },
+      {
+        "caip19": "eip155:1/erc20:0xed025a9fe4b30bcd68460bca42583090c2266468",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "Ripio Coin",
+        "precision": 18,
+        "tokenId": "0xed025a9fe4b30bcd68460bca42583090c2266468",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/24901/thumb/624e429cffe3fe0001456cb8_01_rpc-icon.png?1649324477",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "RPC"
       },
       {
         "caip19": "eip155:1/erc20:0xed0439eacf4c4965ae4613d77a5c2efe10e5f183",
@@ -85273,21 +85448,6 @@
         "symbol": "FIS"
       },
       {
-        "caip19": "eip155:1/erc20:0xef40b859d21e4d566a3d713e756197c021bffaaa",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "APENFT",
-        "precision": 6,
-        "tokenId": "0xef40b859d21e4d566a3d713e756197c021bffaaa",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/15687/thumb/apenft.jpg?1621562368",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "NFT"
-      },
-      {
         "caip19": "eip155:1/erc20:0xef53462838000184f35f7d991452e5f25110b207",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
@@ -85391,6 +85551,21 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "YFIIG"
+      },
+      {
+        "caip19": "eip155:1/erc20:0xef952363c1d990a2fa58f8b379a9fa33bad1dfd1",
+        "caip2": "eip155:1",
+        "dataSource": "coingecko",
+        "name": "LynKey",
+        "precision": 8,
+        "tokenId": "0xef952363c1d990a2fa58f8b379a9fa33bad1dfd1",
+        "contractType": "erc20",
+        "color": "#FFFFFF",
+        "secondaryColor": "#FFFFFF",
+        "icon": "https://assets.coingecko.com/coins/images/25069/thumb/oOcTsBsg_400x400_%281%29.jpg?1650038695",
+        "sendSupport": true,
+        "receiveSupport": true,
+        "symbol": "LYNK"
       },
       {
         "color": "#7057F5",
@@ -86758,21 +86933,6 @@
         "symbol": "IDLEUSDTYIELD"
       },
       {
-        "caip19": "eip155:1/erc20:0xf34960d9d60be18cc1d5afc1a6f012a723a28811",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "KuCoin Token",
-        "precision": 6,
-        "tokenId": "0xf34960d9d60be18cc1d5afc1a6f012a723a28811",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0xf34960d9d60be18cC1D5Afc1A6F012A723a28811/logo.png",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "KCS"
-      },
-      {
         "caip19": "eip155:1/erc20:0xf34b1db61aca1a371fe97bad2606c9f534fb9d7d",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
@@ -87733,21 +87893,6 @@
         "caip19": "eip155:1/erc20:0xf5d0fefaab749d8b14c27f0de60cc6e9e7f848d1"
       },
       {
-        "caip19": "eip155:1/erc20:0xf5dce57282a584d2746faf1593d3121fcac444dc",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "cSAI",
-        "precision": 8,
-        "tokenId": "0xf5dce57282a584d2746faf1593d3121fcac444dc",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0xF5DCe57282A584D2746FaF1593d3121Fcac444dC/logo.png",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "CSAI"
-      },
-      {
         "caip19": "eip155:1/erc20:0xf604d1e51122592e0babe63ac334c0e647222f2d",
         "caip2": "eip155:1",
         "dataSource": "coingecko",
@@ -87836,21 +87981,6 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "GIV"
-      },
-      {
-        "caip19": "eip155:1/erc20:0xf657d69c62c39be9da87d0fb7625b2f730b5af8f",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "No One",
-        "precision": 9,
-        "tokenId": "0xf657d69c62c39be9da87d0fb7625b2f730b5af8f",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/19393/thumb/logo-200x200_%289%29.png?1635150101",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "NOONE"
       },
       {
         "caip19": "eip155:1/erc20:0xf65b5c5104c4fafd4b709d9d60a185eae063276c",
@@ -89308,19 +89438,19 @@
         "symbol": "CPC"
       },
       {
-        "caip19": "eip155:1/erc20:0xfafdf0c4c1cb09d430bf88c75d88bb46dae09967",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
+        "color": "#276BDB",
+        "contractType": "erc20",
+        "dataSource": "yearnfinance",
+        "icon": "https://raw.githack.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0xFAFdF0C4c1CB09d430Bf88c75D88BB46DAe09967/logo-128.png",
         "name": "Iron Bank AUD",
         "precision": 18,
-        "tokenId": "0xfafdf0c4c1cb09d430bf88c75d88bb46dae09967",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://assets.coingecko.com/coins/images/18575/thumb/logo-128_%281%29.png?1632469123",
-        "sendSupport": true,
         "receiveSupport": true,
-        "symbol": "IBAUD"
+        "secondaryColor": "#276BDB",
+        "sendSupport": true,
+        "symbol": "ibAUD",
+        "tokenId": "0xfafdf0c4c1cb09d430bf88c75d88bb46dae09967",
+        "caip2": "eip155:1",
+        "caip19": "eip155:1/erc20:0xfafdf0c4c1cb09d430bf88c75d88bb46dae09967"
       },
       {
         "caip19": "eip155:1/erc20:0xfb130d93e49dca13264344966a611dc79a456bc5",
@@ -90581,21 +90711,6 @@
         "sendSupport": true,
         "receiveSupport": true,
         "symbol": "YFBTC"
-      },
-      {
-        "caip19": "eip155:1/erc20:0xff0a024b66739357c4ed231fb3dbc0c8c22749f5",
-        "caip2": "eip155:1",
-        "dataSource": "coingecko",
-        "name": "Wrapped WRX",
-        "precision": 8,
-        "tokenId": "0xff0a024b66739357c4ed231fb3dbc0c8c22749f5",
-        "contractType": "erc20",
-        "color": "#FFFFFF",
-        "secondaryColor": "#FFFFFF",
-        "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0xFF0a024B66739357c4ED231fB3DBC0c8C22749F5/logo.png",
-        "sendSupport": true,
-        "receiveSupport": true,
-        "symbol": "BWRX"
       },
       {
         "caip19": "eip155:1/erc20:0xff0e5e014cf97e0615cb50f6f39da6388e2fae6e",
