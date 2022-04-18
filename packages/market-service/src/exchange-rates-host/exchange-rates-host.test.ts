@@ -11,6 +11,10 @@ const mockedAxios = axios as jest.Mocked<typeof axios>
 const exchangeRateHostService = new ExchangeRateHostService()
 
 describe('ExchangeRateHostService', () => {
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+
   describe('findByFiatSymbol', () => {
     const args: FiatMarketDataArgs = {
       symbol: 'EUR'

@@ -35,11 +35,11 @@ describe('fiat market service', () => {
       symbol: <const>'EUR',
       timeframe: HistoryTimeframe.HOUR
     }
-    it('can return from fist market service and skip the next', async () => {
+    it('can return from first market service and skip the next', async () => {
       const result = await findPriceHistoryByFiatSymbol(args)
       expect(result).toEqual(mockERHPriceHistoryData)
     })
-    it('can return null if no data found', async () => {
+    it('can return an empty array if no data found', async () => {
       // @ts-ignore
       FiatMarketProviders[0].findPriceHistoryByFiatSymbol.mockRejectedValueOnce({ error: 'error' })
       const result = await findPriceHistoryByFiatSymbol(args)
