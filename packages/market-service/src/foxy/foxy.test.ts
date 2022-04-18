@@ -23,6 +23,7 @@ describe('foxy market service', () => {
       const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => void 0)
       const result = await foxyMarketService.findAll()
       expect(Object.keys(result).length).toEqual(0)
+      expect(consoleSpy).toHaveBeenCalledTimes(2)
       consoleSpy.mockRestore()
     })
 
@@ -31,6 +32,7 @@ describe('foxy market service', () => {
       const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => void 0)
       const result = await foxyMarketService.findAll()
       expect(Object.keys(result).length).toEqual(0)
+      expect(consoleSpy).toHaveBeenCalledTimes(2)
       consoleSpy.mockRestore()
     })
   })
@@ -51,6 +53,7 @@ describe('foxy market service', () => {
       await expect(foxyMarketService.findByCaip19(args)).rejects.toEqual(
         new Error('FoxyMarketService(findByCaip19): error fetching market data')
       )
+      expect(consoleSpy).toHaveBeenCalledTimes(1)
       consoleSpy.mockRestore()
     })
   })
@@ -85,6 +88,7 @@ describe('foxy market service', () => {
       await expect(foxyMarketService.findPriceHistoryByCaip19(args)).rejects.toEqual(
         new Error('FoxyMarketService(findPriceHistoryByCaip19): error fetching price history')
       )
+      expect(consoleSpy).toHaveBeenCalledTimes(1)
       consoleSpy.mockRestore()
     })
   })

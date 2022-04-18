@@ -171,6 +171,7 @@ describe('coingecko market service', () => {
       await expect(coinGeckoMarketService.findByCaip19(args)).rejects.toEqual(
         new Error('CoinGeckoMarketService(findByCaip19): error fetching market data')
       )
+      expect(consoleSpy).toHaveBeenCalledTimes(1)
       consoleSpy.mockRestore()
     })
   })
@@ -205,6 +206,7 @@ describe('coingecko market service', () => {
       await expect(coinGeckoMarketService.findPriceHistoryByCaip19(args)).rejects.toEqual(
         new Error('CoinGeckoMarketService(findPriceHistoryByCaip19): error fetching price history')
       )
+      expect(consoleSpy).toHaveBeenCalledTimes(1)
       consoleSpy.mockRestore()
     })
   })

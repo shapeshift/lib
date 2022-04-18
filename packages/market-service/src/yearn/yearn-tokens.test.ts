@@ -41,6 +41,7 @@ describe('yearn token market service', () => {
       const consoleSpy = jest.spyOn(console, 'info').mockImplementation(() => void 0)
       const result = await yearnTokenMarketCapService.findAll()
       expect(Object.keys(result).length).toEqual(0)
+      expect(consoleSpy).toHaveBeenCalledTimes(1)
       consoleSpy.mockRestore()
     })
 
@@ -51,6 +52,7 @@ describe('yearn token market service', () => {
       const consoleSpy = jest.spyOn(console, 'info').mockImplementation(() => void 0)
       const result = await yearnTokenMarketCapService.findAll()
       expect(Object.keys(result).length).toEqual(0)
+      expect(consoleSpy).toHaveBeenCalledTimes(1)
       consoleSpy.mockRestore()
     })
 

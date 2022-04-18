@@ -122,6 +122,7 @@ describe('osmosis market service', () => {
       await expect(osmosisMarketService.findPriceHistoryByCaip19(args)).rejects.toEqual(
         new Error('MarketService(findPriceHistoryByCaip19): error fetching price history')
       )
+      expect(consoleSpy).toHaveBeenCalledTimes(1)
       consoleSpy.mockRestore()
     })
   })

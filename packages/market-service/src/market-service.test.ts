@@ -95,6 +95,7 @@ describe('market service', () => {
       const consoleSpy = jest.spyOn(console, 'info').mockImplementation(() => void 0)
       await findAll()
       expect(MarketProviders[1].findAll).toHaveBeenCalledTimes(1)
+      expect(consoleSpy).toHaveBeenCalledTimes(1)
       consoleSpy.mockRestore()
     })
     it('errors if no data found', async () => {
@@ -114,6 +115,7 @@ describe('market service', () => {
       await expect(findAll()).rejects.toEqual(
         new Error('Cannot find market service provider for market data.')
       )
+      expect(consoleSpy).toHaveBeenCalledTimes(6)
       consoleSpy.mockRestore()
     })
     it('returns market service data if exists', async () => {
@@ -126,6 +128,7 @@ describe('market service', () => {
       const consoleSpy = jest.spyOn(console, 'info').mockImplementation(() => void 0)
       const result = await findAll()
       expect(result).toEqual(mockYearnServiceFindAllData)
+      expect(consoleSpy).toHaveBeenCalledTimes(1)
       consoleSpy.mockRestore()
     })
   })

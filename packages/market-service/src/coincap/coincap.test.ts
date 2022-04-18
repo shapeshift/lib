@@ -143,6 +143,7 @@ describe('coincap market service', () => {
       await expect(coinMarketService.findByCaip19(args)).rejects.toEqual(
         new Error('MarketService(findByCaip19): error fetching market data')
       )
+      expect(consoleSpy).toHaveBeenCalledTimes(1)
       consoleSpy.mockRestore()
     })
   })
@@ -177,6 +178,7 @@ describe('coincap market service', () => {
       await expect(coinMarketService.findPriceHistoryByCaip19(args)).rejects.toEqual(
         new Error('MarketService(findPriceHistoryByCaip19): error fetching price history')
       )
+      expect(consoleSpy).toHaveBeenCalledTimes(1)
       consoleSpy.mockRestore()
     })
   })
