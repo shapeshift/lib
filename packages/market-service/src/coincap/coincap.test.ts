@@ -139,10 +139,11 @@ describe('coincap market service', () => {
 
     it('should return null on network error', async () => {
       mockedAxios.get.mockRejectedValue(Error)
-      jest.spyOn(console, 'warn').mockImplementation(() => void 0)
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => void 0)
       await expect(coinMarketService.findByCaip19(args)).rejects.toEqual(
         new Error('MarketService(findByCaip19): error fetching market data')
       )
+      consoleSpy.mockRestore()
     })
   })
 
@@ -172,10 +173,11 @@ describe('coincap market service', () => {
 
     it('should return null on network error', async () => {
       mockedAxios.get.mockRejectedValue(Error)
-      jest.spyOn(console, 'warn').mockImplementation(() => void 0)
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => void 0)
       await expect(coinMarketService.findPriceHistoryByCaip19(args)).rejects.toEqual(
         new Error('MarketService(findPriceHistoryByCaip19): error fetching price history')
       )
+      consoleSpy.mockRestore()
     })
   })
 })

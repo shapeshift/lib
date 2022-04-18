@@ -43,10 +43,11 @@ describe('foxy market service', () => {
 
     it('should return null on network error', async () => {
       mockedAxios.get.mockRejectedValue(Error)
-      jest.spyOn(console, 'warn').mockImplementation(() => void 0)
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => void 0)
       await expect(foxyMarketService.findByCaip19(args)).rejects.toEqual(
         new Error('FoxyMarketService(findByCaip19): error fetching market data')
       )
+      consoleSpy.mockRestore()
     })
   })
 
@@ -76,10 +77,11 @@ describe('foxy market service', () => {
 
     it('should return null on network error', async () => {
       mockedAxios.get.mockRejectedValue(Error)
-      jest.spyOn(console, 'warn').mockImplementation(() => void 0)
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => void 0)
       await expect(foxyMarketService.findPriceHistoryByCaip19(args)).rejects.toEqual(
         new Error('FoxyMarketService(findPriceHistoryByCaip19): error fetching price history')
       )
+      consoleSpy.mockRestore()
     })
   })
 })
