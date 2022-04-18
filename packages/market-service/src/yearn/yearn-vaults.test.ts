@@ -48,14 +48,18 @@ describe('yearn market service', () => {
 
     it('can handle api errors', async () => {
       mockedYearnSdk.vaults.get.mockRejectedValueOnce({ error: 'foo' } as never)
+      const consoleSpy = jest.spyOn(console, 'info').mockImplementation(() => void 0)
       const result = await yearnVaultMarketCapService.findAll()
       expect(Object.keys(result).length).toEqual(0)
+      consoleSpy.mockRestore()
     })
 
     it('can handle rate limiting', async () => {
       mockedYearnSdk.vaults.get.mockResolvedValueOnce({ status: 429 } as never)
+      const consoleSpy = jest.spyOn(console, 'info').mockImplementation(() => void 0)
       const result = await yearnVaultMarketCapService.findAll()
       expect(Object.keys(result).length).toEqual(0)
+      consoleSpy.mockRestore()
     })
 
     it('can use default args', async () => {

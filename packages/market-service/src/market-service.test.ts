@@ -92,8 +92,10 @@ describe('market service', () => {
     it('can call the next market service if the first fails', async () => {
       // @ts-ignore
       MarketProviders[0].findAll.mockRejectedValueOnce({ error: 'error' })
+      const consoleSpy = jest.spyOn(console, 'info').mockImplementation(() => void 0)
       await findAll()
       expect(MarketProviders[1].findAll).toHaveBeenCalledTimes(1)
+      consoleSpy.mockRestore()
     })
     it('errors if no data found', async () => {
       // @ts-ignore
@@ -108,9 +110,11 @@ describe('market service', () => {
       MarketProviders[4].findAll.mockRejectedValueOnce({ error: 'error' })
       // @ts-ignore
       MarketProviders[5].findAll.mockRejectedValueOnce({ error: 'error' })
+      const consoleSpy = jest.spyOn(console, 'info').mockImplementation(() => void 0)
       await expect(findAll()).rejects.toEqual(
         new Error('Cannot find market service provider for market data.')
       )
+      consoleSpy.mockRestore()
     })
     it('returns market service data if exists', async () => {
       const result = await findAll()
@@ -119,8 +123,10 @@ describe('market service', () => {
     it('returns next market service data if previous data does not exist', async () => {
       // @ts-ignore
       MarketProviders[0].findAll.mockRejectedValueOnce({ error: 'error' })
+      const consoleSpy = jest.spyOn(console, 'info').mockImplementation(() => void 0)
       const result = await findAll()
       expect(result).toEqual(mockYearnServiceFindAllData)
+      consoleSpy.mockRestore()
     })
   })
 

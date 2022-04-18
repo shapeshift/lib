@@ -38,16 +38,20 @@ describe('yearn token market service', () => {
       mockedYearnSdk.vaults.tokens.mockResolvedValueOnce({ error: 'foo' } as never)
       mockedYearnSdk.tokens.supported.mockResolvedValueOnce({ error: 'foo' } as never)
       mockedYearnSdk.ironBank.tokens.mockResolvedValueOnce({ error: 'foo' } as never)
+      const consoleSpy = jest.spyOn(console, 'info').mockImplementation(() => void 0)
       const result = await yearnTokenMarketCapService.findAll()
       expect(Object.keys(result).length).toEqual(0)
+      consoleSpy.mockRestore()
     })
 
     it('can handle rate limiting', async () => {
       mockedYearnSdk.vaults.tokens.mockResolvedValueOnce({ status: 429 } as never)
       mockedYearnSdk.tokens.supported.mockResolvedValueOnce({ status: 429 } as never)
       mockedYearnSdk.ironBank.tokens.mockResolvedValueOnce({ status: 429 } as never)
+      const consoleSpy = jest.spyOn(console, 'info').mockImplementation(() => void 0)
       const result = await yearnTokenMarketCapService.findAll()
       expect(Object.keys(result).length).toEqual(0)
+      consoleSpy.mockRestore()
     })
 
     it('can use default args', async () => {

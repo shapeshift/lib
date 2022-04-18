@@ -20,14 +20,18 @@ describe('foxy market service', () => {
 
     it('can handle api errors', async () => {
       mockedAxios.get.mockRejectedValue({ error: 'foo' })
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => void 0)
       const result = await foxyMarketService.findAll()
       expect(Object.keys(result).length).toEqual(0)
+      consoleSpy.mockRestore()
     })
 
     it('can handle rate limiting', async () => {
       mockedAxios.get.mockResolvedValue({ status: 429 })
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => void 0)
       const result = await foxyMarketService.findAll()
       expect(Object.keys(result).length).toEqual(0)
+      consoleSpy.mockRestore()
     })
   })
 
