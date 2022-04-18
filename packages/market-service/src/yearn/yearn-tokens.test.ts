@@ -81,7 +81,6 @@ describe('yearn token market service', () => {
         assetReference: mockYearnTokenRestData[1].address.toLowerCase()
       })
       const [yvBtcKey, yvDaiKey] = Object.keys(result)
-      console.log({ result })
       expect(yvDaiKey).toEqual(yvDaiCaip19)
       expect(yvBtcKey).toEqual(yvBtcCaip19)
     })
