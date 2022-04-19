@@ -1,3 +1,24 @@
+# [@shapeshiftoss/investor-foxy-v1.4.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v1.4.0...@shapeshiftoss/investor-foxy-v1.4.1) (2022-04-18)
+
+
+### Bug Fixes
+
+* use mostly right rebase history if one fails ([#525](https://github.com/shapeshift/lib/issues/525)) ([5dda69f](https://github.com/shapeshift/lib/commit/5dda69ff965b9280e4236cb48b11f95e980dbe38))
+
+# [@shapeshiftoss/investor-foxy-v1.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v1.3.4...@shapeshiftoss/investor-foxy-v1.4.0) (2022-04-18)
+
+
+### Features
+
+* add transfer toke function + small fix to claimFromTokemak ([#505](https://github.com/shapeshift/lib/issues/505)) ([e035552](https://github.com/shapeshift/lib/commit/e03555207c650adbc19b031eb3f0ede8131be006))
+
+# [@shapeshiftoss/investor-foxy-v1.3.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v1.3.3...@shapeshiftoss/investor-foxy-v1.3.4) (2022-04-15)
+
+
+### Bug Fixes
+
+* add cosmos keepkey support ([#529](https://github.com/shapeshift/lib/issues/529)) ([74922b2](https://github.com/shapeshift/lib/commit/74922b282d493d31afada7929ab64f5d875ee032))
+
 # [@shapeshiftoss/investor-foxy-v1.3.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v1.3.2...@shapeshiftoss/investor-foxy-v1.3.3) (2022-04-05)
 
 
