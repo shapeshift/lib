@@ -33,10 +33,11 @@ describe('ExchangeRateHostService', () => {
 
     it('should return null on network error', async () => {
       mockedAxios.get.mockRejectedValue(Error)
-      jest.spyOn(console, 'warn').mockImplementation(() => void 0)
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => void 0)
       await expect(exchangeRateHostService.findByFiatSymbol(args)).rejects.toEqual(
         new Error('FiatMarketService(findByFiatSymbol): error fetching market data')
       )
+      expect(consoleSpy).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -64,10 +65,11 @@ describe('ExchangeRateHostService', () => {
 
     it('should return null on network error', async () => {
       mockedAxios.get.mockRejectedValue(Error)
-      jest.spyOn(console, 'warn').mockImplementation(() => void 0)
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => void 0)
       await expect(exchangeRateHostService.findPriceHistoryByFiatSymbol(args)).rejects.toEqual(
         new Error('ExchangeRateHost(findPriceHistoryByFiatSymbol): error fetching price history')
       )
+      expect(consoleSpy).toHaveBeenCalledTimes(1)
     })
   })
 })
