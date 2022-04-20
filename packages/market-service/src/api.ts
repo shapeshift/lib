@@ -1,10 +1,6 @@
-import {
-  FiatPriceHistoryType,
-  FindAllMarketType,
-  FindByCaip19MarketType,
-  FindByFiatMarketType,
-  PriceHistoryType
-} from '@shapeshiftoss/types'
+import { FindAllMarketType, FindByCaip19MarketType, PriceHistoryType } from '@shapeshiftoss/types'
+
+import { FiatPriceHistoryType, FindByFiatMarketType } from './fiat-market-service-types'
 
 export interface MarketService {
   baseUrl: string

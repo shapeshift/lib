@@ -1,12 +1,11 @@
+import { HistoryData, MarketData } from '@shapeshiftoss/types'
+
+import { FiatMarketProviders } from './fiat-market-providers'
 import {
   FiatMarketDataArgs,
   FiatPriceHistoryArgs,
-  FiatPriceHistoryType,
-  HistoryData,
-  MarketData
-} from '@shapeshiftoss/types'
-
-import { FiatMarketProviders } from './fiat-market-providers'
+  FiatPriceHistoryType
+} from './fiat-market-service-types'
 
 export const findByFiatSymbol = async ({ symbol }: FiatMarketDataArgs) => {
   let result: MarketData | null = null

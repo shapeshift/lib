@@ -1,16 +1,10 @@
-import {
-  FiatMarketDataArgs,
-  FiatPriceHistoryArgs,
-  HistoryData,
-  HistoryTimeframe,
-  MarketData
-} from '@shapeshiftoss/types'
+import { HistoryData, HistoryTimeframe, MarketData } from '@shapeshiftoss/types'
 import dayjs from 'dayjs'
 
 import { FiatMarketService } from '../api'
 import { RATE_LIMIT_THRESHOLDS_PER_MINUTE } from '../config'
-import { bnOrZero } from '../utils/bignumber'
-import { isValidDate } from '../utils/isValidDate'
+import { FiatMarketDataArgs, FiatPriceHistoryArgs } from '../fiat-market-service-types'
+import { bn } from '../utils/bignumber'
 import { rateLimitedAxios } from '../utils/rateLimiters'
 import { ExchangeRateHostHistoryData, ExchangeRateHostRate } from './exchange-rates-host-types'
 
@@ -76,11 +70,7 @@ export class ExchangeRateHostService implements FiatMarketService {
       return Object.entries(data.rates).reduce<HistoryData[]>(
         (acc, [formattedDate, ratesObject]) => {
           const date = dayjs(formattedDate, 'YYYY-MM-DD').startOf('day').valueOf()
-          if (!isValidDate(date)) {
-            console.error('ExchangeRateHost fiat history data has invalid date')
-            return acc
-          }
-          const price = bnOrZero(ratesObject[symbol])
+          const price = bn(ratesObject[symbol])
           if (price.isNaN()) {
             console.error('ExchangeRateHost fiat history data has invalid price')
             return acc
