@@ -1,6 +1,7 @@
 import { GetQuoteInput, SwapperType } from '@shapeshiftoss/types'
 
 import { Swapper } from '..'
+import { BuyAssetBySellIdInput } from '../api'
 
 export class SwapperError extends Error {
   constructor(message: string) {
@@ -62,5 +63,11 @@ export class SwapperManager {
   async getBestSwapper(quoteParams: GetQuoteInput): Promise<SwapperType> {
     quoteParams // noop to shut up linter
     return SwapperType.Zrx // TODO: implement getBestSwapper
+  }
+
+  getSupportedBuyAssetsFromSellId(args: BuyAssetBySellIdInput) {
+    return Array.from(this.swappers.values()).map((swapper: Swapper) =>
+      swapper.buyAssetsBySellId(args)
+    )
   }
 }

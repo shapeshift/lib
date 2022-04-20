@@ -16,6 +16,11 @@ import {
   SwapperType
 } from '@shapeshiftoss/types'
 
+export type BuyAssetBySellIdInput = {
+  sellAssetId: CAIP19
+  buyAssetIds: CAIP19[]
+}
+
 export class SwapError extends Error {}
 
 export interface Swapper {
@@ -76,4 +81,9 @@ export interface Swapper {
    * Get max swap balance (minus fees) for sell asset
    */
   getSendMaxAmount(args: SendMaxAmountInput): Promise<string>
+
+  /**
+   * Get supported buyAssetId's by sellAssetId
+   */
+  buyAssetsBySellId(args: BuyAssetBySellIdInput): CAIP19[]
 }
