@@ -2,7 +2,7 @@ import uniq from 'lodash/uniq'
 import { GetQuoteInput, SwapperType } from '@shapeshiftoss/types'
 
 import { Swapper } from '..'
-import { BuyAssetBySellIdInput } from '../api'
+import { BuyAssetBySellIdInput, SupportedSellAssetsInput } from '../api'
 
 export class SwapperError extends Error {
   constructor(message: string) {
@@ -70,6 +70,16 @@ export class SwapperManager {
     return uniq(
       Array.from(this.swappers.values()).flatMap((swapper: Swapper) =>
         swapper.filterBuyAssetsBySellAssetId(args)
+      )
+    )
+  }
+
+  getSupportedSellAssets(args: SupportedSellAssetsInput) {
+    const { sellAssetIds } = args
+
+    return uniq(
+      Array.from(this.swappers.values()).flatMap((swapper: Swapper) =>
+        swapper.filterAssetIdsBySellable(sellAssetIds)
       )
     )
   }

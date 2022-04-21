@@ -21,6 +21,10 @@ export type BuyAssetBySellIdInput = {
   buyAssetIds: CAIP19[]
 }
 
+export type SupportedSellAssetsInput = {
+  sellAssetIds: CAIP19[]
+}
+
 export class SwapError extends Error {}
 
 export interface Swapper {

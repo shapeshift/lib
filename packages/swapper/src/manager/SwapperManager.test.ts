@@ -130,4 +130,37 @@ describe('SwapperManager', () => {
       )
     })
   })
+
+  describe('getSupportedSellAssets', () => {
+    it('should return an array of supported sell assetIds', () => {
+      const sellAssetIds = [
+        'bip122:000000000019d6689c085ae165831e93/slip44:0',
+        'eip155:1/erc20:0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9', // Aave
+        'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d' // Fox
+      ]
+
+      const swapper = new SwapperManager()
+      swapper.addSwapper(SwapperType.Zrx, new ZrxSwapper(zrxSwapperDeps))
+
+      expect(swapper.getSupportedSellAssets({ sellAssetIds })).toStrictEqual(
+        sellAssetIds.slice(-2)
+      )
+    })
+
+    it('should return unique assetIds', () => {
+      const sellAssetIds = [
+        'bip122:000000000019d6689c085ae165831e93/slip44:0',
+        'eip155:1/erc20:0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9', // Aave
+        'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d', // Fox
+        'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d' // Fox (duplicate)
+      ]
+
+      const swapper = new SwapperManager()
+      swapper.addSwapper(SwapperType.Zrx, new ZrxSwapper(zrxSwapperDeps))
+
+      expect(swapper.getSupportedSellAssets({ sellAssetIds })).toStrictEqual(
+        sellAssetIds.slice(1, 3)
+      )
+    })
+  })
 })
