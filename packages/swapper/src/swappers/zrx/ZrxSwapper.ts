@@ -21,7 +21,6 @@ import { SupportedAssetInput, Swapper } from '../../api'
 import { getZrxMinMax } from './getZrxMinMax/getZrxMinMax'
 import { getZrxQuote } from './getZrxQuote/getZrxQuote'
 import { getZrxSendMaxAmount } from './getZrxSendMaxAmount/getZrxSendMaxAmount'
-import { getZrxSupportedAssets } from './getZrxSupportedAssets/getZrxSupportedAssets'
 import { getUsdRate } from './utils/helpers/helpers'
 import { ZrxApprovalNeeded } from './ZrxApprovalNeeded/ZrxApprovalNeeded'
 import { ZrxApproveInfinite } from './ZrxApproveInfinite/ZrxApproveInfinite'
@@ -83,15 +82,10 @@ export class ZrxSwapper implements Swapper {
     return [ETH, FOX]
   }
 
-  getSupportedAssets(): CAIP19[] {
-    return getZrxSupportedAssets()
-  }
-
   isSupportedAssets(args: SupportedAssetInput): boolean {
     const { assetIds } = args
-
-    const supportedAssets = this.getSupportedAssets()
-    return assetIds.every((assetId: CAIP19) => supportedAssets.includes(assetId))
+    // TODO: pending changes to caip lib, we may want to import caip2 value instead of hard coding eth caip2 here.
+    return assetIds.every((id: CAIP19) => id.startsWith('eip155:1'))
   }
 
   async executeQuote(args: ExecQuoteInput<ChainTypes, SwapperType>): Promise<ExecQuoteOutput> {

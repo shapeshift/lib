@@ -87,11 +87,6 @@ export interface Swapper {
   getSendMaxAmount(args: SendMaxAmountInput): Promise<string>
 
   /**
-   * Gets all supported assets
-   */
-  getSupportedAssets(): CAIP19[]
-
-  /**
    * Get a boolean if swapper supports an asset
    */
   isSupportedAssets(args: SupportedAssetInput): boolean
