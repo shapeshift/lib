@@ -142,9 +142,7 @@ describe('SwapperManager', () => {
       const swapper = new SwapperManager()
       swapper.addSwapper(SwapperType.Zrx, new ZrxSwapper(zrxSwapperDeps))
 
-      expect(swapper.getSupportedSellAssets({ sellAssetIds })).toStrictEqual(
-        sellAssetIds.slice(-2)
-      )
+      expect(swapper.getSupportedSellAssets({ sellAssetIds })).toStrictEqual(sellAssetIds.slice(-2))
     })
 
     it('should return unique assetIds', () => {

@@ -17,7 +17,7 @@ import {
 } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
-import { Swapper, BuyAssetBySellIdInput } from '../../api'
+import { BuyAssetBySellIdInput, Swapper } from '../../api'
 import { getZrxMinMax } from './getZrxMinMax/getZrxMinMax'
 import { getZrxQuote } from './getZrxQuote/getZrxQuote'
 import { getZrxSendMaxAmount } from './getZrxSendMaxAmount/getZrxSendMaxAmount'

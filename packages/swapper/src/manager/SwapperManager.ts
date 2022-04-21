@@ -1,5 +1,5 @@
-import uniq from 'lodash/uniq'
 import { GetQuoteInput, SwapperType } from '@shapeshiftoss/types'
+import uniq from 'lodash/uniq'
 
 import { Swapper } from '..'
 import { BuyAssetBySellIdInput, SupportedSellAssetsInput } from '../api'
