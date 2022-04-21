@@ -85,5 +85,10 @@ export interface Swapper {
   /**
    * Get supported buyAssetId's by sellAssetId
    */
-  buyAssetsBySellId(args: BuyAssetBySellIdInput): CAIP19[]
+  filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): CAIP19[]
+
+  /**
+   * Get supported sell assetIds
+   */
+  filterAssetIdsBySellable(assetIds: CAIP19[]): CAIP19[]
 }

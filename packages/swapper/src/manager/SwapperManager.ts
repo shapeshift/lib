@@ -1,3 +1,4 @@
+import uniq from 'lodash/uniq'
 import { GetQuoteInput, SwapperType } from '@shapeshiftoss/types'
 
 import { Swapper } from '..'
@@ -66,8 +67,10 @@ export class SwapperManager {
   }
 
   getSupportedBuyAssetsFromSellId(args: BuyAssetBySellIdInput) {
-    return Array.from(this.swappers.values()).map((swapper: Swapper) =>
-      swapper.buyAssetsBySellId(args)
+    return uniq(
+      Array.from(this.swappers.values()).flatMap((swapper: Swapper) =>
+        swapper.filterBuyAssetsBySellAssetId(args)
+      )
     )
   }
 }
