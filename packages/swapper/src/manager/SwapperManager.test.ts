@@ -159,7 +159,7 @@ describe('SwapperManager', () => {
     })
   })
 
-  describe('getSupportedSellAssets', () => {
+  describe('getSupportedSellableAssets', () => {
     it('should return an array of supported sell assetIds', () => {
       const assetIds = [
         'bip122:000000000019d6689c085ae165831e93/slip44:0',
@@ -170,7 +170,7 @@ describe('SwapperManager', () => {
       const swapper = new SwapperManager()
       swapper.addSwapper(SwapperType.Zrx, new ZrxSwapper(zrxSwapperDeps))
 
-      expect(swapper.getSupportedSellAssets({ assetIds })).toStrictEqual(assetIds.slice(-2))
+      expect(swapper.getSupportedSellableAssets({ assetIds })).toStrictEqual(assetIds.slice(-2))
     })
 
     it('should return unique assetIds', () => {
@@ -184,7 +184,7 @@ describe('SwapperManager', () => {
       const swapper = new SwapperManager()
       swapper.addSwapper(SwapperType.Zrx, new ZrxSwapper(zrxSwapperDeps))
 
-      expect(swapper.getSupportedSellAssets({ assetIds })).toStrictEqual(
+      expect(swapper.getSupportedSellableAssets({ assetIds })).toStrictEqual(
         assetIds.slice(1, 3)
       )
     })

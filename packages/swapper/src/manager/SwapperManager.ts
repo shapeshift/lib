@@ -90,7 +90,7 @@ export class SwapperManager {
     )
   }
 
-  getSupportedSellAssets(args: SupportedSellAssetsInput) {
+  getSupportedSellableAssets(args: SupportedSellAssetsInput) {
     const { assetIds } = args
 
     return uniq(
