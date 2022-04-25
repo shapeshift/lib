@@ -1,5 +1,8 @@
+import { ChainTypes } from '@shapeshiftoss/types'
 import entries from 'lodash/entries'
 import toLower from 'lodash/toLower'
+
+import { fromCAIP19 } from '../../caip19/caip19'
 
 const CAIP19ToBanxaTickerMap = {
   'bip122:000000000019d6689c085ae165831e93/slip44:0': 'btc',
@@ -47,3 +50,17 @@ export const getSupportedBanxaAssets = () =>
     CAIP19,
     ticker
   }))
+
+const caip10TpBanxaBlockchainMap: Record<ChainTypes, string> = {
+  [ChainTypes.Ethereum]: 'ETH',
+  [ChainTypes.Bitcoin]: 'BTC',
+  [ChainTypes.Cosmos]: 'COSMOS',
+  [ChainTypes.Osmosis]: ''
+}
+
+export const getBanxaBlockchainFromBanxaAssetTicker = (asset: string): string => {
+  const assetCAIP19 = banxaTickerToCAIP19(asset.toLowerCase())
+  if (!assetCAIP19) return ''
+  const { chain } = fromCAIP19(assetCAIP19)
+  return caip10TpBanxaBlockchainMap[chain]
+}
