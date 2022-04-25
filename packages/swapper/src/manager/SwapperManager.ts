@@ -1,7 +1,7 @@
 import { GetQuoteInput, SwapperType } from '@shapeshiftoss/types'
 import uniq from 'lodash/uniq'
 
-import { ByPairInput, Swapper, BuyAssetBySellIdInput, SupportedSellAssetsInput } from '..'
+import { BuyAssetBySellIdInput, ByPairInput, SupportedSellAssetsInput, Swapper } from '..'
 
 export class SwapperError extends Error {
   constructor(message: string) {
