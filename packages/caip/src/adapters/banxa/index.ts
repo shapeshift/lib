@@ -59,7 +59,8 @@ const caip2ToBanxaBlockchainCodeMap: Record<CAIP2, string> = {
 
 export const getBanxaBlockchainFromBanxaAssetTicker = (asset: string): string => {
   const assetCAIP19 = banxaTickerToCAIP19(asset.toLowerCase())
-  if (!assetCAIP19) return ''
+  if (!assetCAIP19)
+    throw new Error(`getBanxaBlockchainFromBanxaAssetTicker: ${asset} is not supported`)
   const { chain, network } = fromCAIP19(assetCAIP19)
   const caip2 = toCAIP2({ network, chain })
   return caip2ToBanxaBlockchainCodeMap[caip2]
