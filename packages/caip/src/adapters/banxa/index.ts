@@ -51,7 +51,7 @@ export const getSupportedBanxaAssets = () =>
     ticker
   }))
 
-const caip10TpBanxaBlockchainMap: Record<ChainTypes, string> = {
+const chainTypeToBanxaBlockchainMap: Record<ChainTypes, string> = {
   [ChainTypes.Ethereum]: 'ETH',
   [ChainTypes.Bitcoin]: 'BTC',
   [ChainTypes.Cosmos]: 'COSMOS',
@@ -62,5 +62,5 @@ export const getBanxaBlockchainFromBanxaAssetTicker = (asset: string): string =>
   const assetCAIP19 = banxaTickerToCAIP19(asset.toLowerCase())
   if (!assetCAIP19) return ''
   const { chain } = fromCAIP19(assetCAIP19)
-  return caip10TpBanxaBlockchainMap[chain]
+  return chainTypeToBanxaBlockchainMap[chain]
 }
