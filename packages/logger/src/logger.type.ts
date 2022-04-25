@@ -98,7 +98,4 @@ export interface LogData extends FormattedObject {
 /**
  * A function responsible for processing log data
  */
-export type LoggerFunction = (
-  level: LogLevel.TRACE | LogLevel.DEBUG | LogLevel.INFO | LogLevel.WARN | LogLevel.ERROR,
-  data: LogData
-) => void
+export type LoggerFunction = (level: Exclude<LogLevel, LogLevel.NONE>, data: LogData) => void
