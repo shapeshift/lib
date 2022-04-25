@@ -91,11 +91,11 @@ export class SwapperManager {
   }
 
   getSupportedSellAssets(args: SupportedSellAssetsInput) {
-    const { sellAssetIds } = args
+    const { assetIds } = args
 
     return uniq(
       Array.from(this.swappers.values()).flatMap((swapper: Swapper) =>
-        swapper.filterAssetIdsBySellable(sellAssetIds)
+        swapper.filterAssetIdsBySellable(assetIds)
       )
     )
   }

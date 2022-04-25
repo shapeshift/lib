@@ -98,13 +98,13 @@ export class ZrxSwapper implements Swapper {
   }
 
   filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): CAIP19[] {
-    const { buyAssetIds } = args
+    const { assetIds } = args
     // TODO: pending changes to caip lib, we may want to import caip2 value instead.
-    return buyAssetIds.filter((id) => id.startsWith('eip155:1'))
+    return assetIds.filter((id) => id.startsWith('eip155:1'))
   }
 
   filterAssetIdsBySellable(assetIds: CAIP19[]): CAIP19[] {
     // reusing logic to avoid potential bugs from changing one and not the other
-    return this.filterBuyAssetsBySellAssetId({ buyAssetIds: assetIds, sellAssetId: '' })
+    return this.filterBuyAssetsBySellAssetId({ assetIds, sellAssetId: '' })
   }
 }

@@ -27,11 +27,11 @@ export type ByPairInput = {
 
 export type BuyAssetBySellIdInput = {
   sellAssetId: CAIP19
-  buyAssetIds: CAIP19[]
+  assetIds: CAIP19[]
 }
 
 export type SupportedSellAssetsInput = {
-  sellAssetIds: CAIP19[]
+  assetIds: CAIP19[]
 }
 
 export class SwapError extends Error {}
