@@ -1,6 +1,7 @@
 import { GetQuoteInput, SwapperType } from '@shapeshiftoss/types'
+import uniq from 'lodash/uniq'
 
-import { ByPairInput, Swapper } from '..'
+import { ByPairInput, Swapper, BuyAssetBySellIdInput, SupportedSellAssetsInput } from '..'
 
 export class SwapperError extends Error {
   constructor(message: string) {
@@ -78,6 +79,24 @@ export class SwapperManager {
     const { sellAssetId, buyAssetId } = pair
     return Array.from(this.swappers.values()).filter((swapper: Swapper) =>
       swapper.isSupportedAssets({ assetIds: [sellAssetId, buyAssetId] })
+    )
+  }
+
+  getSupportedBuyAssetsFromSellId(args: BuyAssetBySellIdInput) {
+    return uniq(
+      Array.from(this.swappers.values()).flatMap((swapper: Swapper) =>
+        swapper.filterBuyAssetsBySellAssetId(args)
+      )
+    )
+  }
+
+  getSupportedSellAssets(args: SupportedSellAssetsInput) {
+    const { sellAssetIds } = args
+
+    return uniq(
+      Array.from(this.swappers.values()).flatMap((swapper: Swapper) =>
+        swapper.filterAssetIdsBySellable(sellAssetIds)
+      )
     )
   }
 }

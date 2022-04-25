@@ -25,6 +25,15 @@ export type ByPairInput = {
   buyAssetId: CAIP19
 }
 
+export type BuyAssetBySellIdInput = {
+  sellAssetId: CAIP19
+  buyAssetIds: CAIP19[]
+}
+
+export type SupportedSellAssetsInput = {
+  sellAssetIds: CAIP19[]
+}
+
 export class SwapError extends Error {}
 
 export interface Swapper {
@@ -40,16 +49,6 @@ export interface Swapper {
    * Get a basic quote (rate) for a trading pair
    */
   getQuote(input: GetQuoteInput, wallet?: HDWallet): Promise<Quote<ChainTypes, SwapperType>>
-
-  /**
-   * Get a list of available assets based on the array of assets you send it
-   */
-  getAvailableAssets(assets: Asset[]): Asset[]
-
-  /**
-   * Get a boolean if the trade pair will work
-   */
-  canTradePair(sellAsset: Asset, buyAsset: Asset): boolean
 
   /**
    * Get the usd rate from either the assets symbol or tokenId
@@ -90,4 +89,14 @@ export interface Swapper {
    * Get a boolean if swapper supports an asset
    */
   isSupportedAssets(args: SupportedAssetInput): boolean
+
+  /**
+   * Get supported buyAssetId's by sellAssetId
+   */
+  filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): CAIP19[]
+
+  /**
+   * Get supported sell assetIds
+   */
+  filterAssetIdsBySellable(assetIds: CAIP19[]): CAIP19[]
 }
