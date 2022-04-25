@@ -124,7 +124,7 @@ describe('SwapperManager', () => {
     })
   })
 
-  describe('getSupportedBuyAssetsFromSellId', () => {
+  describe('getSupportedBuyAssetIdsFromSellId', () => {
     it('should return an array of supported buy assetIds given a sell asset Id', () => {
       const assetIds = [
         'bip122:000000000019d6689c085ae165831e93/slip44:0',
@@ -136,7 +136,7 @@ describe('SwapperManager', () => {
       const swapper = new SwapperManager()
       swapper.addSwapper(SwapperType.Zrx, new ZrxSwapper(zrxSwapperDeps))
 
-      expect(swapper.getSupportedBuyAssetsFromSellId({ sellAssetId, assetIds })).toStrictEqual(
+      expect(swapper.getSupportedBuyAssetIdsFromSellId({ sellAssetId, assetIds })).toStrictEqual(
         assetIds.slice(-2)
       )
     })
@@ -153,7 +153,7 @@ describe('SwapperManager', () => {
       const swapper = new SwapperManager()
       swapper.addSwapper(SwapperType.Zrx, new ZrxSwapper(zrxSwapperDeps))
 
-      expect(swapper.getSupportedBuyAssetsFromSellId({ sellAssetId, assetIds })).toStrictEqual(
+      expect(swapper.getSupportedBuyAssetIdsFromSellId({ sellAssetId, assetIds })).toStrictEqual(
         assetIds.slice(1, 3)
       )
     })
@@ -170,7 +170,7 @@ describe('SwapperManager', () => {
       const swapper = new SwapperManager()
       swapper.addSwapper(SwapperType.Zrx, new ZrxSwapper(zrxSwapperDeps))
 
-      expect(swapper.getSupportedSellableAssets({ assetIds })).toStrictEqual(assetIds.slice(-2))
+      expect(swapper.getSupportedSellableAssetIds({ assetIds })).toStrictEqual(assetIds.slice(-2))
     })
 
     it('should return unique assetIds', () => {
@@ -184,9 +184,7 @@ describe('SwapperManager', () => {
       const swapper = new SwapperManager()
       swapper.addSwapper(SwapperType.Zrx, new ZrxSwapper(zrxSwapperDeps))
 
-      expect(swapper.getSupportedSellableAssets({ assetIds })).toStrictEqual(
-        assetIds.slice(1, 3)
-      )
+      expect(swapper.getSupportedSellableAssetIds({ assetIds })).toStrictEqual(assetIds.slice(1, 3))
     })
   })
 })
