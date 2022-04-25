@@ -109,7 +109,7 @@ export default class Logger implements LoggerT {
       ...argsFormatted[1],
       ...argsFormatted[2],
       timestamp: new Date().toISOString(),
-      namespace: this.namespace.join(':'),
+      namespace: this.namespace.join(':') || undefined,
       status: level
     }
 

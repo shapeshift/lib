@@ -89,9 +89,13 @@ export interface FormattedObject {
 }
 
 export interface LogData extends FormattedObject {
+  /**
+   * This only exists if more than 1 plain string was passed to the logger
+   * This should only be possible in plain JS or with @ts-ignore
+   */
   _messages?: string[]
+  namespace?: string
   timestamp: string
-  namespace: string
   status: LogLevel
 }
 
