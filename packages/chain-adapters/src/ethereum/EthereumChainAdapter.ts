@@ -46,7 +46,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     accountNumber: 0
   }
 
-  private readonly chainId: AssetId | CAIP2 = 'eip155:1'
+  private readonly chainId: ChainId | CAIP2 = 'eip155:1'
 
   constructor(args: ChainAdapterArgs) {
     if (args.chainId) {
