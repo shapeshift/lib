@@ -25,7 +25,7 @@ export interface ChainAdapterArgs {
     http: unchained.ethereum.V1Api
     ws: unchained.ws.Client<unchained.ethereum.ParsedTx>
   }
-  chainId?: AssetId | CAIP2
+  chainId?: ChainId | CAIP2
 }
 
 async function getErc20Data(to: string, value: string, contractAddress?: string) {
