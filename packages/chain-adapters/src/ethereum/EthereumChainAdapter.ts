@@ -67,6 +67,9 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     return ChainTypes.Ethereum
   }
 
+  /**
+   * @deprecated - use `getChainId()` instead
+   */
   getCaip2(): ChainId | CAIP2 {
     return this.chainId
   }
