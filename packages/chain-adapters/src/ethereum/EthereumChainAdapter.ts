@@ -1,5 +1,5 @@
 import { Contract } from '@ethersproject/contracts'
-import { AssetNamespace, AssetReference, CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
+import { AssetId, AssetNamespace, AssetReference, CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
@@ -25,7 +25,7 @@ export interface ChainAdapterArgs {
     http: unchained.ethereum.V1Api
     ws: unchained.ws.Client<unchained.ethereum.ParsedTx>
   }
-  chainId?: CAIP2
+  chainId?: AssetId | CAIP2
 }
 
 async function getErc20Data(to: string, value: string, contractAddress?: string) {
@@ -46,7 +46,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     accountNumber: 0
   }
 
-  private readonly chainId: CAIP2 = 'eip155:1'
+  private readonly chainId: AssetId | CAIP2 = 'eip155:1'
 
   constructor(args: ChainAdapterArgs) {
     if (args.chainId) {
@@ -67,11 +67,11 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     return ChainTypes.Ethereum
   }
 
-  getCaip2(): CAIP2 {
+  getCaip2(): AssetId | CAIP2 {
     return this.chainId
   }
 
-  getChainId(): CAIP2 {
+  getChainId(): AssetId | CAIP2 {
     return this.chainId
   }
 
