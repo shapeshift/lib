@@ -89,6 +89,9 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
     return this.chainId
   }
 
+  /**
+   * @deprecated - use `getChainId()` instead
+   */
   getCaip19(): AssetId | CAIP19 {
     return this.assetId
   }
