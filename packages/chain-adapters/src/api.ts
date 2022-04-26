@@ -7,6 +7,9 @@ export type ChainAdapter<T extends ChainTypes> = {
    */
   getType(): T
 
+  /**
+   * @deprecated - use `getChainId()` instead
+    */
   getCaip2(): ChainId | CAIP2
 
   getChainId(): ChainId | CAIP2
