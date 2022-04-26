@@ -36,7 +36,7 @@ const transformValidator = (
 
 export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implements IChainAdapter<T> {
   protected readonly chainId: ChainId | CAIP2
-  protected readonly assetId: AssetId | CAIP19 // This is the caip19 for native token on the chain (ATOM/OSMO/etc)
+  protected readonly assetId: AssetId | CAIP19 // This is the caip-19 asset specifier for native token on the chain (ATOM/OSMO/etc)
   protected readonly supportedChainIds: ChainId[]
   protected readonly coinName: string
   protected readonly providers: {
