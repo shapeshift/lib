@@ -66,7 +66,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
     return this.chainId
   }
 
-  getCaip2(): ChainId | CAIP19 {
+  getCaip2(): ChainId | CAIP2 {
     return this.chainId
   }
 
