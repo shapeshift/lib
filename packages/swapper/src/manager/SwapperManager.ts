@@ -75,10 +75,11 @@ export class SwapperManager {
    * @param pair type {GetQuoteInput}
    * @returns {SwapperType}
    */
-  getSwapperByPair(pair: ByPairInput): Swapper[] {
+  getSwappersByPair(pair: ByPairInput): Swapper[] {
     const { sellAssetId, buyAssetId } = pair
-    return Array.from(this.swappers.values()).filter((swapper: Swapper) =>
-      swapper.isSupportedAssets({ assetIds: [sellAssetId, buyAssetId] })
+    return Array.from(this.swappers.values()).filter(
+      (swapper: Swapper) =>
+        swapper.filterBuyAssetsBySellAssetId({ sellAssetId, assetIds: [buyAssetId] }).length
     )
   }
 

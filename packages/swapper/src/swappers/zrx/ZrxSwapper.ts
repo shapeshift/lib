@@ -73,12 +73,6 @@ export class ZrxSwapper implements Swapper {
     return [ETH, FOX]
   }
 
-  isSupportedAssets(args: SupportedAssetInput): boolean {
-    const { assetIds } = args
-    // TODO: pending changes to caip lib, we may want to import caip2 value instead of hard coding eth caip2 here.
-    return assetIds.every((id: CAIP19) => id.startsWith('eip155:1'))
-  }
-
   async executeQuote(args: ExecQuoteInput<ChainTypes, SwapperType>): Promise<ExecQuoteOutput> {
     return ZrxExecuteQuote(this.deps, args)
   }
