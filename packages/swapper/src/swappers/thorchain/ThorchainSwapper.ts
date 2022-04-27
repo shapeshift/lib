@@ -44,7 +44,7 @@ export class ThorchainSwapper implements Swapper {
   }
 
   async approvalNeeded(): Promise<ApprovalNeededOutput> {
-    throw new Error('ThorchainSwapper: approvalNeeded unimplemented')
+    return false
   }
 
   async approveInfinite(): Promise<string> {
@@ -56,10 +56,10 @@ export class ThorchainSwapper implements Swapper {
   }
 
   filterBuyAssetsBySellAssetId(): CAIP19[] {
-    throw new Error('ThorchainSwapper: filterBuyAssetsBySellAssetId unimplemented')
+    return []
   }
 
   filterAssetIdsBySellable(): CAIP19[] {
-    throw new Error('ThorchainSwapper: filterAssetIdsBySellable unimplemented')
+    return []
   }
 }

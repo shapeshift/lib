@@ -107,7 +107,7 @@ describe('SwapperManager', () => {
         .addSwapper(SwapperType.Zrx, zrxSwapper)
         .addSwapper(SwapperType.Thorchain, new ThorchainSwapper())
 
-      expect(swapperManager.getSwapperByPair({ sellAssetId, buyAssetId })).toEqual([zrxSwapper])
+      expect(swapperManager.getSwappersByPair({ sellAssetId, buyAssetId })).toEqual([zrxSwapper])
     })
 
     it('should return an empty array if no swapper is found', () => {
@@ -120,7 +120,7 @@ describe('SwapperManager', () => {
         .addSwapper(SwapperType.Zrx, zrxSwapper)
         .addSwapper(SwapperType.Thorchain, new ThorchainSwapper())
 
-      expect(swapperManager.getSwapperByPair({ sellAssetId, buyAssetId })).toEqual([])
+      expect(swapperManager.getSwappersByPair({ sellAssetId, buyAssetId })).toEqual([])
     })
   })
 
