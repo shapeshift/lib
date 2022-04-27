@@ -127,7 +127,7 @@ export class AssetService {
     // Return overridden asset description if it exists and add isTrusted for description links
     if (descriptions[asset.assetId ?? asset.caip19]) {
       return {
-        description: descriptions[asset.assetId ?? asset.caip19],
+        description: descriptions[asset.assetId],
         isTrusted: true
       }
     }
