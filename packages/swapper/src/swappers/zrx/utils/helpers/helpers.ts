@@ -11,7 +11,7 @@ import { ZrxError } from '../../ZrxSwapper'
 import { zrxService } from '../zrxService'
 
 export type GetAllowanceRequiredArgs = {
-  quote: Quote<ChainTypes, SwapperType>
+  quote: Quote<ChainTypes>
   web3: Web3
   erc20AllowanceAbi: AbiItem[]
 }
@@ -25,7 +25,7 @@ export type GetERC20AllowanceArgs = {
 }
 
 type GrantAllowanceArgs = {
-  quote: Quote<ChainTypes, SwapperType>
+  quote: Quote<ChainTypes>
   wallet: HDWallet
   adapter: ChainAdapter<ChainTypes.Ethereum>
   erc20Abi: AbiItem[]
