@@ -55,10 +55,6 @@ export class ThorchainSwapper implements Swapper {
     throw new Error('ThorchainSwapper: getSendMaxAmount unimplemented')
   }
 
-  isSupportedAssets(): boolean {
-    return false
-  }
-
   filterBuyAssetsBySellAssetId(): CAIP19[] {
     throw new Error('ThorchainSwapper: filterBuyAssetsBySellAssetId unimplemented')
   }
