@@ -2,6 +2,7 @@ import {
   accountIdToChainId,
   accountIdToSpecifier,
   assetIdtoChainId,
+  btcAssetId,
   btcChainId,
   ethChainId
 } from './utils'
@@ -45,8 +46,6 @@ describe('assetIdtoChainId', () => {
   })
 
   it('returns a BTC chainId for a given BTC assetId', () => {
-    const btcAssetId = 'bip122:000000000019d6689c085ae165831e93/slip44:0'
-    const btcChainId = 'bip122:000000000019d6689c085ae165831e93'
     const result = assetIdtoChainId(btcAssetId)
     expect(result).toEqual(btcChainId)
   })
