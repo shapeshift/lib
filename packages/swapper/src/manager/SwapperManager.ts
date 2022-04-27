@@ -60,11 +60,6 @@ export class SwapperManager {
     return this
   }
 
-  /**
-   *
-   * @param quoteParams type {GetQuoteInput}
-   * @returns {SwapperType}
-   */
   async getBestSwapper(quoteParams: GetQuoteInput): Promise<SwapperType> {
     quoteParams // noop to shut up linter
     return SwapperType.Zrx // TODO: implement getBestSwapper
