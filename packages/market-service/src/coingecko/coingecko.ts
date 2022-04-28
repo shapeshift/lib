@@ -1,5 +1,4 @@
-import { adapters } from '@shapeshiftoss/caip'
-import { caip19 } from '@shapeshiftoss/caip'
+import { adapters, caip19 } from '@shapeshiftoss/caip'
 import {
   ChainTypes,
   FindAllMarketArgs,
