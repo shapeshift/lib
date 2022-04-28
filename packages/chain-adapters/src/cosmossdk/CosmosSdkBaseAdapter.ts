@@ -29,7 +29,6 @@ const transformValidator = (
 ): chainAdapters.cosmos.Validator => ({
   address: validator.address,
   moniker: validator.moniker,
-  tokens: validator.tokens,
   commission: validator.commission.rate,
   apr: validator.apr
 })
@@ -226,7 +225,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
     signTxInput: chainAdapters.SignTxInput<CosmosSignTx>
   ): Promise<string>
 
-  validateAddress(address: string): chainAdapters.ValidAddressResult {
+  async validateAddress(address: string): Promise<chainAdapters.ValidAddressResult> {
     const chain = this.getType()
     try {
       const { prefix } = bech32.decode(address)
@@ -240,6 +239,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
         result: chainAdapters.ValidAddressResultType.Valid
       }
     } catch (err) {
+      console.error(err)
       return { valid: false, result: chainAdapters.ValidAddressResultType.Invalid }
     }
   }

@@ -187,7 +187,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
       const path = toPath(bip44Params)
       const addressNList = bip32ToAddressNList(path)
       const from = await this.getAddress({ bip44Params, wallet })
-      const { valid } = super.validateAddress(from)
+      const { valid } = await super.validateAddress(from)
       if (!valid)
         throw new Error(
           `CosmosChainAdapter:buildDelegateTransaction invalid delegator address ${from}`
@@ -259,7 +259,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
       const path = toPath(bip44Params)
       const addressNList = bip32ToAddressNList(path)
       const from = await this.getAddress({ bip44Params, wallet })
-      const { valid } = super.validateAddress(from)
+      const { valid } = await super.validateAddress(from)
       if (!valid)
         throw new Error(
           `CosmosChainAdapter:buildDelegateTransaction invalid delegator address ${from}`
@@ -328,7 +328,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
       const path = toPath(bip44Params)
       const addressNList = bip32ToAddressNList(path)
       const from = await this.getAddress({ bip44Params, wallet })
-      const { valid } = super.validateAddress(from)
+      const { valid } = await super.validateAddress(from)
       if (!valid)
         throw new Error(
           `CosmosChainAdapter:buildDelegateTransaction invalid delegator address ${from}`
@@ -405,7 +405,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
       const path = toPath(bip44Params)
       const addressNList = bip32ToAddressNList(path)
       const from = await this.getAddress({ bip44Params, wallet })
-      const { valid } = super.validateAddress(from)
+      const { valid } = await super.validateAddress(from)
       if (!valid)
         throw new Error(
           `CosmosChainAdapter:buildRedelegateTransaction invalid delegator address ${from}`

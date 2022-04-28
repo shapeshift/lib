@@ -229,7 +229,7 @@ describe('EthereumChainAdapter', () => {
       const adapter = new ethereum.ChainAdapter(args)
       const referenceAddress = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
       const expectedReturnValue = validAddressTuple
-      const res = adapter.validateAddress(referenceAddress)
+      const res = await adapter.validateAddress(referenceAddress)
       expect(res).toMatchObject(expectedReturnValue)
     })
 
@@ -238,7 +238,7 @@ describe('EthereumChainAdapter', () => {
       const adapter = new ethereum.ChainAdapter(args)
       const referenceAddress = ''
       const expectedReturnValue = invalidAddressTuple
-      const res = adapter.validateAddress(referenceAddress)
+      const res = await adapter.validateAddress(referenceAddress)
       expect(res).toMatchObject(expectedReturnValue)
     })
 
@@ -247,7 +247,7 @@ describe('EthereumChainAdapter', () => {
       const adapter = new ethereum.ChainAdapter(args)
       const referenceAddress = 'foobar'
       const expectedReturnValue = invalidAddressTuple
-      const res = adapter.validateAddress(referenceAddress)
+      const res = await adapter.validateAddress(referenceAddress)
       expect(res).toMatchObject(expectedReturnValue)
     })
   })
@@ -258,7 +258,7 @@ describe('EthereumChainAdapter', () => {
       const adapter = new ethereum.ChainAdapter(args)
       const referenceAddress = 'vitalik.eth'
       const expectedReturnValue = validAddressTuple
-      const res = adapter.validateEnsAddress(referenceAddress)
+      const res = await adapter.validateEnsAddress(referenceAddress)
       expect(res).toMatchObject(expectedReturnValue)
     })
 
@@ -267,7 +267,7 @@ describe('EthereumChainAdapter', () => {
       const adapter = new ethereum.ChainAdapter(args)
       const referenceAddress = ''
       const expectedReturnValue = invalidAddressTuple
-      const res = adapter.validateEnsAddress(referenceAddress)
+      const res = await adapter.validateEnsAddress(referenceAddress)
       expect(res).toMatchObject(expectedReturnValue)
     })
 
@@ -276,7 +276,7 @@ describe('EthereumChainAdapter', () => {
       const adapter = new ethereum.ChainAdapter(args)
       const referenceAddress = 'foobar'
       const expectedReturnValue = invalidAddressTuple
-      const res = adapter.validateEnsAddress(referenceAddress)
+      const res = await adapter.validateEnsAddress(referenceAddress)
       expect(res).toMatchObject(expectedReturnValue)
     })
 
@@ -285,7 +285,7 @@ describe('EthereumChainAdapter', () => {
       const adapter = new ethereum.ChainAdapter(args)
       const referenceAddress = 'vitalik.ethfoobar'
       const expectedReturnValue = invalidAddressTuple
-      const res = adapter.validateEnsAddress(referenceAddress)
+      const res = await adapter.validateEnsAddress(referenceAddress)
       expect(res).toMatchObject(expectedReturnValue)
     })
 
@@ -294,7 +294,7 @@ describe('EthereumChainAdapter', () => {
       const adapter = new ethereum.ChainAdapter(args)
       const referenceAddress = 'asdadfvitalik.ethasdadf'
       const expectedReturnValue = invalidAddressTuple
-      const res = adapter.validateEnsAddress(referenceAddress)
+      const res = await adapter.validateEnsAddress(referenceAddress)
       expect(res).toMatchObject(expectedReturnValue)
     })
   })
