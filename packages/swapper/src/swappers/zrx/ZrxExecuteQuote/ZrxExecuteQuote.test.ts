@@ -36,7 +36,7 @@ describe('ZrxExecuteQuote', () => {
     const args = {
       quote: { ...quoteInput, sellAsset: { ...sellAsset, network: '' } },
       wallet
-    } as unknown as ExecQuoteInput<ChainTypes, SwapperType>
+    } as unknown as ExecQuoteInput<ChainTypes>
     await expect(ZrxExecuteQuote(deps, args)).rejects.toThrow(
       'ZrxSwapper:ZrxExecuteQuote sellAssetNetwork and sellAssetSymbol are required'
     )
