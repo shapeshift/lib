@@ -2,7 +2,6 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "composite": true,
-    "downlevelIteration": true
   },
   "include": ["src/**/*", "src/**/*.json"],
 }

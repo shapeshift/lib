@@ -2,6 +2,7 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "baseUrl": ".",
+    // Configure imports and their directory resolution
     "paths": {
       "@shapeshiftoss/asset-service/*": ["packages/asset-service"],
       "@shapeshiftoss/caip/*": ["packages/caip"],

@@ -1,7 +1,9 @@
 {
+  // tsconfig.build.json files are for configuring TypeScript builds
+  // tsconfig.json files are for configuring TypeScript in VSCode 
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es5",
+    "target": "es2018",
     "jsx": "react",
     "moduleResolution": "node",
     "outDir": "./dist",
