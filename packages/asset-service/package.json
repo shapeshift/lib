@@ -18,10 +18,11 @@
     "url": "https://github.com/shapeshift/lib"
   },
   "scripts": {
-    "build": "yarn clean && tsc --project tsconfig.build.json",
-    "generate": "yarn build && node ./dist/generateAssetData/generateAssetData.js",
+    "build": "yarn clean && yarn compile",
+    "clean": "rm -rf dist && rm -rf tsconfig.build.tsbuildinfo",
+    "compile": "tsc -p tsconfig.build.json",
     "dev": "tsc --watch",
-    "clean": "rm -rf dist",
+    "generate": "yarn build && node ./dist/generateAssetData/generateAssetData.js",
     "test": "jest test",
     "type-check": "tsc --project ./tsconfig.json --noEmit"
   },
