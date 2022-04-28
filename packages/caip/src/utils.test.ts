@@ -4,7 +4,8 @@ import {
   assetIdtoChainId,
   btcAssetId,
   btcChainId,
-  ethChainId
+  ethChainId,
+  getCaip2Reference
 } from './utils'
 
 describe('accountIdToChainId', () => {
@@ -48,5 +49,28 @@ describe('assetIdtoChainId', () => {
   it('returns a BTC chainId for a given BTC assetId', () => {
     const result = assetIdtoChainId(btcAssetId)
     expect(result).toEqual(btcChainId)
+  })
+})
+
+describe('getCaip2Reference', () => {
+  it('returns the reference from a caip2 string with a valid reference', () => {
+    const validCaip2 = 'cosmos:cosmoshub-4'
+    const validCaip2Reference = 'cosmoshub-4'
+
+    const reference = getCaip2Reference(validCaip2)
+    expect(reference).toEqual(validCaip2Reference)
+  })
+  it('returns undefined from an empty caip2 string', () => {
+    const invalidCaip2 = ''
+
+    const reference = getCaip2Reference(invalidCaip2)
+    expect(reference).toBeUndefined()
+  })
+
+  it('returns undefined from an invalid caip2 string', () => {
+    const invalidCaip2 = 'foobar'
+
+    const reference = getCaip2Reference(invalidCaip2)
+    expect(reference).toBeUndefined()
   })
 })
