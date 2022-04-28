@@ -115,16 +115,4 @@ describe('ZrxSwapper', () => {
     await swapper.approveInfinite(args)
     expect(ZrxApproveInfinite).toHaveBeenCalled()
   })
-
-  it('calls getZrxSendMaxAmount on swapper.getSendMaxAmount', async () => {
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
-    const args = {
-      quote,
-      wallet,
-      sellAssetAccountId: '0',
-      feeEstimateKey: chainAdapters.FeeDataKey.Average
-    }
-    await swapper.getSendMaxAmount(args)
-    expect(getZrxSendMaxAmount).toHaveBeenCalled()
-  })
 })

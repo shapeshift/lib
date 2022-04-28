@@ -87,10 +87,6 @@ export class ZrxSwapper implements Swapper {
     return ZrxApproveInfinite(this.deps, args)
   }
 
-  async getSendMaxAmount(args: SendMaxAmountInput): Promise<string> {
-    return getZrxSendMaxAmount(this.deps, args)
-  }
-
   filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): CAIP19[] {
     const { assetIds, sellAssetId } = args
     // TODO: pending changes to caip lib, we may want to import caip2 value instead.
