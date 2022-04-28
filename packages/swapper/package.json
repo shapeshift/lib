@@ -17,6 +17,7 @@
     "dev": "tsc --watch",
     "clean": "rm -rf dist && rm -rf tsconfig.build.tsbuildinfo",
     "compile": "tsc -p tsconfig.build.json",
+    "prepare": "yarn build",
     "test": "jest test",
     "type-check": "tsc --project ./tsconfig.build.json --noEmit",
     "swapcli": "yarn build && node ./dist/swappercli.js"

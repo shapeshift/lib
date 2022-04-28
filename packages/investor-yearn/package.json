@@ -22,7 +22,7 @@
     "clean": "rm -rf dist && rm -rf tsconfig.build.tsbuildinfo",
     "compile": "tsc -p tsconfig.build.json",
     "dev": "tsc --watch",
-    "prepare": "yarn clean && yarn build",
+    "prepare": "yarn build",
     "test": "jest --coverage"
   },
   "dependencies": {
