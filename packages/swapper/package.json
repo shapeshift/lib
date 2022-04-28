@@ -18,7 +18,7 @@
     "clean": "rm -rf dist && rm -rf tsconfig.build.tsbuildinfo",
     "compile": "tsc -p tsconfig.build.json",
     "test": "jest test",
-    "type-check": "tsc --project ./tsconfig.json --noEmit",
+    "type-check": "tsc --project ./tsconfig.build.json --noEmit",
     "swapcli": "yarn build && node ./dist/swappercli.js"
   },
   "dependencies": {

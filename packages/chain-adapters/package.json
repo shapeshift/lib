@@ -23,7 +23,7 @@
     "compile": "tsc -p tsconfig.build.json",
     "dev": "tsc --watch",
     "test": "jest test",
-    "type-check": "tsc --project ./tsconfig.json --noEmit"
+    "type-check": "tsc --project ./tsconfig.build.json --noEmit"
   },
   "dependencies": {
     "axios": "^0.26.0",

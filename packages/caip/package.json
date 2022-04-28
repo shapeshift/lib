@@ -17,7 +17,7 @@
     "url": "https://github.com/shapeshift/lib"
   },
   "scripts": {
-    "build": "yarn clean && yarn compile",
+    "build": "yarn clean && yarn generate && yarn compile",
     "clean": "rm -rf dist && rm -rf tsconfig.build.tsbuildinfo",
     "compile": "tsc -p tsconfig.build.json",
     "dev": "tsc --watch",
@@ -27,7 +27,7 @@
     "generate-osmosis": "ts-node -P tsconfig.build.json src/adapters/osmosis/generate.ts",
     "generate": "yarn generate-coingecko && yarn generate-coincap && yarn generate-yearn && yarn generate-osmosis",
     "test": "jest test",
-    "type-check": "tsc --project ./tsconfig.json --noEmit"
+    "type-check": "tsc --project ./tsconfig.build.json --noEmit"
   },
   "dependencies": {},
   "peerDependencies": {
