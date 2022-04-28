@@ -1,11 +1,4 @@
-import {
-  ChainTypes,
-  GetQuoteInput,
-  Quote,
-  QuoteResponse,
-  SwapperType,
-  SwapSource
-} from '@shapeshiftoss/types'
+import { ChainTypes, GetQuoteInput, Quote, QuoteResponse, SwapSource } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import BigNumber from 'bignumber.js'
 
