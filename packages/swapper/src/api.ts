@@ -12,7 +12,6 @@ import {
   GetQuoteInput,
   MinMaxOutput,
   Quote,
-  SendMaxAmountInput,
   SwapperType
 } from '@shapeshiftoss/types'
 
