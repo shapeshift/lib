@@ -68,8 +68,7 @@ export class ChainAdapter
   }
 
   async getTxHistory(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    input: chainAdapters.TxHistoryInput
+    _input: chainAdapters.TxHistoryInput
   ): Promise<chainAdapters.TxHistoryResponse<ChainTypes.Bitcoin>> {
     throw new Error('Method not implemented.')
   }

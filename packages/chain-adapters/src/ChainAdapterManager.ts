@@ -118,11 +118,11 @@ export class ChainAdapterManager {
   async byChainId(chainId: CAIP2) {
     // this function acts like a validation function and throws if the check doesn't pass
     caip2.isCAIP2(chainId)
-
-    for (const [chain] of this.supported) {
+    // downleveliteration is required here. Could be a performance hit here
+    for (const [chain] of this.supported.entries()) {
       // byChain calls the factory function so we need to call it to create the instances
       const adapter = this.byChain(chain)
-      if ((await adapter.getCaip2()) === chainId) return adapter
+      if (adapter.getCaip2() === chainId) return adapter
     }
 
     throw new Error(`Chain [${chainId}] is not supported`)
