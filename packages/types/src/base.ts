@@ -1,6 +1,6 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 
-import { FeeDataKey, QuoteFeeData, SignTxInput } from './chain-adapters'
+import { QuoteFeeData, SignTxInput } from './chain-adapters'
 
 /** Common */
 
@@ -51,8 +51,10 @@ export enum AssetDataSource {
 // asset-service
 
 type AbstractAsset = {
-  caip19: string
+  assetId: string
   caip2: string
+  caip19: string
+  chainId: string
   chain: ChainTypes
   description?: string
   isTrustedDescription?: boolean
@@ -206,9 +208,3 @@ export type ApproveInfiniteInput<C extends ChainTypes> = {
   wallet: HDWallet
 }
 
-export type SendMaxAmountInput = {
-  wallet: HDWallet
-  quote: Quote<ChainTypes>
-  sellAssetAccountId: string
-  feeEstimateKey?: FeeDataKey // fee estimate speed
-}
