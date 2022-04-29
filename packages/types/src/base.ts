@@ -207,4 +207,3 @@ export type ApproveInfiniteInput<C extends ChainTypes> = {
   quote: Quote<C>
   wallet: HDWallet
 }
-
