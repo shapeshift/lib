@@ -2833,7 +2833,7 @@
     google-protobuf "^3.17.0"
     long "^4.0.0"
 
-"@shapeshiftoss/unchained-client@^6.10.0":
+"@shapeshiftoss/unchained-client@^6.6.0":
   version "6.10.0"
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/unchained-client/-/unchained-client-6.10.0.tgz#3fb20c095e4aab487f1cf215a91f64b3d0d515c7"
   integrity sha512-YFPYj11XE3JMHiEFVvTtK3UWiPgpNfIUESqtSz3ucaef8cjCvspkS3Bewx8oF0HwtOdtD+OFI+LM0jyat2bfPw==
