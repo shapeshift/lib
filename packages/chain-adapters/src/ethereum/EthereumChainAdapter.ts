@@ -89,7 +89,14 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       return {
         balance: balance.toString(),
         caip2: caip,
+        chainId: caip,
         caip19: caip19.toCAIP19({
+          chain,
+          network,
+          assetNamespace: AssetNamespace.Slip44,
+          assetReference: AssetReference.Ethereum
+        }),
+        assetId: caip19.toCAIP19({
           chain,
           network,
           assetNamespace: AssetNamespace.Slip44,
@@ -101,6 +108,12 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           tokens: data.tokens.map((token) => ({
             balance: token.balance,
             caip19: caip19.toCAIP19({
+              chain,
+              network,
+              assetNamespace: getAssetNamespace(token.type),
+              assetReference: token.contract
+            }),
+            assetId: caip19.toCAIP19({
               chain,
               network,
               assetNamespace: getAssetNamespace(token.type),
@@ -374,6 +387,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       ({ data: tx }) => {
         const transfers = tx.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
           caip19: transfer.caip19,
+          assetId: transfer.caip19,
           from: transfer.from,
           to: transfer.to,
           type: getType(transfer.type),
@@ -386,6 +400,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           blockHeight: tx.blockHeight,
           blockTime: tx.blockTime,
           caip2: tx.caip2,
+          chainId: tx.caip2,
           chain: ChainTypes.Ethereum,
           confirmations: tx.confirmations,
           fee: tx.fee,

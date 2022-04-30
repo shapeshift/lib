@@ -110,7 +110,8 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
     }
 
     try {
-      const caip = await this.getCaip2()
+      const chainId = await this.getCaip2()
+      const assetId = await this.getCaip19()
       const { data } = await this.providers.http.getAccount({ pubkey: pubkey })
 
       const balance = bnOrZero(data.balance).plus(bnOrZero(data.unconfirmedBalance))
@@ -118,8 +119,10 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
       return {
         balance: balance.toString(),
         chain: this.getType(),
-        caip2: caip,
-        caip19: this.getCaip19(),
+        caip2: chainId,
+        chainId,
+        caip19: assetId,
+        assetId,
         chainSpecific: {
           addresses: data.addresses,
           nextChangeAddressIndex: data.nextChangeAddressIndex,
