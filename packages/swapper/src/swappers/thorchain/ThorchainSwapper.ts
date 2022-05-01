@@ -17,11 +17,11 @@ export class ThorchainSwapper implements Swapper {
     return SwapperType.Thorchain
   }
 
-  async getQuote(): Promise<Quote<ChainTypes, SwapperType>> {
+  async getQuote(): Promise<Quote<ChainTypes>> {
     throw new Error('ThorchainSwapper: getQuote unimplemented')
   }
 
-  async buildQuoteTx(): Promise<Quote<ChainTypes, SwapperType>> {
+  async buildQuoteTx(): Promise<Quote<ChainTypes>> {
     throw new Error('ThorchainSwapper: getQuote unimplemented')
   }
 
@@ -33,16 +33,6 @@ export class ThorchainSwapper implements Swapper {
   getMinMax(input: GetQuoteInput): Promise<MinMaxOutput> {
     console.info(input)
     throw new Error('ThorchainSwapper: getMinMax unimplemented')
-  }
-
-  getAvailableAssets(assets: Asset[]): Asset[] {
-    console.info(assets)
-    throw new Error('ThorchainSwapper: getAvailableAssets unimplemented')
-  }
-
-  canTradePair(sellAsset: Asset, buyAsset: Asset): boolean {
-    console.info(sellAsset, buyAsset)
-    throw new Error('ThorchainSwapper: canTradePair unimplemented')
   }
 
   async executeQuote(): Promise<ExecQuoteOutput> {
@@ -61,7 +51,11 @@ export class ThorchainSwapper implements Swapper {
     throw new Error('ThorchainSwapper: approveInfinite unimplemented')
   }
 
-  async getSendMaxAmount(): Promise<string> {
-    throw new Error('ThorchainSwapper: getSendMaxAmount unimplemented')
+  filterBuyAssetsBySellAssetId(): CAIP19[] {
+    return []
+  }
+
+  filterAssetIdsBySellable(): CAIP19[] {
+    return []
   }
 }

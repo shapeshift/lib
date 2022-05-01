@@ -1,6 +1,7 @@
-import { GetQuoteInput, SwapperType } from '@shapeshiftoss/types'
+import { SwapperType } from '@shapeshiftoss/types'
+import uniq from 'lodash/uniq'
 
-import { Swapper } from '..'
+import { BuyAssetBySellIdInput, ByPairInput, SupportedSellAssetsInput, Swapper } from '..'
 
 export class SwapperError extends Error {
   constructor(message: string) {
@@ -59,8 +60,40 @@ export class SwapperManager {
     return this
   }
 
-  async getBestSwapper(quoteParams: GetQuoteInput): Promise<SwapperType> {
-    quoteParams // noop to shut up linter
-    return SwapperType.Zrx // TODO: implement getBestSwapper
+  async getBestSwapper(args: ByPairInput): Promise<Swapper> {
+    // TODO: This will eventually have logic to determine the best swapper.
+    // For now we return the first swapper we get from getSwappersByPair
+    return this.getSwappersByPair(args)[0]
+  }
+
+  /**
+   *
+   * @param pair type {GetQuoteInput}
+   * @returns {SwapperType}
+   */
+  getSwappersByPair(pair: ByPairInput): Swapper[] {
+    const { sellAssetId, buyAssetId } = pair
+    return Array.from(this.swappers.values()).filter(
+      (swapper: Swapper) =>
+        swapper.filterBuyAssetsBySellAssetId({ sellAssetId, assetIds: [buyAssetId] }).length
+    )
+  }
+
+  getSupportedBuyAssetIdsFromSellId(args: BuyAssetBySellIdInput) {
+    return uniq(
+      Array.from(this.swappers.values()).flatMap((swapper: Swapper) =>
+        swapper.filterBuyAssetsBySellAssetId(args)
+      )
+    )
+  }
+
+  getSupportedSellableAssetIds(args: SupportedSellAssetsInput) {
+    const { assetIds } = args
+
+    return uniq(
+      Array.from(this.swappers.values()).flatMap((swapper: Swapper) =>
+        swapper.filterAssetIdsBySellable(assetIds)
+      )
+    )
   }
 }

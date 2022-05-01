@@ -1,3 +1,45 @@
+# [@shapeshiftoss/swapper-v3.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v2.3.0...@shapeshiftoss/swapper-v3.0.0) (2022-04-29)
+
+
+### Features
+
+* remove swappertype from quote fee type ([#569](https://github.com/shapeshift/lib/issues/569)) ([303dfb1](https://github.com/shapeshift/lib/commit/303dfb1fd1b27c00075c0921d1478e93cb9feeff))
+
+
+### BREAKING CHANGES
+
+* removed SwapperType generic
+
+# [@shapeshiftoss/swapper-v2.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v2.2.2...@shapeshiftoss/swapper-v2.3.0) (2022-04-28)
+
+
+### Features
+
+* add assetid, chainid fields to asset type ([#570](https://github.com/shapeshift/lib/issues/570)) ([1c3c24c](https://github.com/shapeshift/lib/commit/1c3c24c2df6e71f3a4ad4b7f1863168aafdc8aa5))
+
+# [@shapeshiftoss/swapper-v2.2.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v2.2.1...@shapeshiftoss/swapper-v2.2.2) (2022-04-28)
+
+
+### Bug Fixes
+
+* remove getmaxamount unnecessary code ([#582](https://github.com/shapeshift/lib/issues/582)) ([026672b](https://github.com/shapeshift/lib/commit/026672b39498ea5abe056cc21518d69e611e6090))
+
+# [@shapeshiftoss/swapper-v2.2.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v2.2.0...@shapeshiftoss/swapper-v2.2.1) (2022-04-28)
+
+# [@shapeshiftoss/swapper-v2.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v2.1.0...@shapeshiftoss/swapper-v2.2.0) (2022-04-27)
+
+
+### Features
+
+* **swapper:** add getByPair ([#526](https://github.com/shapeshift/lib/issues/526)) ([ec6d40f](https://github.com/shapeshift/lib/commit/ec6d40f9b399ab6eabdac97125e04c93342b7ab7))
+
+# [@shapeshiftoss/swapper-v2.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v2.0.3...@shapeshiftoss/swapper-v2.1.0) (2022-04-25)
+
+
+### Features
+
+* swapper by buyasset ([#536](https://github.com/shapeshift/lib/issues/536)) ([fbcb02c](https://github.com/shapeshift/lib/commit/fbcb02c540c54a31fc6f637688c0bbdbcad1558c))
+
 # [@shapeshiftoss/swapper-v2.0.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v2.0.2...@shapeshiftoss/swapper-v2.0.3) (2022-04-15)
 
 

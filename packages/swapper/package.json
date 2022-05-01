@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/swapper",
-  "version": "2.0.3",
+  "version": "3.0.0",
   "description": "TODO: description",
   "repository": "https://github.com/shapeshift/lib",
   "license": "MIT",
@@ -13,16 +13,19 @@
     "access": "public"
   },
   "scripts": {
-    "build": "yarn clean && tsc --project tsconfig.build.json",
+    "build": "yarn clean && yarn compile",
     "dev": "tsc --watch",
-    "clean": "rm -rf dist",
+    "clean": "rm -rf dist && rm -rf tsconfig.build.tsbuildinfo",
+    "compile": "tsc -p tsconfig.build.json",
+    "prepare": "yarn build",
     "test": "jest test",
-    "type-check": "tsc --project ./tsconfig.json --noEmit",
+    "type-check": "tsc --project ./tsconfig.build.json --noEmit",
     "swapcli": "yarn build && node ./dist/swappercli.js"
   },
   "dependencies": {
     "axios": "^0.26.0",
     "bignumber.js": "^9.0.1",
+    "lodash": "^4.17.21",
     "retry-axios": "^2.6.0",
     "web3": "^1.6.1"
   },

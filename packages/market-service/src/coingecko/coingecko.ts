@@ -1,5 +1,4 @@
-import { adapters } from '@shapeshiftoss/caip'
-import { fromCAIP19 } from '@shapeshiftoss/caip/dist/caip19/caip19'
+import { adapters, caip19 as AssetId } from '@shapeshiftoss/caip'
 import {
   ChainTypes,
   FindAllMarketArgs,
@@ -20,6 +19,7 @@ import { isValidDate } from '../utils/isValidDate'
 import { rateLimitedAxios } from '../utils/rateLimiters'
 import { CoinGeckoMarketCap } from './coingecko-types'
 
+const { fromCAIP19 } = AssetId
 const axios = rateLimitedAxios(RATE_LIMIT_THRESHOLDS_PER_MINUTE.COINGECKO)
 
 // tons more params here: https://www.coingecko.com/en/api/documentation
@@ -99,7 +99,6 @@ export class CoinGeckoMarketService implements MarketService {
         `${this.baseUrl}/coins/${id}${contractUrl}`
       )
 
-      // TODO: get correct localizations
       const currency = 'usd'
       const marketData = data?.market_data
       return {
@@ -157,7 +156,6 @@ export class CoinGeckoMarketService implements MarketService {
         prices: [number, number][]
       }
 
-      // TODO: change vs_currency to localized currency
       const currency = 'usd'
       const { data: historyData } = await axios.get<CoinGeckoHistoryData>(
         `${url}/market_chart/range?id=${id}&vs_currency=${currency}&from=${from}&to=${to}`

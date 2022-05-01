@@ -12,9 +12,26 @@ import {
   GetQuoteInput,
   MinMaxOutput,
   Quote,
-  SendMaxAmountInput,
   SwapperType
 } from '@shapeshiftoss/types'
+
+export type SupportedAssetInput = {
+  assetIds: CAIP19[]
+}
+
+export type ByPairInput = {
+  sellAssetId: CAIP19
+  buyAssetId: CAIP19
+}
+
+export type BuyAssetBySellIdInput = {
+  sellAssetId: CAIP19
+  assetIds: CAIP19[]
+}
+
+export type SupportedSellAssetsInput = {
+  assetIds: CAIP19[]
+}
 
 export class SwapError extends Error {}
 
@@ -25,22 +42,12 @@ export interface Swapper {
   /**
    * Get a Quote along with an unsigned transaction that can be signed and broadcast to execute the swap
    **/
-  buildQuoteTx(args: BuildQuoteTxInput): Promise<Quote<ChainTypes, SwapperType>>
+  buildQuoteTx(args: BuildQuoteTxInput): Promise<Quote<ChainTypes>>
 
   /**
    * Get a basic quote (rate) for a trading pair
    */
-  getQuote(input: GetQuoteInput, wallet?: HDWallet): Promise<Quote<ChainTypes, SwapperType>>
-
-  /**
-   * Get a list of available assets based on the array of assets you send it
-   */
-  getAvailableAssets(assets: Asset[]): Asset[]
-
-  /**
-   * Get a boolean if the trade pair will work
-   */
-  canTradePair(sellAsset: Asset, buyAsset: Asset): boolean
+  getQuote(input: GetQuoteInput, wallet?: HDWallet): Promise<Quote<ChainTypes>>
 
   /**
    * Get the usd rate from either the assets symbol or tokenId
@@ -60,20 +67,25 @@ export interface Swapper {
   /**
    * Execute a quote built with buildQuoteTx by signing and broadcasting
    */
-  executeQuote(args: ExecQuoteInput<ChainTypes, SwapperType>): Promise<ExecQuoteOutput>
+  executeQuote(args: ExecQuoteInput<ChainTypes>): Promise<ExecQuoteOutput>
 
   /**
    * Get a boolean if a quote needs approval
    */
-  approvalNeeded(args: ApprovalNeededInput<ChainTypes, SwapperType>): Promise<ApprovalNeededOutput>
+  approvalNeeded(args: ApprovalNeededInput<ChainTypes>): Promise<ApprovalNeededOutput>
 
   /**
    * Get the txid of an approve infinite transaction
    */
-  approveInfinite(args: ApproveInfiniteInput<ChainTypes, SwapperType>): Promise<string>
+  approveInfinite(args: ApproveInfiniteInput<ChainTypes>): Promise<string>
 
   /**
-   * Get max swap balance (minus fees) for sell asset
+   * Get supported buyAssetId's by sellAssetId
    */
-  getSendMaxAmount(args: SendMaxAmountInput): Promise<string>
+  filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): CAIP19[]
+
+  /**
+   * Get supported sell assetIds
+   */
+  filterAssetIdsBySellable(assetIds: CAIP19[]): CAIP19[]
 }

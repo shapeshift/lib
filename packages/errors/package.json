@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/errors",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Common set of typed errors",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -22,9 +22,11 @@
     "type-check": "tsc --project ./tsconfig.json --noEmit"
   },
   "dependencies": {
-    "lodash.clonedeep": "^4.5.0"
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.snakecase": "^4.1.1"
   },
   "devDependencies": {
-    "@types/lodash.clonedeep": "^4.5.6"
+    "@types/lodash.clonedeep": "^4.5.6",
+    "@types/lodash.snakecase": "^4.1.7"
   }
 }

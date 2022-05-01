@@ -1,3 +1,36 @@
+# [@shapeshiftoss/types-v3.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v2.11.0...@shapeshiftoss/types-v3.0.0) (2022-04-29)
+
+
+### Features
+
+* remove swappertype from quote fee type ([#569](https://github.com/shapeshift/lib/issues/569)) ([303dfb1](https://github.com/shapeshift/lib/commit/303dfb1fd1b27c00075c0921d1478e93cb9feeff))
+
+
+### BREAKING CHANGES
+
+* removed SwapperType generic
+
+# [@shapeshiftoss/types-v2.11.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v2.10.1...@shapeshiftoss/types-v2.11.0) (2022-04-28)
+
+
+### Features
+
+* add assetid, chainid fields to asset type ([#570](https://github.com/shapeshift/lib/issues/570)) ([1c3c24c](https://github.com/shapeshift/lib/commit/1c3c24c2df6e71f3a4ad4b7f1863168aafdc8aa5))
+
+# [@shapeshiftoss/types-v2.10.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v2.10.0...@shapeshiftoss/types-v2.10.1) (2022-04-28)
+
+
+### Bug Fixes
+
+* remove getmaxamount unnecessary code ([#582](https://github.com/shapeshift/lib/issues/582)) ([026672b](https://github.com/shapeshift/lib/commit/026672b39498ea5abe056cc21518d69e611e6090))
+
+# [@shapeshiftoss/types-v2.10.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v2.9.1...@shapeshiftoss/types-v2.10.0) (2022-04-27)
+
+
+### Features
+
+* **swapper:** add getByPair ([#526](https://github.com/shapeshift/lib/issues/526)) ([ec6d40f](https://github.com/shapeshift/lib/commit/ec6d40f9b399ab6eabdac97125e04c93342b7ab7))
+
 # [@shapeshiftoss/types-v2.9.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v2.9.0...@shapeshiftoss/types-v2.9.1) (2022-04-15)
 
 

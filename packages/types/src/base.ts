@@ -1,6 +1,6 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 
-import { FeeDataKey, QuoteFeeData, SignTxInput } from './chain-adapters'
+import { QuoteFeeData, SignTxInput } from './chain-adapters'
 
 /** Common */
 
@@ -51,8 +51,10 @@ export enum AssetDataSource {
 // asset-service
 
 type AbstractAsset = {
-  caip19: string
+  assetId: string
   caip2: string
+  caip19: string
+  chainId: string
   chain: ChainTypes
   description?: string
   isTrustedDescription?: boolean
@@ -91,7 +93,8 @@ export type Asset = AbstractAsset & Partial<TokenAssetFields>
 
 export enum SwapperType {
   Zrx = '0x',
-  Thorchain = 'Thorchain'
+  Thorchain = 'Thorchain',
+  Test = 'Test'
 }
 
 export type SwapSource = {
@@ -132,7 +135,7 @@ export type ThorVaultInfo = {
 
 export type BuildThorTradeOutput = SignTxInput<unknown> & ThorVaultInfo
 
-export type Quote<C extends ChainTypes, S extends SwapperType> = {
+export type Quote<C extends ChainTypes> = {
   success: boolean
   statusCode?: number
   statusReason?: string
@@ -140,7 +143,7 @@ export type Quote<C extends ChainTypes, S extends SwapperType> = {
   buyAssetAccountId?: string
   sellAsset: Asset
   buyAsset: Asset
-  feeData?: QuoteFeeData<C, S>
+  feeData?: QuoteFeeData<C>
   rate?: string
   depositAddress?: string // this is dex contract address for eth swaps
   receiveAddress?: string
@@ -180,8 +183,8 @@ export type BuildQuoteTxInput = {
   wallet: HDWallet
 }
 
-export type ExecQuoteInput<C extends ChainTypes, S extends SwapperType> = {
-  quote: Quote<C, S>
+export type ExecQuoteInput<C extends ChainTypes> = {
+  quote: Quote<C>
   wallet: HDWallet
 }
 
@@ -189,8 +192,8 @@ export type ExecQuoteOutput = {
   txid: string
 }
 
-export type ApprovalNeededInput<C extends ChainTypes, S extends SwapperType> = {
-  quote: Quote<C, S>
+export type ApprovalNeededInput<C extends ChainTypes> = {
+  quote: Quote<C>
   wallet: HDWallet
 }
 
@@ -200,14 +203,7 @@ export type ApprovalNeededOutput = {
   gasPrice?: string
 }
 
-export type ApproveInfiniteInput<C extends ChainTypes, S extends SwapperType> = {
-  quote: Quote<C, S>
+export type ApproveInfiniteInput<C extends ChainTypes> = {
+  quote: Quote<C>
   wallet: HDWallet
-}
-
-export type SendMaxAmountInput = {
-  wallet: HDWallet
-  quote: Quote<ChainTypes, SwapperType>
-  sellAssetAccountId: string
-  feeEstimateKey?: FeeDataKey // fee estimate speed
 }
