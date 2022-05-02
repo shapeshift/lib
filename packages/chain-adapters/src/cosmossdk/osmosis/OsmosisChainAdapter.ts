@@ -1,12 +1,15 @@
 import { AssetNamespace, AssetReference, caip2, CAIP19, caip19 } from '@shapeshiftoss/caip'
 import {
   bip32ToAddressNList,
+  CosmosSignTx,
+  CosmosTx,
   OsmosisSignTx,
   OsmosisTx,
   supportsOsmosis
 } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
+import { bech32 } from 'bech32'
 
 import { ChainAdapter as IChainAdapter } from '../../api'
 import { ErrorHandler } from '../../error/ErrorHandler'
@@ -19,6 +22,10 @@ export class ChainAdapter
   protected readonly supportedChainIds = ['cosmos:osmosis-1', 'cosmos:osmo-testnet-1']
   protected readonly chainId = this.supportedChainIds[0]
   protected readonly assetId: CAIP19
+
+  protected readonly CHAIN_VALIDATOR_PREFIX_MAPPING = {
+    [ChainTypes.Osmosis]: 'osmovaloper'
+  }
 
   public static readonly defaultBIP44Params: BIP44Params = {
     purpose: 44,
@@ -160,29 +167,299 @@ export class ChainAdapter
       return ErrorHandler(err)
     }
   }
-
   async buildDelegateTransaction(
-    tx: chainAdapters.BuildDelegateTxInput<ChainTypes.Osmosis>
-  ): Promise<{ txToSign: OsmosisSignTx }> {
-    throw new Error('Method not implemented.')
+    tx: chainAdapters.BuildDelegateTxInput<ChainTypes.Cosmos>
+  ): Promise<{ txToSign: CosmosSignTx }> {
+    try {
+      const {
+        validator,
+        wallet,
+        bip44Params = CosmosSdkBaseAdapter.defaultBIP44Params,
+        chainSpecific: { gas, fee },
+        value,
+        memo = ''
+      } = tx
+      if (!validator) throw new Error('CosmosChainAdapter: validator is required')
+      if (!value) throw new Error('CosmosChainAdapter: value is required')
+      const { prefix } = bech32.decode(validator)
+      const chain = this.getType()
+
+      console.log('chain', chain)
+      console.log('prefix', prefix)
+      console.log('this.CHAIN_VALIDATOR_PREFIX_MAPPING', this.CHAIN_VALIDATOR_PREFIX_MAPPING)
+      console.log(
+        'this.CHAIN_VALIDATOR_PREFIX_MAPPING[chain]',
+        this.CHAIN_VALIDATOR_PREFIX_MAPPING[chain]
+      )
+      if (this.CHAIN_VALIDATOR_PREFIX_MAPPING[chain].toString() !== prefix)
+        throw new Error(
+          `watOsmosisChainAdapter:buildDelegateTransaction invalid validator address ${validator}`
+        )
+
+      const path = toPath(bip44Params)
+      const addressNList = bip32ToAddressNList(path)
+      const from = await this.getAddress({ bip44Params, wallet })
+      const { valid } = await super.validateAddress(from)
+      if (!valid)
+        throw new Error(
+          `OsmosisChainAdapter:buildDelegateTransaction invalid delegator address ${from}`
+        )
+
+      const account = await this.getAccount(from)
+
+      const utx: CosmosTx = {
+        fee: {
+          amount: [
+            {
+              amount: bnOrZero(fee).toString(),
+              denom: 'uosmo'
+            }
+          ],
+          gas: gas
+        },
+        msg: [
+          {
+            type: 'cosmos-sdk/MsgDelegate',
+            value: {
+              amount: {
+                amount: bnOrZero(value).toString(),
+                denom: 'uosmo'
+              },
+              delegator_address: from,
+              validator_address: validator
+            }
+          }
+        ],
+        signatures: [],
+        memo
+      }
+
+      const txToSign: CosmosSignTx = {
+        addressNList,
+        tx: utx,
+        chain_id: caip2.ChainReference.CosmosHubMainnet,
+        account_number: account.chainSpecific.accountNumber,
+        sequence: account.chainSpecific.sequence
+      }
+      return { txToSign }
+    } catch (err) {
+      return ErrorHandler(err)
+    }
   }
 
   async buildUndelegateTransaction(
-    tx: chainAdapters.BuildUndelegateTxInput<ChainTypes.Osmosis>
-  ): Promise<{ txToSign: OsmosisSignTx }> {
-    throw new Error('Method not implemented.')
+    tx: chainAdapters.BuildUndelegateTxInput<ChainTypes.Cosmos>
+  ): Promise<{ txToSign: CosmosSignTx }> {
+    try {
+      const {
+        validator,
+        wallet,
+        bip44Params = CosmosSdkBaseAdapter.defaultBIP44Params,
+        chainSpecific: { gas, fee },
+        value,
+        memo = ''
+      } = tx
+      if (!validator) throw new Error('CosmosChainAdapter: validator is required')
+      if (!value) throw new Error('CosmosChainAdapter: value is required')
+      const { prefix } = bech32.decode(validator)
+      const chain = this.getType()
+      if (this.CHAIN_VALIDATOR_PREFIX_MAPPING[chain] !== prefix)
+        throw new Error(
+          `CosmosChainAdapter:buildDelegateTransaction invalid validator address ${validator}`
+        )
+
+      const path = toPath(bip44Params)
+      const addressNList = bip32ToAddressNList(path)
+      const from = await this.getAddress({ bip44Params, wallet })
+      const { valid } = await super.validateAddress(from)
+      if (!valid)
+        throw new Error(
+          `CosmosChainAdapter:buildDelegateTransaction invalid delegator address ${from}`
+        )
+
+      const account = await this.getAccount(from)
+
+      const utx: CosmosTx = {
+        fee: {
+          amount: [
+            {
+              amount: bnOrZero(fee).toString(),
+              denom: 'uosmo'
+            }
+          ],
+          gas: gas
+        },
+        msg: [
+          {
+            type: 'cosmos-sdk/MsgUndelegate',
+            value: {
+              amount: {
+                amount: bnOrZero(value).toString(),
+                denom: 'uosmo'
+              },
+              delegator_address: from,
+              validator_address: validator
+            }
+          }
+        ],
+        signatures: [],
+        memo
+      }
+      const txToSign: CosmosSignTx = {
+        addressNList,
+        tx: utx,
+        chain_id: caip2.ChainReference.CosmosHubMainnet,
+        account_number: account.chainSpecific.accountNumber,
+        sequence: account.chainSpecific.sequence
+      }
+      return { txToSign }
+    } catch (err) {
+      return ErrorHandler(err)
+    }
   }
 
   async buildClaimRewardsTransaction(
-    tx: chainAdapters.BuildClaimRewardsTxInput<ChainTypes.Osmosis>
-  ): Promise<{ txToSign: OsmosisSignTx }> {
-    throw new Error('Method not implemented.')
+    tx: chainAdapters.BuildClaimRewardsTxInput<ChainTypes.Cosmos>
+  ): Promise<{ txToSign: CosmosSignTx }> {
+    try {
+      const {
+        validator,
+        wallet,
+        bip44Params = CosmosSdkBaseAdapter.defaultBIP44Params,
+        chainSpecific: { gas, fee },
+        memo = ''
+      } = tx
+      if (!validator) throw new Error('CosmosChainAdapter: validator is required')
+      const { prefix } = bech32.decode(validator)
+      const chain = this.getType()
+      if (this.CHAIN_VALIDATOR_PREFIX_MAPPING[chain] !== prefix)
+        throw new Error(
+          `CosmosChainAdapter:buildDelegateTransaction invalid validator address ${validator}`
+        )
+
+      const path = toPath(bip44Params)
+      const addressNList = bip32ToAddressNList(path)
+      const from = await this.getAddress({ bip44Params, wallet })
+      const { valid } = await super.validateAddress(from)
+      if (!valid)
+        throw new Error(
+          `CosmosChainAdapter:buildDelegateTransaction invalid delegator address ${from}`
+        )
+
+      const account = await this.getAccount(from)
+
+      const utx: CosmosTx = {
+        fee: {
+          amount: [
+            {
+              amount: bnOrZero(fee).toString(),
+              denom: 'uosmo'
+            }
+          ],
+          gas: gas
+        },
+        msg: [
+          {
+            type: 'cosmos-sdk/MsgWithdrawDelegationReward',
+            value: {
+              delegator_address: from,
+              validator_address: validator
+            }
+          }
+        ],
+        signatures: [],
+        memo
+      }
+      const txToSign: CosmosSignTx = {
+        addressNList,
+        tx: utx,
+        chain_id: caip2.ChainReference.CosmosHubMainnet,
+        account_number: account.chainSpecific.accountNumber,
+        sequence: account.chainSpecific.sequence
+      }
+      return { txToSign }
+    } catch (err) {
+      return ErrorHandler(err)
+    }
   }
 
   async buildRedelegateTransaction(
-    tx: chainAdapters.BuildRedelegateTxInput<ChainTypes.Osmosis>
-  ): Promise<{ txToSign: OsmosisSignTx }> {
-    throw new Error('Method not implemented.')
+    tx: chainAdapters.BuildRedelegateTxInput<ChainTypes.Cosmos>
+  ): Promise<{ txToSign: CosmosSignTx }> {
+    try {
+      const {
+        wallet,
+        bip44Params = CosmosSdkBaseAdapter.defaultBIP44Params,
+        chainSpecific: { gas, fee },
+        value,
+        memo = '',
+        fromValidator,
+        toValidator
+      } = tx
+      if (!toValidator) throw new Error('CosmosChainAdapter: toValidator is required')
+      if (!fromValidator) throw new Error('CosmosChainAdapter: fromValidator is required')
+      if (!value) throw new Error('CosmosChainAdapter: value is required')
+      const { prefix: toPrefix } = bech32.decode(toValidator)
+      const { prefix: fromPrefix } = bech32.decode(fromValidator)
+      const chain = this.getType()
+      if (
+        this.CHAIN_VALIDATOR_PREFIX_MAPPING[chain] !== toPrefix ||
+        this.CHAIN_VALIDATOR_PREFIX_MAPPING[chain] !== fromPrefix
+      )
+        throw new Error(
+          `CosmosChainAdapter:buildDelegateTransaction invalid toValidator or fromValidator address ${toValidator} ${fromValidator}`
+        )
+
+      const path = toPath(bip44Params)
+      const addressNList = bip32ToAddressNList(path)
+      const from = await this.getAddress({ bip44Params, wallet })
+      const { valid } = await super.validateAddress(from)
+      if (!valid)
+        throw new Error(
+          `CosmosChainAdapter:buildRedelegateTransaction invalid delegator address ${from}`
+        )
+
+      const account = await this.getAccount(from)
+
+      const utx: CosmosTx = {
+        fee: {
+          amount: [
+            {
+              amount: bnOrZero(fee).toString(),
+              denom: 'uosmo'
+            }
+          ],
+          gas: gas
+        },
+        msg: [
+          {
+            type: 'cosmos-sdk/MsgBeginRedelegate',
+            value: {
+              amount: {
+                amount: bnOrZero(value).toString(),
+                denom: 'uosmo'
+              },
+              delegator_address: from,
+              validator_src_address: fromValidator,
+              validator_dst_address: toValidator
+            }
+          }
+        ],
+        signatures: [],
+        memo
+      }
+
+      const txToSign: CosmosSignTx = {
+        addressNList,
+        tx: utx,
+        chain_id: caip2.ChainReference.CosmosHubMainnet,
+        account_number: account.chainSpecific.accountNumber,
+        sequence: account.chainSpecific.sequence
+      }
+      return { txToSign }
+    } catch (err) {
+      return ErrorHandler(err)
+    }
   }
 
   async getFeeData({
@@ -213,15 +490,21 @@ export class ChainAdapter
     signTxInput: chainAdapters.SignTxInput<OsmosisSignTx>
   ): Promise<string> {
     const { wallet } = signTxInput
+    console.log('broadcasting tx', signTxInput)
     try {
       if (supportsOsmosis(wallet)) {
+        console.log('supports it')
         const signedTx = await this.signTransaction(signTxInput)
+        console.log('sending tx', signedTx)
         const { data } = await this.providers.http.sendTx({ body: { rawTx: signedTx } })
+        console.log('sent the tx', data)
         return data
       } else {
+        console.log('DOESNT SUPPORT')
         throw new Error('Wallet does not support Cosmos.')
       }
     } catch (error) {
+      console.log('OH FUCK', error)
       return ErrorHandler(error)
     }
   }

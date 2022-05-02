@@ -155,7 +155,6 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
   async getTxHistory(
     input: chainAdapters.TxHistoryInput
   ): Promise<chainAdapters.TxHistoryResponse<T>> {
-    console.log('getTxHistory')
     try {
       const { data } = await this.providers.http.getTxHistory({
         pubkey: input.pubkey,
