@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/asset-service",
-  "version": "2.3.1",
+  "version": "2.4.3",
   "description": "Service to return supported asset details",
   "homepage": "",
   "license": "MIT",
@@ -18,12 +18,14 @@
     "url": "https://github.com/shapeshift/lib"
   },
   "scripts": {
-    "build": "yarn clean && tsc --project tsconfig.build.json",
-    "generate": "yarn build && node ./dist/generateAssetData/generateAssetData.js",
+    "build": "yarn clean && yarn compile",
+    "clean": "rm -rf dist && rm -rf tsconfig.build.tsbuildinfo",
+    "compile": "tsc -p tsconfig.build.json",
     "dev": "tsc --watch",
-    "clean": "rm -rf dist",
+    "generate": "yarn build && node ./dist/generateAssetData/generateAssetData.js",
+    "prepare": "yarn build",
     "test": "jest test",
-    "type-check": "tsc --project ./tsconfig.json --noEmit"
+    "type-check": "tsc --project ./tsconfig.build.json --noEmit"
   },
   "dependencies": {
     "axios": "^0.26.0",
@@ -33,12 +35,12 @@
   },
   "peerDependencies": {
     "@shapeshiftoss/caip": "^2.0.0",
-    "@shapeshiftoss/types": "^2.1.0"
+    "@shapeshiftoss/types": "^3.0.0"
   },
   "devDependencies": {
     "@ethersproject/providers": "^5.5.2",
     "@shapeshiftoss/caip": "^2.0.0",
-    "@shapeshiftoss/types": "^2.1.0",
+    "@shapeshiftoss/types": "^3.0.0",
     "@types/lodash": "^4.14.172",
     "@yfi/sdk": "^1.0.30",
     "dotenv": "^14.3.0",

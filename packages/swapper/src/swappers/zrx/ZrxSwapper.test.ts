@@ -1,6 +1,6 @@
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { chainAdapters, ChainTypes, GetQuoteInput, Quote, SwapperType } from '@shapeshiftoss/types'
+import { ChainTypes, GetQuoteInput, Quote, SwapperType } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import { ZrxError } from '../..'
@@ -8,7 +8,6 @@ import { ZrxSwapper } from '..'
 import { ZrxBuildQuoteTx } from '../zrx/ZrxBuildQuoteTx/ZrxBuildQuoteTx'
 import { getZrxMinMax } from './getZrxMinMax/getZrxMinMax'
 import { getZrxQuote } from './getZrxQuote/getZrxQuote'
-import { getZrxSendMaxAmount } from './getZrxSendMaxAmount/getZrxSendMaxAmount'
 import { getUsdRate } from './utils/helpers/helpers'
 import { FOX } from './utils/test-data/assets'
 import { setupQuote } from './utils/test-data/setupSwapQuote'
@@ -41,13 +40,9 @@ jest.mock('./ZrxApproveInfinite/ZrxApproveInfinite', () => ({
   ZrxApproveInfinite: jest.fn()
 }))
 
-jest.mock('./getZrxSendMaxAmount/getZrxSendMaxAmount', () => ({
-  getZrxSendMaxAmount: jest.fn()
-}))
-
 describe('ZrxSwapper', () => {
   const input = <GetQuoteInput>{}
-  const quote = <Quote<ChainTypes, SwapperType>>{}
+  const quote = <Quote<ChainTypes>>{}
   const wallet = <HDWallet>{}
   const web3 = <Web3>{}
   const adapterManager = <ChainAdapterManager>{}
@@ -81,6 +76,14 @@ describe('ZrxSwapper', () => {
     await swapper.executeQuote(args)
     expect(ZrxExecuteQuote).toHaveBeenCalled()
   })
+  it('gets default pair', () => {
+    const swapper = new ZrxSwapper(zrxSwapperDeps)
+    const pair = swapper.getDefaultPair()
+    const ethCAIP19 = 'eip155:1/slip44:60'
+    expect(pair).toHaveLength(2)
+    expect(pair[0]).toEqual(ethCAIP19)
+    expect(pair[1]).toEqual(FOX.assetId)
+  })
   it('calls getUsdRate on swapper.getUsdRate', async () => {
     const swapper = new ZrxSwapper(zrxSwapperDeps)
     await swapper.getUsdRate(FOX)
@@ -106,17 +109,5 @@ describe('ZrxSwapper', () => {
     const args = { quote, wallet }
     await swapper.approveInfinite(args)
     expect(ZrxApproveInfinite).toHaveBeenCalled()
-  })
-
-  it('calls getZrxSendMaxAmount on swapper.getSendMaxAmount', async () => {
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
-    const args = {
-      quote,
-      wallet,
-      sellAssetAccountId: '0',
-      feeEstimateKey: chainAdapters.FeeDataKey.Average
-    }
-    await swapper.getSendMaxAmount(args)
-    expect(getZrxSendMaxAmount).toHaveBeenCalled()
   })
 })

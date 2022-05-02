@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/chain-adapters",
-  "version": "2.13.4",
+  "version": "2.13.6",
   "description": "> TODO: description",
   "homepage": "",
   "license": "MIT",
@@ -18,11 +18,13 @@
   },
   "scripts": {
     "adapterCli": "yarn build && node ./dist/ChainAdapterCLI.js",
-    "build": "yarn clean && tsc --project tsconfig.build.json",
-    "clean": "rm -rf dist",
+    "build": "yarn clean && yarn compile",
+    "clean": "rm -rf dist && rm -rf tsconfig.build.tsbuildinfo",
+    "compile": "tsc -p tsconfig.build.json",
     "dev": "tsc --watch",
+    "prepare": "yarn build",
     "test": "jest test",
-    "type-check": "tsc --project ./tsconfig.json --noEmit"
+    "type-check": "tsc --project ./tsconfig.build.json --noEmit"
   },
   "dependencies": {
     "axios": "^0.26.0",
@@ -38,16 +40,16 @@
     "@shapeshiftoss/caip": "^2.0.0",
     "@shapeshiftoss/hdwallet-core": "^1.20.0",
     "@shapeshiftoss/hdwallet-native": "^1.20.0",
-    "@shapeshiftoss/types": "^2.1.0",
-    "@shapeshiftoss/unchained-client": "^6.6.0",
+    "@shapeshiftoss/types": "^3.0.0",
+    "@shapeshiftoss/unchained-client": "^6.10.0",
     "bs58check": "^2.0.0"
   },
   "devDependencies": {
     "@shapeshiftoss/caip": "^2.1.2",
     "@shapeshiftoss/hdwallet-core": "^1.20.0",
     "@shapeshiftoss/hdwallet-native": "^1.20.0",
-    "@shapeshiftoss/types": "^2.1.0",
-    "@shapeshiftoss/unchained-client": "^6.6.0",
+    "@shapeshiftoss/types": "^3.0.0",
+    "@shapeshiftoss/unchained-client": "^6.10.0",
     "@types/bs58check": "^2.1.0",
     "@types/multicoin-address-validator": "^0.5.0"
   }

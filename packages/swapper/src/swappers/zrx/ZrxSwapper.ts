@@ -1,4 +1,4 @@
-import { CAIP19 } from '@shapeshiftoss/caip'
+import { AssetId, CAIP19 } from '@shapeshiftoss/caip'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import {
   ApprovalNeededInput,
@@ -12,7 +12,6 @@ import {
   GetQuoteInput,
   MinMaxOutput,
   Quote,
-  SendMaxAmountInput,
   SwapperType
 } from '@shapeshiftoss/types'
 import Web3 from 'web3'
@@ -20,7 +19,6 @@ import Web3 from 'web3'
 import { BuyAssetBySellIdInput, Swapper } from '../../api'
 import { getZrxMinMax } from './getZrxMinMax/getZrxMinMax'
 import { getZrxQuote } from './getZrxQuote/getZrxQuote'
-import { getZrxSendMaxAmount } from './getZrxSendMaxAmount/getZrxSendMaxAmount'
 import { getUsdRate } from './utils/helpers/helpers'
 import { ZrxApprovalNeeded } from './ZrxApprovalNeeded/ZrxApprovalNeeded'
 import { ZrxApproveInfinite } from './ZrxApproveInfinite/ZrxApproveInfinite'
@@ -51,11 +49,11 @@ export class ZrxSwapper implements Swapper {
     return SwapperType.Zrx
   }
 
-  async buildQuoteTx(args: BuildQuoteTxInput): Promise<Quote<ChainTypes, SwapperType>> {
+  async buildQuoteTx(args: BuildQuoteTxInput): Promise<Quote<ChainTypes>> {
     return ZrxBuildQuoteTx(this.deps, args)
   }
 
-  async getQuote(input: GetQuoteInput): Promise<Quote<ChainTypes, SwapperType>> {
+  async getQuote(input: GetQuoteInput): Promise<Quote<ChainTypes>> {
     return getZrxQuote(input)
   }
 
@@ -67,22 +65,22 @@ export class ZrxSwapper implements Swapper {
     return getZrxMinMax(input)
   }
 
-  async executeQuote(args: ExecQuoteInput<ChainTypes, SwapperType>): Promise<ExecQuoteOutput> {
+  getDefaultPair(): [AssetId, AssetId] {
+    const ETH = 'eip155:1/slip44:60'
+    const FOX = 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
+    return [ETH, FOX]
+  }
+
+  async executeQuote(args: ExecQuoteInput<ChainTypes>): Promise<ExecQuoteOutput> {
     return ZrxExecuteQuote(this.deps, args)
   }
 
-  async approvalNeeded(
-    args: ApprovalNeededInput<ChainTypes, SwapperType>
-  ): Promise<ApprovalNeededOutput> {
+  async approvalNeeded(args: ApprovalNeededInput<ChainTypes>): Promise<ApprovalNeededOutput> {
     return ZrxApprovalNeeded(this.deps, args)
   }
 
-  async approveInfinite(args: ApproveInfiniteInput<ChainTypes, SwapperType>): Promise<string> {
+  async approveInfinite(args: ApproveInfiniteInput<ChainTypes>): Promise<string> {
     return ZrxApproveInfinite(this.deps, args)
-  }
-
-  async getSendMaxAmount(args: SendMaxAmountInput): Promise<string> {
-    return getZrxSendMaxAmount(this.deps, args)
   }
 
   filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): CAIP19[] {

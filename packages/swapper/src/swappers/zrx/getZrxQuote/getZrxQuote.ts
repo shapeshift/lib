@@ -1,11 +1,4 @@
-import {
-  ChainTypes,
-  GetQuoteInput,
-  Quote,
-  QuoteResponse,
-  SwapperType,
-  SwapSource
-} from '@shapeshiftoss/types'
+import { ChainTypes, GetQuoteInput, Quote, QuoteResponse, SwapSource } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import BigNumber from 'bignumber.js'
 
@@ -14,9 +7,7 @@ import { normalizeAmount } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
 import { ZrxError } from '../ZrxSwapper'
 
-export async function getZrxQuote(
-  input: GetQuoteInput
-): Promise<Quote<ChainTypes.Ethereum, SwapperType>> {
+export async function getZrxQuote(input: GetQuoteInput): Promise<Quote<ChainTypes.Ethereum>> {
   const {
     sellAsset,
     buyAsset,
@@ -125,7 +116,8 @@ export async function getZrxQuote(
       buyAmount: data.buyAmount,
       guaranteedPrice: data.guaranteedPrice,
       sources:
-        data.sources?.filter((s: SwapSource) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE
+        data.sources?.filter((s: SwapSource) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE,
+      allowanceContract: data.allowanceTarget
     }
   } catch (e) {
     const statusCode =
