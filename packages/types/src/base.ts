@@ -1,6 +1,6 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 
-import { QuoteFeeData, SignTxInput } from './chain-adapters'
+import { QuoteFeeData } from './chain-adapters'
 
 /** Common */
 
