@@ -39,3 +39,4 @@ logs:
   type: stdout
   format: pretty
   level: http
+  
