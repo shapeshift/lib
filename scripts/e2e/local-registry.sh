@@ -4,11 +4,8 @@
 
 set -x
 
-# TODO: set default if no arg
-verdaccio_config=$1
-
 default_verdaccio_package=verdaccio@^5.10.0
-local_registry_url="http://localhost:4873"
+registry_url="http://localhost:4873"
 original_npm_registry_url=`npm get registry`
 original_yarn_registry_url=`yarn config get registry`
 
@@ -18,7 +15,7 @@ function startLocalRegistry {
   echo "Registry output file: $tmp_registry_log"
   VERDACCIO_HANDLE_KILL_SIGNALS=true
   # (yarn verdaccio --config ./.verdaccio/config.yml)
-  nohup npx $default_verdaccio_package --config $verdaccio_config &>$tmp_registry_log &
+  (nohup npx $default_verdaccio_package --config ./.verdaccio/config.yaml &>$tmp_registry_log &)
   # Wait for Verdaccio to boot
   grep -q 'http address' <(tail -f $tmp_registry_log)
 
@@ -37,11 +34,6 @@ function stopLocalRegistry {
   echo "  > NPM:  $CURRENT_NPM_REGISTRY"
   echo "  > YARN: $CURRENT_YARN_REIGSTRY"
 }
-
-if [[ $COMMAND == "clear" ]]; then
-  echo "Clearing Local Registry"
-  rm -rf ./build/local-registry/storage
-fi
 
 # Use following source to extend functionality:
 # @source: https://github.com/facebook/create-react-app/blob/v4.0.0/tasks/publish.sh

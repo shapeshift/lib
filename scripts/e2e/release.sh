@@ -5,7 +5,6 @@ set -x
 
 root_path=$PWD
 
-
 # Load functions for working with local NPM registry (Verdaccio)
 source ./scripts/e2e/local-registry.sh
 
@@ -37,11 +36,10 @@ trap 'set +x; handle_exit' SIGQUIT SIGTERM SIGINT SIGKILL SIGHUP
 # Bootstrap monorepo
 yarn
 
-startLocalRegistry ./.verdaccio/config.yml
+startLocalRegistry
 
 yarn lint
 yarn build
-# TODO: test dev encironment
 
 # Run tests with CI flag
 CI=true yarn test
