@@ -1,4 +1,4 @@
-import { AssetId, CAIP19 } from '@shapeshiftoss/caip'
+import { CAIP19 } from '@shapeshiftoss/caip'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import {
   ApprovalNeededInput,
@@ -63,12 +63,6 @@ export class ZrxSwapper implements Swapper {
 
   async getMinMax(input: GetQuoteInput): Promise<MinMaxOutput> {
     return getZrxMinMax(input)
-  }
-
-  getDefaultPair(): [AssetId, AssetId] {
-    const ETH = 'eip155:1/slip44:60'
-    const FOX = 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
-    return [ETH, FOX]
   }
 
   async executeQuote(args: ExecQuoteInput<ChainTypes>): Promise<ExecQuoteOutput> {
