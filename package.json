@@ -21,6 +21,7 @@
     "clean-link": "yarn clean && yarn && yarn build && yarn link-packages",
     "test": "jest",
     "test:dev": "jest --watch",
+    "test:e2e": "./scripts/e2e/release.sh",
     "type-check": "lerna run type-check",
     "release": "yarn workspaces run semantic-release -e semantic-release-monorepo",
     "publish:lerna": "lerna publish --yes",
