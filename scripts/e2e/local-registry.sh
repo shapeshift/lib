@@ -14,7 +14,6 @@ function startLocalRegistry {
   echo "Starting Local Registry"
   echo "Registry output file: $tmp_registry_log"
   VERDACCIO_HANDLE_KILL_SIGNALS=true
-  # (yarn verdaccio --config ./.verdaccio/config.yml)
   (nohup npx $default_verdaccio_package --config ./.verdaccio/config.yaml &>$tmp_registry_log &)
   # Wait for Verdaccio to boot
   grep -q 'http address' <(tail -f $tmp_registry_log)
@@ -44,6 +43,4 @@ function publishToLocalRegistry {
   # -f force
 	git clean -df
   yarn release --dry-run
-  # --yes skip all confirmation prompts
-  # ./node_modules/.bin/lerna publish --yes --force-publish=* --no-git-tag-version --no-commit-hooks --no-push --exact --dist-tag=latest
 }

@@ -3,8 +3,6 @@
 
 set -x
 
-root_path=$PWD
-
 # Load functions for working with local NPM registry (Verdaccio)
 source ./scripts/e2e/local-registry.sh
 
