@@ -184,13 +184,6 @@ export class ChainAdapter
       const { prefix } = bech32.decode(validator)
       const chain = this.getType()
 
-      console.log('chain', chain)
-      console.log('prefix', prefix)
-      console.log('this.CHAIN_VALIDATOR_PREFIX_MAPPING', this.CHAIN_VALIDATOR_PREFIX_MAPPING)
-      console.log(
-        'this.CHAIN_VALIDATOR_PREFIX_MAPPING[chain]',
-        this.CHAIN_VALIDATOR_PREFIX_MAPPING[chain]
-      )
       if (this.CHAIN_VALIDATOR_PREFIX_MAPPING[chain].toString() !== prefix)
         throw new Error(
           `watOsmosisChainAdapter:buildDelegateTransaction invalid validator address ${validator}`
@@ -490,21 +483,15 @@ export class ChainAdapter
     signTxInput: chainAdapters.SignTxInput<OsmosisSignTx>
   ): Promise<string> {
     const { wallet } = signTxInput
-    console.log('broadcasting tx', signTxInput)
     try {
       if (supportsOsmosis(wallet)) {
-        console.log('supports it')
         const signedTx = await this.signTransaction(signTxInput)
-        console.log('sending tx', signedTx)
         const { data } = await this.providers.http.sendTx({ body: { rawTx: signedTx } })
-        console.log('sent the tx', data)
         return data
       } else {
-        console.log('DOESNT SUPPORT')
         throw new Error('Wallet does not support Cosmos.')
       }
     } catch (error) {
-      console.log('OH FUCK', error)
       return ErrorHandler(error)
     }
   }
