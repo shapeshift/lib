@@ -5,6 +5,7 @@ import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 
 import { BuildTradeInput } from '../../../api'
+import { bnOrZero } from '../utils/bignumber'
 import { APPROVAL_GAS_LIMIT, MAX_SLIPPAGE } from '../utils/constants'
 import { setupZrxQuoteResponse } from '../utils/test-data/setupSwapQuote'
 import { zrxService } from '../utils/zrxService'
@@ -224,11 +225,11 @@ describe('ZrxBuildTrade', () => {
       ...buildTradeResponse,
       feeData: {
         chainSpecific: {
-          approvalFee: new BigNumber(APPROVAL_GAS_LIMIT).multipliedBy(gasPrice).toString(),
+          approvalFee: bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(gasPrice).toString(),
           gasPrice,
           estimatedGas
         },
-        fee: new BigNumber(gasPrice).multipliedBy(estimatedGas).toString()
+        fee: bnOrZero(gasPrice).multipliedBy(estimatedGas).toString()
       }
     })
   })

@@ -97,7 +97,7 @@ describe('utils', () => {
           ...getAllowanceInput,
           sellAsset: { ...sellAsset, symbol: 'ETH' }
         })
-      ).toEqual(new BigNumber(0))
+      ).toEqual(bnOrZero(0))
     })
 
     it('should return sellAmount if allowanceOnChain is 0', async () => {
