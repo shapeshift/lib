@@ -146,8 +146,14 @@ export async function ZrxBuildQuoteTx(
       sources: data.sources?.filter((s) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE
     }
 
+    if (!data.allowanceTarget) throw new SwapError('ZrxSwapper:ZrxBuildQuoteTx no allowance target')
+    if (!data.sellAmount) throw new SwapError('ZrxSwapper:ZrxBuildQuoteTx no sell amount')
+
     const allowanceRequired = await getAllowanceRequired({
-      quote,
+      sellAsset,
+      allowanceContract: data.allowanceTarget,
+      receiveAddress,
+      sellAmount: data.sellAmount,
       web3,
       erc20AllowanceAbi
     })

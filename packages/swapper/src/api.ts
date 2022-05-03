@@ -1,5 +1,6 @@
 import { CAIP19 } from '@shapeshiftoss/caip'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { chainAdapters } from '@shapeshiftoss/types'
 import {
   ApprovalNeededInput,
   ApprovalNeededOutput,
@@ -13,8 +14,7 @@ import {
   MinMaxOutput,
   Quote,
   SwapperType
-} from '@shapeshiftoss/types'
-
+} from '@shapeshiftoss/types/src/'
 export type SupportedAssetInput = {
   assetIds: CAIP19[]
 }
@@ -33,6 +33,73 @@ export type SupportedSellAssetsInput = {
   assetIds: CAIP19[]
 }
 
+export type GetTradeQuoteInput = {
+  sellAsset: Asset
+  buyAsset: Asset
+  sellAmount?: string
+  buyAmount?: string
+  sendMax?: boolean
+  priceImpact?: string // TODO this doesnt belong here but frontend needs it to not break (for now)
+}
+
+export type BuildTradeInput = {
+  sellAsset: Asset
+  buyAsset: Asset
+  sellAmount?: string
+  buyAmount?: string
+  sellAssetAccountId?: string
+  buyAssetAccountId?: string
+  slippage?: string
+  sendMax?: boolean
+  wallet: HDWallet
+}
+
+export type TradeQuote<C extends ChainTypes> = {
+  success: boolean // This will go away when we correctly handle errors
+  statusReason?: string // This will go away when we correctly handle errors
+  sellAsset: Asset
+  buyAsset: Asset
+  feeData: chainAdapters.QuoteFeeData<C>
+  rate: string
+  buyAmount: string
+  sellAmount: string
+  minimum: string | null
+  maximum: string | null
+  allowanceContract?: string
+  sources: Array<SwapSource>
+}
+
+export type BuiltTrade<C extends ChainTypes> = {
+  success: boolean // This will go away when we correctly handle errors
+  statusReason?: string // This will go away when we correctly handle errors
+  sellAssetAccountId: string
+  sellAsset: Asset
+  buyAsset: Asset
+  feeData: chainAdapters.QuoteFeeData<C>
+  rate: string
+  depositAddress: string
+  receiveAddress: string
+  buyAmount: string
+  sellAmount: string
+  txData: string
+  allowanceContract: string
+  sources: Array<SwapSource>
+}
+
+export type ExecTradeInput<C extends ChainTypes> = {
+  builtTrade: BuiltTrade<C>
+  wallet: HDWallet
+}
+
+export type ExecTradeOutput = {
+  txid: string
+}
+
+export type SwapSource = {
+  name: string
+  proportion: string
+}
+
 export class SwapError extends Error {}
 
 export interface Swapper {
@@ -42,10 +109,22 @@ export interface Swapper {
   /**
    * Get a Quote along with an unsigned transaction that can be signed and broadcast to execute the swap
    **/
+  buildTrade(args: BuildTradeInput): Promise<BuiltTrade<ChainTypes>>
+
+  /**
+   * Get a basic quote (rate) for a trading pair
+   */
+  getTradeQuote(input: GetTradeQuoteInput, wallet?: HDWallet): Promise<TradeQuote<ChainTypes>>
+
+  /**
+   * Get a Quote along with an unsigned transaction that can be signed and broadcast to execute the swap
+   * @deprecated The method is going away soon.
+   **/
   buildQuoteTx(args: BuildQuoteTxInput): Promise<Quote<ChainTypes>>
 
   /**
    * Get a basic quote (rate) for a trading pair
+   * @deprecated The method is going away soon.
    */
   getQuote(input: GetQuoteInput, wallet?: HDWallet): Promise<Quote<ChainTypes>>
 
@@ -63,6 +142,11 @@ export interface Swapper {
    * Execute a quote built with buildQuoteTx by signing and broadcasting
    */
   executeQuote(args: ExecQuoteInput<ChainTypes>): Promise<ExecQuoteOutput>
+
+  /**
+   * Execute a trade built with buildTradee by signing and broadcasting
+   */
+  executeTrade(args: ExecTradeInput<ChainTypes>): Promise<ExecQuoteOutput>
 
   /**
    * Get a boolean if a quote needs approval

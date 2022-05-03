@@ -11,7 +11,10 @@ import { ZrxError } from '../../ZrxSwapper'
 import { zrxService } from '../zrxService'
 
 export type GetAllowanceRequiredArgs = {
-  quote: Quote<ChainTypes>
+  receiveAddress: string
+  allowanceContract: string
+  sellAsset: Asset
+  sellAmount: string
   web3: Web3
   erc20AllowanceAbi: AbiItem[]
 }
@@ -57,17 +60,20 @@ export const getERC20Allowance = async ({
 }
 
 export const getAllowanceRequired = async ({
-  quote,
+  receiveAddress,
+  allowanceContract,
+  sellAsset,
+  sellAmount,
   web3,
   erc20AllowanceAbi
 }: GetAllowanceRequiredArgs): Promise<BigNumber> => {
-  if (quote.sellAsset.symbol === 'ETH') {
+  if (sellAsset.symbol === 'ETH') {
     return new BigNumber(0)
   }
 
-  const ownerAddress = quote.receiveAddress
-  const spenderAddress = quote.allowanceContract
-  const tokenId = quote.sellAsset.tokenId
+  const ownerAddress = receiveAddress
+  const spenderAddress = allowanceContract
+  const tokenId = sellAsset.tokenId
 
   if (!ownerAddress || !spenderAddress || !tokenId) {
     throw new SwapError(
@@ -83,14 +89,14 @@ export const getAllowanceRequired = async ({
     tokenId
   })
   if (allowanceOnChain === '0') {
-    return new BigNumber(quote.sellAmount || 0)
+    return new BigNumber(sellAmount || 0)
   }
   if (!allowanceOnChain) {
     throw new SwapError(
-      `No allowance data for ${quote.allowanceContract} to ${quote.receiveAddress}`
+      `No allowance data for ${allowanceContract} to ${receiveAddress}`
     )
   }
-  const allowanceRequired = new BigNumber(quote.sellAmount || 0).minus(allowanceOnChain)
+  const allowanceRequired = new BigNumber(sellAmount || 0).minus(allowanceOnChain)
   return allowanceRequired.lt(0) ? new BigNumber(0) : allowanceRequired
 }
 

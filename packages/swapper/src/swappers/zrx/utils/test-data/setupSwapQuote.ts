@@ -19,5 +19,17 @@ export const setupQuote = () => {
     sellAssetAccountId: '0',
     buyAssetAccountId: '0'
   }
-  return { quoteInput, buyAsset, sellAsset }
+  const buildTradeInput = {
+    sellAsset,
+    buyAsset,
+    success: true,
+    sellAmount: '1000000000000000000',
+    slippage: DEFAULT_SLIPPAGE,
+    allowanceContract: 'allowanceContractAddress',
+    allowanceTarget: 'allowanceTargetAddress',
+    receiveAddress: 'receiveAddress',
+    sellAssetAccountId: '0',
+    buyAssetAccountId: '0'
+  }
+  return { buildTradeInput, quoteInput, buyAsset, sellAsset }
 }
