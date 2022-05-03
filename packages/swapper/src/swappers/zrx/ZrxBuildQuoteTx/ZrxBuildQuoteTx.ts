@@ -28,8 +28,7 @@ export async function ZrxBuildQuoteTx(
     buyAmount,
     slippage,
     sellAssetAccountId,
-    buyAssetAccountId,
-    priceImpact
+    buyAssetAccountId
   } = input
 
   if ((buyAmount && sellAmount) || (!buyAmount && !sellAmount)) {
@@ -128,9 +127,7 @@ export async function ZrxBuildQuoteTx(
       sellAssetAccountId,
       buyAssetAccountId,
       receiveAddress,
-      slippage,
       success: true,
-      statusCode: 0,
       rate: data.price,
       depositAddress: data.to,
       feeData: {
@@ -145,10 +142,8 @@ export async function ZrxBuildQuoteTx(
       txData: data.data,
       sellAmount: data.sellAmount,
       buyAmount: data.buyAmount,
-      guaranteedPrice: data.guaranteedPrice,
       allowanceContract: data.allowanceTarget,
-      sources: data.sources?.filter((s) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE,
-      priceImpact
+      sources: data.sources?.filter((s) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE
     }
 
     const allowanceRequired = await getAllowanceRequired({
@@ -156,9 +151,8 @@ export async function ZrxBuildQuoteTx(
       web3,
       erc20AllowanceAbi
     })
-    quote.allowanceGrantRequired = allowanceRequired.gt(0)
 
-    if (quote.allowanceGrantRequired) {
+    if (allowanceRequired) {
       quote.feeData = {
         fee: quote.feeData?.fee || '0',
         chainSpecific: {
@@ -169,8 +163,6 @@ export async function ZrxBuildQuoteTx(
     }
     return quote
   } catch (e) {
-    const statusCode =
-      e?.response?.data?.validationErrors?.[0]?.code || e?.response?.data?.code || -1
     const statusReason =
       e?.response?.data?.validationErrors?.[0]?.reason ||
       e?.response?.data?.reason ||
@@ -179,7 +171,6 @@ export async function ZrxBuildQuoteTx(
       sellAsset,
       buyAsset,
       success: false,
-      statusCode,
       statusReason
     }
   }
