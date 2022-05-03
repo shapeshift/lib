@@ -1,9 +1,9 @@
 import { ChainTypes, GetQuoteInput, Quote, QuoteResponse, SwapSource } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import BigNumber from 'bignumber.js'
-import { bnOrZero } from 'packages/chain-adapters/dist'
 
 import { getZrxMinMax } from '../getZrxMinMax/getZrxMinMax'
+import { bnOrZero } from '../utils/bignumber'
 import { APPROVAL_GAS_LIMIT, DEFAULT_SOURCE } from '../utils/constants'
 import { normalizeAmount } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
@@ -30,9 +30,9 @@ export async function getZrxQuote(input: GetQuoteInput): Promise<Quote<ChainType
 
   const { minimum: minQuoteSellAmount, maximum: maxSellAmount } = await getZrxMinMax(input)
 
-  const minQuoteSellAmountWei = bnOrZero(minQuoteSellAmount)
-    .times(10)
-    .exponentiatedBy(sellAsset.precision)
+  const minQuoteSellAmountWei = bnOrZero(minQuoteSellAmount).times(
+    bnOrZero(10).exponentiatedBy(sellAsset.precision)
+  )
 
   const amount = useSellAmount ? { sellAmount } : { buyAmount }
   const amountKey = Object.keys(amount)[0]
