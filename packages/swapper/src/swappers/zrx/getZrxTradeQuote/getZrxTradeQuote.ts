@@ -78,8 +78,6 @@ export async function getZrxTradeQuote(
     const rate = useSellAmount ? data.price : bnOrZero(1).div(data.price).toString()
 
     return {
-      sellAsset,
-      buyAsset,
       success: true,
       statusReason: '',
       rate,
@@ -112,8 +110,6 @@ export async function getZrxTradeQuote(
       'Unknown Error'
     // This hackyness will go away when we correctly handle errors
     return {
-      sellAsset,
-      buyAsset,
       success: false,
       statusReason,
       maximum: '0',

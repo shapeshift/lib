@@ -1,6 +1,5 @@
-import { ChainTypes, QuoteResponse } from '@shapeshiftoss/types'
+import { ChainTypes } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
-import BigNumber from 'bignumber.js'
 import * as rax from 'retry-axios'
 
 import { BuildTradeInput, BuiltTrade, SwapError } from '../../..'
@@ -124,11 +123,10 @@ export async function zrxBuildTrade(
     const estimatedGas = bnOrZero(data.gas || 0)
 
     const builtTrade: BuiltTrade<ChainTypes.Ethereum> = {
+      sellAsset,
       success: true,
       statusReason: '',
       sellAssetAccountId,
-      sellAsset,
-      buyAsset,
       receiveAddress,
       rate: data.price,
       depositAddress: data.to,
@@ -178,7 +176,6 @@ export async function zrxBuildTrade(
     // This hackyness will go away when we correctly handle errors
     return {
       sellAsset,
-      buyAsset,
       success: false,
       statusReason,
       sellAmount: '0',

@@ -1,12 +1,12 @@
 import { CAIP19 } from '@shapeshiftoss/caip'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { chainAdapters } from '@shapeshiftoss/types'
 import {
   ApprovalNeededInput,
   ApprovalNeededOutput,
   ApproveInfiniteInput,
   Asset,
   BuildQuoteTxInput,
+  chainAdapters,
   ChainTypes,
   ExecQuoteInput,
   ExecQuoteOutput,
@@ -14,7 +14,7 @@ import {
   MinMaxOutput,
   Quote,
   SwapperType
-} from '@shapeshiftoss/types/src/'
+} from '@shapeshiftoss/types'
 export type SupportedAssetInput = {
   assetIds: CAIP19[]
 }
@@ -33,57 +33,44 @@ export type SupportedSellAssetsInput = {
   assetIds: CAIP19[]
 }
 
-export type GetTradeQuoteInput = {
+export type CommonTradeInput = {
   sellAsset: Asset
   buyAsset: Asset
   sellAmount?: string
   buyAmount?: string
-  sendMax?: boolean
-  priceImpact?: string // TODO this doesnt belong here but frontend needs it to not break (for now)
+  sendMax: boolean
 }
+export type GetTradeQuoteInput = CommonTradeInput
 
-export type BuildTradeInput = {
-  sellAsset: Asset
-  buyAsset: Asset
-  sellAmount?: string
-  buyAmount?: string
-  sellAssetAccountId?: string
-  buyAssetAccountId?: string
+export type BuildTradeInput = CommonTradeInput & {
+  sellAssetAccountId: string
+  buyAssetAccountId: string
   slippage?: string
-  sendMax?: boolean
+  sendMax: boolean
   wallet: HDWallet
 }
 
-export type TradeQuote<C extends ChainTypes> = {
-  minimum: string | null
-  maximum: string | null
+export type CommonTradeOutput<C extends ChainTypes> = {
   success: boolean // This will go away when we correctly handle errors
   statusReason: string // This will go away when we correctly handle errors
-  sellAsset: Asset
-  buyAsset: Asset
-  feeData: chainAdapters.QuoteFeeData<C>
-  rate: string
   buyAmount: string
   sellAmount: string
+  feeData: chainAdapters.QuoteFeeData<C>
+  rate: string
   allowanceContract: string
   sources: Array<SwapSource>
 }
+export type TradeQuote<C extends ChainTypes> = CommonTradeOutput<C> & {
+  minimum: string | null
+  maximum: string | null
+}
 
-export type BuiltTrade<C extends ChainTypes> = {
+export type BuiltTrade<C extends ChainTypes> = CommonTradeOutput<C> & {
   txData: string
+  sellAsset: Asset
   sellAssetAccountId: string
   depositAddress: string
   receiveAddress: string
-  success: boolean // This will go away when we correctly handle errors
-  statusReason: string // This will go away when we correctly handle errors
-  sellAsset: Asset
-  buyAsset: Asset
-  feeData: chainAdapters.QuoteFeeData<C>
-  rate: string
-  buyAmount: string
-  sellAmount: string
-  allowanceContract: string
-  sources: Array<SwapSource>
 }
 
 export type ExecTradeInput<C extends ChainTypes> = {

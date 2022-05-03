@@ -67,6 +67,7 @@ describe('ZrxBuildTrade', () => {
   }
 
   const buildTradeInput: BuildTradeInput = {
+    sendMax: false,
     sellAsset,
     buyAsset,
     buyAmount: '',
@@ -78,7 +79,6 @@ describe('ZrxBuildTrade', () => {
 
   const buildTradeResponse = {
     sellAsset,
-    buyAsset,
     success: true,
     statusReason: '',
     sellAmount: quoteResponse.sellAmount,

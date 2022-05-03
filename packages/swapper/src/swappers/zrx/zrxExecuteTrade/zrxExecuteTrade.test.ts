@@ -25,7 +25,6 @@ describe('ZrxExecuteTrade', () => {
   const execTradeInput: ExecTradeInput<ChainTypes.Ethereum> = {
     builtTrade: {
       sellAsset,
-      buyAsset,
       success: true,
       statusReason: '',
       sellAmount: '1',
