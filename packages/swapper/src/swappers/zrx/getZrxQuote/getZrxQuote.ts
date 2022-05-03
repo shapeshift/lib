@@ -29,7 +29,7 @@ export async function getZrxQuote(input: GetQuoteInput): Promise<Quote<ChainType
 
   const { minimum: minQuoteSellAmount, maximum: maxSellAmount } = await getZrxMinMax(input)
 
-  const minQuoteSellAmountWei = new BigNumber(minQuoteSellAmount as string).times(
+  const minQuoteSellAmountWei = new BigNumber(minQuoteSellAmount).times(
     new BigNumber(10).exponentiatedBy(sellAsset.precision)
   )
 

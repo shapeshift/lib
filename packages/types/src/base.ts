@@ -125,14 +125,14 @@ export type QuoteResponse = {
   sources?: Array<SwapSource>
 }
 
-export type Quote<SellAssetType extends ChainTypes> = {
+export type Quote<C extends ChainTypes> = {
   success: boolean
   statusReason?: string
   sellAssetAccountId?: string
   buyAssetAccountId?: string
   sellAsset: Asset
   buyAsset: Asset
-  feeData?: QuoteFeeData<SellAssetType>
+  feeData?: QuoteFeeData<C>
   rate?: string
   depositAddress?: string // this is dex contract address for eth swaps
   receiveAddress?: string
