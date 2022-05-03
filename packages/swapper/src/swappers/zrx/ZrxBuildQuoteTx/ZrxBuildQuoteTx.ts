@@ -1,6 +1,5 @@
 import { BuildQuoteTxInput, ChainTypes, Quote, QuoteResponse } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
-import BigNumber from 'bignumber.js'
 import * as rax from 'retry-axios'
 
 import { SwapError } from '../../..'

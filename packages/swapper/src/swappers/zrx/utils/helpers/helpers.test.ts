@@ -1,6 +1,5 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { ChainTypes } from '@shapeshiftoss/types'
-import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 
 import { erc20Abi } from '../abi/erc20-abi'

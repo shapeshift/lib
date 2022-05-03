@@ -94,12 +94,12 @@ export interface Swapper {
   getType(): SwapperType
 
   /**
-   * Get a Quote along with an unsigned transaction that can be signed and broadcast to execute the swap
+   * Get builds a trade with definitive rate & txData that can be executed with executeTrade
    **/
   buildTrade(args: BuildTradeInput): Promise<BuiltTrade<ChainTypes>>
 
   /**
-   * Get a basic quote (rate) for a trading pair
+   * Get a trade quote
    */
   getTradeQuote(input: GetTradeQuoteInput, wallet?: HDWallet): Promise<TradeQuote<ChainTypes>>
 
@@ -131,7 +131,7 @@ export interface Swapper {
   executeQuote(args: ExecQuoteInput<ChainTypes>): Promise<ExecQuoteOutput>
 
   /**
-   * Execute a trade built with buildTradee by signing and broadcasting
+   * Execute a trade built with buildTrade by signing and broadcasting
    */
   executeTrade(args: ExecTradeInput<ChainTypes>): Promise<ExecQuoteOutput>
 

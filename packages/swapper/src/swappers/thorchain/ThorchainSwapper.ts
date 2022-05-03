@@ -10,7 +10,7 @@ import {
   SwapperType
 } from '@shapeshiftoss/types'
 
-import { BuildTradeInput, BuiltTrade, Swapper, TradeQuote } from '../../api'
+import { BuiltTrade, Swapper, TradeQuote } from '../../api'
 
 export class ThorchainSwapper implements Swapper {
   getType() {

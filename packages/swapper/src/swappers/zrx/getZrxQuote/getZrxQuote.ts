@@ -1,6 +1,5 @@
 import { ChainTypes, GetQuoteInput, Quote, QuoteResponse, SwapSource } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
-import BigNumber from 'bignumber.js'
 
 import { getZrxMinMax } from '../getZrxMinMax/getZrxMinMax'
 import { bnOrZero } from '../utils/bignumber'

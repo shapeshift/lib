@@ -1,6 +1,5 @@
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { ChainTypes } from '@shapeshiftoss/types'
-import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 
 import { ZrxSwapper } from '../..'

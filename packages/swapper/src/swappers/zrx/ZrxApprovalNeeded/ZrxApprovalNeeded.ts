@@ -1,5 +1,4 @@
 import { ApprovalNeededInput, ApprovalNeededOutput, ChainTypes } from '@shapeshiftoss/types'
-import { BigNumber } from 'bignumber.js'
 
 import { SwapError } from '../../../api'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'

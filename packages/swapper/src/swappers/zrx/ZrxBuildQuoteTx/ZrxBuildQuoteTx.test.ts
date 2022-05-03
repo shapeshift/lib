@@ -2,7 +2,6 @@ import { AssetNamespace } from '@shapeshiftoss/caip'
 import { bnOrZero, ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { ChainTypes, GetQuoteInput } from '@shapeshiftoss/types'
-import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 
 import { APPROVAL_GAS_LIMIT, MAX_SLIPPAGE } from '../utils/constants'

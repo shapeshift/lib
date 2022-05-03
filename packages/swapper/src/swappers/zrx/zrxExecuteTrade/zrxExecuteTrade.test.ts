@@ -7,7 +7,7 @@ import { ZrxSwapperDeps } from '../ZrxSwapper'
 import { zrxExecuteTrade } from './ZrxExecuteTrade'
 
 describe('ZrxExecuteTrade', () => {
-  const { sellAsset, buyAsset } = setupQuote()
+  const { sellAsset } = setupQuote()
   const txid = '0xffaac3dd529171e8a9a2adaf36b0344877c4894720d65dfd86e4b3a56c5a857e'
   let wallet = {
     supportsOfflineSigning: jest.fn(() => true)
