@@ -55,33 +55,33 @@ export type BuildTradeInput = {
 }
 
 export type TradeQuote<C extends ChainTypes> = {
+  minimum: string | null
+  maximum: string | null
   success: boolean // This will go away when we correctly handle errors
-  statusReason?: string // This will go away when we correctly handle errors
+  statusReason: string // This will go away when we correctly handle errors
   sellAsset: Asset
   buyAsset: Asset
   feeData: chainAdapters.QuoteFeeData<C>
   rate: string
   buyAmount: string
   sellAmount: string
-  minimum: string | null
-  maximum: string | null
-  allowanceContract?: string
+  allowanceContract: string
   sources: Array<SwapSource>
 }
 
 export type BuiltTrade<C extends ChainTypes> = {
-  success: boolean // This will go away when we correctly handle errors
-  statusReason?: string // This will go away when we correctly handle errors
+  txData: string
   sellAssetAccountId: string
+  depositAddress: string
+  receiveAddress: string
+  success: boolean // This will go away when we correctly handle errors
+  statusReason: string // This will go away when we correctly handle errors
   sellAsset: Asset
   buyAsset: Asset
   feeData: chainAdapters.QuoteFeeData<C>
   rate: string
-  depositAddress: string
-  receiveAddress: string
   buyAmount: string
   sellAmount: string
-  txData: string
   allowanceContract: string
   sources: Array<SwapSource>
 }

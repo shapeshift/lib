@@ -83,6 +83,7 @@ export async function getZrxTradeQuote(
       sellAsset,
       buyAsset,
       success: true,
+      statusReason: '',
       rate,
       minimum: minQuoteSellAmount,
       maximum: maxSellAmount,
@@ -121,7 +122,8 @@ export async function getZrxTradeQuote(
       feeData: { fee: '0', chainSpecific: {} },
       buyAmount: '0',
       sellAmount: '0',
-      sources: []
+      sources: [],
+      allowanceContract: '0'
     }
   }
 }

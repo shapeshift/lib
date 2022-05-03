@@ -128,11 +128,12 @@ export async function zrxBuildTrade(
     if (!data.buyAmount) throw new SwapError('ZrxSwapper:ZrxBuildQuoteTx no buy amount')
 
     const builtTrade: BuiltTrade<ChainTypes.Ethereum> = {
+      success: true,
+      statusReason: '',
       sellAssetAccountId,
       sellAsset,
       buyAsset,
       receiveAddress,
-      success: true,
       rate: data.price,
       depositAddress: data.to,
       feeData: {
