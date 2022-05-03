@@ -102,7 +102,6 @@ const mockQuoteResponse = {
     tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
   },
   sellAssetAccountId: '0',
-  slippage: DEFAULT_SLIPPAGE,
   sources: [{ name: '0x', proportion: '1' }],
   success: true,
   txData: undefined
