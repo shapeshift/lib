@@ -16,7 +16,15 @@ import {
 } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
-import { BuildTradeInput, BuiltTrade, BuyAssetBySellIdInput, ExecTradeInput, GetTradeQuoteInput, Swapper, TradeQuote } from '../../api'
+import {
+  BuildTradeInput,
+  BuiltTrade,
+  BuyAssetBySellIdInput,
+  ExecTradeInput,
+  GetTradeQuoteInput,
+  Swapper,
+  TradeQuote
+} from '../../api'
 import { getZrxMinMax } from './getZrxMinMax/getZrxMinMax'
 import { getZrxQuote } from './getZrxQuote/getZrxQuote'
 import { getZrxTradeQuote } from './getZrxTradeQuote/getZrxTradeQuote'

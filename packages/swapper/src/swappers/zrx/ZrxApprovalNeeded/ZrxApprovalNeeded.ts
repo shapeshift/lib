@@ -3,6 +3,7 @@ import { BigNumber } from 'bignumber.js'
 
 import { SwapError } from '../../../api'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
+import { bnOrZero } from '../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../utils/constants'
 import { getERC20Allowance } from '../utils/helpers/helpers'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
@@ -37,10 +38,10 @@ export async function ZrxApprovalNeeded(
     spenderAddress: quote.allowanceContract,
     ownerAddress: receiveAddress
   })
-  const allowanceOnChain = new BigNumber(allowanceResult || '0')
+  const allowanceOnChain = bnOrZero(allowanceResult || '0')
 
   return {
-    approvalNeeded: allowanceOnChain.lt(new BigNumber(quote.sellAmount || 1)),
+    approvalNeeded: allowanceOnChain.lt(bnOrZero(quote.sellAmount || 1)),
     gas: APPROVAL_GAS_LIMIT,
     gasPrice: quote?.feeData?.chainSpecific?.gasPrice
   }

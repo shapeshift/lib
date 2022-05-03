@@ -1,16 +1,14 @@
-import { AssetNamespace } from '@shapeshiftoss/caip'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { ChainTypes, GetQuoteInput } from '@shapeshiftoss/types'
+import { ChainTypes } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
-import { BuildTradeInput, GetTradeQuoteInput } from '../../../api'
 
+import { BuildTradeInput } from '../../../api'
 import { APPROVAL_GAS_LIMIT, MAX_SLIPPAGE } from '../utils/constants'
-import { setupQuote } from '../utils/test-data/setupSwapQuote'
+import { setupZrxQuoteResponse } from '../utils/test-data/setupSwapQuote'
 import { zrxService } from '../utils/zrxService'
 import { zrxBuildTrade } from './zrxBuildTrade'
-
 jest.mock('web3')
 
 jest.mock('axios', () => {
@@ -40,74 +38,6 @@ Web3.mockImplementation(() => ({
   }
 }))
 
-const mockQuoteResponse = {
-  allowanceContract: 'allowanceTargetAddress',
-  buyAmount: undefined,
-  buyAsset: {
-    assetId: 'eip155:1/erc20:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-    chainId: 'eip155:1',
-    caip19: 'eip155:1/erc20:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-    caip2: 'eip155:1',
-    chain: 'ethereum',
-    color: '#FFFFFF',
-    contractType: AssetNamespace.ERC20,
-    dataSource: 'coingecko',
-    explorer: 'https://etherscan.io',
-    explorerTxLink: 'https://etherscan.io/tx/',
-    explorerAddressLink: 'https://etherscan.io/address/',
-    icon: 'https://assets.coingecko.com/coins/images/2518/thumb/weth.png?1628852295',
-    name: 'WETH',
-    network: 'MAINNET',
-    precision: 18,
-    slip44: 60,
-    receiveSupport: true,
-    secondaryColor: '#FFFFFF',
-    sendSupport: true,
-    symbol: 'WETH',
-    tokenId: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
-  },
-  buyAssetAccountId: '0',
-  depositAddress: undefined,
-  feeData: {
-    fee: '0',
-    chainSpecific: {
-      approvalFee: '0',
-      estimatedGas: '0',
-      gasPrice: undefined
-    }
-  },
-  rate: undefined,
-  receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
-  sellAmount: '1000000000000000000',
-  sellAsset: {
-    assetId: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
-    chainId: 'eip155:1',
-    caip19: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
-    caip2: 'eip155:1',
-    chain: 'ethereum',
-    color: '#FFFFFF',
-    contractType: AssetNamespace.ERC20,
-    dataSource: 'coingecko',
-    icon: 'https://assets.coincap.io/assets/icons/fox@2x.png',
-    name: 'FOX',
-    slip44: 60,
-    explorer: 'https://etherscan.io',
-    explorerTxLink: 'https://etherscan.io/tx/',
-    explorerAddressLink: 'https://etherscan.io/address/',
-    network: 'MAINNET',
-    precision: 18,
-    receiveSupport: true,
-    secondaryColor: '#FFFFFF',
-    sendSupport: true,
-    symbol: 'FOX',
-    tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
-  },
-  sellAssetAccountId: '0',
-  sources: [{ name: '0x', proportion: '1' }],
-  success: true,
-  txData: undefined
-}
-
 const setup = () => {
   const unchainedUrls = {
     [ChainTypes.Ethereum]: {
@@ -124,7 +54,7 @@ const setup = () => {
 }
 
 describe('ZrxBuildTrade', () => {
-  const { buildTradeInput, sellAsset, buyAsset } = setupQuote()
+  const { quoteResponse, sellAsset, buyAsset } = setupZrxQuoteResponse()
   const { web3Instance, adapterManager } = setup()
   const walletAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
   const wallet = {
@@ -135,44 +65,74 @@ describe('ZrxBuildTrade', () => {
     web3: web3Instance
   }
 
+  const buildTradeInput: BuildTradeInput = {
+    sellAsset,
+    buyAsset,
+    buyAmount: '',
+    sellAmount: '1000000000000000000',
+    sellAssetAccountId: '0',
+    buyAssetAccountId: '0',
+    wallet
+  }
+
+  const buildTradeResponse = {
+    sellAsset,
+    buyAsset,
+    success: true,
+    statusReason: '',
+    sellAmount: quoteResponse.sellAmount,
+    buyAmount: '',
+    depositAddress: quoteResponse.to,
+    allowanceContract: 'allowanceTargetAddress',
+    receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+    sellAssetAccountId: '0',
+    txData: quoteResponse.data,
+    rate: quoteResponse.price,
+    feeData: {
+      fee: (Number(quoteResponse.gas) * Number(quoteResponse.gasPrice)).toString(),
+      chainSpecific: { approvalFee: '123600000', estimatedGas: '1235', gasPrice: '1236' }
+    },
+    sources: []
+  }
+
   it('should throw error if sellAmount AND buyAmount is provided', async () => {
-    const input = { ...buildTradeInput, buyAmount: '1234.12', sellAmount: '1234.12', wallet }
+    const input = { ...buildTradeInput, buyAmount: '1234.12', sellAmount: '1234.12' }
 
     await expect(zrxBuildTrade(deps, input)).rejects.toThrow(
-      'ZrxSwapper:ZrxBuildQuoteTx Exactly one of buyAmount or sellAmount is required'
+      'ZrxSwapper:ZrxBuildTrade Exactly one of buyAmount or sellAmount is required'
     )
   })
 
   it('should throw error if sellAmount AND buyAmount are NOT provided', async () => {
-    const input = { ...buildTradeInput, sellAmount: '', buyAmount: '', wallet }
+    const input = { ...buildTradeInput, sellAmount: '', buyAmount: '' }
 
     await expect(zrxBuildTrade(deps, input)).rejects.toThrow(
-      'ZrxSwapper:ZrxBuildQuoteTx Exactly one of buyAmount or sellAmount is required'
+      'ZrxSwapper:ZrxBuildTrade Exactly one of buyAmount or sellAmount is required'
     )
   })
 
   it('should throw error if sellAssetAccountId is NOT provided', async () => {
-    const input = { ...buildTradeInput, sellAssetAccountId: '', wallet }
+    const input = { ...buildTradeInput, sellAssetAccountId: '' }
 
     await expect(zrxBuildTrade(deps, input)).rejects.toThrow(
-      'ZrxSwapper:ZrxBuildQuoteTx Both sellAssetAccountId and buyAssetAccountId are required'
+      'ZrxSwapper:ZrxBuildTrade Both sellAssetAccountId and buyAssetAccountId are required'
     )
   })
 
   it('should throw error if buyAssetAccountId is NOT provided', async () => {
-    const input = { ...buildTradeInput, buyAssetAccountId: '', wallet }
+    const input = { ...buildTradeInput, buyAssetAccountId: '' }
 
     await expect(zrxBuildTrade(deps, input)).rejects.toThrow(
-      'ZrxSwapper:ZrxBuildQuoteTx Both sellAssetAccountId and buyAssetAccountId are required'
+      'ZrxSwapper:ZrxBuildTrade Both sellAssetAccountId and buyAssetAccountId are required'
     )
   })
 
   it('should throw error if slippage is higher than MAX_SLIPPAGE', async () => {
     const slippage = '31.0'
-    const input = { ...buildTradeInput, slippage, wallet }
+    const input = { ...buildTradeInput, slippage }
 
     await expect(zrxBuildTrade(deps, input)).rejects.toThrow(
-      `ZrxSwapper:ZrxBuildQuoteTx slippage value of ${slippage} is greater than max slippage value of ${MAX_SLIPPAGE}`
+      `ZrxSwapper:ZrxBuildTrade slippage value of ${slippage} is greater than max slippage value of ${MAX_SLIPPAGE}`
     )
   })
 
@@ -189,7 +149,7 @@ describe('ZrxBuildTrade', () => {
     } as unknown as BuildTradeInput
 
     await expect(zrxBuildTrade(deps, input)).rejects.toThrow(
-      'ZrxSwapper:ZrxBuildQuoteTx One of buyAssetContract or buyAssetSymbol or buyAssetNetwork are required'
+      'ZrxSwapper:ZrxBuildTrade One of buyAssetContract or buyAssetSymbol or buyAssetNetwork are required'
     )
   })
 
@@ -206,14 +166,14 @@ describe('ZrxBuildTrade', () => {
     } as unknown as BuildTradeInput
 
     await expect(zrxBuildTrade(deps, input)).rejects.toThrow(
-      'ZrxSwapper:ZrxBuildQuoteTx One of sellAssetContract or sellAssetSymbol or sellAssetNetwork are required'
+      'ZrxSwapper:ZrxBuildTrade One of sellAssetContract or sellAssetSymbol or sellAssetNetwork are required'
     )
   })
 
   it('should return a quote response', async () => {
     const allowanceOnChain = '1000'
     const data = {
-      ...buildTradeInput
+      ...quoteResponse
     }
     ;(web3Instance.eth.Contract as jest.Mock<unknown>).mockImplementation(() => ({
       methods: {
@@ -224,14 +184,14 @@ describe('ZrxBuildTrade', () => {
     }))
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data }))
 
-    expect(await zrxBuildTrade(deps, { ...buildTradeInput, wallet })).toEqual(mockQuoteResponse)
+    expect(await zrxBuildTrade(deps, { ...buildTradeInput })).toEqual(buildTradeResponse)
   })
 
   it('should return a quote response with rate when price is given', async () => {
     const allowanceOnChain = '1000'
     const price = '1000'
     const data = {
-      ...buildTradeInput,
+      ...quoteResponse,
       price
     }
     ;(web3Instance.eth.Contract as jest.Mock<unknown>).mockImplementation(() => ({
@@ -243,8 +203,8 @@ describe('ZrxBuildTrade', () => {
     }))
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data }))
 
-    expect(await zrxBuildTrade(deps, { ...buildTradeInput, wallet })).toEqual({
-      ...mockQuoteResponse,
+    expect(await zrxBuildTrade(deps, { ...buildTradeInput })).toEqual({
+      ...buildTradeResponse,
       rate: price
     })
   })
@@ -253,16 +213,16 @@ describe('ZrxBuildTrade', () => {
     const gasPrice = '10000'
     const estimatedGas = '100'
     const data = {
-      ...buildTradeInput,
+      ...quoteResponse,
+      allowanceTarget: 'allowanceTargetAddress',
       gas: estimatedGas,
       gasPrice
     }
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data }))
 
     expect(await zrxBuildTrade(deps, { ...buildTradeInput, wallet })).toEqual({
-      ...mockQuoteResponse,
+      ...buildTradeResponse,
       feeData: {
-        ...mockQuoteResponse.feeData,
         chainSpecific: {
           approvalFee: new BigNumber(APPROVAL_GAS_LIMIT).multipliedBy(gasPrice).toString(),
           gasPrice,
@@ -270,46 +230,6 @@ describe('ZrxBuildTrade', () => {
         },
         fee: new BigNumber(gasPrice).multipliedBy(estimatedGas).toString()
       }
-    })
-  })
-
-  it('should return a quote response with allowanceContract when allowanceTarget is provided', async () => {
-    const allowanceTarget = '100'
-    const data = {
-      ...buildTradeInput,
-      allowanceTarget
-    }
-    ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data }))
-
-    expect(await zrxBuildTrade(deps, { ...buildTradeInput, wallet })).toEqual({
-      ...mockQuoteResponse,
-      allowanceContract: allowanceTarget
-    })
-  })
-
-  it('should throw on api error status of 400', async () => {
-    ;(zrxService.get as jest.Mock<unknown>).mockImplementation(() =>
-      Promise.reject({ response: { data: { code: 400 } } })
-    )
-
-    expect(await zrxBuildTrade(deps, { ...buildTradeInput, wallet })).toEqual({
-      success: false,
-      statusReason: 'Unknown Error',
-      buyAsset: { ...mockQuoteResponse.buyAsset },
-      sellAsset: { ...mockQuoteResponse.sellAsset }
-    })
-  })
-
-  it('should throw on api error status of 500', async () => {
-    ;(zrxService.get as jest.Mock<unknown>).mockImplementation(() =>
-      Promise.reject({ response: { data: { code: 500 } } })
-    )
-
-    expect(await zrxBuildTrade(deps, { ...buildTradeInput, wallet })).toEqual({
-      success: false,
-      statusReason: 'Unknown Error',
-      buyAsset: { ...mockQuoteResponse.buyAsset },
-      sellAsset: { ...mockQuoteResponse.sellAsset }
     })
   })
 })

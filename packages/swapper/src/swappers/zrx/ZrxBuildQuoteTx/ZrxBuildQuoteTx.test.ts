@@ -1,5 +1,5 @@
 import { AssetNamespace } from '@shapeshiftoss/caip'
-import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+import { bnOrZero, ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { ChainTypes, GetQuoteInput } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
@@ -261,11 +261,11 @@ describe('ZrxBuildQuoteTx', () => {
       feeData: {
         ...mockQuoteResponse.feeData,
         chainSpecific: {
-          approvalFee: new BigNumber(APPROVAL_GAS_LIMIT).multipliedBy(gasPrice).toString(),
+          approvalFee: bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(gasPrice).toString(),
           gasPrice,
           estimatedGas
         },
-        fee: new BigNumber(gasPrice).multipliedBy(estimatedGas).toString()
+        fee: bnOrZero(gasPrice).multipliedBy(estimatedGas).toString()
       }
     })
   })

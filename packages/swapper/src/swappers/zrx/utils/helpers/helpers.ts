@@ -8,6 +8,7 @@ import { AbiItem, numberToHex } from 'web3-utils'
 
 import { SwapError } from '../../../../api'
 import { ZrxError } from '../../ZrxSwapper'
+import { bnOrZero } from '../bignumber'
 import { zrxService } from '../zrxService'
 
 export type GetAllowanceRequiredArgs = {
@@ -45,7 +46,7 @@ type GrantAllowanceArgs = {
  */
 export const normalizeAmount = (amount: string | undefined): string | undefined => {
   if (!amount) return
-  return new BigNumber(amount).toNumber().toLocaleString('fullwide', { useGrouping: false })
+  return bnOrZero(amount).toNumber().toLocaleString('fullwide', { useGrouping: false })
 }
 
 export const getERC20Allowance = async ({
@@ -68,7 +69,7 @@ export const getAllowanceRequired = async ({
   erc20AllowanceAbi
 }: GetAllowanceRequiredArgs): Promise<BigNumber> => {
   if (sellAsset.symbol === 'ETH') {
-    return new BigNumber(0)
+    return bnOrZero(0)
   }
 
   const ownerAddress = receiveAddress
@@ -89,15 +90,13 @@ export const getAllowanceRequired = async ({
     tokenId
   })
   if (allowanceOnChain === '0') {
-    return new BigNumber(sellAmount || 0)
+    return bnOrZero(sellAmount || 0)
   }
   if (!allowanceOnChain) {
-    throw new SwapError(
-      `No allowance data for ${allowanceContract} to ${receiveAddress}`
-    )
+    throw new SwapError(`No allowance data for ${allowanceContract} to ${receiveAddress}`)
   }
-  const allowanceRequired = new BigNumber(sellAmount || 0).minus(allowanceOnChain)
-  return allowanceRequired.lt(0) ? new BigNumber(0) : allowanceRequired
+  const allowanceRequired = bnOrZero(sellAmount || 0).minus(allowanceOnChain)
+  return allowanceRequired.lt(0) ? bnOrZero(0) : allowanceRequired
 }
 
 export const getUsdRate = async (input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string> => {
@@ -114,11 +113,11 @@ export const getUsdRate = async (input: Pick<Asset, 'symbol' | 'tokenId'>): Prom
     }
   )
 
-  const price = new BigNumber(rateResponse.data.price)
+  const price = bnOrZero(rateResponse.data.price)
 
   if (!price.gt(0)) throw new ZrxError('getUsdRate - Failed to get price data')
 
-  return new BigNumber(1).dividedBy(price).toString()
+  return bnOrZero(1).dividedBy(price).toString()
 }
 
 export const grantAllowance = async ({

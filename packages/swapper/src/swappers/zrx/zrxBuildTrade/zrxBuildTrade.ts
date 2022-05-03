@@ -7,6 +7,7 @@ import { BuildTradeInput, BuiltTrade, SwapError } from '../../..'
 import { ZrxQuoteResponse } from '../types'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
+import { bnOrZero } from '../utils/bignumber'
 import {
   AFFILIATE_ADDRESS,
   APPROVAL_GAS_LIMIT,
@@ -35,13 +36,13 @@ export async function zrxBuildTrade(
 
   if ((buyAmount && sellAmount) || (!buyAmount && !sellAmount)) {
     throw new SwapError(
-      'ZrxSwapper:ZrxBuildQuoteTx Exactly one of buyAmount or sellAmount is required'
+      'ZrxSwapper:ZrxBuildTrade Exactly one of buyAmount or sellAmount is required'
     )
   }
 
   if (!sellAssetAccountId || !buyAssetAccountId) {
     throw new SwapError(
-      'ZrxSwapper:ZrxBuildQuoteTx Both sellAssetAccountId and buyAssetAccountId are required'
+      'ZrxSwapper:ZrxBuildTrade Both sellAssetAccountId and buyAssetAccountId are required'
     )
   }
 
@@ -49,18 +50,18 @@ export async function zrxBuildTrade(
   const sellToken = sellAsset.tokenId || sellAsset.symbol || sellAsset.network
   if (!buyToken) {
     throw new SwapError(
-      'ZrxSwapper:ZrxBuildQuoteTx One of buyAssetContract or buyAssetSymbol or buyAssetNetwork are required'
+      'ZrxSwapper:ZrxBuildTrade One of buyAssetContract or buyAssetSymbol or buyAssetNetwork are required'
     )
   }
   if (!sellToken) {
     throw new SwapError(
-      'ZrxSwapper:ZrxBuildQuoteTx One of sellAssetContract or sellAssetSymbol or sellAssetNetwork are required'
+      'ZrxSwapper:ZrxBuildTrade One of sellAssetContract or sellAssetSymbol or sellAssetNetwork are required'
     )
   }
 
   if (buyAsset.chain !== ChainTypes.Ethereum) {
     throw new SwapError(
-      `ZrxSwapper:ZrxBuildQuoteTx buyAsset must be on chain [${ChainTypes.Ethereum}]`
+      `ZrxSwapper:ZrxBuildTrade buyAsset must be on chain [${ChainTypes.Ethereum}]`
     )
   }
 
@@ -68,15 +69,13 @@ export async function zrxBuildTrade(
   const bip44Params = adapter.buildBIP44Params({ accountNumber: Number(buyAssetAccountId) })
   const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 
-  if (new BigNumber(slippage || 0).gt(MAX_SLIPPAGE)) {
+  if (bnOrZero(slippage || 0).gt(MAX_SLIPPAGE)) {
     throw new SwapError(
-      `ZrxSwapper:ZrxBuildQuoteTx slippage value of ${slippage} is greater than max slippage value of ${MAX_SLIPPAGE}`
+      `ZrxSwapper:ZrxBuildTrade slippage value of ${slippage} is greater than max slippage value of ${MAX_SLIPPAGE}`
     )
   }
 
-  const slippagePercentage = slippage
-    ? new BigNumber(slippage).div(100).toString()
-    : DEFAULT_SLIPPAGE
+  const slippagePercentage = slippage ? bnOrZero(slippage).div(100).toString() : DEFAULT_SLIPPAGE
 
   try {
     /**
@@ -122,10 +121,7 @@ export async function zrxBuildTrade(
 
     const { data } = quoteResponse
 
-    const estimatedGas = new BigNumber(data.gas || 0)
-
-    if (!data.sellAmount) throw new SwapError('ZrxSwapper:ZrxBuildQuoteTx no sell amount')
-    if (!data.buyAmount) throw new SwapError('ZrxSwapper:ZrxBuildQuoteTx no buy amount')
+    const estimatedGas = bnOrZero(data.gas || 0)
 
     const builtTrade: BuiltTrade<ChainTypes.Ethereum> = {
       success: true,
@@ -137,8 +133,8 @@ export async function zrxBuildTrade(
       rate: data.price,
       depositAddress: data.to,
       feeData: {
-        fee: new BigNumber(estimatedGas || 0)
-          .multipliedBy(new BigNumber(data.gasPrice || 0))
+        fee: bnOrZero(estimatedGas || 0)
+          .multipliedBy(bnOrZero(data.gasPrice || 0))
           .toString(),
         chainSpecific: {
           estimatedGas: estimatedGas.toString(),
@@ -166,12 +162,15 @@ export async function zrxBuildTrade(
         fee: builtTrade.feeData?.fee || '0',
         chainSpecific: {
           ...builtTrade.feeData?.chainSpecific,
-          approvalFee: new BigNumber(APPROVAL_GAS_LIMIT).multipliedBy(data.gasPrice || 0).toString()
+          approvalFee: bnOrZero(APPROVAL_GAS_LIMIT)
+            .multipliedBy(data.gasPrice || 0)
+            .toString()
         }
       }
     }
     return builtTrade
   } catch (e) {
+    // eslint-disable-next-line no-console
     const statusReason =
       e?.response?.data?.validationErrors?.[0]?.reason ||
       e?.response?.data?.reason ||

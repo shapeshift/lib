@@ -74,10 +74,8 @@ export async function getZrxTradeQuote(
 
     const { data } = quoteResponse
 
-    const estimatedGas = data.estimatedGas
-      ? new BigNumber(data.estimatedGas).times(1.5)
-      : new BigNumber(0)
-    const rate = useSellAmount ? data.price : new BigNumber(1).div(data.price).toString()
+    const estimatedGas = data.estimatedGas ? bnOrZero(data.estimatedGas).times(1.5) : bnOrZero(0)
+    const rate = useSellAmount ? data.price : bnOrZero(1).div(data.price).toString()
 
     return {
       sellAsset,
@@ -88,15 +86,17 @@ export async function getZrxTradeQuote(
       minimum: minQuoteSellAmount,
       maximum: maxSellAmount,
       feeData: {
-        fee: new BigNumber(estimatedGas || 0)
-          .multipliedBy(new BigNumber(data.gasPrice || 0))
+        fee: bnOrZero(estimatedGas || 0)
+          .multipliedBy(bnOrZero(data.gasPrice || 0))
           .toString(),
         chainSpecific: {
           estimatedGas: estimatedGas.toString(),
           gasPrice: data.gasPrice,
           approvalFee:
             sellAsset.tokenId &&
-            new BigNumber(APPROVAL_GAS_LIMIT).multipliedBy(data.gasPrice || 0).toString()
+            bnOrZero(APPROVAL_GAS_LIMIT)
+              .multipliedBy(data.gasPrice || 0)
+              .toString()
         }
       },
       sellAmount: data.sellAmount,
