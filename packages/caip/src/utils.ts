@@ -37,6 +37,6 @@ export const accountIdToSpecifier = (accountId: AccountSpecifier): string => {
 
 // TODO(gomes): Do we still want to call this "reference" or do we want a higher-level naming for this?
 // We're already using accountId, assetId, and chainId higher-level terminologies vs. the specc-y ones from CAIP
-export const getCaip2Reference = (caip2: CAIP2) =>
+export const getReferenceFromChainId = (caip2: CAIP2) =>
   caip2.match(/^(?<caip2Namespace>[-a-z0-9]{3,8}):(?<caip2Reference>[-a-zA-Z0-9]{1,32})$/)?.groups
     ?.caip2Reference
