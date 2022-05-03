@@ -1,3 +1,18 @@
+# [@shapeshiftoss/investor-yearn-v1.4.7](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v1.4.6...@shapeshiftoss/investor-yearn-v1.4.7) (2022-05-02)
+
+
+### Bug Fixes
+
+* removes 3 unnecessary api calls from zrxswapper.  ([#586](https://github.com/shapeshift/lib/issues/586)) ([57d59c8](https://github.com/shapeshift/lib/commit/57d59c8488cceb05cd5e0778b49690d0d2c97b68))
+
+# [@shapeshiftoss/investor-yearn-v1.4.6](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v1.4.5...@shapeshiftoss/investor-yearn-v1.4.6) (2022-05-02)
+
+
+### Bug Fixes
+
+* unbreak lib build ([#588](https://github.com/shapeshift/lib/issues/588)) ([bff0f3d](https://github.com/shapeshift/lib/commit/bff0f3d351f09ae9693b6b173782e8d8671ca3e4))
+* vscode tsconfig errors ([#577](https://github.com/shapeshift/lib/issues/577)) ([50138d0](https://github.com/shapeshift/lib/commit/50138d07b55b730f3bee68fae80414dc6578ee2a))
+
 # [@shapeshiftoss/investor-yearn-v1.4.5](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v1.4.4...@shapeshiftoss/investor-yearn-v1.4.5) (2022-04-15)
 
 
