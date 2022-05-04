@@ -1,4 +1,5 @@
-import { BuildQuoteTxInput, ChainTypes, Quote, QuoteResponse } from '@shapeshiftoss/types'
+import { ChainId } from '@shapeshiftoss/caip'
+import { BuildQuoteTxInput,  Quote, QuoteResponse } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import BigNumber from 'bignumber.js'
 import * as rax from 'retry-axios'
@@ -20,7 +21,7 @@ import { ZrxSwapperDeps } from '../ZrxSwapper'
 export async function ZrxBuildQuoteTx(
   { adapterManager, web3 }: ZrxSwapperDeps,
   { input, wallet }: BuildQuoteTxInput
-): Promise<Quote<ChainTypes>> {
+): Promise<Quote<ChainId>> {
   const {
     sellAsset,
     buyAsset,
@@ -56,9 +57,10 @@ export async function ZrxBuildQuoteTx(
     )
   }
 
-  if (buyAsset.chain !== ChainTypes.Ethereum) {
+  // TODO: should we have a union string of chainId's in caip? ie eip155:1 | bip122:1
+  if (buyAsset.caip2 !== 'eip155:1') {
     throw new SwapError(
-      `ZrxSwapper:ZrxBuildQuoteTx buyAsset must be on chain [${ChainTypes.Ethereum}]`
+      `ZrxSwapper:ZrxBuildQuoteTx buyAsset must be on chain eip155:1`
     )
   }
 
@@ -121,7 +123,7 @@ export async function ZrxBuildQuoteTx(
     const { data } = quoteResponse
 
     const estimatedGas = new BigNumber(data.gas || 0)
-    const quote: Quote<ChainTypes.Ethereum> = {
+    const quote: Quote<ChainId> = {
       sellAsset,
       buyAsset,
       sellAssetAccountId,

@@ -1,4 +1,4 @@
-import { CAIP19 } from '@shapeshiftoss/caip'
+import { CAIP19, ChainId } from '@shapeshiftoss/caip'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import {
   ApprovalNeededInput,
@@ -6,7 +6,6 @@ import {
   ApproveInfiniteInput,
   Asset,
   BuildQuoteTxInput,
-  ChainTypes,
   ExecQuoteInput,
   ExecQuoteOutput,
   GetQuoteInput,
@@ -49,11 +48,11 @@ export class ZrxSwapper implements Swapper {
     return SwapperType.Zrx
   }
 
-  async buildQuoteTx(args: BuildQuoteTxInput): Promise<Quote<ChainTypes>> {
+  async buildQuoteTx(args: BuildQuoteTxInput): Promise<Quote<ChainId>> {
     return ZrxBuildQuoteTx(this.deps, args)
   }
 
-  async getQuote(input: GetQuoteInput): Promise<Quote<ChainTypes>> {
+  async getQuote(input: GetQuoteInput): Promise<Quote<ChainId>> {
     return getZrxQuote(input)
   }
 
@@ -65,15 +64,15 @@ export class ZrxSwapper implements Swapper {
     return getZrxMinMax(input)
   }
 
-  async executeQuote(args: ExecQuoteInput<ChainTypes>): Promise<ExecQuoteOutput> {
+  async executeQuote(args: ExecQuoteInput<ChainId>): Promise<ExecQuoteOutput> {
     return ZrxExecuteQuote(this.deps, args)
   }
 
-  async approvalNeeded(args: ApprovalNeededInput<ChainTypes>): Promise<ApprovalNeededOutput> {
+  async approvalNeeded(args: ApprovalNeededInput<ChainId>): Promise<ApprovalNeededOutput> {
     return ZrxApprovalNeeded(this.deps, args)
   }
 
-  async approveInfinite(args: ApproveInfiniteInput<ChainTypes>): Promise<string> {
+  async approveInfinite(args: ApproveInfiniteInput<ChainId>): Promise<string> {
     return ZrxApproveInfinite(this.deps, args)
   }
 

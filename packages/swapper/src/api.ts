@@ -1,4 +1,4 @@
-import { CAIP19 } from '@shapeshiftoss/caip'
+import { CAIP19, ChainId } from '@shapeshiftoss/caip'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import {
   ApprovalNeededInput,
@@ -6,7 +6,6 @@ import {
   ApproveInfiniteInput,
   Asset,
   BuildQuoteTxInput,
-  ChainTypes,
   ExecQuoteInput,
   ExecQuoteOutput,
   GetQuoteInput,
@@ -42,12 +41,12 @@ export interface Swapper {
   /**
    * Get a Quote along with an unsigned transaction that can be signed and broadcast to execute the swap
    **/
-  buildQuoteTx(args: BuildQuoteTxInput): Promise<Quote<ChainTypes>>
+  buildQuoteTx(args: BuildQuoteTxInput): Promise<Quote<ChainId>>
 
   /**
    * Get a basic quote (rate) for a trading pair
    */
-  getQuote(input: GetQuoteInput, wallet?: HDWallet): Promise<Quote<ChainTypes>>
+  getQuote(input: GetQuoteInput, wallet?: HDWallet): Promise<Quote<ChainId>>
 
   /**
    * Get the usd rate from either the assets symbol or tokenId
@@ -62,17 +61,17 @@ export interface Swapper {
   /**
    * Execute a quote built with buildQuoteTx by signing and broadcasting
    */
-  executeQuote(args: ExecQuoteInput<ChainTypes>): Promise<ExecQuoteOutput>
+  executeQuote(args: ExecQuoteInput<ChainId>): Promise<ExecQuoteOutput>
 
   /**
    * Get a boolean if a quote needs approval
    */
-  approvalNeeded(args: ApprovalNeededInput<ChainTypes>): Promise<ApprovalNeededOutput>
+  approvalNeeded(args: ApprovalNeededInput<ChainId>): Promise<ApprovalNeededOutput>
 
   /**
    * Get the txid of an approve infinite transaction
    */
-  approveInfinite(args: ApproveInfiniteInput<ChainTypes>): Promise<string>
+  approveInfinite(args: ApproveInfiniteInput<ChainId>): Promise<string>
 
   /**
    * Get supported buyAssetId's by sellAssetId
