@@ -26,6 +26,8 @@ jobs:
         env:
           TITLE: ${{ github.event.pull_request.title }}
         run: printf '%s' "$TITLE" | npx commitlint
+      - name: Type check
+        run: yarn tsc --project ./tsconfig.json --noEmit
       - name: Build
         run: yarn build
       - name: Lint
