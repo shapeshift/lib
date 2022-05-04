@@ -16,20 +16,21 @@ export interface ParserArgs {
 }
 
 export class Parser implements SubParser {
-  abiInterface = new ethers.utils.Interface(WETH_ABI)
-  network: Network
   provider: ethers.providers.JsonRpcProvider
 
-  readonly depositSigHash: string
-  readonly withdrawalSigHash: string
+  readonly network: Network
   readonly wethContract: string
+  readonly abiInterface = new ethers.utils.Interface(WETH_ABI)
+
+  readonly supportedFunctions = {
+    depositSigHash: this.abiInterface.getSighash('deposit'),
+    withdrawalSigHash: this.abiInterface.getSighash('withdraw')
+  }
 
   constructor(args: ParserArgs) {
     this.network = args.network
     this.provider = args.provider
 
-    this.depositSigHash = this.abiInterface.getSighash('deposit')
-    this.withdrawalSigHash = this.abiInterface.getSighash('withdraw')
     this.wethContract = {
       mainnet: WETH_CONTRACT_MAINNET,
       ropsten: WETH_CONTRACT_ROPSTEN
@@ -38,99 +39,79 @@ export class Parser implements SubParser {
 
   async parse(tx: BlockbookTx): Promise<TxSpecific | undefined> {
     const txData = tx.ethereumSpecific?.data
+
     if (!txInteractsWithContract(tx, this.wethContract)) return
     if (!txData) return
 
+    const txSigHash = getSigHash(txData)
+
+    if (!Object.values(this.supportedFunctions).some((hash) => hash === txSigHash)) return
+
     const decoded = this.abiInterface.parseTransaction({ data: txData })
 
-    const contract = new ethers.Contract(this.wethContract, ERC20_ABI, this.provider)
+    // failed to decode input data
+    if (!decoded) return
+
     const sendAddress = tx.vin[0].addresses?.[0] ?? ''
-    const receiveAddress = tx.vout?.[0].addresses?.[0] ?? ''
-    const decimals = await contract.decimals()
-    const name = await contract.name()
-    const symbol = await contract.symbol()
+    const contract = new ethers.Contract(this.wethContract, ERC20_ABI, this.provider)
+
+    const assetId = caip19.toCAIP19({
+      chain: ChainTypes.Ethereum,
+      network: toNetworkType(this.network),
+      assetNamespace: AssetNamespace.ERC20,
+      assetReference: this.wethContract
+    })
+
+    const token = {
+      contract: this.wethContract,
+      decimals: await contract.decimals(),
+      name: await contract.name(),
+      symbol: await contract.symbol()
+    }
 
     const transfers = (() => {
-      switch (getSigHash(txData)) {
-        case this.depositSigHash: {
-          if (receiveAddress !== this.wethContract) return undefined
-          const value = tx.value
+      switch (txSigHash) {
+        case this.supportedFunctions.depositSigHash: {
           return [
             {
               type: TransferType.Receive,
               from: this.wethContract,
               to: sendAddress,
-              caip19: caip19.toCAIP19({
-                chain: ChainTypes.Ethereum,
-                network: toNetworkType(this.network),
-                assetNamespace: AssetNamespace.ERC20,
-                assetReference: this.wethContract
-              }),
-              assetId: caip19.toCAIP19({
-                chain: ChainTypes.Ethereum,
-                network: toNetworkType(this.network),
-                assetNamespace: AssetNamespace.ERC20,
-                assetReference: this.wethContract
-              }),
-              totalValue: value,
-              components: [{ value }],
-              token: {
-                contract: this.wethContract,
-                decimals,
-                name,
-                symbol
-              }
+              caip19: assetId,
+              assetId,
+              totalValue: tx.value,
+              components: [{ value: tx.value }],
+              token
             }
           ]
         }
-        case this.withdrawalSigHash: {
-          if (receiveAddress !== this.wethContract) return undefined
-          const result = this.abiInterface.decodeFunctionData(this.withdrawalSigHash, txData)
-          const value = result.wad.toString()
+        case this.supportedFunctions.withdrawalSigHash:
           return [
             {
               type: TransferType.Send,
               from: sendAddress,
               to: this.wethContract,
-              caip19: caip19.toCAIP19({
-                chain: ChainTypes.Ethereum,
-                network: toNetworkType(this.network),
-                assetNamespace: AssetNamespace.ERC20,
-                assetReference: this.wethContract
-              }),
-              assetId: caip19.toCAIP19({
-                chain: ChainTypes.Ethereum,
-                network: toNetworkType(this.network),
-                assetNamespace: AssetNamespace.ERC20,
-                assetReference: this.wethContract
-              }),
-              totalValue: value,
-              components: [{ value }],
-              token: {
-                contract: this.wethContract,
-                decimals,
-                name,
-                symbol
-              }
+              caip19: assetId,
+              assetId,
+              totalValue: decoded.args.wad.toString(),
+              components: [{ value: decoded.args.wad.toString() }],
+              token
             }
           ]
-        }
         default:
-          return undefined
+          return
       }
     })()
 
-    // We didn't recognise the sigHash - exit
+    // no supported function detected
     if (!transfers) return
-
-    const data = {
-      parser: TxParser.WETH,
-      method: decoded.name
-    }
 
     return {
       transfers,
-      data
+      data: {
+        parser: TxParser.WETH,
+        method: decoded.name
+      }
     }
   }
 }

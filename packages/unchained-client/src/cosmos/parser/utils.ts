@@ -9,6 +9,59 @@ const logger = new Logger({
   level: process.env.LOG_LEVEL
 })
 
+const metaData = (msg: Message | undefined, assetId: string): TxMetadata | undefined => {
+  if (!msg) return
+
+  switch (msg.type) {
+    case 'delegate':
+    case 'begin_unbonding':
+      return {
+        parser: 'cosmos',
+        method: msg.type,
+        delegator: msg.from,
+        destinationValidator: msg.to,
+        value: msg?.value?.amount
+      }
+    case 'begin_redelegate':
+      return {
+        parser: 'cosmos',
+        method: msg.type,
+        sourceValidator: msg.from,
+        delegator: msg.origin,
+        destinationValidator: msg.to,
+        value: msg?.value?.amount,
+        caip19: assetId,
+        assetId
+      }
+    case 'withdraw_delegator_reward':
+      return {
+        parser: 'cosmos',
+        method: msg.type,
+        destinationValidator: msg.to,
+        value: msg?.value?.amount,
+        caip19: assetId,
+        assetId
+      }
+    case 'ibc_send':
+    case 'ibc_receive':
+      return {
+        parser: 'cosmos',
+        method: msg.type,
+        ibcDestination: msg.to,
+        ibcSource: msg.from,
+        caip19: assetId,
+        assetId,
+        value: msg?.value?.amount
+      }
+    // known message types with no applicable metadata
+    case 'send':
+      return
+    default:
+      logger.warn(`unsupported message type: ${msg.type}`)
+      return
+  }
+}
+
 const virtualMessageFromEvents = (
   msg: Message,
   events: { [key: string]: Event[] }
@@ -58,62 +111,16 @@ const virtualMessageFromEvents = (
       to: msg.to,
       origin: msg.origin
     }
-  } else {
-    console.warn(`cant create virtual message from events ${events}`)
-    return msg
   }
-}
 
-const metaData = (msg: Message | undefined, assetId: string): TxMetadata | undefined => {
-  if (!msg) return
-  switch (msg.type) {
-    case 'delegate':
-    case 'begin_unbonding':
-      return {
-        parser: 'cosmos',
-        method: msg.type,
-        delegator: msg.from,
-        destinationValidator: msg.to,
-        value: msg?.value?.amount
-      }
-    case 'begin_redelegate':
-      return {
-        parser: 'cosmos',
-        method: msg.type,
-        sourceValidator: msg.from,
-        delegator: msg.origin,
-        destinationValidator: msg.to,
-        value: msg?.value?.amount,
-        caip19: assetId,
-        assetId
-      }
-    case 'withdraw_delegator_reward':
-      return {
-        parser: 'cosmos',
-        method: msg.type,
-        destinationValidator: msg.to,
-        value: msg?.value?.amount,
-        caip19: assetId,
-        assetId
-      }
-    case 'ibc_send':
-    case 'ibc_receive':
-      return {
-        parser: 'cosmos',
-        method: msg.type,
-        ibcDestination: msg.to,
-        ibcSource: msg.from,
-        caip19: assetId,
-        assetId,
-        value: msg?.value?.amount
-      }
-    // known message types with no applicable metadata
-    case 'send':
-      return
-    default:
-      logger.warn(`unsupported message type: ${msg.type}`)
-      return
+  // no virtual message handled, but also no transaction message
+  if (!msg) {
+    logger.warn(
+      `no transaction message found and unable to create virtual message from events: ${events}`
+    )
   }
+
+  return msg
 }
 
 export const valuesFromMsgEvents = (
