@@ -50,7 +50,7 @@ export type BuildTradeInput = CommonTradeInput & {
   wallet: HDWallet
 }
 
-export type CommonTradeOutput<C extends ChainTypes> = {
+export type TradeQuote<C extends ChainTypes> = {
   success: boolean // This will go away when we correctly handle errors
   statusReason: string // This will go away when we correctly handle errors
   buyAmount: string
@@ -59,13 +59,19 @@ export type CommonTradeOutput<C extends ChainTypes> = {
   rate: string
   allowanceContract: string
   sources: Array<SwapSource>
-}
-export type TradeQuote<C extends ChainTypes> = CommonTradeOutput<C> & {
   minimum: string | null
   maximum: string | null
 }
 
-export type BuiltTrade<C extends ChainTypes> = CommonTradeOutput<C> & {
+export type BuiltTrade<C extends ChainTypes> = {
+  success: boolean // This will go away when we correctly handle errors
+  statusReason: string // This will go away when we correctly handle errors
+  buyAmount: string
+  sellAmount: string
+  feeData: chainAdapters.QuoteFeeData<C>
+  rate: string
+  allowanceContract: string
+  sources: Array<SwapSource>
   txData: string
   sellAsset: Asset
   sellAssetAccountId: string
