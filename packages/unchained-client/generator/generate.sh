@@ -3,6 +3,7 @@
 IMAGE=openapi-generator-cli:5.4.0
 USER=$(id -u):$(id -g)
 ROOTDIR=$(git rev-parse --show-toplevel)/packages/unchained-client
+GENDIR=$(pwd)/generator
 
 while getopts ':e:h' flag; do
     case "${flag}" in
@@ -18,9 +19,9 @@ if [[ $env == "" ]]; then
 fi
 
 if [[ "$(docker images -q openapi-generator-cli:5.4.0 2> /dev/null)" == "" ]]; then
-	docker build . -t openapi-generator-cli:5.4.0
+	docker build $GENDIR -t openapi-generator-cli:5.4.0
 fi
 
-docker run --platform=linux/amd64 --rm --user $USER -e JAVA_OPTS='-Dlog.level=error' -v "$ROOTDIR:$ROOTDIR" -w $(pwd)/generator/$env $IMAGE generate
+docker run --platform=linux/amd64 --rm --user $USER -e JAVA_OPTS='-Dlog.level=error' -v "$ROOTDIR:$ROOTDIR" -w $GENDIR/$env $IMAGE generate
 
 exit 0
