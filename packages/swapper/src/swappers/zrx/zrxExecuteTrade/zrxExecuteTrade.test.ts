@@ -4,7 +4,7 @@ import { ChainTypes } from '@shapeshiftoss/types'
 import { ExecTradeInput } from '../../../api'
 import { setupQuote } from '../utils/test-data/setupSwapQuote'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
-import { zrxExecuteTrade } from './ZrxExecuteTrade'
+import { zrxExecuteTrade } from './zrxExecuteTrade'
 
 describe('ZrxExecuteTrade', () => {
   const { sellAsset } = setupQuote()
