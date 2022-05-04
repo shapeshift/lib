@@ -1,0 +1,39 @@
+{
+  "name": "@shapeshiftoss/unchained-client",
+  "version": "6.10.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "source": "src/index.ts",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn clean && yarn generate && tsc -p tsconfig.build.json",
+    "build:dev": "yarn clean && yarn generate:dev && tsc -p tsconfig.build.json",
+    "build:local": "yarn clean && yarn generate:local && tsc -p tsconfig.build.json",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist node_modules src/generated tsconfig.build.tsbuildinfo",
+    "generate": "JAVA_OPTS='-Dlog.level=error' openapi-generator-cli generate -c openapitools.json",
+    "generate:dev": "JAVA_OPTS='-Dlog.level=error' openapi-generator-cli generate -c openapitools-dev.json",
+    "generate:local": "JAVA_OPTS='-Dlog.level=error' openapi-generator-cli generate -c openapitools-local.json",
+    "test": "jest test",
+    "type-check": "tsc --project ./tsconfig.build.json --noEmit"
+  },
+  "dependencies": {
+    "@shapeshiftoss/blockbook": "^6.10.0",
+    "@shapeshiftoss/caip": "^2.2.3",
+    "@shapeshiftoss/logger": "^1.1.1",
+    "@shapeshiftoss/types": "^3.1.2",
+    "@yfi/sdk": "^1.0.30",
+    "bignumber.js": "^9.0.1",
+    "ethers": "^5.5.3",
+    "isomorphic-ws": "^4.0.1",
+    "ws": "^8.3.0"
+  },
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.4.4",
+    "@shapeshiftoss/common-api": "^6.10.0",
+    "@types/ws": "^8.2.1"
+  }
+}
