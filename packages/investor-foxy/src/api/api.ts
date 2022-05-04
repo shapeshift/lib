@@ -1,6 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { AssetNamespace, caip19 } from '@shapeshiftoss/caip'
-import { ChainReference } from '@shapeshiftoss/caip/dist/caip2/caip2'
+import { AssetNamespace, caip19, ChainReference } from '@shapeshiftoss/caip'
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { ChainTypes, NetworkTypes, WithdrawType } from '@shapeshiftoss/types'
 import axios from 'axios'
