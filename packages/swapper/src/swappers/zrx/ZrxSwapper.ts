@@ -18,11 +18,11 @@ import Web3 from 'web3'
 
 import {
   BuildTradeInput,
-  Trade,
   BuyAssetBySellIdInput,
   ExecuteTradeInput,
   GetTradeQuoteInput,
   Swapper,
+  Trade,
   TradeQuote
 } from '../../api'
 import { getZrxMinMax } from './getZrxMinMax/getZrxMinMax'
