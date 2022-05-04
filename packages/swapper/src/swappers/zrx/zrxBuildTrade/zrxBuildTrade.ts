@@ -132,9 +132,7 @@ export async function zrxBuildTrade(
       rate: data.price,
       depositAddress: data.to,
       feeData: {
-        fee: bnOrZero(estimatedGas || 0)
-          .multipliedBy(bnOrZero(data.gasPrice || 0))
-          .toString(),
+        fee: bnOrZero(estimatedGas).multipliedBy(bnOrZero(data.gasPrice)).toString(),
         chainSpecific: {
           estimatedGas: estimatedGas.toString(),
           gasPrice: data.gasPrice
@@ -161,9 +159,7 @@ export async function zrxBuildTrade(
         fee: trade.feeData?.fee || '0',
         chainSpecific: {
           ...trade.feeData?.chainSpecific,
-          approvalFee: bnOrZero(APPROVAL_GAS_LIMIT)
-            .multipliedBy(data.gasPrice || 0)
-            .toString()
+          approvalFee: bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(bnOrZero(data.gasPrice)).toString()
         }
       }
     }

@@ -41,7 +41,7 @@ export async function ZrxApprovalNeeded(
   const allowanceOnChain = bnOrZero(allowanceResult)
 
   return {
-    approvalNeeded: allowanceOnChain.lt(bnOrZero(quote.sellAmount || 1)),
+    approvalNeeded: allowanceOnChain.gte(bnOrZero(quote.sellAmount)),
     gas: APPROVAL_GAS_LIMIT,
     gasPrice: quote?.feeData?.chainSpecific?.gasPrice
   }

@@ -62,8 +62,8 @@ interface TradeBase<C extends ChainTypes> {
 }
 
 export interface TradeQuote<C extends ChainTypes> extends TradeBase<C> {
-  minimum: string | null
-  maximum: string | null
+  minimum: string
+  maximum: string
 }
 
 export interface Trade<C extends ChainTypes> extends TradeBase<C> {
@@ -110,7 +110,7 @@ export interface Swapper {
   /**
    * Get a trade quote
    */
-  getTradeQuote(input: GetTradeQuoteInput, wallet?: HDWallet): Promise<TradeQuote<ChainTypes>>
+  getTradeQuote(input: GetTradeQuoteInput, wallet: HDWallet): Promise<TradeQuote<ChainTypes>>
 
   /**
    * Get a Quote along with an unsigned transaction that can be signed and broadcast to execute the swap

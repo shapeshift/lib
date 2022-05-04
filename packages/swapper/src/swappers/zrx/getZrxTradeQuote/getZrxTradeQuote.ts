@@ -73,7 +73,7 @@ export async function getZrxTradeQuote(
 
     const { data } = quoteResponse
 
-    const estimatedGas = data.estimatedGas ? bnOrZero(data.estimatedGas).times(1.5) : bnOrZero(0)
+    const estimatedGas = bnOrZero(data.estimatedGas).times(1.5)
     const rate = useSellAmount ? data.price : bnOrZero(1).div(data.price).toString()
 
     return {
@@ -89,9 +89,7 @@ export async function getZrxTradeQuote(
           gasPrice: data.gasPrice,
           approvalFee:
             sellAsset.tokenId &&
-            bnOrZero(APPROVAL_GAS_LIMIT)
-              .multipliedBy(data.gasPrice || 0)
-              .toString()
+            bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(bnOrZero(data.gasPrice)).toString()
         }
       },
       sellAmount: data.sellAmount,
@@ -101,7 +99,7 @@ export async function getZrxTradeQuote(
       allowanceContract: data.allowanceTarget,
       buyAsset,
       sellAsset,
-      sellAssetAccountId,
+      sellAssetAccountId
     }
   } catch (e) {
     const statusReason =
@@ -122,7 +120,7 @@ export async function getZrxTradeQuote(
       allowanceContract: '0',
       buyAsset,
       sellAsset,
-      sellAssetAccountId,
+      sellAssetAccountId
     }
   }
 }

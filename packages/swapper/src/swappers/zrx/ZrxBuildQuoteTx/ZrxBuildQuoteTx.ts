@@ -159,9 +159,7 @@ export async function ZrxBuildQuoteTx(
         fee: quote.feeData?.fee || '0',
         chainSpecific: {
           ...quote.feeData?.chainSpecific,
-          approvalFee: bnOrZero(APPROVAL_GAS_LIMIT)
-            .multipliedBy(data.gasPrice || 0)
-            .toString()
+          approvalFee: bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(bnOrZero(data.gasPrice)).toString()
         }
       }
     }

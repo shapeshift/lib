@@ -232,7 +232,7 @@ describe('ZrxBuildTrade', () => {
           gasPrice,
           estimatedGas
         },
-        fee: bnOrZero(gasPrice).multipliedBy(estimatedGas).toString(),
+        fee: bnOrZero(gasPrice).multipliedBy(estimatedGas).toString()
       },
       buyAsset
     })
