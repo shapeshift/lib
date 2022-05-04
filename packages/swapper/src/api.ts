@@ -110,7 +110,7 @@ export interface Swapper {
   /**
    * Get a trade quote
    */
-  getTradeQuote(input: GetTradeQuoteInput, wallet: HDWallet): Promise<TradeQuote<ChainTypes>>
+  getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ChainTypes>>
 
   /**
    * Get a Quote along with an unsigned transaction that can be signed and broadcast to execute the swap
