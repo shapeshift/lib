@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const ethers = {
+  ...jest.requireActual('ethers').ethers,
   providers: {
     JsonRpcProvider: jest.fn()
   },
@@ -42,8 +43,27 @@ const ethers = {
           throw new Error(`no decimals mock for address: ${address}`)
       }
     }
-  })),
-  utils: (jest.requireActual('ethers') as any).utils
+  }))
 }
 
-export { ethers }
+// extra mocks for hdwallet which uses explicit imports instead of the standard `import { ethers } from 'ethers'`
+const BigNumber = jest.requireActual('ethers').BigNumber
+const Bytes = jest.requireActual('ethers').Bytes
+const BytesLike = jest.requireActual('ethers').BytesLike
+const Signature = jest.requireActual('ethers').Signature
+const Signer = jest.requireActual('ethers').Signer
+const UnsignedTransaction = jest.requireActual('ethers').UnsignedTransaction
+const providers = jest.requireActual('ethers').providers
+const utils = jest.requireActual('ethers').utils
+
+export {
+  ethers,
+  BigNumber,
+  Bytes,
+  BytesLike,
+  Signature,
+  Signer,
+  UnsignedTransaction,
+  providers,
+  utils
+}
