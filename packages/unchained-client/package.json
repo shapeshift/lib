@@ -20,7 +20,7 @@
     "type-check": "tsc --project ./tsconfig.build.json --noEmit"
   },
   "dependencies": {
-    "@shapeshiftoss/blockbook": "^6.10.0",
+    "@shapeshiftoss/blockbook": "^6.11.0",
     "@shapeshiftoss/caip": "^2.2.3",
     "@shapeshiftoss/logger": "^1.1.1",
     "@shapeshiftoss/types": "^3.1.2",
@@ -31,7 +31,7 @@
     "ws": "^8.3.0"
   },
   "devDependencies": {
-    "@shapeshiftoss/common-api": "^6.10.0",
+    "@shapeshiftoss/common-api": "^6.11.0",
     "@types/ws": "^8.2.1"
   }
 }

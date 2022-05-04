@@ -2736,21 +2736,10 @@
     varuint-bitcoin "^1.0.4"
     wif "^2.0.1"
 
-"@shapeshiftoss/blockbook@^3.7.0":
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/@shapeshiftoss/blockbook/-/blockbook-3.7.0.tgz#fc7dc8ad98c50d803cb5aa6c348dfe14282a2839"
-  integrity sha512-4QiqkJ59E6ZXbuQ9+LBwJejrPAiuu8VqJxiU24dRWT7x+OXTqOy0IW4IS6Q7yyq8SJGQ9SEM85+wbrzbwankRg==
-  dependencies:
-    axios "^0.21.2"
-    express "^4.17.1"
-    swagger-ui-express "^4.1.5"
-    tsoa "^3.4.0"
-    ws "^8.2.3"
-
-"@shapeshiftoss/blockbook@^6.10.0":
-  version "6.10.0"
-  resolved "https://registry.yarnpkg.com/@shapeshiftoss/blockbook/-/blockbook-6.10.0.tgz#2dac224eb30ccb6a75caf1da21636d7431f139dc"
-  integrity sha512-9C/zN+tkVz5/juHd90mXi3s1r7lRIASNyQhni8FwBPyZjkDgs0Pzcw9wxclp59W9sQWf0gHwpZvPEOyFGb5kxA==
+"@shapeshiftoss/blockbook@^6.11.0":
+  version "6.11.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/blockbook/-/blockbook-6.11.0.tgz#f822548ba3c8f371fcbb71ffaaa419427a090c31"
+  integrity sha512-kJdLMVRUJxXAYy7atB2E0YX6jYxQeKYXoKUxfRc3rZWJSY33s9+mdSxyKxBj3TYRf56XhACA+fpQ6SzjwxbnOg==
   dependencies:
     axios "^0.26.0"
     express "^4.17.1"
@@ -2758,37 +2747,15 @@
     tsoa "^3.4.0"
     ws "^8.3.0"
 
-"@shapeshiftoss/common-api@^6.10.0":
-  version "6.10.0"
-  resolved "https://registry.yarnpkg.com/@shapeshiftoss/common-api/-/common-api-6.10.0.tgz#ee4fa6ce691e245e4e5815fb0946d3178ea1a8e4"
-  integrity sha512-KdyXwHBclYspG0/TmjCQWZnhNZwImLyUmXQdwvUtkitOcGJxGJZ07gJiML2PLYYQHZ/uApPJgMTv7BByI4lTBA==
+"@shapeshiftoss/common-api@^6.11.0":
+  version "6.11.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/common-api/-/common-api-6.11.0.tgz#cea7fc9acc02645bef376ef77a8b4977b31441c4"
+  integrity sha512-e0L/8cLmVen///G6XOoPhTFlrshqNJN73lMH6Pmf08jai9+iGwGdZPoK6h/DhGanFEhXUT0/HjuBzUwxdgtRaA==
   dependencies:
-    "@shapeshiftoss/common-ingester" "^6.10.0"
-    "@shapeshiftoss/common-mongo" "^6.10.0"
     amqp-ts "^1.8.0"
-    mongodb "^3.6.3"
     tsoa "^3.4.0"
     uuid "^8.3.2"
     ws "^8.3.0"
-
-"@shapeshiftoss/common-ingester@^6.10.0":
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/@shapeshiftoss/common-ingester/-/common-ingester-3.7.0.tgz#112c0e84908b86087bde622a9392e6a99752e6ff"
-  integrity sha512-muitr0kyfbqr/gaRDZuGXb/RuYt6auyw2zomXz3fvcqolzERimcjs2O49hbltbv0E8mqD+ckfyH0pThTFRJkzQ==
-  dependencies:
-    "@shapeshiftoss/blockbook" "^3.7.0"
-    "@shapeshiftoss/common-mongo" "^3.7.0"
-    "@shapeshiftoss/logger" "^1.0.0"
-    amqp-ts "^1.8.0"
-    mongodb "^3.6.3"
-    ws "^8.2.3"
-
-"@shapeshiftoss/common-mongo@^3.7.0", "@shapeshiftoss/common-mongo@^6.10.0":
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/@shapeshiftoss/common-mongo/-/common-mongo-3.7.0.tgz#20317b88828b60eef04068d9740d1129bcd40b9b"
-  integrity sha512-qW2lxL/NUguA6UWYIbcTOdVkBTJjZWYJ9bNrlXzzc1UPkYF3T8tQdCDrYNrKD/4Lmv089LFhtbu8uaprAPv1Ww==
-  dependencies:
-    mongodb "^3.6.3"
 
 "@shapeshiftoss/fiojs@1.0.1-shapeshift.2":
   version "1.0.1-shapeshift.2"
@@ -3972,14 +3939,6 @@ bitsyntax@~0.0.4:
   dependencies:
     buffer-more-ints "0.0.2"
 
-bl@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/bl/-/bl-2.2.1.tgz#8c11a7b730655c5d56898cdc871224f40fd901d5"
-  integrity sha512-6Pesp1w0DEX1N550i/uGV/TqucVL4AM/pgThFSN/Qq9si1/DF9aIHs1BxD8V/QU0HoeHO6cQRTAuYnLPKq1e4g==
-  dependencies:
-    readable-stream "^2.3.5"
-    safe-buffer "^5.1.1"
-
 blakejs@^1.1.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/blakejs/-/blakejs-1.2.1.tgz#5057e4206eadb4a97f7c0b6e197a505042fc3814"
@@ -4179,11 +4138,6 @@ bser@2.1.1:
   integrity sha512-gQxTNE/GAfIIrmHLUE3oJyp5FO6HRBfhjnw4/wMmA63ZGDJnWBmgY/lyQBpnDUkGmAhbSe39tx2d/iTOAfglwQ==
   dependencies:
     node-int64 "^0.4.0"
-
-bson@^1.1.4:
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/bson/-/bson-1.1.6.tgz#fb819be9a60cd677e0853aee4ca712a785d6618a"
-  integrity sha512-EvVNVeGo4tHxwi8L6bPj3y3itEvStdwvvlojVxxbyYfoaxJ6keLgrTuKdyfEAszFK+H3olzBuafE0yoh0D1gdg==
 
 buffer-from@^1.0.0:
   version "1.1.2"
@@ -5191,11 +5145,6 @@ delegates@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/delegates/-/delegates-1.0.0.tgz#84c6e159b81904fdca59a0ef44cd870d31250f9a"
   integrity sha1-hMbhWbgZBP3KWaDvRM2HDTElD5o=
-
-denque@^1.4.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/denque/-/denque-1.5.1.tgz#07f670e29c9a78f8faecb2566a1e2c11929c5cbf"
-  integrity sha512-XwE+iZ4D6ZUB7mfYRMb5wByE8L74HCn30FBN7sWnXksWc1LO1bPDl67pBR9o/kC4z/xSNAwkMYcGgqDV3BE3Hw==
 
 depd@^1.1.2, depd@~1.1.2:
   version "1.1.2"
@@ -8724,11 +8673,6 @@ memoizee@^0.4.14:
     next-tick "^1.1.0"
     timers-ext "^0.1.7"
 
-memory-pager@^1.0.2:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/memory-pager/-/memory-pager-1.5.0.tgz#d8751655d22d384682741c972f2c3d6dfa3e66b5"
-  integrity sha512-ZS4Bp4r/Zoeq6+NLJpP+0Zzm0pR8whtGPf1XExKLJBAczGMnSi3It14OiNCStjQjM6NU1okjQGSxgEZN8eBYKg==
-
 meow@^8.0.0:
   version "8.1.2"
   resolved "https://registry.yarnpkg.com/meow/-/meow-8.1.2.tgz#bcbe45bda0ee1729d350c03cffc8395a36c4e897"
@@ -8998,19 +8942,6 @@ monero-regex@^1.0.8:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/monero-regex/-/monero-regex-1.0.9.tgz#4445e98a5d48d038b050fc25ff2e9155b989525c"
   integrity sha512-4kUBp+a/DWmL/m/oVUQLJHe7BKvY4M3XoLtCnCBo/qbXH/FOD/umuttAMFoBTp/1imsYmvPtxxNYxdQY9T+DKg==
-
-mongodb@^3.6.3:
-  version "3.7.3"
-  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-3.7.3.tgz#b7949cfd0adc4cc7d32d3f2034214d4475f175a5"
-  integrity sha512-Psm+g3/wHXhjBEktkxXsFMZvd3nemI0r3IPsE0bU+4//PnvNWKkzhZcEsbPcYiWqe8XqXJJEg4Tgtr7Raw67Yw==
-  dependencies:
-    bl "^2.2.1"
-    bson "^1.1.4"
-    denque "^1.4.1"
-    optional-require "^1.1.8"
-    safe-buffer "^5.1.2"
-  optionalDependencies:
-    saslprep "^1.0.0"
 
 ms@2.0.0:
   version "2.0.0"
@@ -9606,13 +9537,6 @@ opener@^1.5.2:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/opener/-/opener-1.5.2.tgz#5d37e1f35077b9dcac4301372271afdeb2a13598"
   integrity sha512-ur5UIdyw5Y7yEj9wLzhqXiy6GZ3Mwx0yGI+5sMn2r0N0v3cKJvUmFH5yPP+WXh9e0xfyzyJX95D8l088DNFj7A==
-
-optional-require@^1.1.8:
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/optional-require/-/optional-require-1.1.8.tgz#16364d76261b75d964c482b2406cb824d8ec44b7"
-  integrity sha512-jq83qaUb0wNg9Krv1c5OQ+58EK+vHde6aBPzLvPPqJm89UQWsvSuFy9X/OSNJnFeSOKo7btE0n8Nl2+nE+z5nA==
-  dependencies:
-    require-at "^1.0.6"
 
 optionator@^0.8.1:
   version "0.8.3"
@@ -10553,7 +10477,7 @@ readable-stream@3, readable-stream@^3.0.0, readable-stream@^3.0.2, readable-stre
     string_decoder "^1.1.1"
     util-deprecate "^1.0.1"
 
-readable-stream@^2.0.0, readable-stream@^2.0.2, readable-stream@^2.0.6, readable-stream@^2.3.3, readable-stream@^2.3.5, readable-stream@~2.3.6:
+readable-stream@^2.0.0, readable-stream@^2.0.2, readable-stream@^2.0.6, readable-stream@^2.3.3, readable-stream@~2.3.6:
   version "2.3.7"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.3.7.tgz#1eca1cf711aef814c04f62252a36a62f6cb23b57"
   integrity sha512-Ebho8K4jIbHAxnuxi7o42OrZgF/ZTNcsZj6nRKyUmkhLFq8CHItp/fy6hQZuZmP/n3yZ9VBUbp4zz/mX8hmYPw==
@@ -10670,11 +10594,6 @@ request@^2.79.0, request@^2.88.0, request@^2.88.2, request@~2.88.0:
     tough-cookie "~2.5.0"
     tunnel-agent "^0.6.0"
     uuid "^3.3.2"
-
-require-at@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/require-at/-/require-at-1.0.6.tgz#9eb7e3c5e00727f5a4744070a7f560d4de4f6e6a"
-  integrity sha512-7i1auJbMUrXEAZCOQ0VNJgmcT2VOKPRl2YGJwgpHpC9CE91Mv4/4UYIUm4chGJaI381ZDq1JUicFii64Hapd8g==
 
 require-directory@^2.1.1:
   version "2.1.1"
@@ -10826,13 +10745,6 @@ safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
-
-saslprep@^1.0.0:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/saslprep/-/saslprep-1.0.3.tgz#4c02f946b56cf54297e347ba1093e7acac4cf226"
-  integrity sha512-/MY/PEMbk2SuY5sScONwhUDsV2p77Znkb/q3nSVstq/yQzYJOH/Azh29p9oJLsl3LnQwSvZDKagDGBsBwSooag==
-  dependencies:
-    sparse-bitfield "^3.0.3"
 
 saxes@^5.0.1:
   version "5.0.1"
@@ -11181,13 +11093,6 @@ source-map@^0.7.3, source-map@~0.7.2:
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.7.3.tgz#5302f8169031735226544092e64981f751750383"
   integrity sha512-CkCj6giN3S+n9qrYiBTX5gystlENnRW5jZeNLHpe6aue+SrHcG5VYwujhW9s4dY31mEGsxBDrHR6oI69fTXsaQ==
 
-sparse-bitfield@^3.0.3:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/sparse-bitfield/-/sparse-bitfield-3.0.3.tgz#ff4ae6e68656056ba4b3e792ab3334d38273ca11"
-  integrity sha1-/0rm5oZWBWuks+eSqzM004JzyhE=
-  dependencies:
-    memory-pager "^1.0.2"
-
 spawn-error-forwarder@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/spawn-error-forwarder/-/spawn-error-forwarder-1.0.0.tgz#1afd94738e999b0346d7b9fc373be55e07577029"
@@ -11527,7 +11432,7 @@ swagger-ui-dist@>=4.1.3:
   resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-4.9.0.tgz#93a17589159e7e169e9d98860eeec6fbfffbe937"
   integrity sha512-TKoCEfy/I7YfI+ukHwmnknSyUR58ebpdLLv6tJ1FcPYGCmnsgFq7g3gIqrG5zrJiafvI6810xBb6r4r6x17PwA==
 
-swagger-ui-express@^4.1.5, swagger-ui-express@^4.3.0:
+swagger-ui-express@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/swagger-ui-express/-/swagger-ui-express-4.3.0.tgz#226238ab231f7718f9109d63a66efc3a795618dd"
   integrity sha512-jN46SEEe9EoXa3ZgZoKgnSF6z0w3tnM1yqhO4Y+Q4iZVc8JOQB960EZpIAz6rNROrDApVDwcMHR0mhlnc/5Omw==
@@ -12812,11 +12717,6 @@ ws@^7, ws@^7.4.6:
   version "7.5.7"
   resolved "https://registry.yarnpkg.com/ws/-/ws-7.5.7.tgz#9e0ac77ee50af70d58326ecff7e85eb3fa375e67"
   integrity sha512-KMvVuFzpKBuiIXW3E4u3mySRO2/mCHSyZDJQM5NQ9Q9KHWHWh0NHgfbRMLLrceUK5qAL4ytALJbpRMjixFZh8A==
-
-ws@^8.2.3:
-  version "8.6.0"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.6.0.tgz#e5e9f1d9e7ff88083d0c0dd8281ea662a42c9c23"
-  integrity sha512-AzmM3aH3gk0aX7/rZLYvjdvZooofDu3fFOzGqcSnQ1tOcTWwhM/o+q++E8mAyVVIyUdajrkzWUGftaVSDLn1bw==
 
 ws@^8.3.0:
   version "8.5.0"

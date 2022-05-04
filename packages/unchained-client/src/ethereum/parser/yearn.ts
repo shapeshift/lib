@@ -40,7 +40,7 @@ export class Parser implements SubParser {
     // The only Yearn-supported chain we currently support is mainnet
     if (args.network === 'mainnet') {
       // 1 for EthMain (@yfi/sdk/dist/chain.d.ts)
-      this.yearnSdk = new Yearn(1, { provider: this.provider, disableAllowlist: true })
+      this.yearnSdk = new Yearn(1, { provider: this.provider })
     }
   }
 
