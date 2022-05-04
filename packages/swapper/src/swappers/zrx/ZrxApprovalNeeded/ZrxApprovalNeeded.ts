@@ -37,7 +37,7 @@ export async function ZrxApprovalNeeded(
     spenderAddress: quote.allowanceContract,
     ownerAddress: receiveAddress
   })
-  const allowanceOnChain = bnOrZero(allowanceResult || '0')
+  const allowanceOnChain = bnOrZero(allowanceResult)
 
   return {
     approvalNeeded: allowanceOnChain.lt(bnOrZero(quote.sellAmount || 1)),

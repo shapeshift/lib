@@ -66,7 +66,7 @@ export async function ZrxBuildQuoteTx(
   const bip44Params = adapter.buildBIP44Params({ accountNumber: Number(buyAssetAccountId) })
   const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 
-  if (bnOrZero(slippage || 0).gt(MAX_SLIPPAGE)) {
+  if (bnOrZero(slippage).gt(MAX_SLIPPAGE)) {
     throw new SwapError(
       `ZrxSwapper:ZrxBuildQuoteTx slippage value of ${slippage} is greater than max slippage value of ${MAX_SLIPPAGE}`
     )
@@ -118,7 +118,7 @@ export async function ZrxBuildQuoteTx(
 
     const { data } = quoteResponse
 
-    const estimatedGas = bnOrZero(data.gas || 0)
+    const estimatedGas = bnOrZero(data.gas)
     const quote: Quote<ChainTypes.Ethereum> = {
       sellAsset,
       buyAsset,
@@ -129,9 +129,7 @@ export async function ZrxBuildQuoteTx(
       rate: data.price,
       depositAddress: data.to,
       feeData: {
-        fee: bnOrZero(estimatedGas || 0)
-          .multipliedBy(bnOrZero(data.gasPrice || 0))
-          .toString(),
+        fee: bnOrZero(estimatedGas).multipliedBy(bnOrZero(data.gasPrice)).toString(),
         chainSpecific: {
           estimatedGas: estimatedGas.toString(),
           gasPrice: data.gasPrice

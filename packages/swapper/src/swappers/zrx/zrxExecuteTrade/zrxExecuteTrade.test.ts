@@ -1,7 +1,7 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { ChainTypes } from '@shapeshiftoss/types'
 
-import { ExecTradeInput } from '../../../api'
+import { ExecuteTradeInput } from '../../../api'
 import { setupQuote } from '../utils/test-data/setupSwapQuote'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 import { zrxExecuteTrade } from './zrxExecuteTrade'
@@ -22,8 +22,8 @@ describe('ZrxExecuteTrade', () => {
     }))
   }
   const deps = { adapterManager } as unknown as ZrxSwapperDeps
-  const execTradeInput: ExecTradeInput<ChainTypes.Ethereum> = {
-    builtTrade: {
+  const execTradeInput: ExecuteTradeInput<ChainTypes.Ethereum> = {
+    trade: {
       sellAsset,
       success: true,
       statusReason: '',
@@ -48,7 +48,7 @@ describe('ZrxExecuteTrade', () => {
     await expect(
       zrxExecuteTrade(deps, {
         ...execTradeInput,
-        builtTrade: { ...execTradeInput.builtTrade, sellAsset: { ...sellAsset, symbol: '' } }
+        trade: { ...execTradeInput.trade, sellAsset: { ...sellAsset, symbol: '' } }
       })
     ).rejects.toThrow('ZrxSwapper:ZrxExecuteTrade sellAssetSymbol is required')
   })
@@ -57,7 +57,7 @@ describe('ZrxExecuteTrade', () => {
     await expect(
       zrxExecuteTrade(deps, {
         ...execTradeInput,
-        builtTrade: { ...execTradeInput.builtTrade, sellAssetAccountId: '' }
+        trade: { ...execTradeInput.trade, sellAssetAccountId: '' }
       })
     ).rejects.toThrow('ZrxSwapper:ZrxExecuteTrade sellAssetAccountId is required')
   })
@@ -66,7 +66,7 @@ describe('ZrxExecuteTrade', () => {
     await expect(
       zrxExecuteTrade(deps, {
         ...execTradeInput,
-        builtTrade: { ...execTradeInput.builtTrade, sellAmount: '' }
+        trade: { ...execTradeInput.trade, sellAmount: '' }
       })
     ).rejects.toThrow('ZrxSwapper:ZrxExecuteTrade sellAmount is required')
   })
@@ -75,7 +75,7 @@ describe('ZrxExecuteTrade', () => {
     await expect(
       zrxExecuteTrade(deps, {
         ...execTradeInput,
-        builtTrade: { ...execTradeInput.builtTrade, depositAddress: '' }
+        trade: { ...execTradeInput.trade, depositAddress: '' }
       })
     ).rejects.toThrow('ZrxSwapper:ZrxExecuteTrade depositAddress is required')
   })
@@ -84,8 +84,8 @@ describe('ZrxExecuteTrade', () => {
     expect(
       await zrxExecuteTrade(deps, {
         ...execTradeInput,
-        builtTrade: {
-          ...execTradeInput.builtTrade,
+        trade: {
+          ...execTradeInput.trade,
           depositAddress: '0x728F1973c71f7567dE2a34Fa2838D4F0FB7f9765'
         }
       })
@@ -101,8 +101,8 @@ describe('ZrxExecuteTrade', () => {
     expect(
       await zrxExecuteTrade(deps, {
         ...execTradeInput,
-        builtTrade: {
-          ...execTradeInput.builtTrade,
+        trade: {
+          ...execTradeInput.trade,
           depositAddress: '0x728F1973c71f7567dE2a34Fa2838D4F0FB7f9765'
         }
       })

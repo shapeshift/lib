@@ -2,7 +2,7 @@ import { ChainTypes } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 
-import { BuildTradeInput, BuiltTrade, SwapError } from '../../..'
+import { BuildTradeInput, SwapError, Trade } from '../../..'
 import { ZrxQuoteResponse } from '../types'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
@@ -21,7 +21,7 @@ import { ZrxSwapperDeps } from '../ZrxSwapper'
 export async function zrxBuildTrade(
   { adapterManager, web3 }: ZrxSwapperDeps,
   input: BuildTradeInput
-): Promise<BuiltTrade<ChainTypes>> {
+): Promise<Trade<ChainTypes>> {
   const {
     sellAsset,
     buyAsset,
@@ -68,7 +68,7 @@ export async function zrxBuildTrade(
   const bip44Params = adapter.buildBIP44Params({ accountNumber: Number(buyAssetAccountId) })
   const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 
-  if (bnOrZero(slippage || 0).gt(MAX_SLIPPAGE)) {
+  if (bnOrZero(slippage).gt(MAX_SLIPPAGE)) {
     throw new SwapError(
       `ZrxSwapper:ZrxBuildTrade slippage value of ${slippage} is greater than max slippage value of ${MAX_SLIPPAGE}`
     )
@@ -122,7 +122,7 @@ export async function zrxBuildTrade(
 
     const estimatedGas = bnOrZero(data.gas || 0)
 
-    const builtTrade: BuiltTrade<ChainTypes.Ethereum> = {
+    const trade: Trade<ChainTypes.Ethereum> = {
       sellAsset,
       success: true,
       statusReason: '',
@@ -156,17 +156,17 @@ export async function zrxBuildTrade(
     })
 
     if (allowanceRequired) {
-      builtTrade.feeData = {
-        fee: builtTrade.feeData?.fee || '0',
+      trade.feeData = {
+        fee: trade.feeData?.fee || '0',
         chainSpecific: {
-          ...builtTrade.feeData?.chainSpecific,
+          ...trade.feeData?.chainSpecific,
           approvalFee: bnOrZero(APPROVAL_GAS_LIMIT)
             .multipliedBy(data.gasPrice || 0)
             .toString()
         }
       }
     }
-    return builtTrade
+    return trade
   } catch (e) {
     // eslint-disable-next-line no-console
     const statusReason =

@@ -46,11 +46,10 @@ export type BuildTradeInput = CommonTradeInput & {
   sellAssetAccountId: string
   buyAssetAccountId: string
   slippage?: string
-  sendMax: boolean
   wallet: HDWallet
 }
 
-export type TradeQuote<C extends ChainTypes> = {
+export type CommonTradeFields<C extends ChainTypes> = {
   success: boolean // This will go away when we correctly handle errors
   statusReason: string // This will go away when we correctly handle errors
   buyAmount: string
@@ -59,19 +58,14 @@ export type TradeQuote<C extends ChainTypes> = {
   rate: string
   allowanceContract: string
   sources: Array<SwapSource>
+}
+
+export type TradeQuote<C extends ChainTypes> = CommonTradeFields<C> & {
   minimum: string | null
   maximum: string | null
 }
 
-export type BuiltTrade<C extends ChainTypes> = {
-  success: boolean // This will go away when we correctly handle errors
-  statusReason: string // This will go away when we correctly handle errors
-  buyAmount: string
-  sellAmount: string
-  feeData: chainAdapters.QuoteFeeData<C>
-  rate: string
-  allowanceContract: string
-  sources: Array<SwapSource>
+export type Trade<C extends ChainTypes> = CommonTradeFields<C> & {
   txData: string
   sellAsset: Asset
   sellAssetAccountId: string
@@ -79,12 +73,12 @@ export type BuiltTrade<C extends ChainTypes> = {
   receiveAddress: string
 }
 
-export type ExecTradeInput<C extends ChainTypes> = {
-  builtTrade: BuiltTrade<C>
+export type ExecuteTradeInput<C extends ChainTypes> = {
+  trade: Trade<C>
   wallet: HDWallet
 }
 
-export type ExecTradeOutput = {
+export type TradeResult = {
   txid: string
 }
 
@@ -102,7 +96,7 @@ export interface Swapper {
   /**
    * Get builds a trade with definitive rate & txData that can be executed with executeTrade
    **/
-  buildTrade(args: BuildTradeInput): Promise<BuiltTrade<ChainTypes>>
+  buildTrade(args: BuildTradeInput): Promise<Trade<ChainTypes>>
 
   /**
    * Get a trade quote
@@ -139,7 +133,7 @@ export interface Swapper {
   /**
    * Execute a trade built with buildTrade by signing and broadcasting
    */
-  executeTrade(args: ExecTradeInput<ChainTypes>): Promise<ExecQuoteOutput>
+  executeTrade(args: ExecuteTradeInput<ChainTypes>): Promise<ExecQuoteOutput>
 
   /**
    * Get a boolean if a quote needs approval

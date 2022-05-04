@@ -1,36 +1,36 @@
 import { ChainTypes } from '@shapeshiftoss/types'
 import { numberToHex } from 'web3-utils'
 
-import { ExecTradeInput, ExecTradeOutput, SwapError } from '../../../api'
+import { ExecuteTradeInput, SwapError, TradeResult } from '../../../api'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function zrxExecuteTrade(
   { adapterManager }: ZrxSwapperDeps,
-  { builtTrade, wallet }: ExecTradeInput<ChainTypes.Ethereum>
-): Promise<ExecTradeOutput> {
-  const { sellAsset } = builtTrade
+  { trade, wallet }: ExecuteTradeInput<ChainTypes.Ethereum>
+): Promise<TradeResult> {
+  const { sellAsset } = trade
 
   if (!sellAsset.symbol) {
     throw new SwapError('ZrxSwapper:ZrxExecuteTrade sellAssetSymbol is required')
   }
 
-  if (!builtTrade.sellAssetAccountId) {
+  if (!trade.sellAssetAccountId) {
     throw new SwapError('ZrxSwapper:ZrxExecuteTrade sellAssetAccountId is required')
   }
 
-  if (!builtTrade.sellAmount) {
+  if (!trade.sellAmount) {
     throw new SwapError('ZrxSwapper:ZrxExecuteTrade sellAmount is required')
   }
 
-  if (!builtTrade.depositAddress) {
+  if (!trade.depositAddress) {
     throw new SwapError('ZrxSwapper:ZrxExecuteTrade depositAddress is required')
   }
 
   // value is 0 for erc20s
-  const value = sellAsset.symbol === 'ETH' ? builtTrade.sellAmount : '0'
+  const value = sellAsset.symbol === 'ETH' ? trade.sellAmount : '0'
   const adapter = adapterManager.byChain(sellAsset.chain)
   const bip44Params = adapter.buildBIP44Params({
-    accountNumber: Number(builtTrade.sellAssetAccountId)
+    accountNumber: Number(trade.sellAssetAccountId)
   })
 
   let buildTxResponse, signedTx, txid
@@ -38,10 +38,10 @@ export async function zrxExecuteTrade(
     buildTxResponse = await adapter.buildSendTransaction({
       value,
       wallet,
-      to: builtTrade.depositAddress,
+      to: trade.depositAddress,
       chainSpecific: {
-        gasPrice: numberToHex(builtTrade.feeData?.chainSpecific?.gasPrice || 0),
-        gasLimit: numberToHex(builtTrade.feeData?.chainSpecific?.estimatedGas || 0)
+        gasPrice: numberToHex(trade.feeData?.chainSpecific?.gasPrice || 0),
+        gasLimit: numberToHex(trade.feeData?.chainSpecific?.estimatedGas || 0)
       },
       bip44Params
     })
@@ -51,7 +51,7 @@ export async function zrxExecuteTrade(
 
   const { txToSign } = buildTxResponse
 
-  const txWithQuoteData = { ...txToSign, data: builtTrade.txData ?? '' }
+  const txWithQuoteData = { ...txToSign, data: trade.txData ?? '' }
 
   if (wallet.supportsOfflineSigning()) {
     try {

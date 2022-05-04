@@ -18,9 +18,9 @@ import Web3 from 'web3'
 
 import {
   BuildTradeInput,
-  BuiltTrade,
+  Trade,
   BuyAssetBySellIdInput,
-  ExecTradeInput,
+  ExecuteTradeInput,
   GetTradeQuoteInput,
   Swapper,
   TradeQuote
@@ -68,7 +68,7 @@ export class ZrxSwapper implements Swapper {
     return getZrxQuote(input)
   }
 
-  async buildTrade(args: BuildTradeInput): Promise<BuiltTrade<ChainTypes>> {
+  async buildTrade(args: BuildTradeInput): Promise<Trade<ChainTypes>> {
     return zrxBuildTrade(this.deps, args)
   }
 
@@ -88,7 +88,7 @@ export class ZrxSwapper implements Swapper {
     return ZrxExecuteQuote(this.deps, args)
   }
 
-  async executeTrade(args: ExecTradeInput<ChainTypes>): Promise<ExecQuoteOutput> {
+  async executeTrade(args: ExecuteTradeInput<ChainTypes>): Promise<ExecQuoteOutput> {
     return zrxExecuteTrade(this.deps, args)
   }
 

@@ -83,9 +83,7 @@ export async function getZrxTradeQuote(
       minimum: minQuoteSellAmount,
       maximum: maxSellAmount,
       feeData: {
-        fee: bnOrZero(estimatedGas || 0)
-          .multipliedBy(bnOrZero(data.gasPrice || 0))
-          .toString(),
+        fee: bnOrZero(estimatedGas).multipliedBy(bnOrZero(data.gasPrice)).toString(),
         chainSpecific: {
           estimatedGas: estimatedGas.toString(),
           gasPrice: data.gasPrice,

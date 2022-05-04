@@ -90,12 +90,12 @@ export const getAllowanceRequired = async ({
     tokenId
   })
   if (allowanceOnChain === '0') {
-    return bnOrZero(sellAmount || 0)
+    return bnOrZero(sellAmount)
   }
   if (!allowanceOnChain) {
     throw new SwapError(`No allowance data for ${allowanceContract} to ${receiveAddress}`)
   }
-  const allowanceRequired = bnOrZero(sellAmount || 0).minus(allowanceOnChain)
+  const allowanceRequired = bnOrZero(sellAmount).minus(allowanceOnChain)
   return allowanceRequired.lt(0) ? bnOrZero(0) : allowanceRequired
 }
 
