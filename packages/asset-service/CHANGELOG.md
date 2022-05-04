@@ -1,3 +1,32 @@
+# [@shapeshiftoss/asset-service-v2.4.5](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v2.4.4...@shapeshiftoss/asset-service-v2.4.5) (2022-05-03)
+
+
+### Bug Fixes
+
+* blacklist 0xeee burn address ([#584](https://github.com/shapeshift/lib/issues/584)) ([86e2bad](https://github.com/shapeshift/lib/commit/86e2bad3e09a21918fa3b75bb8ead77b3432a5ba))
+
+# [@shapeshiftoss/asset-service-v2.4.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v2.4.3...@shapeshiftoss/asset-service-v2.4.4) (2022-05-02)
+
+
+### Bug Fixes
+
+* update descriptions ([#592](https://github.com/shapeshift/lib/issues/592)) ([b3cf4e8](https://github.com/shapeshift/lib/commit/b3cf4e8673be639704e595f701d18f0a6334371a))
+
+# [@shapeshiftoss/asset-service-v2.4.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v2.4.2...@shapeshiftoss/asset-service-v2.4.3) (2022-05-02)
+
+
+### Bug Fixes
+
+* removes 3 unnecessary api calls from zrxswapper.  ([#586](https://github.com/shapeshift/lib/issues/586)) ([57d59c8](https://github.com/shapeshift/lib/commit/57d59c8488cceb05cd5e0778b49690d0d2c97b68))
+
+# [@shapeshiftoss/asset-service-v2.4.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v2.4.1...@shapeshiftoss/asset-service-v2.4.2) (2022-05-02)
+
+
+### Bug Fixes
+
+* unbreak lib build ([#588](https://github.com/shapeshift/lib/issues/588)) ([bff0f3d](https://github.com/shapeshift/lib/commit/bff0f3d351f09ae9693b6b173782e8d8671ca3e4))
+* vscode tsconfig errors ([#577](https://github.com/shapeshift/lib/issues/577)) ([50138d0](https://github.com/shapeshift/lib/commit/50138d07b55b730f3bee68fae80414dc6578ee2a))
+
 # [@shapeshiftoss/asset-service-v2.4.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v2.4.0...@shapeshiftoss/asset-service-v2.4.1) (2022-04-29)
 
 

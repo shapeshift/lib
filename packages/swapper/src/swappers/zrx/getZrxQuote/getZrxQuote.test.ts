@@ -46,7 +46,6 @@ describe('getZrxQuote', () => {
     const swapper = new ZrxSwapper(zrxSwapperDeps)
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve(undefined))
     const quote = await swapper.getQuote(quoteInput)
-    expect(quote.statusCode).toBe(-1)
     expect(quote.success).toBe(false)
     expect(quote.statusReason).toBe('Unknown Error')
   })
@@ -57,7 +56,6 @@ describe('getZrxQuote', () => {
       response: { data: { code: 502, reason: 'Failed to do some stuff' } }
     } as never)
     const quote = await swapper.getQuote(quoteInput)
-    expect(quote.statusCode).toBe(502)
     expect(quote.success).toBe(false)
     expect(quote.statusReason).toBe('Failed to do some stuff')
   })
@@ -86,15 +84,6 @@ describe('getZrxQuote', () => {
     await expect(swapper.getQuote({ ...quoteInput, sellAmount: undefined })).rejects.toThrow(
       'ZrxError:getQuote - sellAmount or buyAmount amount is required'
     )
-  })
-  it('slippage is undefined', async () => {
-    const { quoteInput } = setupQuote()
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
-    ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
-      Promise.resolve({ data: { success: true } })
-    )
-    const quote = await swapper.getQuote({ ...quoteInput, slippage: undefined })
-    expect(quote?.slippage).toBeFalsy()
   })
   it('fails on non ethereum chain for buyAsset', async () => {
     const { quoteInput, buyAsset } = setupQuote()
@@ -157,23 +146,12 @@ describe('getZrxQuote', () => {
     const minimum = '20'
     const quote = await swapper.getQuote({
       ...quoteInput,
-      sellAmount: '0',
-      minimum
+      sellAmount: '0'
     })
     expect(quote?.sellAmount).toBe(
       new BigNumber(minimum)
         .times(new BigNumber(10).exponentiatedBy(sellAsset.precision))
         .toString()
     )
-  })
-  it('normalizedAmount returns undefined when amount is 0', async () => {
-    const { quoteInput } = setupQuote()
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
-    const quote = await swapper.getQuote({
-      ...quoteInput,
-      sellAmount: '0',
-      minimum: undefined
-    })
-    expect(quote?.minimum).toBe(undefined)
   })
 })
