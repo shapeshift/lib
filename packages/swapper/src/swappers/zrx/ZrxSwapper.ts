@@ -1,9 +1,7 @@
 import { CAIP19 } from '@shapeshiftoss/caip'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import {
-  ApprovalNeededInput,
   ApprovalNeededOutput,
-  ApproveInfiniteInput,
   Asset,
   BuildQuoteTxInput,
   ChainTypes,
@@ -17,6 +15,8 @@ import {
 import Web3 from 'web3'
 
 import {
+  ApprovalNeededInput,
+  ApproveInfiniteInput,
   BuildTradeInput,
   BuyAssetBySellIdInput,
   ExecuteTradeInput,

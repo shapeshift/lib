@@ -13,7 +13,7 @@ import { ZrxError } from '../ZrxSwapper'
 export async function getZrxTradeQuote(
   input: GetTradeQuoteInput
 ): Promise<TradeQuote<ChainTypes.Ethereum>> {
-  const { sellAsset, buyAsset, sellAmount, buyAmount } = input
+  const { sellAsset, buyAsset, sellAmount, buyAmount, sellAssetAccountId } = input
   if (!buyAsset) {
     throw new ZrxError('getQuote - Missing buyAsset')
   }
@@ -98,7 +98,10 @@ export async function getZrxTradeQuote(
       buyAmount: data.buyAmount,
       sources:
         data.sources?.filter((s: SwapSource) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE,
-      allowanceContract: data.allowanceTarget
+      allowanceContract: data.allowanceTarget,
+      buyAsset,
+      sellAsset,
+      sellAssetAccountId,
     }
   } catch (e) {
     const statusReason =
@@ -116,7 +119,10 @@ export async function getZrxTradeQuote(
       buyAmount: '0',
       sellAmount: '0',
       sources: [],
-      allowanceContract: '0'
+      allowanceContract: '0',
+      buyAsset,
+      sellAsset,
+      sellAssetAccountId,
     }
   }
 }

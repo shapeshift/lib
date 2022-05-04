@@ -1,9 +1,7 @@
 import { CAIP19 } from '@shapeshiftoss/caip'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import {
-  ApprovalNeededInput,
   ApprovalNeededOutput,
-  ApproveInfiniteInput,
   Asset,
   BuildQuoteTxInput,
   chainAdapters,
@@ -39,11 +37,11 @@ export type CommonTradeInput = {
   sellAmount?: string
   buyAmount?: string
   sendMax: boolean
+  sellAssetAccountId: string
 }
 export type GetTradeQuoteInput = CommonTradeInput
 
 export type BuildTradeInput = CommonTradeInput & {
-  sellAssetAccountId: string
   buyAssetAccountId: string
   slippage?: string
   wallet: HDWallet
@@ -58,6 +56,9 @@ interface TradeBase<C extends ChainTypes> {
   rate: string
   allowanceContract: string
   sources: Array<SwapSource>
+  buyAsset: Asset
+  sellAsset: Asset
+  sellAssetAccountId: string
 }
 
 export interface TradeQuote<C extends ChainTypes> extends TradeBase<C> {
@@ -67,8 +68,6 @@ export interface TradeQuote<C extends ChainTypes> extends TradeBase<C> {
 
 export interface Trade<C extends ChainTypes> extends TradeBase<C> {
   txData: string
-  sellAsset: Asset
-  sellAssetAccountId: string
   depositAddress: string
   receiveAddress: string
 }
@@ -85,6 +84,16 @@ export type TradeResult = {
 export type SwapSource = {
   name: string
   proportion: string
+}
+
+export type ApproveInfiniteInput<C extends ChainTypes> = {
+  quote: Quote<C> | TradeQuote<C>
+  wallet: HDWallet
+}
+
+export type ApprovalNeededInput<C extends ChainTypes> = {
+  quote: Quote<C> | TradeQuote<C>
+  wallet: HDWallet
 }
 
 export class SwapError extends Error {}

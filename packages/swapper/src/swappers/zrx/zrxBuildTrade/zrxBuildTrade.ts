@@ -124,6 +124,7 @@ export async function zrxBuildTrade(
 
     const trade: Trade<ChainTypes.Ethereum> = {
       sellAsset,
+      buyAsset,
       success: true,
       statusReason: '',
       sellAssetAccountId,
@@ -176,6 +177,7 @@ export async function zrxBuildTrade(
     // This hackyness will go away when we correctly handle errors
     return {
       sellAsset,
+      buyAsset,
       success: false,
       statusReason,
       sellAmount: '0',

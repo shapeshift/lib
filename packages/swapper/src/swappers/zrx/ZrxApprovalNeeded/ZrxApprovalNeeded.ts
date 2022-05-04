@@ -1,6 +1,6 @@
-import { ApprovalNeededInput, ApprovalNeededOutput, ChainTypes } from '@shapeshiftoss/types'
+import { ApprovalNeededOutput, ChainTypes } from '@shapeshiftoss/types'
 
-import { SwapError } from '../../../api'
+import { ApprovalNeededInput, SwapError } from '../../../api'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { bnOrZero } from '../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../utils/constants'
@@ -30,6 +30,7 @@ export async function ZrxApprovalNeeded(
   if (!quote.sellAsset.tokenId || !quote.allowanceContract) {
     throw new SwapError('ZrxApprovalNeeded - tokenId and allowanceTarget are required')
   }
+
   const allowanceResult = await getERC20Allowance({
     web3,
     erc20AllowanceAbi,

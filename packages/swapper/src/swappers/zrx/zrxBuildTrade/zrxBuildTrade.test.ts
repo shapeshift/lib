@@ -184,7 +184,10 @@ describe('ZrxBuildTrade', () => {
     }))
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data }))
 
-    expect(await zrxBuildTrade(deps, { ...buildTradeInput })).toEqual(buildTradeResponse)
+    expect(await zrxBuildTrade(deps, { ...buildTradeInput })).toEqual({
+      ...buildTradeResponse,
+      buyAsset
+    })
   })
 
   it('should return a quote response with rate when price is given', async () => {
@@ -205,7 +208,8 @@ describe('ZrxBuildTrade', () => {
 
     expect(await zrxBuildTrade(deps, { ...buildTradeInput })).toEqual({
       ...buildTradeResponse,
-      rate: price
+      rate: price,
+      buyAsset
     })
   })
 
@@ -228,8 +232,9 @@ describe('ZrxBuildTrade', () => {
           gasPrice,
           estimatedGas
         },
-        fee: bnOrZero(gasPrice).multipliedBy(estimatedGas).toString()
-      }
+        fee: bnOrZero(gasPrice).multipliedBy(estimatedGas).toString(),
+      },
+      buyAsset
     })
   })
 })
