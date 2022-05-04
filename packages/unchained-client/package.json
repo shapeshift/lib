@@ -31,7 +31,6 @@
     "ws": "^8.3.0"
   },
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^2.4.4",
     "@shapeshiftoss/common-api": "^6.10.0",
     "@types/ws": "^8.2.1"
   }
