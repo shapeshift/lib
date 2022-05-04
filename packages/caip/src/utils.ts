@@ -1,6 +1,6 @@
-import { ChainId, fromCAIP2, networkTypeToChainReference } from './caip2/caip2'
+import { ChainId, fromCAIP2, networkTypeToChainReference, toCAIP2 } from './caip2/caip2'
 import { AccountId, fromCAIP10 } from './caip10/caip10'
-import { AssetId } from './caip19/caip19'
+import { AssetId, fromCAIP19 } from './caip19/caip19'
 
 export const btcAssetId = 'bip122:000000000019d6689c085ae165831e93/slip44:0'
 export const ethAssetId = 'eip155:1/slip44:60'
@@ -15,19 +15,17 @@ export const chainIdToAssetId: Record<string, string> = {
   [btcChainId]: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
   [cosmosChainId]: 'cosmos:cosmoshub-4/slip44:118'
 }
-// TODO(gomes): this probably needs better terminology than "supported"?
-const supportedChainIds = [ethChainId, btcChainId, cosmosChainId] as const
+export const assetIdtoChainId = (assetId: AssetId): string => {
+  const { chain, network } = fromCAIP19(assetId)
+  const chainId = toCAIP2({ chain, network })
 
-export type ChainIdType = typeof supportedChainIds[number]
-export type AccountSpecifier = string
+  return chainId
+}
 
-export const assetIdtoChainId = (assetId: AssetId): ChainIdType =>
-  assetId.split('/')[0] as ChainIdType
-
-export const accountIdToChainId = (accountId: AccountSpecifier): ChainId => {
+export const accountIdToChainId = (accountId: AccountId): ChainId => {
   // accountId = 'eip155:1:0xdef1...cafe
-  const [chain, network] = accountId.split(':')
-  return `${chain}:${network}`
+  const { caip2 } = fromCAIP10(accountId)
+  return caip2
 }
 
 export const accountIdToSpecifier = (accountId: AccountId): string => {
