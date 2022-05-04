@@ -1,4 +1,5 @@
-import { ApprovalNeededInput, ApprovalNeededOutput, ChainTypes } from '@shapeshiftoss/types'
+import { ChainId } from '@shapeshiftoss/caip'
+import { ApprovalNeededInput, ApprovalNeededOutput } from '@shapeshiftoss/types'
 import { BigNumber } from 'bignumber.js'
 
 import { SwapError } from '../../../api'
@@ -9,7 +10,7 @@ import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function ZrxApprovalNeeded(
   { adapterManager, web3 }: ZrxSwapperDeps,
-  { quote, wallet }: ApprovalNeededInput<ChainTypes>
+  { quote, wallet }: ApprovalNeededInput<ChainId>
 ): Promise<ApprovalNeededOutput> {
   const { sellAsset } = quote
 
@@ -17,7 +18,7 @@ export async function ZrxApprovalNeeded(
     return { approvalNeeded: false }
   }
 
-  if (sellAsset.chain !== ChainTypes.Ethereum) {
+  if (sellAsset.chainId !== 'eip155:1') {
     throw new SwapError('ZrxSwapper:ZrxApprovalNeeded only Ethereum chain type is supported')
   }
 

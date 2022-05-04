@@ -1,7 +1,7 @@
 import { AssetNamespace } from '@shapeshiftoss/caip'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { ChainTypes, GetQuoteInput } from '@shapeshiftoss/types'
+import { GetQuoteInput } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 
@@ -109,12 +109,13 @@ const mockQuoteResponse = {
 
 const setup = () => {
   const unchainedUrls = {
-    [ChainTypes.Ethereum]: {
+    'eip155:1': {
       httpUrl: 'http://localhost:31300',
       wsUrl: 'ws://localhost:31300'
     }
   }
   const ethNodeUrl = 'http://localhost:1000'
+  //TODO: update ChainAdapterManager to use ChainId instead of ChainTypes
   const adapterManager = new ChainAdapterManager(unchainedUrls)
   const web3Provider = new Web3.providers.HttpProvider(ethNodeUrl)
   const web3Instance = new Web3(web3Provider)

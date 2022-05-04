@@ -1,5 +1,6 @@
-import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
-import { ApproveInfiniteInput, ChainTypes } from '@shapeshiftoss/types'
+import { ChainId } from '@shapeshiftoss/caip'
+import { ChainTypes, ChainAdapter } from '@shapeshiftoss/chain-adapters'
+import { ApproveInfiniteInput } from '@shapeshiftoss/types'
 
 import { erc20Abi } from '../utils/abi/erc20-abi'
 import { MAX_ALLOWANCE } from '../utils/constants'
@@ -8,9 +9,10 @@ import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function ZrxApproveInfinite(
   { adapterManager, web3 }: ZrxSwapperDeps,
-  { quote, wallet }: ApproveInfiniteInput<ChainTypes>
+  { quote, wallet }: ApproveInfiniteInput<ChainId>
 ) {
-  const adapter: ChainAdapter<ChainTypes.Ethereum> = adapterManager.byChain(ChainTypes.Ethereum)
+  // This will change when byChain is converted to byChainId
+  const adapter: ChainAdapter<ChainId> = adapterManager.byChain(ChainTypes.Ethereum)
   const allowanceGrantRequired = await grantAllowance({
     quote: {
       ...quote,
