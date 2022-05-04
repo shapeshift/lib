@@ -28,8 +28,6 @@ jobs:
         run: printf '%s' "$TITLE" | npx commitlint
       - name: Build
         run: yarn build
-      - name: TypeScript compilation check
-        run: yarn tsc --project ./tsconfig.json --noEmit
       - name: Lint
         run: yarn lint
       - name: Test
