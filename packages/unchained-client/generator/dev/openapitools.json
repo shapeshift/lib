@@ -1,14 +1,13 @@
 {
-  "$schema": "../../node_modules/@openapitools/openapi-generator-cli/config.schema.json",
+  "$schema": "usr/local/node_modules/@openapitools/openapi-generator-cli/config.schema.json",
   "spaces": 2,
   "generator-cli": {
-    "version": "5.2.1",
-    "storageDir": "~/.openapitools",
+    "version": "5.4.0",
     "generators": {
       "ethereum": {
-        "inputSpec": "https://api.ethereum.shapeshift.com/swagger.json",
+        "inputSpec": "https://dev-api.ethereum.shapeshift.com/swagger.json",
         "generatorName": "typescript-axios",
-        "output": "#{cwd}/src/generated/ethereum",
+        "output": "#{cwd}/../../src/generated/ethereum",
         "reservedWordsMappings": { "in": "in" },
         "additionalProperties": {
           "supportsES6": "true",
@@ -16,9 +15,9 @@
         }
       },
       "bitcoin": {
-        "inputSpec": "https://api.bitcoin.shapeshift.com/swagger.json",
+        "inputSpec": "https://dev-api.bitcoin.shapeshift.com/swagger.json",
         "generatorName": "typescript-axios",
-        "output": "#{cwd}/src/generated/bitcoin",
+        "output": "#{cwd}/../../src/generated/bitcoin",
         "reservedWordsMappings": { "in": "in" },
         "additionalProperties": {
           "supportsES6": "true",
@@ -26,9 +25,9 @@
         }
       },
       "cosmos": {
-        "inputSpec": "https://api.cosmos.shapeshift.com/swagger",
+        "inputSpec": "https://dev-api.cosmos.shapeshift.com/swagger",
         "generatorName": "typescript-axios",
-        "output": "#{cwd}/src/generated/cosmos",
+        "output": "#{cwd}/../../src/generated/cosmos",
         "reservedWordsMappings": { "in": "in" },
         "additionalProperties": {
           "supportsES6": "true",

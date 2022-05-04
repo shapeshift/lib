@@ -1,5 +1,11 @@
 import type { ErrorResponse, RequestPayload, Topics, TxsTopicData } from '@shapeshiftoss/common-api'
+import { Logger } from '@shapeshiftoss/logger'
 import WebSocket from 'isomorphic-ws'
+
+const logger = new Logger({
+  namespace: ['unchained-client', 'websocket'],
+  level: process.env.LOG_LEVEL
+})
 
 export interface Connection {
   ws: WebSocket
@@ -89,8 +95,8 @@ export class Client<T> {
 
     // send connection errors to all subscription onError handlers
     ws.onerror = (event) => {
-      Object.entries(this.txs).forEach(([subscriptionId, { onError }]) => {
-        onError && onError({ subscriptionId, type: 'error', message: event.message })
+      Object.entries(this.txs).forEach(([id, sub]) => {
+        sub.onError && sub.onError({ subscriptionId: id, type: 'error', message: event.message })
       })
     }
 
@@ -123,7 +129,7 @@ export class Client<T> {
         const onMessageHandler = this.txs[message.subscriptionId || subscriptionId]?.onMessage
         onMessageHandler && onMessageHandler(message)
       } catch (err) {
-        console.log(`failed to handle onmessage event: ${JSON.stringify(event)}: ${err}`)
+        logger.warn(`failed to handle onmessage event: ${JSON.stringify(event)}: ${err}`)
       }
     }
 
@@ -134,9 +140,9 @@ export class Client<T> {
         this.onOpen('txs', resolve)
 
         // subscribe to all queued subscriptions
-        Object.values(this.txs).forEach(({ data }) => {
-          if (!data) return
-          const payload: RequestPayload = { subscriptionId, method: 'subscribe', data }
+        Object.values(this.txs).forEach((tx) => {
+          if (!tx.data) return
+          const payload: RequestPayload = { subscriptionId, method: 'subscribe', data: tx.data }
           ws.send(JSON.stringify(payload))
           delete this.txs[subscriptionId].data
         })
@@ -205,7 +211,7 @@ export class Client<T> {
         closeTxs()
         break
       default:
-        console.log(`topic: ${topic} not supported`)
+        logger.warn(`topic: ${topic} not supported`)
     }
   }
 }

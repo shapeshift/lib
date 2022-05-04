@@ -16,7 +16,7 @@ describe('parseTx', () => {
       blockTime: txMempool.blockTime,
       confirmations: txMempool.confirmations,
       status: Status.Pending,
-      address: address,
+      address,
       caip2: 'bip122:000000000019d6689c085ae165831e93',
       chainId: 'bip122:000000000019d6689c085ae165831e93',
       fee: {
@@ -53,7 +53,7 @@ describe('parseTx', () => {
       blockHash: tx.blockHash,
       confirmations: tx.confirmations,
       status: Status.Confirmed,
-      address: address,
+      address,
       caip2: 'bip122:000000000019d6689c085ae165831e93',
       chainId: 'bip122:000000000019d6689c085ae165831e93',
       fee: {
@@ -89,7 +89,7 @@ describe('parseTx', () => {
       blockTime: txMempool.blockTime,
       confirmations: txMempool.confirmations,
       status: Status.Pending,
-      address: address,
+      address,
       caip2: 'bip122:000000000019d6689c085ae165831e93',
       chainId: 'bip122:000000000019d6689c085ae165831e93',
       transfers: [
@@ -121,7 +121,7 @@ describe('parseTx', () => {
       blockHash: tx.blockHash,
       confirmations: tx.confirmations,
       status: Status.Confirmed,
-      address: address,
+      address,
       caip2: 'bip122:000000000019d6689c085ae165831e93',
       chainId: 'bip122:000000000019d6689c085ae165831e93',
       transfers: [
@@ -152,7 +152,7 @@ describe('parseTx', () => {
       blockTime: txMempool.blockTime,
       confirmations: txMempool.confirmations,
       status: Status.Pending,
-      address: address,
+      address,
       caip2: 'bip122:000000000019d6689c085ae165831e93',
       chainId: 'bip122:000000000019d6689c085ae165831e93',
       fee: {
@@ -198,7 +198,7 @@ describe('parseTx', () => {
       blockHash: tx.blockHash,
       confirmations: tx.confirmations,
       status: Status.Confirmed,
-      address: address,
+      address,
       caip2: 'bip122:000000000019d6689c085ae165831e93',
       chainId: 'bip122:000000000019d6689c085ae165831e93',
       fee: {

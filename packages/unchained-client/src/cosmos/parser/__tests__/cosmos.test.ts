@@ -23,7 +23,7 @@ describe('parseTx', () => {
       blockTime: tx.timestamp,
       confirmations: tx.confirmations,
       status: Status.Confirmed,
-      address: address,
+      address,
       caip2: 'cosmos:cosmoshub-4',
       chainId: 'cosmos:cosmoshub-4',
       fee: {
@@ -60,7 +60,7 @@ describe('parseTx', () => {
       blockTime: tx.timestamp,
       confirmations: tx.confirmations,
       status: Status.Confirmed,
-      address: address,
+      address,
       caip2: 'cosmos:cosmoshub-4',
       chainId: 'cosmos:cosmoshub-4',
       transfers: [
@@ -128,7 +128,7 @@ describe('parseTx', () => {
     const { tx } = undelegate
     const address = 'cosmos1fx4jwv3aalxqwmrpymn34l582lnehr3eqwuz9e'
     const expected: ParsedTx = {
-      address: address,
+      address,
       blockHash: '140D9DEC3087EA26248B60559D9C044F649749E4483E8E1F30143A8E47E7FFE8',
       blockHeight: 9636932,
       blockTime: 1646429915,

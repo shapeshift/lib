@@ -85,7 +85,7 @@ const metaData = (msg: Message | undefined, assetId: string): TxMetadata | undef
         destinationValidator: msg.to,
         value: msg?.value?.amount,
         caip19: assetId,
-        assetId: assetId
+        assetId
       }
     case 'withdraw_delegator_reward':
       return {
@@ -94,7 +94,7 @@ const metaData = (msg: Message | undefined, assetId: string): TxMetadata | undef
         destinationValidator: msg.to,
         value: msg?.value?.amount,
         caip19: assetId,
-        assetId: assetId
+        assetId
       }
     case 'ibc_send':
     case 'ibc_receive':
@@ -104,7 +104,7 @@ const metaData = (msg: Message | undefined, assetId: string): TxMetadata | undef
         ibcDestination: msg.to,
         ibcSource: msg.from,
         caip19: assetId,
-        assetId: assetId,
+        assetId,
         value: msg?.value?.amount
       }
     // known message types with no applicable metadata

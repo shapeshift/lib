@@ -34,7 +34,7 @@ export function aggregateTransfer(
 
   if (transfer) {
     transfer.totalValue = new BigNumber(transfer.totalValue).plus(value).toString(10)
-    transfer.components.push({ value: value })
+    transfer.components.push({ value })
     transfers[index] = transfer
   } else {
     transfers = [
@@ -46,7 +46,7 @@ export function aggregateTransfer(
         from,
         to,
         totalValue: value,
-        components: [{ value: value }],
+        components: [{ value }],
         token
       }
     ]
