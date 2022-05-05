@@ -1,5 +1,5 @@
 import { CAIP2, caip2 } from '@shapeshiftoss/caip'
-import { ChainTypes } from '@shapeshiftoss/types'
+import { ChainTypes, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 
 import { ChainAdapter } from './api'
@@ -88,6 +88,22 @@ export class ChainAdapterManager {
 
   getSupportedChains(): Array<ChainTypes> {
     return Array.from(this.supported.keys())
+  }
+
+  getSupportedAccountTypes(): Record<ChainTypes, Array<UtxoAccountType | undefined>> {
+    return {
+      [ChainTypes.Bitcoin]: [
+        UtxoAccountType.SegwitNative,
+        UtxoAccountType.SegwitP2sh,
+        UtxoAccountType.P2pkh
+      ],
+      // this looks funky, but we need a non zero length array to map over
+      // where we consume it - it either looks weird here or in the consumption
+      // so...  ¯\_(ツ)_/¯
+      [ChainTypes.Ethereum]: [undefined],
+      [ChainTypes.Cosmos]: [undefined],
+      [ChainTypes.Osmosis]: [undefined]
+    }
   }
 
   getSupportedAdapters(): Array<() => ChainAdapter<ChainTypes>> {
