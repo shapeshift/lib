@@ -1,6 +1,7 @@
+import { ChainId } from '@shapeshiftoss/caip'
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { Asset, ChainTypes, Quote, QuoteResponse } from '@shapeshiftoss/types'
+import { Asset, Quote, QuoteResponse } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -11,7 +12,7 @@ import { ZrxError } from '../../ZrxSwapper'
 import { zrxService } from '../zrxService'
 
 export type GetAllowanceRequiredArgs = {
-  quote: Quote<ChainTypes>
+  quote: Quote<ChainId>
   web3: Web3
   erc20AllowanceAbi: AbiItem[]
 }
@@ -25,9 +26,9 @@ export type GetERC20AllowanceArgs = {
 }
 
 type GrantAllowanceArgs = {
-  quote: Quote<ChainTypes>
+  quote: Quote<ChainId>
   wallet: HDWallet
-  adapter: ChainAdapter<ChainTypes.Ethereum>
+  adapter: ChainAdapter<ChainId>
   erc20Abi: AbiItem[]
   web3: Web3
 }

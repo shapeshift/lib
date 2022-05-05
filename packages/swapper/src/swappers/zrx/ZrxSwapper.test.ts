@@ -1,6 +1,7 @@
+import { ChainId } from '@shapeshiftoss/caip'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { ChainTypes, GetQuoteInput, Quote, SwapperType } from '@shapeshiftoss/types'
+import { GetQuoteInput, Quote, SwapperType } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import { ZrxError } from '../..'
@@ -42,7 +43,7 @@ jest.mock('./ZrxApproveInfinite/ZrxApproveInfinite', () => ({
 
 describe('ZrxSwapper', () => {
   const input = <GetQuoteInput>{}
-  const quote = <Quote<ChainTypes>>{}
+  const quote = <Quote<ChainId>>{}
   const wallet = <HDWallet>{}
   const web3 = <Web3>{}
   const adapterManager = <ChainAdapterManager>{}

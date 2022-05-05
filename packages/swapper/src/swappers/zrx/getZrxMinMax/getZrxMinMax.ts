@@ -1,4 +1,4 @@
-import { ChainTypes, GetQuoteInput, MinMaxOutput } from '@shapeshiftoss/types'
+import {  GetQuoteInput, MinMaxOutput } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 
 import { MAX_ZRX_TRADE } from '../utils/constants'
@@ -10,7 +10,7 @@ export const getZrxMinMax = async (
 ): Promise<MinMaxOutput> => {
   const { sellAsset, buyAsset } = input
 
-  if (sellAsset.chain !== ChainTypes.Ethereum || buyAsset.chain !== ChainTypes.Ethereum) {
+  if (sellAsset.chainId !== 'eip155:1' || buyAsset.chainId !== 'eip155:1') {
     throw new ZrxError('getZrxMinMax - must be eth assets')
   }
 
