@@ -21,25 +21,13 @@ type ChainSpecificAccount<T> = ChainSpecific<
 export type Account<T extends ChainTypes> = {
   balance: string
   pubkey: string
-  /**
-   * @deprecated use 'chainId' instead
-   */
-  caip2: string
   chainId: string
-  /**
-   * @deprecated use 'assetId' instead
-   */
-  caip19: string
   assetId: string
   chain: T
 } & ChainSpecificAccount<T>
 
 export type AssetBalance = {
   balance: string
-  /**
-   * @deprecated use 'assetId' instead
-   */
-  caip19: string
   assetId: string
 }
 
@@ -94,10 +82,6 @@ export type SubscribeTxsInput = {
 }
 
 export type TxFee = {
-  /**
-   * @deprecated use 'assetId' instead
-   */
-  caip19: string
   assetId: string
   value: string
 }
@@ -122,10 +106,6 @@ export type Transaction<T extends ChainTypes> = {
   blockHeight: number
   blockTime: number
   chain: T
-  /**
-   * @deprecated use 'chainId' instead
-   */
-  caip2: string
   chainId: string
   confirmations: number
   txid: string
@@ -153,10 +133,6 @@ export interface TxMetadata {
 }
 
 export type TxTransfer = {
-  /**
-   * @deprecated use 'assetId' instead
-   */
-  caip19: string
   assetId: string
   from: string
   to: string
