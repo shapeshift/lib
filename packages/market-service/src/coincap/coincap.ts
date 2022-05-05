@@ -70,10 +70,10 @@ export class CoinCapMarketService implements MarketService {
     }
   }
 
-  findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData | null> => {
-    if (!adapters.CAIP19ToCoinCap(caip19)) return null
+  findByCaip19 = async ({ assetId }: MarketDataArgs): Promise<MarketData | null> => {
+    if (!adapters.CAIP19ToCoinCap(assetId)) return null
     try {
-      const id = adapters.CAIP19ToCoinCap(caip19)
+      const id = adapters.CAIP19ToCoinCap(assetId)
 
       const { data } = await axios.get(`${this.baseUrl}/assets/${id}`)
 
@@ -91,11 +91,11 @@ export class CoinCapMarketService implements MarketService {
   }
 
   findPriceHistoryByCaip19 = async ({
-    caip19,
+    assetId,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
-    if (!adapters.CAIP19ToCoinCap(caip19)) return []
-    const id = adapters.CAIP19ToCoinCap(caip19)
+    if (!adapters.CAIP19ToCoinCap(assetId)) return []
+    const id = adapters.CAIP19ToCoinCap(assetId)
 
     const end = dayjs().startOf('minute')
     let start

@@ -25,19 +25,19 @@ export class FoxyMarketService implements MarketService {
 
   findAll = async () => {
     try {
-      const caip19 = FOXY_CAIP19
-      const marketData = await this.findByCaip19({ caip19 })
+      const assetId = FOXY_CAIP19
+      const marketData = await this.findByCaip19({ assetId })
 
-      return { [caip19]: marketData } as MarketCapResult
+      return { [assetId]: marketData } as MarketCapResult
     } catch (e) {
       console.warn(e)
       return {}
     }
   }
 
-  findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData | null> => {
+  findByCaip19 = async ({ assetId }: MarketDataArgs): Promise<MarketData | null> => {
     try {
-      if (caip19.toLowerCase() !== FOXY_CAIP19.toLowerCase()) {
+      if (assetId.toLowerCase() !== FOXY_CAIP19.toLowerCase()) {
         console.warn('FoxyMarketService(findByCaip19): Failed to find by Caip19')
         return null
       }
@@ -58,10 +58,10 @@ export class FoxyMarketService implements MarketService {
   }
 
   findPriceHistoryByCaip19 = async ({
-    caip19,
+    assetId,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
-    if (caip19.toLowerCase() !== FOXY_CAIP19.toLowerCase()) {
+    if (assetId.toLowerCase() !== FOXY_CAIP19.toLowerCase()) {
       console.warn(
         'FoxyMarketService(findPriceHistoryByCaip19): Failed to find price history by Caip19'
       )

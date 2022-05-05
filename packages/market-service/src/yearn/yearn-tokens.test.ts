@@ -66,15 +66,15 @@ describe('yearn token market service', () => {
       expect(Object.keys(result).length).toEqual(1)
     })
 
-    it('can map yearn to caip ids', async () => {
+    it('can map yearn to assetIds', async () => {
       const result = await yearnTokenMarketCapService.findAll()
-      const yvBtcCaip19 = caip19.toCAIP19({
+      const yvBtcAssetId = caip19.toCAIP19({
         chain: ChainTypes.Ethereum,
         network: NetworkTypes.MAINNET,
         assetNamespace: AssetNamespace.ERC20,
         assetReference: mockYearnTokenRestData[0].address.toLowerCase()
       })
-      const yvDaiCaip19 = caip19.toCAIP19({
+      const yvDaiAssetId = caip19.toCAIP19({
         chain: ChainTypes.Ethereum,
         network: NetworkTypes.MAINNET,
         assetNamespace: AssetNamespace.ERC20,
@@ -82,14 +82,14 @@ describe('yearn token market service', () => {
       })
       const [yvBtcKey, yvDaiKey] = Object.keys(result)
       console.log({ result })
-      expect(yvDaiKey).toEqual(yvDaiCaip19)
-      expect(yvBtcKey).toEqual(yvBtcCaip19)
+      expect(yvDaiKey).toEqual(yvDaiAssetId)
+      expect(yvBtcKey).toEqual(yvBtcAssetId)
     })
   })
 
-  describe('findByCaip19', () => {
+  describe('findByAssetId', () => {
     const args = {
-      caip19: 'eip155:1/erc20:0x19d3364a399d251e894ac732651be8b0e4e85001' // yvDai
+      assetId: 'eip155:1/erc20:0x19d3364a399d251e894ac732651be8b0e4e85001' // yvDai
     }
     it('should return market data for yvDai', async () => {
       const result = {

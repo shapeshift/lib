@@ -44,11 +44,11 @@ export class OsmosisMarketService implements MarketService {
     }
   }
 
-  findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData | null> => {
-    if (!adapters.CAIP19ToOsmosis(caip19)) return null
+  findByCaip19 = async ({ assetId }: MarketDataArgs): Promise<MarketData | null> => {
+    if (!adapters.CAIP19ToOsmosis(assetId)) return null
 
     try {
-      const symbol = adapters.CAIP19ToOsmosis(caip19)
+      const symbol = adapters.CAIP19ToOsmosis(assetId)
       const { data }: { data: OsmosisMarketCap[] } = await axios.get(
         `${this.baseUrl}/tokens/v2/${symbol}`
       )
@@ -69,11 +69,11 @@ export class OsmosisMarketService implements MarketService {
   }
 
   findPriceHistoryByCaip19 = async ({
-    caip19,
+    assetId,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
-    if (!adapters.CAIP19ToOsmosis(caip19)) return []
-    const symbol = adapters.CAIP19ToOsmosis(caip19)
+    if (!adapters.CAIP19ToOsmosis(assetId)) return []
+    const symbol = adapters.CAIP19ToOsmosis(assetId)
 
     let range
     let isV1
