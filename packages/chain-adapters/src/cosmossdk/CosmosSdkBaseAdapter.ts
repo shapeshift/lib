@@ -38,6 +38,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
   protected readonly chainId: ChainId | CAIP2
   protected readonly assetId: AssetId | CAIP19 // This is the CAIP19/AssetId for native token on the chain (ATOM/OSMO/etc)
   protected readonly supportedChainIds: ChainId[]
+  protected readonly supportedAccountTypes: undefined[] = [undefined]
   protected readonly coinName: string
   protected readonly providers: {
     http: unchained.cosmos.V1Api
@@ -151,6 +152,9 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
     return { ...CosmosSdkBaseAdapter.defaultBIP44Params, ...params }
   }
 
+  getSupportedAccountTypes() {
+    return this.supportedAccountTypes
+  }
   async getTxHistory(
     input: chainAdapters.TxHistoryInput
   ): Promise<chainAdapters.TxHistoryResponse<T>> {
