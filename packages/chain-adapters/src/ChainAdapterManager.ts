@@ -122,7 +122,7 @@ export class ChainAdapterManager {
     for (const [chain] of this.supported) {
       // byChain calls the factory function so we need to call it to create the instances
       const adapter = this.byChain(chain)
-      if ((await adapter.getCaip2()) === chainId) return adapter
+      if ((await adapter.getChainId()) === chainId) return adapter
     }
 
     throw new Error(`Chain [${chainId}] is not supported`)

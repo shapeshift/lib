@@ -80,7 +80,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
 
   async getAccount(pubkey: string): Promise<chainAdapters.Account<ChainTypes.Ethereum>> {
     try {
-      const caip = this.getCaip2()
+      const caip = this.getChainId()
       const { chain, network } = caip2.fromCAIP2(caip)
       const { data } = await this.providers.http.getAccount({ pubkey })
 

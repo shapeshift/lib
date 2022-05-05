@@ -162,7 +162,7 @@ describe('BitcoinChainAdapter', () => {
     it('should return chainAdapter with Bitcoin caip19 / assetId', () => {
       const adapter = new bitcoin.ChainAdapter(args)
       const assetId = adapter.getAssetId()
-      const caip19 = adapter.getCaip19()
+      const caip19 = adapter.getAssetId()
       expect(assetId).toEqual(caip19)
       expect(assetId).toEqual(VALID_ASSET_ID)
     })
