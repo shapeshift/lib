@@ -162,7 +162,7 @@ describe('BitcoinChainAdapter', () => {
     it('should return chainAdapter with Bitcoin caip19 / assetId', () => {
       const adapter = new bitcoin.ChainAdapter(args)
       const assetId = adapter.getAssetId()
-      const caip19 = adapter.getCaip19()
+      const caip19 = adapter.getAssetId()
       expect(assetId).toEqual(caip19)
       expect(assetId).toEqual(VALID_ASSET_ID)
     })
@@ -214,7 +214,9 @@ describe('BitcoinChainAdapter', () => {
         chain: ChainTypes.Bitcoin,
         balance: '150',
         caip2: 'bip122:000000000019d6689c085ae165831e93',
+        chainId: 'bip122:000000000019d6689c085ae165831e93',
         caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
+        assetId: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
         chainSpecific: {
           addresses: [],
           nextChangeAddressIndex: 0,

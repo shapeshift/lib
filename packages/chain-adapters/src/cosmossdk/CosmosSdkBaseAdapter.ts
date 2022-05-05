@@ -84,7 +84,6 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
 
   async getAccount(pubkey: string): Promise<chainAdapters.Account<T>> {
     try {
-      const caip = this.getCaip2()
       const { data } = await this.providers.http.getAccount({ pubkey })
 
       const delegations = data.delegations.map<chainAdapters.cosmos.Delegation>((delegation) => ({
@@ -126,8 +125,8 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
 
       return {
         balance: data.balance,
-        caip2: caip,
-        caip19: this.assetId,
+        chainId: this.chainId,
+        assetId: this.assetId,
         chain: this.getType(),
         chainSpecific: {
           accountNumber: data.accountNumber.toString(),
@@ -170,7 +169,8 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
             blockHash: parsedTx.blockHash,
             blockHeight: parsedTx.blockHeight,
             blockTime: parsedTx.blockTime,
-            caip2: this.getCaip2(),
+            caip2: this.getChainId(),
+            chainId: this.getChainId(),
             chain: this.getType(),
             confirmations: parsedTx.confirmations,
             txid: parsedTx.txid,
@@ -179,6 +179,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
             tradeDetails: parsedTx.trade,
             transfers: parsedTx.transfers.map((transfer) => ({
               caip19: transfer.caip19,
+              assetId: transfer.caip19,
               from: transfer.from,
               to: transfer.to,
               type: getType(transfer.type),
@@ -266,7 +267,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
           blockHash: tx.blockHash,
           blockHeight: tx.blockHeight,
           blockTime: tx.blockTime,
-          caip2: tx.caip2,
+          chainId: tx.caip2,
           chain: this.getType(),
           confirmations: tx.confirmations,
           fee: tx.fee,
@@ -274,6 +275,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
           tradeDetails: tx.trade,
           transfers: tx.transfers.map((transfer) => ({
             caip19: transfer.caip19,
+            assetId: transfer.caip19,
             from: transfer.from,
             to: transfer.to,
             type: getType(transfer.type),
