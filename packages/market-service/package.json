@@ -37,11 +37,11 @@
   },
   "peerDependencies": {
     "@shapeshiftoss/caip": "^2.0.0",
-    "@shapeshiftoss/types": "^3.1.2"
+    "@shapeshiftoss/types": "^4.0.0"
   },
   "devDependencies": {
     "@shapeshiftoss/caip": "^2.0.0",
-    "@shapeshiftoss/types": "^3.1.2",
+    "@shapeshiftoss/types": "^4.0.0",
     "limiter": "^2.1.0"
   }
 }
