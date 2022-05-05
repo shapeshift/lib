@@ -1,7 +1,8 @@
 import { ChainId } from '@shapeshiftoss/caip'
-import { ChainTypes, ChainAdapter } from '@shapeshiftoss/chain-adapters'
-import { ApproveInfiniteInput } from '@shapeshiftoss/types'
+import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
+import { ChainTypes } from '@shapeshiftoss/types'
 
+import { ApproveInfiniteInput } from '../../../api'
 import { erc20Abi } from '../utils/abi/erc20-abi'
 import { MAX_ALLOWANCE } from '../utils/constants'
 import { grantAllowance } from '../utils/helpers/helpers'

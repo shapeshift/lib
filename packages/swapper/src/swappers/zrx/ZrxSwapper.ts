@@ -1,9 +1,7 @@
-import { CAIP19, ChainId } from '@shapeshiftoss/caip'
+import { AssetId, ChainId } from '@shapeshiftoss/caip'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import {
-  ApprovalNeededInput,
   ApprovalNeededOutput,
-  ApproveInfiniteInput,
   Asset,
   BuildQuoteTxInput,
   ExecQuoteInput,
@@ -15,14 +13,27 @@ import {
 } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
-import { BuyAssetBySellIdInput, Swapper } from '../../api'
+import {
+  ApprovalNeededInput,
+  ApproveInfiniteInput,
+  BuildTradeInput,
+  BuyAssetBySellIdInput,
+  ExecuteTradeInput,
+  GetTradeQuoteInput,
+  Swapper,
+  Trade,
+  TradeQuote
+} from '../../api'
 import { getZrxMinMax } from './getZrxMinMax/getZrxMinMax'
 import { getZrxQuote } from './getZrxQuote/getZrxQuote'
+import { getZrxTradeQuote } from './getZrxTradeQuote/getZrxTradeQuote'
 import { getUsdRate } from './utils/helpers/helpers'
 import { ZrxApprovalNeeded } from './ZrxApprovalNeeded/ZrxApprovalNeeded'
 import { ZrxApproveInfinite } from './ZrxApproveInfinite/ZrxApproveInfinite'
 import { ZrxBuildQuoteTx } from './ZrxBuildQuoteTx/ZrxBuildQuoteTx'
+import { zrxBuildTrade } from './zrxBuildTrade/zrxBuildTrade'
 import { ZrxExecuteQuote } from './ZrxExecuteQuote/ZrxExecuteQuote'
+import { zrxExecuteTrade } from './zrxExecuteTrade/zrxExecuteTrade'
 
 export type ZrxSwapperDeps = {
   adapterManager: ChainAdapterManager
@@ -56,6 +67,14 @@ export class ZrxSwapper implements Swapper {
     return getZrxQuote(input)
   }
 
+  async buildTrade(args: BuildTradeInput): Promise<Trade<ChainId>> {
+    return zrxBuildTrade(this.deps, args)
+  }
+
+  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ChainId>> {
+    return getZrxTradeQuote(input)
+  }
+
   async getUsdRate(input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string> {
     return getUsdRate(input)
   }
@@ -68,6 +87,10 @@ export class ZrxSwapper implements Swapper {
     return ZrxExecuteQuote(this.deps, args)
   }
 
+  async executeTrade(args: ExecuteTradeInput<ChainId>): Promise<ExecQuoteOutput> {
+    return zrxExecuteTrade(this.deps, args)
+  }
+
   async approvalNeeded(args: ApprovalNeededInput<ChainId>): Promise<ApprovalNeededOutput> {
     return ZrxApprovalNeeded(this.deps, args)
   }
@@ -76,13 +99,13 @@ export class ZrxSwapper implements Swapper {
     return ZrxApproveInfinite(this.deps, args)
   }
 
-  filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): CAIP19[] {
+  filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): AssetId[] {
     const { assetIds, sellAssetId } = args
     // TODO: pending changes to caip lib, we may want to import caip2 value instead.
     return assetIds.filter((id) => id.startsWith('eip155:1') && sellAssetId.startsWith('eip155:1'))
   }
 
-  filterAssetIdsBySellable(assetIds: CAIP19[]): CAIP19[] {
+  filterAssetIdsBySellable(assetIds: AssetId[]): AssetId[] {
     return assetIds.filter((id) => id.startsWith('eip155:1'))
   }
 }
