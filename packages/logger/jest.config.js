@@ -6,14 +6,16 @@ module.exports = {
   collectCoverageFrom: ['src/**/*.[tj]s'],
   coverageDirectory: 'coverage',
   coveragePathIgnorePatterns: [
- 	"/node_modules/",
-	"/dist/",
+    "/node_modules/",
+    "/dist/",
   ],
   preset: 'ts-jest',
-	roots: [
-	  'src'
-	],
+  roots: [
+    'src'
+  ],
   testEnvironment: 'node',
-  testPathIgnorePatterns: ['.d.ts', '.js', '__mocks__', 'mockData'],
-  setupFiles: ['<rootDir>/.jest/setEnvVars.js']
+  testPathIgnorePatterns: [
+    "/node_modules/",
+    "/dist/"
+  ]
 }
