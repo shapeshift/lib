@@ -51,16 +51,27 @@ export const getSupportedBanxaAssets = () =>
     ticker
   }))
 
+/**
+ * map CAIP2s to Banxa blockchain codes (ETH, BTC, COSMOS),
+ * since some Banxa assets could be on multiple chains and their default
+ * chain won't be exactly the same as ours.
+ */
 const caip2ToBanxaBlockchainCodeMap: Record<CAIP2, string> = {
   'eip155:1': 'ETH',
   'bip122:000000000019d6689c085ae165831e93': 'BTC',
   'cosmos:cosmoshub-4': 'COSMOS'
 }
 
-export const getBanxaBlockchainFromBanxaAssetTicker = (asset: string): string => {
-  const assetCAIP19 = banxaTickerToCAIP19(asset.toLowerCase())
+/**
+ * Convert a banxa asset identifier to a Banxa chain identifier for use in Banxa HTTP URLs
+ *
+ * @param {string} banxaAssetId - a Banxa asset string referencing a specific asset; e.g., 'atom'
+ * @returns {string} - a Banxa chain identifier; e.g., 'cosmos'
+ */
+export const getBanxaBlockchainFromBanxaAssetTicker = (banxaAssetId: string): string => {
+  const assetCAIP19 = banxaTickerToCAIP19(banxaAssetId.toLowerCase())
   if (!assetCAIP19)
-    throw new Error(`getBanxaBlockchainFromBanxaAssetTicker: ${asset} is not supported`)
+    throw new Error(`getBanxaBlockchainFromBanxaAssetTicker: ${banxaAssetId} is not supported`)
   const { chain, network } = fromCAIP19(assetCAIP19)
   const caip2 = toCAIP2({ network, chain })
   return caip2ToBanxaBlockchainCodeMap[caip2]
