@@ -1,7 +1,13 @@
 import { AssetNamespace } from '@shapeshiftoss/caip'
 import { bnOrZero, ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { ChainTypes, GetQuoteInput } from '@shapeshiftoss/types'
+import {
+  AssetDataSource,
+  ChainTypes,
+  GetQuoteInput,
+  NetworkTypes,
+  Quote
+} from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import { APPROVAL_GAS_LIMIT, MAX_SLIPPAGE } from '../utils/constants'
@@ -38,24 +44,22 @@ Web3.mockImplementation(() => ({
   }
 }))
 
-const mockQuoteResponse = {
+const mockQuoteResponse: Quote<ChainTypes.Ethereum> = {
   allowanceContract: 'allowanceTargetAddress',
   buyAmount: undefined,
   buyAsset: {
     assetId: 'eip155:1/erc20:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
     chainId: 'eip155:1',
-    caip19: 'eip155:1/erc20:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-    caip2: 'eip155:1',
-    chain: 'ethereum',
+    chain: ChainTypes.Ethereum,
     color: '#FFFFFF',
     contractType: AssetNamespace.ERC20,
-    dataSource: 'coingecko',
+    dataSource: AssetDataSource.CoinGecko,
     explorer: 'https://etherscan.io',
     explorerTxLink: 'https://etherscan.io/tx/',
     explorerAddressLink: 'https://etherscan.io/address/',
     icon: 'https://assets.coingecko.com/coins/images/2518/thumb/weth.png?1628852295',
     name: 'WETH',
-    network: 'MAINNET',
+    network: NetworkTypes.MAINNET,
     precision: 18,
     slip44: 60,
     receiveSupport: true,
@@ -80,19 +84,17 @@ const mockQuoteResponse = {
   sellAsset: {
     assetId: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
     chainId: 'eip155:1',
-    caip19: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
-    caip2: 'eip155:1',
-    chain: 'ethereum',
+    chain: ChainTypes.Ethereum,
     color: '#FFFFFF',
     contractType: AssetNamespace.ERC20,
-    dataSource: 'coingecko',
+    dataSource: AssetDataSource.CoinGecko,
     icon: 'https://assets.coincap.io/assets/icons/fox@2x.png',
     name: 'FOX',
     slip44: 60,
     explorer: 'https://etherscan.io',
     explorerTxLink: 'https://etherscan.io/tx/',
     explorerAddressLink: 'https://etherscan.io/address/',
-    network: 'MAINNET',
+    network: NetworkTypes.MAINNET,
     precision: 18,
     receiveSupport: true,
     secondaryColor: '#FFFFFF',
