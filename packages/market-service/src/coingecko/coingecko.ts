@@ -87,12 +87,12 @@ export class CoinGeckoMarketService implements MarketService {
     }
   }
 
-  findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData | null> => {
+  findByCaip19 = async ({ assetId }: MarketDataArgs): Promise<MarketData | null> => {
     try {
-      if (!adapters.CAIP19ToCoingecko(caip19)) return null
-      const { chain, assetReference } = fromCAIP19(caip19)
+      if (!adapters.CAIP19ToCoingecko(assetId)) return null
+      const { chain, assetReference } = fromCAIP19(assetId)
       const isToken = chain === ChainTypes.Ethereum && assetReference.startsWith('0x')
-      const id = isToken ? 'ethereum' : adapters.CAIP19ToCoingecko(caip19)
+      const id = isToken ? 'ethereum' : adapters.CAIP19ToCoingecko(assetId)
       const contractUrl = isToken ? `/contract/${assetReference}` : ''
 
       const { data }: { data: CoinGeckoAssetData } = await axios.get(
@@ -114,14 +114,14 @@ export class CoinGeckoMarketService implements MarketService {
   }
 
   findPriceHistoryByCaip19 = async ({
-    caip19,
+    assetId,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
-    if (!adapters.CAIP19ToCoingecko(caip19)) return []
+    if (!adapters.CAIP19ToCoingecko(assetId)) return []
     try {
-      const { chain, assetReference } = fromCAIP19(caip19)
+      const { chain, assetReference } = fromCAIP19(assetId)
       const isToken = chain === ChainTypes.Ethereum && assetReference.startsWith('0x')
-      const id = isToken ? 'ethereum' : adapters.CAIP19ToCoingecko(caip19)
+      const id = isToken ? 'ethereum' : adapters.CAIP19ToCoingecko(assetId)
       const contract = isToken ? `/contract/${assetReference}` : ''
 
       const end = dayjs().startOf('minute')

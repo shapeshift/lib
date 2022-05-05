@@ -80,22 +80,15 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
 
   async getAccount(pubkey: string): Promise<chainAdapters.Account<ChainTypes.Ethereum>> {
     try {
-      const caip = this.getChainId()
-      const { chain, network } = caip2.fromCAIP2(caip)
+      const chainId = this.getChainId()
+      const { chain, network } = caip2.fromCAIP2(chainId)
       const { data } = await this.providers.http.getAccount({ pubkey })
 
       const balance = bnOrZero(data.balance).plus(bnOrZero(data.unconfirmedBalance))
 
       return {
         balance: balance.toString(),
-        caip2: caip,
-        chainId: caip,
-        caip19: caip19.toCAIP19({
-          chain,
-          network,
-          assetNamespace: AssetNamespace.Slip44,
-          assetReference: AssetReference.Ethereum
-        }),
+        chainId,
         assetId: caip19.toCAIP19({
           chain,
           network,
@@ -178,7 +171,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           if (!erc20ContractAddress) throw new Error('no token address')
           const erc20Balance = account?.chainSpecific?.tokens?.find((token) => {
             return (
-              caip19.fromCAIP19(token.caip19).assetReference === erc20ContractAddress.toLowerCase()
+              caip19.fromCAIP19(token.assetId).assetReference === erc20ContractAddress.toLowerCase()
             )
           })?.balance
           if (!erc20Balance) throw new Error('no balance')
@@ -275,7 +268,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     if (sendMax && isErc20Send && contractAddress) {
       const account = await this.getAccount(from)
       const erc20Balance = account?.chainSpecific?.tokens?.find((token) => {
-        const { assetReference } = caip19.fromCAIP19(token.caip19)
+        const { assetReference } = caip19.fromCAIP19(token.assetId)
         return assetReference === contractAddress.toLowerCase()
       })?.balance
       if (!erc20Balance) throw new Error('no balance')
@@ -386,7 +379,6 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       { topic: 'txs', addresses: [address] },
       ({ data: tx }) => {
         const transfers = tx.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
-          caip19: transfer.caip19,
           assetId: transfer.caip19,
           from: transfer.from,
           to: transfer.to,
@@ -399,7 +391,6 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           blockHash: tx.blockHash,
           blockHeight: tx.blockHeight,
           blockTime: tx.blockTime,
-          caip2: tx.caip2,
           chainId: tx.caip2,
           chain: ChainTypes.Ethereum,
           confirmations: tx.confirmations,

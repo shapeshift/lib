@@ -119,9 +119,7 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
       return {
         balance: balance.toString(),
         chain: this.getType(),
-        caip2: chainId,
         chainId,
-        caip19: assetId,
         assetId,
         chainSpecific: {
           addresses: data.addresses,

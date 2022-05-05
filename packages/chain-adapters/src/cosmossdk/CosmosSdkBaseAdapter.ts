@@ -125,8 +125,8 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
 
       return {
         balance: data.balance,
-        caip2: this.chainId,
-        caip19: this.assetId,
+        chainId: this.chainId,
+        assetId: this.assetId,
         chain: this.getType(),
         chainSpecific: {
           accountNumber: data.accountNumber.toString(),
@@ -267,7 +267,6 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
           blockHash: tx.blockHash,
           blockHeight: tx.blockHeight,
           blockTime: tx.blockTime,
-          caip2: tx.caip2,
           chainId: tx.caip2,
           chain: this.getType(),
           confirmations: tx.confirmations,

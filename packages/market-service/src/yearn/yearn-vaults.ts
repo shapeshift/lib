@@ -123,7 +123,7 @@ export class YearnVaultMarketCapService implements MarketService {
     }
   }
 
-  findByCaip19 = async ({ caip19: assetId }: MarketDataArgs): Promise<MarketData | null> => {
+  findByCaip19 = async ({ assetId }: MarketDataArgs): Promise<MarketData | null> => {
     const id = adapters.CAIP19ToYearn(assetId)
     if (!id) return null
     try {
@@ -195,7 +195,7 @@ export class YearnVaultMarketCapService implements MarketService {
   }
 
   findPriceHistoryByCaip19 = async ({
-    caip19: assetId,
+    assetId,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
     const id = adapters.CAIP19ToYearn(assetId)

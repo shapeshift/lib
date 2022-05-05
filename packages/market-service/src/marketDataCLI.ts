@@ -17,7 +17,7 @@ const main = async (): Promise<void> => {
   // const caip19 = 'eip155:1/erc20:0x93ed140172ff226dad1f7f3650489b8daa07ae7f' // Zapper Token
   // const caip19 = 'eip155:1/erc20:0x3f1b0278a9ee595635b61817630cc19de792f506' // Zapper Token
   // const caip19 = 'cosmos:osmosis-1/slip44:118' // Osmosis
-  const caip19 = FOXY_CAIP19 // FOXy
+  const assetId = FOXY_CAIP19 // FOXy
   const timeframe = HistoryTimeframe.YEAR
   // const caip19 = 'bip122:000000000019d6689c085ae165831e93/slip44:0' // BTC
   // const provider = new JsonRpcProvider('https://daemon.ethereum.shapeshift.com')
@@ -28,7 +28,7 @@ const main = async (): Promise<void> => {
   // const cgMarkteService = new CoinGeckoMarketService()
   // const data = await yearnMarketService.findAll()
   // const data = await yearnMarketService.findByCaip19({ caip19 })
-  const data = await foxyMarketService.findPriceHistoryByCaip19({ caip19, timeframe })
+  const data = await foxyMarketService.findPriceHistoryByCaip19({ assetId, timeframe })
   // const data = await foxyMarketService.findByCaip19({ caip19 })
   // const data = await foxyMarketService.findAll()
   // const data = await yearnMarketService.findAll()

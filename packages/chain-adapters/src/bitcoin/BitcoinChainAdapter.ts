@@ -337,7 +337,6 @@ export class ChainAdapter
       { topic: 'txs', addresses },
       ({ data: tx }) => {
         const transfers = tx.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
-          caip19: transfer.caip19,
           assetId: transfer.caip19,
           from: transfer.from,
           to: transfer.to,
@@ -350,7 +349,6 @@ export class ChainAdapter
           blockHash: tx.blockHash,
           blockHeight: tx.blockHeight,
           blockTime: tx.blockTime,
-          caip2: tx.caip2,
           chainId: tx.caip2,
           chain: ChainTypes.Bitcoin,
           confirmations: tx.confirmations,

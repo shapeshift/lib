@@ -56,13 +56,13 @@ export class YearnTokenMarketCapService implements MarketService {
       const tokens = uniqueTokens.slice(0, argsToUse.count)
 
       return tokens.reduce((acc, token) => {
-        const _caip19: string = caip19.toCAIP19({
+        const _assetId: string = caip19.toCAIP19({
           chain: ChainTypes.Ethereum,
           network: NetworkTypes.MAINNET,
           assetNamespace: AssetNamespace.ERC20,
           assetReference: token.address
         })
-        acc[_caip19] = {
+        acc[_assetId] = {
           price: bnOrZero(token.priceUsdc).div(`1e+${USDC_PRECISION}`).toString(),
           // TODO: figure out how to get these values.
           marketCap: '0',
@@ -78,8 +78,8 @@ export class YearnTokenMarketCapService implements MarketService {
     }
   }
 
-  findByCaip19 = async ({ caip19: _caip19 }: MarketDataArgs): Promise<MarketData | null> => {
-    const address = adapters.CAIP19ToYearn(_caip19)
+  findByCaip19 = async ({ assetId: _assetId }: MarketDataArgs): Promise<MarketData | null> => {
+    const address = adapters.CAIP19ToYearn(_assetId)
     if (!address) return null
     try {
       // the yearnSdk caches the response to all of these calls and returns the cache if found.
