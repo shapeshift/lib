@@ -33,11 +33,7 @@ export class ChainAdapter
     coinType: 0,
     accountNumber: 0
   }
-
-  protected readonly supportedChainIds: CAIP2[] = [
-    'bip122:000000000019d6689c085ae165831e93',
-    'bip122:000000000933ea01ad0ee984209779ba'
-  ]
+  public static readonly defaultUtxoAccountType: UtxoAccountType = UtxoAccountType.SegwitNative
 
   private readonly supportedAccountTypes: UtxoAccountType[] = [
     UtxoAccountType.SegwitNative,
@@ -45,8 +41,10 @@ export class ChainAdapter
     UtxoAccountType.P2pkh
   ]
 
-  public static readonly defaultUtxoAccountType: UtxoAccountType = UtxoAccountType.SegwitNative
-
+  protected readonly supportedChainIds: CAIP2[] = [
+    'bip122:000000000019d6689c085ae165831e93',
+    'bip122:000000000933ea01ad0ee984209779ba'
+  ]
   chainId = this.supportedChainIds[0]
 
   constructor(args: ChainAdapterArgs) {
