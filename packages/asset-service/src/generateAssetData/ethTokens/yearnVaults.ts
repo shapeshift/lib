@@ -30,16 +30,6 @@ export const getYearnVaults = async (): Promise<TokenAsset[]> => {
         network: NetworkTypes.MAINNET,
         assetNamespace: AssetNamespace.ERC20,
         assetReference: vault.address
-      }),
-      caip2: caip2.toCAIP2({
-        chain: ChainTypes.Ethereum,
-        network: NetworkTypes.MAINNET
-      }),
-      caip19: caip19.toCAIP19({
-        chain: ChainTypes.Ethereum,
-        network: NetworkTypes.MAINNET,
-        assetNamespace: AssetNamespace.ERC20,
-        assetReference: vault.address
       })
     }
   })
@@ -65,16 +55,6 @@ export const getIronBankTokens = async (): Promise<TokenAsset[]> => {
         network: NetworkTypes.MAINNET
       }),
       assetId: caip19.toCAIP19({
-        chain: ChainTypes.Ethereum,
-        network: NetworkTypes.MAINNET,
-        assetNamespace: AssetNamespace.ERC20,
-        assetReference: token.address
-      }),
-      caip2: caip2.toCAIP2({
-        chain: ChainTypes.Ethereum,
-        network: NetworkTypes.MAINNET
-      }),
-      caip19: caip19.toCAIP19({
         chain: ChainTypes.Ethereum,
         network: NetworkTypes.MAINNET,
         assetNamespace: AssetNamespace.ERC20,
@@ -108,16 +88,6 @@ export const getZapperTokens = async (): Promise<TokenAsset[]> => {
         network: NetworkTypes.MAINNET,
         assetNamespace: AssetNamespace.ERC20,
         assetReference: token.address
-      }),
-      caip2: caip2.toCAIP2({
-        chain: ChainTypes.Ethereum,
-        network: NetworkTypes.MAINNET
-      }),
-      caip19: caip19.toCAIP19({
-        chain: ChainTypes.Ethereum,
-        network: NetworkTypes.MAINNET,
-        assetNamespace: AssetNamespace.ERC20,
-        assetReference: token.address
       })
     }
   })
@@ -143,16 +113,6 @@ export const getUnderlyingVaultTokens = async (): Promise<TokenAsset[]> => {
         network: NetworkTypes.MAINNET
       }),
       assetId: caip19.toCAIP19({
-        chain: ChainTypes.Ethereum,
-        network: NetworkTypes.MAINNET,
-        assetNamespace: AssetNamespace.ERC20,
-        assetReference: token.address
-      }),
-      caip2: caip2.toCAIP2({
-        chain: ChainTypes.Ethereum,
-        network: NetworkTypes.MAINNET
-      }),
-      caip19: caip19.toCAIP19({
         chain: ChainTypes.Ethereum,
         network: NetworkTypes.MAINNET,
         assetNamespace: AssetNamespace.ERC20,
