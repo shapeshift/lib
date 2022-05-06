@@ -126,20 +126,20 @@ describe('coingecko market service', () => {
       expect(mockedAxios.get).toHaveBeenCalledTimes(2)
     })
 
-    it('can map coingecko to caip ids', async () => {
+    it('can map coingecko to assetIds', async () => {
       mockedAxios.get.mockResolvedValueOnce({ data: [btc] }).mockResolvedValue({ data: [eth] })
       const result = await coinGeckoMarketService.findAll()
-      const btcCaip19 = adapters.coingeckoToCAIP19('bitcoin')
-      const ethCaip19 = adapters.coingeckoToCAIP19('ethereum')
+      const btcAssetId = adapters.coingeckoToCAIP19('bitcoin')
+      const ethAssetId = adapters.coingeckoToCAIP19('ethereum')
       const [btcKey, ethKey] = Object.keys(result)
-      expect(btcKey).toEqual(btcCaip19)
-      expect(ethKey).toEqual(ethCaip19)
+      expect(btcKey).toEqual(btcAssetId)
+      expect(ethKey).toEqual(ethAssetId)
     })
   })
 
-  describe('findByCaip19', () => {
+  describe('findByAssetId', () => {
     const args = {
-      caip19: 'eip155:1/slip44:60'
+      assetId: 'eip155:1/slip44:60'
     }
 
     it('should return market data for ETH', async () => {
@@ -174,9 +174,9 @@ describe('coingecko market service', () => {
     })
   })
 
-  describe('findPriceHistoryByCaip19', () => {
+  describe('findPriceHistoryByAssetId', () => {
     const args = {
-      caip19: 'eip155:1/slip44:60',
+      assetId: 'eip155:1/slip44:60',
       timeframe: HistoryTimeframe.HOUR
     }
 

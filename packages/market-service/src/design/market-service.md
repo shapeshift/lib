@@ -22,10 +22,10 @@ All prices, marketCaps and volumes are represented in US Dollars.
       pages?: number,
       perPage?: number
     ```
-  * returns an object keyed by caip19 with the following fields
+  * returns an object keyed by assetId with the following fields
     ```
       {
-        [caip19: string]: {
+        [assetId: string]: {
           marketSource: enum
           price: string
           marketCap: string
@@ -65,9 +65,9 @@ All prices, marketCaps and volumes are represented in US Dollars.
 * `findByCaip19`
   * Args
     ```
-      caip19: string
+      assetId: string
     ```
-  * returns an object keyed by caip19 with the following fields
+  * returns an object keyed by assetId with the following fields
     ```
       {
         marketSource: enum
@@ -92,7 +92,7 @@ All prices, marketCaps and volumes are represented in US Dollars.
 * `findPriceHistoryByCaip19`
   * Args
     ```
-      caip19: string
+      assetId: string
       timeframe: enum {
         HOUR = '1H',
         DAY = '24H',

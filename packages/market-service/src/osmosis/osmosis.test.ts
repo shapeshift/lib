@@ -37,10 +37,10 @@ describe('osmosis market service', () => {
     })
   })
 
-  describe('findByCaip19', () => {
+  describe('findByAssetId', () => {
     it('should return market data for Secret Network', async () => {
       const args = {
-        caip19:
+        assetId:
           'cosmos:osmosis-1/ibc:0954E1C28EB7AF5B72D24F3BC2B47BBB2FDF91BDDFD57B74B99E133AED40972A'
       }
       const result: MarketData = {
@@ -55,7 +55,7 @@ describe('osmosis market service', () => {
     })
 
     it('should return market data for Ion', async () => {
-      const args = { caip19: 'cosmos:osmosis-1/native:uion' }
+      const args = { assetId: 'cosmos:osmosis-1/native:uion' }
       const result: MarketData = {
         price: '7110.2708806483',
         marketCap: '8737040.33551496',
@@ -67,7 +67,7 @@ describe('osmosis market service', () => {
     })
 
     it('should return market data for Osmosis', async () => {
-      const args = { caip19: 'cosmos:osmosis-1/slip44:118' }
+      const args = { assetId: 'cosmos:osmosis-1/slip44:118' }
       const result: MarketData = {
         price: '8.0939512289',
         marketCap: '513382677.98398143',
@@ -79,10 +79,10 @@ describe('osmosis market service', () => {
     })
   })
 
-  describe('findPriceHistoryByCaip19', () => {
+  describe('findPriceHistoryByAssetId', () => {
     it('should return market data for OSMO (v1 endpoint)', async () => {
       const args = {
-        caip19: 'cosmos:osmosis-1/slip44:118',
+        assetId: 'cosmos:osmosis-1/slip44:118',
         timeframe: HistoryTimeframe.HOUR
       }
 
@@ -98,7 +98,7 @@ describe('osmosis market service', () => {
 
     it('should return market data for OSMO (v2 endpoint)', async () => {
       const args = {
-        caip19: 'cosmos:osmosis-1/slip44:118',
+        assetId: 'cosmos:osmosis-1/slip44:118',
         timeframe: HistoryTimeframe.YEAR
       }
 
@@ -114,7 +114,7 @@ describe('osmosis market service', () => {
 
     it('should return null on network error', async () => {
       const args = {
-        caip19: 'cosmos:osmosis-1/slip44:118',
+        assetId: 'cosmos:osmosis-1/slip44:118',
         timeframe: HistoryTimeframe.YEAR
       }
       mockedAxios.get.mockRejectedValue(Error)

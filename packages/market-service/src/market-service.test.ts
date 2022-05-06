@@ -124,9 +124,9 @@ describe('market service', () => {
     })
   })
 
-  describe('findByCaip19', () => {
+  describe('findByAssetId', () => {
     const args = {
-      caip19: 'eip155:1/slip44:60'
+      assetId: 'eip155:1/slip44:60'
     }
     it('can return from first market service and skip the next', async () => {
       const result = await findByCaip19(args)
@@ -156,9 +156,9 @@ describe('market service', () => {
     })
   })
 
-  describe('findPriceHistoryByCaip19', () => {
+  describe('findPriceHistoryByAssetId', () => {
     const args = {
-      caip19: 'eip155:1/slip44:60',
+      assetId: 'eip155:1/slip44:60',
       timeframe: HistoryTimeframe.HOUR
     }
     it('can return from fist market service and skip the next', async () => {

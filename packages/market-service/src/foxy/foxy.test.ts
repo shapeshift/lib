@@ -31,9 +31,9 @@ describe('foxy market service', () => {
     })
   })
 
-  describe('findByCaip19', () => {
+  describe('findByAssetId', () => {
     const args = {
-      caip19: FOXY_CAIP19
+      assetId: FOXY_CAIP19
     }
 
     it('should return market data for FOXy', async () => {
@@ -50,9 +50,9 @@ describe('foxy market service', () => {
     })
   })
 
-  describe('findPriceHistoryByCaip19', () => {
+  describe('findPriceHistoryByAssetId', () => {
     const args = {
-      caip19: FOXY_CAIP19,
+      assetId: FOXY_CAIP19,
       timeframe: HistoryTimeframe.HOUR
     }
 
