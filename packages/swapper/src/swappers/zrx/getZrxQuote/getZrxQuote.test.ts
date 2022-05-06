@@ -1,9 +1,9 @@
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { ChainTypes } from '@shapeshiftoss/types'
-import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 
 import { ZrxSwapper } from '../..'
+import { bnOrZero } from '../utils/bignumber'
 import { normalizeAmount } from '../utils/helpers/helpers'
 import { setupQuote } from '../utils/test-data/setupSwapQuote'
 import { zrxService } from '../utils/zrxService'
@@ -149,9 +149,7 @@ describe('getZrxQuote', () => {
       sellAmount: '0'
     })
     expect(quote?.sellAmount).toBe(
-      new BigNumber(minimum)
-        .times(new BigNumber(10).exponentiatedBy(sellAsset.precision))
-        .toString()
+      bnOrZero(minimum).times(bnOrZero(10).exponentiatedBy(sellAsset.precision)).toString()
     )
   })
 })

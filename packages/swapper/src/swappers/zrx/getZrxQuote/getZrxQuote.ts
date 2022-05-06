@@ -1,6 +1,5 @@
 import { ChainTypes, GetQuoteInput, Quote, QuoteResponse, SwapSource } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
-import BigNumber from 'bignumber.js'
 
 import { getZrxMinMax } from '../getZrxMinMax/getZrxMinMax'
 import { bnOrZero } from '../utils/bignumber'
@@ -70,10 +69,8 @@ export async function getZrxQuote(input: GetQuoteInput): Promise<Quote<ChainType
 
     const { data } = quoteResponse
 
-    const estimatedGas = data.estimatedGas
-      ? new BigNumber(data.estimatedGas).times(1.5)
-      : new BigNumber(0)
-    const rate = useSellAmount ? data.price : new BigNumber(1).div(data.price).toString()
+    const estimatedGas = bnOrZero(data.estimatedGas).times(1.5)
+    const rate = useSellAmount ? data.price : bnOrZero(1).div(data.price).toString()
 
     return {
       sellAsset,
@@ -83,15 +80,13 @@ export async function getZrxQuote(input: GetQuoteInput): Promise<Quote<ChainType
       minimum: minQuoteSellAmount,
       maximum: maxSellAmount,
       feeData: {
-        fee: new BigNumber(estimatedGas || 0)
-          .multipliedBy(new BigNumber(data.gasPrice || 0))
-          .toString(),
+        fee: bnOrZero(estimatedGas).multipliedBy(bnOrZero(data.gasPrice)).toString(),
         chainSpecific: {
           estimatedGas: estimatedGas.toString(),
           gasPrice: data.gasPrice,
           approvalFee:
             sellAsset.tokenId &&
-            new BigNumber(APPROVAL_GAS_LIMIT).multipliedBy(data.gasPrice || 0).toString()
+            bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(bnOrZero(data.gasPrice)).toString()
         }
       },
       sellAmount: data.sellAmount,

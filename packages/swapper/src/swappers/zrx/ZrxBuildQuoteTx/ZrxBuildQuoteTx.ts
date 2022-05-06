@@ -1,11 +1,11 @@
 import { BuildQuoteTxInput, ChainTypes, Quote, QuoteResponse } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
-import BigNumber from 'bignumber.js'
 import * as rax from 'retry-axios'
 
 import { SwapError } from '../../..'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
+import { bnOrZero } from '../utils/bignumber'
 import {
   AFFILIATE_ADDRESS,
   APPROVAL_GAS_LIMIT,
@@ -66,15 +66,13 @@ export async function ZrxBuildQuoteTx(
   const bip44Params = adapter.buildBIP44Params({ accountNumber: Number(buyAssetAccountId) })
   const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 
-  if (new BigNumber(slippage || 0).gt(MAX_SLIPPAGE)) {
+  if (bnOrZero(slippage).gt(MAX_SLIPPAGE)) {
     throw new SwapError(
       `ZrxSwapper:ZrxBuildQuoteTx slippage value of ${slippage} is greater than max slippage value of ${MAX_SLIPPAGE}`
     )
   }
 
-  const slippagePercentage = slippage
-    ? new BigNumber(slippage).div(100).toString()
-    : DEFAULT_SLIPPAGE
+  const slippagePercentage = slippage ? bnOrZero(slippage).div(100).toString() : DEFAULT_SLIPPAGE
 
   try {
     /**
@@ -120,7 +118,7 @@ export async function ZrxBuildQuoteTx(
 
     const { data } = quoteResponse
 
-    const estimatedGas = new BigNumber(data.gas || 0)
+    const estimatedGas = bnOrZero(data.gas)
     const quote: Quote<ChainTypes.Ethereum> = {
       sellAsset,
       buyAsset,
@@ -131,9 +129,7 @@ export async function ZrxBuildQuoteTx(
       rate: data.price,
       depositAddress: data.to,
       feeData: {
-        fee: new BigNumber(estimatedGas || 0)
-          .multipliedBy(new BigNumber(data.gasPrice || 0))
-          .toString(),
+        fee: bnOrZero(estimatedGas).multipliedBy(bnOrZero(data.gasPrice)).toString(),
         chainSpecific: {
           estimatedGas: estimatedGas.toString(),
           gasPrice: data.gasPrice
@@ -146,8 +142,14 @@ export async function ZrxBuildQuoteTx(
       sources: data.sources?.filter((s) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE
     }
 
+    if (!data.allowanceTarget) throw new SwapError('ZrxSwapper:ZrxBuildQuoteTx no allowance target')
+    if (!data.sellAmount) throw new SwapError('ZrxSwapper:ZrxBuildQuoteTx no sell amount')
+
     const allowanceRequired = await getAllowanceRequired({
-      quote,
+      sellAsset,
+      allowanceContract: data.allowanceTarget,
+      receiveAddress,
+      sellAmount: data.sellAmount,
       web3,
       erc20AllowanceAbi
     })
@@ -157,7 +159,7 @@ export async function ZrxBuildQuoteTx(
         fee: quote.feeData?.fee || '0',
         chainSpecific: {
           ...quote.feeData?.chainSpecific,
-          approvalFee: new BigNumber(APPROVAL_GAS_LIMIT).multipliedBy(data.gasPrice || 0).toString()
+          approvalFee: bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(bnOrZero(data.gasPrice)).toString()
         }
       }
     }
