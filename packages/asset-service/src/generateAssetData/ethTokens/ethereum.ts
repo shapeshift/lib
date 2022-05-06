@@ -36,7 +36,7 @@ export const addTokensToEth = async (): Promise<BaseAsset> => {
     ...underlyingTokens,
     ...foxyToken
   ]
-  const uniqueTokens = orderBy(uniqBy(tokens, 'caip19'), 'caip19') // Remove dups and order for PR readability
+  const uniqueTokens = orderBy(uniqBy(tokens, 'assetId'), 'assetId') // Remove dups and order for PR readability
   const batchSize = 100 // tune this to keep rate limiting happy
   const tokenBatches = chunk(uniqueTokens, batchSize)
   let modifiedTokens: TokenAsset[] = []
