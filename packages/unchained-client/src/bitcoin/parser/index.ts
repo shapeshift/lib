@@ -21,7 +21,7 @@ export class TransactionParser {
   }
 
   async parse(tx: BlockbookTx, address: string): Promise<ParsedTx> {
-    const caip19Bitcoin = toCAIP19({
+    const bitcoinAssetId = toCAIP19({
       chain: ChainTypes.Bitcoin,
       network: toNetworkType(this.network),
       assetNamespace: AssetNamespace.Slip44,
@@ -33,7 +33,6 @@ export class TransactionParser {
       blockHash: tx.blockHash,
       blockHeight: tx.blockHeight,
       blockTime: tx.blockTime,
-      caip2: toCAIP2({ chain: ChainTypes.Bitcoin, network: toNetworkType(this.network) }),
       chainId: toCAIP2({ chain: ChainTypes.Bitcoin, network: toNetworkType(this.network) }),
       confirmations: tx.confirmations,
       status: tx.confirmations > 0 ? Status.Confirmed : Status.Pending,
@@ -49,7 +48,7 @@ export class TransactionParser {
           parsedTx.transfers = aggregateTransfer(
             parsedTx.transfers,
             TransferType.Send,
-            caip19Bitcoin,
+            bitcoinAssetId,
             vin.addresses?.[0] ?? '',
             tx.vout[0].addresses?.[0] ?? '',
             sendValue.toString(10)
@@ -59,7 +58,7 @@ export class TransactionParser {
         // network fee
         const fees = new BigNumber(tx.fees ?? 0)
         if (fees.gt(0)) {
-          parsedTx.fee = { caip19: caip19Bitcoin, assetId: caip19Bitcoin, value: fees.toString(10) }
+          parsedTx.fee = { assetId: bitcoinAssetId, value: fees.toString(10) }
         }
       }
     })
@@ -72,7 +71,7 @@ export class TransactionParser {
           parsedTx.transfers = aggregateTransfer(
             parsedTx.transfers,
             TransferType.Receive,
-            caip19Bitcoin,
+            bitcoinAssetId,
             tx.vin[0].addresses?.[0] ?? '',
             vout.addresses?.[0] ?? '',
             receiveValue.toString(10)

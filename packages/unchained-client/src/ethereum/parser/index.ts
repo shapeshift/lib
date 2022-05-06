@@ -79,7 +79,6 @@ export class TransactionParser {
       blockHash: tx.blockHash,
       blockHeight: tx.blockHeight,
       blockTime: tx.blockTime,
-      caip2: toCAIP2({ chain: ChainTypes.Ethereum, network: toNetworkType(this.network) }),
       chainId: toCAIP2({ chain: ChainTypes.Ethereum, network: toNetworkType(this.network) }),
       confirmations: tx.confirmations,
       status: TransactionParser.getStatus(tx),
@@ -108,7 +107,7 @@ export class TransactionParser {
     address: string,
     internalTxs?: Array<InternalTx>
   ) {
-    const caip19Ethereum = toCAIP19({
+    const ethereumAssetId = toCAIP19({
       chain: ChainTypes.Ethereum,
       network: toNetworkType(this.network),
       assetNamespace: AssetNamespace.Slip44,
@@ -124,7 +123,7 @@ export class TransactionParser {
         parsedTx.transfers = aggregateTransfer(
           parsedTx.transfers,
           TransferType.Send,
-          caip19Ethereum,
+          ethereumAssetId,
           sendAddress,
           receiveAddress,
           sendValue.toString(10)
@@ -134,7 +133,7 @@ export class TransactionParser {
       // network fee
       const fees = new BigNumber(tx.fees ?? 0)
       if (fees.gt(0)) {
-        parsedTx.fee = { caip19: caip19Ethereum, assetId: caip19Ethereum, value: fees.toString(10) }
+        parsedTx.fee = { assetId: ethereumAssetId, value: fees.toString(10) }
       }
     }
 
@@ -145,7 +144,7 @@ export class TransactionParser {
         parsedTx.transfers = aggregateTransfer(
           parsedTx.transfers,
           TransferType.Receive,
-          caip19Ethereum,
+          ethereumAssetId,
           sendAddress,
           receiveAddress,
           receiveValue.toString(10)
