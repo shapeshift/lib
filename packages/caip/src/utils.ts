@@ -15,18 +15,14 @@ export const chainIdToAssetId: Record<string, string> = {
   [btcChainId]: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
   [cosmosChainId]: 'cosmos:cosmoshub-4/slip44:118'
 }
-export const assetIdtoChainId = (assetId: AssetId): string => {
+export const assetIdToChainId = (assetId: AssetId): string => {
   const { chain, network } = fromCAIP19(assetId)
   const chainId = toCAIP2({ chain, network })
 
   return chainId
 }
 
-export const accountIdToChainId = (accountId: AccountId): ChainId => {
-  // accountId = 'eip155:1:0xdef1...cafe
-  const { caip2 } = fromCAIP10(accountId)
-  return caip2
-}
+export const accountIdToChainId = (accountId: AccountId): ChainId => fromCAIP10(accountId).caip2
 
 export const accountIdToSpecifier = (accountId: AccountId): string => {
   const { account } = fromCAIP10(accountId)

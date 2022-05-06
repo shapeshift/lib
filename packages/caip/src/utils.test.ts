@@ -1,7 +1,7 @@
 import {
   accountIdToChainId,
   accountIdToSpecifier,
-  assetIdtoChainId,
+  assetIdToChainId,
   btcAssetId,
   btcChainId,
   ethChainId,
@@ -9,13 +9,13 @@ import {
 } from './utils'
 
 describe('accountIdToChainId', () => {
-  it('can get eth caip2 from accountId', () => {
+  it('can get eth chainId from accountId', () => {
     const accountId = 'eip155:1:0xdef1cafe'
     const chainId = accountIdToChainId(accountId)
     expect(chainId).toEqual(ethChainId)
   })
 
-  it('can get btc caip2 from accountId', () => {
+  it('can get btc chainId from accountId', () => {
     const accountId = 'bip122:000000000019d6689c085ae165831e93:xpubfoobarbaz'
     const chainId = accountIdToChainId(accountId)
     expect(chainId).toEqual(btcChainId)
@@ -30,7 +30,7 @@ describe('accountIdToSpecifier', () => {
     expect(result).toEqual(address)
   })
 
-  it('can get xpub form accountId', () => {
+  it('can get xpub from accountId', () => {
     const xpub = 'xpubfoobarbaz'
     const accountId = 'bip122:000000000019d6689c085ae165831e93:xpubfoobarbaz'
     const result = accountIdToSpecifier(accountId)
@@ -38,37 +38,37 @@ describe('accountIdToSpecifier', () => {
   })
 })
 
-describe('assetIdtoChainId', () => {
+describe('assetIdToChainId', () => {
   it('returns a ETH chainId for a given ETH assetId', () => {
     const ethAssetId = 'eip155:1/erc20:0x3155ba85d5f96b2d030a4966af206230e46849cb'
     const chainId = 'eip155:1'
-    const result = assetIdtoChainId(ethAssetId)
+    const result = assetIdToChainId(ethAssetId)
     expect(result).toEqual(chainId)
   })
 
   it('returns a BTC chainId for a given BTC assetId', () => {
-    const result = assetIdtoChainId(btcAssetId)
+    const result = assetIdToChainId(btcAssetId)
     expect(result).toEqual(btcChainId)
   })
 })
 
 describe('getChainReferenceFromChainId', () => {
-  it('returns the reference from a caip2 string with a valid reference', () => {
-    const validCaip2 = 'cosmos:cosmoshub-4'
-    const validCaip2Reference = 'cosmoshub-4'
+  it('returns the reference from a chainId string with a valid reference', () => {
+    const validChainId = 'cosmos:cosmoshub-4'
+    const validChainIdReference = 'cosmoshub-4'
 
-    const reference = getChainReferenceFromChainId(validCaip2)
-    expect(reference).toEqual(validCaip2Reference)
+    const reference = getChainReferenceFromChainId(validChainId)
+    expect(reference).toEqual(validChainIdReference)
   })
-  it('returns undefined from an empty caip2 string', () => {
-    const invalidCaip2 = ''
+  it('returns undefined from an empty chainId string', () => {
+    const invalidChainId = ''
 
-    expect(() => getChainReferenceFromChainId(invalidCaip2)).toThrow()
+    expect(() => getChainReferenceFromChainId(invalidChainId)).toThrow()
   })
 
-  it('returns undefined from an invalid caip2 string', () => {
-    const invalidCaip2 = 'foobar'
+  it('returns undefined from an invalid chainId string', () => {
+    const invalidChainId = 'foobar'
 
-    expect(() => getChainReferenceFromChainId(invalidCaip2)).toThrow()
+    expect(() => getChainReferenceFromChainId(invalidChainId)).toThrow()
   })
 })
