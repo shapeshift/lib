@@ -17,20 +17,11 @@ export const chainIdToAssetId: Record<string, string> = {
 }
 export const assetIdToChainId = (assetId: AssetId): string => {
   const { chain, network } = fromCAIP19(assetId)
-  const chainId = toCAIP2({ chain, network })
-
-  return chainId
+  return toCAIP2({ chain, network })
 }
 
 export const accountIdToChainId = (accountId: AccountId): ChainId => fromCAIP10(accountId).caip2
 
-export const accountIdToSpecifier = (accountId: AccountId): string => {
-  const { account } = fromCAIP10(accountId)
-  return account
-}
+export const accountIdToSpecifier = (accountId: AccountId): string => fromCAIP10(accountId).account
 
-export const getChainReferenceFromChainId = (chainId: ChainId) => {
-  const { network } = fromCAIP2(chainId)
-  const chainReference = networkTypeToChainReference[network]
-  return chainReference
-}
+export const getChainReferenceFromChainId = (chainId: ChainId) => networkTypeToChainReference[fromCAIP2(chainId).network]
