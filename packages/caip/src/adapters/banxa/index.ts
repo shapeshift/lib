@@ -1,7 +1,7 @@
 import entries from 'lodash/entries'
 import toLower from 'lodash/toLower'
 
-import { CAIP2, toCAIP2 } from '../../caip2/caip2'
+import { ChainId, toCAIP2 } from '../../caip2/caip2'
 import { fromCAIP19 } from '../../caip19/caip19'
 
 const CAIP19ToBanxaTickerMap = {
@@ -56,11 +56,11 @@ export const getSupportedBanxaAssets = () =>
  * since some Banxa assets could be on multiple chains and their default
  * chain won't be exactly the same as ours.
  */
-const caip2ToBanxaBlockchainCodeMap: Record<CAIP2, string> = {
+const chainIdToBanxaBlockchainCodeMap: Record<ChainId, string> = {
   'eip155:1': 'ETH',
   'bip122:000000000019d6689c085ae165831e93': 'BTC',
   'cosmos:cosmoshub-4': 'COSMOS'
-}
+} as const
 
 /**
  * Convert a banxa asset identifier to a Banxa chain identifier for use in Banxa HTTP URLs
@@ -73,6 +73,6 @@ export const getBanxaBlockchainFromBanxaAssetTicker = (banxaAssetId: string): st
   if (!assetCAIP19)
     throw new Error(`getBanxaBlockchainFromBanxaAssetTicker: ${banxaAssetId} is not supported`)
   const { chain, network } = fromCAIP19(assetCAIP19)
-  const caip2 = toCAIP2({ network, chain })
-  return caip2ToBanxaBlockchainCodeMap[caip2]
+  const chainId = toCAIP2({ network, chain })
+  return chainIdToBanxaBlockchainCodeMap[chainId]
 }
