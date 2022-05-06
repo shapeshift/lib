@@ -1,4 +1,4 @@
-import { AssetNamespace, caip2, caip19 } from '@shapeshiftoss/caip'
+import { AssetNamespace, toCAIP2, toCAIP19 } from '@shapeshiftoss/caip'
 import { AssetDataSource, ChainTypes, NetworkTypes, TokenAsset } from '@shapeshiftoss/types'
 import { Token, Vault } from '@yfi/sdk'
 import toLower from 'lodash/toLower'
@@ -21,11 +21,11 @@ export const getYearnVaults = async (): Promise<TokenAsset[]> => {
       sendSupport: true,
       symbol: vault.symbol,
       tokenId: toLower(vault.address),
-      chainId: caip2.toCAIP2({
+      chainId: toCAIP2({
         chain: ChainTypes.Ethereum,
         network: NetworkTypes.MAINNET
       }),
-      assetId: caip19.toCAIP19({
+      assetId: toCAIP19({
         chain: ChainTypes.Ethereum,
         network: NetworkTypes.MAINNET,
         assetNamespace: AssetNamespace.ERC20,
@@ -50,11 +50,11 @@ export const getIronBankTokens = async (): Promise<TokenAsset[]> => {
       sendSupport: true,
       symbol: token.symbol,
       tokenId: toLower(token.address),
-      chainId: caip2.toCAIP2({
+      chainId: toCAIP2({
         chain: ChainTypes.Ethereum,
         network: NetworkTypes.MAINNET
       }),
-      assetId: caip19.toCAIP19({
+      assetId: toCAIP19({
         chain: ChainTypes.Ethereum,
         network: NetworkTypes.MAINNET,
         assetNamespace: AssetNamespace.ERC20,
@@ -79,11 +79,11 @@ export const getZapperTokens = async (): Promise<TokenAsset[]> => {
       sendSupport: true,
       symbol: token.symbol,
       tokenId: toLower(token.address),
-      chainId: caip2.toCAIP2({
+      chainId: toCAIP2({
         chain: ChainTypes.Ethereum,
         network: NetworkTypes.MAINNET
       }),
-      assetId: caip19.toCAIP19({
+      assetId: toCAIP19({
         chain: ChainTypes.Ethereum,
         network: NetworkTypes.MAINNET,
         assetNamespace: AssetNamespace.ERC20,
@@ -108,11 +108,11 @@ export const getUnderlyingVaultTokens = async (): Promise<TokenAsset[]> => {
       sendSupport: true,
       symbol: token.symbol,
       tokenId: toLower(token.address),
-      chainId: caip2.toCAIP2({
+      chainId: toCAIP2({
         chain: ChainTypes.Ethereum,
         network: NetworkTypes.MAINNET
       }),
-      assetId: caip19.toCAIP19({
+      assetId: toCAIP19({
         chain: ChainTypes.Ethereum,
         network: NetworkTypes.MAINNET,
         assetNamespace: AssetNamespace.ERC20,
