@@ -52,7 +52,7 @@ export const getSupportedBanxaAssets = () =>
   }))
 
 /**
- * map CAIP2s to Banxa blockchain codes (ETH, BTC, COSMOS),
+ * map ChainIds to Banxa blockchain codes (ETH, BTC, COSMOS),
  * since some Banxa assets could be on multiple chains and their default
  * chain won't be exactly the same as ours.
  */
