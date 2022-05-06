@@ -1,4 +1,4 @@
-import { AssetNamespace, AssetReference, CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
+import { AssetNamespace, AssetReference, CAIP2, fromCAIP2, toCAIP19 } from '@shapeshiftoss/caip'
 import {
   bip32ToAddressNList,
   BTCOutputAddressType,
@@ -35,6 +35,12 @@ export class ChainAdapter
   }
   public static readonly defaultUtxoAccountType: UtxoAccountType = UtxoAccountType.SegwitNative
 
+  private static readonly supportedAccountTypes: UtxoAccountType[] = [
+    UtxoAccountType.SegwitNative,
+    UtxoAccountType.SegwitP2sh,
+    UtxoAccountType.P2pkh
+  ]
+
   protected readonly supportedChainIds: CAIP2[] = [
     'bip122:000000000019d6689c085ae165831e93',
     'bip122:000000000933ea01ad0ee984209779ba'
@@ -50,12 +56,12 @@ export class ChainAdapter
     } else {
       this.chainId = this.supportedChainIds[0]
     }
-    const { chain, network } = caip2.fromCAIP2(this.chainId)
+    const { chain, network } = fromCAIP2(this.chainId)
     if (chain !== ChainTypes.Bitcoin) {
       throw new Error('chainId must be a bitcoin chain type')
     }
     this.coinName = args.coinName
-    this.assetId = caip19.toCAIP19({
+    this.assetId = toCAIP19({
       chain,
       network,
       assetNamespace: AssetNamespace.Slip44,
@@ -65,6 +71,10 @@ export class ChainAdapter
 
   getType(): ChainTypes.Bitcoin {
     return ChainTypes.Bitcoin
+  }
+
+  getSupportedAccountTypes() {
+    return ChainAdapter.supportedAccountTypes
   }
 
   async getTxHistory(

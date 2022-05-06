@@ -1,3 +1,24 @@
+# [@shapeshiftoss/caip-v2.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v2.4.0...@shapeshiftoss/caip-v2.5.0) (2022-05-06)
+
+
+### Features
+
+* **caip:** banxa chain map ([#546](https://github.com/shapeshift/lib/issues/546)) ([337ba5c](https://github.com/shapeshift/lib/commit/337ba5c44fb52a7389e63372f3c12678dc5387ba))
+
+# [@shapeshiftoss/caip-v2.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v2.3.0...@shapeshiftoss/caip-v2.4.0) (2022-05-06)
+
+
+### Features
+
+* **caip:** flatten exports ([#560](https://github.com/shapeshift/lib/issues/560)) ([e326522](https://github.com/shapeshift/lib/commit/e3265223dca3c2126b2822395353f6650c4b0342))
+
+# [@shapeshiftoss/caip-v2.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v2.2.5...@shapeshiftoss/caip-v2.3.0) (2022-05-06)
+
+
+### Features
+
+* **caip:** add caip-related utils/constants to caip package ([#572](https://github.com/shapeshift/lib/issues/572)) ([0d91a3b](https://github.com/shapeshift/lib/commit/0d91a3b11490af6f056f2c3f83c6f671e8743bdd))
+
 # [@shapeshiftoss/caip-v2.2.5](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v2.2.4...@shapeshiftoss/caip-v2.2.5) (2022-05-05)
 
 # [@shapeshiftoss/caip-v2.2.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v2.2.3...@shapeshiftoss/caip-v2.2.4) (2022-05-05)
