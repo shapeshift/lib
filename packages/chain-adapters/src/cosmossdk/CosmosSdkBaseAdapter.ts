@@ -174,11 +174,16 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
             chain: this.getType(),
             confirmations: parsedTx.confirmations,
             txid: parsedTx.txid,
-            fee: parsedTx.fee,
+            ...(parsedTx.fee && {
+              fee: {
+                caip19: parsedTx.fee.assetId,
+                value: parsedTx.fee.value
+              }
+            }),
             status: getStatus(parsedTx.status),
             tradeDetails: parsedTx.trade,
             transfers: parsedTx.transfers.map((transfer) => ({
-              caip19: transfer.caip19,
+              caip19: transfer.assetId,
               from: transfer.from,
               to: transfer.to,
               type: getType(transfer.type),
@@ -266,14 +271,19 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
           blockHash: tx.blockHash,
           blockHeight: tx.blockHeight,
           blockTime: tx.blockTime,
-          caip2: tx.caip2,
+          caip2: tx.chainId,
           chain: this.getType(),
           confirmations: tx.confirmations,
-          fee: tx.fee,
+          ...(tx.fee && {
+            fee: {
+              caip19: tx.fee.assetId,
+              value: tx.fee.value
+            }
+          }),
           status: getStatus(tx.status),
           tradeDetails: tx.trade,
           transfers: tx.transfers.map((transfer) => ({
-            caip19: transfer.caip19,
+            caip19: transfer.assetId,
             from: transfer.from,
             to: transfer.to,
             type: getType(transfer.type),

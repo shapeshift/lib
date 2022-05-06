@@ -3,7 +3,10 @@ import { TransactionParser } from '../index'
 import standardNoChange from './mockData/standardNoChange'
 import standardWithChange from './mockData/standardWithChange'
 
-const txParser = new TransactionParser({ rpcUrl: '' })
+const txParser = new TransactionParser({
+  rpcUrl: '',
+  chainId: 'bip122:000000000019d6689c085ae165831e93'
+})
 
 describe('parseTx', () => {
   it('should be able to parse standard send with no change mempool', async () => {
