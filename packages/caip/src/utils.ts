@@ -24,4 +24,5 @@ export const accountIdToChainId = (accountId: AccountId): ChainId => fromCAIP10(
 
 export const accountIdToSpecifier = (accountId: AccountId): string => fromCAIP10(accountId).account
 
-export const getChainReferenceFromChainId = (chainId: ChainId) => networkTypeToChainReference[fromCAIP2(chainId).network]
+export const getChainReferenceFromChainId = (chainId: ChainId) =>
+  networkTypeToChainReference[fromCAIP2(chainId).network]
