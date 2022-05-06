@@ -46,7 +46,7 @@ import zrxTradeEthToMatic from './mockData/zrxTradeEthToMatic'
 import zrxTradeTetherToKishu from './mockData/zrxTradeTetherToKishu'
 import zrxTradeTribeToEth from './mockData/zrxTradeTribeToEth'
 
-const txParser = new TransactionParser({ rpcUrl: '' })
+const txParser = new TransactionParser({ rpcUrl: '', chainId: 'eip155:1' })
 
 describe('parseTx', () => {
   describe('multiSig', () => {

@@ -380,7 +380,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       { topic: 'txs', addresses: [address] },
       ({ data: tx }) => {
         const transfers = tx.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
-          caip19: transfer.caip19,
+          caip19: transfer.assetId,
           from: transfer.from,
           to: transfer.to,
           type: getType(transfer.type),
@@ -392,10 +392,15 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           blockHash: tx.blockHash,
           blockHeight: tx.blockHeight,
           blockTime: tx.blockTime,
-          caip2: tx.caip2,
+          caip2: tx.chainId,
           chain: ChainTypes.Ethereum,
           confirmations: tx.confirmations,
-          fee: tx.fee,
+          ...(tx.fee && {
+            fee: {
+              caip19: tx.fee.assetId,
+              value: tx.fee.value
+            }
+          }),
           status: getStatus(tx.status),
           tradeDetails: tx.trade,
           transfers,
