@@ -1,4 +1,4 @@
-import { adapters, AssetNamespace, caip19 } from '@shapeshiftoss/caip'
+import { adapters, AssetNamespace, toCAIP19 } from '@shapeshiftoss/caip'
 import {
   ChainTypes,
   FindAllMarketArgs,
@@ -56,7 +56,7 @@ export class YearnTokenMarketCapService implements MarketService {
       const tokens = uniqueTokens.slice(0, argsToUse.count)
 
       return tokens.reduce((acc, token) => {
-        const _assetId: string = caip19.toCAIP19({
+        const _assetId: string = toCAIP19({
           chain: ChainTypes.Ethereum,
           network: NetworkTypes.MAINNET,
           assetNamespace: AssetNamespace.ERC20,
