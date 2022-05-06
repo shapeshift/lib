@@ -134,7 +134,7 @@ describe('ChainAdapterManager', () => {
 
     it('should throw an error for an invalid ChainId', async () => {
       const cam = new ChainAdapterManager({})
-      await expect(cam.byChainId('fake:caip2')).rejects.toThrow('invalid')
+      await expect(cam.byChainId('fake:chainId')).rejects.toThrow('invalid')
     })
 
     it('should throw an error if there is no supported adapter', async () => {

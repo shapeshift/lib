@@ -100,12 +100,6 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           nonce: data.nonce,
           tokens: data.tokens.map((token) => ({
             balance: token.balance,
-            caip19: caip19.toCAIP19({
-              chain,
-              network,
-              assetNamespace: getAssetNamespace(token.type),
-              assetReference: token.contract
-            }),
             assetId: caip19.toCAIP19({
               chain,
               network,
