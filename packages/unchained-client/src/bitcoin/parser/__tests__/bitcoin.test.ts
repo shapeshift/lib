@@ -17,10 +17,8 @@ describe('parseTx', () => {
       confirmations: txMempool.confirmations,
       status: Status.Pending,
       address,
-      caip2: 'bip122:000000000019d6689c085ae165831e93',
       chainId: 'bip122:000000000019d6689c085ae165831e93',
       fee: {
-        caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
         assetId: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
         value: '6528'
       },
@@ -29,7 +27,6 @@ describe('parseTx', () => {
           type: TransferType.Send,
           from: '1ALpDTSP3BmBYKDudG8sLmt9ppDRNwqunj',
           to: '1KcXirKZg5bNnwAKGCTDprwJXivtFyAQc7',
-          caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
           assetId: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
           totalValue: '12989718',
           components: [{ value: '12989718' }]
@@ -54,10 +51,8 @@ describe('parseTx', () => {
       confirmations: tx.confirmations,
       status: Status.Confirmed,
       address,
-      caip2: 'bip122:000000000019d6689c085ae165831e93',
       chainId: 'bip122:000000000019d6689c085ae165831e93',
       fee: {
-        caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
         assetId: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
         value: '6528'
       },
@@ -66,7 +61,6 @@ describe('parseTx', () => {
           type: TransferType.Send,
           from: '1ALpDTSP3BmBYKDudG8sLmt9ppDRNwqunj',
           to: '1KcXirKZg5bNnwAKGCTDprwJXivtFyAQc7',
-          caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
           assetId: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
           totalValue: '12989718',
           components: [{ value: '12989718' }]
@@ -90,14 +84,12 @@ describe('parseTx', () => {
       confirmations: txMempool.confirmations,
       status: Status.Pending,
       address,
-      caip2: 'bip122:000000000019d6689c085ae165831e93',
       chainId: 'bip122:000000000019d6689c085ae165831e93',
       transfers: [
         {
           type: TransferType.Receive,
           to: '1KcXirKZg5bNnwAKGCTDprwJXivtFyAQc7',
           from: '1ALpDTSP3BmBYKDudG8sLmt9ppDRNwqunj',
-          caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
           assetId: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
           totalValue: '12983190',
           components: [{ value: '12983190' }]
@@ -122,14 +114,12 @@ describe('parseTx', () => {
       confirmations: tx.confirmations,
       status: Status.Confirmed,
       address,
-      caip2: 'bip122:000000000019d6689c085ae165831e93',
       chainId: 'bip122:000000000019d6689c085ae165831e93',
       transfers: [
         {
           type: TransferType.Receive,
           to: '1KcXirKZg5bNnwAKGCTDprwJXivtFyAQc7',
           from: '1ALpDTSP3BmBYKDudG8sLmt9ppDRNwqunj',
-          caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
           assetId: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
           totalValue: '12983190',
           components: [{ value: '12983190' }]
@@ -153,10 +143,8 @@ describe('parseTx', () => {
       confirmations: txMempool.confirmations,
       status: Status.Pending,
       address,
-      caip2: 'bip122:000000000019d6689c085ae165831e93',
       chainId: 'bip122:000000000019d6689c085ae165831e93',
       fee: {
-        caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
         assetId: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
         value: '6112'
       },
@@ -165,7 +153,6 @@ describe('parseTx', () => {
           type: TransferType.Send,
           to: '1Ex6unDe3gt4twj8GDHTutUbKvvHzMPj3e',
           from: '19BJg2jSvz8pHiz7kKSgdp69iVV5CnAvzB',
-          caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
           assetId: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
           totalValue: '4098889',
           components: [{ value: '4098889' }]
@@ -174,7 +161,6 @@ describe('parseTx', () => {
           type: TransferType.Receive,
           to: '19BJg2jSvz8pHiz7kKSgdp69iVV5CnAvzB',
           from: '19BJg2jSvz8pHiz7kKSgdp69iVV5CnAvzB',
-          caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
           assetId: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
           totalValue: '3908177',
           components: [{ value: '3908177' }]
@@ -199,10 +185,8 @@ describe('parseTx', () => {
       confirmations: tx.confirmations,
       status: Status.Confirmed,
       address,
-      caip2: 'bip122:000000000019d6689c085ae165831e93',
       chainId: 'bip122:000000000019d6689c085ae165831e93',
       fee: {
-        caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
         assetId: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
         value: '6112'
       },
@@ -211,7 +195,6 @@ describe('parseTx', () => {
           type: TransferType.Send,
           to: '1Ex6unDe3gt4twj8GDHTutUbKvvHzMPj3e',
           from: '19BJg2jSvz8pHiz7kKSgdp69iVV5CnAvzB',
-          caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
           assetId: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
           totalValue: '4098889',
           components: [{ value: '4098889' }]
@@ -220,7 +203,6 @@ describe('parseTx', () => {
           type: TransferType.Receive,
           to: '19BJg2jSvz8pHiz7kKSgdp69iVV5CnAvzB',
           from: '19BJg2jSvz8pHiz7kKSgdp69iVV5CnAvzB',
-          caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
           assetId: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
           totalValue: '3908177',
           components: [{ value: '3908177' }]
