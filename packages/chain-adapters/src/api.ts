@@ -18,7 +18,7 @@ export type ChainAdapter<T extends ChainTypes> = {
    * For bitcoin, that's the list of UTXO account types
    * For other networks, this just returns [undefined], as we need a zero-length array to map over in web
    */
-  getSupportedAccountTypes(): Array<undefined | UtxoAccountType>
+  getSupportedAccountTypes?(): Array<undefined | UtxoAccountType>
   /**
    * Get the balance of an address
    */

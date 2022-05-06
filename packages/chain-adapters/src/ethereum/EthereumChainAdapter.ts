@@ -55,7 +55,6 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
   }
 
   private readonly chainId: ChainId | CAIP2 = 'eip155:1'
-  private readonly supportedAccountTypes: undefined[] = [undefined]
 
   constructor(args: ChainAdapterArgs) {
     if (args.chainId) {
@@ -70,10 +69,6 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       }
     }
     this.providers = args.providers
-  }
-
-  getSupportedAccountTypes() {
-    return this.supportedAccountTypes
   }
 
   getType(): ChainTypes.Ethereum {
