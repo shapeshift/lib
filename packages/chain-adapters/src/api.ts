@@ -15,8 +15,8 @@ export type ChainAdapter<T extends ChainTypes> = {
   getChainId(): ChainId | CAIP2
   /**
    * Get the supported account types for an adapter
-   * For bitcoin, that's the list of UTXO account types
-   * For other networks, this just returns [undefined], as we need a zero-length array to map over in web
+   * For UTXO coins, that's the list of UTXO account types
+   * For other networks, this is unimplemented, and left as a responsibility of the consumer.
    */
   getSupportedAccountTypes?(): Array<UtxoAccountType>
   /**
