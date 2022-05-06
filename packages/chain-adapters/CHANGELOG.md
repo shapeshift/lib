@@ -1,3 +1,16 @@
+# [@shapeshiftoss/chain-adapters-v2.14.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.13.10...@shapeshiftoss/chain-adapters-v2.14.0) (2022-05-06)
+
+
+### Features
+
+* **caip:** flatten exports ([#560](https://github.com/shapeshift/lib/issues/560)) ([e326522](https://github.com/shapeshift/lib/commit/e3265223dca3c2126b2822395353f6650c4b0342))
+
+# [@shapeshiftoss/chain-adapters-v2.13.10](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.13.9...@shapeshiftoss/chain-adapters-v2.13.10) (2022-05-05)
+
+# [@shapeshiftoss/chain-adapters-v2.13.9](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.13.8...@shapeshiftoss/chain-adapters-v2.13.9) (2022-05-05)
+
+# [@shapeshiftoss/chain-adapters-v2.13.8](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.13.7...@shapeshiftoss/chain-adapters-v2.13.8) (2022-05-05)
+
 # [@shapeshiftoss/chain-adapters-v2.13.7](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.13.6...@shapeshiftoss/chain-adapters-v2.13.7) (2022-05-04)
 
 # [@shapeshiftoss/chain-adapters-v2.13.6](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v2.13.5...@shapeshiftoss/chain-adapters-v2.13.6) (2022-05-02)
