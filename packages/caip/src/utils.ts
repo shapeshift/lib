@@ -10,7 +10,7 @@ export const ethChainId = 'eip155:1'
 export const btcChainId = 'bip122:000000000019d6689c085ae165831e93'
 export const cosmosChainId = 'cosmos:cosmoshub-4'
 
-export const chainIdToAssetId: Record<string, string> = {
+export const chainIdToAssetId: Record<ChainId, AssetId> = {
   [ethChainId]: 'eip155:1/slip44:60',
   [btcChainId]: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
   [cosmosChainId]: 'cosmos:cosmoshub-4/slip44:118'
