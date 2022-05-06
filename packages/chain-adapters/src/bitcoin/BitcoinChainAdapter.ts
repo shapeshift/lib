@@ -35,7 +35,7 @@ export class ChainAdapter
   }
   public static readonly defaultUtxoAccountType: UtxoAccountType = UtxoAccountType.SegwitNative
 
-  private readonly supportedAccountTypes: UtxoAccountType[] = [
+  private static readonly supportedAccountTypes: UtxoAccountType[] = [
     UtxoAccountType.SegwitNative,
     UtxoAccountType.SegwitP2sh,
     UtxoAccountType.P2pkh
@@ -74,7 +74,7 @@ export class ChainAdapter
   }
 
   getSupportedAccountTypes() {
-    return this.supportedAccountTypes
+    return ChainAdapter.supportedAccountTypes
   }
 
   async getTxHistory(
