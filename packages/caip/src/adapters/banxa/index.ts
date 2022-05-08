@@ -40,9 +40,9 @@ const invert = <T extends Record<string, string>>(data: T) =>
 
 const banxaTickerToAssetIdMap = invert(assetIdToBanxaTickerMap)
 
-export const banxaTickerToCAIP19 = (id: string): string | undefined => banxaTickerToAssetIdMap[id]
+export const banxaTickerToAssetId = (id: string): string | undefined => banxaTickerToAssetIdMap[id]
 
-export const CAIP19ToBanxaTicker = (assetId: string): string | undefined =>
+export const assetIdToBanxaTicker = (assetId: string): string | undefined =>
   assetIdToBanxaTickerMap[toLower(assetId)]
 
 export const getSupportedBanxaAssets = () =>
@@ -69,10 +69,10 @@ const chainIdToBanxaBlockchainCodeMap: Record<ChainId, string> = {
  * @returns {string} - a Banxa chain identifier; e.g., 'cosmos'
  */
 export const getBanxaBlockchainFromBanxaAssetTicker = (banxaAssetId: string): string => {
-  const assetCAIP19 = banxaTickerToCAIP19(banxaAssetId.toLowerCase())
-  if (!assetCAIP19)
+  const assetId = banxaTickerToAssetId(banxaAssetId.toLowerCase())
+  if (!assetId)
     throw new Error(`getBanxaBlockchainFromBanxaAssetTicker: ${banxaAssetId} is not supported`)
-  const { chain, network } = fromCAIP19(assetCAIP19)
+  const { chain, network } = fromCAIP19(assetId)
   const chainId = toCAIP2({ network, chain })
   return chainIdToBanxaBlockchainCodeMap[chainId]
 }
