@@ -4,7 +4,7 @@ import toLower from 'lodash/toLower'
 import { ChainId, toCAIP2 } from '../../caip2/caip2'
 import { fromCAIP19 } from '../../caip19/caip19'
 
-const CAIP19ToBanxaTickerMap = {
+const assetIdToBanxaTickerMap = {
   'bip122:000000000019d6689c085ae165831e93/slip44:0': 'btc',
   'cosmos:cosmoshub-4/slip44:118': 'atom',
   'eip155:1/slip44:60': 'eth',
@@ -38,16 +38,16 @@ const CAIP19ToBanxaTickerMap = {
 const invert = <T extends Record<string, string>>(data: T) =>
   Object.entries(data).reduce((acc, [k, v]) => ((acc[v] = k), acc), {} as Record<string, string>)
 
-const banxaTickerToCAIP19Map = invert(CAIP19ToBanxaTickerMap)
+const banxaTickerToAssetIdMap = invert(assetIdToBanxaTickerMap)
 
-export const banxaTickerToCAIP19 = (id: string): string | undefined => banxaTickerToCAIP19Map[id]
+export const banxaTickerToCAIP19 = (id: string): string | undefined => banxaTickerToAssetIdMap[id]
 
-export const CAIP19ToBanxaTicker = (caip19: string): string | undefined =>
-  CAIP19ToBanxaTickerMap[toLower(caip19)]
+export const CAIP19ToBanxaTicker = (assetId: string): string | undefined =>
+  assetIdToBanxaTickerMap[toLower(assetId)]
 
 export const getSupportedBanxaAssets = () =>
-  entries(CAIP19ToBanxaTickerMap).map(([CAIP19, ticker]) => ({
-    CAIP19,
+  entries(assetIdToBanxaTickerMap).map(([assetId, ticker]) => ({
+    assetId,
     ticker
   }))
 
