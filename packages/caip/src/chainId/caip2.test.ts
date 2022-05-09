@@ -85,13 +85,13 @@ describe('chainId', () => {
 
     it('throws with invalid Bitcoin namespace ChainId', () => {
       const badBitcoinChainId = 'bip999:000000000933ea01ad0ee984209779ba'
-      expect(() => fromChainId(badBitcoinChainId)).toThrow('fromAssetId: unsupported chain: bip999')
+      expect(() => fromChainId(badBitcoinChainId)).toThrow('fromChainId: unsupported chain: bip999')
     })
 
     it('throws with invalid Bitcoin reference ChainId', () => {
       const badBitcoinChainId = 'bip122:000000000xxxxxxxxxxxxxxxxxxxxxxx'
       expect(() => fromChainId(badBitcoinChainId)).toThrow(
-        'fromAssetId: unsupported bip122 network: 000000000xxxxxxxxxxxxxxxxxxxxxxx'
+        'fromChainId: unsupported bip122 network: 000000000xxxxxxxxxxxxxxxxxxxxxxx'
       )
     })
 
@@ -112,14 +112,14 @@ describe('chainId', () => {
     it('throws with invalid Cosmos namespace ChainId', () => {
       const badCosmosChainId = 'cosmosssssssssss:cosmoshub-4'
       expect(() => fromChainId(badCosmosChainId)).toThrow(
-        'fromAssetId: unsupported chain: cosmosssssssssss'
+        'fromChainId: unsupported chain: cosmosssssssssss'
       )
     })
 
     it('throws with invalid Cosmos reference ChainId', () => {
       const badCosmosChainId = 'cosmos:kek-testnet'
       expect(() => fromChainId(badCosmosChainId)).toThrow(
-        'fromAssetId: unsupported cosmos network: kek-testnet'
+        'fromChainId: unsupported cosmos network: kek-testnet'
       )
     })
 
@@ -147,14 +147,14 @@ describe('chainId', () => {
     it('throws with invalid Ethereum namespace ChainId', () => {
       const badEthereumChainId = 'eip123:1'
       expect(() => fromChainId(badEthereumChainId)).toThrow(
-        'fromAssetId: unsupported chain: eip123'
+        'fromChainId: unsupported chain: eip123'
       )
     })
 
     it('throws with invalid Ethereum reference ChainId', () => {
       const badEthereumChainId = 'eip155:999'
       expect(() => fromChainId(badEthereumChainId)).toThrow(
-        'fromAssetId: unsupported eip155 network: 999'
+        'fromChainId: unsupported eip155 network: 999'
       )
     })
 
