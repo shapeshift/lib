@@ -1,4 +1,10 @@
-import { AssetNamespace, AssetReference, CAIP2, fromCAIP2, toCAIP19 } from '@shapeshiftoss/caip'
+import {
+  AssetNamespace,
+  AssetReference,
+  ChainId,
+  fromChainId,
+  toAssetId
+} from '@shapeshiftoss/caip'
 import {
   bip32ToAddressNList,
   BTCOutputAddressType,
@@ -41,7 +47,7 @@ export class ChainAdapter
     UtxoAccountType.P2pkh
   ]
 
-  protected readonly supportedChainIds: CAIP2[] = [
+  protected readonly supportedChainIds: ChainId[] = [
     'bip122:000000000019d6689c085ae165831e93',
     'bip122:000000000933ea01ad0ee984209779ba'
   ]
@@ -56,12 +62,12 @@ export class ChainAdapter
     } else {
       this.chainId = this.supportedChainIds[0]
     }
-    const { chain, network } = fromCAIP2(this.chainId)
+    const { chain, network } = fromChainId(this.chainId)
     if (chain !== ChainTypes.Bitcoin) {
       throw new Error('chainId must be a bitcoin chain type')
     }
     this.coinName = args.coinName
-    this.assetId = toCAIP19({
+    this.assetId = toAssetId({
       chain,
       network,
       assetNamespace: AssetNamespace.Slip44,
@@ -347,7 +353,11 @@ export class ChainAdapter
       { topic: 'txs', addresses },
       ({ data: tx }) => {
         const transfers = tx.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
+<<<<<<< Updated upstream
           assetId: transfer.caip19,
+=======
+          caip19: transfer.assetId,
+>>>>>>> Stashed changes
           from: transfer.from,
           to: transfer.to,
           type: getType(transfer.type),
@@ -359,10 +369,19 @@ export class ChainAdapter
           blockHash: tx.blockHash,
           blockHeight: tx.blockHeight,
           blockTime: tx.blockTime,
+<<<<<<< Updated upstream
           chainId: tx.caip2,
+=======
+          caip2: tx.chainId,
+>>>>>>> Stashed changes
           chain: ChainTypes.Bitcoin,
           confirmations: tx.confirmations,
-          fee: tx.fee,
+          ...(tx.fee && {
+            fee: {
+              caip19: tx.fee.assetId,
+              value: tx.fee.value
+            }
+          }),
           status: getStatus(tx.status),
           tradeDetails: tx.trade,
           transfers,
