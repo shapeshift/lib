@@ -84,7 +84,7 @@ describe('coingecko market service', () => {
     it('can sort by market cap', async () => {
       mockedAxios.get.mockResolvedValueOnce({ data: [btc] }).mockResolvedValue({ data: [eth] })
       const result = await coinGeckoMarketService.findAll()
-      expect(Object.keys(result)[0]).toEqual(adapters.coingeckoToCAIP19(btc.id))
+      expect(Object.keys(result)[0]).toEqual(adapters.coingeckoToAssetId(btc.id))
     })
 
     it('can handle api errors', async () => {
@@ -129,8 +129,8 @@ describe('coingecko market service', () => {
     it('can map coingecko to caip ids', async () => {
       mockedAxios.get.mockResolvedValueOnce({ data: [btc] }).mockResolvedValue({ data: [eth] })
       const result = await coinGeckoMarketService.findAll()
-      const btcCaip19 = adapters.coingeckoToCAIP19('bitcoin')
-      const ethCaip19 = adapters.coingeckoToCAIP19('ethereum')
+      const btcCaip19 = adapters.coingeckoToAssetId('bitcoin')
+      const ethCaip19 = adapters.coingeckoToAssetId('ethereum')
       const [btcKey, ethKey] = Object.keys(result)
       expect(btcKey).toEqual(btcCaip19)
       expect(ethKey).toEqual(ethCaip19)

@@ -4,8 +4,8 @@ import {
   AssetNamespace,
   AssetReference,
   ChainId,
-  fromCAIP2,
-  toCAIP19
+  fromChainId,
+  toAssetId
 } from '@shapeshiftoss/caip'
 import { BigNumber } from 'bignumber.js'
 import { ethers } from 'ethers'
@@ -41,8 +41,8 @@ export class TransactionParser {
   constructor(args: TransactionParserArgs) {
     this.chainId = args.chainId
 
-    this.assetId = toCAIP19({
-      ...fromCAIP2(this.chainId),
+    this.assetId = toAssetId({
+      ...fromChainId(this.chainId),
       assetNamespace: AssetNamespace.Slip44,
       assetReference: AssetReference.Ethereum
     })
@@ -169,8 +169,8 @@ export class TransactionParser {
       }
 
       const transferArgs = [
-        toCAIP19({
-          ...fromCAIP2(this.chainId),
+        toAssetId({
+          ...fromChainId(this.chainId),
           assetNamespace: AssetNamespace.ERC20,
           assetReference: transfer.token
         }),
@@ -201,8 +201,8 @@ export class TransactionParser {
 
     internalTxs?.forEach((internalTx) => {
       const transferArgs = [
-        toCAIP19({
-          ...fromCAIP2(this.chainId),
+        toAssetId({
+          ...fromChainId(this.chainId),
           assetNamespace: AssetNamespace.Slip44,
           assetReference: AssetReference.Ethereum
         }),

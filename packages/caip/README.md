@@ -10,20 +10,20 @@ https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-2.md
 
 Usage
 
-### `toCAIP2`
+### `toChainId`
 
 ```ts
 const chain = ChainTypes.Ethereum
 const network = NetworkTypes.MAINNET
-const result = toCAIP2({ chain, network })
+const result = toChainId({ chain, network })
 expect(result).toEqual('eip155:1')
 ```
 
-### `fromCAIP2`
+### `fromChainId`
 
 ```ts
 const ethCaip2 = 'eip155:1'
-const { chain, network } = fromCAIP2(ethCaip2)
+const { chain, network } = fromChainId(ethCaip2)
 expect(chain).toEqual(ChainTypes.Ethereum)
 expect(network).toEqual(NetworkTypes.MAINNET)
 ```
@@ -34,7 +34,7 @@ https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-19.md
 
 Usage
 
-### `toCAIP19`
+### `toAssetId`
 
 Ether
 
@@ -43,7 +43,7 @@ const chain = ChainTypes.Ethereum
 const network = NetworkTypes.MAINNET
 const assetNamespace = AssetNamespace.Slip44
 const assetReference = AssetReference.Ethereum
-const result = toCAIP19({ chain, network, assetNamespace, assetReference })
+const result = toAssetId({ chain, network, assetNamespace, assetReference })
 expect(result).toEqual('eip155:1/slip44:60')
 ```
 
@@ -54,7 +54,7 @@ const chain = ChainTypes.Ethereum
 const network = NetworkTypes.MAINNET
 const contractType = AssetNamespace.ERC20
 const tokenId = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
-const result = toCAIP19({ chain, network, contractType, tokenId })
+const result = toAssetId({ chain, network, contractType, tokenId })
 expect(result).toEqual('eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d')
 ```
 

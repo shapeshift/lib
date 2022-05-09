@@ -1,5 +1,5 @@
 import { Tx as BlockbookTx } from '@shapeshiftoss/blockbook'
-import { AssetNamespace, ChainId, fromCAIP2, toCAIP19 } from '@shapeshiftoss/caip'
+import { AssetNamespace, ChainId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
 import { ethers } from 'ethers'
 
 import { TransferType, TxParser } from '../../types'
@@ -71,8 +71,8 @@ export class Parser implements SubParser {
           const symbol = await contract.symbol()
           const value = decoded.args.amountTokenDesired.toString()
 
-          const assetId = toCAIP19({
-            ...fromCAIP2(this.chainId),
+          const assetId = toAssetId({
+            ...fromChainId(this.chainId),
             assetNamespace: AssetNamespace.ERC20,
             assetReference: tokenAddress
           })
@@ -96,8 +96,8 @@ export class Parser implements SubParser {
           const symbol = await contract.symbol()
           const value = decoded.args.liquidity.toString()
 
-          const assetId = toCAIP19({
-            ...fromCAIP2(this.chainId),
+          const assetId = toAssetId({
+            ...fromChainId(this.chainId),
             assetNamespace: AssetNamespace.ERC20,
             assetReference: lpTokenAddress
           })

@@ -1,4 +1,4 @@
-import { adapters, AssetNamespace, toCAIP19 } from '@shapeshiftoss/caip'
+import { adapters, AssetNamespace, toAssetId } from '@shapeshiftoss/caip'
 import {
   ChainTypes,
   FindAllMarketArgs,
@@ -56,7 +56,7 @@ export class YearnTokenMarketCapService implements MarketService {
       const tokens = uniqueTokens.slice(0, argsToUse.count)
 
       return tokens.reduce((acc, token) => {
-        const _caip19: string = toCAIP19({
+        const _caip19: string = toAssetId({
           chain: ChainTypes.Ethereum,
           network: NetworkTypes.MAINNET,
           assetNamespace: AssetNamespace.ERC20,
@@ -79,7 +79,7 @@ export class YearnTokenMarketCapService implements MarketService {
   }
 
   findByCaip19 = async ({ caip19: _caip19 }: MarketDataArgs): Promise<MarketData | null> => {
-    const address = adapters.CAIP19ToYearn(_caip19)
+    const address = adapters.assetIdToYearn(_caip19)
     if (!address) return null
     try {
       // the yearnSdk caches the response to all of these calls and returns the cache if found.

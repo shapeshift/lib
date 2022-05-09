@@ -63,7 +63,7 @@ describe('adapters:coincap', () => {
     expect(coincapToAssetId('osmosis')).toEqual(assetId)
   })
 
-  describe('AssetIdToCoinCap', () => {
+  describe('assetIdToCoinCap', () => {
     it('can get coincap id for bitcoin AssetId', () => {
       const chain = ChainTypes.Bitcoin
       const network = NetworkTypes.MAINNET
