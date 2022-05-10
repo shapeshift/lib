@@ -2747,10 +2747,10 @@
     tsoa "^3.4.0"
     ws "^8.3.0"
 
-"@shapeshiftoss/caip@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@shapeshiftoss/caip/-/caip-3.0.0.tgz#c2865d114a33c59cbd073dc330ddd021bcddb11d"
-  integrity sha512-mxxFlQUWY+v3bAoV8lZoAhj1NISmilyBFvVzGshC6sDts2ObZWU5+6teP7IFLuPecoxn9GJFNRxAF7LKFR+HmA==
+"@shapeshiftoss/caip@^2.0.0", "@shapeshiftoss/caip@^2.1.2", "@shapeshiftoss/caip@^2.2.3":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/caip/-/caip-2.5.0.tgz#f82f0fb16267d1bcfa80e31fd2708c89adbfda3a"
+  integrity sha512-CWL50ctseRvPWM1AdydZZ2yAjN/46e29xUwikVTXycbyNKV445i3I50iScjNfmNOUNM5u9Mq67FGsiDhvpNZOw==
 
 "@shapeshiftoss/common-api@^6.11.0":
   version "6.11.0"
