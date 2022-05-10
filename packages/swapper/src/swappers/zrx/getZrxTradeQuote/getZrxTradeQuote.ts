@@ -1,7 +1,7 @@
-import { ChainTypes, SwapSource } from '@shapeshiftoss/types'
+import { SwapSource } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 
-import { GetTradeQuoteInput, TradeQuote } from '../../../api'
+import { ChainIdTypes, GetTradeQuoteInput, TradeQuote } from '../../../api'
 import { getZrxMinMax } from '../getZrxMinMax/getZrxMinMax'
 import { ZrxPriceResponse } from '../types'
 import { bnOrZero } from '../utils/bignumber'
@@ -12,16 +12,13 @@ import { ZrxError } from '../ZrxSwapper'
 
 export async function getZrxTradeQuote(
   input: GetTradeQuoteInput
-): Promise<TradeQuote<ChainTypes.Ethereum>> {
+): Promise<TradeQuote<ChainIdTypes.Ethereum>> {
   const { sellAsset, buyAsset, sellAmount, buyAmount, sellAssetAccountId } = input
   if (!buyAsset) {
     throw new ZrxError('getQuote - Missing buyAsset')
   }
   if (!sellAsset) {
     throw new ZrxError('getQuote - Missing sellAsset')
-  }
-  if (buyAsset.chain !== ChainTypes.Ethereum || sellAsset.chain !== ChainTypes.Ethereum) {
-    throw new ZrxError('getQuote - Both assets need to be on the Ethereum chain to use Zrx')
   }
   if (!sellAmount && !buyAmount) {
     throw new ZrxError('getQuote - sellAmount or buyAmount amount is required')

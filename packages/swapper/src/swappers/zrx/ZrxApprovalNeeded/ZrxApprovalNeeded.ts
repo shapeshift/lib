@@ -1,6 +1,6 @@
-import { ApprovalNeededOutput, ChainTypes } from '@shapeshiftoss/types'
+import { ApprovalNeededOutput } from '@shapeshiftoss/types'
 
-import { ApprovalNeededInput, SwapError } from '../../../api'
+import { ApprovalNeededInput, ChainIdTypes, SwapError } from '../../../api'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { bnOrZero } from '../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../utils/constants'
@@ -9,7 +9,7 @@ import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function ZrxApprovalNeeded(
   { adapterManager, web3 }: ZrxSwapperDeps,
-  { quote, wallet }: ApprovalNeededInput<ChainTypes>
+  { quote, wallet }: ApprovalNeededInput<ChainIdTypes>
 ): Promise<ApprovalNeededOutput> {
   const { sellAsset } = quote
 
@@ -17,13 +17,9 @@ export async function ZrxApprovalNeeded(
     return { approvalNeeded: false }
   }
 
-  if (sellAsset.chain !== ChainTypes.Ethereum) {
-    throw new SwapError('ZrxSwapper:ZrxApprovalNeeded only Ethereum chain type is supported')
-  }
-
   const accountNumber = quote.sellAssetAccountId ? Number(quote.sellAssetAccountId) : 0
 
-  const adapter = adapterManager.byChain(sellAsset.chain)
+  const adapter = await adapterManager.byChainId('1234')
   const bip44Params = adapter.buildBIP44Params({ accountNumber })
   const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 

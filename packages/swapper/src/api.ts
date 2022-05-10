@@ -3,19 +3,35 @@ import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import {
   ApprovalNeededOutput,
   Asset,
-  BuildQuoteTxInput,
-  chainAdapters,
-  ChainTypes,
-  ExecQuoteInput,
   ExecQuoteOutput,
   GetQuoteInput,
   MinMaxOutput,
-  Quote,
   SwapperType
 } from '@shapeshiftoss/types'
+import { ethereum } from '@shapeshiftoss/types/src/chain-adapters'
+import { ChainSpecific } from '@shapeshiftoss/types/src/utility'
+
 export type SupportedAssetInput = {
   assetIds: CAIP19[]
 }
+
+export enum ChainIdTypes {
+  Ethereum = 'eip155:1/slip44:60',
+  Bitcoin = 'bip122:000000000019d6689c085ae165831e93/slip44:0',
+  Cosmos = 'cosmos:cosmoshub-4/slip44:118',
+  Osmosis = 'cosmos:osmosis-1/slip44:118'
+}
+
+type ChainSpecificQuoteFeeData<T1> = ChainSpecific<
+  T1,
+  {
+    [ChainIdTypes.Ethereum]: ethereum.QuoteFeeData
+  }
+>
+
+export type QuoteFeeData<T1 extends ChainIdTypes> = {
+  fee: string
+} & ChainSpecificQuoteFeeData<T1>
 
 export type ByPairInput = {
   sellAssetId: CAIP19
@@ -47,12 +63,12 @@ export type BuildTradeInput = CommonTradeInput & {
   wallet: HDWallet
 }
 
-interface TradeBase<C extends ChainTypes> {
+interface TradeBase<C extends ChainIdTypes> {
   success: boolean // This will go away when we correctly handle errors
   statusReason: string // This will go away when we correctly handle errors
   buyAmount: string
   sellAmount: string
-  feeData: chainAdapters.QuoteFeeData<C>
+  feeData: QuoteFeeData<C>
   rate: string
   allowanceContract: string
   sources: Array<SwapSource>
@@ -61,18 +77,18 @@ interface TradeBase<C extends ChainTypes> {
   sellAssetAccountId: string
 }
 
-export interface TradeQuote<C extends ChainTypes> extends TradeBase<C> {
+export interface TradeQuote<C extends ChainIdTypes> extends TradeBase<C> {
   minimum: string
   maximum: string
 }
 
-export interface Trade<C extends ChainTypes> extends TradeBase<C> {
+export interface Trade<C extends ChainIdTypes> extends TradeBase<C> {
   txData: string
   depositAddress: string
   receiveAddress: string
 }
 
-export type ExecuteTradeInput<C extends ChainTypes> = {
+export type ExecuteTradeInput<C extends ChainIdTypes> = {
   trade: Trade<C>
   wallet: HDWallet
 }
@@ -86,13 +102,13 @@ export type SwapSource = {
   proportion: string
 }
 
-export type ApproveInfiniteInput<C extends ChainTypes> = {
-  quote: Quote<C> | TradeQuote<C>
+export type ApproveInfiniteInput<C extends ChainIdTypes> = {
+  quote: TradeQuote<C>
   wallet: HDWallet
 }
 
-export type ApprovalNeededInput<C extends ChainTypes> = {
-  quote: Quote<C> | TradeQuote<C>
+export type ApprovalNeededInput<C extends ChainIdTypes> = {
+  quote: TradeQuote<C>
   wallet: HDWallet
 }
 
@@ -105,24 +121,12 @@ export interface Swapper {
   /**
    * Get builds a trade with definitive rate & txData that can be executed with executeTrade
    **/
-  buildTrade(args: BuildTradeInput): Promise<Trade<ChainTypes>>
+  buildTrade(args: BuildTradeInput): Promise<Trade<ChainIdTypes>>
 
   /**
    * Get a trade quote
    */
-  getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ChainTypes>>
-
-  /**
-   * Get a Quote along with an unsigned transaction that can be signed and broadcast to execute the swap
-   * @deprecated The method is going away soon.
-   **/
-  buildQuoteTx(args: BuildQuoteTxInput): Promise<Quote<ChainTypes>>
-
-  /**
-   * Get a basic quote (rate) for a trading pair
-   * @deprecated The method is going away soon.
-   */
-  getQuote(input: GetQuoteInput, wallet?: HDWallet): Promise<Quote<ChainTypes>>
+  getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ChainIdTypes>>
 
   /**
    * Get the usd rate from either the assets symbol or tokenId
@@ -135,24 +139,19 @@ export interface Swapper {
   getMinMax(input: GetQuoteInput): Promise<MinMaxOutput>
 
   /**
-   * Execute a quote built with buildQuoteTx by signing and broadcasting
-   */
-  executeQuote(args: ExecQuoteInput<ChainTypes>): Promise<ExecQuoteOutput>
-
-  /**
    * Execute a trade built with buildTrade by signing and broadcasting
    */
-  executeTrade(args: ExecuteTradeInput<ChainTypes>): Promise<ExecQuoteOutput>
+  executeTrade(args: ExecuteTradeInput<ChainIdTypes>): Promise<ExecQuoteOutput>
 
   /**
    * Get a boolean if a quote needs approval
    */
-  approvalNeeded(args: ApprovalNeededInput<ChainTypes>): Promise<ApprovalNeededOutput>
+  approvalNeeded(args: ApprovalNeededInput<ChainIdTypes>): Promise<ApprovalNeededOutput>
 
   /**
    * Get the txid of an approve infinite transaction
    */
-  approveInfinite(args: ApproveInfiniteInput<ChainTypes>): Promise<string>
+  approveInfinite(args: ApproveInfiniteInput<ChainIdTypes>): Promise<string>
 
   /**
    * Get supported buyAssetId's by sellAssetId

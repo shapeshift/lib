@@ -2,15 +2,13 @@ import { CAIP19 } from '@shapeshiftoss/caip'
 import {
   ApprovalNeededOutput,
   Asset,
-  ChainTypes,
   ExecQuoteOutput,
   GetQuoteInput,
   MinMaxOutput,
-  Quote,
   SwapperType
 } from '@shapeshiftoss/types'
 
-import { BuyAssetBySellIdInput, Swapper, Trade, TradeQuote } from '../../api'
+import { BuyAssetBySellIdInput, ChainIdTypes, Swapper, Trade, TradeQuote } from '../../api'
 
 /**
  * Playground for testing different scenarios of multiple swappers in the manager.
@@ -29,14 +27,6 @@ export class TestSwapper implements Swapper {
       'cosmos:cosmoshub-4/slip44:118',
       'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
     ]
-  }
-
-  async getQuote(): Promise<Quote<ChainTypes>> {
-    throw new Error('TestSwapper: getQuote unimplemented')
-  }
-
-  async buildQuoteTx(): Promise<Quote<ChainTypes>> {
-    throw new Error('TestSwapper: getQuote unimplemented')
   }
 
   getUsdRate(input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string> {
@@ -71,11 +61,11 @@ export class TestSwapper implements Swapper {
     return this.supportAssets
   }
 
-  async buildTrade(): Promise<Trade<ChainTypes>> {
+  async buildTrade(): Promise<Trade<ChainIdTypes>> {
     throw new Error('TestSwapper: buildTrade unimplemented')
   }
 
-  async getTradeQuote(): Promise<TradeQuote<ChainTypes>> {
+  async getTradeQuote(): Promise<TradeQuote<ChainIdTypes>> {
     throw new Error('TestSwapper: getTradeQuote unimplemented')
   }
 

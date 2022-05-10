@@ -1,8 +1,7 @@
-import { ChainTypes } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 
-import { BuildTradeInput, SwapError, Trade } from '../../..'
+import { BuildTradeInput, ChainIdTypes, SwapError, Trade } from '../../..'
 import { ZrxQuoteResponse } from '../types'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
@@ -21,7 +20,7 @@ import { ZrxSwapperDeps } from '../ZrxSwapper'
 export async function zrxBuildTrade(
   { adapterManager, web3 }: ZrxSwapperDeps,
   input: BuildTradeInput
-): Promise<Trade<ChainTypes>> {
+): Promise<Trade<ChainIdTypes>> {
   const {
     sellAsset,
     buyAsset,
@@ -55,12 +54,6 @@ export async function zrxBuildTrade(
   if (!sellToken) {
     throw new SwapError(
       'ZrxSwapper:ZrxBuildTrade One of sellAssetContract or sellAssetSymbol or sellAssetNetwork are required'
-    )
-  }
-
-  if (buyAsset.chain !== ChainTypes.Ethereum) {
-    throw new SwapError(
-      `ZrxSwapper:ZrxBuildTrade buyAsset must be on chain [${ChainTypes.Ethereum}]`
     )
   }
 
@@ -122,7 +115,7 @@ export async function zrxBuildTrade(
 
     const estimatedGas = bnOrZero(data.gas || 0)
 
-    const trade: Trade<ChainTypes.Ethereum> = {
+    const trade: Trade<ChainIdTypes.Ethereum> = {
       sellAsset,
       buyAsset,
       success: true,

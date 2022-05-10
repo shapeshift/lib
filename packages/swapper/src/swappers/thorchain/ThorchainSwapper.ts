@@ -2,27 +2,17 @@ import { CAIP19 } from '@shapeshiftoss/caip'
 import {
   ApprovalNeededOutput,
   Asset,
-  ChainTypes,
   ExecQuoteOutput,
   GetQuoteInput,
   MinMaxOutput,
-  Quote,
   SwapperType
 } from '@shapeshiftoss/types'
 
-import { Swapper, Trade, TradeQuote } from '../../api'
+import { ChainIdTypes, Swapper, Trade, TradeQuote } from '../../api'
 
 export class ThorchainSwapper implements Swapper {
   getType() {
     return SwapperType.Thorchain
-  }
-
-  async getQuote(): Promise<Quote<ChainTypes>> {
-    throw new Error('ThorchainSwapper: getQuote unimplemented')
-  }
-
-  async buildQuoteTx(): Promise<Quote<ChainTypes>> {
-    throw new Error('ThorchainSwapper: getQuote unimplemented')
   }
 
   getUsdRate(input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string> {
@@ -55,11 +45,11 @@ export class ThorchainSwapper implements Swapper {
     return []
   }
 
-  async buildTrade(): Promise<Trade<ChainTypes>> {
+  async buildTrade(): Promise<Trade<ChainIdTypes>> {
     throw new Error('ThorchainSwapper: buildTrade unimplemented')
   }
 
-  async getTradeQuote(): Promise<TradeQuote<ChainTypes>> {
+  async getTradeQuote(): Promise<TradeQuote<ChainIdTypes>> {
     throw new Error('ThorchainSwapper: getTradeQuote unimplemented')
   }
 

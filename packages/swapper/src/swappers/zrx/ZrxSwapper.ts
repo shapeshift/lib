@@ -3,13 +3,9 @@ import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import {
   ApprovalNeededOutput,
   Asset,
-  BuildQuoteTxInput,
-  ChainTypes,
-  ExecQuoteInput,
   ExecQuoteOutput,
   GetQuoteInput,
   MinMaxOutput,
-  Quote,
   SwapperType
 } from '@shapeshiftoss/types'
 import Web3 from 'web3'
@@ -19,6 +15,7 @@ import {
   ApproveInfiniteInput,
   BuildTradeInput,
   BuyAssetBySellIdInput,
+  ChainIdTypes,
   ExecuteTradeInput,
   GetTradeQuoteInput,
   Swapper,
@@ -26,14 +23,11 @@ import {
   TradeQuote
 } from '../../api'
 import { getZrxMinMax } from './getZrxMinMax/getZrxMinMax'
-import { getZrxQuote } from './getZrxQuote/getZrxQuote'
 import { getZrxTradeQuote } from './getZrxTradeQuote/getZrxTradeQuote'
 import { getUsdRate } from './utils/helpers/helpers'
 import { ZrxApprovalNeeded } from './ZrxApprovalNeeded/ZrxApprovalNeeded'
 import { ZrxApproveInfinite } from './ZrxApproveInfinite/ZrxApproveInfinite'
-import { ZrxBuildQuoteTx } from './ZrxBuildQuoteTx/ZrxBuildQuoteTx'
 import { zrxBuildTrade } from './zrxBuildTrade/zrxBuildTrade'
-import { ZrxExecuteQuote } from './ZrxExecuteQuote/ZrxExecuteQuote'
 import { zrxExecuteTrade } from './zrxExecuteTrade/zrxExecuteTrade'
 
 export type ZrxSwapperDeps = {
@@ -60,19 +54,11 @@ export class ZrxSwapper implements Swapper {
     return SwapperType.Zrx
   }
 
-  async buildQuoteTx(args: BuildQuoteTxInput): Promise<Quote<ChainTypes>> {
-    return ZrxBuildQuoteTx(this.deps, args)
-  }
-
-  async getQuote(input: GetQuoteInput): Promise<Quote<ChainTypes>> {
-    return getZrxQuote(input)
-  }
-
-  async buildTrade(args: BuildTradeInput): Promise<Trade<ChainTypes>> {
+  async buildTrade(args: BuildTradeInput): Promise<Trade<ChainIdTypes>> {
     return zrxBuildTrade(this.deps, args)
   }
 
-  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ChainTypes>> {
+  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ChainIdTypes>> {
     return getZrxTradeQuote(input)
   }
 
@@ -84,19 +70,15 @@ export class ZrxSwapper implements Swapper {
     return getZrxMinMax(input)
   }
 
-  async executeQuote(args: ExecQuoteInput<ChainTypes>): Promise<ExecQuoteOutput> {
-    return ZrxExecuteQuote(this.deps, args)
-  }
-
-  async executeTrade(args: ExecuteTradeInput<ChainTypes>): Promise<ExecQuoteOutput> {
+  async executeTrade(args: ExecuteTradeInput<ChainIdTypes>): Promise<ExecQuoteOutput> {
     return zrxExecuteTrade(this.deps, args)
   }
 
-  async approvalNeeded(args: ApprovalNeededInput<ChainTypes>): Promise<ApprovalNeededOutput> {
+  async approvalNeeded(args: ApprovalNeededInput<ChainIdTypes>): Promise<ApprovalNeededOutput> {
     return ZrxApprovalNeeded(this.deps, args)
   }
 
-  async approveInfinite(args: ApproveInfiniteInput<ChainTypes>): Promise<string> {
+  async approveInfinite(args: ApproveInfiniteInput<ChainIdTypes>): Promise<string> {
     return ZrxApproveInfinite(this.deps, args)
   }
 

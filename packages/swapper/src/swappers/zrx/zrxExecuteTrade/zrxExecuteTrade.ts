@@ -1,12 +1,11 @@
-import { ChainTypes } from '@shapeshiftoss/types'
 import { numberToHex } from 'web3-utils'
 
-import { ExecuteTradeInput, SwapError, TradeResult } from '../../../api'
+import { ChainIdTypes, ExecuteTradeInput, SwapError, TradeResult } from '../../../api'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function zrxExecuteTrade(
   { adapterManager }: ZrxSwapperDeps,
-  { trade, wallet }: ExecuteTradeInput<ChainTypes.Ethereum>
+  { trade, wallet }: ExecuteTradeInput<ChainIdTypes.Ethereum>
 ): Promise<TradeResult> {
   const { sellAsset } = trade
 
