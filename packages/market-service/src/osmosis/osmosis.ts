@@ -25,7 +25,7 @@ export class OsmosisMarketService implements MarketService {
         .map((data) => data ?? []) // filter out rate limited results
         .sort((a, b) => (a.liquidity < b.liquidity ? 1 : -1))
         .reduce((acc, token) => {
-          const caip19 = adapters.osmosisToCAIP19(token.denom)
+          const caip19 = adapters.osmosisToAssetId(token.denom)
           if (!caip19) return acc
 
           acc[caip19] = {
@@ -45,10 +45,10 @@ export class OsmosisMarketService implements MarketService {
   }
 
   findByCaip19 = async ({ assetId }: MarketDataArgs): Promise<MarketData | null> => {
-    if (!adapters.CAIP19ToOsmosis(assetId)) return null
+    if (!adapters.assetIdToOsmosis(assetId)) return null
 
     try {
-      const symbol = adapters.CAIP19ToOsmosis(assetId)
+      const symbol = adapters.assetIdToOsmosis(assetId)
       const { data }: { data: OsmosisMarketCap[] } = await axios.get(
         `${this.baseUrl}/tokens/v2/${symbol}`
       )
@@ -72,8 +72,8 @@ export class OsmosisMarketService implements MarketService {
     assetId,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
-    if (!adapters.CAIP19ToOsmosis(assetId)) return []
-    const symbol = adapters.CAIP19ToOsmosis(assetId)
+    if (!adapters.assetIdToOsmosis(assetId)) return []
+    const symbol = adapters.assetIdToOsmosis(assetId)
 
     let range
     let isV1

@@ -1,4 +1,4 @@
-import { adapters, AssetNamespace, toCAIP19 } from '@shapeshiftoss/caip'
+import { adapters, AssetNamespace, toAssetId } from '@shapeshiftoss/caip'
 import {
   ChainTypes,
   FindAllMarketArgs,
@@ -54,7 +54,7 @@ export class YearnVaultMarketCapService implements MarketService {
             : -1
         )
         .reduce((acc, yearnItem) => {
-          const assetId = toCAIP19({
+          const assetId = toAssetId({
             chain: ChainTypes.Ethereum,
             network: NetworkTypes.MAINNET,
             assetNamespace: AssetNamespace.ERC20,
@@ -124,7 +124,7 @@ export class YearnVaultMarketCapService implements MarketService {
   }
 
   findByCaip19 = async ({ assetId }: MarketDataArgs): Promise<MarketData | null> => {
-    const id = adapters.CAIP19ToYearn(assetId)
+    const id = adapters.assetIdToYearn(assetId)
     if (!id) return null
     try {
       const vaults = await rateLimiter(() => this.yearnSdk.vaults.get([id]))
@@ -198,7 +198,7 @@ export class YearnVaultMarketCapService implements MarketService {
     assetId,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
-    const id = adapters.CAIP19ToYearn(assetId)
+    const id = adapters.assetIdToYearn(assetId)
     if (!id) return []
     try {
       let daysAgo

@@ -51,7 +51,7 @@ export class CoinCapMarketService implements MarketService {
         .reduce((acc, cur) => {
           const { id } = cur
           try {
-            const caip19 = adapters.coincapToCAIP19(id)
+            const caip19 = adapters.coincapToAssetId(id)
             if (!caip19) return acc
             const curWithoutId = omit(cur, 'id') // don't leak this through to clients
             acc[caip19] = {
@@ -71,9 +71,9 @@ export class CoinCapMarketService implements MarketService {
   }
 
   findByCaip19 = async ({ assetId }: MarketDataArgs): Promise<MarketData | null> => {
-    if (!adapters.CAIP19ToCoinCap(assetId)) return null
+    if (!adapters.assetIdToCoinCap(assetId)) return null
     try {
-      const id = adapters.CAIP19ToCoinCap(assetId)
+      const id = adapters.assetIdToCoinCap(assetId)
 
       const { data } = await axios.get(`${this.baseUrl}/assets/${id}`)
 
@@ -94,8 +94,8 @@ export class CoinCapMarketService implements MarketService {
     assetId,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
-    if (!adapters.CAIP19ToCoinCap(assetId)) return []
-    const id = adapters.CAIP19ToCoinCap(assetId)
+    if (!adapters.assetIdToCoinCap(assetId)) return []
+    const id = adapters.assetIdToCoinCap(assetId)
 
     const end = dayjs().startOf('minute')
     let start

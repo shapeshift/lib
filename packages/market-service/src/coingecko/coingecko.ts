@@ -1,4 +1,4 @@
-import { adapters, fromCAIP19 } from '@shapeshiftoss/caip'
+import { adapters, fromAssetId } from '@shapeshiftoss/caip'
 import {
   ChainTypes,
   FindAllMarketArgs,
@@ -67,7 +67,7 @@ export class CoinGeckoMarketService implements MarketService {
         .reduce((acc, cur) => {
           const { id } = cur
           try {
-            const caip19 = adapters.coingeckoToCAIP19(id)
+            const caip19 = adapters.coingeckoToAssetId(id)
             if (!caip19) return acc
             const curWithoutId = omit(cur, 'id') // don't leak this through to clients
             acc[caip19] = {
@@ -88,10 +88,10 @@ export class CoinGeckoMarketService implements MarketService {
 
   findByCaip19 = async ({ assetId }: MarketDataArgs): Promise<MarketData | null> => {
     try {
-      if (!adapters.CAIP19ToCoingecko(assetId)) return null
-      const { chain, assetReference } = fromCAIP19(assetId)
+      if (!adapters.assetIdToCoingecko(assetId)) return null
+      const { chain, assetReference } = fromAssetId(assetId)
       const isToken = chain === ChainTypes.Ethereum && assetReference.startsWith('0x')
-      const id = isToken ? 'ethereum' : adapters.CAIP19ToCoingecko(assetId)
+      const id = isToken ? 'ethereum' : adapters.assetIdToCoingecko(assetId)
       const contractUrl = isToken ? `/contract/${assetReference}` : ''
 
       const { data }: { data: CoinGeckoAssetData } = await axios.get(
@@ -116,11 +116,11 @@ export class CoinGeckoMarketService implements MarketService {
     assetId,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
-    if (!adapters.CAIP19ToCoingecko(assetId)) return []
+    if (!adapters.assetIdToCoingecko(assetId)) return []
     try {
-      const { chain, assetReference } = fromCAIP19(assetId)
+      const { chain, assetReference } = fromAssetId(assetId)
       const isToken = chain === ChainTypes.Ethereum && assetReference.startsWith('0x')
-      const id = isToken ? 'ethereum' : adapters.CAIP19ToCoingecko(assetId)
+      const id = isToken ? 'ethereum' : adapters.assetIdToCoingecko(assetId)
       const contract = isToken ? `/contract/${assetReference}` : ''
 
       const end = dayjs().startOf('minute')
