@@ -1,3 +1,36 @@
+# [@shapeshiftoss/caip-v3.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v2.6.0...@shapeshiftoss/caip-v3.0.0) (2022-05-09)
+
+
+### Performance Improvements
+
+* **caip:** bump caip version ([#629](https://github.com/shapeshift/lib/issues/629)) ([acb7c29](https://github.com/shapeshift/lib/commit/acb7c290178d2a25f72ac52c62023006d0afaa10))
+
+
+### BREAKING CHANGES
+
+* **caip:** properly bump major version
+
+# [@shapeshiftoss/caip-v2.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v2.5.2...@shapeshiftoss/caip-v2.6.0) (2022-05-09)
+
+
+### Features
+
+* **caip:** major bump commit ([#628](https://github.com/shapeshift/lib/issues/628)) ([c22a2dc](https://github.com/shapeshift/lib/commit/c22a2dc61448c338f8d4ac1000d60f59fdda5b25))
+
+# [@shapeshiftoss/caip-v2.5.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v2.5.1...@shapeshiftoss/caip-v2.5.2) (2022-05-09)
+
+
+### Performance Improvements
+
+* **caip:** breaking readme change ([#627](https://github.com/shapeshift/lib/issues/627)) ([69a786d](https://github.com/shapeshift/lib/commit/69a786db0177d20ff874c8ce169b39c768a0008b))
+
+# [@shapeshiftoss/caip-v2.5.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v2.5.0...@shapeshiftoss/caip-v2.5.1) (2022-05-09)
+
+
+### Performance Improvements
+
+* **caip:** remove caip vernacular ([#625](https://github.com/shapeshift/lib/issues/625)) ([f92b4f0](https://github.com/shapeshift/lib/commit/f92b4f0ed89f4f3352dd0130757fa686a214c6d4))
+
 # [@shapeshiftoss/caip-v2.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v2.4.0...@shapeshiftoss/caip-v2.5.0) (2022-05-06)
 
 
