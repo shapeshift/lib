@@ -67,10 +67,10 @@ export class CoinGeckoMarketService implements MarketService {
         .reduce((acc, cur) => {
           const { id } = cur
           try {
-            const caip19 = adapters.coingeckoToAssetId(id)
-            if (!caip19) return acc
+            const assetId = adapters.coingeckoToAssetId(id)
+            if (!assetId) return acc
             const curWithoutId = omit(cur, 'id') // don't leak this through to clients
-            acc[caip19] = {
+            acc[assetId] = {
               price: curWithoutId.current_price.toString(),
               marketCap: curWithoutId.market_cap.toString(),
               volume: curWithoutId.total_volume.toString(),
@@ -78,7 +78,7 @@ export class CoinGeckoMarketService implements MarketService {
             }
             return acc
           } catch {
-            return acc // no caip found, we don't support this asset
+            return acc // no AssetId found, we don't support this asset
           }
         }, {} as MarketCapResult)
     } catch (e) {
@@ -86,7 +86,7 @@ export class CoinGeckoMarketService implements MarketService {
     }
   }
 
-  findByCaip19 = async ({ assetId }: MarketDataArgs): Promise<MarketData | null> => {
+  findByAssetId = async ({ assetId }: MarketDataArgs): Promise<MarketData | null> => {
     try {
       if (!adapters.assetIdToCoingecko(assetId)) return null
       const { chain, assetReference } = fromAssetId(assetId)
@@ -108,11 +108,11 @@ export class CoinGeckoMarketService implements MarketService {
       }
     } catch (e) {
       console.warn(e)
-      throw new Error('CoinGeckoMarketService(findByCaip19): error fetching market data')
+      throw new Error('CoinGeckoMarketService(findByAssetId): error fetching market data')
     }
   }
 
-  findPriceHistoryByCaip19 = async ({
+  findPriceHistoryByAssetId = async ({
     assetId,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
@@ -179,7 +179,7 @@ export class CoinGeckoMarketService implements MarketService {
     } catch (e) {
       console.warn(e)
       throw new Error(
-        'CoinGeckoMarketService(findPriceHistoryByCaip19): error fetching price history'
+        'CoinGeckoMarketService(findPriceHistoryByAssetId): error fetching price history'
       )
     }
   }

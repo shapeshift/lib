@@ -98,8 +98,8 @@ describe('coincap market service', () => {
         .mockResolvedValueOnce({ data: { data: [eth] } })
         .mockResolvedValue({ data: { data: [btc] } })
       const result = await coinMarketService.findAll()
-      const btcCaip19 = adapters.coincapToAssetId('bitcoin')
-      const ethCaip19 = adapters.coincapToAssetId('ethereum')
+      const btcAssetIds = adapters.coincapToAssetId('bitcoin')
+      const ethAssetIds = adapters.coincapToAssetId('ethereum')
       const [btcKey, ethKey] = Object.keys(result)
       expect(btcKey).toEqual(btcAssetIds)
       expect(ethKey).toEqual(ethAssetIds)
@@ -134,14 +134,14 @@ describe('coincap market service', () => {
         volume: '13216473429.9114945699035335'
       }
       mockedAxios.get.mockResolvedValue({ data: { data: eth } })
-      expect(await coinMarketService.findByCaip19(args)).toEqual(result)
+      expect(await coinMarketService.findByAssetId(args)).toEqual(result)
     })
 
     it('should return null on network error', async () => {
       mockedAxios.get.mockRejectedValue(Error)
       jest.spyOn(console, 'warn').mockImplementation(() => void 0)
-      await expect(coinMarketService.findByCaip19(args)).rejects.toEqual(
-        new Error('MarketService(findByCaip19): error fetching market data')
+      await expect(coinMarketService.findByAssetId(args)).rejects.toEqual(
+        new Error('MarketService(findByAssetId): error fetching market data')
       )
     })
   })
@@ -167,14 +167,14 @@ describe('coincap market service', () => {
         { date: new Date('2021-09-12T00:00:00.000Z').valueOf(), price: 45196.488277558245 }
       ]
       mockedAxios.get.mockResolvedValue({ data: { data: mockHistoryData } })
-      expect(await coinMarketService.findPriceHistoryByCaip19(args)).toEqual(expected)
+      expect(await coinMarketService.findPriceHistoryByAssetId(args)).toEqual(expected)
     })
 
     it('should return null on network error', async () => {
       mockedAxios.get.mockRejectedValue(Error)
       jest.spyOn(console, 'warn').mockImplementation(() => void 0)
-      await expect(coinMarketService.findPriceHistoryByCaip19(args)).rejects.toEqual(
-        new Error('MarketService(findPriceHistoryByCaip19): error fetching price history')
+      await expect(coinMarketService.findPriceHistoryByAssetId(args)).rejects.toEqual(
+        new Error('MarketService(findPriceHistoryByAssetId): error fetching price history')
       )
     })
   })

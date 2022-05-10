@@ -123,7 +123,7 @@ export class YearnVaultMarketCapService implements MarketService {
     }
   }
 
-  findByCaip19 = async ({ assetId }: MarketDataArgs): Promise<MarketData | null> => {
+  findByAssetId = async ({ assetId }: MarketDataArgs): Promise<MarketData | null> => {
     const id = adapters.assetIdToYearn(assetId)
     if (!id) return null
     try {
@@ -184,7 +184,7 @@ export class YearnVaultMarketCapService implements MarketService {
       }
     } catch (e) {
       console.warn(e)
-      throw new Error('YearnMarketService(findByCaip19): error fetching market data')
+      throw new Error('YearnMarketService(findByAssetId): error fetching market data')
     }
   }
 
@@ -194,7 +194,7 @@ export class YearnVaultMarketCapService implements MarketService {
     return date
   }
 
-  findPriceHistoryByCaip19 = async ({
+  findPriceHistoryByAssetId = async ({
     assetId,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {

@@ -25,10 +25,10 @@ export class OsmosisMarketService implements MarketService {
         .map((data) => data ?? []) // filter out rate limited results
         .sort((a, b) => (a.liquidity < b.liquidity ? 1 : -1))
         .reduce((acc, token) => {
-          const caip19 = adapters.osmosisToAssetId(token.denom)
-          if (!caip19) return acc
+          const assetId = adapters.osmosisToAssetId(token.denom)
+          if (!assetId) return acc
 
-          acc[caip19] = {
+          acc[assetId] = {
             price: token.price.toString(),
             marketCap: token.liquidity.toString(),
             volume: token.volume_24h.toString(),
@@ -44,7 +44,7 @@ export class OsmosisMarketService implements MarketService {
     }
   }
 
-  findByCaip19 = async ({ assetId }: MarketDataArgs): Promise<MarketData | null> => {
+  findByAssetId = async ({ assetId }: MarketDataArgs): Promise<MarketData | null> => {
     if (!adapters.assetIdToOsmosis(assetId)) return null
 
     try {
@@ -64,11 +64,11 @@ export class OsmosisMarketService implements MarketService {
       }
     } catch (e) {
       console.warn(e)
-      throw new Error('MarketService(findByCaip19): error fetching market data')
+      throw new Error('MarketService(findByAssetId): error fetching market data')
     }
   }
 
-  findPriceHistoryByCaip19 = async ({
+  findPriceHistoryByAssetId = async ({
     assetId,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
@@ -145,7 +145,7 @@ export class OsmosisMarketService implements MarketService {
       }, [])
     } catch (e) {
       console.warn(e)
-      throw new Error('MarketService(findPriceHistoryByCaip19): error fetching price history')
+      throw new Error('MarketService(findPriceHistoryByAssetId): error fetching price history')
     }
   }
 }

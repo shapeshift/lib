@@ -62,7 +62,7 @@ All prices, marketCaps and volumes are represented in US Dollars.
       }
     ```
 
-* `findByCaip19`
+* `findByAssetId`
   * Args
     ```
       assetId: string
@@ -89,7 +89,7 @@ All prices, marketCaps and volumes are represented in US Dollars.
       }
     ```
 
-* `findPriceHistoryByCaip19`
+* `findPriceHistoryByAssetId`
   * Args
     ```
       assetId: string

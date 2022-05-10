@@ -98,7 +98,7 @@ describe('yearn token market service', () => {
         changePercent24Hr: 0,
         volume: '0'
       }
-      expect(await yearnTokenMarketCapService.findByCaip19(args)).toEqual(result)
+      expect(await yearnTokenMarketCapService.findByAssetId(args)).toEqual(result)
     })
 
     it('should return null on network error', async () => {
@@ -106,14 +106,14 @@ describe('yearn token market service', () => {
       mockedYearnSdk.ironBank.tokens.mockRejectedValueOnce(Error as never)
       mockedYearnSdk.tokens.supported.mockRejectedValueOnce(Error as never)
       jest.spyOn(console, 'warn').mockImplementation(() => void 0)
-      expect(await yearnTokenMarketCapService.findByCaip19(args)).toEqual(null)
+      expect(await yearnTokenMarketCapService.findByAssetId(args)).toEqual(null)
     })
   })
 
-  describe('findPriceHistoryByCaip19', () => {
+  describe('findPriceHistoryByAssetId', () => {
     it('should return market empty array', async () => {
       const expected: [] = []
-      expect(await yearnTokenMarketCapService.findPriceHistoryByCaip19()).toEqual(expected)
+      expect(await yearnTokenMarketCapService.findPriceHistoryByAssetId()).toEqual(expected)
     })
   })
 })

@@ -78,7 +78,7 @@ export class YearnTokenMarketCapService implements MarketService {
     }
   }
 
-  findByCaip19 = async ({ assetId: _assetId }: MarketDataArgs): Promise<MarketData | null> => {
+  findByAssetId = async ({ assetId: _assetId }: MarketDataArgs): Promise<MarketData | null> => {
     const address = adapters.assetIdToYearn(_assetId)
     if (!address) return null
     try {
@@ -111,11 +111,11 @@ export class YearnTokenMarketCapService implements MarketService {
       }
     } catch (e) {
       console.warn(e)
-      throw new Error('YearnMarketService(findByCaip19): error fetching market data')
+      throw new Error('YearnMarketService(findByAssetId): error fetching market data')
     }
   }
 
-  findPriceHistoryByCaip19 = async (): Promise<HistoryData[]> => {
+  findPriceHistoryByAssetId = async (): Promise<HistoryData[]> => {
     // TODO: figure out a way to get zapper, ironbank and underlying token historical data.
     return []
   }

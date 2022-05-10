@@ -5,8 +5,8 @@ import { FiatPriceHistoryType, FindByFiatMarketType } from './fiat-market-servic
 export interface MarketService {
   baseUrl: string
   findAll: FindAllMarketType
-  findPriceHistoryByCaip19: PriceHistoryType
-  findByCaip19: FindByCaip19MarketType
+  findPriceHistoryByAssetId: PriceHistoryType
+  findByAssetId: FindByCaip19MarketType
 }
 
 export interface FiatMarketService {

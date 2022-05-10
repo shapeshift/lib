@@ -51,10 +51,10 @@ export class CoinCapMarketService implements MarketService {
         .reduce((acc, cur) => {
           const { id } = cur
           try {
-            const caip19 = adapters.coincapToAssetId(id)
-            if (!caip19) return acc
+            const assetId = adapters.coincapToAssetId(id)
+            if (!assetId) return acc
             const curWithoutId = omit(cur, 'id') // don't leak this through to clients
-            acc[caip19] = {
+            acc[assetId] = {
               price: curWithoutId.priceUsd.toString(),
               marketCap: curWithoutId.marketCapUsd.toString(),
               volume: curWithoutId.volumeUsd24Hr.toString(),
@@ -62,7 +62,7 @@ export class CoinCapMarketService implements MarketService {
             }
             return acc
           } catch {
-            return acc // no caip found, we don't support this asset
+            return acc // no AssetId found, we don't support this asset
           }
         }, {} as MarketCapResult)
     } catch (e) {
@@ -70,7 +70,7 @@ export class CoinCapMarketService implements MarketService {
     }
   }
 
-  findByCaip19 = async ({ assetId }: MarketDataArgs): Promise<MarketData | null> => {
+  findByAssetId = async ({ assetId }: MarketDataArgs): Promise<MarketData | null> => {
     if (!adapters.assetIdToCoinCap(assetId)) return null
     try {
       const id = adapters.assetIdToCoinCap(assetId)
@@ -86,11 +86,11 @@ export class CoinCapMarketService implements MarketService {
       }
     } catch (e) {
       console.warn(e)
-      throw new Error('MarketService(findByCaip19): error fetching market data')
+      throw new Error('MarketService(findByAssetId): error fetching market data')
     }
   }
 
-  findPriceHistoryByCaip19 = async ({
+  findPriceHistoryByAssetId = async ({
     assetId,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
@@ -164,7 +164,7 @@ export class CoinCapMarketService implements MarketService {
       }, [])
     } catch (e) {
       console.warn(e)
-      throw new Error('MarketService(findPriceHistoryByCaip19): error fetching price history')
+      throw new Error('MarketService(findPriceHistoryByAssetId): error fetching price history')
     }
   }
 }

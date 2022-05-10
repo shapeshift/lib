@@ -51,7 +51,7 @@ describe('osmosis market service', () => {
       }
 
       mockedAxios.get.mockResolvedValue({ data: [secretNetwork] })
-      expect(await osmosisMarketService.findByCaip19(args)).toEqual(result)
+      expect(await osmosisMarketService.findByAssetId(args)).toEqual(result)
     })
 
     it('should return market data for Ion', async () => {
@@ -63,7 +63,7 @@ describe('osmosis market service', () => {
         changePercent24Hr: -15.5060091033
       }
       mockedAxios.get.mockResolvedValue({ data: [ion] })
-      expect(await osmosisMarketService.findByCaip19(args)).toEqual(result)
+      expect(await osmosisMarketService.findByAssetId(args)).toEqual(result)
     })
 
     it('should return market data for Osmosis', async () => {
@@ -75,7 +75,7 @@ describe('osmosis market service', () => {
         changePercent24Hr: -8.5460553557
       }
       mockedAxios.get.mockResolvedValue({ data: [osmo] })
-      expect(await osmosisMarketService.findByCaip19(args)).toEqual(result)
+      expect(await osmosisMarketService.findByAssetId(args)).toEqual(result)
     })
   })
 
@@ -93,7 +93,7 @@ describe('osmosis market service', () => {
         { date: new Date('2022-02-19T17:00:00.000Z').valueOf(), price: 8.7544961127 }
       ]
       mockedAxios.get.mockResolvedValue({ data: mockHourlyHistoryData })
-      expect(await osmosisMarketService.findPriceHistoryByCaip19(args)).toEqual(expected)
+      expect(await osmosisMarketService.findPriceHistoryByAssetId(args)).toEqual(expected)
     })
 
     it('should return market data for OSMO (v2 endpoint)', async () => {
@@ -109,7 +109,7 @@ describe('osmosis market service', () => {
         { date: new Date('2021-06-27T00:00:00.000Z').valueOf(), price: 5.3994292528 }
       ]
       mockedAxios.get.mockResolvedValue({ data: mockOsmosisYearlyHistoryData })
-      expect(await osmosisMarketService.findPriceHistoryByCaip19(args)).toEqual(expected)
+      expect(await osmosisMarketService.findPriceHistoryByAssetId(args)).toEqual(expected)
     })
 
     it('should return null on network error', async () => {
@@ -119,8 +119,8 @@ describe('osmosis market service', () => {
       }
       mockedAxios.get.mockRejectedValue(Error)
       jest.spyOn(console, 'warn').mockImplementation(() => void 0)
-      await expect(osmosisMarketService.findPriceHistoryByCaip19(args)).rejects.toEqual(
-        new Error('MarketService(findPriceHistoryByCaip19): error fetching price history')
+      await expect(osmosisMarketService.findPriceHistoryByAssetId(args)).rejects.toEqual(
+        new Error('MarketService(findPriceHistoryByAssetId): error fetching price history')
       )
     })
   })

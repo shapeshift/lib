@@ -101,14 +101,14 @@ describe('yearn market service', () => {
         changePercent24Hr: 0.00467104804294,
         volume: '100000'
       }
-      expect(await yearnVaultMarketCapService.findByCaip19(args)).toEqual(result)
+      expect(await yearnVaultMarketCapService.findByAssetId(args)).toEqual(result)
     })
 
     it('should return null on network error', async () => {
       mockedYearnSdk.vaults.get.mockRejectedValueOnce(Error as never)
       jest.spyOn(console, 'warn').mockImplementation(() => void 0)
-      await expect(yearnVaultMarketCapService.findByCaip19(args)).rejects.toEqual(
-        new Error('YearnMarketService(findByCaip19): error fetching market data')
+      await expect(yearnVaultMarketCapService.findByAssetId(args)).rejects.toEqual(
+        new Error('YearnMarketService(findByAssetId): error fetching market data')
       )
     })
   })
@@ -127,13 +127,13 @@ describe('yearn market service', () => {
         { date: 1639441831000, price: 1.085204 },
         { date: 1639530562000, price: 1.085871 }
       ]
-      expect(await yearnVaultMarketCapService.findPriceHistoryByCaip19(args)).toEqual(expected)
+      expect(await yearnVaultMarketCapService.findPriceHistoryByAssetId(args)).toEqual(expected)
     })
 
     it('should return null on network error', async () => {
       mockedYearnSdk.services.subgraph.fetchQuery.mockRejectedValueOnce(Error as never)
       jest.spyOn(console, 'warn').mockImplementation(() => void 0)
-      await expect(yearnVaultMarketCapService.findPriceHistoryByCaip19(args)).rejects.toEqual(
+      await expect(yearnVaultMarketCapService.findPriceHistoryByAssetId(args)).rejects.toEqual(
         new Error('YearnMarketService(getPriceHistory): error fetching price history')
       )
     })
