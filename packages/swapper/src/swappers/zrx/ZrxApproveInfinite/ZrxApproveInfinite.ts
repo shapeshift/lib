@@ -9,7 +9,6 @@ export async function ZrxApproveInfinite(
   { adapterManager, web3 }: ZrxSwapperDeps,
   { quote, wallet }: ApproveInfiniteInput<ChainIdTypes>
 ) {
-  const adapter = await adapterManager.byChainId('1234')
   const allowanceGrantRequired = await grantAllowance({
     quote: {
       ...quote,
@@ -17,7 +16,7 @@ export async function ZrxApproveInfinite(
       sellAmount: MAX_ALLOWANCE
     },
     wallet,
-    adapter,
+    adapterManager,
     erc20Abi,
     web3
   })

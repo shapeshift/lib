@@ -1,6 +1,6 @@
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import { chainAdapters } from '@shapeshiftoss/types'
-import { ChainIdTypes } from 'packages/swapper/src/api'
+import { chainAdapters, ChainTypes } from '@shapeshiftoss/types'
+// import { ChainIdTypes } from '../../../../api'
 import Web3 from 'web3'
 
 jest.mock('@shapeshiftoss/chain-adapters')
@@ -31,11 +31,11 @@ ChainAdapterManager.mockImplementation(() => ({
 
 export const setupZrxDeps = () => {
   const unchainedUrls = {
-    [ChainIdTypes.Bitcoin]: {
+    [ChainTypes.Bitcoin]: {
       httpUrl: 'https://api.bitcoin.shapeshift.com',
       wsUrl: 'wss://api.bitcoin.shapeshift.com'
     },
-    [ChainIdTypes.Ethereum]: {
+    [ChainTypes.Ethereum]: {
       httpUrl: 'https://api.ethereum.shapeshift.com',
       wsUrl: 'wss://api.ethereum.shapeshift.com'
     }
