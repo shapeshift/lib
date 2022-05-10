@@ -16,7 +16,7 @@ import { ZrxApproveInfinite } from './ZrxApproveInfinite/ZrxApproveInfinite'
 import { zrxExecuteTrade } from './zrxExecuteTrade/zrxExecuteTrade'
 
 jest.mock('./utils/helpers/helpers')
-jest.mock('../zrx/ZrxExecuteTrade/ZrxExecuteTrade', () => ({
+jest.mock('../zrx/zrxExecuteTrade/zrxExecuteTrade', () => ({
   zrxExecuteTrade: jest.fn()
 }))
 
