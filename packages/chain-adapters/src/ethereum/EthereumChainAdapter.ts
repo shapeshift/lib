@@ -387,12 +387,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           chainId: tx.chainId,
           chain: ChainTypes.Ethereum,
           confirmations: tx.confirmations,
-          ...(tx.fee && {
-            fee: {
-              assetId: tx.fee.assetId,
-              value: tx.fee.value
-            }
-          }),
+          fee: tx.fee,
           status: getStatus(tx.status),
           tradeDetails: tx.trade,
           transfers,

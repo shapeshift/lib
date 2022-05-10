@@ -368,12 +368,7 @@ export class ChainAdapter
           chainId: tx.chainId,
           chain: ChainTypes.Bitcoin,
           confirmations: tx.confirmations,
-          ...(tx.fee && {
-            fee: {
-              assetId: tx.fee.assetId,
-              value: tx.fee.value
-            }
-          }),
+          fee: tx.fee,
           status: getStatus(tx.status),
           tradeDetails: tx.trade,
           transfers,
