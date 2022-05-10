@@ -1,5 +1,9 @@
-import { FindAllMarketType, PriceHistoryType } from '@shapeshiftoss/types'
-import { MarketData, MarketDataArgs } from '@shapeshiftoss/types/src'
+import {
+  FindAllMarketType,
+  MarketData,
+  MarketDataArgs,
+  PriceHistoryType
+} from '@shapeshiftoss/types'
 
 import { FiatPriceHistoryType, FindByFiatMarketType } from './fiat-market-service-types'
 
