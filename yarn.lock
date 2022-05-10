@@ -2714,16 +2714,6 @@
     lodash "^4.17.4"
     read-pkg-up "^7.0.0"
 
-"@shapeshiftoss/asset-service@^2.0.0":
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/@shapeshiftoss/asset-service/-/asset-service-2.6.0.tgz#810ae765f546b1780d5fc635ef0350ff057bd2d3"
-  integrity sha512-TN/V2Tsr0PomkFwJAb6G83db8zlE8MmnlT1a4GBAh342QngOVyuz0K+goDXgodyS3tHBEgvhabvz7Z5vWA/e+Q==
-  dependencies:
-    axios "^0.26.0"
-    identicon.js "^2.3.3"
-    js-pixel-fonts "^1.5.0"
-    lodash "^4.17.21"
-
 "@shapeshiftoss/bitcoinjs-lib@5.2.0-shapeshift.2":
   version "5.2.0-shapeshift.2"
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/bitcoinjs-lib/-/bitcoinjs-lib-5.2.0-shapeshift.2.tgz#f000da26302a8a35822201a6c49a4cf7e1379ed4"
@@ -2757,19 +2747,10 @@
     tsoa "^3.4.0"
     ws "^8.3.0"
 
-"@shapeshiftoss/chain-adapters@^2.13.0":
-  version "2.15.0"
-  resolved "https://registry.yarnpkg.com/@shapeshiftoss/chain-adapters/-/chain-adapters-2.15.0.tgz#366c47bdd6900c64b92c26454ee743e3abcc6dd1"
-  integrity sha512-RUZ2wpv6zrHCydjxVtyBpCpfRYP7bcFKBVL7z4b7dtI3MvL2uTZMf3cKsbUma+pSLlHgdinqd/SS2Dx4dc6YKA==
-  dependencies:
-    axios "^0.26.0"
-    bech32 "^2.0.0"
-    bignumber.js "^9.0.1"
-    bitcoinjs-lib "^5.2.0"
-    coinselect "^3.1.12"
-    ethers "^5.4.7"
-    multicoin-address-validator "^0.5.2"
-    web3-utils "^1.6.0"
+"@shapeshiftoss/caip@^2.0.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/caip/-/caip-2.5.0.tgz#f82f0fb16267d1bcfa80e31fd2708c89adbfda3a"
+  integrity sha512-CWL50ctseRvPWM1AdydZZ2yAjN/46e29xUwikVTXycbyNKV445i3I50iScjNfmNOUNM5u9Mq67FGsiDhvpNZOw==
 
 "@shapeshiftoss/common-api@^6.11.0":
   version "6.11.0"
