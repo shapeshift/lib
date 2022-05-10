@@ -353,11 +353,7 @@ export class ChainAdapter
       { topic: 'txs', addresses },
       ({ data: tx }) => {
         const transfers = tx.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
-<<<<<<< Updated upstream
-          assetId: transfer.caip19,
-=======
-          caip19: transfer.assetId,
->>>>>>> Stashed changes
+          assetId: transfer.assetId,
           from: transfer.from,
           to: transfer.to,
           type: getType(transfer.type),
@@ -369,16 +365,12 @@ export class ChainAdapter
           blockHash: tx.blockHash,
           blockHeight: tx.blockHeight,
           blockTime: tx.blockTime,
-<<<<<<< Updated upstream
-          chainId: tx.caip2,
-=======
-          caip2: tx.chainId,
->>>>>>> Stashed changes
+          chainId: tx.chainId,
           chain: ChainTypes.Bitcoin,
           confirmations: tx.confirmations,
           ...(tx.fee && {
             fee: {
-              caip19: tx.fee.assetId,
+              assetId: tx.fee.assetId,
               value: tx.fee.value
             }
           }),

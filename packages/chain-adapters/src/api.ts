@@ -7,11 +7,6 @@ export type ChainAdapter<T extends ChainTypes> = {
    */
   getType(): T
 
-  /**
-   * @deprecated - use `getChainId()` instead
-   */
-  getCaip2(): ChainId
-
   getChainId(): ChainId
   /**
    * Get the supported account types for an adapter

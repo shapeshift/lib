@@ -66,10 +66,6 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
     return this.chainId
   }
 
-  getCaip2(): ChainId {
-    return this.chainId
-  }
-
   async getInfo(): Promise<chainAdapters.cosmos.Info> {
     try {
       const { data } = await this.providers.http.getInfo()
@@ -175,18 +171,14 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
             txid: parsedTx.txid,
             ...(parsedTx.fee && {
               fee: {
-                caip19: parsedTx.fee.assetId,
+                assetId: parsedTx.fee.assetId,
                 value: parsedTx.fee.value
               }
             }),
             status: getStatus(parsedTx.status),
             tradeDetails: parsedTx.trade,
             transfers: parsedTx.transfers.map((transfer) => ({
-<<<<<<< Updated upstream
-              assetId: transfer.caip19,
-=======
-              caip19: transfer.assetId,
->>>>>>> Stashed changes
+              assetId: transfer.assetId,
               from: transfer.from,
               to: transfer.to,
               type: getType(transfer.type),
@@ -274,27 +266,19 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
           blockHash: tx.blockHash,
           blockHeight: tx.blockHeight,
           blockTime: tx.blockTime,
-<<<<<<< Updated upstream
-          chainId: tx.caip2,
-=======
-          caip2: tx.chainId,
->>>>>>> Stashed changes
+          chainId: tx.chainId,
           chain: this.getType(),
           confirmations: tx.confirmations,
           ...(tx.fee && {
             fee: {
-              caip19: tx.fee.assetId,
+              assetId: tx.fee.assetId,
               value: tx.fee.value
             }
           }),
           status: getStatus(tx.status),
           tradeDetails: tx.trade,
           transfers: tx.transfers.map((transfer) => ({
-<<<<<<< Updated upstream
-            assetId: transfer.caip19,
-=======
-            caip19: transfer.assetId,
->>>>>>> Stashed changes
+            assetId: transfer.assetId,
             from: transfer.from,
             to: transfer.to,
             type: getType(transfer.type),

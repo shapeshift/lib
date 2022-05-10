@@ -74,39 +74,22 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     return ChainTypes.Ethereum
   }
 
-  /**
-   * @deprecated - use `getChainId()` instead
-   */
-  getCaip2(): ChainId {
-    return this.chainId
-  }
-
   getChainId(): ChainId {
     return this.chainId
   }
 
   async getAccount(pubkey: string): Promise<chainAdapters.Account<ChainTypes.Ethereum>> {
     try {
-<<<<<<< Updated upstream
       const chainId = this.getChainId()
-      const { chain, network } = fromCAIP2(chainId)
-=======
-      const caip = this.getCaip2()
-      const { chain, network } = fromChainId(caip)
->>>>>>> Stashed changes
+      const { chain, network } = fromChainId(chainId)
       const { data } = await this.providers.http.getAccount({ pubkey })
 
       const balance = bnOrZero(data.balance).plus(bnOrZero(data.unconfirmedBalance))
 
       return {
         balance: balance.toString(),
-<<<<<<< Updated upstream
         chainId,
-        assetId: toCAIP19({
-=======
-        caip2: caip,
-        caip19: toAssetId({
->>>>>>> Stashed changes
+        assetId: toAssetId({
           chain,
           network,
           assetNamespace: AssetNamespace.Slip44,
@@ -117,11 +100,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           nonce: data.nonce,
           tokens: data.tokens.map((token) => ({
             balance: token.balance,
-<<<<<<< Updated upstream
-            assetId: toCAIP19({
-=======
-            caip19: toAssetId({
->>>>>>> Stashed changes
+            assetId: toAssetId({
               chain,
               network,
               assetNamespace: getAssetNamespace(token.type),
@@ -186,11 +165,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
         if (isErc20Send) {
           if (!erc20ContractAddress) throw new Error('no token address')
           const erc20Balance = account?.chainSpecific?.tokens?.find((token) => {
-<<<<<<< Updated upstream
-            return fromCAIP19(token.assetId).assetReference === erc20ContractAddress.toLowerCase()
-=======
-            return fromAssetId(token.caip19).assetReference === erc20ContractAddress.toLowerCase()
->>>>>>> Stashed changes
+            return fromAssetId(token.assetId).assetReference === erc20ContractAddress.toLowerCase()
           })?.balance
           if (!erc20Balance) throw new Error('no balance')
           tx.value = erc20Balance
@@ -286,11 +261,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     if (sendMax && isErc20Send && contractAddress) {
       const account = await this.getAccount(from)
       const erc20Balance = account?.chainSpecific?.tokens?.find((token) => {
-<<<<<<< Updated upstream
-        const { assetReference } = fromCAIP19(token.assetId)
-=======
-        const { assetReference } = fromAssetId(token.caip19)
->>>>>>> Stashed changes
+        const { assetReference } = fromAssetId(token.assetId)
         return assetReference === contractAddress.toLowerCase()
       })?.balance
       if (!erc20Balance) throw new Error('no balance')
@@ -401,11 +372,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       { topic: 'txs', addresses: [address] },
       ({ data: tx }) => {
         const transfers = tx.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
-<<<<<<< Updated upstream
-          assetId: transfer.caip19,
-=======
-          caip19: transfer.assetId,
->>>>>>> Stashed changes
+          assetId: transfer.assetId,
           from: transfer.from,
           to: transfer.to,
           type: getType(transfer.type),
@@ -417,16 +384,12 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           blockHash: tx.blockHash,
           blockHeight: tx.blockHeight,
           blockTime: tx.blockTime,
-<<<<<<< Updated upstream
-          chainId: tx.caip2,
-=======
-          caip2: tx.chainId,
->>>>>>> Stashed changes
+          chainId: tx.chainId,
           chain: ChainTypes.Ethereum,
           confirmations: tx.confirmations,
           ...(tx.fee && {
             fee: {
-              caip19: tx.fee.assetId,
+              assetId: tx.fee.assetId,
               value: tx.fee.value
             }
           }),
