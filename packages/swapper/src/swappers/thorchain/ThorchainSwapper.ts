@@ -1,4 +1,4 @@
-import { CAIP19 } from '@shapeshiftoss/caip'
+import { AssetId } from '@shapeshiftoss/caip'
 import {
   ApprovalNeededOutput,
   Asset,
@@ -25,10 +25,6 @@ export class ThorchainSwapper implements Swapper {
     throw new Error('ThorchainSwapper: getMinMax unimplemented')
   }
 
-  async executeQuote(): Promise<ExecQuoteOutput> {
-    throw new Error('ThorchainSwapper: executeQuote unimplemented')
-  }
-
   async approvalNeeded(): Promise<ApprovalNeededOutput> {
     throw new Error('ThorchainSwapper: approvalNeeded unimplemented')
   }
@@ -37,11 +33,11 @@ export class ThorchainSwapper implements Swapper {
     throw new Error('ThorchainSwapper: approveInfinite unimplemented')
   }
 
-  filterBuyAssetsBySellAssetId(): CAIP19[] {
+  filterBuyAssetsBySellAssetId(): AssetId[] {
     return []
   }
 
-  filterAssetIdsBySellable(): CAIP19[] {
+  filterAssetIdsBySellable(): AssetId[] {
     return []
   }
 

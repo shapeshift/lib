@@ -1,4 +1,4 @@
-import { CAIP19 } from '@shapeshiftoss/caip'
+import { AssetId } from '@shapeshiftoss/caip'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import {
   ApprovalNeededOutput,
@@ -12,7 +12,7 @@ import { ethereum } from '@shapeshiftoss/types/src/chain-adapters'
 import { ChainSpecific } from '@shapeshiftoss/types/src/utility'
 
 export type SupportedAssetInput = {
-  assetIds: CAIP19[]
+  assetIds: AssetId[]
 }
 
 export enum ChainIdTypes {
@@ -34,17 +34,17 @@ export type QuoteFeeData<T1 extends ChainIdTypes> = {
 } & ChainSpecificQuoteFeeData<T1>
 
 export type ByPairInput = {
-  sellAssetId: CAIP19
-  buyAssetId: CAIP19
+  sellAssetId: AssetId
+  buyAssetId: AssetId
 }
 
 export type BuyAssetBySellIdInput = {
-  sellAssetId: CAIP19
-  assetIds: CAIP19[]
+  sellAssetId: AssetId
+  assetIds: AssetId[]
 }
 
 export type SupportedSellAssetsInput = {
-  assetIds: CAIP19[]
+  assetIds: AssetId[]
 }
 
 export type CommonTradeInput = {
@@ -156,10 +156,10 @@ export interface Swapper {
   /**
    * Get supported buyAssetId's by sellAssetId
    */
-  filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): CAIP19[]
+  filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): AssetId[]
 
   /**
    * Get supported sell assetIds
    */
-  filterAssetIdsBySellable(assetIds: CAIP19[]): CAIP19[]
+  filterAssetIdsBySellable(assetIds: AssetId[]): AssetId[]
 }
