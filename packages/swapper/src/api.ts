@@ -110,9 +110,8 @@ export type ApprovalNeededInput<C extends SupportedChainIds> = {
   wallet: HDWallet
 }
 
-
 // Example:
-// - SwapError(SwapErrorTypes.INSUFFICIENT_FUNDS, { cause: { err } })
+// - SwapError(SwapErrorTypes.INSUFFICIENT_FUNDS, { cause: { err }, details: 'foo' })
 export const SwapError = createErrorClass('SwapError')
 
 // Swap Errors
@@ -139,7 +138,7 @@ export enum SwapErrorTypes {
   SIGNING_FAILED = 'SIGNING_FAILED',
   SIGN_AND_BROADCAST_FAILED = 'SIGN_AND_BROADCAST_FAILED',
   SIGNING_REQUIRED = 'SIGNING_REQUIRED',
-  HDWALLET_INVALID_CONFIG = 'HDWALLET_INVALID_CONFIG',
+  HDWALLET_INVALID_CONFIG = 'HDWALLET_INVALID_CONFIG'
 }
 
 export interface Swapper {
