@@ -5,8 +5,8 @@ import {
   Asset,
   ExecQuoteOutput,
   GetQuoteInput,
-  SupportedChainIds,
   MinMaxOutput,
+  SupportedChainIds,
   SwapperType
 } from '@shapeshiftoss/types'
 import { ethereum } from '@shapeshiftoss/types/src/chain-adapters'

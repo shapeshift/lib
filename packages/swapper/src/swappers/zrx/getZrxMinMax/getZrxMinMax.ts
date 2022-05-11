@@ -9,6 +9,10 @@ export const getZrxMinMax = async (
 ): Promise<MinMaxOutput> => {
   const { sellAsset } = input
 
+  if (sellAsset.chainId !== 'eip155:1' || buyAsset.chain !== 'eip155:1') {
+    throw new ZrxError('getZrxMinMax - must be eth assets')
+  }
+
   const usdRate = await getUsdRate({
     symbol: sellAsset.symbol,
     tokenId: sellAsset.tokenId

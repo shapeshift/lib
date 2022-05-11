@@ -1,4 +1,5 @@
 import { SupportedChainIds } from '@shapeshiftoss/types'
+
 import { ApproveInfiniteInput } from '../../../api'
 import { erc20Abi } from '../utils/abi/erc20-abi'
 import { MAX_ALLOWANCE } from '../utils/constants'

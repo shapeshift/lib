@@ -1,7 +1,7 @@
+import { SupportedChainIds } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 
-import { SupportedChainIds } from '@shapeshiftoss/types'
 import { BuildTradeInput, SwapError, Trade } from '../../..'
 import { ZrxQuoteResponse } from '../types'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
@@ -56,6 +56,10 @@ export async function zrxBuildTrade(
     throw new SwapError(
       'ZrxSwapper:ZrxBuildTrade One of sellAssetContract or sellAssetSymbol or sellAssetNetwork are required'
     )
+  }
+
+  if (buyAsset.chainId !== 'eip155:1') {
+    throw new SwapError('ZrxSwapper:ZrxBuildTrade buyAsset must be on chainId eip155:1')
   }
 
   const adapter = adapterManager.byChain(buyAsset.chain)

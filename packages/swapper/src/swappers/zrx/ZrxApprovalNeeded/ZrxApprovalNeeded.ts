@@ -13,13 +13,17 @@ export async function ZrxApprovalNeeded(
 ): Promise<ApprovalNeededOutput> {
   const { sellAsset } = quote
 
+  if (sellAsset.chainId !== 'eip155:1') {
+    throw new SwapError('ZrxSwapper:ZrxApprovalNeeded only Ethereum chain type is supported')
+  }
+
   if (sellAsset.symbol === 'ETH') {
     return { approvalNeeded: false }
   }
 
   const accountNumber = quote.sellAssetAccountId ? Number(quote.sellAssetAccountId) : 0
 
-  const adapter = await adapterManager.byChainId('1234')
+  const adapter = await adapterManager.byChainId('eip155:1')
   const bip44Params = adapter.buildBIP44Params({ accountNumber })
   const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 

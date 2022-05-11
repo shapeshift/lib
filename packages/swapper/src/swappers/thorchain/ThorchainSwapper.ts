@@ -4,8 +4,8 @@ import {
   Asset,
   ExecQuoteOutput,
   GetQuoteInput,
-  SupportedChainIds,
   MinMaxOutput,
+  SupportedChainIds,
   SwapperType
 } from '@shapeshiftoss/types'
 

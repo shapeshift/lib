@@ -21,6 +21,9 @@ export async function getZrxTradeQuote(input: GetTradeQuoteInput): Promise<Trade
   if (!sellAmount && !buyAmount) {
     throw new ZrxError('getQuote - sellAmount or buyAmount amount is required')
   }
+  if (buyAsset.chainId !== 'eip155:1' || sellAsset.chainId !== 'eip155:1') {
+    throw new ZrxError('getQuote - Both assets need to be on the Ethereum chain to use Zrx')
+  }
 
   const useSellAmount = !!sellAmount
   const buyToken = buyAsset.tokenId || buyAsset.symbol
