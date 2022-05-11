@@ -23,7 +23,7 @@ export async function ZrxApprovalNeeded(
 
   const accountNumber = quote.sellAssetAccountId ? Number(quote.sellAssetAccountId) : 0
 
-  const adapter = await adapterManager.byChainId('eip155:1')
+  const adapter = await adapterManager.byChainId(sellAsset.chainId)
   const bip44Params = adapter.buildBIP44Params({ accountNumber })
   const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 
