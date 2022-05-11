@@ -5,3 +5,7 @@ export type BuildTxInput = {
 export type Account = {
   sequence: number
 }
+
+export type FeeData = {
+  gasLimit: string
+}

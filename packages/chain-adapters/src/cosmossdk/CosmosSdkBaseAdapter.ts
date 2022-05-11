@@ -13,8 +13,8 @@ export type CosmosChainTypes = ChainTypes.Cosmos | ChainTypes.Osmosis
 export interface ChainAdapterArgs {
   chainId?: ChainId
   providers: {
-    http: unchained.cosmos.V1Api
-    ws: unchained.ws.Client<unchained.cosmos.Tx>| unchained.ws.Client<unchained.osmosis.Tx>
+    http: unchained.cosmos.V1Api | unchained.osmosis.V1Api
+    ws: unchained.ws.Client<unchained.cosmos.Tx> | unchained.ws.Client<unchained.osmosis.Tx>
   }
   coinName: string
 }
