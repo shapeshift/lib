@@ -5,10 +5,11 @@ import {
   ExecQuoteOutput,
   GetQuoteInput,
   MinMaxOutput,
+  SupportedChainIds,
   SwapperType
 } from '@shapeshiftoss/types'
 
-import { BuyAssetBySellIdInput, SupportedChainIds, Swapper, Trade, TradeQuote } from '../../api'
+import { BuyAssetBySellIdInput, Swapper, Trade, TradeQuote } from '../../api'
 
 /**
  * Playground for testing different scenarios of multiple swappers in the manager.

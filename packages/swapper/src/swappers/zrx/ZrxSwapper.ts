@@ -6,6 +6,7 @@ import {
   ExecQuoteOutput,
   GetQuoteInput,
   MinMaxOutput,
+  SupportedChainIds,
   SwapperType
 } from '@shapeshiftoss/types'
 import Web3 from 'web3'
@@ -17,7 +18,6 @@ import {
   BuyAssetBySellIdInput,
   ExecuteTradeInput,
   GetTradeQuoteInput,
-  SupportedChainIds,
   Swapper,
   Trade,
   TradeQuote

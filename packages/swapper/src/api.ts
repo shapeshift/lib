@@ -5,6 +5,7 @@ import {
   Asset,
   ExecQuoteOutput,
   GetQuoteInput,
+  SupportedChainIds,
   MinMaxOutput,
   SwapperType
 } from '@shapeshiftoss/types'
@@ -14,18 +15,6 @@ import { ChainSpecific } from '@shapeshiftoss/types/src/utility'
 export type SupportedAssetInput = {
   assetIds: AssetId[]
 }
-
-// All supported chainIds (CAIP2) that we supprt
-// as const is required - it tells the compiler that this is statically defined,
-// and let's us narrow the type from `string` to `['eip155:1', 'bip:29034892304']`
-const supportedChainIds = [
-  'eip155:1',
-  'bip122:000000000019d6689c085ae165831e93',
-  'cosmos:cosmoshub-4',
-  'cosmos:osmosis-1'
-] as const
-
-export type SupportedChainIds = typeof supportedChainIds[number]
 
 type ChainSpecificQuoteFeeData<T1> = ChainSpecific<
   T1,

@@ -4,11 +4,12 @@ import {
   Asset,
   ExecQuoteOutput,
   GetQuoteInput,
+  SupportedChainIds,
   MinMaxOutput,
   SwapperType
 } from '@shapeshiftoss/types'
 
-import { SupportedChainIds, Swapper, Trade, TradeQuote } from '../../api'
+import { Swapper, Trade, TradeQuote } from '../../api'
 
 export class ThorchainSwapper implements Swapper {
   getType() {

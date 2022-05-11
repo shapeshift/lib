@@ -1,6 +1,6 @@
-import { ApprovalNeededOutput } from '@shapeshiftoss/types'
+import { ApprovalNeededOutput, SupportedChainIds } from '@shapeshiftoss/types'
 
-import { ApprovalNeededInput, SupportedChainIds, SwapError } from '../../../api'
+import { ApprovalNeededInput, SwapError } from '../../../api'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { bnOrZero } from '../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../utils/constants'
