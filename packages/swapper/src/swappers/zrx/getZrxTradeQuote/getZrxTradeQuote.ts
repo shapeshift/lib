@@ -10,9 +10,7 @@ import { normalizeAmount } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
 import { ZrxError } from '../ZrxSwapper'
 
-export async function getZrxTradeQuote(
-  input: GetTradeQuoteInput
-): Promise<TradeQuote<'eip155:1'>> {
+export async function getZrxTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<'eip155:1'>> {
   const { sellAsset, buyAsset, sellAmount, buyAmount, sellAssetAccountId } = input
   if (!buyAsset) {
     throw new ZrxError('getQuote - Missing buyAsset')

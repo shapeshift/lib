@@ -15,9 +15,9 @@ import {
   ApproveInfiniteInput,
   BuildTradeInput,
   BuyAssetBySellIdInput,
-  SupportedChainIds,
   ExecuteTradeInput,
   GetTradeQuoteInput,
+  SupportedChainIds,
   Swapper,
   Trade,
   TradeQuote
@@ -74,7 +74,9 @@ export class ZrxSwapper implements Swapper {
     return zrxExecuteTrade(this.deps, args)
   }
 
-  async approvalNeeded(args: ApprovalNeededInput<SupportedChainIds>): Promise<ApprovalNeededOutput> {
+  async approvalNeeded(
+    args: ApprovalNeededInput<SupportedChainIds>
+  ): Promise<ApprovalNeededOutput> {
     return ZrxApprovalNeeded(this.deps, args)
   }
 

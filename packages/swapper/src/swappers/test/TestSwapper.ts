@@ -8,7 +8,7 @@ import {
   SwapperType
 } from '@shapeshiftoss/types'
 
-import { BuyAssetBySellIdInput, Swapper, SupportedChainIds, Trade, TradeQuote } from '../../api'
+import { BuyAssetBySellIdInput, SupportedChainIds, Swapper, Trade, TradeQuote } from '../../api'
 
 /**
  * Playground for testing different scenarios of multiple swappers in the manager.
