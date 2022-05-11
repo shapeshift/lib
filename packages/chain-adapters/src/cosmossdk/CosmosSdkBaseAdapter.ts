@@ -14,7 +14,7 @@ export interface ChainAdapterArgs {
   chainId?: ChainId
   providers: {
     http: unchained.cosmos.V1Api
-    ws: unchained.ws.Client<unchained.cosmos.Tx>
+    ws: unchained.ws.Client<unchained.cosmos.Tx>| unchained.ws.Client<unchained.osmosis.Tx>
   }
   coinName: string
 }
@@ -24,7 +24,7 @@ const CHAIN_TO_BECH32_PREFIX_MAPPING = {
   [ChainTypes.Osmosis]: 'osmo'
 }
 
-const transformValidator = (
+export const transformValidator = (
   validator: unchained.cosmos.Validator
 ): chainAdapters.cosmos.Validator => ({
   address: validator.address,
@@ -41,10 +41,10 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
   protected readonly coinName: string
   protected readonly providers: {
     http: unchained.cosmos.V1Api
-    ws: unchained.ws.Client<unchained.cosmos.Tx>
+    ws: unchained.ws.Client<unchained.cosmos.Tx>| unchained.ws.Client<unchained.osmosis.Tx>
   }
 
-  protected parser: unchained.cosmos.TransactionParser
+  protected parser: unchained.cosmos.TransactionParser | unchained.cosmos.TransactionParser
 
   static defaultBIP44Params: BIP44Params
 
