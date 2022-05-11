@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 
-import { BuildTradeInput, ChainIdTypes, SwapError, Trade } from '../../..'
+import { BuildTradeInput, SupportedChainIds, SwapError, Trade } from '../../..'
 import { ZrxQuoteResponse } from '../types'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
@@ -20,7 +20,7 @@ import { ZrxSwapperDeps } from '../ZrxSwapper'
 export async function zrxBuildTrade(
   { adapterManager, web3 }: ZrxSwapperDeps,
   input: BuildTradeInput
-): Promise<Trade<ChainIdTypes>> {
+): Promise<Trade<SupportedChainIds>> {
   const {
     sellAsset,
     buyAsset,
@@ -115,7 +115,7 @@ export async function zrxBuildTrade(
 
     const estimatedGas = bnOrZero(data.gas || 0)
 
-    const trade: Trade<ChainIdTypes.Ethereum> = {
+    const trade: Trade<'eip155:1'> = {
       sellAsset,
       buyAsset,
       success: true,

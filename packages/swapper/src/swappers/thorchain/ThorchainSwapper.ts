@@ -8,7 +8,7 @@ import {
   SwapperType
 } from '@shapeshiftoss/types'
 
-import { ChainIdTypes, Swapper, Trade, TradeQuote } from '../../api'
+import { SupportedChainIds, Swapper, Trade, TradeQuote } from '../../api'
 
 export class ThorchainSwapper implements Swapper {
   getType() {
@@ -41,11 +41,11 @@ export class ThorchainSwapper implements Swapper {
     return []
   }
 
-  async buildTrade(): Promise<Trade<ChainIdTypes>> {
+  async buildTrade(): Promise<Trade<SupportedChainIds>> {
     throw new Error('ThorchainSwapper: buildTrade unimplemented')
   }
 
-  async getTradeQuote(): Promise<TradeQuote<ChainIdTypes>> {
+  async getTradeQuote(): Promise<TradeQuote<SupportedChainIds>> {
     throw new Error('ThorchainSwapper: getTradeQuote unimplemented')
   }
 

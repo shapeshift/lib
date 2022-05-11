@@ -1,7 +1,7 @@
 import { SwapSource } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 
-import { ChainIdTypes, GetTradeQuoteInput, TradeQuote } from '../../../api'
+import { GetTradeQuoteInput, TradeQuote } from '../../../api'
 import { getZrxMinMax } from '../getZrxMinMax/getZrxMinMax'
 import { ZrxPriceResponse } from '../types'
 import { bnOrZero } from '../utils/bignumber'
@@ -12,7 +12,7 @@ import { ZrxError } from '../ZrxSwapper'
 
 export async function getZrxTradeQuote(
   input: GetTradeQuoteInput
-): Promise<TradeQuote<ChainIdTypes.Ethereum>> {
+): Promise<TradeQuote<'eip155:1'>> {
   const { sellAsset, buyAsset, sellAmount, buyAmount, sellAssetAccountId } = input
   if (!buyAsset) {
     throw new ZrxError('getQuote - Missing buyAsset')

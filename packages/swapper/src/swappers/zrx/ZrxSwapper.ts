@@ -15,7 +15,7 @@ import {
   ApproveInfiniteInput,
   BuildTradeInput,
   BuyAssetBySellIdInput,
-  ChainIdTypes,
+  SupportedChainIds,
   ExecuteTradeInput,
   GetTradeQuoteInput,
   Swapper,
@@ -54,11 +54,11 @@ export class ZrxSwapper implements Swapper {
     return SwapperType.Zrx
   }
 
-  async buildTrade(args: BuildTradeInput): Promise<Trade<ChainIdTypes>> {
+  async buildTrade(args: BuildTradeInput): Promise<Trade<SupportedChainIds>> {
     return zrxBuildTrade(this.deps, args)
   }
 
-  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ChainIdTypes>> {
+  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<SupportedChainIds>> {
     return getZrxTradeQuote(input)
   }
 
@@ -70,15 +70,15 @@ export class ZrxSwapper implements Swapper {
     return getZrxMinMax(input)
   }
 
-  async executeTrade(args: ExecuteTradeInput<ChainIdTypes>): Promise<ExecQuoteOutput> {
+  async executeTrade(args: ExecuteTradeInput<SupportedChainIds>): Promise<ExecQuoteOutput> {
     return zrxExecuteTrade(this.deps, args)
   }
 
-  async approvalNeeded(args: ApprovalNeededInput<ChainIdTypes>): Promise<ApprovalNeededOutput> {
+  async approvalNeeded(args: ApprovalNeededInput<SupportedChainIds>): Promise<ApprovalNeededOutput> {
     return ZrxApprovalNeeded(this.deps, args)
   }
 
-  async approveInfinite(args: ApproveInfiniteInput<ChainIdTypes>): Promise<string> {
+  async approveInfinite(args: ApproveInfiniteInput<SupportedChainIds>): Promise<string> {
     return ZrxApproveInfinite(this.deps, args)
   }
 

@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { AbiItem, numberToHex } from 'web3-utils'
 
-import { ChainIdTypes, SwapError, TradeQuote } from '../../../../api'
+import { SupportedChainIds, SwapError, TradeQuote } from '../../../../api'
 import { ZrxError } from '../../ZrxSwapper'
 import { bnOrZero } from '../bignumber'
 import { zrxService } from '../zrxService'
@@ -29,7 +29,7 @@ export type GetERC20AllowanceArgs = {
 }
 
 type GrantAllowanceArgs = {
-  quote: TradeQuote<ChainIdTypes>
+  quote: TradeQuote<SupportedChainIds>
   wallet: HDWallet
   adapterManager: ChainAdapterManager
   erc20Abi: AbiItem[]
@@ -131,7 +131,7 @@ export const grantAllowance = async ({
     throw new Error('sellAsset.tokenId is required')
   }
 
-  const adapter = await adapterManager.byChainId(ChainIdTypes.Ethereum)
+  const adapter = await adapterManager.byChainId('eip155:1')
   const erc20Contract = new web3.eth.Contract(erc20Abi, quote.sellAsset.tokenId)
   const approveTx = erc20Contract.methods
     .approve(quote.allowanceContract, quote.sellAmount)
