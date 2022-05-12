@@ -3,23 +3,23 @@ import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import {
   ApprovalNeededOutput,
   Asset,
+  chainAdapters,
   ExecQuoteOutput,
   GetQuoteInput,
   MinMaxOutput,
   SupportedChainIds,
   SwapperType
 } from '@shapeshiftoss/types'
-import { ethereum } from '@shapeshiftoss/types/src/chain-adapters'
-import { ChainSpecific } from '@shapeshiftoss/types/src/utility'
+import {} from '@shapeshiftoss/types/src/utility'
 
 export type SupportedAssetInput = {
   assetIds: AssetId[]
 }
 
-type ChainSpecificQuoteFeeData<T1> = ChainSpecific<
+type ChainSpecificQuoteFeeData<T1> = chainAdapters.ChainSpecific<
   T1,
   {
-    ['eip155:1']: ethereum.QuoteFeeData
+    ['eip155:1']: chainAdapters.ethereum.QuoteFeeData
   }
 >
 

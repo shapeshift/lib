@@ -6,7 +6,7 @@ import * as bitcoin from './bitcoin'
 import * as cosmos from './cosmos'
 import * as ethereum from './ethereum'
 import * as osmosis from './osmosis'
-export { bitcoin, cosmos, ethereum }
+export { bitcoin, cosmos, ethereum, ChainSpecific }
 
 type ChainSpecificAccount<T> = ChainSpecific<
   T,
