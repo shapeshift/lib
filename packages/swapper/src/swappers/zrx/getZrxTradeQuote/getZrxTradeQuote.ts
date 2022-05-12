@@ -4,7 +4,7 @@ import { AxiosResponse } from 'axios'
 import { GetTradeQuoteInput, TradeQuote } from '../../../api'
 import { getZrxMinMax } from '../getZrxMinMax/getZrxMinMax'
 import { ZrxPriceResponse } from '../types'
-import { bnOrZero } from '../utils/bignumber'
+import { bn, bnOrZero } from '../utils/bignumber'
 import { APPROVAL_GAS_LIMIT, DEFAULT_SOURCE } from '../utils/constants'
 import { normalizeAmount } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
@@ -34,7 +34,7 @@ export async function getZrxTradeQuote(
   const { minimum: minQuoteSellAmount, maximum: maxSellAmount } = await getZrxMinMax(input)
 
   const minQuoteSellAmountWei = bnOrZero(minQuoteSellAmount).times(
-    bnOrZero(10).exponentiatedBy(sellAsset.precision)
+    bn(10).exponentiatedBy(sellAsset.precision)
   )
 
   const amount = useSellAmount ? { sellAmount } : { buyAmount }
@@ -74,7 +74,7 @@ export async function getZrxTradeQuote(
     const { data } = quoteResponse
 
     const estimatedGas = bnOrZero(data.estimatedGas).times(1.5)
-    const rate = useSellAmount ? data.price : bnOrZero(1).div(data.price).toString()
+    const rate = useSellAmount ? data.price : bn(1).div(data.price).toString()
 
     return {
       success: true,
