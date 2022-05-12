@@ -23,17 +23,12 @@ export async function getZrxTradeQuote(
   if (buyAsset.chain !== ChainTypes.Ethereum || sellAsset.chain !== ChainTypes.Ethereum) {
     throw new ZrxError('getQuote - Both assets need to be on the Ethereum chain to use Zrx')
   }
-  if (!sellAmount) {
-    throw new ZrxError('getQuote - sellAmount is required')
-  }
 
   const useSellAmount = !!sellAmount
   const buyToken = buyAsset.tokenId || buyAsset.symbol
   const sellToken = sellAsset.tokenId || sellAsset.symbol
 
   const { minimum, maximum } = await getZrxMinMax(buyAsset, sellAsset)
-
-  if (!minimum) throw new ZrxError('getQuote - sellAmount is required')
 
   const minQuoteSellAmount = bnOrZero(minimum).times(
     bnOrZero(10).exponentiatedBy(sellAsset.precision)
