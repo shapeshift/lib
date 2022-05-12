@@ -3,7 +3,7 @@ import {
   ApprovalNeededOutput,
   Asset,
   ExecQuoteOutput,
-  GetQuoteInput,
+  GetMinMaxInput,
   MinMaxOutput,
   SupportedChainIds,
   SwapperType
@@ -21,7 +21,7 @@ export class ThorchainSwapper implements Swapper {
     throw new Error('ThorchainSwapper: getUsdRate unimplemented')
   }
 
-  getMinMax(input: GetQuoteInput): Promise<MinMaxOutput> {
+  getMinMax(input: GetMinMaxInput): Promise<MinMaxOutput> {
     console.info(input)
     throw new Error('ThorchainSwapper: getMinMax unimplemented')
   }

@@ -2,7 +2,7 @@ import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import Web3 from 'web3'
 
 import { ZrxSwapper } from '../..'
-import { bnOrZero } from '../utils/bignumber'
+import { bn, bnOrZero } from '../utils/bignumber'
 import { normalizeAmount } from '../utils/helpers/helpers'
 import { setupQuote } from '../utils/test-data/setupSwapQuote'
 import { zrxService } from '../utils/zrxService'
@@ -77,13 +77,6 @@ describe('getZrxTradeQuote', () => {
       }
     })
   })
-  it('fails on no sellAmount or buyAmount', async () => {
-    const { quoteInput } = setupQuote()
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
-    await expect(swapper.getTradeQuote({ ...quoteInput, sellAmount: undefined })).rejects.toThrow(
-      'ZrxError:getQuote - sellAmount or buyAmount amount is required'
-    )
-  })
   it('fails on non ethereum chain for buyAsset', async () => {
     const { quoteInput, buyAsset } = setupQuote()
     const swapper = new ZrxSwapper(zrxSwapperDeps)
@@ -148,7 +141,7 @@ describe('getZrxTradeQuote', () => {
       sellAmount: '0'
     })
     expect(quote?.sellAmount).toBe(
-      bnOrZero(minimum).times(bnOrZero(10).exponentiatedBy(sellAsset.precision)).toString()
+      bnOrZero(minimum).times(bn(10).exponentiatedBy(sellAsset.precision)).toString()
     )
   })
 })

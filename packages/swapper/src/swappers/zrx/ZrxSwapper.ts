@@ -4,7 +4,7 @@ import {
   ApprovalNeededOutput,
   Asset,
   ExecQuoteOutput,
-  GetQuoteInput,
+  GetMinMaxInput,
   MinMaxOutput,
   SupportedChainIds,
   SwapperType
@@ -66,8 +66,8 @@ export class ZrxSwapper implements Swapper {
     return getUsdRate(input)
   }
 
-  async getMinMax(input: GetQuoteInput): Promise<MinMaxOutput> {
-    return getZrxMinMax(input)
+  async getMinMax(input: GetMinMaxInput): Promise<MinMaxOutput> {
+    return getZrxMinMax(input.sellAsset, input.buyAsset)
   }
 
   async executeTrade(args: ExecuteTradeInput<SupportedChainIds>): Promise<ExecQuoteOutput> {
@@ -85,11 +85,11 @@ export class ZrxSwapper implements Swapper {
   }
 
   filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): AssetId[] {
-    const { assetIds, sellAssetId } = args
-    return assetIds.filter((id) => id.startsWith('eip155:1') && sellAssetId.startsWith('eip155:1'))
+    const { assetIds = [], sellAssetId } = args
+    return assetIds.filter((id) => id.startsWith('eip155:1') && sellAssetId?.startsWith('eip155:1'))
   }
 
-  filterAssetIdsBySellable(assetIds: AssetId[]): AssetId[] {
+  filterAssetIdsBySellable(assetIds: AssetId[] = []): AssetId[] {
     return assetIds.filter((id) => id.startsWith('eip155:1'))
   }
 }

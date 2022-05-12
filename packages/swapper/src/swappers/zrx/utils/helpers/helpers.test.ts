@@ -3,7 +3,7 @@ import Web3 from 'web3'
 
 import { erc20Abi } from '../abi/erc20-abi'
 import { erc20AllowanceAbi } from '../abi/erc20Allowance-abi'
-import { bnOrZero } from '../bignumber'
+import { bn, bnOrZero } from '../bignumber'
 import {
   getAllowanceRequired,
   getUsdRate,
@@ -88,7 +88,7 @@ describe('utils', () => {
           ...getAllowanceInput,
           sellAsset: { ...sellAsset, symbol: 'ETH' }
         })
-      ).toEqual(bnOrZero(0))
+      ).toEqual(bn(0))
     })
 
     it('should return sellAmount if allowanceOnChain is 0', async () => {
@@ -132,7 +132,7 @@ describe('utils', () => {
         }
       }))
 
-      expect(await getAllowanceRequired(getAllowanceInput)).toEqual(bnOrZero(0))
+      expect(await getAllowanceRequired(getAllowanceInput)).toEqual(bn(0))
     })
 
     it('should return sellAsset minus allowanceOnChain', async () => {
@@ -147,7 +147,7 @@ describe('utils', () => {
       }))
 
       expect(await getAllowanceRequired({ ...getAllowanceInput, sellAmount: '1000' })).toEqual(
-        bnOrZero(900)
+        bn(900)
       )
     })
   })

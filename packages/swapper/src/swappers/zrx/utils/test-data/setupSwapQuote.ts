@@ -7,31 +7,24 @@ import { FOX, WETH } from './assets'
 export const setupQuote = () => {
   const sellAsset: Asset = { ...FOX }
   const buyAsset: Asset = { ...WETH }
-  const tradeQuote: TradeQuote<SupportedChainIds> = {
+  const quoteInput = {
     success: true,
     statusReason: '',
     buyAmount: '',
     sellAmount: '1000000000000000000',
-    feeData: { fee: '' },
-    rate: '',
     sellAsset,
     buyAsset,
     allowanceContract: 'allowanceContractAddress',
     sellAssetAccountId: '0',
-    sources: [],
-    minimum: '',
-    maximum: ''
+    buyAssetAccountId: '0',
+    sendMax: false,
+    minimum: '0',
+    maximum: '999999999999',
+    feeData: { fee: '0' },
+    rate: '1',
+    sources: []
   }
-
-  const quoteInput: GetTradeQuoteInput = {
-    buyAmount: '',
-    sellAmount: '1000000000000000000',
-    sellAsset,
-    buyAsset,
-    sellAssetAccountId: '0',
-    sendMax: false
-  }
-  return { quoteInput, tradeQuote, buyAsset, sellAsset }
+  return { quoteInput, buyAsset, sellAsset }
 }
 
 export const setupZrxTradeQuoteResponse = () => {

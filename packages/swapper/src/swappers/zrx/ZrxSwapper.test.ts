@@ -3,7 +3,7 @@ import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { SwapperType } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
-import { ZrxError } from '../..'
+import { TradeQuote, ZrxError } from '../..'
 import { ZrxSwapper } from '..'
 import { zrxBuildTrade } from '../zrx/zrxBuildTrade/zrxBuildTrade'
 import { getZrxMinMax } from './getZrxMinMax/getZrxMinMax'
