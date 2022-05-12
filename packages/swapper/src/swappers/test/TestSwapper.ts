@@ -2,10 +2,10 @@ import { AssetId } from '@shapeshiftoss/caip'
 import {
   ApprovalNeededOutput,
   Asset,
-  ChainTypes,
   ExecQuoteOutput,
-  GetQuoteInput,
+  GetMinMaxInput,
   MinMaxOutput,
+  SupportedChainIds,
   SwapperType
 } from '@shapeshiftoss/types'
 
@@ -35,7 +35,7 @@ export class TestSwapper implements Swapper {
     throw new Error('TestSwapper: getUsdRate unimplemented')
   }
 
-  getMinMax(input: GetQuoteInput): Promise<MinMaxOutput> {
+  getMinMax(input: GetMinMaxInput): Promise<MinMaxOutput> {
     console.info(input)
     throw new Error('TestSwapper: getMinMax unimplemented')
   }
@@ -58,11 +58,11 @@ export class TestSwapper implements Swapper {
     return this.supportAssets
   }
 
-  async buildTrade(): Promise<Trade<ChainTypes>> {
+  async buildTrade(): Promise<Trade<SupportedChainIds>> {
     throw new Error('TestSwapper: buildTrade unimplemented')
   }
 
-  async getTradeQuote(): Promise<TradeQuote<ChainTypes>> {
+  async getTradeQuote(): Promise<TradeQuote<SupportedChainIds>> {
     throw new Error('TestSwapper: getTradeQuote unimplemented')
   }
 

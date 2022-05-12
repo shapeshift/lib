@@ -1,12 +1,13 @@
-import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
+import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { Asset, ChainTypes, Quote, QuoteResponse } from '@shapeshiftoss/types'
+import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { AbiItem, numberToHex } from 'web3-utils'
 
-import { SwapError } from '../../../../api'
+import { SwapError, TradeQuote } from '../../../../api'
+import { ZrxPriceResponse } from '../../types'
 import { ZrxError } from '../../ZrxSwapper'
 import { bn, bnOrZero } from '../bignumber'
 import { zrxService } from '../zrxService'
@@ -29,9 +30,9 @@ export type GetERC20AllowanceArgs = {
 }
 
 type GrantAllowanceArgs = {
-  quote: Quote<ChainTypes>
+  quote: TradeQuote<SupportedChainIds>
   wallet: HDWallet
-  adapter: ChainAdapter<ChainTypes.Ethereum>
+  adapterManager: ChainAdapterManager
   erc20Abi: AbiItem[]
   web3: Web3
 }
@@ -102,7 +103,7 @@ export const getAllowanceRequired = async ({
 export const getUsdRate = async (input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string> => {
   const { symbol, tokenId } = input
   if (symbol === 'USDC') return '1' // Will break if comparing against usdc
-  const rateResponse: AxiosResponse<QuoteResponse> = await zrxService.get<QuoteResponse>(
+  const rateResponse: AxiosResponse<ZrxPriceResponse> = await zrxService.get<ZrxPriceResponse>(
     '/swap/v1/price',
     {
       params: {
@@ -123,7 +124,7 @@ export const getUsdRate = async (input: Pick<Asset, 'symbol' | 'tokenId'>): Prom
 export const grantAllowance = async ({
   quote,
   wallet,
-  adapter,
+  adapterManager,
   erc20Abi,
   web3
 }: GrantAllowanceArgs): Promise<string> => {
@@ -131,6 +132,7 @@ export const grantAllowance = async ({
     throw new Error('sellAsset.tokenId is required')
   }
 
+  const adapter = await adapterManager.byChainId('eip155:1')
   const erc20Contract = new web3.eth.Contract(erc20Abi, quote.sellAsset.tokenId)
   const approveTx = erc20Contract.methods
     .approve(quote.allowanceContract, quote.sellAmount)

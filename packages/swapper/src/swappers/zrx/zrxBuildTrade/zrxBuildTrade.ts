@@ -1,4 +1,4 @@
-import { ChainTypes } from '@shapeshiftoss/types'
+import { SupportedChainIds } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 
@@ -21,23 +21,16 @@ import { ZrxSwapperDeps } from '../ZrxSwapper'
 export async function zrxBuildTrade(
   { adapterManager, web3 }: ZrxSwapperDeps,
   input: BuildTradeInput
-): Promise<Trade<ChainTypes>> {
+): Promise<Trade<SupportedChainIds>> {
   const {
     sellAsset,
     buyAsset,
     sellAmount,
-    buyAmount,
     slippage,
     sellAssetAccountId,
     buyAssetAccountId,
     wallet
   } = input
-
-  if ((buyAmount && sellAmount) || (!buyAmount && !sellAmount)) {
-    throw new SwapError(
-      'ZrxSwapper:ZrxBuildTrade Exactly one of buyAmount or sellAmount is required'
-    )
-  }
 
   if (!sellAssetAccountId || !buyAssetAccountId) {
     throw new SwapError(
@@ -58,10 +51,8 @@ export async function zrxBuildTrade(
     )
   }
 
-  if (buyAsset.chain !== ChainTypes.Ethereum) {
-    throw new SwapError(
-      `ZrxSwapper:ZrxBuildTrade buyAsset must be on chain [${ChainTypes.Ethereum}]`
-    )
+  if (buyAsset.chainId !== 'eip155:1') {
+    throw new SwapError('ZrxSwapper:ZrxBuildTrade buyAsset must be on chainId eip155:1')
   }
 
   const adapter = adapterManager.byChain(buyAsset.chain)
@@ -83,7 +74,6 @@ export async function zrxBuildTrade(
      *   sellToken: contract address (or symbol) of token to sell
      *   buyToken: contractAddress (or symbol) of token to buy
      *   sellAmount?: integer string value of the smallest increment of the sell token
-     *   buyAmount?: integer string value of the smallest incremtent of the buy token
      * }
      */
 
@@ -109,7 +99,6 @@ export async function zrxBuildTrade(
           buyToken,
           sellToken,
           sellAmount: normalizeAmount(sellAmount?.toString()),
-          buyAmount: normalizeAmount(buyAmount?.toString()),
           takerAddress: receiveAddress,
           slippagePercentage,
           skipValidation: false,
@@ -122,7 +111,7 @@ export async function zrxBuildTrade(
 
     const estimatedGas = bnOrZero(data.gas || 0)
 
-    const trade: Trade<ChainTypes.Ethereum> = {
+    const trade: Trade<'eip155:1'> = {
       sellAsset,
       buyAsset,
       success: true,

@@ -1,4 +1,4 @@
-import { ChainTypes, SwapSource } from '@shapeshiftoss/types'
+import { SwapSource } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 
 import { GetTradeQuoteInput, TradeQuote } from '../../../api'
@@ -10,45 +10,29 @@ import { normalizeAmount } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
 import { ZrxError } from '../ZrxSwapper'
 
-export async function getZrxTradeQuote(
-  input: GetTradeQuoteInput
-): Promise<TradeQuote<ChainTypes.Ethereum>> {
-  const { sellAsset, buyAsset, sellAmount, buyAmount, sellAssetAccountId } = input
+export async function getZrxTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<'eip155:1'>> {
+  const { sellAsset, buyAsset, sellAmount, sellAssetAccountId } = input
   if (!buyAsset) {
     throw new ZrxError('getQuote - Missing buyAsset')
   }
   if (!sellAsset) {
     throw new ZrxError('getQuote - Missing sellAsset')
   }
-  if (buyAsset.chain !== ChainTypes.Ethereum || sellAsset.chain !== ChainTypes.Ethereum) {
+  if (buyAsset.chainId !== 'eip155:1' || sellAsset.chainId !== 'eip155:1') {
     throw new ZrxError('getQuote - Both assets need to be on the Ethereum chain to use Zrx')
-  }
-  if (!sellAmount && !buyAmount) {
-    throw new ZrxError('getQuote - sellAmount or buyAmount amount is required')
   }
 
   const useSellAmount = !!sellAmount
   const buyToken = buyAsset.tokenId || buyAsset.symbol
   const sellToken = sellAsset.tokenId || sellAsset.symbol
 
-  const { minimum: minQuoteSellAmount, maximum: maxSellAmount } = await getZrxMinMax(input)
+  const { minimum, maximum } = await getZrxMinMax(buyAsset, sellAsset)
 
-  const minQuoteSellAmountWei = bnOrZero(minQuoteSellAmount).times(
-    bn(10).exponentiatedBy(sellAsset.precision)
+  const minQuoteSellAmount = bnOrZero(minimum).times(bn(10).exponentiatedBy(sellAsset.precision))
+
+  const normalizedSellAmount = normalizeAmount(
+    bnOrZero(minimum).lt(minQuoteSellAmount) ? minQuoteSellAmount.toString() : sellAmount
   )
-
-  const amount = useSellAmount ? { sellAmount } : { buyAmount }
-  const amountKey = Object.keys(amount)[0]
-  const amountValue = Object.values(amount)[0]
-
-  let normalizedAmount = normalizeAmount(amountValue)
-  if (!normalizedAmount || normalizedAmount === '0') {
-    normalizedAmount = normalizeAmount(minQuoteSellAmountWei?.toString())
-  }
-
-  if (!normalizedAmount || normalizedAmount === '0') {
-    throw new ZrxError('getQuote - Must have valid sellAmount, buyAmount or minimum amount')
-  }
 
   try {
     /**
@@ -66,7 +50,7 @@ export async function getZrxTradeQuote(
         params: {
           sellToken,
           buyToken,
-          [amountKey]: normalizedAmount
+          sellAmount: normalizedSellAmount
         }
       }
     )
@@ -80,8 +64,8 @@ export async function getZrxTradeQuote(
       success: true,
       statusReason: '',
       rate,
-      minimum: minQuoteSellAmount,
-      maximum: maxSellAmount,
+      minimum,
+      maximum,
       feeData: {
         fee: bnOrZero(estimatedGas).multipliedBy(bnOrZero(data.gasPrice)).toString(),
         chainSpecific: {

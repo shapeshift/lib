@@ -3,10 +3,10 @@ import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import {
   ApprovalNeededOutput,
   Asset,
-  ChainTypes,
   ExecQuoteOutput,
-  GetQuoteInput,
+  GetMinMaxInput,
   MinMaxOutput,
+  SupportedChainIds,
   SwapperType
 } from '@shapeshiftoss/types'
 import Web3 from 'web3'
@@ -54,11 +54,11 @@ export class ZrxSwapper implements Swapper {
     return SwapperType.Zrx
   }
 
-  async buildTrade(args: BuildTradeInput): Promise<Trade<ChainTypes>> {
+  async buildTrade(args: BuildTradeInput): Promise<Trade<SupportedChainIds>> {
     return zrxBuildTrade(this.deps, args)
   }
 
-  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ChainTypes>> {
+  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<SupportedChainIds>> {
     return getZrxTradeQuote(input)
   }
 
@@ -66,19 +66,21 @@ export class ZrxSwapper implements Swapper {
     return getUsdRate(input)
   }
 
-  async getMinMax(input: GetQuoteInput): Promise<MinMaxOutput> {
-    return getZrxMinMax(input)
+  async getMinMax(input: GetMinMaxInput): Promise<MinMaxOutput> {
+    return getZrxMinMax(input.sellAsset, input.buyAsset)
   }
 
-  async executeTrade(args: ExecuteTradeInput<ChainTypes>): Promise<ExecQuoteOutput> {
+  async executeTrade(args: ExecuteTradeInput<SupportedChainIds>): Promise<ExecQuoteOutput> {
     return zrxExecuteTrade(this.deps, args)
   }
 
-  async approvalNeeded(args: ApprovalNeededInput<ChainTypes>): Promise<ApprovalNeededOutput> {
+  async approvalNeeded(
+    args: ApprovalNeededInput<SupportedChainIds>
+  ): Promise<ApprovalNeededOutput> {
     return ZrxApprovalNeeded(this.deps, args)
   }
 
-  async approveInfinite(args: ApproveInfiniteInput<ChainTypes>): Promise<string> {
+  async approveInfinite(args: ApproveInfiniteInput<SupportedChainIds>): Promise<string> {
     return ZrxApproveInfinite(this.deps, args)
   }
 
