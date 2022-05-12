@@ -3,13 +3,13 @@
 This package is ShapeShift's partial implementation of [CAIPs](https://github.com/ChainAgnostic/CAIPs) - Chain Agnostic Improvement Protocols.
 It is not exhaustive and is currently only used internally.
 
-## ChainId - Blockchain ID Specification
+## ChainId (CAIP2) - Blockchain ID Specification
 
 https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-2.md
 
 Usage
 
-### `toChainId`
+### `toChainId` | `toCAIP2`
 
 ```ts
 const chain = ChainTypes.Ethereum
@@ -18,7 +18,7 @@ const result = toChainId({ chain, network })
 expect(result).toEqual('eip155:1')
 ```
 
-### `fromChainId`
+### `fromChainId` | `fromCAIP2`
 
 ```ts
 const ethChainId = 'eip155:1'
@@ -27,13 +27,13 @@ expect(chain).toEqual(ChainTypes.Ethereum)
 expect(network).toEqual(NetworkTypes.MAINNET)
 ```
 
-## AssetId - Asset Type and Asset ID Specification
+## AssetId (CAIP19) - Asset Type and Asset ID Specification
 
 https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-19.md
 
 Usage
 
-### `toAssetId`
+### `toAssetId` | `toCAIP19`
 
 Ether
 
@@ -57,7 +57,7 @@ const result = toAssetId({ chain, network, contractType, tokenId })
 expect(result).toEqual('eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d')
 ```
 
-### `fromAssetId`
+### `fromAssetId` | `fromCAIP19`
 
 Ether
 
