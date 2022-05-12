@@ -21,7 +21,7 @@ export const setupQuote = () => {
     maximum: '999999999999',
     statusReason: '',
     buyAmount: '',
-    feeData: { fee: '0'},
+    feeData: { fee: '0' },
     rate: '1',
     sources: []
   }
