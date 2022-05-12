@@ -2,6 +2,7 @@
 import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 
 import {
+  ChainId,
   ChainNamespace,
   chainNamespaceToChainType,
   ChainReference,
@@ -109,10 +110,13 @@ export const toAssetId: ToAssetId = (args: ToAssetIdArgs): string => {
 }
 
 type FromAssetIdReturn = {
-  chain: ChainTypes
-  network: NetworkTypes
+  // chain: ChainTypes
+  chainNamespace: ChainNamespace // just the chain
+  chainReference: ChainReference // the "network" of the chain
+  chainId: ChainId // the full chainId - 'eip155:1'
+  // network: NetworkTypes
   assetNamespace: AssetNamespace
-  assetReference: AssetReference | string
+  assetReference: AssetReference
 }
 
 const parseAssetIdRegExp = /([-a-z\d]{3,8}):([-a-zA-Z\d]{1,32})\/([-a-z\d]{3,8}):([-a-zA-Z\d]+)/
@@ -146,3 +150,8 @@ export const fromAssetId = (assetId: string): FromAssetIdReturn => {
 
   throw new Error(`fromAssetId: invalid AssetId: ${assetId}`)
 }
+
+// chainId will most commonly be used for ergonomics purposes
+// however, chainReference (the network) will be used more rarely and
+// can be destructured when needed
+const { chainId, chainReference } = fromAssetId('eip155:1/cw20:0')
