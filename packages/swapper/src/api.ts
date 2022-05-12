@@ -10,7 +10,6 @@ import {
   SupportedChainIds,
   SwapperType
 } from '@shapeshiftoss/types'
-import { createErrorClass } from '@shapeshiftoss/errors'
 
 export type SupportedAssetInput = {
   assetIds: AssetId[]
@@ -110,10 +109,6 @@ export type ApprovalNeededInput<C extends SupportedChainIds> = {
   wallet: HDWallet
 }
 
-// Example:
-// - SwapError(SwapErrorTypes.INSUFFICIENT_FUNDS, { cause: { err }, details: 'foo' })
-export const SwapError = createErrorClass('SwapError')
-
 // Swap Errors
 export enum SwapErrorTypes {
   AMOUNT_TO_SMALL = 'AMOUNT_TO_SMALL',
@@ -138,7 +133,8 @@ export enum SwapErrorTypes {
   SIGNING_FAILED = 'SIGNING_FAILED',
   SIGN_AND_BROADCAST_FAILED = 'SIGN_AND_BROADCAST_FAILED',
   SIGNING_REQUIRED = 'SIGNING_REQUIRED',
-  HDWALLET_INVALID_CONFIG = 'HDWALLET_INVALID_CONFIG'
+  HDWALLET_INVALID_CONFIG = 'HDWALLET_INVALID_CONFIG',
+  UNSUPPORTED_PAIR = 'UNSUPPORTED_PAIR'
 }
 
 export interface Swapper {

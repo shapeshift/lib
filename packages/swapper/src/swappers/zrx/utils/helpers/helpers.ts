@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { AbiItem, numberToHex } from 'web3-utils'
 
-import { SwapError, TradeQuote } from '../../../../api'
+import { TradeQuote } from '../../../../api'
 import { ZrxPriceResponse } from '../../types'
 import { ZrxError } from '../../ZrxSwapper'
 import { bn, bnOrZero } from '../bignumber'
@@ -78,7 +78,7 @@ export const getAllowanceRequired = async ({
   const tokenId = sellAsset.tokenId
 
   if (!ownerAddress || !spenderAddress || !tokenId) {
-    throw new SwapError(
+    throw new ZrxError(
       'getAllowanceRequired - receiveAddress, allowanceContract and tokenId are required'
     )
   }
@@ -94,7 +94,7 @@ export const getAllowanceRequired = async ({
     return bnOrZero(sellAmount)
   }
   if (!allowanceOnChain) {
-    throw new SwapError(`No allowance data for ${allowanceContract} to ${receiveAddress}`)
+    throw new ZrxError(`No allowance data for ${allowanceContract} to ${receiveAddress}`)
   }
   const allowanceRequired = bnOrZero(sellAmount).minus(allowanceOnChain)
   return allowanceRequired.lt(0) ? bn(0) : allowanceRequired
@@ -168,17 +168,17 @@ export const grantAllowance = async ({
     try {
       signedTx = await adapter.signTransaction({ txToSign: grantAllowanceTxToSign, wallet })
     } catch (error) {
-      throw new SwapError(`grantAllowance - signTransaction error: ${error}`)
+      throw new ZrxError(`grantAllowance - signTransaction error: ${error}`)
     }
 
     if (!signedTx) {
-      throw new SwapError(`grantAllowance - Signed transaction is required: ${signedTx}`)
+      throw new ZrxError(`grantAllowance - Signed transaction is required: ${signedTx}`)
     }
 
     try {
       broadcastedTxId = await adapter.broadcastTransaction(signedTx)
     } catch (error) {
-      throw new SwapError(`grantAllowance - broadcastTransaction error: ${error}`)
+      throw new ZrxError(`grantAllowance - broadcastTransaction error: ${error}`)
     }
 
     return broadcastedTxId
@@ -189,11 +189,11 @@ export const grantAllowance = async ({
         wallet
       })
     } catch (error) {
-      throw new SwapError(`grantAllowance - signAndBroadcastTransaction error: ${error}`)
+      throw new ZrxError(`grantAllowance - signAndBroadcastTransaction error: ${error}`)
     }
 
     return broadcastedTxId
   } else {
-    throw new SwapError('grantAllowance - invalid HDWallet config')
+    throw new ZrxError('grantAllowance - invalid HDWallet config')
   }
 }

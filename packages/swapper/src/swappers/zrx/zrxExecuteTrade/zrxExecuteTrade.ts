@@ -1,7 +1,7 @@
 import { numberToHex } from 'web3-utils'
 
-import { ExecuteTradeInput, SwapError, SwapErrorTypes, TradeResult } from '../../../api'
-import { ZrxSwapperDeps } from '../ZrxSwapper'
+import { ExecuteTradeInput, SwapErrorTypes, TradeResult } from '../../../api'
+import { ZrxSwapperDeps, ZrxSwapError } from '../ZrxSwapper'
 
 export async function zrxExecuteTrade(
   { adapterManager }: ZrxSwapperDeps,
@@ -29,7 +29,7 @@ export async function zrxExecuteTrade(
       bip44Params
     })
   } catch (error) {
-    throw new SwapError(SwapErrorTypes.BUILDING_TRANSACTION_FAILED, { cause: error })
+    throw new ZrxSwapError(SwapErrorTypes.BUILDING_TRANSACTION_FAILED, { cause: error })
   }
 
   const { txToSign } = buildTxResponse
@@ -40,18 +40,18 @@ export async function zrxExecuteTrade(
     try {
       signedTx = await adapter.signTransaction({ txToSign: txWithQuoteData, wallet })
     } catch (error) {
-      throw new SwapError(SwapErrorTypes.SIGNING_FAILED, { cause: error })
+      throw new ZrxSwapError(SwapErrorTypes.SIGNING_FAILED, { cause: error })
     }
 
     // TODO(ryankk): should we add a cause?
     if (!signedTx) {
-      throw new SwapError(SwapErrorTypes.SIGNING_REQUIRED, { details: signedTx })
+      throw new ZrxSwapError(SwapErrorTypes.SIGNING_REQUIRED, { details: signedTx })
     }
 
     try {
       txid = await adapter.broadcastTransaction(signedTx)
     } catch (error) {
-      throw new SwapError(SwapErrorTypes.BROADCAST_FAILED, { cause: error })
+      throw new ZrxSwapError(SwapErrorTypes.BROADCAST_FAILED, { cause: error })
     }
 
     return { txid }
@@ -59,12 +59,12 @@ export async function zrxExecuteTrade(
     try {
       txid = await adapter.signAndBroadcastTransaction?.({ txToSign: txWithQuoteData, wallet })
     } catch (error) {
-      throw new SwapError(SwapErrorTypes.SIGN_AND_BROADCAST_FAILED, { cause: error })
+      throw new ZrxSwapError(SwapErrorTypes.SIGN_AND_BROADCAST_FAILED, { cause: error })
     }
 
     return { txid }
   } else {
     // TODO: should we send something specific from the wallet in this case?
-    throw new SwapError(SwapErrorTypes.HDWALLET_INVALID_CONFIG, { details: wallet })
+    throw new ZrxSwapError(SwapErrorTypes.HDWALLET_INVALID_CONFIG, { details: wallet })
   }
 }

@@ -1,25 +1,22 @@
 import { SwapSource } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 
-import { GetTradeQuoteInput, TradeQuote } from '../../../api'
+import { GetTradeQuoteInput, TradeQuote, SwapErrorTypes } from '../../../api'
 import { getZrxMinMax } from '../getZrxMinMax/getZrxMinMax'
 import { ZrxPriceResponse } from '../types'
 import { bn, bnOrZero } from '../utils/bignumber'
 import { APPROVAL_GAS_LIMIT, DEFAULT_SOURCE } from '../utils/constants'
 import { normalizeAmount } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
-import { ZrxError } from '../ZrxSwapper'
+import { ZrxSwapError } from '../ZrxSwapper'
 
 export async function getZrxTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<'eip155:1'>> {
   const { sellAsset, buyAsset, sellAmount, sellAssetAccountId } = input
-  if (!buyAsset) {
-    throw new ZrxError('getQuote - Missing buyAsset')
-  }
-  if (!sellAsset) {
-    throw new ZrxError('getQuote - Missing sellAsset')
-  }
   if (buyAsset.chainId !== 'eip155:1' || sellAsset.chainId !== 'eip155:1') {
-    throw new ZrxError('getQuote - Both assets need to be on the Ethereum chain to use Zrx')
+    throw new ZrxSwapError('Both assets need to be on the Ethereum chain to use Zrx', {
+      code: SwapErrorTypes.UNSUPPORTED_PAIR,
+      details: { swapperName: 'Zrx' }
+    })
   }
 
   const useSellAmount = !!sellAmount
@@ -85,26 +82,7 @@ export async function getZrxTradeQuote(input: GetTradeQuoteInput): Promise<Trade
       sellAsset,
       sellAssetAccountId
     }
-  } catch (e) {
-    const statusReason =
-      e?.response?.data?.validationErrors?.[0]?.reason ||
-      e?.response?.data?.reason ||
-      'Unknown Error'
-    // This hackyness will go away when we correctly handle errors
-    return {
-      success: false,
-      statusReason,
-      maximum: '0',
-      minimum: '0',
-      rate: '0',
-      feeData: { fee: '0', chainSpecific: {} },
-      buyAmount: '0',
-      sellAmount: '0',
-      sources: [],
-      allowanceContract: '0',
-      buyAsset,
-      sellAsset,
-      sellAssetAccountId
-    }
+  } catch (error) {
+    throw ZrxSwapError(SwapErrorTypes.QUOTE_FAILED, { cause: error, details: { sellAsset, buyAsset } })
   }
 }

@@ -1,4 +1,5 @@
 import { AssetId } from '@shapeshiftoss/caip'
+import { createErrorClass } from '@shapeshiftoss/errors'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import {
   ApprovalNeededOutput,
@@ -35,8 +36,17 @@ export type ZrxSwapperDeps = {
   web3: Web3
 }
 
-export class ZrxError extends Error {
-  constructor(message: string) {
+export const SwapError = createErrorClass('SwapError')
+
+export class ZrxError extends SwapError<
+  Record<string, unknown>,
+  { cause?: unknown; details?: T; code?: string } = {
+    cause?: unknown
+    details?: T
+    code?: string
+  }
+> {
+  constructor(message?: string, options?: U) {
     super(message)
     this.message = `ZrxError:${message}`
   }

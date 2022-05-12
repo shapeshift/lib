@@ -1,11 +1,11 @@
 import { ApprovalNeededOutput, SupportedChainIds } from '@shapeshiftoss/types'
 
-import { ApprovalNeededInput, SwapError } from '../../../api'
+import { ApprovalNeededInput } from '../../../api'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { bnOrZero } from '../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../utils/constants'
 import { getERC20Allowance } from '../utils/helpers/helpers'
-import { ZrxSwapperDeps } from '../ZrxSwapper'
+import { ZrxSwapperDeps, ZrxError } from '../ZrxSwapper'
 
 export async function ZrxApprovalNeeded(
   { adapterManager, web3 }: ZrxSwapperDeps,
@@ -14,7 +14,7 @@ export async function ZrxApprovalNeeded(
   const { sellAsset } = quote
 
   if (sellAsset.chainId !== 'eip155:1') {
-    throw new SwapError('ZrxSwapper:ZrxApprovalNeeded only Ethereum chain type is supported')
+    throw new ZrxError('ZrxSwapper:ZrxApprovalNeeded only Ethereum chain type is supported')
   }
 
   if (sellAsset.symbol === 'ETH') {
@@ -28,7 +28,7 @@ export async function ZrxApprovalNeeded(
   const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 
   if (!quote.sellAsset.tokenId || !quote.allowanceContract) {
-    throw new SwapError('ZrxApprovalNeeded - tokenId and allowanceTarget are required')
+    throw new ZrxError('ZrxApprovalNeeded - tokenId and allowanceTarget are required')
   }
 
   const allowanceResult = await getERC20Allowance({

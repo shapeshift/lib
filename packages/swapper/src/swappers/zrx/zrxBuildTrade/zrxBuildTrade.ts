@@ -2,7 +2,7 @@ import { SupportedChainIds } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 
-import { BuildTradeInput, SwapError, Trade } from '../../..'
+import { BuildTradeInput, ZrxError, Trade } from '../../..'
 import { ZrxQuoteResponse } from '../types'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
@@ -33,7 +33,7 @@ export async function zrxBuildTrade(
   } = input
 
   if (!sellAssetAccountId || !buyAssetAccountId) {
-    throw new SwapError(
+    throw new ZrxError(
       'ZrxSwapper:ZrxBuildTrade Both sellAssetAccountId and buyAssetAccountId are required'
     )
   }
@@ -41,18 +41,18 @@ export async function zrxBuildTrade(
   const buyToken = buyAsset.tokenId || buyAsset.symbol || buyAsset.network
   const sellToken = sellAsset.tokenId || sellAsset.symbol || sellAsset.network
   if (!buyToken) {
-    throw new SwapError(
+    throw new ZrxError(
       'ZrxSwapper:ZrxBuildTrade One of buyAssetContract or buyAssetSymbol or buyAssetNetwork are required'
     )
   }
   if (!sellToken) {
-    throw new SwapError(
+    throw new ZrxError(
       'ZrxSwapper:ZrxBuildTrade One of sellAssetContract or sellAssetSymbol or sellAssetNetwork are required'
     )
   }
 
   if (buyAsset.chainId !== 'eip155:1') {
-    throw new SwapError('ZrxSwapper:ZrxBuildTrade buyAsset must be on chainId eip155:1')
+    throw new ZrxError('ZrxSwapper:ZrxBuildTrade buyAsset must be on chainId eip155:1')
   }
 
   const adapter = adapterManager.byChain(buyAsset.chain)
@@ -60,7 +60,7 @@ export async function zrxBuildTrade(
   const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 
   if (bnOrZero(slippage).gt(MAX_SLIPPAGE)) {
-    throw new SwapError(
+    throw new ZrxError(
       `ZrxSwapper:ZrxBuildTrade slippage value of ${slippage} is greater than max slippage value of ${MAX_SLIPPAGE}`
     )
   }

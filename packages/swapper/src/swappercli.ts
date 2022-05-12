@@ -4,7 +4,7 @@ import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-nativ
 import { Asset, ChainTypes, NetworkTypes, SwapperType } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 import dotenv from 'dotenv'
-import readline from 'readline-sync'
+// import readline from 'readline-sync'
 import Web3 from 'web3'
 
 import { SwapperManager } from './manager/SwapperManager'
@@ -17,7 +17,7 @@ const {
   UNCHAINED_WS_API = 'wss://localhost:31300',
   ETH_NODE_URL = 'http://localhost:3000',
   DEVICE_ID = 'device123',
-  MNEMONIC = 'salon adapt foil saddle orient make page zero cheese marble test catalog'
+  MNEMONIC = 'all all all all all all all all all all all all'
 } = process.env
 
 const toBaseUnit = (amount: BigNumber | string, precision: number): string => {
@@ -26,9 +26,9 @@ const toBaseUnit = (amount: BigNumber | string, precision: number): string => {
     .toString()
 }
 
-const fromBaseUnit = (amount: BigNumber | string, precision: number): string => {
-  return new BigNumber(amount).times(new BigNumber(10).exponentiatedBy(precision * -1)).toString()
-}
+// const fromBaseUnit = (amount: BigNumber | string, precision: number): string => {
+//   return new BigNumber(amount).times(new BigNumber(10).exponentiatedBy(precision * -1)).toString()
+// }
 
 const getWallet = async (): Promise<NativeHDWallet> => {
   if (!MNEMONIC) {
@@ -106,28 +106,34 @@ const main = async (): Promise<void> => {
   const swapper = manager.getSwapper(SwapperType.Zrx)
   const sellAmountBase = toBaseUnit(sellAmount, sellAsset.precision)
 
-  const quote = await swapper.getTradeQuote({
-    sellAsset,
-    buyAsset,
-    sellAmount: sellAmountBase,
-    sellAssetAccountId: '0',
-    sendMax: false
-  })
+  let quote
+  let answer
+  try {
+    quote = await swapper.getTradeQuote({
+      sellAsset,
+      buyAsset,
+      sellAmount: sellAmountBase,
+      sellAssetAccountId: '0',
+      sendMax: false
+    })
+  } catch (e) {
+    console.error(e)
+  }
 
   console.info('quote = ', JSON.stringify(quote))
 
-  if (!quote.success) {
-    console.error('Obtaining the quote failed: ', quote.statusReason)
-    return
-  }
+  // if (!quote.success) {
+  //   console.error('Obtaining the quote failed: ', quote.statusReason)
+  //   return
+  // }
 
-  const buyAmount = fromBaseUnit(quote.buyAmount || '0', buyAsset.precision)
+  // const buyAmount = fromBaseUnit(quote.buyAmount || '0', buyAsset.precision)
 
-  const answer = readline.question(
-    `Swap ${sellAmount} ${sellAsset.symbol} for ${buyAmount} ${
-      buyAsset.symbol
-    } on ${swapper.getType()}? (y/n): `
-  )
+  // const answer = readline.question(
+  //   `Swap ${sellAmount} ${sellAsset.symbol} for ${buyAmount} ${
+  //     buyAsset.symbol
+  //   } on ${swapper.getType()}? (y/n): `
+  // )
   if (answer === 'y') {
     const trade = await swapper.buildTrade({
       wallet,
