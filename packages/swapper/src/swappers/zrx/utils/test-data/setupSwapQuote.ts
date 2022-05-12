@@ -1,13 +1,13 @@
 import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
+import { GetTradeQuoteInput, TradeQuote } from 'packages/swapper/src'
 
-import { GetTradeQuoteInput, TradeQuote } from '../../../../api'
 import { ZrxQuoteResponse } from '../../types'
 import { FOX, WETH } from './assets'
 
 export const setupQuote = () => {
   const sellAsset: Asset = { ...FOX }
   const buyAsset: Asset = { ...WETH }
-  const quoteInput = {
+  const tradeQuote: TradeQuote<SupportedChainIds> = {
     success: true,
     statusReason: '',
     buyAmount: '',
@@ -16,15 +16,21 @@ export const setupQuote = () => {
     buyAsset,
     allowanceContract: 'allowanceContractAddress',
     sellAssetAccountId: '0',
-    buyAssetAccountId: '0',
-    sendMax: false,
     minimum: '0',
     maximum: '999999999999',
     feeData: { fee: '0' },
     rate: '1',
     sources: []
   }
-  return { quoteInput, buyAsset, sellAsset }
+
+  const quoteInput: GetTradeQuoteInput = {
+    sellAmount: '1000000000000000000',
+    sellAsset,
+    buyAsset,
+    sellAssetAccountId: '0',
+    sendMax: false
+  }
+  return { quoteInput, tradeQuote, buyAsset, sellAsset }
 }
 
 export const setupZrxTradeQuoteResponse = () => {
