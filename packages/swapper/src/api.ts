@@ -16,10 +16,13 @@ export type SupportedAssetInput = {
   assetIds: AssetId[]
 }
 
+// TODO(ryankk): ChainSpecificQuoteFeeData and QuoteFeeData is being used as a stopgap until removal of ChainTypes
+// in ChainAdapters is complete. Once ChainTypes replaced with SupportedChainIds inside ChainAdapters this can go
+// away and we can use the chainAdapters.QuoteFeeData directly.
 type ChainSpecificQuoteFeeData<T1> = chainAdapters.ChainSpecific<
   T1,
   {
-    ['eip155:1']: chainAdapters.ethereum.QuoteFeeData
+    'eip155:1': chainAdapters.ethereum.QuoteFeeData
   }
 >
 
