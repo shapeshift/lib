@@ -13,9 +13,9 @@ import { ZrxSwapError } from '../ZrxSwapper'
 export async function getZrxTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<'eip155:1'>> {
   const { sellAsset, buyAsset, sellAmount, sellAssetAccountId } = input
   if (buyAsset.chainId !== 'eip155:1' || sellAsset.chainId !== 'eip155:1') {
-    throw new ZrxSwapError('Both assets need to be on the Ethereum chain to use Zrx', {
-      code: SwapErrorTypes.UNSUPPORTED_PAIR,
-      details: { swapperName: 'Zrx' }
+    throw new ZrxSwapError(SwapErrorTypes.UNSUPPORTED_PAIR, {
+      cause: 'Both assets need to be on the Ethereum chain to use Zrx',
+      details: { buyAssetChainId: buyAsset.chainId, sellAssetChainId: sellAsset.chainId }
     })
   }
 
@@ -82,7 +82,26 @@ export async function getZrxTradeQuote(input: GetTradeQuoteInput): Promise<Trade
       sellAsset,
       sellAssetAccountId
     }
-  } catch (error) {
-    throw ZrxSwapError(SwapErrorTypes.QUOTE_FAILED, { cause: error, details: { sellAsset, buyAsset } })
+  } catch (e) {
+    const statusReason =
+      e?.response?.data?.validationErrors?.[0]?.reason ||
+      e?.response?.data?.reason ||
+      'Unknown Error'
+    // This hackyness will go away when we correctly handle errors
+    return {
+      success: false,
+      statusReason,
+      maximum: '0',
+      minimum: '0',
+      rate: '0',
+      feeData: { fee: '0', chainSpecific: {} },
+      buyAmount: '0',
+      sellAmount: '0',
+      sources: [],
+      allowanceContract: '0',
+      buyAsset,
+      sellAsset,
+      sellAssetAccountId
+    }
   }
 }

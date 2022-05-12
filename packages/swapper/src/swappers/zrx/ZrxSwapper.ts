@@ -36,17 +36,10 @@ export type ZrxSwapperDeps = {
   web3: Web3
 }
 
-export const SwapError = createErrorClass('SwapError')
+export const ZrxSwapError = createErrorClass('SwapError')
 
-export class ZrxError extends SwapError<
-  Record<string, unknown>,
-  { cause?: unknown; details?: T; code?: string } = {
-    cause?: unknown
-    details?: T
-    code?: string
-  }
-> {
-  constructor(message?: string, options?: U) {
+export class ZrxError extends Error {
+  constructor(message?: string) {
     super(message)
     this.message = `ZrxError:${message}`
   }

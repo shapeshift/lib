@@ -45,7 +45,7 @@ export async function zrxExecuteTrade(
 
     // TODO(ryankk): should we add a cause?
     if (!signedTx) {
-      throw new ZrxSwapError(SwapErrorTypes.SIGNING_REQUIRED, { details: signedTx })
+      throw new ZrxSwapError(SwapErrorTypes.SIGNING_REQUIRED, { details: { signedTx } })
     }
 
     try {
@@ -65,6 +65,6 @@ export async function zrxExecuteTrade(
     return { txid }
   } else {
     // TODO: should we send something specific from the wallet in this case?
-    throw new ZrxSwapError(SwapErrorTypes.HDWALLET_INVALID_CONFIG, { details: wallet })
+    throw new ZrxSwapError(SwapErrorTypes.HDWALLET_INVALID_CONFIG)
   }
 }
