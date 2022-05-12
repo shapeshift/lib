@@ -3,7 +3,7 @@ import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { ChainTypes, SwapperType } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
-import { ZrxError } from '../..'
+import { TradeQuote, ZrxError } from '../..'
 import { ZrxSwapper } from '..'
 import { zrxBuildTrade } from '../zrx/zrxBuildTrade/zrxBuildTrade'
 import { getZrxMinMax } from './getZrxMinMax/getZrxMinMax'
@@ -41,7 +41,7 @@ jest.mock('./ZrxApproveInfinite/ZrxApproveInfinite', () => ({
 }))
 
 describe('ZrxSwapper', () => {
-  const quote = <Quote<ChainTypes>>{}
+  const quote = <TradeQuote<ChainTypes>>{}
   const wallet = <HDWallet>{}
   const web3 = <Web3>{}
   const adapterManager = <ChainAdapterManager>{}
