@@ -151,6 +151,8 @@ export const fromAssetId = (assetId: string): FromAssetIdReturn => {
   throw new Error(`fromAssetId: invalid AssetId: ${assetId}`)
 }
 
+export const toCAIP2 = toAssetId
+
 // chainId will most commonly be used for ergonomics purposes
 // however, chainReference (the network) will be used more rarely and
 // can be destructured when needed

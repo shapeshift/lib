@@ -9,7 +9,7 @@ https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-2.md
 
 Usage
 
-### `toChainId`
+### `toChainId` | `toCAIP2`
 
 ```ts
 const chain = ChainTypes.Ethereum
