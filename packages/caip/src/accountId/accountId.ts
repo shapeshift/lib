@@ -1,3 +1,5 @@
+import { ChainReference } from '@shapeshiftoss/caip'
+
 import { ChainId, ChainNamespace, isChainId } from '../chainId/chainId'
 
 export type AccountId = string
@@ -29,11 +31,13 @@ export const toAccountId: ToAccountId = ({ chainId, account }) => {
 }
 
 type FromAccountIdReturn = {
-  chainId: string
+  chainNamespace: ChainNamespace // the "chain"
+  chainReference: ChainReference // the "network"
+  chainId: string // e.g. 'eip155:1'
   account: string
 }
 
-type FromAccountId = (accountId: string) => FromAccountIdReturn
+type FromAccountId = (accountId: AccountId) => FromAccountIdReturn
 
 export const fromAccountId: FromAccountId = (accountId) => {
   const parts = accountId.split(':')
