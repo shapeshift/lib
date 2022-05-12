@@ -1,5 +1,5 @@
+import { ChainReference } from '@shapeshiftoss/caip'
 // https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-2.md
-
 import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import invert from 'lodash/invert'
 
@@ -146,11 +146,13 @@ export const toChainId = (args: ToChainIdArgs): string => {
 }
 
 type FromChainIdReturn = {
-  chain: ChainTypes
-  network: NetworkTypes
+  chainNamespace: ChainNamespace
+  chainReference: ChainReference
+  // chain: ChainTypes
+  // network: NetworkTypes
 }
 
-type FromChainId = (chainId: string) => FromChainIdReturn
+type FromChainId = (chainId: ChainId) => FromChainIdReturn
 
 export const fromChainId: FromChainId = (chainId) => {
   const [c, n] = chainId.split(':')
