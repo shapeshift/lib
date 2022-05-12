@@ -3,12 +3,35 @@
 import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import invert from 'lodash/invert'
 
+/**
+ * a chain id is a combination of both ChainNamespace and ChainReference
+ * e.g. 'eip155:1'
+ */
 export type ChainId = string
 
 export enum ChainNamespace {
   Ethereum = 'eip155',
   Bitcoin = 'bip122',
   Cosmos = 'cosmos'
+}
+
+const namespaceStrings = (Object.keys(ChainNamespace) as Array<keyof typeof ChainNamespace>).map(
+  (k) => ChainNamespace[k]
+)
+
+// people will bitch about the plurality of the type - can we avoid this/shadow the type with the same
+// name as the enum???
+export type ChainNamespaces = typeof namespaceStrings[number]
+
+type C = {
+  [k in ChainNamespaces]?: string
+}
+
+// ergonomically, able to use both an enum or a raw string, and they both satisfy the type constraint
+// and the type is a string union, rather than a loose string
+export const foo: C = {
+  ['eip155']: '',
+  [ChainNamespace.Bitcoin]: ''
 }
 
 export enum ChainReference {
