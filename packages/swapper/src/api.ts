@@ -10,7 +10,7 @@ import {
   SupportedChainIds,
   SwapperType
 } from '@shapeshiftoss/types'
-import {} from '@shapeshiftoss/types/src/utility'
+import { ChainSpecific } from '@shapeshiftoss/types'
 
 export type SupportedAssetInput = {
   assetIds: AssetId[]
@@ -19,7 +19,7 @@ export type SupportedAssetInput = {
 // TODO(ryankk): ChainSpecificQuoteFeeData and QuoteFeeData is being used as a stopgap until removal of ChainTypes
 // in ChainAdapters is complete. Once ChainTypes replaced with SupportedChainIds inside ChainAdapters this can go
 // away and we can use the chainAdapters.QuoteFeeData directly.
-type ChainSpecificQuoteFeeData<T1> = chainAdapters.ChainSpecific<
+type ChainSpecificQuoteFeeData<T1> = ChainSpecific<
   T1,
   {
     'eip155:1': chainAdapters.ethereum.QuoteFeeData

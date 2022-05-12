@@ -1,6 +1,6 @@
 import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
-import { GetTradeQuoteInput, TradeQuote } from 'packages/swapper/src'
 
+import { GetTradeQuoteInput, TradeQuote } from '../../../../api'
 import { ZrxQuoteResponse } from '../../types'
 import { FOX, WETH } from './assets'
 
