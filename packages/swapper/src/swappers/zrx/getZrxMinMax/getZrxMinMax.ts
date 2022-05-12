@@ -1,6 +1,6 @@
 import { Asset, ChainTypes, MinMaxOutput } from '@shapeshiftoss/types'
 
-import { bnOrZero } from '../utils/bignumber'
+import { bn, bnOrZero } from '../utils/bignumber'
 import { MAX_ZRX_TRADE } from '../utils/constants'
 import { getUsdRate } from '../utils/helpers/helpers'
 import { ZrxError } from '../ZrxSwapper'
@@ -15,7 +15,7 @@ export const getZrxMinMax = async (sellAsset: Asset, buyAsset: Asset): Promise<M
     tokenId: sellAsset.tokenId
   })
 
-  const minimum = bnOrZero(1).dividedBy(bnOrZero(usdRate)).toString()
+  const minimum = bn(1).dividedBy(bnOrZero(usdRate)).toString()
 
   return {
     minimum, // $1 worth of the sell token.
