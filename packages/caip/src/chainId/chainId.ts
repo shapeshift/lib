@@ -50,10 +50,14 @@ export enum ChainReference {
 }
 
 type ToChainIdArgs = {
-  chain: ChainTypes
-  network: NetworkTypes | ChainReference
+  chainNamespace: ChainNamespace
+  chainReference: ChainReference
+  // chain: ChainTypes // replaced by ChainNamespace above
+  // network: NetworkTypes | ChainReference // replaced by ChainReference above
 }
 
+// this needs to be deleted from this package - caip should not contain anything shapeshift-specific
+// when we're done
 const shapeShiftToChainId = Object.freeze({
   [ChainTypes.Ethereum]: {
     namespace: ChainNamespace.Ethereum,
