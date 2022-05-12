@@ -27,6 +27,30 @@ expect(chain).toEqual(ChainTypes.Ethereum)
 expect(network).toEqual(NetworkTypes.MAINNET)
 ```
 
+## AccountId (CAIP10) - Blockchain ID Specification
+
+https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-10.md
+
+Usage
+
+### `toAccountId` | `toCAIP10`
+
+```ts
+const chainId = 'eip155:1'
+const account = '0xA44C286BA83Bb771cd0107B2c1Df678435Bd1535'
+const result = (toAccountId({ chainId, account }))
+expect(result).toEqual('eip155:1:0xa44c286ba83bb771cd0107b2c1df678435bd1535')
+```
+
+### `fromAccountId` | `fromCAIP10`
+
+```ts
+const accountId = 'eip155:1:0xa44c286ba83bb771cd0107b2c1df678435bd1535'
+const { chainId, account } = fromAccountId(accountId)
+expect(chainId).toEqual('eip155:1')
+expect(account).toEqual('0xa44c286ba83bb771cd0107b2c1df678435bd1535')
+```
+
 ## AssetId (CAIP19) - Asset Type and Asset ID Specification
 
 https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-19.md
