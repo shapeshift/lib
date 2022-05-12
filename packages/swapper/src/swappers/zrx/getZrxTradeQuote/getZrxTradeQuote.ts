@@ -33,6 +33,16 @@ export async function getZrxTradeQuote(
 
   const { minimum, maximum } = await getZrxMinMax(buyAsset, sellAsset)
 
+  if (!minimum) throw new ZrxError('getQuote - sellAmount is required')
+
+  const minQuoteSellAmount = bnOrZero(minimum).times(
+    bnOrZero(10).exponentiatedBy(sellAsset.precision)
+  )
+
+  const normalizedSellAmount = normalizeAmount(
+    bnOrZero(minimum).lt(minQuoteSellAmount) ? minQuoteSellAmount.toString() : sellAmount
+  )
+
   try {
     /**
      * /swap/v1/price
@@ -49,7 +59,7 @@ export async function getZrxTradeQuote(
         params: {
           sellToken,
           buyToken,
-          sellAmount: normalizeAmount(sellAmount)
+          sellAmount: normalizedSellAmount
         }
       }
     )
