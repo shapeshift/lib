@@ -4,13 +4,13 @@ import {
   ApprovalNeededOutput,
   Asset,
   chainAdapters,
+  ChainSpecific,
   ExecQuoteOutput,
   GetMinMaxInput,
   MinMaxOutput,
   SupportedChainIds,
   SwapperType
 } from '@shapeshiftoss/types'
-import { ChainSpecific } from '@shapeshiftoss/types'
 
 export type SupportedAssetInput = {
   assetIds: AssetId[]
