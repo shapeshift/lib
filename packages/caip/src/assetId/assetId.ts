@@ -115,7 +115,7 @@ type FromAssetIdReturn = {
   assetReference: AssetReference | string
 }
 
-export type FromAssetId = (assetId: string) => FromAssetIdReturn
+export type FromAssetId = (assetId: AssetId) => FromAssetIdReturn
 
 const parseAssetIdRegExp = /([-a-z\d]{3,8}):([-a-zA-Z\d]{1,32})\/([-a-z\d]{3,8}):([-a-zA-Z\d]+)/
 
