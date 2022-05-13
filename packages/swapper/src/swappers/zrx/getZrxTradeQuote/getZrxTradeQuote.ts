@@ -1,7 +1,7 @@
 import { SwapSource } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 
-import { GetTradeQuoteInput, TradeQuote, SwapErrorTypes } from '../../../api'
+import { GetTradeQuoteInput, SwapErrorTypes, TradeQuote } from '../../../api'
 import { getZrxMinMax } from '../getZrxMinMax/getZrxMinMax'
 import { ZrxPriceResponse } from '../types'
 import { bn, bnOrZero } from '../utils/bignumber'

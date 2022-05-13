@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { AbiItem, numberToHex } from 'web3-utils'
 
-import { TradeQuote, SwapErrorTypes } from '../../../../api'
+import { SwapErrorTypes, TradeQuote } from '../../../../api'
 import { ZrxPriceResponse } from '../../types'
 import { ZrxSwapError } from '../../ZrxSwapper'
 import { bn, bnOrZero } from '../bignumber'
@@ -79,11 +79,9 @@ export const getAllowanceRequired = async ({
     const tokenId = sellAsset.tokenId
 
     if (!tokenId) {
-      throw new ZrxSwapError(
-        '[getAllowanceRequired] - sellAsset.tokenId is required',
-        { code: SwapErrorTypes.ALLOWANCE_REQUIRED }
-      )
-
+      throw new ZrxSwapError('[getAllowanceRequired] - sellAsset.tokenId is required', {
+        code: SwapErrorTypes.ALLOWANCE_REQUIRED
+      })
     }
 
     const allowanceOnChain = await getERC20Allowance({
@@ -167,7 +165,7 @@ export const grantAllowance = async ({
       accountNumber: Number(quote.sellAssetAccountId) || 0
     })
 
-    let grantAllowanceTxToSign, signedTx, broadcastedTxId
+    let signedTx, broadcastedTxId
 
     const { txToSign } = await adapter.buildSendTransaction({
       wallet,
@@ -181,7 +179,7 @@ export const grantAllowance = async ({
       }
     })
 
-    grantAllowanceTxToSign = {
+    const grantAllowanceTxToSign = {
       ...txToSign,
       data: approveTx
     }

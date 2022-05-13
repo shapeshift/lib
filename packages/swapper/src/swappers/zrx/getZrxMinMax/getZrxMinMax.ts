@@ -1,10 +1,10 @@
 import { Asset, MinMaxOutput } from '@shapeshiftoss/types'
 
+import { SwapErrorTypes } from '../../../api'
 import { bn, bnOrZero } from '../utils/bignumber'
 import { MAX_ZRX_TRADE } from '../utils/constants'
 import { getUsdRate } from '../utils/helpers/helpers'
 import { ZrxSwapError } from '../ZrxSwapper'
-import { SwapErrorTypes } from '../../../api'
 
 export const getZrxMinMax = async (sellAsset: Asset, buyAsset: Asset): Promise<MinMaxOutput> => {
   try {

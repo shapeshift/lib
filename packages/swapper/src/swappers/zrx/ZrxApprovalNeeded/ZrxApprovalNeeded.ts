@@ -5,7 +5,7 @@ import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { bnOrZero } from '../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../utils/constants'
 import { getERC20Allowance } from '../utils/helpers/helpers'
-import { ZrxSwapperDeps, ZrxError, ZrxSwapError } from '../ZrxSwapper'
+import { ZrxError, ZrxSwapError, ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function ZrxApprovalNeeded(
   { adapterManager, web3 }: ZrxSwapperDeps,

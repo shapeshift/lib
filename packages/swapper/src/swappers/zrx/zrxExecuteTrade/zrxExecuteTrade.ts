@@ -1,7 +1,7 @@
 import { numberToHex } from 'web3-utils'
 
 import { ExecuteTradeInput, SwapErrorTypes, TradeResult } from '../../../api'
-import { ZrxSwapperDeps, ZrxSwapError } from '../ZrxSwapper'
+import { ZrxSwapError, ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function zrxExecuteTrade(
   { adapterManager }: ZrxSwapperDeps,

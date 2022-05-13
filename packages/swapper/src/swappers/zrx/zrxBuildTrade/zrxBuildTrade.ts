@@ -2,7 +2,7 @@ import { SupportedChainIds } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 
-import { BuildTradeInput, ZrxError, Trade } from '../../..'
+import { BuildTradeInput, Trade, ZrxError } from '../../..'
 import { ZrxQuoteResponse } from '../types'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
