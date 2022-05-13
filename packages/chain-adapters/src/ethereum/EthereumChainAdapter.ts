@@ -18,7 +18,7 @@ import { numberToHex } from 'web3-utils'
 import { ChainAdapter as IChainAdapter } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
 import { getAssetNamespace, getStatus, getType, toPath, toRootDerivationPath } from '../utils'
-import { bnOrZero } from '../utils/bignumber'
+import { bn, bnOrZero } from '../utils/bignumber'
 import erc20Abi from './erc20Abi.json'
 
 export interface ChainAdapterArgs {
@@ -164,12 +164,12 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           if (!erc20Balance) throw new Error('no balance')
           tx.value = erc20Balance
         } else {
-          if (new BigNumber(account.balance).isZero()) throw new Error('no balance')
+          if (bnOrZero(account.balance).isZero()) throw new Error('no balance')
 
           // (The type system guarantees that either maxFeePerGas or gasPrice will be undefined, but not both)
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          const fee = new BigNumber((maxFeePerGas ?? gasPrice)!).times(gasLimit)
-          tx.value = new BigNumber(account.balance).minus(fee).toString()
+          const fee = bnOrZero((maxFeePerGas ?? gasPrice)!).times(bnOrZero(gasLimit))
+          tx.value = bnOrZero(account.balance).minus(fee).toString()
         }
       }
       const data = await getErc20Data(to, tx?.value, erc20ContractAddress)
@@ -273,61 +273,55 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
 
     const feeData = (await this.providers.http.getGasFees()).data
     const normalizationConstants = {
-      fast: bnOrZero(new BigNumber(fees.fast).dividedBy(fees.standard)).toString(),
-      average: String(1),
-      slow: bnOrZero(new BigNumber(fees.low).dividedBy(fees.standard)).toString()
+      fast: bnOrZero(bn(fees.fast).dividedBy(fees.standard)),
+      average: bn(1),
+      slow: bnOrZero(bn(fees.low).dividedBy(fees.standard))
     }
 
     return {
       fast: {
-        txFee: bnOrZero(new BigNumber(fees.fast).times(gasLimit)).toPrecision(),
+        txFee: bnOrZero(bn(fees.fast).times(gasLimit)).toPrecision(),
         chainSpecific: {
           gasLimit,
           gasPrice: bnOrZero(fees.fast).toString(),
-          maxFeePerGas: bnOrZero(
-            new BigNumber(feeData.maxFeePerGas)
-              .times(normalizationConstants.fast)
-              .toFixed(0, BigNumber.ROUND_CEIL)
-          ).toString(),
-          maxPriorityFeePerGas: bnOrZero(
-            new BigNumber(feeData.maxPriorityFeePerGas)
-              .times(normalizationConstants.fast)
-              .toFixed(0, BigNumber.ROUND_CEIL)
-          ).toString()
+          maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
+            .times(normalizationConstants.fast)
+            .toFixed(0, BigNumber.ROUND_CEIL)
+            .toString(),
+          maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
+            .times(normalizationConstants.fast)
+            .toFixed(0, BigNumber.ROUND_CEIL)
+            .toString()
         }
       },
       average: {
-        txFee: bnOrZero(new BigNumber(fees.standard).times(gasLimit)).toPrecision(),
+        txFee: bnOrZero(bn(fees.standard).times(gasLimit)).toPrecision(),
         chainSpecific: {
           gasLimit,
           gasPrice: bnOrZero(fees.standard).toString(),
-          maxFeePerGas: bnOrZero(
-            new BigNumber(feeData.maxFeePerGas)
-              .times(normalizationConstants.average)
-              .toFixed(0, BigNumber.ROUND_CEIL)
-          ).toString(),
-          maxPriorityFeePerGas: bnOrZero(
-            new BigNumber(feeData.maxPriorityFeePerGas)
-              .times(normalizationConstants.average)
-              .toFixed(0, BigNumber.ROUND_CEIL)
-          ).toString()
+          maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
+            .times(normalizationConstants.average)
+            .toFixed(0, BigNumber.ROUND_CEIL)
+            .toString(),
+          maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
+            .times(normalizationConstants.average)
+            .toFixed(0, BigNumber.ROUND_CEIL)
+            .toString()
         }
       },
       slow: {
-        txFee: bnOrZero(new BigNumber(fees.low).times(gasLimit)).toPrecision(),
+        txFee: bnOrZero(bn(fees.low).times(gasLimit)).toPrecision(),
         chainSpecific: {
           gasLimit,
           gasPrice: bnOrZero(fees.low).toString(),
-          maxFeePerGas: bnOrZero(
-            new BigNumber(feeData.maxFeePerGas)
-              .times(normalizationConstants.slow)
-              .toFixed(0, BigNumber.ROUND_CEIL)
-          ).toString(),
-          maxPriorityFeePerGas: bnOrZero(
-            new BigNumber(feeData.maxPriorityFeePerGas)
-              .times(normalizationConstants.slow)
-              .toFixed(0, BigNumber.ROUND_CEIL)
-          ).toString()
+          maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
+            .times(normalizationConstants.slow)
+            .toFixed(0, BigNumber.ROUND_CEIL)
+            .toString(),
+          maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
+            .times(normalizationConstants.slow)
+            .toFixed(0, BigNumber.ROUND_CEIL)
+            .toString()
         }
       }
     }
