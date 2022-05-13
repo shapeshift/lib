@@ -39,7 +39,7 @@ export type ZrxSwapperDeps = {
 export const ZrxSwapError = createErrorClass('SwapError')
 
 export class ZrxError extends Error {
-  constructor(message?: string) {
+  constructor(message: string) {
     super(message)
     this.message = `ZrxError:${message}`
   }
