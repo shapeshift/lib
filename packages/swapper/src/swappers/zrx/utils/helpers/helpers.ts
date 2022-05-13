@@ -91,9 +91,7 @@ export const getAllowanceRequired = async ({
       spenderAddress,
       tokenId
     })
-    if (allowanceOnChain === '0') {
-      return bnOrZero(sellAmount)
-    }
+    if (allowanceOnChain === '0') return bnOrZero(sellAmount)
     if (!allowanceOnChain) {
       throw new ZrxSwapError(
         `[getAllowanceRequired] - No allowance data for ${allowanceContract} to ${receiveAddress}`,

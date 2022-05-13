@@ -14,7 +14,6 @@ export async function ZrxApproveInfinite(
     const allowanceGrantRequired = await grantAllowance({
       quote: {
         ...quote,
-        allowanceContract: quote.allowanceContract,
         sellAmount: MAX_ALLOWANCE
       },
       wallet,

@@ -1,4 +1,5 @@
 import { ApprovalNeededOutput, SupportedChainIds } from '@shapeshiftoss/types'
+import { SwapError } from 'packages/swapper/dist'
 
 import { ApprovalNeededInput, SwapErrorTypes } from '../../../api'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
@@ -25,7 +26,7 @@ export async function ZrxApprovalNeeded(
       return { approvalNeeded: false }
     }
 
-    const accountNumber = quote.sellAssetAccountId ? Number(quote.sellAssetAccountId) : 0
+    const accountNumber = bnOrZero(quote.sellAssetAccountId).toNumber()
 
     const adapter = await adapterManager.byChainId(sellAsset.chainId)
     const bip44Params = adapter.buildBIP44Params({ accountNumber })
@@ -44,10 +45,14 @@ export async function ZrxApprovalNeeded(
     })
     const allowanceOnChain = bnOrZero(allowanceResult)
 
+    if (!quote.feeData.chainSpecific?.gasPrice)
+      throw new ZrxSwapError('[ZrxApprovalNeeded] - no gas price with quote', {
+        code: SwapErrorTypes.APPROVAL_NEEDED
+      })
     return {
       approvalNeeded: allowanceOnChain.lte(bnOrZero(quote.sellAmount)),
       gas: APPROVAL_GAS_LIMIT,
-      gasPrice: quote?.feeData?.chainSpecific?.gasPrice
+      gasPrice: quote.feeData.chainSpecific?.gasPrice
     }
   } catch (e) {
     throw new ZrxSwapError('[ZrxApprovalNeeded]', {

@@ -12,16 +12,13 @@ export const getZrxMinMax = async (sellAsset: Asset, buyAsset: Asset): Promise<M
       throw new ZrxSwapError('[getZrxMinMax]', { code: SwapErrorTypes.UNSUPPORTED_PAIR })
     }
 
-    const usdRate = await getUsdRate({
-      symbol: sellAsset.symbol,
-      tokenId: sellAsset.tokenId
-    })
+    const usdRate = await getUsdRate({ ...sellAsset })
 
-    const minimum = bn(1).dividedBy(bnOrZero(usdRate)).toString()
-
+    const minimum = bn(1).dividedBy(bnOrZero(usdRate)).toString() // $1 worth of the sell token.
+    const maximum = MAX_ZRX_TRADE // Arbitrarily large value. 10e+28 here.
     return {
-      minimum, // $1 worth of the sell token.
-      maximum: MAX_ZRX_TRADE // Arbitrarily large value. 10e+28 here.
+      minimum,
+      maximum
     }
   } catch (e) {
     throw new ZrxSwapError('[getZrxMinMax]', { cause: e, code: SwapErrorTypes.MIN_MAX_ERROR })
