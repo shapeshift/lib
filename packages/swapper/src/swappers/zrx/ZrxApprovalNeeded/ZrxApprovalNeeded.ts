@@ -1,11 +1,11 @@
 import { ApprovalNeededOutput, SupportedChainIds } from '@shapeshiftoss/types'
 
-import { ApprovalNeededInput } from '../../../api'
+import { ApprovalNeededInput, SwapErrorTypes } from '../../../api'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { bnOrZero } from '../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../utils/constants'
 import { getERC20Allowance } from '../utils/helpers/helpers'
-import { ZrxSwapperDeps, ZrxError, ZrxSwapError, SwapErrorTypes } from '../ZrxSwapper'
+import { ZrxSwapperDeps, ZrxError, ZrxSwapError } from '../ZrxSwapper'
 
 export async function ZrxApprovalNeeded(
   { adapterManager, web3 }: ZrxSwapperDeps,
