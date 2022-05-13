@@ -9,16 +9,15 @@ export async function zrxExecuteTrade(
 ): Promise<TradeResult> {
   const { sellAsset } = trade
 
-  // value is 0 for erc20s
-  const value = sellAsset.symbol === 'ETH' ? trade.sellAmount : '0'
-  const adapter = adapterManager.byChain(sellAsset.chain)
-  const bip44Params = adapter.buildBIP44Params({
-    accountNumber: Number(trade.sellAssetAccountId)
-  })
-
-  let buildTxResponse, signedTx, txid
   try {
-    buildTxResponse = await adapter.buildSendTransaction({
+    // value is 0 for erc20s
+    const value = sellAsset.symbol === 'ETH' ? trade.sellAmount : '0'
+    const adapter = adapterManager.byChain(sellAsset.chain)
+    const bip44Params = adapter.buildBIP44Params({
+      accountNumber: Number(trade.sellAssetAccountId)
+    })
+
+    const buildTxResponse = await adapter.buildSendTransaction({
       value,
       wallet,
       to: trade.depositAddress,
@@ -28,43 +27,30 @@ export async function zrxExecuteTrade(
       },
       bip44Params
     })
-  } catch (error) {
-    throw new ZrxSwapError(SwapErrorTypes.BUILDING_TRANSACTION_FAILED, { cause: error })
-  }
 
-  const { txToSign } = buildTxResponse
+    const { txToSign } = buildTxResponse
 
-  const txWithQuoteData = { ...txToSign, data: trade.txData ?? '' }
+    const txWithQuoteData = { ...txToSign, data: trade.txData ?? '' }
 
-  if (wallet.supportsOfflineSigning()) {
-    try {
-      signedTx = await adapter.signTransaction({ txToSign: txWithQuoteData, wallet })
-    } catch (error) {
-      throw new ZrxSwapError(SwapErrorTypes.SIGNING_FAILED, { cause: error })
+    if (wallet.supportsOfflineSigning()) {
+      const signedTx = await adapter.signTransaction({ txToSign: txWithQuoteData, wallet })
+
+      const txid = await adapter.broadcastTransaction(signedTx)
+
+      return { txid }
+    } else if (wallet.supportsBroadcast() && adapter.signAndBroadcastTransaction) {
+      const txid = await adapter.signAndBroadcastTransaction?.({
+        txToSign: txWithQuoteData,
+        wallet
+      })
+
+      return { txid }
+    } else {
+      throw new ZrxSwapError('[zrxExecuteTrade]', {
+        code: SwapErrorTypes.SIGN_AND_BROADCAST_FAILED
+      })
     }
-
-    // TODO(ryankk): should we add a cause?
-    if (!signedTx) {
-      throw new ZrxSwapError(SwapErrorTypes.SIGNING_REQUIRED, { details: { signedTx } })
-    }
-
-    try {
-      txid = await adapter.broadcastTransaction(signedTx)
-    } catch (error) {
-      throw new ZrxSwapError(SwapErrorTypes.BROADCAST_FAILED, { cause: error })
-    }
-
-    return { txid }
-  } else if (wallet.supportsBroadcast() && adapter.signAndBroadcastTransaction) {
-    try {
-      txid = await adapter.signAndBroadcastTransaction?.({ txToSign: txWithQuoteData, wallet })
-    } catch (error) {
-      throw new ZrxSwapError(SwapErrorTypes.SIGN_AND_BROADCAST_FAILED, { cause: error })
-    }
-
-    return { txid }
-  } else {
-    // TODO: should we send something specific from the wallet in this case?
-    throw new ZrxSwapError(SwapErrorTypes.HDWALLET_INVALID_CONFIG)
+  } catch (e) {
+    throw new ZrxSwapError('[zrxExecuteTrade]', { cause: e, code: SwapErrorTypes.EXECUTE_TRADE })
   }
 }
