@@ -273,55 +273,61 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
 
     const feeData = (await this.providers.http.getGasFees()).data
     const normalizationConstants = {
-      fast: bnOrZero(fees.fast).dividedBy(fees.standard).toString(),
+      fast: bnOrZero(new BigNumber(fees.fast).dividedBy(fees.standard)).toString(),
       average: String(1),
-      slow: bnOrZero(fees.low).dividedBy(fees.standard).toString()
+      slow: bnOrZero(new BigNumber(fees.low).dividedBy(fees.standard)).toString()
     }
 
     return {
       fast: {
-        txFee: new BigNumber(fees.fast).times(gasLimit).toPrecision(),
+        txFee: bnOrZero(new BigNumber(fees.fast).times(gasLimit)).toPrecision(),
         chainSpecific: {
           gasLimit,
-          gasPrice: String(fees.fast),
-          maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
-            .times(normalizationConstants.fast)
-            .toFixed(0, BigNumber.ROUND_CEIL)
-            .toString(),
-          maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
-            .times(normalizationConstants.fast)
-            .toFixed(0, BigNumber.ROUND_CEIL)
-            .toString()
+          gasPrice: bnOrZero(fees.fast).toString(),
+          maxFeePerGas: bnOrZero(
+            new BigNumber(feeData.maxFeePerGas)
+              .times(normalizationConstants.fast)
+              .toFixed(0, BigNumber.ROUND_CEIL)
+          ).toString(),
+          maxPriorityFeePerGas: bnOrZero(
+            new BigNumber(feeData.maxPriorityFeePerGas)
+              .times(normalizationConstants.fast)
+              .toFixed(0, BigNumber.ROUND_CEIL)
+          ).toString()
         }
       },
       average: {
-        txFee: new BigNumber(fees.standard).times(gasLimit).toPrecision(),
+        txFee: bnOrZero(new BigNumber(fees.standard).times(gasLimit)).toPrecision(),
         chainSpecific: {
           gasLimit,
-          gasPrice: String(fees.standard),
-          maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
-            .times(normalizationConstants.average)
-            .toFixed(0, BigNumber.ROUND_CEIL)
-            .toString(),
-          maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
-            .times(normalizationConstants.average)
-            .toFixed(0, BigNumber.ROUND_CEIL)
-            .toString()
+          gasPrice: bnOrZero(fees.standard).toString(),
+          maxFeePerGas: bnOrZero(
+            new BigNumber(feeData.maxFeePerGas)
+              .times(normalizationConstants.average)
+              .toFixed(0, BigNumber.ROUND_CEIL)
+          ).toString(),
+          maxPriorityFeePerGas: bnOrZero(
+            new BigNumber(feeData.maxPriorityFeePerGas)
+              .times(normalizationConstants.average)
+              .toFixed(0, BigNumber.ROUND_CEIL)
+          ).toString()
         }
       },
       slow: {
-        txFee: new BigNumber(fees.low).times(gasLimit).toPrecision(),
+        txFee: bnOrZero(new BigNumber(fees.low).times(gasLimit)).toPrecision(),
         chainSpecific: {
           gasLimit,
-          gasPrice: String(fees.low),
-          maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
-            .times(normalizationConstants.slow)
-            .toFixed(0, BigNumber.ROUND_CEIL)
-            .toString(),
-          maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
-            .times(normalizationConstants.slow)
-            .toFixed(0, BigNumber.ROUND_CEIL)
-            .toString()
+          gasPrice: bnOrZero(fees.low).toString(),
+          maxFeePerGas: bnOrZero(
+            new BigNumber(feeData.maxFeePerGas)
+              .times(normalizationConstants.slow)
+              .toFixed(0, BigNumber.ROUND_CEIL)
+          ).toString(),
+          maxPriorityFeePerGas: bnOrZero(
+            new BigNumber(feeData.maxPriorityFeePerGas)
+              .times(normalizationConstants.slow)
+              .toFixed(0, BigNumber.ROUND_CEIL)
+          ).toString()
         }
       }
     }
