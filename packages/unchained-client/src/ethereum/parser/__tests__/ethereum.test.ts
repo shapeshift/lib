@@ -977,7 +977,10 @@ describe('parseTx', () => {
         address,
         chainId: 'eip155:1',
         confirmations: txMempool.confirmations,
-        data: undefined,
+        data: {
+          method: "stake",
+          parser: TxParser.UniV2
+        },
         status: Status.Pending,
         transfers: []
       }
@@ -999,7 +1002,10 @@ describe('parseTx', () => {
         address,
         chainId: 'eip155:1',
         confirmations: tx.confirmations,
-        data: undefined,
+        data: {
+          method: "stake",
+          parser: TxParser.UniV2
+        },
         status: Status.Confirmed,
         fee: {
           value: '4650509500000000',
@@ -1009,7 +1015,7 @@ describe('parseTx', () => {
           {
             type: TransferType.Send,
             from: address,
-            to: '0xDd80E21669A664Bce83E3AD9a0d74f8Dad5D9E72',
+            to: '0x212ebf9FD3c10F371557b08E993eAaB385c3932b',
             assetId: 'eip155:1/erc20:0x470e8de2ebaef52014a47cb5e6af86884947f08c',
             totalValue: '99572547380794318',
             components: [{ value: '99572547380794318' }],
@@ -1034,7 +1040,10 @@ describe('parseTx', () => {
         address,
         chainId: 'eip155:1',
         confirmations: txMempool.confirmations,
-        data: undefined,
+        data: {
+          method: "exit",
+          parser: TxParser.UniV2
+        },
         status: Status.Pending,
         transfers: []
       }
@@ -1056,7 +1065,10 @@ describe('parseTx', () => {
         address,
         chainId: 'eip155:1',
         confirmations: tx.confirmations,
-        data: undefined,
+        data: {
+          method: "exit",
+          parser: TxParser.UniV2
+        },
         status: Status.Confirmed,
         fee: {
           value: '6136186875000000',
@@ -1065,7 +1077,7 @@ describe('parseTx', () => {
         transfers: [
           {
             type: TransferType.Receive,
-            from: '0xDd80E21669A664Bce83E3AD9a0d74f8Dad5D9E72',
+            from: '0x212ebf9FD3c10F371557b08E993eAaB385c3932b',
             to: address,
             assetId: 'eip155:1/erc20:0x470e8de2ebaef52014a47cb5e6af86884947f08c',
             totalValue: '531053586030903030',
@@ -1074,7 +1086,7 @@ describe('parseTx', () => {
           },
           {
             type: TransferType.Receive,
-            from: '0xDd80E21669A664Bce83E3AD9a0d74f8Dad5D9E72',
+            from: '0x212ebf9FD3c10F371557b08E993eAaB385c3932b',
             to: address,
             assetId: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
             totalValue: '317669338073988',
