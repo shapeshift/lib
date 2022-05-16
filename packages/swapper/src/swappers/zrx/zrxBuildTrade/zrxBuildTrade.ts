@@ -2,7 +2,7 @@ import { SupportedChainIds } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 
-import { BuildTradeInput, Trade, ZrxError } from '../../..'
+import { BuildTradeInput, SwapErrorTypes, Trade } from '../../..'
 import { ZrxQuoteResponse } from '../types'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
@@ -11,12 +11,11 @@ import {
   AFFILIATE_ADDRESS,
   APPROVAL_GAS_LIMIT,
   DEFAULT_SLIPPAGE,
-  DEFAULT_SOURCE,
-  MAX_SLIPPAGE
+  DEFAULT_SOURCE
 } from '../utils/constants'
 import { getAllowanceRequired, normalizeAmount } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
-import { ZrxSwapperDeps } from '../ZrxSwapper'
+import { ZrxSwapError, ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function zrxBuildTrade(
   { adapterManager, web3 }: ZrxSwapperDeps,
@@ -32,38 +31,19 @@ export async function zrxBuildTrade(
     wallet
   } = input
 
-  if (!sellAssetAccountId || !buyAssetAccountId) {
-    throw new ZrxError(
-      'ZrxSwapper:ZrxBuildTrade Both sellAssetAccountId and buyAssetAccountId are required'
-    )
-  }
-
-  const buyToken = buyAsset.tokenId || buyAsset.symbol || buyAsset.network
-  const sellToken = sellAsset.tokenId || sellAsset.symbol || sellAsset.network
-  if (!buyToken) {
-    throw new ZrxError(
-      'ZrxSwapper:ZrxBuildTrade One of buyAssetContract or buyAssetSymbol or buyAssetNetwork are required'
-    )
-  }
-  if (!sellToken) {
-    throw new ZrxError(
-      'ZrxSwapper:ZrxBuildTrade One of sellAssetContract or sellAssetSymbol or sellAssetNetwork are required'
-    )
-  }
+  const buyToken = buyAsset.tokenId || buyAsset.symbol
+  const sellToken = sellAsset.tokenId || sellAsset.symbol
 
   if (buyAsset.chainId !== 'eip155:1') {
-    throw new ZrxError('ZrxSwapper:ZrxBuildTrade buyAsset must be on chainId eip155:1')
+    throw new ZrxSwapError('[ZrxBuildTrade] - buyAsset must be on chainId eip155:1', {
+      code: SwapErrorTypes.BUILD_TRADE,
+      details: { chainId: sellAsset.chainId }
+    })
   }
 
   const adapter = await adapterManager.byChainId(buyAsset.chainId)
   const bip44Params = adapter.buildBIP44Params({ accountNumber: Number(buyAssetAccountId) })
   const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
-
-  if (bnOrZero(slippage).gt(MAX_SLIPPAGE)) {
-    throw new ZrxError(
-      `ZrxSwapper:ZrxBuildTrade slippage value of ${slippage} is greater than max slippage value of ${MAX_SLIPPAGE}`
-    )
-  }
 
   const slippagePercentage = slippage ? bnOrZero(slippage).div(100).toString() : DEFAULT_SLIPPAGE
 
