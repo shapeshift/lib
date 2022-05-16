@@ -1,19 +1,18 @@
 import { SwapSource } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 
-import { GetTradeQuoteInput, SwapErrorTypes, TradeQuote } from '../../../api'
+import { GetTradeQuoteInput, SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
 import { getZrxMinMax } from '../getZrxMinMax/getZrxMinMax'
 import { ZrxPriceResponse } from '../types'
 import { bn, bnOrZero } from '../utils/bignumber'
 import { APPROVAL_GAS_LIMIT, DEFAULT_SOURCE } from '../utils/constants'
 import { normalizeAmount } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
-import { ZrxSwapError } from '../ZrxSwapper'
 
 export async function getZrxTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<'eip155:1'>> {
   const { sellAsset, buyAsset, sellAmount, sellAssetAccountId } = input
   if (buyAsset.chainId !== 'eip155:1' || sellAsset.chainId !== 'eip155:1') {
-    throw new ZrxSwapError(SwapErrorTypes.UNSUPPORTED_PAIR, {
+    throw new SwapError(SwapErrorTypes.UNSUPPORTED_PAIR, {
       cause: 'Both assets need to be on the Ethereum chain to use Zrx',
       details: { buyAssetChainId: buyAsset.chainId, sellAssetChainId: sellAsset.chainId }
     })

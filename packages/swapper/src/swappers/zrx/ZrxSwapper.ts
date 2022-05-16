@@ -36,15 +36,6 @@ export type ZrxSwapperDeps = {
   web3: Web3
 }
 
-export const ZrxSwapError = createErrorClass('SwapError')
-
-export class ZrxError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.message = `ZrxError:${message}`
-  }
-}
-
 export class ZrxSwapper implements Swapper {
   public static swapperName = 'ZrxSwapper'
   deps: ZrxSwapperDeps

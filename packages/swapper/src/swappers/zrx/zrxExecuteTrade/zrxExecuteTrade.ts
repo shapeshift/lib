@@ -1,8 +1,8 @@
 import { numberToHex } from 'web3-utils'
 
-import { ExecuteTradeInput, SwapErrorTypes, TradeResult } from '../../../api'
+import { ExecuteTradeInput, SwapError,SwapErrorTypes, TradeResult } from '../../../api'
 import { bnOrZero } from '../utils/bignumber'
-import { ZrxSwapError, ZrxSwapperDeps } from '../ZrxSwapper'
+import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function zrxExecuteTrade(
   { adapterManager }: ZrxSwapperDeps,
@@ -46,11 +46,11 @@ export async function zrxExecuteTrade(
 
       return { txid }
     } else {
-      throw new ZrxSwapError('[zrxExecuteTrade]', {
+      throw new SwapError('[zrxExecuteTrade]', {
         code: SwapErrorTypes.SIGN_AND_BROADCAST_FAILED
       })
     }
   } catch (e) {
-    throw new ZrxSwapError('[zrxExecuteTrade]', { cause: e, code: SwapErrorTypes.EXECUTE_TRADE })
+    throw new SwapError('[zrxExecuteTrade]', { cause: e, code: SwapErrorTypes.EXECUTE_TRADE })
   }
 }

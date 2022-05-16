@@ -10,6 +10,9 @@ import {
   SupportedChainIds,
   SwapperType
 } from '@shapeshiftoss/types'
+import { createErrorClass } from '@shapeshiftoss/errors'
+
+export const SwapError = createErrorClass('SwapError')
 
 export type SupportedAssetInput = {
   assetIds: AssetId[]

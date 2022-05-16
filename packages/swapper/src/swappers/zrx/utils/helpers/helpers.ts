@@ -6,9 +6,8 @@ import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { AbiItem, numberToHex } from 'web3-utils'
 
-import { SwapErrorTypes, TradeQuote } from '../../../../api'
+import { SwapErrorTypes, TradeQuote, SwapError } from '../../../../api'
 import { ZrxPriceResponse } from '../../types'
-import { ZrxSwapError } from '../../ZrxSwapper'
 import { bn, bnOrZero } from '../bignumber'
 import { zrxService } from '../zrxService'
 
@@ -79,7 +78,7 @@ export const getAllowanceRequired = async ({
     const tokenId = sellAsset.tokenId
 
     if (!tokenId) {
-      throw new ZrxSwapError('[getAllowanceRequired] - sellAsset.tokenId is required', {
+      throw new SwapError('[getAllowanceRequired] - sellAsset.tokenId is required', {
         code: SwapErrorTypes.ALLOWANCE_REQUIRED
       })
     }
@@ -93,7 +92,7 @@ export const getAllowanceRequired = async ({
     })
     if (allowanceOnChain === '0') return bnOrZero(sellAmount)
     if (!allowanceOnChain) {
-      throw new ZrxSwapError(
+      throw new SwapError(
         `[getAllowanceRequired] - No allowance data for ${allowanceContract} to ${receiveAddress}`,
         { code: SwapErrorTypes.ALLOWANCE_REQUIRED }
       )
@@ -101,7 +100,7 @@ export const getAllowanceRequired = async ({
     const allowanceRequired = bnOrZero(sellAmount).minus(allowanceOnChain)
     return allowanceRequired.lt(0) ? bn(0) : allowanceRequired
   } catch (e) {
-    throw new ZrxSwapError('[getAllowanceRequired]', {
+    throw new SwapError('[getAllowanceRequired]', {
       cause: e,
       code: SwapErrorTypes.ALLOWANCE_REQUIRED
     })
@@ -127,13 +126,13 @@ export const getUsdRate = async (input: Pick<Asset, 'symbol' | 'tokenId'>): Prom
     const price = bnOrZero(rateResponse.data.price)
 
     if (!price.gt(0))
-      throw new ZrxSwapError('[getUsdRate] - Failed to get price data', {
+      throw new SwapError('[getUsdRate] - Failed to get price data', {
         code: SwapErrorTypes.USD_RATE_FAILED
       })
 
     return bn(1).dividedBy(price).toString()
   } catch (e) {
-    throw new ZrxSwapError('[getUsdRate]', {
+    throw new SwapError('[getUsdRate]', {
       cause: e,
       code: SwapErrorTypes.USD_RATE_FAILED
     })
@@ -149,7 +148,7 @@ export const grantAllowance = async ({
 }: GrantAllowanceArgs): Promise<string> => {
   try {
     if (!quote.sellAsset.tokenId) {
-      throw new ZrxSwapError('[grantAllowance] - sellAsset.tokenId is required', {
+      throw new SwapError('[grantAllowance] - sellAsset.tokenId is required', {
         code: SwapErrorTypes.GRANT_ALLOWANCE
       })
     }
@@ -183,7 +182,7 @@ export const grantAllowance = async ({
       const signedTx = await adapter.signTransaction({ txToSign: grantAllowanceTxToSign, wallet })
 
       if (!signedTx) {
-        throw new ZrxSwapError(`[grantAllowance] - Signed transaction is required: ${signedTx}`, {
+        throw new SwapError(`[grantAllowance] - Signed transaction is required: ${signedTx}`, {
           code: SwapErrorTypes.GRANT_ALLOWANCE
         })
       }
@@ -199,12 +198,12 @@ export const grantAllowance = async ({
 
       return broadcastedTxId
     } else {
-      throw new ZrxSwapError('[grantAllowance] - invalid HDWallet config', {
+      throw new SwapError('[grantAllowance] - invalid HDWallet config', {
         code: SwapErrorTypes.GRANT_ALLOWANCE
       })
     }
   } catch (e) {
-    throw new ZrxSwapError('[grantAllowance]', {
+    throw new SwapError('[grantAllowance]', {
       cause: e,
       code: SwapErrorTypes.GRANT_ALLOWANCE
     })

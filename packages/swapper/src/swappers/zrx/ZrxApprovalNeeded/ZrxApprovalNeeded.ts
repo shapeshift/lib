@@ -1,11 +1,11 @@
 import { ApprovalNeededOutput, SupportedChainIds } from '@shapeshiftoss/types'
 
-import { ApprovalNeededInput, SwapErrorTypes } from '../../../api'
+import { ApprovalNeededInput, SwapErrorTypes, SwapError } from '../../../api'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { bnOrZero } from '../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../utils/constants'
 import { getERC20Allowance } from '../utils/helpers/helpers'
-import { ZrxSwapError, ZrxSwapperDeps } from '../ZrxSwapper'
+import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function ZrxApprovalNeeded(
   { adapterManager, web3 }: ZrxSwapperDeps,
@@ -15,7 +15,7 @@ export async function ZrxApprovalNeeded(
 
   try {
     if (sellAsset.chainId !== 'eip155:1') {
-      throw new ZrxSwapError('[ZrxApprovalNeeded] - sellAsset chainId is not supported', {
+      throw new SwapError('[ZrxApprovalNeeded] - sellAsset chainId is not supported', {
         code: SwapErrorTypes.APPROVAL_NEEDED,
         details: { chainId: sellAsset.chainId }
       })
@@ -33,7 +33,7 @@ export async function ZrxApprovalNeeded(
     const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 
     if (!quote.sellAsset.tokenId || !quote.allowanceContract) {
-      throw new ZrxSwapError('[ZrxApprovalNeeded] - tokenId and allowanceTarget are required', {
+      throw new SwapError('[ZrxApprovalNeeded] - tokenId and allowanceTarget are required', {
         code: SwapErrorTypes.APPROVAL_NEEDED,
         details: { chainId: sellAsset.chainId }
       })
@@ -49,7 +49,7 @@ export async function ZrxApprovalNeeded(
     const allowanceOnChain = bnOrZero(allowanceResult)
 
     if (!quote.feeData.chainSpecific?.gasPrice)
-      throw new ZrxSwapError('[ZrxApprovalNeeded] - no gas price with quote', {
+      throw new SwapError('[ZrxApprovalNeeded] - no gas price with quote', {
         code: SwapErrorTypes.APPROVAL_NEEDED
       })
     return {
@@ -58,7 +58,7 @@ export async function ZrxApprovalNeeded(
       gasPrice: quote.feeData.chainSpecific?.gasPrice
     }
   } catch (e) {
-    throw new ZrxSwapError('[ZrxApprovalNeeded]', {
+    throw new SwapError('[ZrxApprovalNeeded]', {
       cause: e,
       code: SwapErrorTypes.APPROVAL_NEEDED
     })

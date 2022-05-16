@@ -1,10 +1,10 @@
 import { SupportedChainIds } from '@shapeshiftoss/types'
 
-import { ApproveInfiniteInput, SwapErrorTypes } from '../../../api'
+import { ApproveInfiniteInput, SwapErrorTypes, SwapError } from '../../../api'
 import { erc20Abi } from '../utils/abi/erc20-abi'
 import { MAX_ALLOWANCE } from '../utils/constants'
 import { grantAllowance } from '../utils/helpers/helpers'
-import { ZrxSwapError, ZrxSwapperDeps } from '../ZrxSwapper'
+import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function ZrxApproveInfinite(
   { adapterManager, web3 }: ZrxSwapperDeps,
@@ -24,7 +24,7 @@ export async function ZrxApproveInfinite(
 
     return allowanceGrantRequired
   } catch (e) {
-    throw new ZrxSwapError('[ZrxApproveInfinite]', {
+    throw new SwapError('[ZrxApproveInfinite]', {
       cause: e,
       code: SwapErrorTypes.APPROVE_INFINITE
     })

@@ -2,7 +2,7 @@ import { SupportedChainIds } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 
-import { BuildTradeInput, SwapErrorTypes, Trade } from '../../..'
+import { BuildTradeInput, SwapError, SwapErrorTypes, Trade } from '../../..'
 import { ZrxQuoteResponse } from '../types'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
@@ -15,7 +15,7 @@ import {
 } from '../utils/constants'
 import { getAllowanceRequired, normalizeAmount } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
-import { ZrxSwapError, ZrxSwapperDeps } from '../ZrxSwapper'
+import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function zrxBuildTrade(
   { adapterManager, web3 }: ZrxSwapperDeps,
@@ -35,7 +35,7 @@ export async function zrxBuildTrade(
   const sellToken = sellAsset.tokenId || sellAsset.symbol
 
   if (buyAsset.chainId !== 'eip155:1') {
-    throw new ZrxSwapError('[ZrxBuildTrade] - buyAsset must be on chainId eip155:1', {
+    throw new SwapError('[ZrxBuildTrade] - buyAsset must be on chainId eip155:1', {
       code: SwapErrorTypes.BUILD_TRADE,
       details: { chainId: sellAsset.chainId }
     })
