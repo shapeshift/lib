@@ -1,3 +1,4 @@
+import { UNI_V2_STAKING_REWARDS } from '../../constants'
 import { mempoolMock } from './mempoolMock'
 
 const foxStake = {
@@ -13,7 +14,7 @@ const foxStake = {
     {
       value: '0',
       n: 0,
-      addresses: ['0x212ebf9FD3c10F371557b08E993eAaB385c3932b'],
+      addresses: [UNI_V2_STAKING_REWARDS],
       isAddress: true
     }
   ],
@@ -27,7 +28,7 @@ const foxStake = {
     {
       type: 'ERC20',
       from: '0x6bF198c2B5c8E48Af4e876bc2173175b89b1DA0C',
-      to: '0x212ebf9FD3c10F371557b08E993eAaB385c3932b',
+      to: UNI_V2_STAKING_REWARDS,
       token: '0x470e8de2eBaef52014A47Cb5E6aF86884947F08c',
       name: 'Uniswap V2',
       symbol: 'UNI-V2',
