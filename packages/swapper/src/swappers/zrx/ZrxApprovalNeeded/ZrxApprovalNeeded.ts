@@ -22,7 +22,8 @@ export async function ZrxApprovalNeeded(
       })
     }
 
-    if (sellAsset.symbol === 'ETH') {
+    // No approval needed for trading eth itself
+    if (sellAsset.assetId === 'eip155:1/slip44:60') {
       return { approvalNeeded: false }
     }
 
