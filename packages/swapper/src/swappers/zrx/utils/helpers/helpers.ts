@@ -159,9 +159,8 @@ export const grantAllowance = async ({
       .approve(quote.allowanceContract, quote.sellAmount)
       .encodeABI()
 
-    const bip44Params = adapter.buildBIP44Params({
-      accountNumber: Number(quote.sellAssetAccountId) || 0
-    })
+    const accountNumber = bnOrZero(quote.sellAssetAccountId).toNumber()
+    const bip44Params = adapter.buildBIP44Params({ accountNumber })
 
     const { txToSign } = await adapter.buildSendTransaction({
       wallet,
