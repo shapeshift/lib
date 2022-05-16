@@ -72,7 +72,7 @@ describe('SwapperManager', () => {
       const manager = new SwapperManager()
       // @ts-ignore
       expect(() => manager.addSwapper(SwapperType.Thorchain, {})).toThrow(
-        '[getSwapper] - invalid swapper instanc'
+        '[getSwapper] - invalid swapper instance'
       )
     })
   })
