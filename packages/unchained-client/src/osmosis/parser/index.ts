@@ -27,7 +27,7 @@ export class TransactionParser {
     this.assetId = toAssetId({
       ...fromChainId(this.chainId),
       assetNamespace: AssetNamespace.Slip44,
-      assetReference: AssetReference.Cosmos
+      assetReference: AssetReference.Osmosis
     })
   }
 

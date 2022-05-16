@@ -40,11 +40,11 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
   protected readonly supportedChainIds: ChainId[]
   protected readonly coinName: string
   protected readonly providers: {
-    http: unchained.cosmos.V1Api
-    ws: unchained.ws.Client<unchained.cosmos.Tx>| unchained.ws.Client<unchained.osmosis.Tx>
+    http: unchained.cosmos.V1Api | unchained.osmosis.V1Api
+    ws: unchained.ws.Client<unchained.cosmos.Tx> | unchained.ws.Client<unchained.osmosis.Tx>
   }
 
-  protected parser: unchained.cosmos.TransactionParser | unchained.cosmos.TransactionParser
+  protected parser: unchained.cosmos.TransactionParser | unchained.osmosis.TransactionParser
 
   static defaultBIP44Params: BIP44Params
 
