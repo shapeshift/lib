@@ -55,7 +55,7 @@ export async function zrxBuildTrade(
     throw new ZrxError('ZrxSwapper:ZrxBuildTrade buyAsset must be on chainId eip155:1')
   }
 
-  const adapter = adapterManager.byChain(buyAsset.chain)
+  const adapter = await adapterManager.byChainId(buyAsset.chainId)
   const bip44Params = adapter.buildBIP44Params({ accountNumber: Number(buyAssetAccountId) })
   const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 
