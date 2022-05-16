@@ -1,6 +1,5 @@
 import { AssetId } from '@shapeshiftoss/caip'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import { createErrorClass } from '@shapeshiftoss/errors'
 import {
   ApprovalNeededOutput,
   Asset,
