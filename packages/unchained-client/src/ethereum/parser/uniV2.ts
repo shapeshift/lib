@@ -6,7 +6,8 @@ import { TransferType, TxParser } from '../../types'
 import { SubParser, TxSpecific } from '../types'
 import ERC20_ABI from './abi/erc20'
 import UNIV2_ABI from './abi/uniV2'
-import { UNI_V2_ROUTER_CONTRACT, WETH_CONTRACT_MAINNET, WETH_CONTRACT_ROPSTEN } from './constants'
+import UNIV2_STAKING_ABI from './abi/uniV2Staking'
+import { UNI_V2_ROUTER_CONTRACT, WETH_CONTRACT_MAINNET, WETH_CONTRACT_ROPSTEN, UNI_V2_STAKING_REWARDS } from './constants'
 import { getSigHash, txInteractsWithContract } from './utils'
 
 export interface ParserArgs {
@@ -20,10 +21,16 @@ export class Parser implements SubParser {
   readonly chainId: ChainId
   readonly wethContract: string
   readonly abiInterface = new ethers.utils.Interface(UNIV2_ABI)
+  readonly stakingRewardsInterface = new ethers.utils.Interface(UNIV2_STAKING_ABI)
 
   readonly supportedFunctions = {
     addLiquidityEthSigHash: this.abiInterface.getSighash('addLiquidityETH'),
-    removeLiquidityEthSigHash: this.abiInterface.getSighash('removeLiquidityETH')
+    removeLiquidityEthSigHash: this.abiInterface.getSighash('removeLiquidityETH'),
+  }
+
+  readonly supportedStakingRewardsFunctions = {
+    stakeSigHash: this.stakingRewardsInterface.getSighash('stake'),
+    exitSigHash: this.stakingRewardsInterface.getSighash('exit'),
   }
 
   constructor(args: ParserArgs) {
@@ -42,10 +49,9 @@ export class Parser implements SubParser {
     }
   }
 
-  async parse(tx: BlockbookTx): Promise<TxSpecific | undefined> {
+  async parseUniV2(tx: BlockbookTx): Promise<TxSpecific | undefined> {
     const txData = tx.ethereumSpecific?.data
 
-    if (!txInteractsWithContract(tx, UNI_V2_ROUTER_CONTRACT)) return
     if (!txData) return
     if (tx.confirmations) return
 
@@ -129,6 +135,37 @@ export class Parser implements SubParser {
         method: decoded.name
       }
     }
+  }
+
+  async parseStakingRewards(tx: BlockbookTx): Promise<TxSpecific | undefined> {
+    const txData = tx.ethereumSpecific?.data
+
+    if (!txData) return
+
+    const txSigHash = getSigHash(txData)
+
+    if (!Object.values(this.supportedStakingRewardsFunctions).some((hash) => hash === txSigHash)) return
+
+    const decoded = this.stakingRewardsInterface.parseTransaction({ data: txData })
+
+    // failed to decode input data
+    if (!decoded) return
+
+    return {
+      data: {
+        parser: TxParser.UniV2,
+        method: decoded.name
+      }
+    }
+  }
+
+  async parse(tx: BlockbookTx): Promise<TxSpecific | undefined> {
+    if (txInteractsWithContract(tx, UNI_V2_ROUTER_CONTRACT)) {
+      return this.parseUniV2(tx)
+    } else if (txInteractsWithContract(tx, UNI_V2_STAKING_REWARDS)) {
+      return this.parseStakingRewards(tx)
+    }
+    return
   }
 
   private static pairFor(tokenA: string, tokenB: string): string {
