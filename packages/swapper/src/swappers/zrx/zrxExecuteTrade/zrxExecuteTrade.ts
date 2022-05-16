@@ -12,7 +12,7 @@ export async function zrxExecuteTrade(
 
   try {
     // value is 0 for erc20s
-    const value = sellAsset.symbol === 'ETH' ? trade.sellAmount : '0'
+    const value = sellAsset.assetId === 'eip155:1/slip44:60' ? trade.sellAmount : '0'
     const adapter = await adapterManager.byChainId(sellAsset.chainId)
     const bip44Params = adapter.buildBIP44Params({
       accountNumber: bnOrZero(trade.sellAssetAccountId).toNumber()
