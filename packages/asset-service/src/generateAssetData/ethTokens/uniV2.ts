@@ -5,7 +5,7 @@ export const getUniV2Token = (): TokenAsset[] => {
   const chain = ChainTypes.Ethereum
   const network = NetworkTypes.MAINNET
   const assetNamespace = AssetNamespace.ERC20
-  const assetReference = '0x470e8de2ebaef52014a47cb5e6af86884947f08c' // FOXy contract address
+  const assetReference = '0x470e8de2ebaef52014a47cb5e6af86884947f08c' // UNI-V2 contract address
 
   const result: TokenAsset = {
     assetId: toAssetId({
