@@ -1,4 +1,5 @@
 import { AssetId } from '@shapeshiftoss/caip'
+import { createErrorClass } from '@shapeshiftoss/errors'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import {
   ApprovalNeededOutput,
@@ -10,7 +11,6 @@ import {
   SupportedChainIds,
   SwapperType
 } from '@shapeshiftoss/types'
-import { createErrorClass } from '@shapeshiftoss/errors'
 
 export const SwapError = createErrorClass('SwapError')
 

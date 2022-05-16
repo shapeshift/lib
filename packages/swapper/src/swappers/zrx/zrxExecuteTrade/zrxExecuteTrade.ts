@@ -1,6 +1,6 @@
 import { numberToHex } from 'web3-utils'
 
-import { ExecuteTradeInput, SwapError,SwapErrorTypes, TradeResult } from '../../../api'
+import { ExecuteTradeInput, SwapError, SwapErrorTypes, TradeResult } from '../../../api'
 import { bnOrZero } from '../utils/bignumber'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 

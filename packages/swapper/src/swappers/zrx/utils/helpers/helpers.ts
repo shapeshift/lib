@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { AbiItem, numberToHex } from 'web3-utils'
 
-import { SwapErrorTypes, TradeQuote, SwapError } from '../../../../api'
+import { SwapError, SwapErrorTypes, TradeQuote } from '../../../../api'
 import { ZrxPriceResponse } from '../../types'
 import { bn, bnOrZero } from '../bignumber'
 import { zrxService } from '../zrxService'
