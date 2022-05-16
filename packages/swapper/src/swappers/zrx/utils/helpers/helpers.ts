@@ -163,8 +163,6 @@ export const grantAllowance = async ({
       accountNumber: Number(quote.sellAssetAccountId) || 0
     })
 
-    let signedTx, broadcastedTxId
-
     const { txToSign } = await adapter.buildSendTransaction({
       wallet,
       to: quote.sellAsset.tokenId,
@@ -182,7 +180,7 @@ export const grantAllowance = async ({
       data: approveTx
     }
     if (wallet.supportsOfflineSigning()) {
-      signedTx = await adapter.signTransaction({ txToSign: grantAllowanceTxToSign, wallet })
+      const signedTx = await adapter.signTransaction({ txToSign: grantAllowanceTxToSign, wallet })
 
       if (!signedTx) {
         throw new ZrxSwapError(`[grantAllowance] - Signed transaction is required: ${signedTx}`, {
@@ -190,11 +188,11 @@ export const grantAllowance = async ({
         })
       }
 
-      broadcastedTxId = await adapter.broadcastTransaction(signedTx)
+      const broadcastedTxId = await adapter.broadcastTransaction(signedTx)
 
       return broadcastedTxId
     } else if (wallet.supportsBroadcast() && adapter.signAndBroadcastTransaction) {
-      broadcastedTxId = await adapter.signAndBroadcastTransaction?.({
+      const broadcastedTxId = await adapter.signAndBroadcastTransaction?.({
         txToSign: grantAllowanceTxToSign,
         wallet
       })
