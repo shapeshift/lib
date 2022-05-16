@@ -166,11 +166,8 @@ export class Parser implements SubParser {
   }
 
   async parse(tx: BlockbookTx): Promise<TxSpecific | undefined> {
-    if (txInteractsWithContract(tx, UNI_V2_ROUTER_CONTRACT)) {
-      return this.parseUniV2(tx)
-    } else if (txInteractsWithContract(tx, UNI_V2_STAKING_REWARDS)) {
-      return this.parseStakingRewards(tx)
-    }
+    if (txInteractsWithContract(tx, UNI_V2_ROUTER_CONTRACT)) return this.parseUniV2(tx)
+    if (txInteractsWithContract(tx, UNI_V2_STAKING_REWARDS)) return this.parseStakingRewards(tx)
     return
   }
 
