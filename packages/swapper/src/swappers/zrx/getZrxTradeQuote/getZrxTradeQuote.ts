@@ -12,10 +12,13 @@ import { zrxService } from '../utils/zrxService'
 export async function getZrxTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<'eip155:1'>> {
   const { sellAsset, buyAsset, sellAmount, sellAssetAccountId } = input
   if (buyAsset.chainId !== 'eip155:1' || sellAsset.chainId !== 'eip155:1') {
-    throw new SwapError(SwapErrorTypes.UNSUPPORTED_PAIR, {
-      cause: 'Both assets need to be on the Ethereum chain to use Zrx',
-      details: { buyAssetChainId: buyAsset.chainId, sellAssetChainId: sellAsset.chainId }
-    })
+    throw new SwapError(
+      '[getZrxTradeQuote] - Both assets need to be on the Ethereum chain to use Zrx',
+      {
+        code: SwapErrorTypes.UNSUPPORTED_PAIR,
+        details: { buyAssetChainId: buyAsset.chainId, sellAssetChainId: sellAsset.chainId }
+      }
+    )
   }
 
   const useSellAmount = !!sellAmount
