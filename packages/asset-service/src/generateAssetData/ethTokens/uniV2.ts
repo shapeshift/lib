@@ -1,4 +1,4 @@
-import { AssetNamespace, toCAIP2, toCAIP19 } from '@shapeshiftoss/caip'
+import { AssetNamespace, toAssetId, toChainId } from '@shapeshiftoss/caip'
 import { AssetDataSource, ChainTypes, NetworkTypes, TokenAsset } from '@shapeshiftoss/types'
 
 export const getUniV2Token = (): TokenAsset[] => {
@@ -8,13 +8,13 @@ export const getUniV2Token = (): TokenAsset[] => {
   const assetReference = '0x470e8de2ebaef52014a47cb5e6af86884947f08c' // FOXy contract address
 
   const result: TokenAsset = {
-    assetId: toCAIP19({
+    assetId: toAssetId({
       chain,
       network,
       assetNamespace,
       assetReference
     }),
-    chainId: toCAIP2({ chain, network }),
+    chainId: toChainId({ chain, network }),
     dataSource: AssetDataSource.CoinGecko,
     name: 'Uniswap ETH/FOX LP',
     precision: 18,
