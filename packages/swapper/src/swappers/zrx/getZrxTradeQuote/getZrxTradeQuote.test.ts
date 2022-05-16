@@ -88,7 +88,7 @@ describe('getZrxTradeQuote', () => {
         ...quoteInput,
         buyAsset: { ...buyAsset, chainId: 'bip122:000000000019d6689c085ae165831e93' }
       })
-    ).rejects.toThrow('ZrxError:getQuote - Both assets need to be on the Ethereum chain to use Zrx')
+    ).rejects.toThrow('UNSUPPORTED_PAIR')
   })
   it('fails on non ethereum chain for sellAsset', async () => {
     const { quoteInput, sellAsset } = setupQuote()
@@ -101,7 +101,7 @@ describe('getZrxTradeQuote', () => {
         ...quoteInput,
         sellAsset: { ...sellAsset, chainId: 'bip122:000000000019d6689c085ae165831e93' }
       })
-    ).rejects.toThrow('ZrxError:getQuote - Both assets need to be on the Ethereum chain to use Zrx')
+    ).rejects.toThrow('UNSUPPORTED_PAIR')
   })
   it('uses symbol when weth tokenId is undefined', async () => {
     const { quoteInput, buyAsset } = setupQuote()
