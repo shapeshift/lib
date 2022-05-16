@@ -9,18 +9,14 @@ export async function zrxExecuteTrade(
   { trade, wallet }: ExecuteTradeInput<'eip155:1'>
 ): Promise<TradeResult> {
   const { sellAsset } = trade
-  console.log('zrxExecuteTrade')
   try {
     // value is 0 for erc20s
     const value = sellAsset.assetId === 'eip155:1/slip44:60' ? trade.sellAmount : '0'
-    console.log('wtf1', sellAsset)
     const adapter = await adapterManager.byChainId(sellAsset.chainId)
-    console.log('wtf2')
     const bip44Params = adapter.buildBIP44Params({
       accountNumber: bnOrZero(trade.sellAssetAccountId).toNumber()
     })
 
-    console.log('about to build tx with', value, trade)
     const buildTxResponse = await adapter.buildSendTransaction({
       value,
       wallet,
@@ -36,7 +32,6 @@ export async function zrxExecuteTrade(
 
     const txWithQuoteData = { ...txToSign, data: trade.txData ?? '' }
 
-    console.log('first')
     if (wallet.supportsOfflineSigning()) {
       const signedTx = await adapter.signTransaction({ txToSign: txWithQuoteData, wallet })
 
@@ -44,7 +39,6 @@ export async function zrxExecuteTrade(
 
       return { txid }
     } else if (wallet.supportsBroadcast() && adapter.signAndBroadcastTransaction) {
-      console.log('sign and broadcast')
       const txid = await adapter.signAndBroadcastTransaction?.({
         txToSign: txWithQuoteData,
         wallet
