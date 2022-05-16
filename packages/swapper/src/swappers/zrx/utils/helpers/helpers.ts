@@ -111,12 +111,13 @@ export const getAllowanceRequired = async ({
 export const getUsdRate = async (input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string> => {
   const { symbol, tokenId } = input
   try {
-    if (symbol === 'USDC') return '1' // Will break if comparing against usdc
+    const USDC_CONTRACT_ADDRESS = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+    if (tokenId?.toLowerCase() === USDC_CONTRACT_ADDRESS) return '1' // Will break if comparing against usdc
     const rateResponse: AxiosResponse<ZrxPriceResponse> = await zrxService.get<ZrxPriceResponse>(
       '/swap/v1/price',
       {
         params: {
-          buyToken: 'USDC',
+          buyToken: USDC_CONTRACT_ADDRESS,
           buyAmount: '1000000000', // rate is imprecise for low $ values, hence asking for $1000
           sellToken: tokenId || symbol
         }
