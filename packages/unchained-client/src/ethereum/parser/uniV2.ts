@@ -7,7 +7,12 @@ import { SubParser, TxSpecific } from '../types'
 import ERC20_ABI from './abi/erc20'
 import UNIV2_ABI from './abi/uniV2'
 import UNIV2_STAKING_ABI from './abi/uniV2Staking'
-import { UNI_V2_ROUTER_CONTRACT, WETH_CONTRACT_MAINNET, WETH_CONTRACT_ROPSTEN, UNI_V2_STAKING_REWARDS } from './constants'
+import {
+  UNI_V2_ROUTER_CONTRACT,
+  UNI_V2_STAKING_REWARDS,
+  WETH_CONTRACT_MAINNET,
+  WETH_CONTRACT_ROPSTEN
+} from './constants'
 import { getSigHash, txInteractsWithContract } from './utils'
 
 export interface ParserArgs {
@@ -25,12 +30,12 @@ export class Parser implements SubParser {
 
   readonly supportedFunctions = {
     addLiquidityEthSigHash: this.abiInterface.getSighash('addLiquidityETH'),
-    removeLiquidityEthSigHash: this.abiInterface.getSighash('removeLiquidityETH'),
+    removeLiquidityEthSigHash: this.abiInterface.getSighash('removeLiquidityETH')
   }
 
   readonly supportedStakingRewardsFunctions = {
     stakeSigHash: this.stakingRewardsInterface.getSighash('stake'),
-    exitSigHash: this.stakingRewardsInterface.getSighash('exit'),
+    exitSigHash: this.stakingRewardsInterface.getSighash('exit')
   }
 
   constructor(args: ParserArgs) {
@@ -144,7 +149,8 @@ export class Parser implements SubParser {
 
     const txSigHash = getSigHash(txData)
 
-    if (!Object.values(this.supportedStakingRewardsFunctions).some((hash) => hash === txSigHash)) return
+    if (!Object.values(this.supportedStakingRewardsFunctions).some((hash) => hash === txSigHash))
+      return
 
     const decoded = this.stakingRewardsInterface.parseTransaction({ data: txData })
 

@@ -978,7 +978,7 @@ describe('parseTx', () => {
         chainId: 'eip155:1',
         confirmations: txMempool.confirmations,
         data: {
-          method: "stake",
+          method: 'stake',
           parser: TxParser.UniV2
         },
         status: Status.Pending,
@@ -1003,7 +1003,7 @@ describe('parseTx', () => {
         chainId: 'eip155:1',
         confirmations: tx.confirmations,
         data: {
-          method: "stake",
+          method: 'stake',
           parser: TxParser.UniV2
         },
         status: Status.Confirmed,
@@ -1041,7 +1041,7 @@ describe('parseTx', () => {
         chainId: 'eip155:1',
         confirmations: txMempool.confirmations,
         data: {
-          method: "exit",
+          method: 'exit',
           parser: TxParser.UniV2
         },
         status: Status.Pending,
@@ -1066,7 +1066,7 @@ describe('parseTx', () => {
         chainId: 'eip155:1',
         confirmations: tx.confirmations,
         data: {
-          method: "exit",
+          method: 'exit',
           parser: TxParser.UniV2
         },
         status: Status.Confirmed,
