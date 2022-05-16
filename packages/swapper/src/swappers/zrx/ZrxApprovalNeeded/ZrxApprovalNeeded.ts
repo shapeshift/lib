@@ -1,5 +1,4 @@
 import { ApprovalNeededOutput, SupportedChainIds } from '@shapeshiftoss/types'
-import { SwapError } from 'packages/swapper/dist'
 
 import { ApprovalNeededInput, SwapErrorTypes } from '../../../api'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'

@@ -107,7 +107,6 @@ const main = async (): Promise<void> => {
   const sellAmountBase = toBaseUnit(sellAmount, sellAsset.precision)
 
   let quote
-  let answer
   try {
     quote = await swapper.getTradeQuote({
       sellAsset,
@@ -133,7 +132,7 @@ const main = async (): Promise<void> => {
 
   const buyAmount = fromBaseUnit(quote.buyAmount || '0', buyAsset.precision)
 
-  answer = readline.question(
+  const answer = readline.question(
     `Swap ${sellAmount} ${sellAsset.symbol} for ${buyAmount} ${
       buyAsset.symbol
     } on ${swapper.getType()}? (y/n): `
