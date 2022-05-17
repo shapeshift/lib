@@ -1,4 +1,3 @@
-import { ASSET_NAMESPACE } from '@shapeshiftoss/caip'
 import { AssetDataSource, BaseAsset, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 
 export const ethereum: BaseAsset = {
@@ -86,7 +85,7 @@ export const tEthereum: BaseAsset = {
       name: 'Test Token',
       precision: 18,
       tokenId: '0x1da00b6fc705f2ce4c25d7e7add25a3cc045e54a',
-      contractType: ASSET_NAMESPACE.ERC20,
+      contractType: 'erc20',
       color: '#FFFFFF',
       dataSource: AssetDataSource.CoinGecko,
       secondaryColor: '#FFFFFF',

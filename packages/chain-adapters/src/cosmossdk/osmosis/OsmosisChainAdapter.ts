@@ -1,10 +1,4 @@
-import {
-  ASSET_NAMESPACE,
-  ASSET_REFERENCE,
-  AssetId,
-  fromChainId,
-  toAssetId
-} from '@shapeshiftoss/caip'
+import { ASSET_REFERENCE, AssetId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, OsmosisSignTx, supportsOsmosis } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 
@@ -35,7 +29,7 @@ export class ChainAdapter
     this.assetId = toAssetId({
       chain,
       network,
-      assetNamespace: ASSET_NAMESPACE.Slip44,
+      assetNamespace: 'slip44',
       assetReference: ASSET_REFERENCE.Osmosis
     })
   }

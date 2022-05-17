@@ -1,5 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { ASSET_NAMESPACE, CHAIN_REFERENCE, ChainReference, toAssetId } from '@shapeshiftoss/caip'
+import { CHAIN_REFERENCE, ChainReference, toAssetId } from '@shapeshiftoss/caip'
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { ChainTypes, NetworkTypes, WithdrawType } from '@shapeshiftoss/types'
 import axios from 'axios'
@@ -1082,7 +1082,7 @@ export class FoxyApi {
 
     const chain = ChainTypes.Ethereum
     const network = NetworkTypes.MAINNET
-    const assetNamespace = ASSET_NAMESPACE.ERC20
+    const assetNamespace = 'erc20'
     const assetReference = tokenContractAddress
     // foxy assetId
     const assetId = toAssetId({ chain, network, assetNamespace, assetReference })

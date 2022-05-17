@@ -2,7 +2,7 @@ import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import axios from 'axios'
 import fs from 'fs'
 
-import { ASSET_NAMESPACE, ASSET_REFERENCE, toAssetId } from '../../assetId/assetId'
+import { ASSET_REFERENCE, toAssetId } from '../../assetId/assetId'
 import { toChainId } from '../../chainId/chainId'
 
 export type CoinCapCoin = {
@@ -43,7 +43,7 @@ export const parseEthData = (data: CoinCapCoin[]) => {
 
   return ethCoins.reduce((acc, { id, explorer }) => {
     let assetReference: string = ASSET_REFERENCE.Ethereum
-    const assetNamespace = id === 'ethereum' ? ASSET_NAMESPACE.Slip44 : ASSET_NAMESPACE.ERC20
+    const assetNamespace = id === 'ethereum' ? 'slip44' : 'erc20'
     if (id !== 'ethereum' && explorer) {
       assetReference = explorer
         .replace('https://etherscan.io/token/', '')
@@ -62,7 +62,7 @@ export const makeBtcData = () => {
   const assetId = toAssetId({
     chain,
     network,
-    assetNamespace: ASSET_NAMESPACE.Slip44,
+    assetNamespace: 'slip44',
     assetReference: ASSET_REFERENCE.Bitcoin
   })
   return { [assetId]: 'bitcoin' }
@@ -74,7 +74,7 @@ export const makeCosmosHubData = () => {
   const assetId = toAssetId({
     chain,
     network,
-    assetNamespace: ASSET_NAMESPACE.Slip44,
+    assetNamespace: 'slip44',
     assetReference: ASSET_REFERENCE.Cosmos
   })
   return { [assetId]: 'cosmos' }
@@ -86,7 +86,7 @@ export const makeOsmosisData = () => {
   const assetId = toAssetId({
     chain,
     network,
-    assetNamespace: ASSET_NAMESPACE.Slip44,
+    assetNamespace: 'slip44',
     assetReference: ASSET_REFERENCE.Osmosis
   })
   return { [assetId]: 'osmosis' }

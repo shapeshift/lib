@@ -1,5 +1,5 @@
 import { Tx as BlockbookTx } from '@shapeshiftoss/blockbook'
-import { ASSET_NAMESPACE, AssetId, ChainId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
+import { AssetId, ChainId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
 import { ASSET_REFERENCE } from '@shapeshiftoss/caip/src'
 import { BigNumber } from 'bignumber.js'
 import { ethers } from 'ethers'
@@ -37,7 +37,7 @@ export class TransactionParser {
 
     this.assetId = toAssetId({
       ...fromChainId(this.chainId),
-      assetNamespace: ASSET_NAMESPACE.Slip44,
+      assetNamespace: 'slip44',
       assetReference: ASSET_REFERENCE.Ethereum
     })
 
@@ -165,7 +165,7 @@ export class TransactionParser {
       const transferArgs = [
         toAssetId({
           ...fromChainId(this.chainId),
-          assetNamespace: ASSET_NAMESPACE.ERC20,
+          assetNamespace: 'erc20',
           assetReference: transfer.token
         }),
         transfer.from,
@@ -197,7 +197,7 @@ export class TransactionParser {
       const transferArgs = [
         toAssetId({
           ...fromChainId(this.chainId),
-          assetNamespace: ASSET_NAMESPACE.Slip44,
+          assetNamespace: 'slip44',
           assetReference: ASSET_REFERENCE.Ethereum
         }),
         internalTx.from,

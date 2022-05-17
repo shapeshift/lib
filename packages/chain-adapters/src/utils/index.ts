@@ -1,4 +1,4 @@
-import { ASSET_NAMESPACE, AssetNamespace } from '@shapeshiftoss/caip'
+import { AssetNamespace } from '@shapeshiftoss/caip'
 import { chainAdapters } from '@shapeshiftoss/types'
 import { Status, TransferType } from '@shapeshiftoss/unchained-client'
 
@@ -6,8 +6,8 @@ export * from './bip44'
 export * from './utxoUtils'
 
 export const getAssetNamespace = (type: string): AssetNamespace => {
-  if (type === 'ERC20') return ASSET_NAMESPACE.ERC20
-  if (type === 'ERC721') return ASSET_NAMESPACE.ERC721
+  if (type === 'ERC20') return 'erc20'
+  if (type === 'ERC721') return 'erc721'
   throw new Error(`Unknown asset namespace. type: ${type}`)
 }
 

@@ -1,4 +1,3 @@
-import { ASSET_NAMESPACE } from '@shapeshiftoss/caip'
 import { AssetDataSource, TokenAsset } from '@shapeshiftoss/types'
 
 export const tokensToOverride: Array<TokenAsset> = [
@@ -9,7 +8,7 @@ export const tokensToOverride: Array<TokenAsset> = [
     name: 'Fox',
     precision: 18,
     tokenId: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
-    contractType: ASSET_NAMESPACE.ERC20,
+    contractType: 'erc20',
     color: '#FFFFFF',
     dataSource: AssetDataSource.CoinGecko,
     secondaryColor: '#FFFFFF',

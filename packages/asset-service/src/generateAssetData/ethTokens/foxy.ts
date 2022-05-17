@@ -1,10 +1,10 @@
-import { ASSET_NAMESPACE, toAssetId, toChainId } from '@shapeshiftoss/caip'
+import { toAssetId, toChainId } from '@shapeshiftoss/caip'
 import { AssetDataSource, ChainTypes, NetworkTypes, TokenAsset } from '@shapeshiftoss/types'
 
 export const getFoxyToken = (): TokenAsset[] => {
   const chain = ChainTypes.Ethereum
   const network = NetworkTypes.MAINNET
-  const assetNamespace = ASSET_NAMESPACE.ERC20
+  const assetNamespace = 'erc20'
   const assetReference = '0xDc49108ce5C57bc3408c3A5E95F3d864eC386Ed3' // FOXy contract address
 
   const result: TokenAsset = {

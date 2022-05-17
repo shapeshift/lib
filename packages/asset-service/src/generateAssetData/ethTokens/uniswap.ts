@@ -1,4 +1,4 @@
-import { ASSET_NAMESPACE, toAssetId, toChainId } from '@shapeshiftoss/caip'
+import { toAssetId, toChainId } from '@shapeshiftoss/caip'
 import { AssetDataSource, ChainTypes, NetworkTypes, TokenAsset } from '@shapeshiftoss/types'
 import axios from 'axios'
 import lodash from 'lodash'
@@ -29,7 +29,7 @@ export async function getUniswapTokens(): Promise<TokenAsset[]> {
 
   const chain = ChainTypes.Ethereum
   const network = NetworkTypes.MAINNET
-  const assetNamespace = ASSET_NAMESPACE.ERC20
+  const assetNamespace = 'erc20'
 
   return uniswapTokenData.tokens.reduce<TokenAsset[]>((acc, token) => {
     const overrideToken: TokenAsset | undefined = lodash.find(
