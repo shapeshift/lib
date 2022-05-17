@@ -5,7 +5,8 @@ import {
   btcAssetId,
   btcChainId,
   ethChainId,
-  getChainReferenceFromChainId
+  getChainReferenceFromChainId,
+  getFeeAssetIdFromAssetId
 } from './utils'
 
 describe('accountIdToChainId', () => {
@@ -70,5 +71,19 @@ describe('getChainReferenceFromChainId', () => {
     const invalidChainId = 'foobar'
 
     expect(() => getChainReferenceFromChainId(invalidChainId)).toThrow()
+  })
+})
+
+describe('getFeeAssetIdFromAssetId', () => {
+  it('returns a ETH fee assetId for a given ETH/ERC20 assetId', () => {
+    const ethAssetId = 'eip155:1/erc20:0x3155ba85d5f96b2d030a4966af206230e46849cb'
+    const feeAssetId = 'eip155:1/slip44:60'
+    const result = getFeeAssetIdFromAssetId(ethAssetId)
+    expect(result).toEqual(feeAssetId)
+  })
+
+  it('returns a BTC fee assetId for a given BTC assetId', () => {
+    const result = getFeeAssetIdFromAssetId(btcAssetId)
+    expect(result).toEqual(btcAssetId)
   })
 })
