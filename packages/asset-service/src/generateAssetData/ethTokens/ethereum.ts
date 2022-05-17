@@ -10,7 +10,7 @@ import { generateTrustWalletUrl } from '../../service/TrustWalletService'
 import { ethereum } from '../baseAssets'
 import { getFoxyToken } from './foxy'
 import { getUniswapTokens } from './uniswap'
-import { getUniV2Token } from './uniV2'
+import { getUniswapV2Pools } from './uniswapV2Pools'
 import {
   getIronBankTokens,
   getUnderlyingVaultTokens,
@@ -35,7 +35,7 @@ export const addTokensToEth = async (): Promise<BaseAsset> => {
     getZapperTokens(),
     getUnderlyingVaultTokens(),
     getFoxyToken(),
-    getUniV2Token()
+    getUniswapV2Pools()
   ])
   const tokens = [
     ...ethTokens,

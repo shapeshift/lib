@@ -1,7 +1,7 @@
 import { AssetNamespace, toAssetId, toChainId } from '@shapeshiftoss/caip'
 import { AssetDataSource, ChainTypes, NetworkTypes, TokenAsset } from '@shapeshiftoss/types'
 
-export const getUniV2Token = (): TokenAsset[] => {
+export const getUniswapV2Pools = (): TokenAsset[] => {
   const chain = ChainTypes.Ethereum
   const network = NetworkTypes.MAINNET
   const assetNamespace = AssetNamespace.ERC20
@@ -16,12 +16,12 @@ export const getUniV2Token = (): TokenAsset[] => {
     }),
     chainId: toChainId({ chain, network }),
     dataSource: AssetDataSource.CoinGecko,
-    name: 'Uniswap ETH/FOX LP',
+    name: 'Uniswap V2 - FOX/WETH',
     precision: 18,
     tokenId: assetReference,
     contractType: assetNamespace,
-    color: '#CCCCCC',
-    secondaryColor: '#CCCCCC',
+    color: '#FFFFFF',
+    secondaryColor: '#FFFFFF',
     icon: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png',
     sendSupport: true,
     receiveSupport: true,
