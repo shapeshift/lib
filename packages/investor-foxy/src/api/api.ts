@@ -53,8 +53,10 @@ import {
 
 export * from './foxy-types'
 
-// EthereumMainnet, EthereumRinkeby, EthereumRopsten
-type Network = '1' | '3' | '4'
+type Network =
+  | typeof CHAIN_REFERENCE.EthereumMainnet
+  | typeof CHAIN_REFERENCE.EthereumRinkeby
+  | typeof CHAIN_REFERENCE.EthereumRopsten
 
 export type ConstructorArgs = {
   adapter: ChainAdapter<ChainTypes.Ethereum>
