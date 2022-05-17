@@ -16,7 +16,7 @@ export async function ZrxApprovalNeeded(
   try {
     if (sellAsset.chainId !== 'eip155:1') {
       throw new SwapError('[ZrxApprovalNeeded] - sellAsset chainId is not supported', {
-        code: SwapErrorTypes.APPROVAL_NEEDED,
+        code: SwapErrorTypes.UNSUPPORTED_CHAIN,
         details: { chainId: sellAsset.chainId }
       })
     }
@@ -34,7 +34,7 @@ export async function ZrxApprovalNeeded(
 
     if (!quote.sellAsset.tokenId || !quote.allowanceContract) {
       throw new SwapError('[ZrxApprovalNeeded] - tokenId and allowanceTarget are required', {
-        code: SwapErrorTypes.APPROVAL_NEEDED,
+        code: SwapErrorTypes.VALIDATION_FAILED,
         details: { chainId: sellAsset.chainId }
       })
     }
@@ -50,7 +50,7 @@ export async function ZrxApprovalNeeded(
 
     if (!quote.feeData.chainSpecific?.gasPrice)
       throw new SwapError('[ZrxApprovalNeeded] - no gas price with quote', {
-        code: SwapErrorTypes.APPROVAL_NEEDED
+        code: SwapErrorTypes.RESPONSE_ERROR
       })
     return {
       approvalNeeded: allowanceOnChain.lte(bnOrZero(quote.sellAmount)),
@@ -58,9 +58,10 @@ export async function ZrxApprovalNeeded(
       gasPrice: quote.feeData.chainSpecific?.gasPrice
     }
   } catch (e) {
+    if (e instanceof SwapError) throw e
     throw new SwapError('[ZrxApprovalNeeded]', {
       cause: e,
-      code: SwapErrorTypes.APPROVAL_NEEDED
+      code: SwapErrorTypes.CHECK_APPROVAL_FAILED
     })
   }
 }

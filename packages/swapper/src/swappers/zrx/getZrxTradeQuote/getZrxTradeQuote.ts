@@ -85,6 +85,7 @@ export async function getZrxTradeQuote(input: GetTradeQuoteInput): Promise<Trade
       sellAssetAccountId
     }
   } catch (e) {
-    throw new SwapError('[getZrxTradeQuote]', { cause: e, code: SwapErrorTypes.TRADE_QUOTE })
+    if (e instanceof SwapError) throw e
+    throw new SwapError('[getZrxTradeQuote]', { cause: e, code: SwapErrorTypes.TRADE_QUOTE_FAILED })
   }
 }

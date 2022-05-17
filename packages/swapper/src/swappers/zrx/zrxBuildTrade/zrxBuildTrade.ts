@@ -36,7 +36,7 @@ export async function zrxBuildTrade(
 
     if (buyAsset.chainId !== 'eip155:1') {
       throw new SwapError('[ZrxBuildTrade] - buyAsset must be on chainId eip155:1', {
-        code: SwapErrorTypes.BUILD_TRADE,
+        code: SwapErrorTypes.VALIDATION_FAILED,
         details: { chainId: sellAsset.chainId }
       })
     }
@@ -133,8 +133,9 @@ export async function zrxBuildTrade(
     }
     return trade
   } catch (e) {
+    if (e instanceof SwapError) throw e
     throw new SwapError('[ZrxBuildTrade]', {
-      code: SwapErrorTypes.BUILD_TRADE
+      code: SwapErrorTypes.BUILD_TRADE_FAILED
     })
   }
 }

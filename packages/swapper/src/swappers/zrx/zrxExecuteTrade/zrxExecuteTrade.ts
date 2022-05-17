@@ -51,6 +51,10 @@ export async function zrxExecuteTrade(
       })
     }
   } catch (e) {
-    throw new SwapError('[zrxExecuteTrade]', { cause: e, code: SwapErrorTypes.EXECUTE_TRADE })
+    if (e instanceof SwapError) throw e
+    throw new SwapError('[zrxExecuteTrade]', {
+      cause: e,
+      code: SwapErrorTypes.EXECUTE_TRADE_FAILED
+    })
   }
 }

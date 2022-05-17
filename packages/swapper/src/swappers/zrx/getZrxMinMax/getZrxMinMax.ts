@@ -20,6 +20,7 @@ export const getZrxMinMax = async (sellAsset: Asset, buyAsset: Asset): Promise<M
       maximum
     }
   } catch (e) {
-    throw new SwapError('[getZrxMinMax]', { cause: e, code: SwapErrorTypes.MIN_MAX_ERROR })
+    if (e instanceof SwapError) throw e
+    throw new SwapError('[getZrxMinMax]', { cause: e, code: SwapErrorTypes.MIN_MAX_FAILED })
   }
 }
