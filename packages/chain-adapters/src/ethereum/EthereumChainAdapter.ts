@@ -72,7 +72,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     return this.chainId
   }
 
-  getFeeAssetId(): string {
+  getFeeAssetId(): AssetId {
     return 'eip155:1/slip44:60'
   }
 
