@@ -3,7 +3,7 @@ import { ParsedTx as Tx } from '../../types'
 import {
   FOXY_STAKING_CONTRACT,
   SHAPE_SHIFT_ROUTER_CONTRACT,
-  UNI_V2_STAKING_REWARDS
+  UNI_V2_FOX_STAKING_REWARDS_V3
 } from '../constants'
 import { TransactionParser } from '../index'
 import ethSelfSend from './mockData/ethSelfSend'
@@ -1018,7 +1018,7 @@ describe('parseTx', () => {
           {
             type: TransferType.Send,
             from: address,
-            to: UNI_V2_STAKING_REWARDS,
+            to: UNI_V2_FOX_STAKING_REWARDS_V3,
             assetId: 'eip155:1/erc20:0x470e8de2ebaef52014a47cb5e6af86884947f08c',
             totalValue: '99572547380794318',
             components: [{ value: '99572547380794318' }],
@@ -1080,7 +1080,7 @@ describe('parseTx', () => {
         transfers: [
           {
             type: TransferType.Receive,
-            from: UNI_V2_STAKING_REWARDS,
+            from: UNI_V2_FOX_STAKING_REWARDS_V3,
             to: address,
             assetId: 'eip155:1/erc20:0x470e8de2ebaef52014a47cb5e6af86884947f08c',
             totalValue: '531053586030903030',
@@ -1089,7 +1089,7 @@ describe('parseTx', () => {
           },
           {
             type: TransferType.Receive,
-            from: UNI_V2_STAKING_REWARDS,
+            from: UNI_V2_FOX_STAKING_REWARDS_V3,
             to: address,
             assetId: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
             totalValue: '317669338073988',

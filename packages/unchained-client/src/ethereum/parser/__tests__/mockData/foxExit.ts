@@ -1,4 +1,4 @@
-import { UNI_V2_STAKING_REWARDS } from '../../constants'
+import { UNI_V2_FOX_STAKING_REWARDS_V3 } from '../../constants'
 import { mempoolMock } from './mempoolMock'
 
 const foxExit = {
@@ -14,7 +14,7 @@ const foxExit = {
     {
       value: '0',
       n: 0,
-      addresses: [UNI_V2_STAKING_REWARDS],
+      addresses: [UNI_V2_FOX_STAKING_REWARDS_V3],
       isAddress: true
     }
   ],
@@ -27,7 +27,7 @@ const foxExit = {
   tokenTransfers: [
     {
       type: 'ERC20',
-      from: UNI_V2_STAKING_REWARDS,
+      from: UNI_V2_FOX_STAKING_REWARDS_V3,
       to: '0x6bF198c2B5c8E48Af4e876bc2173175b89b1DA0C',
       token: '0x470e8de2eBaef52014A47Cb5E6aF86884947F08c',
       name: 'Uniswap V2',
@@ -37,7 +37,7 @@ const foxExit = {
     },
     {
       type: 'ERC20',
-      from: UNI_V2_STAKING_REWARDS,
+      from: UNI_V2_FOX_STAKING_REWARDS_V3,
       to: '0x6bF198c2B5c8E48Af4e876bc2173175b89b1DA0C',
       token: '0xc770EEfAd204B5180dF6a14Ee197D99d808ee52d',
       name: 'FOX',

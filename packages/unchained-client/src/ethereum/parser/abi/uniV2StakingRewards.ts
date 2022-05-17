@@ -1,6 +1,6 @@
 import { JsonFragment } from '@ethersproject/abi/lib/fragments'
 
-const uniV2Staking: Array<JsonFragment> = [
+const uniV2StakingRewards: Array<JsonFragment> = [
   {
     inputs: [
       {
@@ -412,4 +412,4 @@ const uniV2Staking: Array<JsonFragment> = [
   }
 ]
 
-export default uniV2Staking
+export default uniV2StakingRewards

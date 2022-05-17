@@ -6,10 +6,10 @@ import { TransferType, TxParser } from '../../types'
 import { SubParser, TxSpecific } from '../types'
 import ERC20_ABI from './abi/erc20'
 import UNIV2_ABI from './abi/uniV2'
-import UNIV2_STAKING_ABI from './abi/uniV2Staking'
+import UNIV2_STAKING_REWARDS_ABI from './abi/uniV2StakingRewards'
 import {
+  UNI_V2_FOX_STAKING_REWARDS_V3,
   UNI_V2_ROUTER_CONTRACT,
-  UNI_V2_STAKING_REWARDS,
   WETH_CONTRACT_MAINNET,
   WETH_CONTRACT_ROPSTEN
 } from './constants'
@@ -26,7 +26,7 @@ export class Parser implements SubParser {
   readonly chainId: ChainId
   readonly wethContract: string
   readonly abiInterface = new ethers.utils.Interface(UNIV2_ABI)
-  readonly stakingRewardsInterface = new ethers.utils.Interface(UNIV2_STAKING_ABI)
+  readonly stakingRewardsInterface = new ethers.utils.Interface(UNIV2_STAKING_REWARDS_ABI)
 
   readonly supportedFunctions = {
     addLiquidityEthSigHash: this.abiInterface.getSighash('addLiquidityETH'),
@@ -167,7 +167,8 @@ export class Parser implements SubParser {
 
   async parse(tx: BlockbookTx): Promise<TxSpecific | undefined> {
     if (txInteractsWithContract(tx, UNI_V2_ROUTER_CONTRACT)) return this.parseUniV2(tx)
-    if (txInteractsWithContract(tx, UNI_V2_STAKING_REWARDS)) return this.parseStakingRewards(tx)
+    if (txInteractsWithContract(tx, UNI_V2_FOX_STAKING_REWARDS_V3))
+      return this.parseStakingRewards(tx)
     return
   }
 
