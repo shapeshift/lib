@@ -1,6 +1,10 @@
 import { Dex, Status, Trade, TradeType, TransferType, TxParser } from '../../../types'
 import { ParsedTx as Tx } from '../../types'
-import { FOXY_STAKING_CONTRACT, SHAPE_SHIFT_ROUTER_CONTRACT, UNI_V2_STAKING_REWARDS } from '../constants'
+import {
+  FOXY_STAKING_CONTRACT,
+  SHAPE_SHIFT_ROUTER_CONTRACT,
+  UNI_V2_STAKING_REWARDS
+} from '../constants'
 import { TransactionParser } from '../index'
 import ethSelfSend from './mockData/ethSelfSend'
 import foxClaim from './mockData/foxClaim'
