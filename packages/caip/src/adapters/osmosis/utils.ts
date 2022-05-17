@@ -38,8 +38,7 @@ export const parseOsmosisData = (data: OsmosisCoin[]) => {
     let assetReference
 
     if (isNativeAsset) {
-      // TODO(ryankk): remove `toString` when AssetReferences are changed to strings
-      assetReference = isOsmo ? ASSET_REFERENCE.Osmosis.toString() : denom
+      assetReference = isOsmo ? ASSET_REFERENCE.Osmosis : denom
       assetNamespace = isOsmo ? ASSET_NAMESPACE.Slip44 : ASSET_NAMESPACE.NATIVE
     } else {
       assetReference = denom.split('/')[1]
