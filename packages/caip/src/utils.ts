@@ -39,4 +39,3 @@ export const chainIdToFeeAssetId = (chainId: ChainId): AssetId => chainIdToAsset
 // chain we support.
 export const getFeeAssetIdFromAssetId = (assetId: AssetId): AssetId =>
   chainIdToAssetId[assetIdToChainId(assetId)]
-
