@@ -6,7 +6,7 @@ import { SwapError, SwapErrorTypes } from '../api'
 
 function validateSwapper(swapper: Swapper) {
   if (!(typeof swapper === 'object' && typeof swapper.getType === 'function'))
-    throw new SwapError('[getSwapper] - invalid swapper instance', {
+    throw new SwapError('[validateSwapper] - invalid swapper instance', {
       code: SwapErrorTypes.MANAGER
     })
 }
