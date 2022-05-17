@@ -54,7 +54,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
     return ChainTypes.Cosmos
   }
 
-  getFeeAssetId(): string {
+  getFeeAssetId(): AssetId {
     return 'cosmos:cosmoshub-4/slip44:118'
   }
 
