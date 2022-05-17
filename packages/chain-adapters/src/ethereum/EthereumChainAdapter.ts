@@ -1,5 +1,6 @@
 import { Contract } from '@ethersproject/contracts'
 import {
+  AssetId,
   AssetNamespace,
   AssetReference,
   ChainId,

@@ -1,4 +1,5 @@
 import {
+  AssetId,
   AssetNamespace,
   AssetReference,
   ChainId,
