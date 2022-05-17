@@ -12,7 +12,8 @@ export const btcChainId = 'bip122:000000000019d6689c085ae165831e93'
 export const cosmosChainId = 'cosmos:cosmoshub-4'
 export const osmosisChainId = 'cosmos:osmosis-1'
 
-// This is also a map of fee assetIds by chainId
+// TODO(ryankk): this will be removed and replaced with something like `toAssetId(fromChainId(chainId))`
+// when `fromChainId` supports returning ChainNamespace and ChainReference.
 export const chainIdToAssetId: Record<ChainId, AssetId> = {
   [ethChainId]: ethAssetId,
   [btcChainId]: btcAssetId,
