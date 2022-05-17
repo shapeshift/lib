@@ -8,6 +8,12 @@ export type ChainAdapter<T extends ChainTypes> = {
   getType(): T
 
   getChainId(): ChainId
+
+  /**
+   * Base fee asset used to pay for txs on a given chain
+   */
+  getFeeAssetId(): string
+
   /**
    * Get the supported account types for an adapter
    * For UTXO coins, that's the list of UTXO account types

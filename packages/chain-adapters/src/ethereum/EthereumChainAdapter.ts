@@ -72,6 +72,10 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     return this.chainId
   }
 
+  getFeeAssetId(): string {
+    return 'eip155:1/slip44:60'
+  }
+
   async getAccount(pubkey: string): Promise<chainAdapters.Account<ChainTypes.Ethereum>> {
     try {
       const chainId = this.getChainId()

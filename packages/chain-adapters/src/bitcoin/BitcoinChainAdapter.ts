@@ -79,6 +79,10 @@ export class ChainAdapter
     return ChainTypes.Bitcoin
   }
 
+  getFeeAssetId(): string {
+    return 'bip122:000000000019d6689c085ae165831e93/slip44:0'
+  }
+
   getSupportedAccountTypes() {
     return ChainAdapter.supportedAccountTypes
   }
