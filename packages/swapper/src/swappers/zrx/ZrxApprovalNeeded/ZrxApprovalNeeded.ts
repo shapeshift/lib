@@ -50,7 +50,8 @@ export async function ZrxApprovalNeeded(
 
     if (!quote.feeData.chainSpecific?.gasPrice)
       throw new SwapError('[ZrxApprovalNeeded] - no gas price with quote', {
-        code: SwapErrorTypes.RESPONSE_ERROR
+        code: SwapErrorTypes.RESPONSE_ERROR,
+        details: { feeData: quote.feeData }
       })
     return {
       approvalNeeded: allowanceOnChain.lte(bnOrZero(quote.sellAmount)),
