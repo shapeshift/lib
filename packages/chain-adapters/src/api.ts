@@ -12,7 +12,7 @@ export type ChainAdapter<T extends ChainTypes> = {
   /**
    * Base fee asset used to pay for txs on a given chain
    */
-  getFeeAssetId(): string
+  getFeeAssetId(): AssetId
 
   /**
    * Get the supported account types for an adapter
