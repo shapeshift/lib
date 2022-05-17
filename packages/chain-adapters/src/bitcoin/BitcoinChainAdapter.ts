@@ -1,7 +1,7 @@
 import {
-  AssetId,
   ASSET_NAMESPACE,
   ASSET_REFERENCE,
+  AssetId,
   ChainId,
   fromChainId,
   toAssetId

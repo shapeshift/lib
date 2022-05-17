@@ -1,8 +1,8 @@
 import { Contract } from '@ethersproject/contracts'
 import {
-  AssetId,
   ASSET_NAMESPACE,
   ASSET_REFERENCE,
+  AssetId,
   ChainId,
   fromAssetId,
   fromChainId,
