@@ -1,4 +1,5 @@
 import { ApprovalNeededOutput, SupportedChainIds } from '@shapeshiftoss/types'
+import { getFeeAssetIdFromAssetId } from '@shapeshiftoss/caip'
 
 import { ApprovalNeededInput, SwapError, SwapErrorTypes } from '../../../api'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
@@ -21,8 +22,8 @@ export async function ZrxApprovalNeeded(
       })
     }
 
-    // No approval needed for trading eth itself
-    if (sellAsset.assetId === 'eip155:1/slip44:60') {
+    // No approval needed for selling a fee asset
+    if (sellAsset.assetId === getFeeAssetIdFromAssetId(sellAsset.assetId)) {
       return { approvalNeeded: false }
     }
 

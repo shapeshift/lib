@@ -4,6 +4,10 @@ import {
   assetIdToChainId,
   btcAssetId,
   btcChainId,
+  cosmosAssetId,
+  cosmosChainId,
+  chainIdToFeeAssetId,
+  ethAssetId,
   ethChainId,
   getChainReferenceFromChainId,
   getFeeAssetIdFromAssetId
@@ -41,9 +45,9 @@ describe('accountIdToSpecifier', () => {
 
 describe('assetIdToChainId', () => {
   it('returns a ETH chainId for a given ETH assetId', () => {
-    const ethAssetId = 'eip155:1/erc20:0x3155ba85d5f96b2d030a4966af206230e46849cb'
+    const erc20AssetId = 'eip155:1/erc20:0x3155ba85d5f96b2d030a4966af206230e46849cb'
     const chainId = 'eip155:1'
-    const result = assetIdToChainId(ethAssetId)
+    const result = assetIdToChainId(erc20AssetId)
     expect(result).toEqual(chainId)
   })
 
@@ -74,16 +78,30 @@ describe('getChainReferenceFromChainId', () => {
   })
 })
 
+describe('chainIdToFeeAssetId', () => {
+  it('returns a chain fee assetId for a given ETH chainId', () => {
+    const result = chainIdToFeeAssetId(ethChainId)
+    expect(result).toEqual(ethAssetId)
+  })
+
+  it('returns chain fee assetId (ATOM) for a given Cosmos assetId', () => {
+    const result = chainIdToFeeAssetId(cosmosChainId)
+    expect(result).toEqual(cosmosAssetId)
+  })
+})
+
 describe('getFeeAssetIdFromAssetId', () => {
-  it('returns a ETH fee assetId for a given ETH/ERC20 assetId', () => {
-    const ethAssetId = 'eip155:1/erc20:0x3155ba85d5f96b2d030a4966af206230e46849cb'
+  it('returns a ETH fee assetId (ETH) for a given ETH/ERC20 assetId', () => {
+    const erc20AssetId = 'eip155:1/erc20:0x3155ba85d5f96b2d030a4966af206230e46849cb'
     const feeAssetId = 'eip155:1/slip44:60'
-    const result = getFeeAssetIdFromAssetId(ethAssetId)
+    const result = getFeeAssetIdFromAssetId(erc20AssetId)
     expect(result).toEqual(feeAssetId)
   })
 
-  it('returns a BTC fee assetId for a given BTC assetId', () => {
-    const result = getFeeAssetIdFromAssetId(btcAssetId)
-    expect(result).toEqual(btcAssetId)
+  it('returns Cosmos fee assetId (ATOM) for a given Cosmos assetId', () => {
+    const junoAssetId =
+      'cosmos:cosmoshub-4/ibc:46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED'
+    const result = getFeeAssetIdFromAssetId(junoAssetId)
+    expect(result).toEqual(cosmosAssetId)
   })
 })

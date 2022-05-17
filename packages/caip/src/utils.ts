@@ -33,7 +33,10 @@ export const accountIdToSpecifier = (accountId: AccountId): string =>
 export const getChainReferenceFromChainId = (chainId: ChainId) =>
   networkTypeToChainReference[fromChainId(chainId).network]
 
+export const chainIdToFeeAssetId = (chainId: ChainId): AssetId => chainIdToAssetId[chainId]
+
 // We make the assumption here that the fee assetIds are in `chainIdToAssetId` for each
 // chain we support.
 export const getFeeAssetIdFromAssetId = (assetId: AssetId): AssetId =>
   chainIdToAssetId[assetIdToChainId(assetId)]
+
