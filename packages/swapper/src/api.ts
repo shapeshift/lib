@@ -124,7 +124,8 @@ export enum SwapErrorTypes {
   USD_RATE_FAILED = 'USD_RATE_FAILED',
   GRANT_ALLOWANCE = 'GRANT_ALLOWANCE',
   BUILD_TRADE = 'BUILD_TRADE',
-  MANAGER = 'MANAGER'
+  MANAGER = 'MANAGER',
+  TRADE_QUOTE = 'TRADE_QUOTE'
 }
 
 export interface Swapper {
