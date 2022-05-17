@@ -2,7 +2,7 @@ import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import axios from 'axios'
 import fs from 'fs'
 
-import { AssetNamespace, AssetReference, toAssetId } from '../../assetId/assetId'
+import { ASSET_NAMESPACE, ASSET_REFERENCE, toAssetId } from '../../assetId/assetId'
 import { toChainId } from '../../chainId/chainId'
 
 export type CoingeckoCoin = {
@@ -34,8 +34,8 @@ export const parseEthData = (data: CoingeckoCoin[]) => {
   const network = NetworkTypes.MAINNET
 
   return ethCoins.reduce((acc, { id, platforms }) => {
-    const assetNamespace = id === 'ethereum' ? AssetNamespace.Slip44 : AssetNamespace.ERC20
-    const assetReference = id === 'ethereum' ? AssetReference.Ethereum : platforms?.ethereum
+    const assetNamespace = id === 'ethereum' ? ASSET_NAMESPACE.Slip44 : ASSET_NAMESPACE.ERC20
+    const assetReference = id === 'ethereum' ? ASSET_REFERENCE.Ethereum : platforms?.ethereum
     const assetId = toAssetId({ chain, network, assetNamespace, assetReference })
     acc[assetId] = id
     return acc
@@ -48,8 +48,8 @@ export const makeBtcData = () => {
   const assetId = toAssetId({
     chain,
     network,
-    assetNamespace: AssetNamespace.Slip44,
-    assetReference: AssetReference.Bitcoin
+    assetNamespace: ASSET_NAMESPACE.Slip44,
+    assetReference: ASSET_REFERENCE.Bitcoin
   })
   return { [assetId]: 'bitcoin' }
 }
@@ -60,8 +60,8 @@ export const makeCosmosHubData = () => {
   const assetId = toAssetId({
     chain,
     network,
-    assetNamespace: AssetNamespace.Slip44,
-    assetReference: AssetReference.Cosmos
+    assetNamespace: ASSET_NAMESPACE.Slip44,
+    assetReference: ASSET_REFERENCE.Cosmos
   })
   return { [assetId]: 'cosmos' }
 }
@@ -72,8 +72,8 @@ export const makeOsmosisData = () => {
   const assetId = toAssetId({
     chain,
     network,
-    assetNamespace: AssetNamespace.Slip44,
-    assetReference: AssetReference.Osmosis
+    assetNamespace: ASSET_NAMESPACE.Slip44,
+    assetReference: ASSET_REFERENCE.Osmosis
   })
   return { [assetId]: 'osmosis' }
 }

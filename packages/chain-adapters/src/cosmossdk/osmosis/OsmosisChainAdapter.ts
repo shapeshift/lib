@@ -1,7 +1,7 @@
 import {
+  ASSET_NAMESPACE,
+  ASSET_REFERENCE,
   AssetId,
-  AssetNamespace,
-  AssetReference,
   fromChainId,
   toAssetId
 } from '@shapeshiftoss/caip'
@@ -12,6 +12,7 @@ import { ChainAdapter as IChainAdapter } from '../../api'
 import { ErrorHandler } from '../../error/ErrorHandler'
 import { toPath } from '../../utils'
 import { ChainAdapterArgs, CosmosSdkBaseAdapter } from '../CosmosSdkBaseAdapter'
+
 export class ChainAdapter
   extends CosmosSdkBaseAdapter<ChainTypes.Osmosis>
   implements IChainAdapter<ChainTypes.Osmosis>
@@ -34,8 +35,8 @@ export class ChainAdapter
     this.assetId = toAssetId({
       chain,
       network,
-      assetNamespace: AssetNamespace.Slip44,
-      assetReference: AssetReference.Osmosis
+      assetNamespace: ASSET_NAMESPACE.Slip44,
+      assetReference: ASSET_REFERENCE.Osmosis
     })
   }
 

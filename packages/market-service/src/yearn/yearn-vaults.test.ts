@@ -1,4 +1,4 @@
-import { AssetNamespace, toAssetId } from '@shapeshiftoss/caip'
+import { ASSET_NAMESPACE, toAssetId } from '@shapeshiftoss/caip'
 import { ChainTypes, HistoryTimeframe, NetworkTypes } from '@shapeshiftoss/types'
 
 import { YearnVaultMarketCapService } from './yearn-vaults'
@@ -40,7 +40,7 @@ describe('yearn market service', () => {
         toAssetId({
           chain: ChainTypes.Ethereum,
           network: NetworkTypes.MAINNET,
-          assetNamespace: AssetNamespace.ERC20,
+          assetNamespace: ASSET_NAMESPACE.ERC20,
           assetReference: yvBTCAddress.toLowerCase()
         })
       )
@@ -75,13 +75,13 @@ describe('yearn market service', () => {
       const yvBtcAssetId = toAssetId({
         chain: ChainTypes.Ethereum,
         network: NetworkTypes.MAINNET,
-        assetNamespace: AssetNamespace.ERC20,
+        assetNamespace: ASSET_NAMESPACE.ERC20,
         assetReference: mockYearnVaultRestData[0].address.toLowerCase()
       })
       const yvDaiAssetId = toAssetId({
         chain: ChainTypes.Ethereum,
         network: NetworkTypes.MAINNET,
-        assetNamespace: AssetNamespace.ERC20,
+        assetNamespace: ASSET_NAMESPACE.ERC20,
         assetReference: mockYearnVaultRestData[1].address.toLowerCase()
       })
       const [yvDaiKey, yvBtcKey] = Object.keys(result)

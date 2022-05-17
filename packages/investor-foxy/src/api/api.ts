@@ -1,5 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { AssetNamespace, ChainReference, toAssetId } from '@shapeshiftoss/caip'
+import { ASSET_NAMESPACE, CHAIN_REFERENCE, ChainReference, toAssetId } from '@shapeshiftoss/caip'
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { ChainTypes, NetworkTypes, WithdrawType } from '@shapeshiftoss/types'
 import axios from 'axios'
@@ -53,14 +53,14 @@ import {
 
 export * from './foxy-types'
 
+// EthereumMainnet, EthereumRinkeby, EthereumRopsten
+type Network = '1' | '3' | '4'
+
 export type ConstructorArgs = {
   adapter: ChainAdapter<ChainTypes.Ethereum>
   providerUrl: string
   foxyAddresses: FoxyAddressesType
-  network?:
-    | ChainReference.EthereumMainnet
-    | ChainReference.EthereumRinkeby
-    | ChainReference.EthereumRopsten
+  network?: Network
 }
 
 export const transformData = ({ tvl, apy, expired, ...contractData }: FoxyOpportunityInputData) => {
@@ -95,7 +95,7 @@ export class FoxyApi {
     adapter,
     providerUrl,
     foxyAddresses,
-    network = ChainReference.EthereumMainnet
+    network = CHAIN_REFERENCE.EthereumMainnet
   }: ConstructorArgs) {
     this.adapter = adapter
     this.provider = new Web3.providers.HttpProvider(providerUrl)
@@ -1080,7 +1080,7 @@ export class FoxyApi {
 
     const chain = ChainTypes.Ethereum
     const network = NetworkTypes.MAINNET
-    const assetNamespace = AssetNamespace.ERC20
+    const assetNamespace = ASSET_NAMESPACE.ERC20
     const assetReference = tokenContractAddress
     // foxy assetId
     const assetId = toAssetId({ chain, network, assetNamespace, assetReference })

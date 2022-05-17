@@ -1,6 +1,6 @@
 import {
-  AssetNamespace,
-  AssetReference,
+  ASSET_NAMESPACE,
+  ASSET_REFERENCE,
   ChainId,
   fromChainId,
   toAssetId
@@ -70,8 +70,8 @@ export class ChainAdapter
     this.assetId = toAssetId({
       chain,
       network,
-      assetNamespace: AssetNamespace.Slip44,
-      assetReference: AssetReference.Bitcoin
+      assetNamespace: ASSET_NAMESPACE.Slip44,
+      assetReference: ASSET_REFERENCE.Bitcoin
     })
   }
 

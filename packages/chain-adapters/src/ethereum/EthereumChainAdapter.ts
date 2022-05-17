@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import {
-  AssetNamespace,
-  AssetReference,
+  ASSET_NAMESPACE,
+  ASSET_REFERENCE,
   ChainId,
   fromAssetId,
   fromChainId,
@@ -86,8 +86,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
         assetId: toAssetId({
           chain,
           network,
-          assetNamespace: AssetNamespace.Slip44,
-          assetReference: AssetReference.Ethereum
+          assetNamespace: ASSET_NAMESPACE.Slip44,
+          assetReference: ASSET_REFERENCE.Ethereum
         }),
         chain: ChainTypes.Ethereum,
         chainSpecific: {
