@@ -5,7 +5,7 @@ export const getUniswapV2Pools = (): TokenAsset[] => {
   const chain = ChainTypes.Ethereum
   const network = NetworkTypes.MAINNET
   const assetNamespace = AssetNamespace.ERC20
-  const assetReference = '0x470e8de2ebaef52014a47cb5e6af86884947f08c' // Uniswap - FOX/WETH contract address
+  const assetReference = '0x470e8de2ebaef52014a47cb5e6af86884947f08c' // Uniswap V2 - FOX/WETH contract address
 
   const result: TokenAsset = {
     assetId: toAssetId({
@@ -22,10 +22,10 @@ export const getUniswapV2Pools = (): TokenAsset[] => {
     contractType: assetNamespace,
     color: '#FFFFFF',
     secondaryColor: '#FFFFFF',
-    icon: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png',
+    icon: 'https://assets.coincap.io/assets/icons/256/uni.png',
     sendSupport: true,
     receiveSupport: true,
-    symbol: 'ETH/FOX'
+    symbol: 'UNI-V2-FOX-WETH'
   }
 
   return [result]
