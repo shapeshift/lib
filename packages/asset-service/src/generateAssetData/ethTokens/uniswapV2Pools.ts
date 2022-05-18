@@ -1,11 +1,11 @@
-import { toAssetId, toChainId } from '@shapeshiftoss/caip'
+import { AssetNamespace, toAssetId, toChainId } from '@shapeshiftoss/caip'
 import { AssetDataSource, ChainTypes, NetworkTypes, TokenAsset } from '@shapeshiftoss/types'
 
-export const getFoxyToken = (): TokenAsset[] => {
+export const getUniswapV2Pools = (): TokenAsset[] => {
   const chain = ChainTypes.Ethereum
   const network = NetworkTypes.MAINNET
-  const assetNamespace = 'erc20'
-  const assetReference = '0xDc49108ce5C57bc3408c3A5E95F3d864eC386Ed3' // FOXy contract address
+  const assetNamespace = AssetNamespace.ERC20
+  const assetReference = '0x470e8de2ebaef52014a47cb5e6af86884947f08c' // Uniswap V2 - FOX/WETH contract address
 
   const result: TokenAsset = {
     assetId: toAssetId({
@@ -16,16 +16,16 @@ export const getFoxyToken = (): TokenAsset[] => {
     }),
     chainId: toChainId({ chain, network }),
     dataSource: AssetDataSource.CoinGecko,
-    name: 'FOX Yieldy',
+    name: 'Uniswap V2 - FOX/WETH',
     precision: 18,
     tokenId: assetReference,
     contractType: assetNamespace,
-    color: '#CE3885',
-    secondaryColor: '#CE3885',
-    icon: 'https://raw.githubusercontent.com/shapeshift/lib/main/packages/asset-service/src/generateAssetData/ethTokens/icons/foxy-icon.png',
+    color: '#FFFFFF',
+    secondaryColor: '#FFFFFF',
+    icon: 'https://assets.coincap.io/assets/icons/256/uni.png',
     sendSupport: true,
     receiveSupport: true,
-    symbol: 'FOXy'
+    symbol: 'UNI-V2-FOX-WETH'
   }
 
   return [result]
