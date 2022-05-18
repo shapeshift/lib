@@ -25,9 +25,10 @@ import erc20Abi from './erc20Abi.json'
 export interface ChainAdapterArgs {
   providers: {
     http: unchained.ethereum.V1Api
-    ws: unchained.ws.Client<unchained.ethereum.ParsedTx>
+    ws: unchained.ws.Client<unchained.ethereum.EthereumTx>
   }
   chainId?: ChainId
+  rpcUrl: string
 }
 
 async function getErc20Data(to: string, value: string, contractAddress?: string) {
@@ -38,17 +39,19 @@ async function getErc20Data(to: string, value: string, contractAddress?: string)
 }
 
 export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
+  private readonly chainId: ChainId = 'eip155:1'
   private readonly providers: {
     http: unchained.ethereum.V1Api
-    ws: unchained.ws.Client<unchained.ethereum.ParsedTx>
+    ws: unchained.ws.Client<unchained.ethereum.EthereumTx>
   }
+
+  private parser: unchained.ethereum.TransactionParser
+
   public static readonly defaultBIP44Params: BIP44Params = {
     purpose: 44,
     coinType: 60,
     accountNumber: 0
   }
-
-  private readonly chainId: ChainId = 'eip155:1'
 
   constructor(args: ChainAdapterArgs) {
     if (args.chainId) {
@@ -62,7 +65,12 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
         throw new Error(`The ChainID ${args.chainId} is not supported`)
       }
     }
+
     this.providers = args.providers
+    this.parser = new unchained.ethereum.TransactionParser({
+      chainId: this.chainId,
+      rpcUrl: args.rpcUrl
+    })
   }
 
   getType(): ChainTypes.Ethereum {
@@ -361,15 +369,18 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     onMessage: (msg: chainAdapters.Transaction<ChainTypes.Ethereum>) => void,
     onError: (err: chainAdapters.SubscribeError) => void
   ): Promise<void> {
-    const { wallet, bip44Params = ChainAdapter.defaultBIP44Params } = input
+    const { bip44Params = ChainAdapter.defaultBIP44Params } = input
 
-    const address = await this.getAddress({ wallet, bip44Params })
+    //const address = await this.getAddress({ wallet, bip44Params })
+    const address = '0xc098b2a3aa256d2140208c3de6543aaef5cd3a94'
     const subscriptionId = toRootDerivationPath(bip44Params)
 
     await this.providers.ws.subscribeTxs(
       subscriptionId,
       { topic: 'txs', addresses: [address] },
-      ({ data: tx }) => {
+      async (msg) => {
+        const tx = await this.parser.parse(msg.data, msg.address)
+
         const transfers = tx.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
           assetId: transfer.assetId,
           from: transfer.from,
@@ -394,7 +405,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           ...(tx.data && {
             data: {
               method: tx.data.method,
-              parser: tx.data.parser ?? 'unknown'
+              parser: tx.data.parser
             }
           })
         })

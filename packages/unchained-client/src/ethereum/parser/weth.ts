@@ -1,7 +1,7 @@
-import { Tx as BlockbookTx } from '@shapeshiftoss/blockbook'
 import { AssetNamespace, ChainId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
 import { ethers } from 'ethers'
 
+import { EthereumTx } from '../../generated/ethereum'
 import { TransferType, TxParser } from '../../types'
 import { SubParser, TxSpecific } from '../types'
 import ERC20_ABI from './abi/erc20'
@@ -42,22 +42,19 @@ export class Parser implements SubParser {
     }
   }
 
-  async parse(tx: BlockbookTx): Promise<TxSpecific | undefined> {
-    const txData = tx.ethereumSpecific?.data
-
+  async parse(tx: EthereumTx): Promise<TxSpecific | undefined> {
     if (!txInteractsWithContract(tx, this.wethContract)) return
-    if (!txData) return
+    if (!tx.inputData) return
 
-    const txSigHash = getSigHash(txData)
+    const txSigHash = getSigHash(tx.inputData)
 
     if (!Object.values(this.supportedFunctions).some((hash) => hash === txSigHash)) return
 
-    const decoded = this.abiInterface.parseTransaction({ data: txData })
+    const decoded = this.abiInterface.parseTransaction({ data: tx.inputData })
 
     // failed to decode input data
     if (!decoded) return
 
-    const sendAddress = tx.vin[0].addresses?.[0] ?? ''
     const contract = new ethers.Contract(this.wethContract, ERC20_ABI, this.provider)
 
     const assetId = toAssetId({
@@ -80,7 +77,7 @@ export class Parser implements SubParser {
             {
               type: TransferType.Receive,
               from: this.wethContract,
-              to: sendAddress,
+              to: tx.from,
               assetId,
               totalValue: tx.value,
               components: [{ value: tx.value }],
@@ -92,7 +89,7 @@ export class Parser implements SubParser {
           return [
             {
               type: TransferType.Send,
-              from: sendAddress,
+              from: tx.from,
               to: this.wethContract,
               assetId,
               totalValue: decoded.args.wad.toString(),

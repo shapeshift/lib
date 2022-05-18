@@ -28,8 +28,11 @@ export class ChainAdapterManager {
             const http = new unchained.ethereum.V1Api(
               new unchained.ethereum.Configuration({ basePath: httpUrl })
             )
-            const ws = new unchained.ws.Client<unchained.ethereum.ParsedTx>(wsUrl)
-            return this.addChain(type, () => new ethereum.ChainAdapter({ providers: { http, ws } }))
+            const ws = new unchained.ws.Client<unchained.ethereum.EthereumTx>(wsUrl)
+            return this.addChain(
+              type,
+              () => new ethereum.ChainAdapter({ providers: { http, ws }, rpcUrl: httpUrl })
+            )
           }
           case ChainTypes.Bitcoin: {
             const http = new unchained.bitcoin.V1Api(

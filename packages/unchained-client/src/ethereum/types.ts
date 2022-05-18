@@ -1,5 +1,4 @@
-import { Tx as BlockbookTx } from '@shapeshiftoss/blockbook'
-
+import { EthereumTx } from '../generated/ethereum'
 import { StandardTx, StandardTxMetadata } from '../types'
 
 export interface InternalTx {
@@ -26,5 +25,5 @@ export interface ParsedTx extends StandardTx {
 export type TxSpecific = Partial<Pick<ParsedTx, 'trade' | 'transfers' | 'data'>>
 
 export interface SubParser {
-  parse(tx: BlockbookTx): Promise<TxSpecific | undefined>
+  parse(tx: EthereumTx): Promise<TxSpecific | undefined>
 }

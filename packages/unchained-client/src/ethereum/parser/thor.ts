@@ -1,7 +1,7 @@
-import { Tx as BlockbookTx } from '@shapeshiftoss/blockbook'
 import { ChainId } from '@shapeshiftoss/caip'
 import { ethers } from 'ethers'
 
+import { EthereumTx } from '../../generated/ethereum'
 import { Dex, TradeType, TxParser } from '../../types'
 import { SubParser, TxSpecific } from '../types'
 import THOR_ABI from './abi/thor'
@@ -54,17 +54,15 @@ export class Parser implements SubParser {
     return result.to
   }
 
-  async parse(tx: BlockbookTx): Promise<TxSpecific | undefined> {
-    const txData = tx.ethereumSpecific?.data
-
+  async parse(tx: EthereumTx): Promise<TxSpecific | undefined> {
     if (!txInteractsWithContract(tx, this.routerContract)) return
-    if (!txData) return
+    if (!tx.inputData) return
 
-    const txSigHash = getSigHash(txData)
+    const txSigHash = getSigHash(tx.inputData)
 
     if (!Object.values(this.supportedFunctions).some((hash) => hash === txSigHash)) return
 
-    const decoded = this.abiInterface.parseTransaction({ data: txData })
+    const decoded = this.abiInterface.parseTransaction({ data: tx.inputData })
 
     // failed to decode input data
     if (!decoded) return
