@@ -6,8 +6,8 @@ import { SwapError, SwapErrorTypes } from '../api'
 
 function validateSwapper(swapper: Swapper) {
   if (!(typeof swapper === 'object' && typeof swapper.getType === 'function'))
-    throw new SwapError('[getSwapper] - invalid swapper instance', {
-      code: SwapErrorTypes.MANAGER
+    throw new SwapError('[validateSwapper] - invalid swapper instance', {
+      code: SwapErrorTypes.MANAGER_ERROR
     })
 }
 
@@ -29,7 +29,7 @@ export class SwapperManager {
     const swapper = this.swappers.get(swapperType)
     if (swapper)
       throw new SwapError('[addSwapper] - swapper already exists', {
-        code: SwapErrorTypes.MANAGER,
+        code: SwapErrorTypes.MANAGER_ERROR,
         details: { swapperType }
       })
     validateSwapper(swapperInstance)
@@ -46,7 +46,7 @@ export class SwapperManager {
     const swapper = this.swappers.get(swapperType)
     if (!swapper)
       throw new SwapError('[getSwapper] - swapperType doesnt exist', {
-        code: SwapErrorTypes.MANAGER,
+        code: SwapErrorTypes.MANAGER_ERROR,
         details: { swapperType }
       })
     return swapper
@@ -61,7 +61,7 @@ export class SwapperManager {
     const swapper = this.swappers.get(swapperType)
     if (!swapper)
       throw new SwapError('[removeSwapper] - swapperType doesnt exist', {
-        code: SwapErrorTypes.MANAGER,
+        code: SwapErrorTypes.MANAGER_ERROR,
         details: { swapperType }
       })
     this.swappers.delete(swapperType)

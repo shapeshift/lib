@@ -79,7 +79,7 @@ export const getAllowanceRequired = async ({
 
     if (!tokenId) {
       throw new SwapError('[getAllowanceRequired] - sellAsset.tokenId is required', {
-        code: SwapErrorTypes.ALLOWANCE_REQUIRED
+        code: SwapErrorTypes.VALIDATION_FAILED
       })
     }
 
@@ -92,17 +92,18 @@ export const getAllowanceRequired = async ({
     })
     if (allowanceOnChain === '0') return bnOrZero(sellAmount)
     if (!allowanceOnChain) {
-      throw new SwapError(
-        `[getAllowanceRequired] - No allowance data for ${allowanceContract} to ${receiveAddress}`,
-        { code: SwapErrorTypes.ALLOWANCE_REQUIRED }
-      )
+      throw new SwapError(`[getAllowanceRequired] - No allowance data`, {
+        details: { allowanceContract, receiveAddress },
+        code: SwapErrorTypes.RESPONSE_ERROR
+      })
     }
     const allowanceRequired = bnOrZero(sellAmount).minus(allowanceOnChain)
     return allowanceRequired.lt(0) ? bn(0) : allowanceRequired
   } catch (e) {
+    if (e instanceof SwapError) throw e
     throw new SwapError('[getAllowanceRequired]', {
       cause: e,
-      code: SwapErrorTypes.ALLOWANCE_REQUIRED
+      code: SwapErrorTypes.ALLOWANCE_REQUIRED_FAILED
     })
   }
 }
@@ -127,11 +128,12 @@ export const getUsdRate = async (input: Pick<Asset, 'symbol' | 'tokenId'>): Prom
 
     if (!price.gt(0))
       throw new SwapError('[getUsdRate] - Failed to get price data', {
-        code: SwapErrorTypes.USD_RATE_FAILED
+        code: SwapErrorTypes.RESPONSE_ERROR
       })
 
     return bn(1).dividedBy(price).toString()
   } catch (e) {
+    if (e instanceof SwapError) throw e
     throw new SwapError('[getUsdRate]', {
       cause: e,
       code: SwapErrorTypes.USD_RATE_FAILED
@@ -149,7 +151,7 @@ export const grantAllowance = async ({
   try {
     if (!quote.sellAsset.tokenId) {
       throw new SwapError('[grantAllowance] - sellAsset.tokenId is required', {
-        code: SwapErrorTypes.GRANT_ALLOWANCE
+        code: SwapErrorTypes.VALIDATION_FAILED
       })
     }
 
@@ -181,12 +183,6 @@ export const grantAllowance = async ({
     if (wallet.supportsOfflineSigning()) {
       const signedTx = await adapter.signTransaction({ txToSign: grantAllowanceTxToSign, wallet })
 
-      if (!signedTx) {
-        throw new SwapError(`[grantAllowance] - Signed transaction is required: ${signedTx}`, {
-          code: SwapErrorTypes.GRANT_ALLOWANCE
-        })
-      }
-
       const broadcastedTxId = await adapter.broadcastTransaction(signedTx)
 
       return broadcastedTxId
@@ -199,13 +195,14 @@ export const grantAllowance = async ({
       return broadcastedTxId
     } else {
       throw new SwapError('[grantAllowance] - invalid HDWallet config', {
-        code: SwapErrorTypes.GRANT_ALLOWANCE
+        code: SwapErrorTypes.SIGN_AND_BROADCAST_FAILED
       })
     }
   } catch (e) {
+    if (e instanceof SwapError) throw e
     throw new SwapError('[grantAllowance]', {
       cause: e,
-      code: SwapErrorTypes.GRANT_ALLOWANCE
+      code: SwapErrorTypes.GRANT_ALLOWANCE_FAILED
     })
   }
 }

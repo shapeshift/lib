@@ -24,9 +24,10 @@ export async function ZrxApproveInfinite(
 
     return allowanceGrantRequired
   } catch (e) {
+    if (e instanceof SwapError) throw e
     throw new SwapError('[ZrxApproveInfinite]', {
       cause: e,
-      code: SwapErrorTypes.APPROVE_INFINITE
+      code: SwapErrorTypes.APPROVE_INFINITE_FAILED
     })
   }
 }

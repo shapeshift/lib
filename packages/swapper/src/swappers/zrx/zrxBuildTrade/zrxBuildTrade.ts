@@ -30,24 +30,23 @@ export async function zrxBuildTrade(
     buyAssetAccountId,
     wallet
   } = input
-
-  const buyToken = buyAsset.tokenId || buyAsset.symbol
-  const sellToken = sellAsset.tokenId || sellAsset.symbol
-
-  if (buyAsset.chainId !== 'eip155:1') {
-    throw new SwapError('[ZrxBuildTrade] - buyAsset must be on chainId eip155:1', {
-      code: SwapErrorTypes.BUILD_TRADE,
-      details: { chainId: sellAsset.chainId }
-    })
-  }
-
-  const adapter = await adapterManager.byChainId(buyAsset.chainId)
-  const bip44Params = adapter.buildBIP44Params({ accountNumber: Number(buyAssetAccountId) })
-  const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
-
-  const slippagePercentage = slippage ? bnOrZero(slippage).div(100).toString() : DEFAULT_SLIPPAGE
-
   try {
+    const buyToken = buyAsset.tokenId || buyAsset.symbol
+    const sellToken = sellAsset.tokenId || sellAsset.symbol
+
+    if (buyAsset.chainId !== 'eip155:1') {
+      throw new SwapError('[ZrxBuildTrade] - buyAsset must be on chainId eip155:1', {
+        code: SwapErrorTypes.VALIDATION_FAILED,
+        details: { chainId: sellAsset.chainId }
+      })
+    }
+
+    const adapter = await adapterManager.byChainId(buyAsset.chainId)
+    const bip44Params = adapter.buildBIP44Params({ accountNumber: Number(buyAssetAccountId) })
+    const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
+
+    const slippagePercentage = slippage ? bnOrZero(slippage).div(100).toString() : DEFAULT_SLIPPAGE
+
     /**
      * /swap/v1/quote
      * params: {
@@ -134,27 +133,9 @@ export async function zrxBuildTrade(
     }
     return trade
   } catch (e) {
-    // eslint-disable-next-line no-console
-    const statusReason =
-      e?.response?.data?.validationErrors?.[0]?.reason ||
-      e?.response?.data?.reason ||
-      'Unknown Error'
-    // This hackyness will go away when we correctly handle errors
-    return {
-      sellAsset,
-      buyAsset,
-      success: false,
-      statusReason,
-      sellAmount: '0',
-      buyAmount: '0',
-      depositAddress: '',
-      allowanceContract: '',
-      receiveAddress: '',
-      sellAssetAccountId,
-      txData: '',
-      rate: '0',
-      feeData: { fee: '0', chainSpecific: {} },
-      sources: []
-    }
+    if (e instanceof SwapError) throw e
+    throw new SwapError('[ZrxBuildTrade]', {
+      code: SwapErrorTypes.BUILD_TRADE_FAILED
+    })
   }
 }
