@@ -4,6 +4,7 @@ import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-nativ
 import { BIP44Params, ChainTypes } from '@shapeshiftoss/types'
 import dotenv from 'dotenv'
 
+import { cosmossdk } from './'
 import { ChainAdapterManager } from './ChainAdapterManager'
 
 dotenv.config()
@@ -33,10 +34,6 @@ const unchainedUrls = {
   [ChainTypes.Cosmos]: {
     httpUrl: 'https://dev-api.cosmos.shapeshift.com',
     wsUrl: 'wss://dev-api.cosmos.shapeshift.com'
-  },
-  [ChainTypes.Osmosis]: {
-    httpUrl: 'https://dev-api.osmosis.shapeshift.com',
-    wsUrl: 'wss://dev-api.osmosis.shapeshift.com'
   }
 }
 
@@ -171,47 +168,47 @@ const main = async () => {
     // }
 
     /** COSMOS CLI */
-    const osmosisChainAdapter = chainAdapterManager.byChain(ChainTypes.Osmosis)
-    const osmosisBip44Params: BIP44Params = { purpose: 44, coinType: 118, accountNumber: 0 }
+    const cosmosChainAdapter = chainAdapterManager.byChain(ChainTypes.Cosmos)
+    const cosmosBip44Params: BIP44Params = { purpose: 44, coinType: 118, accountNumber: 0 }
 
-    const osmosisAddress = await osmosisChainAdapter.getAddress({
+    const cosmosAddress = await cosmosChainAdapter.getAddress({
       wallet,
-      bip44Params: osmosisBip44Params
+      bip44Params: cosmosBip44Params
     })
-    console.log('cosmosAddress:', osmosisAddress)
+    console.log('cosmosAddress:', cosmosAddress)
 
-    const osmosisAccount = await osmosisChainAdapter.getAccount(osmosisAddress)
-    console.log('cosmosAccount:', osmosisAccount)
+    const cosmosAccount = await cosmosChainAdapter.getAccount(cosmosAddress)
+    console.log('cosmosAccount:', cosmosAccount)
 
-    const osmosisTxHistory = await osmosisChainAdapter.getTxHistory({ pubkey: osmosisAddress })
-    console.log('cosmosTxHistory:', osmosisTxHistory)
+    const cosmosTxHistory = await cosmosChainAdapter.getTxHistory({ pubkey: cosmosAddress })
+    console.log('cosmosTxHistory:', cosmosTxHistory)
 
-    // const osmosisShapeShiftValidator = await (
-    //   osmosisChainAdapter as cosmossdk.cosmos.ChainAdapter
-    // ).getValidator('cosmosvaloper199mlc7fr6ll5t54w7tts7f4s0cvnqgc59nmuxf')
-    // console.log('cosmosShapeShiftValidator:', cosmosShapeShiftValidator)
+    const cosmosShapeShiftValidator = await (
+      cosmosChainAdapter as cosmossdk.cosmos.ChainAdapter
+    ).getValidator('cosmosvaloper199mlc7fr6ll5t54w7tts7f4s0cvnqgc59nmuxf')
+    console.log('cosmosShapeShiftValidator:', cosmosShapeShiftValidator)
 
-    await osmosisChainAdapter.subscribeTxs(
-      { wallet, bip44Params: osmosisBip44Params },
+    await cosmosChainAdapter.subscribeTxs(
+      { wallet, bip44Params: cosmosBip44Params },
       (msg) => console.log(msg),
       (err) => console.log(err)
     )
 
     // send cosmos example
     try {
-      const value = '9900'
+      // const value = '99000'
 
-      const feeData = await osmosisChainAdapter.getFeeData({ sendMax: false })
-      const fee = '1000' // Increas if taking too long
+      const feeData = await cosmosChainAdapter.getFeeData({ sendMax: false })
+      const fee = 10 // Increas if taking too long
       const gas = feeData.slow.chainSpecific.gasLimit
 
-      const osmosisUnsignedTx = await osmosisChainAdapter.buildSendTransaction({
-        to: 'osmo1fx4jwv3aalxqwmrpymn34l582lnehr3eg40jnt',
-        value,
-        wallet,
-        bip44Params: osmosisBip44Params,
-        chainSpecific: { gas, fee }
-      })
+      // const cosmosUnsignedTx = await cosmosChainAdapter.buildSendTransaction({
+      //   to: 'cosmos1j26n3mjpwx4f7zz65tzq3mygcr74wp7kcwcner',
+      //   value,
+      //   wallet,
+      //   bip44Params: cosmosBip44Params,
+      //   chainSpecific: { gas, fee }
+      // })
 
       // const cosmosUnsignedTx = await (cosmosChainAdapter as any).claimRewards({
       //   validator: 'cosmosvaloper199mlc7fr6ll5t54w7tts7f4s0cvnqgc59nmuxf', // ShapeShift DAO validator
@@ -221,21 +218,21 @@ const main = async () => {
       //   chainSpecific: { gas, fee }
       // })
 
-      // const cosmosUnsignedTx = await (cosmosChainAdapter as any).buildRedelegateTransaction({
-      //   fromValidator: 'cosmosvaloper156gqf9837u7d4c4678yt3rl4ls9c5vuursrrzf', // test validator
-      //   toValidator: 'cosmosvaloper199mlc7fr6ll5t54w7tts7f4s0cvnqgc59nmuxf', // ShapeShift DAO validator
-      //   value: '100000000000',
-      //   wallet,
-      //   bip44Params: cosmosBip44Params,
-      //   chainSpecific: { gas, fee }
-      // })
-      if (!osmosisChainAdapter.signAndBroadcastTransaction) return
-
-      // console.log('comsos unsigned tx', JSON.stringify(cosmosUnsignedTx, null, 2))
-
-      const broadcastedTx = await osmosisChainAdapter.signAndBroadcastTransaction({
+      const cosmosUnsignedTx = await (cosmosChainAdapter as any).buildRedelegateTransaction({
+        fromValidator: 'cosmosvaloper156gqf9837u7d4c4678yt3rl4ls9c5vuursrrzf', // test validator
+        toValidator: 'cosmosvaloper199mlc7fr6ll5t54w7tts7f4s0cvnqgc59nmuxf', // ShapeShift DAO validator
+        value: '100000000000',
         wallet,
-        txToSign: osmosisUnsignedTx.txToSign
+        bip44Params: cosmosBip44Params,
+        chainSpecific: { gas, fee }
+      })
+      if (!cosmosChainAdapter.signAndBroadcastTransaction) return
+
+      console.log('comsos unsigned tx', JSON.stringify(cosmosUnsignedTx, null, 2))
+
+      const broadcastedTx = await cosmosChainAdapter.signAndBroadcastTransaction({
+        wallet,
+        txToSign: cosmosUnsignedTx.txToSign
       })
       console.log('broadcastedTx:', broadcastedTx)
     } catch (err) {
