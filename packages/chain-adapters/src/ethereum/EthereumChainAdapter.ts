@@ -126,14 +126,48 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     return { ...ChainAdapter.defaultBIP44Params, ...params }
   }
 
-  // @ts-ignore: keep type signature with unimplemented state
-  async getTxHistory({
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    pubkey
-  }: unchained.ethereum.V1ApiGetTxHistoryRequest): Promise<
-    chainAdapters.TxHistoryResponse<ChainTypes.Ethereum>
-  > {
-    throw new Error('Method not implemented.')
+  async getTxHistory(
+    input: chainAdapters.TxHistoryInput
+  ): Promise<chainAdapters.TxHistoryResponse<ChainTypes.Ethereum>> {
+    const { data } = await this.providers.http.getTxHistory({
+      pubkey: input.pubkey,
+      pageSize: input.pageSize,
+      cursor: input.cursor
+    })
+
+    const txs = await Promise.all(
+      data.txs.map(async (tx) => {
+        const parsedTx = await this.parser.parse(tx, input.pubkey)
+
+        return {
+          address: input.pubkey,
+          blockHash: parsedTx.blockHash,
+          blockHeight: parsedTx.blockHeight,
+          blockTime: parsedTx.blockTime,
+          chainId: parsedTx.chainId,
+          chain: this.getType(),
+          confirmations: parsedTx.confirmations,
+          txid: parsedTx.txid,
+          fee: parsedTx.fee,
+          status: getStatus(parsedTx.status),
+          tradeDetails: parsedTx.trade,
+          transfers: parsedTx.transfers.map((transfer) => ({
+            assetId: transfer.assetId,
+            from: transfer.from,
+            to: transfer.to,
+            type: getType(transfer.type),
+            value: transfer.totalValue
+          })),
+          data: parsedTx.data
+        }
+      })
+    )
+
+    return {
+      cursor: data.cursor ?? '',
+      pubkey: input.pubkey,
+      transactions: txs
+    }
   }
 
   async buildSendTransaction(tx: chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>): Promise<{
@@ -381,14 +415,6 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       async (msg) => {
         const tx = await this.parser.parse(msg.data, msg.address)
 
-        const transfers = tx.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
-          assetId: transfer.assetId,
-          from: transfer.from,
-          to: transfer.to,
-          type: getType(transfer.type),
-          value: transfer.totalValue
-        }))
-
         onMessage({
           address: tx.address,
           blockHash: tx.blockHash,
@@ -400,14 +426,15 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           fee: tx.fee,
           status: getStatus(tx.status),
           tradeDetails: tx.trade,
-          transfers,
+          transfers: tx.transfers.map((transfer) => ({
+            assetId: transfer.assetId,
+            from: transfer.from,
+            to: transfer.to,
+            type: getType(transfer.type),
+            value: transfer.totalValue
+          })),
           txid: tx.txid,
-          ...(tx.data && {
-            data: {
-              method: tx.data.method,
-              parser: tx.data.parser
-            }
-          })
+          data: tx.data
         })
       },
       (err) => onError({ message: err.message })
