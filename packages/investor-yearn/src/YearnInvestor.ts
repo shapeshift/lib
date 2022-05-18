@@ -1,9 +1,10 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
-import { Investor } from '@shapeshiftoss/investor/src'
+import { Investor } from '@shapeshiftoss/investor'
 import { ChainTypes } from '@shapeshiftoss/types'
-import { Vault, Yearn } from '@yfi/sdk'
+import { Vault, VaultMetadata, Yearn } from '@yfi/sdk'
 import first from 'lodash/first'
+import find from 'lodash/find'
 import Web3 from 'web3'
 import { HttpProvider } from 'web3-core/types'
 import { Contract } from 'web3-eth-contract'
@@ -11,8 +12,9 @@ import { Contract } from 'web3-eth-contract'
 import { ConstructorArgs } from './api'
 import { ssRouterAbi, ssRouterContractAddress } from './constants'
 import { YearnOpportunity } from './YearnOpportunity'
+import { ETHSignTx } from '@shapeshiftoss/hdwallet-core'
 
-export class YearnInvestor implements Investor {
+export class YearnInvestor implements Investor<ETHSignTx, VaultMetadata> {
   public adapter: ChainAdapter<ChainTypes.Ethereum>
   public provider: HttpProvider
   public jsonRpcProvider: JsonRpcProvider
@@ -20,8 +22,10 @@ export class YearnInvestor implements Investor {
   public vaults: Vault[]
   private yearnSdk: Yearn<1>
   private ssRouterContract: Contract
+  private dryRun?: true
 
-  constructor({ adapter, providerUrl, network = 1 }: ConstructorArgs) {
+  constructor({ adapter, dryRun, providerUrl, network = 1 }: ConstructorArgs) {
+    this.dryRun = dryRun
     this.adapter = adapter
     this.provider = new Web3.providers.HttpProvider(providerUrl)
     this.jsonRpcProvider = new JsonRpcProvider(providerUrl)
@@ -36,12 +40,16 @@ export class YearnInvestor implements Investor {
   }
 
   async findAll() {
-    return (await this.yearnSdk.vaults.get()).map((vault) => new YearnOpportunity(vault))
+    return (await this.yearnSdk.vaults.get()).map((vault) => new YearnOpportunity({ dryRun: this.dryRun, contract: this.ssRouterContract, yearnSdk: this.yearnSdk }, vault))
   }
 
-  async findByAddress(address: string) {
+  async findByOpportunityId(opportunityId: string) {
     return first(
-      (await this.yearnSdk.vaults.get([address])).map((vault) => new YearnOpportunity(vault))
+      (await this.yearnSdk.vaults.get([opportunityId])).map((vault) => new YearnOpportunity({ dryRun: this.dryRun, contract: this.ssRouterContract, yearnSdk: this.yearnSdk }, vault))
     )
+  }
+
+  async findByUnderlyingAssetId(assetId: string) {
+    return find(await this.findAll(), { tokenId: assetId })
   }
 }

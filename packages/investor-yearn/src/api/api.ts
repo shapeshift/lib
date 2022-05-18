@@ -32,6 +32,7 @@ export type ConstructorArgs = {
   adapter: ChainAdapter<ChainTypes.Ethereum>
   providerUrl: string
   network?: 1 | 250 | 1337 | 42161 // 1: 'ethereum', 250: 'fantom', 1337: 'ethereum', 42161: 'arbitrum'
+  dryRun?: true
 }
 
 export type YearnVault = Vault
@@ -263,18 +264,15 @@ export class YearnVaultApi {
       wallet
     } = input
     if (!wallet || !vaultAddress) throw new Error('Missing inputs')
-    const estimatedGas: BigNumber = await this.estimateWithdrawGas(input)
-
     // We use the vault directly to withdraw the vault tokens. There is no benefit to the DAO to use
     // the router to withdraw funds and there is an extra approval required for the user if we
     // withdrew from the vault using the shapeshift router. Affiliate fees for SS are the same
     // either way. For this reason, we simply withdraw from the vault directly.
     const vaultContract: Contract = new this.web3.eth.Contract(yv2VaultAbi, vaultAddress)
-    const data: string = vaultContract.methods
-      .withdraw(amountDesired.toString(), userAddress)
-      .encodeABI({
-        from: userAddress
-      })
+    const preWithdraw = await vaultContract.methods.withdraw(amountDesired.toString(), userAddress)
+    const encodedTx = await preWithdraw.encodeABI({ from: userAddress })
+    const estimatedGas = await preWithdraw.estimateGas({       from: userAddress      })
+
     const nonce = await this.web3.eth.getTransactionCount(userAddress)
     const gasPrice = await this.web3.eth.getGasPrice()
 
