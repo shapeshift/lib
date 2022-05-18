@@ -1,15 +1,37 @@
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { adapters } from '@shapeshiftoss/caip'
-import { ApprovalRequired, InvestorOpportunity } from '@shapeshiftoss/investor/src'
-import { Vault, VaultMetadata } from '@yfi/sdk'
-import { BigNumber } from 'bignumber.js'
+import type { ChainAdapter } from '@shapeshiftoss/chain-adapters/*'
+import type { ApprovalRequired, InvestorOpportunity } from '@shapeshiftoss/investor/src'
+import { Logger } from '@shapeshiftoss/logger'
+import type { ChainTypes } from '@shapeshiftoss/types'
+import { type ChainId, type Vault, type VaultMetadata, Yearn } from '@yfi/sdk'
+import type { BigNumber } from 'bignumber.js'
+import Web3 from 'web3'
+import { HttpProvider } from 'web3-core'
+import { Contract } from 'web3-eth-contract'
 
 import { ssRouterAbi, ssRouterContractAddress, yv2VaultAbi } from './constants'
 import { buildTxToSign } from './utils'
 import { bnOrZero } from './utils/bignumber'
 
-export class YearnOpportunity implements InvestorOpportunity<VaultMetadata>, ApprovalRequired {
-  private readonly _vault: Vault
+type YearnOpportunityDeps = {
+  chainAdapter: ChainAdapter<ChainTypes>
+  logger?: Logger
+  providerUrl: string
+  network?: ChainId
+}
 
+export class YearnOpportunity implements InvestorOpportunity<VaultMetadata>, ApprovalRequired {
+  readonly #internals: {
+    chainAdapter: ChainAdapter<ChainTypes>
+    httpProvider: HttpProvider
+    jsonRpcProvider: JsonRpcProvider
+    web3: Web3
+    yearn: Yearn<ChainId>
+    contract: Contract
+    logger?: Logger
+    vault: Vault
+  }
   public readonly apr: BigNumber
   public readonly displayName: string
   public readonly id: string
@@ -21,15 +43,21 @@ export class YearnOpportunity implements InvestorOpportunity<VaultMetadata>, App
   public readonly supply: BigNumber
   public readonly tvl: BigNumber
 
-  constructor(vault: Vault) {
-    this.adapter = adapter
-    this.provider = new Web3.providers.HttpProvider(providerUrl)
-    this.jsonRpcProvider = new JsonRpcProvider(providerUrl)
-    this.web3 = new Web3(this.provider)
-    this.yearnSdk = new Yearn(network, { provider: this.jsonRpcProvider })
-    this.ssRouterContract = new this.web3.eth.Contract(ssRouterAbi, ssRouterContractAddress)
+  constructor(deps: YearnOpportunityDeps, vault: Vault) {
+    const httpProvider = new HttpProvider(deps.providerUrl)
+    const jsonRpcProvider = new JsonRpcProvider(deps.providerUrl)
 
-    this._vault = vault
+    this.#internals = {
+      chainAdapter: deps.chainAdapter,
+      contract: new Contract(ssRouterAbi, ssRouterContractAddress),
+      httpProvider: new HttpProvider(deps.providerUrl),
+      jsonRpcProvider: new JsonRpcProvider(deps.providerUrl),
+      logger: deps.logger ?? new Logger({ name: 'Yearn Opportunity' }),
+      web3: new Web3(httpProvider),
+      yearn: new Yearn(deps.network ?? 1, { provider: jsonRpcProvider }),
+      vault
+    }
+
     this.id = vault.address
     this.metadata = vault.metadata
     this.displayName = vault.metadata.displayName || vault.name
@@ -38,7 +66,7 @@ export class YearnOpportunity implements InvestorOpportunity<VaultMetadata>, App
     this.tvl = bnOrZero(vault.metadata.totalAssets)
     this.price = bnOrZero(vault.metadata.pricePerShare)
     this.underlyingAsset = {
-      balance: new BigNumber(vault.underlyingTokenBalance.amount),
+      balance: bnOrZero(vault.underlyingTokenBalance.amount),
       assetId: adapters.yearnToCAIP19(vault.token)
     }
     this.positionAsset = {
@@ -71,11 +99,11 @@ export class YearnOpportunity implements InvestorOpportunity<VaultMetadata>, App
     const data: string = vaultContract.methods
       .withdraw(amount.toString(), address)
       .encodeABI({ from: address })
-    const nonce = await this.web3.eth.getTransactionCount(address)
-    const gasPrice = await this.web3.eth.getGasPrice()
+    const nonce = await this.#internals.web3.eth.getTransactionCount(address)
+    const gasPrice = await this.#internals.web3.eth.getGasPrice()
 
     const txToSign = buildTxToSign({
-      bip44Params: this.adapter.buildBIP44Params({ accountNumber: 0 }),
+      bip44Params: this.#internals.chainAdapter.buildBIP44Params({ accountNumber: 0 }),
       chainId: 1,
       data,
       estimatedGas: estimatedGas.toString(),
@@ -85,14 +113,17 @@ export class YearnOpportunity implements InvestorOpportunity<VaultMetadata>, App
       value: '0'
     })
     if (wallet.supportsOfflineSigning()) {
-      const signedTx = await this.adapter.signTransaction({ txToSign, wallet })
+      const signedTx = await this.#internals.chainAdapter.signTransaction({ txToSign, wallet })
       if (dryRun) return signedTx
-      return this.adapter.broadcastTransaction(signedTx)
-    } else if (wallet.supportsBroadcast() && this.adapter.signAndBroadcastTransaction) {
+      return this.#internals.chainAdapter.broadcastTransaction(signedTx)
+    } else if (
+      wallet.supportsBroadcast() &&
+      this.#internals.chainAdapter.signAndBroadcastTransaction
+    ) {
       if (dryRun) {
         throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
       }
-      return this.adapter.signAndBroadcastTransaction({ txToSign, wallet })
+      return this.#internals.chainAdapter.signAndBroadcastTransaction({ txToSign, wallet })
     } else {
       throw new Error('Invalid HDWallet configuration ')
     }

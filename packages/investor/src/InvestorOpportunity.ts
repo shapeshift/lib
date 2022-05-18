@@ -8,7 +8,6 @@ export abstract class InvestorOpportunity<T = unknown> {
   static create: <U = unknown>(details: { address: string }) => Promise<InvestorOpportunity<U>>
   readonly id: string // opportunity address (contract address / validator address)
   readonly displayName: string
-  readonly isApprovalRequired: boolean = false
   readonly underlyingAsset: {
     assetId: string
     balance: BigNumber
