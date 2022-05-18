@@ -1,32 +1,27 @@
 import { Tx as BlockbookTx } from '@shapeshiftoss/blockbook'
-import { AssetNamespace, AssetReference, toCAIP2, toCAIP19 } from '@shapeshiftoss/caip'
-import { ChainTypes } from '@shapeshiftoss/types'
+import { ASSET_REFERENCE, AssetId, ChainId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
 import { BigNumber } from 'bignumber.js'
 import { ethers } from 'ethers'
 
 import { Status, Token, TransferType } from '../../types'
 import { aggregateTransfer, findAsyncSequential } from '../../utils'
-import { InternalTx, Network, ParsedTx, SubParser, TxSpecific } from '../types'
+import { InternalTx, ParsedTx, SubParser, TxSpecific } from '../types'
 import * as foxy from './foxy'
 import * as thor from './thor'
 import * as uniV2 from './uniV2'
-import {
-  getInternalMultisigAddress,
-  getSigHash,
-  SENDMULTISIG_SIG_HASH,
-  toNetworkType
-} from './utils'
+import { getInternalMultisigAddress, getSigHash, SENDMULTISIG_SIG_HASH } from './utils'
 import * as weth from './weth'
 import * as yearn from './yearn'
 import * as zrx from './zrx'
 
 export interface TransactionParserArgs {
-  network?: Network
+  chainId: ChainId
   rpcUrl: string
 }
 
 export class TransactionParser {
-  network: Network
+  chainId: ChainId
+  assetId: AssetId
 
   private readonly thor: thor.Parser
   private readonly uniV2: uniV2.Parser
@@ -37,16 +32,22 @@ export class TransactionParser {
   private readonly parsers: Array<SubParser>
 
   constructor(args: TransactionParserArgs) {
+    this.chainId = args.chainId
+
+    this.assetId = toAssetId({
+      ...fromChainId(this.chainId),
+      assetNamespace: 'slip44',
+      assetReference: ASSET_REFERENCE.Ethereum
+    })
+
     const provider = new ethers.providers.JsonRpcProvider(args.rpcUrl)
 
-    this.network = args.network ?? 'mainnet'
-
-    this.thor = new thor.Parser({ network: this.network, rpcUrl: args.rpcUrl })
-    this.uniV2 = new uniV2.Parser({ network: this.network, provider })
+    this.thor = new thor.Parser({ chainId: this.chainId, rpcUrl: args.rpcUrl })
+    this.uniV2 = new uniV2.Parser({ chainId: this.chainId, provider })
     this.zrx = new zrx.Parser()
-    this.yearn = new yearn.Parser({ provider, network: this.network })
+    this.yearn = new yearn.Parser({ provider, chainId: this.chainId })
     this.foxy = new foxy.Parser()
-    this.weth = new weth.Parser({ network: this.network, provider })
+    this.weth = new weth.Parser({ chainId: this.chainId, provider })
 
     this.parsers = [this.zrx, this.thor, this.uniV2, this.yearn, this.foxy, this.weth]
   }
@@ -79,8 +80,7 @@ export class TransactionParser {
       blockHash: tx.blockHash,
       blockHeight: tx.blockHeight,
       blockTime: tx.blockTime,
-      caip2: toCAIP2({ chain: ChainTypes.Ethereum, network: toNetworkType(this.network) }),
-      chainId: toCAIP2({ chain: ChainTypes.Ethereum, network: toNetworkType(this.network) }),
+      chainId: this.chainId,
       confirmations: tx.confirmations,
       status: TransactionParser.getStatus(tx),
       trade: contractParserResult?.trade,
@@ -108,12 +108,6 @@ export class TransactionParser {
     address: string,
     internalTxs?: Array<InternalTx>
   ) {
-    const caip19Ethereum = toCAIP19({
-      chain: ChainTypes.Ethereum,
-      network: toNetworkType(this.network),
-      assetNamespace: AssetNamespace.Slip44,
-      assetReference: AssetReference.Ethereum
-    })
     const sendAddress = tx.vin[0].addresses?.[0] ?? ''
     const receiveAddress = tx.vout[0].addresses?.[0] ?? ''
 
@@ -124,7 +118,7 @@ export class TransactionParser {
         parsedTx.transfers = aggregateTransfer(
           parsedTx.transfers,
           TransferType.Send,
-          caip19Ethereum,
+          this.assetId,
           sendAddress,
           receiveAddress,
           sendValue.toString(10)
@@ -134,7 +128,7 @@ export class TransactionParser {
       // network fee
       const fees = new BigNumber(tx.fees ?? 0)
       if (fees.gt(0)) {
-        parsedTx.fee = { caip19: caip19Ethereum, assetId: caip19Ethereum, value: fees.toString(10) }
+        parsedTx.fee = { assetId: this.assetId, value: fees.toString(10) }
       }
     }
 
@@ -145,7 +139,7 @@ export class TransactionParser {
         parsedTx.transfers = aggregateTransfer(
           parsedTx.transfers,
           TransferType.Receive,
-          caip19Ethereum,
+          this.assetId,
           sendAddress,
           receiveAddress,
           receiveValue.toString(10)
@@ -168,10 +162,9 @@ export class TransactionParser {
       }
 
       const transferArgs = [
-        toCAIP19({
-          chain: ChainTypes.Ethereum,
-          network: toNetworkType(this.network),
-          assetNamespace: AssetNamespace.ERC20,
+        toAssetId({
+          ...fromChainId(this.chainId),
+          assetNamespace: 'erc20',
           assetReference: transfer.token
         }),
         transfer.from,
@@ -201,11 +194,10 @@ export class TransactionParser {
 
     internalTxs?.forEach((internalTx) => {
       const transferArgs = [
-        toCAIP19({
-          chain: ChainTypes.Ethereum,
-          network: toNetworkType(this.network),
-          assetNamespace: AssetNamespace.Slip44,
-          assetReference: AssetReference.Ethereum
+        toAssetId({
+          ...fromChainId(this.chainId),
+          assetNamespace: 'slip44',
+          assetReference: ASSET_REFERENCE.Ethereum
         }),
         internalTx.from,
         internalTx.to,

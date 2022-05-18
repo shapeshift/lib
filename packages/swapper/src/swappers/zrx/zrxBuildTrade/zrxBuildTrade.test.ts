@@ -5,8 +5,8 @@ import Web3 from 'web3'
 
 import { BuildTradeInput } from '../../../api'
 import { bnOrZero } from '../utils/bignumber'
-import { APPROVAL_GAS_LIMIT, MAX_SLIPPAGE } from '../utils/constants'
-import { setupZrxQuoteResponse } from '../utils/test-data/setupSwapQuote'
+import { APPROVAL_GAS_LIMIT } from '../utils/constants'
+import { setupZrxTradeQuoteResponse } from '../utils/test-data/setupSwapQuote'
 import { zrxService } from '../utils/zrxService'
 import { zrxBuildTrade } from './zrxBuildTrade'
 jest.mock('web3')
@@ -54,7 +54,7 @@ const setup = () => {
 }
 
 describe('ZrxBuildTrade', () => {
-  const { quoteResponse, sellAsset, buyAsset } = setupZrxQuoteResponse()
+  const { quoteResponse, sellAsset, buyAsset } = setupZrxTradeQuoteResponse()
   const { web3Instance, adapterManager } = setup()
   const walletAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
   const wallet = {
@@ -69,7 +69,6 @@ describe('ZrxBuildTrade', () => {
     sendMax: false,
     sellAsset,
     buyAsset,
-    buyAmount: '',
     sellAmount: '1000000000000000000',
     sellAssetAccountId: '0',
     buyAssetAccountId: '0',
@@ -94,81 +93,6 @@ describe('ZrxBuildTrade', () => {
     },
     sources: []
   }
-
-  it('should throw error if sellAmount AND buyAmount is provided', async () => {
-    const input = { ...buildTradeInput, buyAmount: '1234.12', sellAmount: '1234.12' }
-
-    await expect(zrxBuildTrade(deps, input)).rejects.toThrow(
-      'ZrxSwapper:ZrxBuildTrade Exactly one of buyAmount or sellAmount is required'
-    )
-  })
-
-  it('should throw error if sellAmount AND buyAmount are NOT provided', async () => {
-    const input = { ...buildTradeInput, sellAmount: '', buyAmount: '' }
-
-    await expect(zrxBuildTrade(deps, input)).rejects.toThrow(
-      'ZrxSwapper:ZrxBuildTrade Exactly one of buyAmount or sellAmount is required'
-    )
-  })
-
-  it('should throw error if sellAssetAccountId is NOT provided', async () => {
-    const input = { ...buildTradeInput, sellAssetAccountId: '' }
-
-    await expect(zrxBuildTrade(deps, input)).rejects.toThrow(
-      'ZrxSwapper:ZrxBuildTrade Both sellAssetAccountId and buyAssetAccountId are required'
-    )
-  })
-
-  it('should throw error if buyAssetAccountId is NOT provided', async () => {
-    const input = { ...buildTradeInput, buyAssetAccountId: '' }
-
-    await expect(zrxBuildTrade(deps, input)).rejects.toThrow(
-      'ZrxSwapper:ZrxBuildTrade Both sellAssetAccountId and buyAssetAccountId are required'
-    )
-  })
-
-  it('should throw error if slippage is higher than MAX_SLIPPAGE', async () => {
-    const slippage = '31.0'
-    const input = { ...buildTradeInput, slippage }
-
-    await expect(zrxBuildTrade(deps, input)).rejects.toThrow(
-      `ZrxSwapper:ZrxBuildTrade slippage value of ${slippage} is greater than max slippage value of ${MAX_SLIPPAGE}`
-    )
-  })
-
-  it('should throw error if tokenId, symbol and network are not provided for buyAsset', async () => {
-    const input = {
-      ...buildTradeInput,
-      buyAsset: {
-        ...buyAsset,
-        tokenId: '',
-        symbol: '',
-        network: ''
-      },
-      wallet
-    } as unknown as BuildTradeInput
-
-    await expect(zrxBuildTrade(deps, input)).rejects.toThrow(
-      'ZrxSwapper:ZrxBuildTrade One of buyAssetContract or buyAssetSymbol or buyAssetNetwork are required'
-    )
-  })
-
-  it('should throw error if tokenId, symbol and network are not provided for sellAsset', async () => {
-    const input = {
-      ...buildTradeInput,
-      sellAsset: {
-        ...sellAsset,
-        tokenId: '',
-        symbol: '',
-        network: ''
-      },
-      wallet
-    } as unknown as BuildTradeInput
-
-    await expect(zrxBuildTrade(deps, input)).rejects.toThrow(
-      'ZrxSwapper:ZrxBuildTrade One of sellAssetContract or sellAssetSymbol or sellAssetNetwork are required'
-    )
-  })
 
   it('should return a quote response', async () => {
     const allowanceOnChain = '1000'

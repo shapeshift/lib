@@ -1,3 +1,54 @@
+# [@shapeshiftoss/market-service-v4.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.0.0...@shapeshiftoss/market-service-v4.0.1) (2022-05-18)
+
+# [@shapeshiftoss/market-service-v4.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v3.0.2...@shapeshiftoss/market-service-v4.0.0) (2022-05-18)
+
+
+### Performance Improvements
+
+* replace enums with dynamically derived object literals ([#656](https://github.com/shapeshift/lib/issues/656)) ([6d2d821](https://github.com/shapeshift/lib/commit/6d2d821318da9db4afec97b1247cf006a5fc42d2))
+
+
+### BREAKING CHANGES
+
+* the enum removal will need to be handled by consumers to use the new constants.
+
+* chore: remove toString() and associated comment
+
+* chore: remove string litirals
+
+* chore: optimise imports
+
+* chore: use string union for AssetNamespace
+
+* chore: update README
+
+# [@shapeshiftoss/market-service-v3.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v3.0.1...@shapeshiftoss/market-service-v3.0.2) (2022-05-16)
+
+
+### Bug Fixes
+
+* sort fiat price history by time correctly ([#647](https://github.com/shapeshift/lib/issues/647)) ([845d4dc](https://github.com/shapeshift/lib/commit/845d4dc8f464a25cf4c4cc7498bdac9a9ef22185))
+
+# [@shapeshiftoss/market-service-v3.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v3.0.0...@shapeshiftoss/market-service-v3.0.1) (2022-05-12)
+
+# [@shapeshiftoss/market-service-v3.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v2.3.0...@shapeshiftoss/market-service-v3.0.0) (2022-05-10)
+
+
+### Performance Improvements
+
+* **marketService:** replace caip properties with their high-level counterparts ([#607](https://github.com/shapeshift/lib/issues/607)) ([85a7cd2](https://github.com/shapeshift/lib/commit/85a7cd2b7004b425badc7c965385553fe9823ce8))
+
+
+### BREAKING CHANGES
+
+* **marketService:** updates the market service with caip-free types and vernacular.
+
+* chore: use local FindByAssetIdMarketType
+
+* chore: do not import from source
+
+Co-authored-by: kaladinlight <35275952+kaladinlight@users.noreply.github.com>
+
 # [@shapeshiftoss/market-service-v2.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v2.2.3...@shapeshiftoss/market-service-v2.3.0) (2022-05-06)
 
 

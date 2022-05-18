@@ -1,12 +1,11 @@
-import { CAIP19 } from '@shapeshiftoss/caip'
+import { AssetId } from '@shapeshiftoss/caip'
 import {
   ApprovalNeededOutput,
   Asset,
-  ChainTypes,
   ExecQuoteOutput,
-  GetQuoteInput,
+  GetMinMaxInput,
   MinMaxOutput,
-  Quote,
+  SupportedChainIds,
   SwapperType
 } from '@shapeshiftoss/types'
 
@@ -31,26 +30,14 @@ export class TestSwapper implements Swapper {
     ]
   }
 
-  async getQuote(): Promise<Quote<ChainTypes>> {
-    throw new Error('TestSwapper: getQuote unimplemented')
-  }
-
-  async buildQuoteTx(): Promise<Quote<ChainTypes>> {
-    throw new Error('TestSwapper: getQuote unimplemented')
-  }
-
   getUsdRate(input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string> {
     console.info(input)
     throw new Error('TestSwapper: getUsdRate unimplemented')
   }
 
-  getMinMax(input: GetQuoteInput): Promise<MinMaxOutput> {
+  getMinMax(input: GetMinMaxInput): Promise<MinMaxOutput> {
     console.info(input)
     throw new Error('TestSwapper: getMinMax unimplemented')
-  }
-
-  async executeQuote(): Promise<ExecQuoteOutput> {
-    throw new Error('TestSwapper: executeQuote unimplemented')
   }
 
   async approvalNeeded(): Promise<ApprovalNeededOutput> {
@@ -61,21 +48,21 @@ export class TestSwapper implements Swapper {
     throw new Error('TestSwapper: approveInfinite unimplemented')
   }
 
-  filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): CAIP19[] {
+  filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): AssetId[] {
     const { sellAssetId } = args
     if (!this.supportAssets.includes(sellAssetId)) return []
     return this.supportAssets
   }
 
-  filterAssetIdsBySellable(): CAIP19[] {
+  filterAssetIdsBySellable(): AssetId[] {
     return this.supportAssets
   }
 
-  async buildTrade(): Promise<Trade<ChainTypes>> {
+  async buildTrade(): Promise<Trade<SupportedChainIds>> {
     throw new Error('TestSwapper: buildTrade unimplemented')
   }
 
-  async getTradeQuote(): Promise<TradeQuote<ChainTypes>> {
+  async getTradeQuote(): Promise<TradeQuote<SupportedChainIds>> {
     throw new Error('TestSwapper: getTradeQuote unimplemented')
   }
 

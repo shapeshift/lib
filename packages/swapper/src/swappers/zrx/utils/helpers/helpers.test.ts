@@ -1,10 +1,9 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { ChainTypes } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import { erc20Abi } from '../abi/erc20-abi'
 import { erc20AllowanceAbi } from '../abi/erc20Allowance-abi'
-import { bnOrZero } from '../bignumber'
+import { bn, bnOrZero } from '../bignumber'
 import {
   getAllowanceRequired,
   getUsdRate,
@@ -35,16 +34,9 @@ Web3.mockImplementation(() => ({
   }
 }))
 
-const setup = () => {
-  const { web3Instance, adapterManager } = setupZrxDeps()
-  const adapter = adapterManager.byChain(ChainTypes.Ethereum)
-
-  return { web3Instance, adapter }
-}
-
 describe('utils', () => {
-  const { quoteInput, sellAsset } = setupQuote()
-  const { web3Instance, adapter } = setup()
+  const { tradeQuote, sellAsset } = setupQuote()
+  const { web3Instance, adapterManager } = setupZrxDeps()
 
   describe('getUsdRate', () => {
     it('getUsdRate gets the usd rate of the symbol', async () => {
@@ -55,7 +47,7 @@ describe('utils', () => {
       expect(rate).toBe('0.5')
       expect(zrxService.get).toHaveBeenCalledWith('/swap/v1/price', {
         params: {
-          buyToken: 'USDC',
+          buyToken: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
           buyAmount: '1000000000',
           sellToken: 'FOX'
         }
@@ -64,7 +56,7 @@ describe('utils', () => {
     it('getUsdRate fails', async () => {
       ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data: {} }))
       await expect(getUsdRate({ symbol: 'WETH', tokenId: '0x0001' })).rejects.toThrow(
-        'getUsdRate - Failed to get price data'
+        '[getUsdRate]'
       )
     })
   })
@@ -94,9 +86,9 @@ describe('utils', () => {
       expect(
         await getAllowanceRequired({
           ...getAllowanceInput,
-          sellAsset: { ...sellAsset, symbol: 'ETH' }
+          sellAsset: { ...sellAsset, assetId: 'eip155:1/slip44:60' }
         })
-      ).toEqual(bnOrZero(0))
+      ).toEqual(bn(0))
     })
 
     it('should return sellAmount if allowanceOnChain is 0', async () => {
@@ -125,7 +117,7 @@ describe('utils', () => {
       }))
 
       await expect(getAllowanceRequired(getAllowanceInput)).rejects.toThrow(
-        `No allowance data for ${getAllowanceInput.allowanceContract} to ${getAllowanceInput.receiveAddress}`
+        `[getAllowanceRequired]`
       )
     })
 
@@ -140,7 +132,7 @@ describe('utils', () => {
         }
       }))
 
-      expect(await getAllowanceRequired(getAllowanceInput)).toEqual(bnOrZero(0))
+      expect(await getAllowanceRequired(getAllowanceInput)).toEqual(bn(0))
     })
 
     it('should return sellAsset minus allowanceOnChain', async () => {
@@ -155,7 +147,7 @@ describe('utils', () => {
       }))
 
       expect(await getAllowanceRequired({ ...getAllowanceInput, sellAmount: '1000' })).toEqual(
-        bnOrZero(900)
+        bn(900)
       )
     })
   })
@@ -169,7 +161,7 @@ describe('utils', () => {
 
     it('should throw if sellAsset.tokenId is not provided', async () => {
       const quote = {
-        ...quoteInput,
+        ...tradeQuote,
         sellAsset: { ...sellAsset, tokenId: '' }
       }
       ;(web3Instance.eth.Contract as jest.Mock<unknown>).mockImplementation(() => ({
@@ -183,13 +175,13 @@ describe('utils', () => {
       }))
 
       await expect(
-        grantAllowance({ quote, wallet, adapter, erc20Abi, web3: web3Instance })
-      ).rejects.toThrow('sellAsset.tokenId is required')
+        grantAllowance({ quote, wallet, adapterManager, erc20Abi, web3: web3Instance })
+      ).rejects.toThrow('[grantAllowance]')
     })
 
     it('should return a txid', async () => {
       const quote = {
-        ...quoteInput
+        ...tradeQuote
       }
       ;(web3Instance.eth.Contract as jest.Mock<unknown>).mockImplementation(() => ({
         methods: {
@@ -202,7 +194,7 @@ describe('utils', () => {
       }))
 
       expect(
-        await grantAllowance({ quote, wallet, adapter, erc20Abi, web3: web3Instance })
+        await grantAllowance({ quote, wallet, adapterManager, erc20Abi, web3: web3Instance })
       ).toEqual('broadcastedTx')
     })
   })

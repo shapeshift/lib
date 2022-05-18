@@ -1,8 +1,8 @@
-import { ChainTypes } from '@shapeshiftoss/types'
+import { SupportedChainIds } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 
-import { BuildTradeInput, SwapError, Trade } from '../../..'
+import { BuildTradeInput, SwapError, SwapErrorTypes, Trade } from '../../..'
 import { ZrxQuoteResponse } from '../types'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
@@ -11,8 +11,7 @@ import {
   AFFILIATE_ADDRESS,
   APPROVAL_GAS_LIMIT,
   DEFAULT_SLIPPAGE,
-  DEFAULT_SOURCE,
-  MAX_SLIPPAGE
+  DEFAULT_SOURCE
 } from '../utils/constants'
 import { getAllowanceRequired, normalizeAmount } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
@@ -21,69 +20,39 @@ import { ZrxSwapperDeps } from '../ZrxSwapper'
 export async function zrxBuildTrade(
   { adapterManager, web3 }: ZrxSwapperDeps,
   input: BuildTradeInput
-): Promise<Trade<ChainTypes>> {
+): Promise<Trade<SupportedChainIds>> {
   const {
     sellAsset,
     buyAsset,
     sellAmount,
-    buyAmount,
     slippage,
     sellAssetAccountId,
     buyAssetAccountId,
     wallet
   } = input
-
-  if ((buyAmount && sellAmount) || (!buyAmount && !sellAmount)) {
-    throw new SwapError(
-      'ZrxSwapper:ZrxBuildTrade Exactly one of buyAmount or sellAmount is required'
-    )
-  }
-
-  if (!sellAssetAccountId || !buyAssetAccountId) {
-    throw new SwapError(
-      'ZrxSwapper:ZrxBuildTrade Both sellAssetAccountId and buyAssetAccountId are required'
-    )
-  }
-
-  const buyToken = buyAsset.tokenId || buyAsset.symbol || buyAsset.network
-  const sellToken = sellAsset.tokenId || sellAsset.symbol || sellAsset.network
-  if (!buyToken) {
-    throw new SwapError(
-      'ZrxSwapper:ZrxBuildTrade One of buyAssetContract or buyAssetSymbol or buyAssetNetwork are required'
-    )
-  }
-  if (!sellToken) {
-    throw new SwapError(
-      'ZrxSwapper:ZrxBuildTrade One of sellAssetContract or sellAssetSymbol or sellAssetNetwork are required'
-    )
-  }
-
-  if (buyAsset.chain !== ChainTypes.Ethereum) {
-    throw new SwapError(
-      `ZrxSwapper:ZrxBuildTrade buyAsset must be on chain [${ChainTypes.Ethereum}]`
-    )
-  }
-
-  const adapter = adapterManager.byChain(buyAsset.chain)
-  const bip44Params = adapter.buildBIP44Params({ accountNumber: Number(buyAssetAccountId) })
-  const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
-
-  if (bnOrZero(slippage).gt(MAX_SLIPPAGE)) {
-    throw new SwapError(
-      `ZrxSwapper:ZrxBuildTrade slippage value of ${slippage} is greater than max slippage value of ${MAX_SLIPPAGE}`
-    )
-  }
-
-  const slippagePercentage = slippage ? bnOrZero(slippage).div(100).toString() : DEFAULT_SLIPPAGE
-
   try {
+    const buyToken = buyAsset.tokenId || buyAsset.symbol
+    const sellToken = sellAsset.tokenId || sellAsset.symbol
+
+    if (buyAsset.chainId !== 'eip155:1') {
+      throw new SwapError('[ZrxBuildTrade] - buyAsset must be on chainId eip155:1', {
+        code: SwapErrorTypes.VALIDATION_FAILED,
+        details: { chainId: sellAsset.chainId }
+      })
+    }
+
+    const adapter = await adapterManager.byChainId(buyAsset.chainId)
+    const bip44Params = adapter.buildBIP44Params({ accountNumber: Number(buyAssetAccountId) })
+    const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
+
+    const slippagePercentage = slippage ? bnOrZero(slippage).div(100).toString() : DEFAULT_SLIPPAGE
+
     /**
      * /swap/v1/quote
      * params: {
      *   sellToken: contract address (or symbol) of token to sell
      *   buyToken: contractAddress (or symbol) of token to buy
      *   sellAmount?: integer string value of the smallest increment of the sell token
-     *   buyAmount?: integer string value of the smallest incremtent of the buy token
      * }
      */
 
@@ -109,7 +78,6 @@ export async function zrxBuildTrade(
           buyToken,
           sellToken,
           sellAmount: normalizeAmount(sellAmount?.toString()),
-          buyAmount: normalizeAmount(buyAmount?.toString()),
           takerAddress: receiveAddress,
           slippagePercentage,
           skipValidation: false,
@@ -122,7 +90,7 @@ export async function zrxBuildTrade(
 
     const estimatedGas = bnOrZero(data.gas || 0)
 
-    const trade: Trade<ChainTypes.Ethereum> = {
+    const trade: Trade<'eip155:1'> = {
       sellAsset,
       buyAsset,
       success: true,
@@ -165,27 +133,9 @@ export async function zrxBuildTrade(
     }
     return trade
   } catch (e) {
-    // eslint-disable-next-line no-console
-    const statusReason =
-      e?.response?.data?.validationErrors?.[0]?.reason ||
-      e?.response?.data?.reason ||
-      'Unknown Error'
-    // This hackyness will go away when we correctly handle errors
-    return {
-      sellAsset,
-      buyAsset,
-      success: false,
-      statusReason,
-      sellAmount: '0',
-      buyAmount: '0',
-      depositAddress: '',
-      allowanceContract: '',
-      receiveAddress: '',
-      sellAssetAccountId,
-      txData: '',
-      rate: '0',
-      feeData: { fee: '0', chainSpecific: {} },
-      sources: []
-    }
+    if (e instanceof SwapError) throw e
+    throw new SwapError('[ZrxBuildTrade]', {
+      code: SwapErrorTypes.BUILD_TRADE_FAILED
+    })
   }
 }

@@ -1,4 +1,4 @@
-import { AssetNamespace, AssetReference, CAIP19, fromCAIP2, toCAIP19 } from '@shapeshiftoss/caip'
+import { ASSET_REFERENCE, AssetId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, OsmosisSignTx, supportsOsmosis } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 
@@ -6,13 +6,14 @@ import { ChainAdapter as IChainAdapter } from '../../api'
 import { ErrorHandler } from '../../error/ErrorHandler'
 import { toPath } from '../../utils'
 import { ChainAdapterArgs, CosmosSdkBaseAdapter } from '../CosmosSdkBaseAdapter'
+
 export class ChainAdapter
   extends CosmosSdkBaseAdapter<ChainTypes.Osmosis>
   implements IChainAdapter<ChainTypes.Osmosis>
 {
   protected readonly supportedChainIds = ['cosmos:osmosis-1', 'cosmos:osmo-testnet-1']
   protected readonly chainId = this.supportedChainIds[0]
-  protected readonly assetId: CAIP19
+  protected readonly assetId: AssetId
 
   public static readonly defaultBIP44Params: BIP44Params = {
     purpose: 44,
@@ -23,18 +24,22 @@ export class ChainAdapter
   constructor(args: ChainAdapterArgs) {
     super(args)
 
-    const { chain, network } = fromCAIP2(this.chainId)
+    const { chain, network } = fromChainId(this.chainId)
 
-    this.assetId = toCAIP19({
+    this.assetId = toAssetId({
       chain,
       network,
-      assetNamespace: AssetNamespace.Slip44,
-      assetReference: AssetReference.Osmosis
+      assetNamespace: 'slip44',
+      assetReference: ASSET_REFERENCE.Osmosis
     })
   }
 
   getType(): ChainTypes.Osmosis {
     return ChainTypes.Osmosis
+  }
+
+  getFeeAssetId(): AssetId {
+    return 'cosmos:osmosis-1/slip44:118'
   }
 
   async getAddress(input: chainAdapters.GetAddressInput): Promise<string> {

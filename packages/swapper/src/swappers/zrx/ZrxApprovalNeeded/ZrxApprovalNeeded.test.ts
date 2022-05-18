@@ -1,5 +1,4 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { ChainTypes } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import { APPROVAL_GAS_LIMIT } from '../utils/constants'
@@ -36,11 +35,11 @@ describe('ZrxApprovalNeeded', () => {
     ethGetAddress: jest.fn(() => Promise.resolve(walletAddress))
   } as unknown as HDWallet
 
-  const { quoteInput, sellAsset } = setupQuote()
+  const { tradeQuote, sellAsset } = setupQuote()
 
-  it('returns false if sellAsset symbol is ETH', async () => {
+  it('returns false if sellAsset assetId is ETH', async () => {
     const input = {
-      quote: { ...quoteInput, sellAsset: { ...sellAsset, symbol: 'ETH' } },
+      quote: { ...tradeQuote, sellAsset: { ...sellAsset, assetId: 'eip155:1/slip44:60' } },
       wallet
     }
 
@@ -49,13 +48,11 @@ describe('ZrxApprovalNeeded', () => {
 
   it('throws an error if sellAsset chain is not ETH', async () => {
     const input = {
-      quote: { ...quoteInput, sellAsset: { ...sellAsset, chain: ChainTypes.Bitcoin } },
+      quote: { ...tradeQuote, sellAsset: { ...sellAsset, chainId: '' } },
       wallet
     }
 
-    await expect(ZrxApprovalNeeded(args, input)).rejects.toThrow(
-      'ZrxSwapper:ZrxApprovalNeeded only Ethereum chain type is supported'
-    )
+    await expect(ZrxApprovalNeeded(args, input)).rejects.toThrow('[ZrxApprovalNeeded]')
   })
 
   it('returns false if allowanceOnChain is greater than quote.sellAmount', async () => {
@@ -63,7 +60,7 @@ describe('ZrxApprovalNeeded', () => {
     const data = { allowanceTarget: '10' }
     const input = {
       quote: {
-        ...quoteInput,
+        ...tradeQuote,
         sellAmount: '10',
         feeData: { fee: '0', chainSpecific: { gasPrice: '1000' } }
       },
@@ -90,7 +87,7 @@ describe('ZrxApprovalNeeded', () => {
     const data = { allowanceTarget: '10' }
     const input = {
       quote: {
-        ...quoteInput,
+        ...tradeQuote,
         sellAmount: '10',
         feeData: { fee: '0', chainSpecific: { gasPrice: '1000' } }
       },

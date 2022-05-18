@@ -15,13 +15,11 @@ jest.mock('../utils/helpers/helpers', () => ({
 
 describe('getZrxMinMax', () => {
   it('returns minimum and maximum', async () => {
-    const minMax = await getZrxMinMax({ sellAsset: FOX, buyAsset: WETH })
+    const minMax = await getZrxMinMax(FOX, WETH)
     expect(minMax.minimum).toBe('1')
     expect(minMax.maximum).toBe(MAX_ZRX_TRADE)
   })
   it('fails on non eth asset', async () => {
-    await expect(getZrxMinMax({ sellAsset: BTC, buyAsset: WETH })).rejects.toThrow(
-      'ZrxError:getZrxMinMax - must be eth assets'
-    )
+    await expect(getZrxMinMax(BTC, WETH)).rejects.toThrow('[getZrxMinMax]')
   })
 })

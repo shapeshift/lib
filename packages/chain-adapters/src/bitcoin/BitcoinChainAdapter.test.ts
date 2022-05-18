@@ -159,11 +159,9 @@ describe('BitcoinChainAdapter', () => {
       const chainId = adapter.getChainId()
       expect(chainId).toEqual('bip122:000000000933ea01ad0ee984209779ba')
     })
-    it('should return chainAdapter with Bitcoin caip19 / assetId', () => {
+    it('should return chainAdapter with Bitcoin assetId', () => {
       const adapter = new bitcoin.ChainAdapter(args)
       const assetId = adapter.getAssetId()
-      const caip19 = adapter.getCaip19()
-      expect(assetId).toEqual(caip19)
       expect(assetId).toEqual(VALID_ASSET_ID)
     })
     it('should throw if called with invalid chainId', () => {
@@ -195,7 +193,6 @@ describe('BitcoinChainAdapter', () => {
   describe('getAccount', () => {
     it('should return account info for a specified address', async () => {
       args.providers.http = {
-        getInfo: jest.fn().mockResolvedValue({ data: { network: 'mainnet' } }),
         getAccount: jest.fn().mockResolvedValue({
           data: {
             pubkey: '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx',
@@ -213,8 +210,8 @@ describe('BitcoinChainAdapter', () => {
         pubkey: '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx',
         chain: ChainTypes.Bitcoin,
         balance: '150',
-        caip2: 'bip122:000000000019d6689c085ae165831e93',
-        caip19: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
+        chainId: 'bip122:000000000019d6689c085ae165831e93',
+        assetId: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
         chainSpecific: {
           addresses: [],
           nextChangeAddressIndex: 0,
@@ -228,7 +225,6 @@ describe('BitcoinChainAdapter', () => {
 
     it('should throw for an unspecified address', async () => {
       args.providers.http = {
-        getInfo: jest.fn().mockResolvedValue({ data: { network: 'mainnet' } }),
         getAccount: jest.fn<any, any>().mockResolvedValue({
           pubkey: '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx',
           balance: '0'
@@ -289,7 +285,6 @@ describe('BitcoinChainAdapter', () => {
       const wallet: any = await getWallet()
 
       args.providers.http = {
-        getInfo: jest.fn().mockResolvedValue({ data: { network: 'mainnet' } }),
         getUtxos: jest.fn<any, any>().mockResolvedValue(getUtxosMockResponse),
         getTransaction: jest.fn<any, any>().mockResolvedValue(getTransactionMockResponse),
         getAccount: jest.fn().mockResolvedValue(getAccountMockResponse),
@@ -357,7 +352,6 @@ describe('BitcoinChainAdapter', () => {
       const wallet: any = await getWallet()
 
       args.providers.http = {
-        getInfo: jest.fn().mockResolvedValue({ data: { network: 'mainnet' } }),
         getUtxos: jest.fn<any, any>().mockResolvedValue(getUtxosMockResponse),
         getTransaction: jest.fn<any, any>().mockResolvedValue(getTransactionMockResponse),
         getAccount: jest.fn().mockResolvedValue(getAccountMockResponse),
