@@ -167,6 +167,7 @@ export class Parser implements SubParser {
 
   async parse(tx: BlockbookTx): Promise<TxSpecific | undefined> {
     if (txInteractsWithContract(tx, UNI_V2_ROUTER_CONTRACT)) return this.parseUniV2(tx)
+    // TODO: parse any transaction that has input data that is able to be decoded using the `stakingRewardsInterface`
     if (txInteractsWithContract(tx, UNI_V2_FOX_STAKING_REWARDS_V3))
       return this.parseStakingRewards(tx)
     return
