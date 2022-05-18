@@ -15,7 +15,7 @@ import { ExchangeRateHostHistoryData, ExchangeRateHostRate } from './exchange-ra
 const axios = rateLimitedAxios(RATE_LIMIT_THRESHOLDS_PER_MINUTE.DEFAULT)
 const baseCurrency = 'USD'
 
-export const makeUrls = (
+export const makeExchangeRateRequestUrls = (
   start: Dayjs,
   end: Dayjs,
   symbol: SupportedFiatCurrencies,
@@ -31,7 +31,7 @@ export const makeUrls = (
     .fill(null)
     .map((_, i) => {
       const urlStart = start.add(i * maxDaysPerRequest, 'day')
-      const maybeEnd = urlStart.add(maxDaysPerRequest, 'day')
+      const maybeEnd = urlStart.add(maxDaysPerRequest - 1, 'day')
       const urlEnd = maybeEnd.isAfter(end) ? end : maybeEnd
       return `${baseUrl}/timeseries?base=${baseCurrency}&symbols=${symbol}&start_date=${urlStart.format(
         'YYYY-MM-DD'
@@ -89,7 +89,7 @@ export class ExchangeRateHostService implements FiatMarketService {
     }
 
     try {
-      const urls: string[] = makeUrls(start, end, symbol, this.baseUrl)
+      const urls: string[] = makeExchangeRateRequestUrls(start, end, symbol, this.baseUrl)
 
       const results = await Promise.all(
         urls.map((url) => axios.get<ExchangeRateHostHistoryData>(url))

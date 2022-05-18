@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 
 import { FiatMarketDataArgs, FiatPriceHistoryArgs } from '../fiat-market-service-types'
 import { mockERHFindByFiatSymbol, mockERHPriceHistoryData } from './erhMockData'
-import { ExchangeRateHostService, makeUrls } from './exchange-rates-host'
+import { ExchangeRateHostService, makeExchangeRateRequestUrls } from './exchange-rates-host'
 import { ExchangeRateHostRate } from './exchange-rates-host-types'
 
 jest.mock('axios')
@@ -76,13 +76,13 @@ describe('ExchangeRateHostService', () => {
   })
 })
 
-describe('makeUrls', () => {
+describe('makeExchangeRateRequestUrls', () => {
   it('should make one url', () => {
     const start = dayjs('2020-01-01')
     const end = dayjs('2020-01-02')
     const symbol = 'EUR'
     const baseUrl = 'https://api.exchangeratesapi.io'
-    expect(makeUrls(start, end, symbol, baseUrl)).toEqual([
+    expect(makeExchangeRateRequestUrls(start, end, symbol, baseUrl)).toEqual([
       'https://api.exchangeratesapi.io/timeseries?base=USD&symbols=EUR&start_date=2020-01-01&end_date=2020-01-02'
     ])
   })
@@ -92,11 +92,11 @@ describe('makeUrls', () => {
     const end = dayjs('2022-05-17')
     const symbol = 'EUR'
     const baseUrl = 'https://api.exchangeratesapi.io'
-    expect(makeUrls(start, end, symbol, baseUrl)).toEqual([
-      'https://api.exchangeratesapi.io/timeseries?base=USD&symbols=EUR&start_date=2017-05-20&end_date=2018-05-21',
-      'https://api.exchangeratesapi.io/timeseries?base=USD&symbols=EUR&start_date=2018-05-21&end_date=2019-05-22',
-      'https://api.exchangeratesapi.io/timeseries?base=USD&symbols=EUR&start_date=2019-05-22&end_date=2020-05-22',
-      'https://api.exchangeratesapi.io/timeseries?base=USD&symbols=EUR&start_date=2020-05-22&end_date=2021-05-23',
+    expect(makeExchangeRateRequestUrls(start, end, symbol, baseUrl)).toEqual([
+      'https://api.exchangeratesapi.io/timeseries?base=USD&symbols=EUR&start_date=2017-05-20&end_date=2018-05-20',
+      'https://api.exchangeratesapi.io/timeseries?base=USD&symbols=EUR&start_date=2018-05-21&end_date=2019-05-21',
+      'https://api.exchangeratesapi.io/timeseries?base=USD&symbols=EUR&start_date=2019-05-22&end_date=2020-05-21',
+      'https://api.exchangeratesapi.io/timeseries?base=USD&symbols=EUR&start_date=2020-05-22&end_date=2021-05-22',
       'https://api.exchangeratesapi.io/timeseries?base=USD&symbols=EUR&start_date=2021-05-23&end_date=2022-05-17'
     ])
   })
