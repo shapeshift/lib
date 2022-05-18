@@ -135,6 +135,32 @@ describe('coingecko market service', () => {
       expect(btcKey).toEqual(btcAssetId)
       expect(ethKey).toEqual(ethAssetId)
     })
+
+    it('extract correct values for each asset', async () => {
+      const btcResult = {
+        price: '54810',
+        marketCap: '1032270421549',
+        changePercent24Hr: -0.33384,
+        volume: '38267223547',
+        supply: '18840237',
+        maxSupply: '21000000'
+      }
+
+      const ethResult = {
+        price: '3459.72',
+        marketCap: '407989270877',
+        changePercent24Hr: -3.74881,
+        volume: '17486135198',
+        supply: '117874980.3115'
+      }
+
+      mockedAxios.get.mockResolvedValueOnce({ data: [btc] }).mockResolvedValue({ data: [eth] })
+      const result = await coinGeckoMarketService.findAll()
+      const btcAssetId = adapters.coingeckoToAssetId('bitcoin')
+      const ethAssetId = adapters.coingeckoToAssetId('ethereum')
+      expect(result[btcAssetId!]).toEqual(btcResult)
+      expect(result[ethAssetId!]).toEqual(ethResult)
+    })
   })
 
   describe('findByAssetId', () => {
@@ -147,7 +173,9 @@ describe('coingecko market service', () => {
         price: 3611.19,
         marketCap: 424970837706,
         changePercent24Hr: 2.19682,
-        volume: 21999495657
+        volume: 21999495657,
+        supply: null,
+        maxSupply: null
       }
       const market_data = {
         current_price: {
@@ -159,7 +187,36 @@ describe('coingecko market service', () => {
         price_change_percentage_24h: result.changePercent24Hr,
         total_volume: {
           usd: result.volume
-        }
+        },
+        circulating_supply: null,
+        max_supply: null
+      }
+      mockedAxios.get.mockResolvedValue({ data: { market_data } })
+      expect(await coinGeckoMarketService.findByAssetId(args)).toEqual(result)
+    })
+
+    it('should return market data for BTC', async () => {
+      const result = {
+        price: 54810,
+        marketCap: 1032270421549,
+        changePercent24Hr: -0.33384,
+        volume: 38267223547,
+        supply: 18840237,
+        maxSupply: 21000000
+      }
+      const market_data = {
+        current_price: {
+          usd: result.price
+        },
+        market_cap: {
+          usd: result.marketCap
+        },
+        price_change_percentage_24h: result.changePercent24Hr,
+        total_volume: {
+          usd: result.volume
+        },
+        circulating_supply: result.supply,
+        max_supply: result.maxSupply
       }
       mockedAxios.get.mockResolvedValue({ data: { market_data } })
       expect(await coinGeckoMarketService.findByAssetId(args)).toEqual(result)
