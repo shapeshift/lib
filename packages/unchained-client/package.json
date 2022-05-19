@@ -14,9 +14,9 @@
     "build:local": "yarn clean && yarn generate:local && tsc -p tsconfig.build.json",
     "dev": "tsc --watch",
     "clean": "rm -rf dist src/generated tsconfig.build.tsbuildinfo",
-    "generate": "./generator/generate.sh -e dev",
-    "generate:public": "./generator/generate.sh -e public",
-    "generate:local": "./generator/generate.sh -e local",
+    "generate": "cp generator/openapitools-dev.json openapitools.json && openapi-generator-cli generate && rm openapitools.json",
+    "generate:prod": "cp generator/openapitools-prod.json openapitools.json && openapi-generator-cli generate && rm openapitools.json",
+    "generate:local": "cp generator/openapitools-local.json openapitools.json && openapi-generator-cli generate && rm openapitools.json",
     "type-check": "tsc --project ./tsconfig.build.json --noEmit"
   },
   "dependencies": {
@@ -33,6 +33,7 @@
     "@shapeshiftoss/types": "^4.0.0"
   },
   "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.5.1",
     "@shapeshiftoss/caip": "^4.0.0",
     "@shapeshiftoss/common-api": "^6.11.0",
     "@shapeshiftoss/logger": "^1.1.2",
