@@ -105,6 +105,10 @@ export class CoinGeckoMarketService implements MarketService {
 
       const currency = 'usd'
       const marketData = data?.market_data
+      /* max_supply may be null on coingecko while available on other sources (coincap)
+      hence choosing to take value from total_supply if existing
+      Also a lot of time when max_supply is null, total_supply is the maximum supply on coingecko
+      We can reassess in the future the degree of precision we want on that field */
       return {
         price: marketData?.current_price?.[currency],
         marketCap: marketData?.market_cap?.[currency],
