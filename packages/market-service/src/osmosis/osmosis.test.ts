@@ -1,5 +1,5 @@
 import { adapters } from '@shapeshiftoss/caip'
-import { HistoryTimeframe } from '@shapeshiftoss/types'
+import { HistoryTimeframe, MarketData } from '@shapeshiftoss/types'
 import axios from 'axios'
 
 import { OsmosisMarketService } from './osmosis'
@@ -43,7 +43,7 @@ describe('osmosis market service', () => {
         assetId:
           'cosmos:osmosis-1/ibc:0954E1C28EB7AF5B72D24F3BC2B47BBB2FDF91BDDFD57B74B99E133AED40972A'
       }
-      const expectedResult = {
+      const expectedResult: MarketData = {
         price: '4.5456667708',
         marketCap: '17581752.09948758',
         volume: '3289855.395915219',
@@ -59,7 +59,7 @@ describe('osmosis market service', () => {
 
     it('should return market data for Ion', async () => {
       const args = { assetId: 'cosmos:osmosis-1/native:uion' }
-      const expectedResult = {
+      const expectedResult: MarketData = {
         price: '7110.2708806483',
         marketCap: '8737040.33551496',
         volume: '353672.5116333088',
