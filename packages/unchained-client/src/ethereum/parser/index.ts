@@ -58,7 +58,7 @@ export class TransactionParser {
     this.parsers = [this.zrx, this.thor, this.uniV2, this.yearn, this.foxy, this.weth]
   }
 
-  async parse(tx: EthereumTx, address: string, internalTxs?: Array<InternalTx>): Promise<ParsedTx> {
+  async parse(tx: EthereumTx, address: string): Promise<ParsedTx> {
     // We expect only one Parser to return a result. If multiple do, we take the first and early exit.
     const contractParserResult = await findAsyncSequential<SubParser, TxSpecific>(
       this.parsers,
@@ -79,7 +79,7 @@ export class TransactionParser {
       data: contractParserResult?.data
     }
 
-    return this.getParsedTxWithTransfers(tx, parsedTx, address, internalTxs)
+    return this.getParsedTxWithTransfers(tx, parsedTx, address)
   }
 
   private static getStatus(tx: EthereumTx): Status {
@@ -92,12 +92,7 @@ export class TransactionParser {
     return Status.Unknown
   }
 
-  private getParsedTxWithTransfers(
-    tx: EthereumTx,
-    parsedTx: ParsedTx,
-    address: string,
-    internalTxs?: Array<InternalTx>
-  ) {
+  private getParsedTxWithTransfers(tx: EthereumTx, parsedTx: ParsedTx, address: string) {
     if (address === tx.from) {
       // send amount
       const sendValue = new BigNumber(tx.value)
@@ -179,7 +174,7 @@ export class TransactionParser {
       }
     })
 
-    internalTxs?.forEach((internalTx) => {
+    tx.internalTxs?.forEach((internalTx) => {
       const transferArgs = [
         toAssetId({
           ...fromChainId(this.chainId),
