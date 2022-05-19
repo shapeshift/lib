@@ -3,6 +3,7 @@
   "spaces": 2,
   "generator-cli": {
     "version": "5.4.0",
+    "storageDir": "~/.openapitools",
     "generators": {
       "ethereum": {
         "inputSpec": "https://dev-api.ethereum.shapeshift.com/swagger.json",
