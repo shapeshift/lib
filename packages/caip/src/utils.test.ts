@@ -79,12 +79,12 @@ describe('getChainReferenceFromChainId', () => {
 })
 
 describe('chainIdToFeeAssetId', () => {
-  it('returns a chain fee assetId for a given ETH chainId', () => {
+  it('returns a chain fee assetId for a given Ethereum chainId', () => {
     const result = chainIdToFeeAssetId(ethChainId)
     expect(result).toEqual(ethAssetId)
   })
 
-  it('returns chain fee assetId (ATOM) for a given Cosmos assetId', () => {
+  it('returns chain fee assetId (ATOM) for a given Cosmos chainId', () => {
     const result = chainIdToFeeAssetId(cosmosChainId)
     expect(result).toEqual(cosmosAssetId)
   })
