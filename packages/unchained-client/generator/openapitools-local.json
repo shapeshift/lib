@@ -6,7 +6,7 @@
     "storageDir": "~/.openapitools",
     "generators": {
       "ethereum": {
-        "inputSpec": "https://api.ethereum.localhost/swagger.json",
+        "inputSpec": "http://api.ethereum.localhost/swagger.json",
         "generatorName": "typescript-axios",
         "output": "#{cwd}/src/generated/ethereum",
         "reservedWordsMappings": { "in": "in" },
@@ -16,7 +16,7 @@
         }
       },
       "bitcoin": {
-        "inputSpec": "https://api.bitcoin.localhost/swagger.json",
+        "inputSpec": "http://api.bitcoin.localhost/swagger.json",
         "generatorName": "typescript-axios",
         "output": "#{cwd}/src/generated/bitcoin",
         "reservedWordsMappings": { "in": "in" },
@@ -26,7 +26,7 @@
         }
       },
       "cosmos": {
-        "inputSpec": "https://api.cosmos.localhost/swagger",
+        "inputSpec": "http://api.cosmos.localhost/swagger",
         "generatorName": "typescript-axios",
         "output": "#{cwd}/src/generated/cosmos",
         "reservedWordsMappings": { "in": "in" },
