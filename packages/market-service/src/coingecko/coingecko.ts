@@ -77,7 +77,9 @@ export class CoinGeckoMarketService implements MarketService {
               volume: curWithoutId.total_volume.toString(),
               changePercent24Hr: curWithoutId.price_change_percentage_24h,
               supply: curWithoutId.circulating_supply.toString(),
-              maxSupply: curWithoutId.max_supply?.toString()
+              maxSupply: curWithoutId.max_supply
+                ? curWithoutId.max_supply.toString()
+                : curWithoutId.total_supply?.toString()
             }
             return acc
           } catch {
@@ -110,6 +112,8 @@ export class CoinGeckoMarketService implements MarketService {
         volume: marketData?.total_volume?.[currency],
         supply: marketData?.circulating_supply,
         maxSupply: marketData?.max_supply
+          ? marketData?.max_supply
+          : marketData?.total_supply?.toString()
       }
     } catch (e) {
       console.warn(e)
