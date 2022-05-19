@@ -103,7 +103,7 @@ describe('ExchangeRateHostService', () => {
       )
     })
 
-    it('should have different sensible dates for week timeframe', async () => {
+    it('should have different and sensible dates for week timeframe', async () => {
       mockedAxios.get.mockResolvedValue({ data })
 
       await exchangeRateHostService.findPriceHistoryByFiatSymbol({
