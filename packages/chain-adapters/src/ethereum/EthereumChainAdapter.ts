@@ -402,10 +402,9 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     onMessage: (msg: chainAdapters.Transaction<ChainTypes.Ethereum>) => void,
     onError: (err: chainAdapters.SubscribeError) => void
   ): Promise<void> {
-    const { bip44Params = ChainAdapter.defaultBIP44Params } = input
+    const { wallet, bip44Params = ChainAdapter.defaultBIP44Params } = input
 
-    //const address = await this.getAddress({ wallet, bip44Params })
-    const address = '0xc098b2a3aa256d2140208c3de6543aaef5cd3a94'
+    const address = await this.getAddress({ wallet, bip44Params })
     const subscriptionId = toRootDerivationPath(bip44Params)
 
     await this.providers.ws.subscribeTxs(

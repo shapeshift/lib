@@ -39,6 +39,11 @@ export default {
     ],
     internalTxs: [
       {
+        from: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+        to: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
+        value: '541566754246167133'
+      },
+      {
         from: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
         to: '0x5bb96c35a68Cba037D0F261C67477416db137F03',
         value: '541566754246167133'

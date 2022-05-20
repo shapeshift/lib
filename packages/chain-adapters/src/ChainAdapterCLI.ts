@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { BIP44Params, ChainTypes, UtxoAccountType } from '@shapeshiftoss/types'
 import dotenv from 'dotenv'
@@ -24,8 +25,8 @@ const unchainedUrls = {
     wsUrl: 'wss://dev-api.bitcoin.shapeshift.com'
   },
   [ChainTypes.Ethereum]: {
-    httpUrl: 'http://api.ethereum.localhost',
-    wsUrl: 'ws://api.ethereum.localhost'
+    httpUrl: 'https://dev-api.ethereum.shapeshift.com',
+    wsUrl: 'wss://dev-api.ethereum.shapeshift.com'
   },
   [ChainTypes.Cosmos]: {
     httpUrl: 'https://dev-api.cosmos.shapeshift.com',
@@ -33,8 +34,7 @@ const unchainedUrls = {
   }
 }
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// @ts-ignore
+// @ts-ignore:nextLine
 const testBitcoin = async (
   chainAdapterManager: ChainAdapterManager,
   wallet: NativeHDWallet,
@@ -86,8 +86,7 @@ const testBitcoin = async (
   }
 }
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// @ts-ignore
+// @ts-ignore:nextLine
 const testEthereum = async (
   chainAdapterManager: ChainAdapterManager,
   wallet: NativeHDWallet,
@@ -162,8 +161,7 @@ const testEthereum = async (
   }
 }
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// @ts-ignore
+// @ts-ignore:nextLine
 const testCosmos = async (
   chainAdapterManager: ChainAdapterManager,
   wallet: NativeHDWallet,
@@ -244,9 +242,9 @@ const main = async () => {
 
     const wallet = await getWallet()
 
-    //await testBitcoin(chainAdapterManager, wallet)
+    await testBitcoin(chainAdapterManager, wallet)
     await testEthereum(chainAdapterManager, wallet)
-    //await testCosmos(chainAdapterManager, wallet)
+    await testCosmos(chainAdapterManager, wallet)
   } catch (err) {
     console.error(err)
   }

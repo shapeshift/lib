@@ -70,6 +70,11 @@ const uniRemoveLiquidity = {
   ],
   internalTxs: [
     {
+      from: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+      to: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+      value: '6761476182340434'
+    },
+    {
       from: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
       to: '0x6bF198c2B5c8E48Af4e876bc2173175b89b1DA0C',
       value: '6761476182340434'
