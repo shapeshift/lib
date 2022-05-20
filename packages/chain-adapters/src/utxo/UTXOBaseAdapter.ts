@@ -19,7 +19,7 @@ export type UTXOChainTypes = ChainTypes.Bitcoin // to be extended in the future 
 export interface ChainAdapterArgs {
   providers: {
     http: unchained.bitcoin.V1Api
-    ws: unchained.ws.Client<unchained.Tx>
+    ws: unchained.ws.Client<unchained.bitcoin.BitcoinTx>
   }
   coinName: string
   chainId?: ChainId
@@ -38,7 +38,7 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
   protected readonly supportedChainIds: ChainId[]
   protected readonly providers: {
     http: unchained.bitcoin.V1Api
-    ws: unchained.ws.Client<unchained.Tx>
+    ws: unchained.ws.Client<unchained.bitcoin.BitcoinTx>
   }
 
   protected constructor(args: ChainAdapterArgs) {

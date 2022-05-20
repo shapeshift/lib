@@ -45,21 +45,24 @@ export class ChainAdapter
     'bip122:000000000019d6689c085ae165831e93',
     'bip122:000000000933ea01ad0ee984209779ba'
   ]
-  chainId = this.supportedChainIds[0]
+
+  protected chainId = this.supportedChainIds[0]
+
+  private parser: unchained.bitcoin.TransactionParser
 
   constructor(args: ChainAdapterArgs) {
     super(args)
-    if (args.chainId && !this.supportedChainIds.includes(args.chainId))
+
+    if (args.chainId && !this.supportedChainIds.includes(args.chainId)) {
       throw new Error(`Bitcoin chainId ${args.chainId} not supported`)
+    }
+
     if (args.chainId) {
       this.chainId = args.chainId
-    } else {
-      this.chainId = this.supportedChainIds[0]
     }
+
     const { chain, network } = fromChainId(this.chainId)
-    if (chain !== ChainTypes.Bitcoin) {
-      throw new Error('chainId must be a bitcoin chain type')
-    }
+
     this.coinName = args.coinName
     this.assetId = toAssetId({
       chain,
@@ -67,6 +70,7 @@ export class ChainAdapter
       assetNamespace: 'slip44',
       assetReference: ASSET_REFERENCE.Bitcoin
     })
+    this.parser = new unchained.bitcoin.TransactionParser({ chainId: this.chainId })
   }
 
   getType(): ChainTypes.Bitcoin {
@@ -349,14 +353,8 @@ export class ChainAdapter
     await this.providers.ws.subscribeTxs(
       subscriptionId,
       { topic: 'txs', addresses },
-      ({ data: tx }) => {
-        const transfers = tx.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
-          assetId: transfer.assetId,
-          from: transfer.from,
-          to: transfer.to,
-          type: getType(transfer.type),
-          value: transfer.totalValue
-        }))
+      async (msg) => {
+        const tx = await this.parser.parse(msg.data, msg.address)
 
         onMessage({
           address: tx.address,
@@ -369,7 +367,13 @@ export class ChainAdapter
           fee: tx.fee,
           status: getStatus(tx.status),
           tradeDetails: tx.trade,
-          transfers,
+          transfers: tx.transfers.map((transfer) => ({
+            assetId: transfer.assetId,
+            from: transfer.from,
+            to: transfer.to,
+            type: getType(transfer.type),
+            value: transfer.totalValue
+          })),
           txid: tx.txid
         })
       },

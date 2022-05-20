@@ -39,7 +39,7 @@ export class ChainAdapterManager {
             const http = new unchained.bitcoin.V1Api(
               new unchained.bitcoin.Configuration({ basePath: httpUrl })
             )
-            const ws = new unchained.ws.Client<unchained.Tx>(wsUrl)
+            const ws = new unchained.ws.Client<unchained.bitcoin.BitcoinTx>(wsUrl)
             return this.addChain(
               type,
               () => new bitcoin.ChainAdapter({ providers: { http, ws }, coinName: 'Bitcoin' })
