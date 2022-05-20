@@ -1,14 +1,15 @@
 import { AssetService } from '@shapeshiftoss/asset-service'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { Asset, ChainTypes, NetworkTypes, SwapperType } from '@shapeshiftoss/types'
+import { Asset, ChainTypes, SwapperType } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 import dotenv from 'dotenv'
 import readline from 'readline-sync'
-import Web3 from 'web3'
+// import Web3 from 'web3'
 
 import { SwapperManager } from './manager/SwapperManager'
-import { ZrxSwapper } from './swappers/zrx/ZrxSwapper'
+import { OsmoSwapper } from './swappers/osmosis/OsmoSwapper'
+// import { ZrxSwapper } from './swappers/zrx/ZrxSwapper'
 
 dotenv.config()
 
@@ -60,7 +61,13 @@ const main = async (): Promise<void> => {
 
   const assetService = new AssetService('')
   await assetService.initialize()
-  const assets = assetService.byNetwork(NetworkTypes.MAINNET)
+  const assets = assetService.byNetwork()
+  // console.info('assets: ', assets)
+  //
+  // const testOsmo = assets.filter(function (e) {
+  //   return e.symbol === 'OSMO'
+  // })
+  // console.info('testOsmo: ', testOsmo)
 
   if (!assets) {
     console.error('No assets found in asset service')
@@ -89,21 +96,37 @@ const main = async (): Promise<void> => {
   // Swapper Deps
   const wallet = await getWallet()
   const unchainedUrls = {
-    [ChainTypes.Ethereum]: {
-      httpUrl: UNCHAINED_HTTP_API,
-      wsUrl: UNCHAINED_WS_API
+    // [ChainTypes.Ethereum]: {
+    //   httpUrl: UNCHAINED_HTTP_API,
+    //   wsUrl: UNCHAINED_WS_API
+    // },
+    [ChainTypes.Cosmos]: {
+      httpUrl: 'http://api.cosmos.localhost',
+      wsUrl: 'ws://api.cosmos.localhost'
+    },
+    [ChainTypes.Osmosis]: {
+      httpUrl: 'http://api.osmosis.localhost',
+      wsUrl: 'ws://api.osmosis.localhost'
+    },
+    [ChainTypes.Bitcoin]: {
+      httpUrl: 'https://dev-api.bitcoin.shapeshift.com',
+      wsUrl: 'wss://dev-api.bitcoin.shapeshift.com'
     }
   }
   const adapterManager = new ChainAdapterManager(unchainedUrls)
-  const web3Provider = new Web3.providers.HttpProvider(ETH_NODE_URL)
-  const web3 = new Web3(web3Provider)
+  // const web3Provider = new Web3.providers.HttpProvider(ETH_NODE_URL)
+  // const web3 = new Web3(web3Provider)
 
-  const zrxSwapperDeps = { wallet, adapterManager, web3 }
+  // const zrxSwapperDeps = { wallet, adapterManager, web3 }
+  const osmoSwapperDeps = { wallet, adapterManager }
 
   const manager = new SwapperManager()
-  const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
-  manager.addSwapper(SwapperType.Zrx, zrxSwapper)
-  const swapper = manager.getSwapper(SwapperType.Zrx)
+  // const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
+  // manager.addSwapper(SwapperType.Zrx, zrxSwapper)
+  // @ts-ignore
+  const osmoSwapper = new OsmoSwapper(osmoSwapperDeps)
+  manager.addSwapper(SwapperType.Osmosis, osmoSwapper)
+  const swapper = manager.getSwapper(SwapperType.Osmosis)
   const sellAmountBase = toBaseUnit(sellAmount, sellAsset.precision)
 
   let quote

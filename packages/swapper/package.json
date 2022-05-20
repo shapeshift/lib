@@ -18,9 +18,9 @@
     "clean": "rm -rf dist && rm -rf tsconfig.build.tsbuildinfo",
     "compile": "tsc -p tsconfig.build.json",
     "prepare": "yarn build",
-    "test": "jest test",
+    "test": "jest test src/swappers/osmosis/OsmoSwapper.test.ts",
     "type-check": "tsc --project ./tsconfig.build.json --noEmit",
-    "swapcli": "yarn build && node ./dist/swappercli.js"
+    "swapcli": "yarn build && node dist/swappercli.js ATOM OSMO 0.01"
   },
   "dependencies": {
     "axios": "^0.26.0",
