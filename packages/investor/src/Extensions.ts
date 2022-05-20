@@ -12,7 +12,7 @@ export type ApproveInput = {
 export interface ApprovalRequired {
   isApprovalRequired: true
   allowance: (address: string) => Promise<unknown>
-  approve: (input: ApproveInput) => Promise<unknown>
+  prepareApprove: (input: ApproveInput) => Promise<unknown>
 }
 
 export interface ClaimableReward {

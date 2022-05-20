@@ -1,5 +1,8 @@
 import type { ETHWallet } from '@shapeshiftoss/hdwallet-core'
 import type { BigNumber } from 'bignumber.js'
+import type { ChainAdapter } from '@shapeshiftoss/chain-adapters'
+import { ChainTypes } from '@shapeshiftoss/types'
+
 // @TODO: Add EventEmitter support? We may want to raise an 'updated' event
 // so React can listen and re-render on data change?
 // Maybe just take a callback?
@@ -26,9 +29,11 @@ export abstract class InvestorOpportunity<TxType, T = unknown> {
   } // TVL in terms of UnderlyingAsset
   // readonly supply: BigNumber // Position Asset - we may not need this
   readonly metadata: T
-  readonly dryRun: boolean = false
 
   prepareWithdrawal: (input: DepositWithdrawArgs) => Promise<TxType>
   prepareDeposit: (input: DepositWithdrawArgs) => Promise<TxType>
-  signAndBroadcast: (tx: TxType) => Promise<void>
+  /**
+   * @returns {string} TXID
+   */
+  signAndBroadcast: <T extends ChainTypes>(deps: { wallet: ETHWallet; chainAdapter: ChainAdapter<T> }, tx: TxType) => Promise<string>
 }

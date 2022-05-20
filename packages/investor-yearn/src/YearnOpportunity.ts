@@ -1,26 +1,21 @@
-import { JsonRpcProvider } from '@ethersproject/providers'
 import { adapters } from '@shapeshiftoss/caip'
 import type { ChainAdapter } from '@shapeshiftoss/chain-adapters/*'
-import { ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
-import { ApprovalRequired, Fee, InvestorOpportunity, WithdrawInput } from '@shapeshiftoss/investor'
+import { ETHSignTx, ETHWallet, bip32ToAddressNList } from '@shapeshiftoss/hdwallet-core'
+import { ApprovalRequired, InvestorOpportunity, Fee } from '@shapeshiftoss/investor'
 import { Logger } from '@shapeshiftoss/logger'
-import type { ChainTypes } from '@shapeshiftoss/types'
-import { type ChainId, type Vault, type VaultMetadata, FeesInterface,Yearn } from '@yfi/sdk'
+import { type ChainId, type Vault, type VaultMetadata, Yearn } from '@yfi/sdk'
 import type { BigNumber } from 'bignumber.js'
 import { DepositWithdrawArgs } from 'packages/investor/dist/InvestorOpportunity'
 import Web3 from 'web3'
-import { HttpProvider } from 'web3-core'
 import { Contract } from 'web3-eth-contract'
+import isNil from 'lodash/isNil'
+import omit from 'lodash/omit'
 
-import {
-  erc20Abi,
-  MAX_ALLOWANCE,
-  ssRouterAbi,
-  ssRouterContractAddress,
-  yv2VaultAbi
-} from './constants'
-import { buildTxToSign } from './utils'
+import { erc20Abi, MAX_ALLOWANCE, ssRouterContractAddress, yv2VaultAbi } from './constants'
+import { buildTxToSign, toPath } from './utils'
 import { bnOrZero } from './utils/bignumber'
+import { ChainTypes } from 'packages/types/dist'
+import { numberToHex } from 'web3-utils'
 
 type YearnOpportunityDeps = {
   contract: Contract
@@ -30,8 +25,19 @@ type YearnOpportunityDeps = {
   yearnSdk: Yearn<1>
 }
 
+type PreparedTransaction = Omit<ETHSignTx, 'addressNList'> & {
+  gasPrice: string
+  feePriority?: Fee
+}
+
+const feeMultipier: Record<Fee, number> = Object.freeze({
+  [Fee.High]: 1,
+  [Fee.Medium]: 0.8,
+  [Fee.Low]: 0.5
+})
+
 export class YearnOpportunity
-  implements InvestorOpportunity<ETHSignTx, VaultMetadata>, ApprovalRequired
+  implements InvestorOpportunity<PreparedTransaction, VaultMetadata>, ApprovalRequired
 {
   readonly #internals: {
     routerContract: Contract
@@ -47,7 +53,7 @@ export class YearnOpportunity
   public readonly isApprovalRequired: true
   public readonly metadata: VaultMetadata
   public readonly underlyingAsset: { assetId: string; balance: BigNumber }
-  public readonly positionAsset: { assetId: string; balance: BigNumber, price: BigNumber }
+  public readonly positionAsset: { assetId: string; balance: BigNumber; price: BigNumber }
   public readonly price: BigNumber
   public readonly supply: BigNumber
   public readonly tvl: {
@@ -86,37 +92,77 @@ export class YearnOpportunity
     }
   }
 
-  private async update() {
-    // re-fetch data and update state
-    const contract = new this.#internals.web3.eth.Contract(yv2VaultAbi, this.id)
-    const pricePerShare = await contract.methods.pricePerShare().call()
-    return bnOrZero(pricePerShare)
-    const totalSupply = await contract.methods.totalSupply().call()
-    return bnOrZero(totalSupply)
-    const positionBalance = await contract.methods.balanceOf(userAddress).call()
-    return bnOrZero(positionBalance)
+  // private async update() {
+  //   // re-fetch data and update state
+  //   const contract = new this.#internals.web3.eth.Contract(yv2VaultAbi, this.id)
+  //   const pricePerShare = await contract.methods.pricePerShare().call()
+  //   return bnOrZero(pricePerShare)
+  //   const totalSupply = await contract.methods.totalSupply().call()
+  //   return bnOrZero(totalSupply)
+  //   const positionBalance = await contract.methods.balanceOf(userAddress).call()
+  //   return bnOrZero(positionBalance)
+  // }
+
+  private checksumAddress(address: string): string {
+    return this.#internals.web3.utils.toChecksumAddress(address)
+  }
+
+  /**
+   * From the token contract address and vault address, we need to get the vault id. The router
+   * contract needs the vault id to know which vault it is dealing with when depositing, since it
+   * takes a token address and a vault id.
+   */
+  private async getVaultId({
+    tokenContractAddress,
+    vaultAddress
+  }: {
+    tokenContractAddress: string
+    vaultAddress: string
+  }): Promise<number> {
+    const numVaults = await this.#internals.routerContract.methods
+      .numVaults(this.checksumAddress(tokenContractAddress))
+      .call()
+    let id: number | null = null
+    for (let i = 0; i <= numVaults && isNil(id); i++) {
+      const result = await this.#internals.routerContract.methods
+        .vaults(this.checksumAddress(tokenContractAddress), i)
+        .call()
+      if (result === this.checksumAddress(vaultAddress)) id = i
+    }
+    if (isNil(id))
+      throw new Error(
+        `Could not find vault id for token: ${tokenContractAddress} vault: ${vaultAddress}`
+      )
+    return id
   }
 
   async signAndBroadcast(
-    { wallet, chainAdapter }: { wallet: ETHWallet; chainAdapter: ChainAdapter },
-    tx: PreparedTransaction
+    { wallet, chainAdapter }: { wallet: ETHWallet; chainAdapter: ChainAdapter<ChainTypes.Ethereum> },
+    preparedTx: PreparedTransaction
   ): Promise<string> {
+    if (!preparedTx.feePriority) throw new Error('Missing feePriority')
+
+    const path = toPath(chainAdapter.buildBIP44Params({ accountNumber: 0 }))
+    const addressNList = bip32ToAddressNList(path)
+    const gasPrice = numberToHex(bnOrZero(preparedTx.gasPrice).times(feeMultipier[preparedTx.feePriority]).toString())
+    const txToSign: ETHSignTx = { ...omit(preparedTx, ['feePriority', 'gasPrice']), addressNList, gasPrice }
+
     if (wallet.supportsOfflineSigning()) {
-      const signedTx = await chainAdapter.signTransaction({ tx, wallet })
+      const signedTx = await chainAdapter.signTransaction({ txToSign, wallet })
       if (this.#internals.dryRun) return signedTx
       return chainAdapter.broadcastTransaction(signedTx)
     } else if (wallet.supportsBroadcast() && chainAdapter.signAndBroadcastTransaction) {
       if (this.#internals.dryRun) {
         throw new Error(`Cannot perform a dry run with wallet of type ${wallet.getVendor()}`)
       }
-      return chainAdapter.signAndBroadcastTransaction({ tx, wallet })
+      return chainAdapter.signAndBroadcastTransaction({ txToSign, wallet })
     } else {
       throw new Error('Invalid HDWallet configuration ')
     }
   }
 
   async prepareDeposit(input: DepositWithdrawArgs): Promise<PreparedTransaction> {
-    const { address, amount, chainAdapter } = input
+    const { address, amount } = input
 
     // In order to properly earn affiliate revenue, we must deposit to the vault through the SS
     // router contract. This is not necessary for withdraws. We can withdraw directly from the vault
@@ -124,7 +170,7 @@ export class YearnOpportunity
     const tokenChecksum = this.#internals.web3.utils.toChecksumAddress(
       this.#internals.vault.tokenId
     )
-    const userChecksum = this.#internals.web3.utils.toChecksumAddress(userAddress)
+    const userChecksum = this.#internals.web3.utils.toChecksumAddress(address)
     // TODO(theobold): implment getVaultId function
     const vaultIndex = await this.getVaultId({ tokenContractAddress, vaultAddress })
     const preWithdraw = await this.#internals.routerContract.methods.deposit(
@@ -133,22 +179,17 @@ export class YearnOpportunity
       amount.toString(),
       vaultIndex
     )
-    const data = await preWithdraw.encodeABI({ from: userAddress })
-    const estimatedGas = await preWithdraw.estimateGas({ from: userAddress })
+    const data = await preWithdraw.encodeABI({ from: address })
+    const estimatedGas = await preWithdraw.estimateGas({ from: address })
 
     const nonce = await this.#internals.web3.eth.getTransactionCount(address)
     const gasPrice = await this.#internals.web3.eth.getGasPrice()
 
     return buildTxToSign({
-      bip44Params: chainAdapter.buildBIP44Params({ accountNumber: 0 }),
       chainId: 1,
       data,
       estimatedGas: estimatedGas.toString(),
-      gasPrice: {
-        high: 1,
-        mid: 0.5,
-        low: 0
-      },
+      gasPrice,
       nonce: String(nonce),
       to: this.id,
       value: '0'
@@ -218,7 +259,7 @@ export class YearnOpportunity
       chainId: 1,
       data,
       estimatedGas: estimatedGas.toString(),
-      gasPrice:  {
+      gasPrice: {
         high: 1,
         mid: 0.5,
         low: 0
