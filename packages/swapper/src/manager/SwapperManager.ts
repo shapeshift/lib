@@ -40,21 +40,6 @@ export class SwapperManager {
   /**
    *
    * @param swapperType swapper type {SwapperType|string}
-   * @returns {Swapper}
-   */
-  getSwapper(swapperType: SwapperType): Swapper {
-    const swapper = this.swappers.get(swapperType)
-    if (!swapper)
-      throw new SwapError('[getSwapper] - swapperType doesnt exist', {
-        code: SwapErrorTypes.MANAGER_ERROR,
-        details: { swapperType }
-      })
-    return swapper
-  }
-
-  /**
-   *
-   * @param swapperType swapper type {SwapperType|string}
    * @returns {SwapperManager}
    */
   removeSwapper(swapperType: SwapperType): this {
@@ -68,7 +53,7 @@ export class SwapperManager {
     return this
   }
 
-  async getBestSwapper(args: ByPairInput): Promise<Swapper> {
+  async getBestSwapper(args: ByPairInput): Promise<Swapper | undefined> {
     // TODO: This will eventually have logic to determine the best swapper.
     // For now we return the first swapper we get from getSwappersByPair
     return this.getSwappersByPair(args)[0]
