@@ -140,7 +140,7 @@ export class TransactionParser {
         toAssetId({
           ...fromChainId(this.chainId),
           assetNamespace: 'erc20',
-          assetReference: transfer.token
+          assetReference: transfer.contract
         }),
         transfer.from,
         transfer.to,

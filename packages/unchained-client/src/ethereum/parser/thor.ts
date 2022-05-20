@@ -39,21 +39,6 @@ export class Parser implements SubParser {
     }
   }
 
-  // detect address associated with transferOut internal transaction
-  getInternalAddress(inputData: string): string | undefined {
-    if (getSigHash(inputData) !== this.supportedFunctions.transferOutSigHash) return
-
-    const result = this.abiInterface.decodeFunctionData(
-      this.supportedFunctions.transferOutSigHash,
-      inputData
-    )
-
-    const [type] = result.memo.split(':')
-    if (type !== 'OUT' || type !== 'REFUND') return
-
-    return result.to
-  }
-
   async parse(tx: EthereumTx): Promise<TxSpecific | undefined> {
     if (!txInteractsWithContract(tx, this.routerContract)) return
     if (!tx.inputData) return
