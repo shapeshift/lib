@@ -61,8 +61,8 @@ export class TransactionParser {
     const parsedTx: ParsedTx = {
       address,
       blockHash: tx.blockHash,
-      blockHeight: tx.blockHeight ?? -1,
-      blockTime: tx.timestamp ?? 0,
+      blockHeight: tx.blockHeight,
+      blockTime: tx.timestamp,
       chainId: this.chainId,
       confirmations: tx.confirmations,
       status: TransactionParser.getStatus(tx),
