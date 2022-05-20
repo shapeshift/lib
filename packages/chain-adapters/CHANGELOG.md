@@ -1,3 +1,48 @@
+# [@shapeshiftoss/chain-adapters-v4.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v4.2.0...@shapeshiftoss/chain-adapters-v4.3.0) (2022-05-20)
+
+
+### Features
+
+* chain and asset utility functions ([#654](https://github.com/shapeshift/lib/issues/654)) ([4e12ce6](https://github.com/shapeshift/lib/commit/4e12ce6fd10cd8bf34e059e63c2a162fb6576932))
+
+# [@shapeshiftoss/chain-adapters-v4.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v4.1.0...@shapeshiftoss/chain-adapters-v4.2.0) (2022-05-19)
+
+
+### Features
+
+* **chain-adapters:** change byChainId to by synchronous ([#668](https://github.com/shapeshift/lib/issues/668)) ([5017672](https://github.com/shapeshift/lib/commit/50176724116f62dfcccd315d9215f326cc982d9f))
+
+# [@shapeshiftoss/chain-adapters-v4.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v4.0.1...@shapeshiftoss/chain-adapters-v4.1.0) (2022-05-18)
+
+
+### Features
+
+* osmosis adapter ([#664](https://github.com/shapeshift/lib/issues/664)) ([8bcdfd1](https://github.com/shapeshift/lib/commit/8bcdfd17a9902fb08239c4b4a2db3ae6b6e15183))
+
+# [@shapeshiftoss/chain-adapters-v4.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v4.0.0...@shapeshiftoss/chain-adapters-v4.0.1) (2022-05-18)
+
+# [@shapeshiftoss/chain-adapters-v4.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v3.0.4...@shapeshiftoss/chain-adapters-v4.0.0) (2022-05-18)
+
+
+### Performance Improvements
+
+* replace enums with dynamically derived object literals ([#656](https://github.com/shapeshift/lib/issues/656)) ([6d2d821](https://github.com/shapeshift/lib/commit/6d2d821318da9db4afec97b1247cf006a5fc42d2))
+
+
+### BREAKING CHANGES
+
+* the enum removal will need to be handled by consumers to use the new constants.
+
+* chore: remove toString() and associated comment
+
+* chore: remove string litirals
+
+* chore: optimise imports
+
+* chore: use string union for AssetNamespace
+
+* chore: update README
+
 # [@shapeshiftoss/chain-adapters-v3.0.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v3.0.3...@shapeshiftoss/chain-adapters-v3.0.4) (2022-05-17)
 
 # [@shapeshiftoss/chain-adapters-v3.0.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v3.0.2...@shapeshiftoss/chain-adapters-v3.0.3) (2022-05-17)

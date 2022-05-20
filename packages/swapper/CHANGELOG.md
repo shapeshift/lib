@@ -1,3 +1,43 @@
+# [@shapeshiftoss/swapper-v5.1.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.1.0...@shapeshiftoss/swapper-v5.1.1) (2022-05-20)
+
+
+### Bug Fixes
+
+* add blacklist and make getBestSwapper return possibly undefined ([#672](https://github.com/shapeshift/lib/issues/672)) ([c2e3834](https://github.com/shapeshift/lib/commit/c2e38345a74af92c94890ccdcf1c6da2e30f99c1))
+
+# [@shapeshiftoss/swapper-v5.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.0.1...@shapeshiftoss/swapper-v5.1.0) (2022-05-20)
+
+
+### Features
+
+* chain and asset utility functions ([#654](https://github.com/shapeshift/lib/issues/654)) ([4e12ce6](https://github.com/shapeshift/lib/commit/4e12ce6fd10cd8bf34e059e63c2a162fb6576932))
+
+# [@shapeshiftoss/swapper-v5.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.0.0...@shapeshiftoss/swapper-v5.0.1) (2022-05-18)
+
+# [@shapeshiftoss/swapper-v5.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v4.1.3...@shapeshiftoss/swapper-v5.0.0) (2022-05-18)
+
+
+### Performance Improvements
+
+* replace enums with dynamically derived object literals ([#656](https://github.com/shapeshift/lib/issues/656)) ([6d2d821](https://github.com/shapeshift/lib/commit/6d2d821318da9db4afec97b1247cf006a5fc42d2))
+
+
+### BREAKING CHANGES
+
+* the enum removal will need to be handled by consumers to use the new constants.
+
+* chore: remove toString() and associated comment
+
+* chore: remove string litirals
+
+* chore: optimise imports
+
+* chore: use string union for AssetNamespace
+
+* chore: update README
+
+# [@shapeshiftoss/swapper-v4.1.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v4.1.2...@shapeshiftoss/swapper-v4.1.3) (2022-05-17)
+
 # [@shapeshiftoss/swapper-v4.1.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v4.1.1...@shapeshiftoss/swapper-v4.1.2) (2022-05-17)
 
 # [@shapeshiftoss/swapper-v4.1.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v4.1.0...@shapeshiftoss/swapper-v4.1.1) (2022-05-13)

@@ -1,4 +1,4 @@
-import { AssetNamespace, ChainId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
+import { ChainId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
 import { ethers } from 'ethers'
 
 import { EthereumTx } from '../../generated/ethereum'
@@ -59,7 +59,7 @@ export class Parser implements SubParser {
 
     const assetId = toAssetId({
       ...fromChainId(this.chainId),
-      assetNamespace: AssetNamespace.ERC20,
+      assetNamespace: 'erc20',
       assetReference: this.wethContract
     })
 

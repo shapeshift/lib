@@ -1,11 +1,4 @@
-import {
-  AssetId,
-  AssetNamespace,
-  AssetReference,
-  ChainId,
-  fromChainId,
-  toAssetId
-} from '@shapeshiftoss/caip'
+import { ASSET_REFERENCE, AssetId, ChainId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
 import { BigNumber } from 'bignumber.js'
 import { ethers } from 'ethers'
 
@@ -42,8 +35,8 @@ export class TransactionParser {
 
     this.assetId = toAssetId({
       ...fromChainId(this.chainId),
-      assetNamespace: AssetNamespace.Slip44,
-      assetReference: AssetReference.Ethereum
+      assetNamespace: 'slip44',
+      assetReference: ASSET_REFERENCE.Ethereum
     })
 
     const provider = new ethers.providers.JsonRpcProvider(args.rpcUrl)
@@ -146,8 +139,8 @@ export class TransactionParser {
       const transferArgs = [
         toAssetId({
           ...fromChainId(this.chainId),
-          assetNamespace: AssetNamespace.ERC20,
-          assetReference: transfer.contract
+          assetNamespace: 'erc20',
+          assetReference: transfer.token
         }),
         transfer.from,
         transfer.to,
@@ -178,8 +171,8 @@ export class TransactionParser {
       const transferArgs = [
         toAssetId({
           ...fromChainId(this.chainId),
-          assetNamespace: AssetNamespace.Slip44,
-          assetReference: AssetReference.Ethereum
+          assetNamespace: 'slip44',
+          assetReference: ASSET_REFERENCE.Ethereum
         }),
         internalTx.from,
         internalTx.to,
