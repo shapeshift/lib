@@ -3,11 +3,8 @@ import { toCAIP19 } from '@shapeshiftoss/caip'
 // @ts-ignore
 import {
   ChainAdapterManager,
-  // @ts-ignore
   CosmosChainAdapter,
-  // @ts-ignore
   OsmosisChainAdapter
-  // @ts-ignore
 } from '@shapeshiftoss/chain-adapters/*'
 import {
   bip32ToAddressNList,
@@ -18,17 +15,13 @@ import {
 import {
   ApprovalNeededOutput,
   Asset,
-  // BuildQuoteTxInput,
   ChainTypes,
-  // ExecQuoteInput,
   ExecQuoteOutput,
-  // GetQuoteInput,
   MinMaxOutput,
-  // Quote,
   SwapperType
-  // @ts-ignore
 } from '@shapeshiftoss/types'
 import axios from 'axios'
+import { sleep } from 'wait-promise'
 
 // import { getRate } from '../../api'
 import {
@@ -42,7 +35,6 @@ import {
 } from '../../api'
 import { DEFAULT_SOURCE } from './constants'
 import { getRateInfo, IsymbolDenomMapping, symbolDenomMapping } from './OsmoService'
-// import { wait } from 'wait-promise'
 
 const osmoUrl =
   'https://osmosis-1--lcd--full.datahub.figment.io/apikey/0180433904229d03ca0e8370b0ff3fb8'
@@ -162,7 +154,8 @@ export class OsmoSwapper implements Swapper {
     if (!sellAmount) throw Error('missing sellAmount')
     if (!wallet) throw Error('missing wallet')
 
-    const pair = sellAsset + '_' + buyAsset
+    const pair = sellAsset.symbol + '_' + buyAsset.symbol
+    console.info('pair: ', pair)
 
     const sellAssetDenom = symbolDenomMapping[sellAsset.symbol as keyof IsymbolDenomMapping]
     const buyAssetDenom = symbolDenomMapping[buyAsset.symbol as keyof IsymbolDenomMapping]
@@ -173,10 +166,14 @@ export class OsmoSwapper implements Swapper {
     console.info('sellAsset.chain: ', sellAsset.chain)
     console.info('deps: ', this.deps)
 
-    const osmosisAdapter = this.deps.adapterManager.byChain(sellAsset.chain) as OsmosisChainAdapter
+    const osmosisAdapter = this.deps.adapterManager.byChain(
+      ChainTypes.Osmosis
+    ) as OsmosisChainAdapter
     console.info('osmosisAdapter: ', osmosisAdapter)
 
-    const cosmosisAdapter = this.deps.adapterManager.byChain(buyAsset.chain) as CosmosChainAdapter
+    const cosmosisAdapter = this.deps.adapterManager.byChain(
+      ChainTypes.Cosmos
+    ) as CosmosChainAdapter
     console.info('cosmosisAdapter: ', cosmosisAdapter)
 
     // const osmosisAdapter = this.adapterManager.byNetwork(sellAsset.network) as OsmosisChainAdapter
@@ -189,10 +186,10 @@ export class OsmoSwapper implements Swapper {
 
     console.info('args: ', args)
     console.info('wallet: ', wallet)
-    const sellAddress = await (wallet as OsmosisWallet).osmosisGetAddress({
+    const buyAddress = await (wallet as OsmosisWallet).osmosisGetAddress({
       addressNList: bip32ToAddressNList("m/44'/118'/0'/0/0")
     })
-    const buyAddress = await (wallet as CosmosWallet).cosmosGetAddress({
+    const sellAddress = await (wallet as CosmosWallet).cosmosGetAddress({
       addressNList: bip32ToAddressNList("m/44'/118'/0'/0/0")
     })
     if (!sellAddress) throw new Error('no sell address')
@@ -224,7 +221,18 @@ export class OsmoSwapper implements Swapper {
 
       //wait till confirmed
       console.info('txid: ', txid)
+      const confirmed = false
+      while (!confirmed) {
+        //get info
+        let txInfo = await axios({ method: 'GET', url: `${atomUrl}/cosmos/tx/v1beta1/txs/${txid}` })
+        txInfo = txInfo.data
+        console.info('txInfo: ', txInfo)
+
+        await sleep(3000)
+      }
     }
+
+    //verify IBC balance
 
     //if ATOM -> OSMO
 
@@ -291,8 +299,8 @@ export class OsmoSwapper implements Swapper {
       },
       wallet
     }
-    console.info('signTxInput: ', signTxInput)
-    console.info('signTxInput: ', JSON.stringify(signTxInput))
+    // console.info('signTxInput: ', signTxInput)
+    // console.info('signTxInput: ', JSON.stringify(signTxInput))
     const signed = await osmosisAdapter.signTransaction(signTxInput)
     console.info('signed: ', signed)
 
@@ -314,21 +322,26 @@ export class OsmoSwapper implements Swapper {
   }
 
   async performIbcTransfer(input: any, adapter: any, wallet: any): Promise<any> {
-    const { senderAddress, receiverAddress, amount } = input
+    const { sender, receiver, amount } = input
+    console.info('performIbcTransfer input: ', input)
 
     // const fee = '100'
     const gas = '1350000'
 
     //get block height
-    const osmoResponseLatestBlock = await axios.get(`${osmoUrl}/blocks/latest`)
-    const osmoLatestBlock = osmoResponseLatestBlock.data.block.header.height
+    const atomResponseLatestBlock = await axios.get(`${atomUrl}/blocks/latest`)
+    const atomLatestBlock = atomResponseLatestBlock.data.block.header.height
+    console.info('atomLatestBlock: ', atomLatestBlock)
 
     const addressNList = bip32ToAddressNList("m/44'/118'/0'/0/0")
 
-    const atomAccountUrl = `${atomUrl}/auth/accounts/${senderAddress}`
+    const atomAccountUrl = `${atomUrl}/auth/accounts/${sender}`
     const atomResponseAccount = await axios.get(atomAccountUrl)
+    console.info('atomResponseAccount: ', atomResponseAccount)
     const atomAccountNumber = atomResponseAccount.data.result.value.account_number
     const atomSequence = atomResponseAccount.data.result.value.sequence
+    console.info('atomAccountNumber: ', atomAccountNumber)
+    console.info('atomSequence: ', atomSequence)
 
     if (!atomAccountNumber) throw new Error('no atom account number')
 
@@ -354,17 +367,18 @@ export class OsmoSwapper implements Swapper {
               denom: 'uatom',
               amount
             },
-            sender: senderAddress,
-            receiver: receiverAddress,
+            sender,
+            receiver,
             timeout_height: {
               revision_number: '4',
-              revision_height: String(Number(osmoLatestBlock) + 100)
+              revision_height: String(Number(atomLatestBlock) + 100)
             }
           }
         }
       ]
     }
 
+    console.info('adapter: ', adapter)
     const signed = await adapter.signTransaction(
       {
         symbol: 'ATOM',

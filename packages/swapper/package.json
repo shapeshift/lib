@@ -23,6 +23,7 @@
     "swapcli": "yarn build && node dist/swappercli.js ATOM OSMO 0.01"
   },
   "dependencies": {
+    "@types/wait-promise": "^0.4.0",
     "axios": "^0.26.0",
     "bignumber.js": "^9.0.1",
     "lodash": "^4.17.21",

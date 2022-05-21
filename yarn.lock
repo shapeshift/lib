@@ -3160,6 +3160,11 @@
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.1.tgz#20f18294f797f2209b5f65c8e3b5c8e8261d127c"
   integrity sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==
 
+"@types/wait-promise@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@types/wait-promise/-/wait-promise-0.4.0.tgz#c5582b8f3c9c236852fe4753502b28b2fdce04d3"
+  integrity sha512-CQl7sO9ILb8PgWJnBJhfJqrH89AXb8TnjLXmQa2+ipdXx2dop1U8YOvQxrsExoFB/aLz+cZJg9P/bzPdli08QA==
+
 "@types/ws@^8.2.1":
   version "8.5.3"
   resolved "https://registry.yarnpkg.com/@types/ws/-/ws-8.5.3.tgz#7d25a1ffbecd3c4f2d35068d0b283c037003274d"
