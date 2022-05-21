@@ -1,6 +1,8 @@
 import { AssetService } from '@shapeshiftoss/asset-service'
+// @ts-ignore
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
+// @ts-ignore
 import { Asset, ChainTypes, SwapperType } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 import dotenv from 'dotenv'
@@ -14,9 +16,9 @@ import { OsmoSwapper } from './swappers/osmosis/OsmoSwapper'
 dotenv.config()
 
 const {
-  UNCHAINED_HTTP_API = 'http://localhost:31300',
-  UNCHAINED_WS_API = 'wss://localhost:31300',
-  ETH_NODE_URL = 'http://localhost:3000',
+  // UNCHAINED_HTTP_API = 'http://localhost:31300',
+  // UNCHAINED_WS_API = 'wss://localhost:31300',
+  // ETH_NODE_URL = 'http://localhost:3000',
   DEVICE_ID = 'device123',
   MNEMONIC = 'all all all all all all all all all all all all'
 } = process.env
