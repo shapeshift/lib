@@ -167,7 +167,7 @@ const main = async (): Promise<void> => {
       wallet,
       buyAsset,
       sendMax: false,
-      sellAmount: sellAmountBase,
+      sellAmount,
       sellAsset,
       sellAssetAccountId: '0',
       buyAssetAccountId: '0'

@@ -120,6 +120,11 @@ export class OsmoSwapper implements Swapper {
       sellAmount !== '0' ? sellAmount : '1'
     )
 
+    //convert amount to base
+    let amountBaseSell: number = parseFloat(sellAmount) * 1000000
+    amountBaseSell = parseInt(String(amountBaseSell))
+    const amountBaseSellString = amountBaseSell.toString()
+
     // @ts-ignore
     return {
       buyAmount,
@@ -128,7 +133,7 @@ export class OsmoSwapper implements Swapper {
       feeData: { fee: '100' },
       rate,
       receiveAddress: '',
-      sellAmount: '',
+      sellAmount: amountBaseSellString,
       sellAsset,
       sellAssetAccountId: '0',
       sources: [{ name: 'Osmosis', proportion: '100' }],
