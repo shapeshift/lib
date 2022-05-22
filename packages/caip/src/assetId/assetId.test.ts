@@ -69,6 +69,17 @@ describe('assetId', () => {
       ).toThrow()
     })
 
+    it('throws with invalid namespace', () => {
+      expect(() =>
+        toAssetId({
+          chainNamespace: CHAIN_NAMESPACE.Ethereum,
+          chainReference: CHAIN_REFERENCE.EthereumMainnet,
+          assetNamespace: 'cw721',
+          assetReference: ASSET_REFERENCE.Ethereum
+        })
+      ).toThrow()
+    })
+
     it('can make Cosmos AssetId on CosmosHub mainnet', () => {
       const result = toAssetId({
         chainNamespace: CHAIN_NAMESPACE.Cosmos,

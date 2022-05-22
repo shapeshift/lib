@@ -39,16 +39,15 @@ type ToAssetIdArgs = {
   assetReference: AssetReference | string
 }
 
-// type ValidAssetNamespace = {
-//   [k in ChainNamespace]: AssetNamespace[]
-// }
-//
-// // FIXME: Check for this, same as VALID_CHAIN_IDS
-// const VALID_ASSET_NAMESPACE: ValidAssetNamespace = Object.freeze({
-//   [CHAIN_NAMESPACE.Bitcoin]: ['slip44'],
-//   [CHAIN_NAMESPACE.Ethereum]: ['slip44', 'erc20', 'erc721'],
-//   [CHAIN_NAMESPACE.Cosmos]: ['cw20', 'cw721', 'ibc', 'native', 'slip44']
-// })
+type ValidAssetNamespace = {
+  [k in ChainNamespace]: AssetNamespace[]
+}
+
+const VALID_ASSET_NAMESPACE: ValidAssetNamespace = Object.freeze({
+  [CHAIN_NAMESPACE.Bitcoin]: ['slip44'],
+  [CHAIN_NAMESPACE.Ethereum]: ['slip44', 'erc20', 'erc721'],
+  [CHAIN_NAMESPACE.Cosmos]: ['cw20', 'cw721', 'ibc', 'native', 'slip44']
+})
 
 type ValidChainMap = {
   [k in ChainNamespace]: ChainReference[]
@@ -113,11 +112,11 @@ const isValidSlip44 = (value: string) => {
 type ToAssetId = (args: ToAssetIdArgs) => AssetId
 
 export const toAssetId: ToAssetId = (args: ToAssetIdArgs): AssetId => {
-  const { chainNamespace, chainReference, assetNamespace } = args
-  let { assetReference } = args
+  const { chainNamespace, chainReference, assetNamespace, assetReference } = args
   if (!assetNamespace) throw new Error('toAssetId: No assetNamespace provided')
   if (!assetReference) throw new Error('toAssetId: No assetReference provided')
 
+  const isContractAddress = Array<AssetNamespace>('erc20', 'erc721').includes(assetNamespace)
   const chainId = chainIdOrUndefined(`${chainNamespace}:${chainReference}`) // FIXME: use toChainId
 
   if (
@@ -129,25 +128,33 @@ export const toAssetId: ToAssetId = (args: ToAssetIdArgs): AssetId => {
       `toAssetId: Chain Reference ${chainReference} not supported for Chain Namespace ${chainNamespace}`
     )
 
+  if (
+    !VALID_ASSET_NAMESPACE[chainNamespace].includes(assetNamespace) ||
+    !isAssetNamespace(assetNamespace)
+  )
+    throw new Error(
+      `toAssetId: AssetNamespace ${assetNamespace} not supported for Chain Namespace ${chainNamespace}`
+    )
+
   if (assetNamespace === 'slip44' && !isValidSlip44(String(assetReference))) {
     throw new Error(`Invalid reference for namespace slip44`)
   }
 
-  if (Array<AssetNamespace>('erc20', 'erc721').includes(assetNamespace)) {
-    if (!assetReference.startsWith('0x')) {
+  if (isContractAddress) {
+    if (!assetReference.startsWith('0x'))
       throw new Error(`toAssetId: assetReference must start with 0x: ${assetReference}`)
-    }
-    if (assetReference.length !== 42) {
+    if (assetReference.length !== 42)
       throw new Error(
         `toAssetId: assetReference length must be 42, length: ${assetReference.length}`
       )
-    }
-
-    // We make Eth contract addresses lower case to simplify comparisons
-    assetReference = assetReference.toLowerCase()
   }
 
-  return `${chainId}/${assetNamespace}:${assetReference}`
+  // We make Eth contract addresses lower case to simplify comparisons
+  const assetReferenceCaseCorrected = isContractAddress
+    ? assetReference.toLowerCase()
+    : assetReference
+
+  return `${chainId}/${assetNamespace}:${assetReferenceCaseCorrected}`
 }
 
 type FromAssetIdReturn = {
@@ -173,9 +180,8 @@ export const fromAssetId: FromAssetId = (assetId) => {
     assetNamespace && ['erc20', 'erc721'].includes(assetNamespace)
 
   const assetReference = shouldLowercaseAssetReference ? toLower(matches[4]) : matches[4]
-  if (!chainNamespace || !chainReference) {
+  if (!chainNamespace || !chainReference)
     throw new Error(`fromAssetId: invalid AssetId: ${assetId}`)
-  }
   const chainId = chainIdOrUndefined(`${chainNamespace}:${chainReference}`) // FIXME: use toChainId
 
   if (assetNamespace && assetReference && chainId) {
