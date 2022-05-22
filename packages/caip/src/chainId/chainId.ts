@@ -255,11 +255,5 @@ export const networkTypeToChainReference = invert(chainReferenceToNetworkType) a
   ChainReference
 >
 
-export const chainNamespaceToChainType: Record<ChainNamespace, ChainTypes> = Object.freeze({
-  [CHAIN_NAMESPACE.Bitcoin]: ChainTypes.Bitcoin,
-  [CHAIN_NAMESPACE.Ethereum]: ChainTypes.Ethereum,
-  [CHAIN_NAMESPACE.Cosmos]: ChainTypes.Cosmos
-})
-
 export const toCAIP2 = toChainId
 export const fromCAIP2 = fromChainId

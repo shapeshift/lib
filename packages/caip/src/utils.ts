@@ -1,6 +1,6 @@
 import { AccountId, fromAccountId } from './accountId/accountId'
 import { AssetId, fromAssetId } from './assetId/assetId'
-import { ChainId, fromChainId, networkTypeToChainReference, toChainId } from './chainId/chainId'
+import { ChainId, fromChainId, networkTypeToChainReference } from './chainId/chainId'
 
 export const btcAssetId = 'bip122:000000000019d6689c085ae165831e93/slip44:0'
 export const ethAssetId = 'eip155:1/slip44:60'
@@ -20,9 +20,10 @@ export const chainIdToAssetId: Record<ChainId, AssetId> = {
   [cosmosChainId]: cosmosAssetId,
   [osmosisChainId]: osmosisAssetId
 }
+
+// FIXME - remove this, as fromAssetId() now handles it
 export const assetIdToChainId = (assetId: AssetId): string => {
-  const { chain, network } = fromAssetId(assetId)
-  return toChainId({ chain, network })
+  return fromAssetId(assetId).chainId
 }
 
 export const accountIdToChainId = (accountId: AccountId): ChainId =>
