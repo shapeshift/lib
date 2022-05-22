@@ -6,7 +6,7 @@ import toLower from 'lodash/toLower'
 import uniqBy from 'lodash/uniqBy'
 
 import { toAssetId } from '../../assetId/assetId'
-import { toChainId } from '../../chainId/chainId'
+import { CHAIN_NAMESPACE, CHAIN_REFERENCE, toChainId } from '../../chainId/chainId'
 
 const network = 1 // 1 for mainnet
 const provider = new JsonRpcProvider(process.env.REACT_APP_ETHEREUM_NODE_URL)
@@ -33,16 +33,17 @@ export const fetchData = async () => {
 }
 
 export const parseEthData = (data: (Token | Vault)[]) => {
-  const chain = ChainTypes.Ethereum
   const assetNamespace = 'erc20'
+  const chainNamespace = CHAIN_NAMESPACE.Ethereum
+  const chainReference = CHAIN_REFERENCE.EthereumMainnet
 
   return data.reduce((acc, datum) => {
     const { address } = datum
     const id = address
     const assetReference = toLower(address)
     const assetId = toAssetId({
-      chain,
-      network: NetworkTypes.MAINNET,
+      chainNamespace,
+      chainReference,
       assetNamespace,
       assetReference
     })

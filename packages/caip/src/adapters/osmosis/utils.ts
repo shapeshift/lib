@@ -3,7 +3,7 @@ import axios from 'axios'
 import fs from 'fs'
 
 import { ASSET_REFERENCE, AssetNamespace, toAssetId } from '../../assetId/assetId'
-import { toChainId } from '../../chainId/chainId'
+import { CHAIN_NAMESPACE, CHAIN_REFERENCE, toChainId } from '../../chainId/chainId'
 
 export type OsmosisCoin = {
   price: number
@@ -45,9 +45,9 @@ export const parseOsmosisData = (data: OsmosisCoin[]) => {
       assetNamespace = 'ibc'
     }
 
-    const chain = ChainTypes.Osmosis
-    const network = NetworkTypes.OSMOSIS_MAINNET
-    const assetId = toAssetId({ chain, network, assetNamespace, assetReference })
+    const chainNamespace = CHAIN_NAMESPACE.Cosmos
+    const chainReference = CHAIN_REFERENCE.OsmosisMainnet
+    const assetId = toAssetId({ chainNamespace, chainReference, assetNamespace, assetReference })
 
     acc[assetId] = symbol
     return acc

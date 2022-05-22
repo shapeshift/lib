@@ -1,5 +1,4 @@
 // https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-19.md
-import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import toLower from 'lodash/toLower'
 
 import {
@@ -7,8 +6,7 @@ import {
   CHAIN_REFERENCE,
   ChainId,
   ChainNamespace,
-  ChainReference,
-  toChainId
+  ChainReference
 } from '../chainId/chainId'
 
 export type AssetId = string
@@ -35,13 +33,41 @@ export const ASSET_REFERENCE = {
 export type AssetReference = typeof ASSET_REFERENCE[keyof typeof ASSET_REFERENCE]
 
 type ToAssetIdArgs = {
-  chain?: ChainTypes
-  network?: NetworkTypes | ChainReference
-  chainNamespace?: ChainNamespace
-  chainReference?: ChainReference
+  chainNamespace: ChainNamespace
+  chainReference: ChainReference
   assetNamespace: AssetNamespace
   assetReference: AssetReference | string
 }
+
+// type ValidAssetNamespace = {
+//   [k in ChainNamespace]: AssetNamespace[]
+// }
+//
+// // FIXME: Check for this, same as VALID_CHAIN_IDS
+// const VALID_ASSET_NAMESPACE: ValidAssetNamespace = Object.freeze({
+//   [CHAIN_NAMESPACE.Bitcoin]: ['slip44'],
+//   [CHAIN_NAMESPACE.Ethereum]: ['slip44', 'erc20', 'erc721'],
+//   [CHAIN_NAMESPACE.Cosmos]: ['cw20', 'cw721', 'ibc', 'native', 'slip44']
+// })
+
+type ValidChainMap = {
+  [k in ChainNamespace]: ChainReference[]
+}
+
+const VALID_CHAIN_IDS: ValidChainMap = Object.freeze({
+  [CHAIN_NAMESPACE.Bitcoin]: [CHAIN_REFERENCE.BitcoinMainnet, CHAIN_REFERENCE.BitcoinTestnet],
+  [CHAIN_NAMESPACE.Ethereum]: [
+    CHAIN_REFERENCE.EthereumMainnet,
+    CHAIN_REFERENCE.EthereumRopsten,
+    CHAIN_REFERENCE.EthereumRinkeby
+  ],
+  [CHAIN_NAMESPACE.Cosmos]: [
+    CHAIN_REFERENCE.CosmosHubMainnet,
+    CHAIN_REFERENCE.CosmosHubVega,
+    CHAIN_REFERENCE.OsmosisMainnet,
+    CHAIN_REFERENCE.OsmosisTestnet
+  ]
+})
 
 export const isChainNamespace = (
   maybeChainNamespace: ChainNamespace | string
@@ -87,31 +113,21 @@ const isValidSlip44 = (value: string) => {
 type ToAssetId = (args: ToAssetIdArgs) => AssetId
 
 export const toAssetId: ToAssetId = (args: ToAssetIdArgs): AssetId => {
-  const { chainNamespace, chainReference, assetNamespace, chain, network } = args
+  const { chainNamespace, chainReference, assetNamespace } = args
   let { assetReference } = args
-  // if (!chain) throw new Error('toAssetId: No chain provided')
-  // if (!network) throw new Error('toAssetId: No chainReference Provided')
   if (!assetNamespace) throw new Error('toAssetId: No assetNamespace provided')
   if (!assetReference) throw new Error('toAssetId: No assetReference provided')
 
-  let chainId
-  if (network && chain) {
-    chainId = toChainId({ chain, network })
-  } else {
-    chainId = chainIdOrUndefined(`${chainNamespace}:${chainReference}`) // FIXME: use toChainId
-  }
+  const chainId = chainIdOrUndefined(`${chainNamespace}:${chainReference}`) // FIXME: use toChainId
 
-  if (chainNamespace && !isChainNamespace(chainNamespace)) {
+  if (
+    !VALID_CHAIN_IDS[chainNamespace].includes(chainReference) ||
+    !isChainNamespace(chainNamespace) ||
+    !isChainReference(chainReference)
+  )
     throw new Error(
-      `toAssetId: Asset Namespace ${assetNamespace} not supported for Chain Namespace ${chainNamespace}`
+      `toAssetId: Chain Reference ${chainReference} not supported for Chain Namespace ${chainNamespace}`
     )
-  }
-
-  if (chainReference && !isChainReference(chainReference)) {
-    throw new Error(
-      `toAssetId: Asset Namespace ${assetNamespace} not supported for Chain Reference ${chainReference}`
-    )
-  }
 
   if (assetNamespace === 'slip44' && !isValidSlip44(String(assetReference))) {
     throw new Error(`Invalid reference for namespace slip44`)
@@ -135,11 +151,9 @@ export const toAssetId: ToAssetId = (args: ToAssetIdArgs): AssetId => {
 }
 
 type FromAssetIdReturn = {
-  // chain: ChainTypes
   chainNamespace: ChainNamespace
   chainReference: ChainReference
   chainId: ChainId
-  // network: NetworkTypes
   assetNamespace: AssetNamespace
   assetReference: AssetReference | string
 }
@@ -164,15 +178,7 @@ export const fromAssetId: FromAssetId = (assetId) => {
   }
   const chainId = chainIdOrUndefined(`${chainNamespace}:${chainReference}`) // FIXME: use toChainId
 
-  const hasAllParts = !!(
-    chainNamespace &&
-    chainReference &&
-    assetNamespace &&
-    assetReference &&
-    chainId
-  )
-
-  if (hasAllParts) {
+  if (assetNamespace && assetReference && chainId) {
     return { chainId, chainReference, chainNamespace, assetNamespace, assetReference }
   } else {
     throw new Error(`fromAssetId: invalid AssetId: ${assetId}`)
