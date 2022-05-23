@@ -1,5 +1,4 @@
 import { SupportedChainIds } from '@shapeshiftoss/types'
-import { SwapperType } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 
@@ -92,7 +91,6 @@ export async function zrxBuildTrade(
     const estimatedGas = bnOrZero(data.gas || 0)
 
     const trade: ZrxTrade<'eip155:1'> = {
-      swapperType: SwapperType.Zrx,
       sellAsset,
       buyAsset,
       success: true,
