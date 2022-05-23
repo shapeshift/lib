@@ -23,12 +23,15 @@ export async function getZrxTradeQuote(input: GetTradeQuoteInput): Promise<Trade
       )
     }
 
-    const { assetReference: sellAssetErc20Address } = fromAssetId(sellAsset.assetId)
-    const { assetReference: buyAssetErc20Address } = fromAssetId(buyAsset.assetId)
+    const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
+      fromAssetId(sellAsset.assetId)
+    const { assetReference: buyAssetErc20Address, assetNamespace: buyAssetNamespace } = fromAssetId(
+      buyAsset.assetId
+    )
 
     const useSellAmount = !!sellAmount
-    const buyToken = buyAssetErc20Address || buyAsset.symbol
-    const sellToken = sellAssetErc20Address || sellAsset.symbol
+    const buyToken = buyAssetNamespace === 'erc20' ? buyAssetErc20Address : buyAsset.symbol
+    const sellToken = sellAssetNamespace === 'erc20' ? sellAssetErc20Address : sellAsset.symbol
 
     const { minimum, maximum } = await getZrxMinMax(sellAsset, buyAsset)
 

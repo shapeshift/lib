@@ -32,10 +32,13 @@ export async function zrxBuildTrade(
     wallet
   } = input
   try {
-    const { assetReference: buyAssetErc20Address } = fromAssetId(buyAsset.assetId)
-    const { assetReference: sellAssetErc20Address } = fromAssetId(sellAsset.assetId)
-    const buyToken = buyAssetErc20Address || buyAsset.symbol
-    const sellToken = sellAssetErc20Address || sellAsset.symbol
+    const { assetReference: buyAssetErc20Address, assetNamespace: buyAssetNamespace } = fromAssetId(
+      buyAsset.assetId
+    )
+    const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
+      fromAssetId(sellAsset.assetId)
+    const buyToken = buyAssetNamespace === 'erc20' ? buyAssetErc20Address : sellAsset.symbol
+    const sellToken = sellAssetNamespace === 'erc20' ? sellAssetErc20Address : sellAsset.symbol
 
     if (buyAsset.chainId !== 'eip155:1') {
       throw new SwapError('[ZrxBuildTrade] - buyAsset must be on chainId eip155:1', {

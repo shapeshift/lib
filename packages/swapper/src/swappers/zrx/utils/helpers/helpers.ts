@@ -106,7 +106,7 @@ export const getAllowanceRequired = async ({
 export const getUsdRate = async (input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> => {
   const { symbol, assetId } = input
 
-  const { assetReference: erc20Address } = fromAssetId(assetId)
+  const { assetReference: erc20Address, assetNamespace } = fromAssetId(assetId)
 
   try {
     const USDC_CONTRACT_ADDRESS = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
@@ -117,7 +117,7 @@ export const getUsdRate = async (input: Pick<Asset, 'symbol' | 'assetId'>): Prom
         params: {
           buyToken: USDC_CONTRACT_ADDRESS,
           buyAmount: '1000000000', // rate is imprecise for low $ values, hence asking for $1000
-          sellToken: erc20Address || symbol
+          sellToken: assetNamespace === 'erc20' ? erc20Address : symbol
         }
       }
     )
