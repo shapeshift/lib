@@ -76,7 +76,7 @@ export const isAssetId = (maybeAssetId: AssetId | string): maybeAssetId is Asset
 export const isValidChainPartsPair = (
   chainNamespace: ChainNamespace,
   chainReference: ChainReference
-) => VALID_CHAIN_IDS[chainNamespace].includes(chainReference)
+) => VALID_CHAIN_IDS[chainNamespace]?.includes(chainReference) || false
 
 export const isValidChainId = (maybeChainId: ChainId | string): maybeChainId is ChainId => {
   const chainIdRegExp = /([-a-z\d]{3,8}):([-a-zA-Z\d]{1,32})/
@@ -98,7 +98,6 @@ const getTypeGuardAssertion = <T>(
   }
 }
 
-// FIXME: Add tests for assertion helpers
 export const assertIsValidChainId: (
   value: ChainId | string | undefined
 ) => asserts value is ChainId = getTypeGuardAssertion(
