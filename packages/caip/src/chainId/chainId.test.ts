@@ -1,5 +1,5 @@
 import { CHAIN_NAMESPACE, CHAIN_REFERENCE } from '../constants'
-import { isValidChainId } from '../utils'
+import { assertIsValidChainId, isValidChainId } from '../utils'
 import { fromCAIP2, fromChainId, toCAIP2, toChainId } from './chainId'
 
 describe('chainId', () => {
@@ -71,7 +71,7 @@ describe('chainId', () => {
           chainNamespace: CHAIN_NAMESPACE.Bitcoin,
           chainReference: CHAIN_REFERENCE.CosmosHubVega
         })
-      ).toThrow('isChainId: invalid ChainId bip122:vega-testnet')
+      ).toThrow('assertIsValidChainId: unsupported ChainId: bip122:vega-testnet')
     })
   })
 
@@ -90,17 +90,17 @@ describe('chainId', () => {
       expect(chainReference).toEqual(CHAIN_REFERENCE.BitcoinTestnet)
     })
 
-    it('throws with invalid Bitcoin namespace ChainId', () => {
+    it('throws with unsupported Bitcoin namespace ChainId', () => {
       const badBitcoinChainId = 'bip999:000000000933ea01ad0ee984209779ba'
       expect(() => fromChainId(badBitcoinChainId)).toThrow(
-        'fromChainId: unsupported Chain Namespace: bip999'
+        'assertIsChainNamespace: unsupported ChainNamespace: bip999'
       )
     })
 
-    it('throws with invalid Bitcoin reference ChainId', () => {
+    it('throws with unsupported Bitcoin reference ChainId', () => {
       const badBitcoinChainId = 'bip122:000000000xxxxxxxxxxxxxxxxxxxxxxx'
       expect(() => fromChainId(badBitcoinChainId)).toThrow(
-        'fromChainId: unsupported Chain Reference: 000000000xxxxxxxxxxxxxxxxxxxxxxx'
+        'assertIsChainReference: unsupported ChainReference: 000000000xxxxxxxxxxxxxxxxxxxxxxx'
       )
     })
 
@@ -118,17 +118,17 @@ describe('chainId', () => {
       expect(chainReference).toEqual(CHAIN_REFERENCE.CosmosHubVega)
     })
 
-    it('throws with invalid Cosmos namespace ChainId', () => {
+    it('throws with unsupported Cosmos namespace ChainId', () => {
       const badCosmosChainId = 'cosmosssssssssss:cosmoshub-4'
       expect(() => fromChainId(badCosmosChainId)).toThrow(
-        'fromChainId: unsupported Chain Namespace: cosmosssssssssss'
+        'assertIsChainNamespace: unsupported ChainNamespace: cosmosssssssssss'
       )
     })
 
-    it('throws with invalid Cosmos reference ChainId', () => {
+    it('throws with unsupported Cosmos reference ChainId', () => {
       const badCosmosChainId = 'cosmos:kek-testnet'
       expect(() => fromChainId(badCosmosChainId)).toThrow(
-        'fromChainId: unsupported Chain Reference: kek-testnet'
+        'assertIsChainReference: unsupported ChainReference: kek-testnet'
       )
     })
 
@@ -153,17 +153,17 @@ describe('chainId', () => {
       expect(chainReference).toEqual(CHAIN_REFERENCE.EthereumMainnet)
     })
 
-    it('throws with invalid Ethereum namespace ChainId', () => {
+    it('throws with unsupported Ethereum namespace ChainId', () => {
       const badEthereumChainId = 'eip123:1'
       expect(() => fromChainId(badEthereumChainId)).toThrow(
-        'fromChainId: unsupported Chain Namespace: eip123'
+        'assertIsChainNamespace: unsupported ChainNamespace: eip123'
       )
     })
 
-    it('throws with invalid Ethereum reference ChainId', () => {
+    it('throws with unsupported Ethereum reference ChainId', () => {
       const badEthereumChainId = 'eip155:999'
       expect(() => fromChainId(badEthereumChainId)).toThrow(
-        'fromChainId: unsupported Chain Reference: 999'
+        'assertIsChainReference: unsupported ChainReference: 999'
       )
     })
 
@@ -183,25 +183,27 @@ describe('chainId', () => {
 
     it('should throw when there is no network reference', () => {
       expect(() => fromChainId('bip122')).toThrow(
-        'fromChainId: unsupported Chain Reference: undefined'
+        'assertIsChainReference: unsupported ChainReference: undefined'
       )
-      expect(() => fromChainId(':1')).toThrow('fromChainId: unsupported Chain Namespace: ')
-      expect(() => fromChainId(':')).toThrow('fromChainId: unsupported Chain Namespace: ')
+      expect(() => fromChainId(':1')).toThrow(
+        'assertIsChainNamespace: unsupported ChainNamespace: '
+      )
+      expect(() => fromChainId(':')).toThrow('assertIsChainNamespace: unsupported ChainNamespace: ')
     })
   })
 })
 
 describe('isChainId', () => {
   it('throws on eip155 without a network reference', () => {
-    expect(() => isValidChainId('eip155')).toThrow()
+    expect(() => assertIsValidChainId('eip155')).toThrow()
   })
 
   it('validates eip155:1 mainnet as true', () => {
     expect(isValidChainId('eip155:1')).toBe(true)
   })
 
-  it('throws on eip155:2 invalid network reference', () => {
-    expect(() => isValidChainId('eip155:2')).toThrow()
+  it('throws on eip155:2 unsupported network reference', () => {
+    expect(() => assertIsValidChainId('eip155:2')).toThrow()
   })
 
   it('validates ethereum testnets as true', () => {
@@ -218,17 +220,17 @@ describe('isChainId', () => {
   })
 
   it('throws on bip122 with the wrong network reference', () => {
-    expect(() => isValidChainId('bip122:1')).toThrow()
+    expect(() => assertIsValidChainId('bip122:1')).toThrow()
   })
 
   it('throws on bip122', () => {
     // missing network
-    expect(() => isValidChainId('bip122')).toThrow()
+    expect(() => assertIsValidChainId('bip122')).toThrow()
   })
 
   it('throws on empty string', () => {
     // missing network
-    expect(() => isValidChainId('')).toThrow()
+    expect(() => assertIsValidChainId('')).toThrow()
   })
 
   it('should return true for cosmos', () => {
@@ -242,6 +244,8 @@ describe('isChainId', () => {
   })
 
   it('should throw for an unknown cosmos chain', () => {
-    expect(() => isValidChainId('cosmos:fakechain-1')).toThrow('invalid')
+    expect(() => assertIsValidChainId('cosmos:fakechain-1')).toThrow(
+      'assertIsValidChainId: unsupported ChainId: cosmos:fakechain-1'
+    )
   })
 })

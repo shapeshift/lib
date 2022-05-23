@@ -1,6 +1,6 @@
 import { ChainId } from '../chainId/chainId'
 import { CHAIN_NAMESPACE } from '../constants'
-import { assertIsValidChainId, isValidChainId } from '../utils'
+import { assertIsValidChainId } from '../utils'
 
 export type AccountId = string
 
@@ -43,7 +43,7 @@ export const fromAccountId: FromAccountId = (accountId) => {
   }
 
   const chainId = parts.slice(0, 2).join(':')
-  isValidChainId(chainId)
+  assertIsValidChainId(chainId) // FIXME: add a test for this
   const account = parts[2]
 
   if (!account) {

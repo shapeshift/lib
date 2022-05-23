@@ -1,10 +1,12 @@
 // https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-2.md
 
-import { NetworkTypes } from '@shapeshiftoss/types'
-import invert from 'lodash/invert'
-
 import { CHAIN_NAMESPACE, CHAIN_REFERENCE } from '../constants'
-import { assertIsValidChainId, isChainNamespace, isChainReference, isValidChain } from '../utils'
+import {
+  assertIsChainNamespace,
+  assertIsChainReference,
+  assertIsValidChainId,
+  assertValidChainPartsPair
+} from '../utils'
 
 export type ChainId = string
 
@@ -31,37 +33,12 @@ type FromChainIdReturn = {
 type FromChainId = (chainId: string) => FromChainIdReturn
 
 export const fromChainId: FromChainId = (chainId) => {
-  const [maybeChainNamespace, maybeChainReference] = chainId.split(':')
-  if (!isChainNamespace(maybeChainNamespace))
-    throw new Error(`fromChainId: unsupported Chain Namespace: ${maybeChainNamespace}`)
-
-  if (!isChainReference(maybeChainReference))
-    throw new Error(`fromChainId: unsupported Chain Reference: ${maybeChainReference}`)
-
-  if (!isValidChain(maybeChainNamespace, maybeChainReference))
-    throw new Error(
-      `fromChainId: error parsing chainId, Chain Namespace: ${maybeChainNamespace}, Chain Reference: ${maybeChainReference}`
-    )
-
-  return { chainNamespace: maybeChainNamespace, chainReference: maybeChainReference }
+  const [chainNamespace, chainReference] = chainId.split(':')
+  assertIsChainNamespace(chainNamespace)
+  assertIsChainReference(chainReference)
+  assertValidChainPartsPair(chainNamespace, chainReference)
+  return { chainNamespace, chainReference }
 }
-
-export const chainReferenceToNetworkType: Record<ChainReference, NetworkTypes> = Object.freeze({
-  [CHAIN_REFERENCE.BitcoinMainnet]: NetworkTypes.MAINNET,
-  [CHAIN_REFERENCE.BitcoinTestnet]: NetworkTypes.TESTNET,
-  [CHAIN_REFERENCE.EthereumMainnet]: NetworkTypes.MAINNET,
-  [CHAIN_REFERENCE.EthereumRopsten]: NetworkTypes.ETH_ROPSTEN,
-  [CHAIN_REFERENCE.EthereumRinkeby]: NetworkTypes.ETH_RINKEBY,
-  [CHAIN_REFERENCE.CosmosHubMainnet]: NetworkTypes.COSMOSHUB_MAINNET,
-  [CHAIN_REFERENCE.CosmosHubVega]: NetworkTypes.COSMOSHUB_VEGA,
-  [CHAIN_REFERENCE.OsmosisMainnet]: NetworkTypes.OSMOSIS_MAINNET,
-  [CHAIN_REFERENCE.OsmosisTestnet]: NetworkTypes.OSMOSIS_TESTNET
-})
-
-export const networkTypeToChainReference = invert(chainReferenceToNetworkType) as Record<
-  NetworkTypes,
-  ChainReference
->
 
 export const toCAIP2 = toChainId
 export const fromCAIP2 = fromChainId

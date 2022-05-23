@@ -3,7 +3,14 @@ import toLower from 'lodash/toLower'
 
 import { ChainId, ChainNamespace, ChainReference, toChainId } from '../chainId/chainId'
 import { ASSET_NAMESPACE_STRINGS, ASSET_REFERENCE, VALID_ASSET_NAMESPACE } from '../constants'
-import { isAssetNamespace, isChainNamespace, isChainReference, isValidChain } from '../utils'
+import {
+  assertIsChainNamespace,
+  assertIsChainReference,
+  assertValidChainPartsPair,
+  isAssetNamespace,
+  isChainNamespace,
+  isChainReference
+} from '../utils'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // const { CHAIN_NAMESPACE } = require('./utils')
@@ -42,14 +49,9 @@ export const toAssetId: ToAssetId = (args: ToAssetIdArgs): AssetId => {
   const isContractAddress = Array<AssetNamespace>('erc20', 'erc721').includes(assetNamespace)
   const chainId = toChainId({ chainNamespace, chainReference })
 
-  if (
-    !isChainNamespace(chainNamespace) ||
-    !isChainReference(chainReference) ||
-    !isValidChain(chainNamespace, chainReference)
-  )
-    throw new Error(
-      `toAssetId: Chain Reference ${chainReference} not supported for Chain Namespace ${chainNamespace}`
-    )
+  assertIsChainNamespace(chainNamespace)
+  assertIsChainReference(chainReference)
+  assertValidChainPartsPair(chainNamespace, chainReference)
 
   if (
     !VALID_ASSET_NAMESPACE[chainNamespace].includes(assetNamespace) ||
@@ -103,8 +105,8 @@ export const fromAssetId: FromAssetId = (assetId) => {
     assetNamespace && ['erc20', 'erc721'].includes(assetNamespace)
 
   const assetReference = shouldLowercaseAssetReference ? toLower(matches[4]) : matches[4]
-  if (!chainNamespace || !chainReference)
-    throw new Error(`fromAssetId: invalid AssetId: ${assetId}`)
+  assertIsChainReference(chainReference)
+  assertIsChainNamespace(chainNamespace)
   const chainId = toChainId({ chainNamespace, chainReference })
 
   if (assetNamespace && assetReference && chainId) {
