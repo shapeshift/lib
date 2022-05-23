@@ -37,7 +37,7 @@ export async function zrxBuildTrade(
     )
     const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
       fromAssetId(sellAsset.assetId)
-    const buyToken = buyAssetNamespace === 'erc20' ? buyAssetErc20Address : sellAsset.symbol
+    const buyToken = buyAssetNamespace === 'erc20' ? buyAssetErc20Address : buyAsset.symbol
     const sellToken = sellAssetNamespace === 'erc20' ? sellAssetErc20Address : sellAsset.symbol
 
     if (buyAsset.chainId !== 'eip155:1') {
