@@ -1,3 +1,24 @@
+# [@shapeshiftoss/asset-service-v4.2.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v4.2.0...@shapeshiftoss/asset-service-v4.2.1) (2022-05-21)
+
+
+### Bug Fixes
+
+* mintscan url osmosis ([#675](https://github.com/shapeshift/lib/issues/675)) ([5f3fc07](https://github.com/shapeshift/lib/commit/5f3fc0708672d348471383f83d2a16d8f3ae1496))
+
+# [@shapeshiftoss/asset-service-v4.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v4.1.0...@shapeshiftoss/asset-service-v4.2.0) (2022-05-20)
+
+
+### Features
+
+* chain and asset utility functions ([#654](https://github.com/shapeshift/lib/issues/654)) ([4e12ce6](https://github.com/shapeshift/lib/commit/4e12ce6fd10cd8bf34e059e63c2a162fb6576932))
+
+# [@shapeshiftoss/asset-service-v4.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v4.0.1...@shapeshiftoss/asset-service-v4.1.0) (2022-05-18)
+
+
+### Features
+
+* add uni-v2 staking parser ([#648](https://github.com/shapeshift/lib/issues/648)) ([4e09ab7](https://github.com/shapeshift/lib/commit/4e09ab73c5768df4368e59aad7eb4107ef4dede7))
+
 # [@shapeshiftoss/asset-service-v4.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v4.0.0...@shapeshiftoss/asset-service-v4.0.1) (2022-05-18)
 
 # [@shapeshiftoss/asset-service-v4.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v3.0.1...@shapeshiftoss/asset-service-v4.0.0) (2022-05-18)

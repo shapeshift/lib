@@ -1,3 +1,17 @@
+# [@shapeshiftoss/types-v4.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v4.2.0...@shapeshiftoss/types-v4.3.0) (2022-05-20)
+
+
+### Features
+
+* add supply and maxSupply to marketData ([#673](https://github.com/shapeshift/lib/issues/673)) ([773b632](https://github.com/shapeshift/lib/commit/773b6325acf5ff1122aa2dde9f2dc34f41eab4ad))
+
+# [@shapeshiftoss/types-v4.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v4.1.0...@shapeshiftoss/types-v4.2.0) (2022-05-18)
+
+
+### Features
+
+* osmosis adapter ([#664](https://github.com/shapeshift/lib/issues/664)) ([8bcdfd1](https://github.com/shapeshift/lib/commit/8bcdfd17a9902fb08239c4b4a2db3ae6b6e15183))
+
 # [@shapeshiftoss/types-v4.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v4.0.1...@shapeshiftoss/types-v4.1.0) (2022-05-12)
 
 

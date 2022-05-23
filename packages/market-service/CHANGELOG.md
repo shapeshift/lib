@@ -1,3 +1,31 @@
+# [@shapeshiftoss/market-service-v4.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.1.0...@shapeshiftoss/market-service-v4.2.0) (2022-05-20)
+
+
+### Features
+
+* add supply and maxSupply fields to market service response ([#670](https://github.com/shapeshift/lib/issues/670)) ([9ad837b](https://github.com/shapeshift/lib/commit/9ad837bc8b56d105dc4892c242bd25ed15cb0cf0))
+
+# [@shapeshiftoss/market-service-v4.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.0.3...@shapeshiftoss/market-service-v4.1.0) (2022-05-20)
+
+
+### Features
+
+* chain and asset utility functions ([#654](https://github.com/shapeshift/lib/issues/654)) ([4e12ce6](https://github.com/shapeshift/lib/commit/4e12ce6fd10cd8bf34e059e63c2a162fb6576932))
+
+# [@shapeshiftoss/market-service-v4.0.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.0.2...@shapeshiftoss/market-service-v4.0.3) (2022-05-19)
+
+
+### Bug Fixes
+
+* timeframes for fiat rates ([#667](https://github.com/shapeshift/lib/issues/667)) ([38f3d12](https://github.com/shapeshift/lib/commit/38f3d12f0a375a0723755a9402dfd9f3be51ebf8))
+
+# [@shapeshiftoss/market-service-v4.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.0.1...@shapeshiftoss/market-service-v4.0.2) (2022-05-18)
+
+
+### Bug Fixes
+
+* fetch multiple years for fiat price history ([#660](https://github.com/shapeshift/lib/issues/660)) ([810c899](https://github.com/shapeshift/lib/commit/810c89977614b6fa86a6d855376765f1f52724c3))
+
 # [@shapeshiftoss/market-service-v4.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.0.0...@shapeshiftoss/market-service-v4.0.1) (2022-05-18)
 
 # [@shapeshiftoss/market-service-v4.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v3.0.2...@shapeshiftoss/market-service-v4.0.0) (2022-05-18)
