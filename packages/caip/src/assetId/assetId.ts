@@ -4,16 +4,14 @@ import toLower from 'lodash/toLower'
 import { ChainId, ChainNamespace, ChainReference, toChainId } from '../chainId/chainId'
 import { ASSET_NAMESPACE_STRINGS, ASSET_REFERENCE, VALID_ASSET_NAMESPACE } from '../constants'
 import {
+  assertIsAssetNamespace,
   assertIsChainNamespace,
   assertIsChainReference,
   assertValidChainPartsPair,
+  isAssetId,
   isAssetNamespace,
-  isChainNamespace,
-  isChainReference
+  parseAssetIdRegExp
 } from '../utils'
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-// const { CHAIN_NAMESPACE } = require('./utils')
 
 export type AssetId = string
 
@@ -43,7 +41,7 @@ type ToAssetId = (args: ToAssetIdArgs) => AssetId
 
 export const toAssetId: ToAssetId = (args: ToAssetIdArgs): AssetId => {
   const { chainNamespace, chainReference, assetNamespace, assetReference } = args
-  if (!assetNamespace) throw new Error('toAssetId: No assetNamespace provided')
+  assertIsAssetNamespace(assetNamespace)
   if (!assetReference) throw new Error('toAssetId: No assetReference provided')
 
   const isContractAddress = Array<AssetNamespace>('erc20', 'erc721').includes(assetNamespace)
@@ -92,14 +90,18 @@ type FromAssetIdReturn = {
 
 export type FromAssetId = (assetId: AssetId) => FromAssetIdReturn
 
-const parseAssetIdRegExp = /([-a-z\d]{3,8}):([-a-zA-Z\d]{1,32})\/([-a-z\d]{3,8}):([-a-zA-Z\d]+)/
-
 export const fromAssetId: FromAssetId = (assetId) => {
+  if (!isAssetId(assetId)) throw new Error(`fromAssetId: invalid AssetId: ${assetId}`)
   const matches = parseAssetIdRegExp.exec(assetId) ?? []
 
-  const chainNamespace = isChainNamespace(matches[1]) ? matches[1] : undefined
-  const chainReference = isChainReference(matches[2]) ? matches[2] : undefined
-  const assetNamespace = isAssetNamespace(matches[3]) ? matches[3] : undefined
+  // These should never throw because isAssetId() would have already caught it, but they help with type inference
+  assertIsChainNamespace(matches[1])
+  assertIsChainReference(matches[2])
+  assertIsAssetNamespace(matches[3])
+
+  const chainNamespace = matches[1]
+  const chainReference = matches[2]
+  const assetNamespace = matches[3]
 
   const shouldLowercaseAssetReference =
     assetNamespace && ['erc20', 'erc721'].includes(assetNamespace)

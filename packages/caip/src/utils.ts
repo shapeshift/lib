@@ -19,6 +19,9 @@ export const btcChainId = 'bip122:000000000019d6689c085ae165831e93'
 export const cosmosChainId = 'cosmos:cosmoshub-4'
 export const osmosisChainId = 'cosmos:osmosis-1'
 
+export const parseAssetIdRegExp =
+  /([-a-z\d]{3,8}):([-a-zA-Z\d]{1,32})\/([-a-z\d]{3,8}):([-a-zA-Z\d]+)/
+
 // TODO(ryankk): this will be removed and replaced with something like `toAssetId(fromChainId(chainId))`
 // when `fromChainId` supports returning ChainNamespace and ChainReference.
 export const chainIdToAssetId: Record<ChainId, AssetId> = {
@@ -62,6 +65,13 @@ export const isAssetReference = (
   maybeAssetReference: AssetReference | string
 ): maybeAssetReference is AssetReference =>
   Object.values(ASSET_REFERENCE).some((s) => s === maybeAssetReference)
+
+export const isAssetId = (maybeAssetId: AssetId | string): maybeAssetId is AssetReference => {
+  const matches = parseAssetIdRegExp.exec(maybeAssetId) ?? []
+  return (
+    isChainNamespace(matches[1]) && isChainReference(matches[2]) && isAssetNamespace(matches[3])
+  )
+}
 
 export const isValidChainPartsPair = (
   chainNamespace: ChainNamespace,
@@ -108,6 +118,20 @@ export const assertIsChainReference: (
 ) => asserts value is ChainReference = getTypeGuardAssertion(
   isChainReference,
   'assertIsChainReference: unsupported ChainReference'
+)
+
+export const assertIsAssetNamespace: (
+  value: AssetNamespace | string | undefined
+) => asserts value is AssetNamespace = getTypeGuardAssertion(
+  isAssetNamespace,
+  'assertIsAssetNamespace: unsupported AssetNamespace'
+)
+
+export const assertIsAssetReference: (
+  value: AssetReference | string | undefined
+) => asserts value is AssetReference = getTypeGuardAssertion(
+  isAssetReference,
+  'assertIsAssetReference: unsupported AssetReference'
 )
 
 export const assertValidChainPartsPair = (
