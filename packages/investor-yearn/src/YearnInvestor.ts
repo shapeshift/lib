@@ -1,17 +1,21 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { ETHSignTx } from '@shapeshiftoss/hdwallet-core'
 import { Investor } from '@shapeshiftoss/investor'
-import { VaultMetadata, Yearn } from '@yfi/sdk'
+import { VaultMetadata, Yearn, ChainId } from '@yfi/sdk'
 import find from 'lodash/find'
 import first from 'lodash/first'
 import Web3 from 'web3'
 import { Contract } from 'web3-eth-contract'
 
-import { ConstructorArgs } from './api'
 import { ssRouterAbi, ssRouterContractAddress } from './constants'
-import { YearnOpportunity } from './YearnOpportunity'
+import { YearnOpportunity, PreparedTransaction } from './YearnOpportunity'
 
-export class YearnInvestor implements Investor<ETHSignTx, VaultMetadata> {
+type ConstructorArgs = {
+  dryRun?: true,
+  providerUrl: string,
+  network?: ChainId
+}
+
+export class YearnInvestor implements Investor<PreparedTransaction, VaultMetadata> {
   #deps: {
     web3: Web3
     yearnSdk: Yearn<1>
@@ -50,6 +54,6 @@ export class YearnInvestor implements Investor<ETHSignTx, VaultMetadata> {
   }
 
   async findByUnderlyingAssetId(assetId: string) {
-    return find(await this.findAll(), { tokenId: assetId })
+    return find(await this.findAll(), { underlyingAsset: { assetId } })
   }
 }

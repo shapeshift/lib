@@ -1,4 +1,3 @@
-import { ETHWallet } from '@shapeshiftoss/hdwallet-core'
 import type { BigNumber } from 'bignumber.js'
 
 export interface RebasingToken {}
@@ -7,8 +6,8 @@ export type ApproveInput = {
   accountNumber?: number
   dryRun?: boolean
   address: string
-  wallet: ETHWallet
 }
+
 export interface ApprovalRequired {
   isApprovalRequired: true
   allowance: (address: string) => Promise<unknown>
