@@ -3,35 +3,37 @@ import { ChainNamespace, ChainReference } from 'packages/caip/src/chainId/chainI
 import {
   ASSET_NAMESPACE_STRINGS,
   ASSET_REFERENCE,
-  CHAIN_NAMESPACE,
-  CHAIN_REFERENCE
-} from './constants'
-import {
-  accountIdToChainId,
-  accountIdToSpecifier,
-  assertIsAssetNamespace,
-  assertIsAssetReference,
-  assertIsChainNamespace,
-  assertIsChainReference,
-  assertIsValidChainId,
-  assertValidChainPartsPair,
   btcAssetId,
   btcChainId,
-  chainIdToFeeAssetId,
+  CHAIN_NAMESPACE,
+  CHAIN_REFERENCE,
   cosmosAssetId,
   cosmosChainId,
   ethAssetId,
   ethChainId,
-  getFeeAssetIdFromAssetId,
+  osmosisAssetId,
+  osmosisChainId
+} from './constants'
+import {
+  assertIsAssetNamespace,
+  assertIsAssetReference,
+  assertIsChainId,
+  assertIsChainNamespace,
+  assertIsChainReference,
+  assertValidChainPartsPair,
   isAssetId,
   isAssetNamespace,
   isAssetReference,
+  isChainId,
   isChainNamespace,
-  isChainReference,
-  isValidChainId,
-  isValidChainPartsPair,
-  osmosisAssetId,
-  osmosisChainId
+  isChainReference
+} from './typeGuards'
+import {
+  accountIdToChainId,
+  accountIdToSpecifier,
+  chainIdToFeeAssetId,
+  getFeeAssetIdFromAssetId,
+  isValidChainPartsPair
 } from './utils'
 
 describe('accountIdToChainId', () => {
@@ -130,12 +132,12 @@ describe('type guard', () => {
 
   describe('isValidChainId', () => {
     it('correctly determines type', () => {
-      expect(isValidChainId(ethChainId)).toEqual(true)
-      expect(isValidChainId(btcChainId)).toEqual(true)
-      expect(isValidChainId(cosmosChainId)).toEqual(true)
-      expect(isValidChainId(osmosisChainId)).toEqual(true)
-      expect(isValidChainId('invalid')).toEqual(false)
-      expect(isValidChainId('')).toEqual(false)
+      expect(isChainId(ethChainId)).toEqual(true)
+      expect(isChainId(btcChainId)).toEqual(true)
+      expect(isChainId(cosmosChainId)).toEqual(true)
+      expect(isChainId(osmosisChainId)).toEqual(true)
+      expect(isChainId('invalid')).toEqual(false)
+      expect(isChainId('')).toEqual(false)
     })
   })
 
@@ -170,14 +172,14 @@ describe('type guard', () => {
 })
 
 describe('type guard assertion', () => {
-  describe('assertIsValidChainId', () => {
+  describe('assertIsChainId', () => {
     it('correctly asserts type', () => {
-      expect(() => assertIsValidChainId(ethChainId)).not.toThrow()
-      expect(() => assertIsValidChainId(btcChainId)).not.toThrow()
-      expect(() => assertIsValidChainId(cosmosChainId)).not.toThrow()
-      expect(() => assertIsValidChainId(osmosisChainId)).not.toThrow()
-      expect(() => assertIsValidChainId('invalid')).toThrow()
-      expect(() => assertIsValidChainId('')).toThrow()
+      expect(() => assertIsChainId(ethChainId)).not.toThrow()
+      expect(() => assertIsChainId(btcChainId)).not.toThrow()
+      expect(() => assertIsChainId(cosmosChainId)).not.toThrow()
+      expect(() => assertIsChainId(osmosisChainId)).not.toThrow()
+      expect(() => assertIsChainId('invalid')).toThrow()
+      expect(() => assertIsChainId('')).toThrow()
     })
   })
 

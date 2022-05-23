@@ -2,11 +2,11 @@
 
 import { CHAIN_NAMESPACE, CHAIN_REFERENCE } from '../constants'
 import {
+  assertIsChainId,
   assertIsChainNamespace,
   assertIsChainReference,
-  assertIsValidChainId,
   assertValidChainPartsPair
-} from '../utils'
+} from '../typeGuards'
 
 export type ChainId = string
 
@@ -21,7 +21,7 @@ type ToChainIdArgs = {
 export const toChainId = (args: ToChainIdArgs): ChainId => {
   const { chainNamespace, chainReference } = args
   const maybeChainId = `${chainNamespace}:${chainReference}`
-  assertIsValidChainId(maybeChainId)
+  assertIsChainId(maybeChainId)
   return maybeChainId
 }
 

@@ -9,9 +9,9 @@ import {
   assertIsChainReference,
   assertValidChainPartsPair,
   isAssetId,
-  isAssetNamespace,
-  parseAssetIdRegExp
-} from '../utils'
+  isAssetNamespace
+} from '../typeGuards'
+import { parseAssetIdRegExp } from '../utils'
 
 export type AssetId = string
 

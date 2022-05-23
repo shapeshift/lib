@@ -1,6 +1,6 @@
 import { ChainId, ChainNamespace, ChainReference, fromChainId, toChainId } from '../chainId/chainId'
 import { CHAIN_NAMESPACE } from '../constants'
-import { assertIsChainNamespace, assertIsChainReference, assertIsValidChainId } from '../utils'
+import { assertIsChainId, assertIsChainNamespace, assertIsChainReference } from '../typeGuards'
 
 export type AccountId = string
 
@@ -29,7 +29,7 @@ export const toAccountId: ToAccountId = ({
   if (!account) throw new Error(`toAccountId: account is required`)
 
   const chainId = maybeChainId ?? toChainId({ chainNamespace, chainReference })
-  assertIsValidChainId(chainId)
+  assertIsChainId(chainId)
   const { chainNamespace: chainNamespaceFromChainId } = fromChainId(chainId)
 
   // we lowercase eth accounts as per the draft spec
@@ -62,7 +62,7 @@ export const fromAccountId: FromAccountId = (accountId) => {
   const chainId = parts.slice(0, 2).join(':')
   assertIsChainNamespace(chainNamespace)
   assertIsChainReference(chainReference)
-  assertIsValidChainId(chainId)
+  assertIsChainId(chainId)
 
   const account = parts[2]
   if (!account) {

@@ -2,16 +2,16 @@ import axios from 'axios'
 import fs from 'fs'
 
 import { toAssetId } from '../../assetId/assetId'
-import { ASSET_REFERENCE, CHAIN_NAMESPACE, CHAIN_REFERENCE } from '../../constants'
 import {
+  ASSET_REFERENCE,
   btcChainId,
+  CHAIN_NAMESPACE,
+  CHAIN_REFERENCE,
   cosmosChainId,
   ethChainId,
-  makeBtcData,
-  makeCosmosHubData,
-  makeOsmosisData,
   osmosisChainId
-} from '../../utils'
+} from '../../constants'
+import { makeBtcData, makeCosmosHubData, makeOsmosisData } from '../../utils'
 
 export type CoingeckoCoin = {
   id: string

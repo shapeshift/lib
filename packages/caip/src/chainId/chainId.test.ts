@@ -1,5 +1,5 @@
 import { CHAIN_NAMESPACE, CHAIN_REFERENCE } from '../constants'
-import { assertIsValidChainId, isValidChainId } from '../utils'
+import { assertIsChainId, isChainId } from '../typeGuards'
 import { fromCAIP2, fromChainId, toCAIP2, toChainId } from './chainId'
 
 describe('chainId', () => {
@@ -71,7 +71,7 @@ describe('chainId', () => {
           chainNamespace: CHAIN_NAMESPACE.Bitcoin,
           chainReference: CHAIN_REFERENCE.CosmosHubVega
         })
-      ).toThrow('assertIsValidChainId: unsupported ChainId: bip122:vega-testnet')
+      ).toThrow('assertIsChainId: unsupported ChainId: bip122:vega-testnet')
     })
   })
 
@@ -195,57 +195,57 @@ describe('chainId', () => {
 
 describe('isChainId', () => {
   it('throws on eip155 without a network reference', () => {
-    expect(() => assertIsValidChainId('eip155')).toThrow()
+    expect(() => assertIsChainId('eip155')).toThrow()
   })
 
   it('validates eip155:1 mainnet as true', () => {
-    expect(isValidChainId('eip155:1')).toBe(true)
+    expect(isChainId('eip155:1')).toBe(true)
   })
 
   it('throws on eip155:2 unsupported network reference', () => {
-    expect(() => assertIsValidChainId('eip155:2')).toThrow()
+    expect(() => assertIsChainId('eip155:2')).toThrow()
   })
 
   it('validates ethereum testnets as true', () => {
-    expect(isValidChainId('eip155:3')).toBe(true)
-    expect(isValidChainId('eip155:4')).toBe(true)
+    expect(isChainId('eip155:3')).toBe(true)
+    expect(isChainId('eip155:4')).toBe(true)
   })
 
   it('validates bip122:000000000019d6689c085ae165831e93 mainnet as true', () => {
-    expect(isValidChainId('bip122:000000000019d6689c085ae165831e93')).toBe(true)
+    expect(isChainId('bip122:000000000019d6689c085ae165831e93')).toBe(true)
   })
 
   it('validates bip122:000000000933ea01ad0ee984209779ba testnet as true', () => {
-    expect(isValidChainId('bip122:000000000933ea01ad0ee984209779ba')).toBe(true)
+    expect(isChainId('bip122:000000000933ea01ad0ee984209779ba')).toBe(true)
   })
 
   it('throws on bip122 with the wrong network reference', () => {
-    expect(() => assertIsValidChainId('bip122:1')).toThrow()
+    expect(() => assertIsChainId('bip122:1')).toThrow()
   })
 
   it('throws on bip122', () => {
     // missing network
-    expect(() => assertIsValidChainId('bip122')).toThrow()
+    expect(() => assertIsChainId('bip122')).toThrow()
   })
 
   it('throws on empty string', () => {
     // missing network
-    expect(() => assertIsValidChainId('')).toThrow()
+    expect(() => assertIsChainId('')).toThrow()
   })
 
   it('should return true for cosmos', () => {
-    expect(isValidChainId('cosmos:cosmoshub-4')).toBe(true)
-    expect(isValidChainId('cosmos:vega-testnet')).toBe(true)
+    expect(isChainId('cosmos:cosmoshub-4')).toBe(true)
+    expect(isChainId('cosmos:vega-testnet')).toBe(true)
   })
 
   it('should return true for osmosis', () => {
-    expect(isValidChainId('cosmos:osmosis-1')).toBe(true)
-    expect(isValidChainId('cosmos:osmo-testnet-1')).toBe(true)
+    expect(isChainId('cosmos:osmosis-1')).toBe(true)
+    expect(isChainId('cosmos:osmo-testnet-1')).toBe(true)
   })
 
   it('should throw for an unknown cosmos chain', () => {
-    expect(() => assertIsValidChainId('cosmos:fakechain-1')).toThrow(
-      'assertIsValidChainId: unsupported ChainId: cosmos:fakechain-1'
+    expect(() => assertIsChainId('cosmos:fakechain-1')).toThrow(
+      'assertIsChainId: unsupported ChainId: cosmos:fakechain-1'
     )
   })
 })
