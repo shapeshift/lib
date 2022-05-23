@@ -1,4 +1,4 @@
-import { ChainId, ChainNamespace, ChainReference } from '../chainId/chainId'
+import { ChainId, ChainNamespace, ChainReference, toChainId } from '../chainId/chainId'
 import { CHAIN_NAMESPACE } from '../constants'
 import { assertIsChainNamespace, assertIsChainReference, assertIsValidChainId } from '../utils'
 
@@ -26,7 +26,7 @@ export const toAccountId: ToAccountId = ({
   chainReference,
   account
 }) => {
-  const chainId = maybeChainId ?? `${chainNamespace}:${chainReference}`
+  const chainId = maybeChainId ?? toChainId({ chainNamespace, chainReference })
   assertIsValidChainId(chainId)
 
   if (!account) {

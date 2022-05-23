@@ -1,5 +1,4 @@
-import { ChainNamespace, ChainReference } from 'packages/caip/src/chainId/chainId'
-
+import { ChainNamespace, ChainReference, toChainId } from '../chainId/chainId'
 import { CHAIN_NAMESPACE, CHAIN_REFERENCE } from '../constants'
 import { fromAccountId, fromCAIP10, toAccountId, toCAIP10 } from './accountId'
 
@@ -20,7 +19,7 @@ describe('toAccountId', () => {
   it('throws on empty account', () => {
     const chainNamespace = CHAIN_NAMESPACE.Ethereum
     const chainReference = CHAIN_REFERENCE.EthereumMainnet
-    const chainId = `${chainNamespace}:${chainReference}`
+    const chainId = toChainId({ chainNamespace, chainReference })
     const account = ''
     expect(() => toAccountId({ chainId, account })).toThrow()
     expect(() => toAccountId({ chainNamespace, chainReference, account })).toThrow()
@@ -29,7 +28,7 @@ describe('toAccountId', () => {
   it('accepts valid eth chainId and account', () => {
     const chainNamespace = CHAIN_NAMESPACE.Ethereum
     const chainReference = CHAIN_REFERENCE.EthereumMainnet
-    const chainId = `${chainNamespace}:${chainReference}`
+    const chainId = toChainId({ chainNamespace, chainReference })
     const account = '0xa44c286ba83bb771cd0107b2c1df678435bd1535'
     const expectedAccountId = `${chainId}:${account}`
     expect(toAccountId({ chainId, account })).toEqual(expectedAccountId)
@@ -39,7 +38,7 @@ describe('toAccountId', () => {
   it('lowercases eth address', () => {
     const chainNamespace = CHAIN_NAMESPACE.Ethereum
     const chainReference = CHAIN_REFERENCE.EthereumMainnet
-    const chainId = `${chainNamespace}:${chainReference}`
+    const chainId = toChainId({ chainNamespace, chainReference })
     const account = '0xA44C286BA83Bb771cd0107B2c1Df678435Bd1535'
     const expectedAccountId = `${chainId}:${account.toLowerCase()}`
     expect(toAccountId({ chainId, account })).toEqual(expectedAccountId)
@@ -49,7 +48,7 @@ describe('toAccountId', () => {
   it('does not lowercase bitcoin account', () => {
     const chainNamespace = CHAIN_NAMESPACE.Bitcoin
     const chainReference = CHAIN_REFERENCE.BitcoinMainnet
-    const chainId = `${chainNamespace}:${chainReference}`
+    const chainId = toChainId({ chainNamespace, chainReference })
     const account = '327aHcrjdooNUzG3qqZkuVZkm3MyjgxScn'
     const expectedAccountId = `${chainId}:${account}`
     expect(toAccountId({ chainId, account })).toEqual(expectedAccountId)

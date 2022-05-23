@@ -357,7 +357,7 @@ describe('assetId', () => {
         fromAssetId(AssetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Ethereum)
       expect(chainReference).toEqual(CHAIN_REFERENCE.EthereumMainnet)
-      expect(chainId).toEqual(`${chainNamespace}:${chainReference}`) // FIXME: use toChainId
+      expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
       expect(assetNamespace).toEqual('slip44')
       expect(assetReference).toEqual(ASSET_REFERENCE.Ethereum)
     })
@@ -368,7 +368,7 @@ describe('assetId', () => {
         fromAssetId(AssetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Ethereum)
       expect(chainReference).toEqual(CHAIN_REFERENCE.EthereumRopsten)
-      expect(chainId).toEqual(`${chainNamespace}:${chainReference}`) // FIXME: use toChainId
+      expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
       expect(assetNamespace).toEqual('slip44')
       expect(assetReference).toEqual(ASSET_REFERENCE.Ethereum)
     })
@@ -379,7 +379,7 @@ describe('assetId', () => {
         fromAssetId(AssetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Bitcoin)
       expect(chainReference).toEqual(CHAIN_REFERENCE.BitcoinMainnet)
-      expect(chainId).toEqual(`${chainNamespace}:${chainReference}`) // FIXME: use toChainId
+      expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
       expect(assetNamespace).toEqual('slip44')
       expect(assetReference).toEqual(ASSET_REFERENCE.Bitcoin)
     })
@@ -390,7 +390,7 @@ describe('assetId', () => {
         fromAssetId(AssetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Bitcoin)
       expect(chainReference).toEqual(CHAIN_REFERENCE.BitcoinTestnet)
-      expect(chainId).toEqual(`${chainNamespace}:${chainReference}`) // FIXME: use toChainId
+      expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
       expect(assetNamespace).toEqual('slip44')
       expect(assetReference).toEqual(ASSET_REFERENCE.Bitcoin)
     })
@@ -401,7 +401,7 @@ describe('assetId', () => {
         fromAssetId(AssetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Ethereum)
       expect(chainReference).toEqual(CHAIN_REFERENCE.EthereumMainnet)
-      expect(chainId).toEqual(`${chainNamespace}:${chainReference}`) // FIXME: use toChainId
+      expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
       expect(assetNamespace).toEqual('erc20')
       expect(assetReference).toEqual('0xc770eefad204b5180df6a14ee197d99d808ee52d')
     })
@@ -412,7 +412,7 @@ describe('assetId', () => {
         fromAssetId(AssetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Ethereum)
       expect(chainReference).toEqual(CHAIN_REFERENCE.EthereumRopsten)
-      expect(chainId).toEqual(`${chainNamespace}:${chainReference}`) // FIXME: use toChainId
+      expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
       expect(assetNamespace).toEqual('erc20')
       expect(assetReference).toEqual('0xc770eefad204b5180df6a14ee197d99d808ee52d')
     })
@@ -423,7 +423,7 @@ describe('assetId', () => {
         fromAssetId(AssetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Ethereum)
       expect(chainReference).toEqual(CHAIN_REFERENCE.EthereumRopsten)
-      expect(chainId).toEqual(`${chainNamespace}:${chainReference}`) // FIXME: use toChainId
+      expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
       expect(assetNamespace).toEqual('erc721')
       expect(assetReference).toEqual('0xc770eefad204b5180df6a14ee197d99d808ee52d')
     })
@@ -434,7 +434,7 @@ describe('assetId', () => {
         fromAssetId(AssetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Ethereum)
       expect(chainReference).toEqual(CHAIN_REFERENCE.EthereumRopsten)
-      expect(chainId).toEqual(`${chainNamespace}:${chainReference}`) // FIXME: use toChainId
+      expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
       expect(assetNamespace).toEqual('erc20')
       expect(assetReference).toEqual('0xc770eefad204b5180df6a14ee197d99d808ee52d')
     })
@@ -445,7 +445,7 @@ describe('assetId', () => {
         fromAssetId(AssetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Cosmos)
       expect(chainReference).toEqual(CHAIN_REFERENCE.CosmosHubMainnet)
-      expect(chainId).toEqual(`${chainNamespace}:${chainReference}`) // FIXME: use toChainId
+      expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
       expect(assetNamespace).toEqual('slip44')
       expect(assetReference).toEqual(ASSET_REFERENCE.Cosmos)
     })
@@ -456,7 +456,7 @@ describe('assetId', () => {
         fromAssetId(AssetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Cosmos)
       expect(chainReference).toEqual(CHAIN_REFERENCE.OsmosisMainnet)
-      expect(chainId).toEqual(`${chainNamespace}:${chainReference}`) // FIXME: use toChainId
+      expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
       expect(assetNamespace).toEqual('slip44')
       expect(assetReference).toEqual(ASSET_REFERENCE.Osmosis)
     })
@@ -468,7 +468,7 @@ describe('assetId', () => {
         fromAssetId(AssetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Cosmos)
       expect(chainReference).toEqual(CHAIN_REFERENCE.OsmosisMainnet)
-      expect(chainId).toEqual(`${chainNamespace}:${chainReference}`) // FIXME: use toChainId
+      expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
       expect(assetNamespace).toEqual('ibc')
       expect(assetReference).toEqual(
         '346786EA82F41FE55FAD14BF69AD8BA9B36985406E43F3CB23E6C45A285A9593'
@@ -481,7 +481,7 @@ describe('assetId', () => {
         fromAssetId(AssetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Cosmos)
       expect(chainReference).toEqual(CHAIN_REFERENCE.OsmosisMainnet)
-      expect(chainId).toEqual(`${chainNamespace}:${chainReference}`) // FIXME: use toChainId
+      expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
       expect(assetNamespace).toEqual('cw20')
       expect(assetReference).toEqual('canlab')
     })
@@ -492,7 +492,7 @@ describe('assetId', () => {
         fromAssetId(AssetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Cosmos)
       expect(chainReference).toEqual(CHAIN_REFERENCE.OsmosisMainnet)
-      expect(chainId).toEqual(`${chainNamespace}:${chainReference}`) // FIXME: use toChainId
+      expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
       expect(assetNamespace).toEqual('cw721')
       expect(assetReference).toEqual('osmokitty')
     })
