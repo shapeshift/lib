@@ -1,6 +1,6 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 
-import { ExecuteTradeInput } from '../../../api'
+import { ExecuteTradeInput, ZrxTrade } from '../../../api'
 import { setupQuote } from '../utils/test-data/setupSwapQuote'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 import { zrxExecuteTrade } from './zrxExecuteTrade'
@@ -40,7 +40,7 @@ describe('ZrxExecuteTrade', () => {
         chainSpecific: { approvalFee: '123600000', estimatedGas: '1235', gasPrice: '1236' }
       },
       sources: []
-    },
+    } as ZrxTrade<'eip155:1'>,
     wallet
   }
 
@@ -51,7 +51,7 @@ describe('ZrxExecuteTrade', () => {
         trade: {
           ...execTradeInput.trade,
           depositAddress: '0x728F1973c71f7567dE2a34Fa2838D4F0FB7f9765'
-        }
+        } as ZrxTrade<'eip155:1'>
       })
     ).toEqual({ txid })
   })
@@ -68,7 +68,7 @@ describe('ZrxExecuteTrade', () => {
         trade: {
           ...execTradeInput.trade,
           depositAddress: '0x728F1973c71f7567dE2a34Fa2838D4F0FB7f9765'
-        }
+        } as ZrxTrade<'eip155:1'>
       })
     ).toEqual({ txid })
   })
