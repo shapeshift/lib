@@ -88,6 +88,7 @@ const getTypeGuardAssertion = <T>(
   }
 }
 
+// FIXME: Add tests for assertion helpers
 export const assertIsValidChainId: (
   value: ChainId | string | undefined
 ) => asserts value is ChainId = getTypeGuardAssertion(
