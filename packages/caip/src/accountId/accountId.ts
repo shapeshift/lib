@@ -1,4 +1,6 @@
-import { CHAIN_NAMESPACE, ChainId, isChainId } from '../chainId/chainId'
+import { ChainId } from '../chainId/chainId'
+import { CHAIN_NAMESPACE } from '../constants'
+import { assertIsValidChainId, isValidChainId } from '../utils'
 
 export type AccountId = string
 
@@ -7,12 +9,10 @@ type ToAccountIdArgs = {
   account: string
 }
 
-type ToAccountId = (args: ToAccountIdArgs) => string
+type ToAccountId = (args: ToAccountIdArgs) => AccountId
 
 export const toAccountId: ToAccountId = ({ chainId, account }) => {
-  if (!isChainId(chainId)) {
-    throw new Error(`toAccountId: invalid ChainId ${chainId}`)
-  }
+  assertIsValidChainId(chainId)
 
   if (!account) {
     throw new Error(`toAccountId: account is required`)
@@ -43,9 +43,7 @@ export const fromAccountId: FromAccountId = (accountId) => {
   }
 
   const chainId = parts.slice(0, 2).join(':')
-  if (!isChainId(chainId)) {
-    throw new Error(`fromAccountId: invalid ChainId ${chainId}`)
-  }
+  isValidChainId(chainId)
   const account = parts[2]
 
   if (!account) {

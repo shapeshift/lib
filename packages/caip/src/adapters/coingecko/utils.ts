@@ -1,9 +1,17 @@
-import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import axios from 'axios'
 import fs from 'fs'
 
-import { ASSET_REFERENCE, toAssetId } from '../../assetId/assetId'
-import { CHAIN_NAMESPACE, CHAIN_REFERENCE, toChainId } from '../../chainId/chainId'
+import { toAssetId } from '../../assetId/assetId'
+import { ASSET_REFERENCE, CHAIN_NAMESPACE, CHAIN_REFERENCE } from '../../constants'
+import {
+  btcChainId,
+  cosmosChainId,
+  ethChainId,
+  makeBtcData,
+  makeCosmosHubData,
+  makeOsmosisData,
+  osmosisChainId
+} from '../../utils'
 
 export type CoingeckoCoin = {
   id: string
@@ -42,57 +50,11 @@ export const parseEthData = (data: CoingeckoCoin[]) => {
   }, {} as Record<string, string>)
 }
 
-export const makeBtcData = () => {
-  const chainNamespace = CHAIN_NAMESPACE.Bitcoin
-  const chainReference = CHAIN_REFERENCE.BitcoinMainnet
-  const assetId = toAssetId({
-    chainNamespace,
-    chainReference,
-    assetNamespace: 'slip44',
-    assetReference: ASSET_REFERENCE.Bitcoin
-  })
-  return { [assetId]: 'bitcoin' }
-}
-
-export const makeCosmosHubData = () => {
-  const chainNamespace = CHAIN_NAMESPACE.Cosmos
-  const chainReference = CHAIN_REFERENCE.CosmosHubMainnet
-  const assetId = toAssetId({
-    chainNamespace,
-    chainReference,
-    assetNamespace: 'slip44',
-    assetReference: ASSET_REFERENCE.Cosmos
-  })
-  return { [assetId]: 'cosmos' }
-}
-
-export const makeOsmosisData = () => {
-  const chainNamespace = CHAIN_NAMESPACE.Cosmos
-  const chainReference = CHAIN_REFERENCE.OsmosisMainnet
-  const assetId = toAssetId({
-    chainNamespace,
-    chainReference,
-    assetNamespace: 'slip44',
-    assetReference: ASSET_REFERENCE.Osmosis
-  })
-  return { [assetId]: 'osmosis' }
-}
-
 export const parseData = (d: CoingeckoCoin[]) => {
-  const ethereumMainnet = toChainId({ chain: ChainTypes.Ethereum, network: NetworkTypes.MAINNET })
-  const bitcoinMainnet = toChainId({ chain: ChainTypes.Bitcoin, network: NetworkTypes.MAINNET })
-  const cosmosHubMainnet = toChainId({
-    chain: ChainTypes.Cosmos,
-    network: NetworkTypes.COSMOSHUB_MAINNET
-  })
-  const osmosisMainnet = toChainId({
-    chain: ChainTypes.Osmosis,
-    network: NetworkTypes.OSMOSIS_MAINNET
-  })
   return {
-    [ethereumMainnet]: parseEthData(d),
-    [bitcoinMainnet]: makeBtcData(),
-    [cosmosHubMainnet]: makeCosmosHubData(),
-    [osmosisMainnet]: makeOsmosisData()
+    [ethChainId]: parseEthData(d),
+    [btcChainId]: makeBtcData(),
+    [cosmosChainId]: makeCosmosHubData(),
+    [osmosisChainId]: makeOsmosisData()
   }
 }

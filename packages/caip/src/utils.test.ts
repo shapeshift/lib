@@ -1,17 +1,16 @@
 import {
   accountIdToChainId,
   accountIdToSpecifier,
-  assetIdToChainId,
-  btcAssetId,
   btcChainId,
   chainIdToFeeAssetId,
   cosmosAssetId,
   cosmosChainId,
   ethAssetId,
   ethChainId,
-  getChainReferenceFromChainId,
   getFeeAssetIdFromAssetId
 } from './utils'
+
+// const { hello1, hello2 } = require('./utils')
 
 describe('accountIdToChainId', () => {
   it('can get eth chainId from accountId', () => {
@@ -40,41 +39,6 @@ describe('accountIdToSpecifier', () => {
     const accountId = 'bip122:000000000019d6689c085ae165831e93:xpubfoobarbaz'
     const result = accountIdToSpecifier(accountId)
     expect(result).toEqual(xpub)
-  })
-})
-
-describe('assetIdToChainId', () => {
-  it('returns a ETH chainId for a given ETH assetId', () => {
-    const erc20AssetId = 'eip155:1/erc20:0x3155ba85d5f96b2d030a4966af206230e46849cb'
-    const chainId = 'eip155:1'
-    const result = assetIdToChainId(erc20AssetId)
-    expect(result).toEqual(chainId)
-  })
-
-  it('returns a BTC chainId for a given BTC assetId', () => {
-    const result = assetIdToChainId(btcAssetId)
-    expect(result).toEqual(btcChainId)
-  })
-})
-
-describe('getChainReferenceFromChainId', () => {
-  it('returns the reference from a chainId string with a valid reference', () => {
-    const validChainId = 'cosmos:cosmoshub-4'
-    const validChainIdReference = 'cosmoshub-4'
-
-    const reference = getChainReferenceFromChainId(validChainId)
-    expect(reference).toEqual(validChainIdReference)
-  })
-  it('returns undefined from an empty chainId string', () => {
-    const invalidChainId = ''
-
-    expect(() => getChainReferenceFromChainId(invalidChainId)).toThrow()
-  })
-
-  it('returns undefined from an invalid chainId string', () => {
-    const invalidChainId = 'foobar'
-
-    expect(() => getChainReferenceFromChainId(invalidChainId)).toThrow()
   })
 })
 

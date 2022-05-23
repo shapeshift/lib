@@ -1,34 +1,16 @@
 // https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-19.md
 import toLower from 'lodash/toLower'
 
-import {
-  CHAIN_NAMESPACE,
-  CHAIN_REFERENCE,
-  ChainId,
-  ChainNamespace,
-  ChainReference
-} from '../chainId/chainId'
+import { ChainId, ChainNamespace, ChainReference, toChainId } from '../chainId/chainId'
+import { ASSET_NAMESPACE_STRINGS, ASSET_REFERENCE, VALID_ASSET_NAMESPACE } from '../constants'
+import { isAssetNamespace, isChainNamespace, isChainReference, isValidChain } from '../utils'
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+// const { CHAIN_NAMESPACE } = require('./utils')
 
 export type AssetId = string
 
-const assetNamespaceStrings = [
-  'cw20',
-  'cw721',
-  'erc20',
-  'erc721',
-  'slip44',
-  'native',
-  'ibc'
-] as const
-
-export type AssetNamespace = typeof assetNamespaceStrings[number]
-
-export const ASSET_REFERENCE = {
-  Bitcoin: '0',
-  Ethereum: '60',
-  Cosmos: '118',
-  Osmosis: '118'
-} as const
+export type AssetNamespace = typeof ASSET_NAMESPACE_STRINGS[number]
 
 export type AssetReference = typeof ASSET_REFERENCE[keyof typeof ASSET_REFERENCE]
 
@@ -38,65 +20,6 @@ type ToAssetIdArgs = {
   assetNamespace: AssetNamespace
   assetReference: AssetReference | string
 }
-
-type ValidAssetNamespace = {
-  [k in ChainNamespace]: AssetNamespace[]
-}
-
-const VALID_ASSET_NAMESPACE: ValidAssetNamespace = Object.freeze({
-  [CHAIN_NAMESPACE.Bitcoin]: ['slip44'],
-  [CHAIN_NAMESPACE.Ethereum]: ['slip44', 'erc20', 'erc721'],
-  [CHAIN_NAMESPACE.Cosmos]: ['cw20', 'cw721', 'ibc', 'native', 'slip44']
-})
-
-type ValidChainMap = {
-  [k in ChainNamespace]: ChainReference[]
-}
-
-const VALID_CHAIN_IDS: ValidChainMap = Object.freeze({
-  [CHAIN_NAMESPACE.Bitcoin]: [CHAIN_REFERENCE.BitcoinMainnet, CHAIN_REFERENCE.BitcoinTestnet],
-  [CHAIN_NAMESPACE.Ethereum]: [
-    CHAIN_REFERENCE.EthereumMainnet,
-    CHAIN_REFERENCE.EthereumRopsten,
-    CHAIN_REFERENCE.EthereumRinkeby
-  ],
-  [CHAIN_NAMESPACE.Cosmos]: [
-    CHAIN_REFERENCE.CosmosHubMainnet,
-    CHAIN_REFERENCE.CosmosHubVega,
-    CHAIN_REFERENCE.OsmosisMainnet,
-    CHAIN_REFERENCE.OsmosisTestnet
-  ]
-})
-
-export const isChainNamespace = (
-  maybeChainNamespace: ChainNamespace | string
-): maybeChainNamespace is ChainNamespace =>
-  Object.values(CHAIN_NAMESPACE).some((s) => s === maybeChainNamespace)
-
-export const isChainReference = (
-  maybeChainReference: ChainReference | string
-): maybeChainReference is ChainReference =>
-  Object.values(CHAIN_REFERENCE).some((s) => s === maybeChainReference)
-
-export const isAssetNamespace = (
-  maybeAssetNamespace: AssetNamespace | string
-): maybeAssetNamespace is AssetNamespace =>
-  assetNamespaceStrings.some((s) => s === maybeAssetNamespace)
-
-export const isAssetReference = (
-  maybeAssetReference: AssetReference | string
-): maybeAssetReference is AssetReference =>
-  Object.values(ASSET_REFERENCE).some((s) => s === maybeAssetReference)
-
-export const isChainId = (maybeChainId: ChainId | string): maybeChainId is ChainId => {
-  const chainIdRegExp = /([-a-z\d]{3,8}):([-a-zA-Z\d]{1,32})/
-  const [maybeChainNamespace, maybeChainReference] =
-    chainIdRegExp.exec(maybeChainId)?.slice(1) ?? []
-  return isChainNamespace(maybeChainNamespace) && isChainReference(maybeChainReference)
-}
-
-export const chainIdOrUndefined = (maybeChainId: string): ChainId | undefined =>
-  isChainId(maybeChainId) ? maybeChainId : undefined
 
 /**
  * validate that a value is a string slip44 value
@@ -117,12 +40,12 @@ export const toAssetId: ToAssetId = (args: ToAssetIdArgs): AssetId => {
   if (!assetReference) throw new Error('toAssetId: No assetReference provided')
 
   const isContractAddress = Array<AssetNamespace>('erc20', 'erc721').includes(assetNamespace)
-  const chainId = chainIdOrUndefined(`${chainNamespace}:${chainReference}`) // FIXME: use toChainId
+  const chainId = toChainId({ chainNamespace, chainReference })
 
   if (
-    !VALID_CHAIN_IDS[chainNamespace].includes(chainReference) ||
     !isChainNamespace(chainNamespace) ||
-    !isChainReference(chainReference)
+    !isChainReference(chainReference) ||
+    !isValidChain(chainNamespace, chainReference)
   )
     throw new Error(
       `toAssetId: Chain Reference ${chainReference} not supported for Chain Namespace ${chainNamespace}`
@@ -182,7 +105,7 @@ export const fromAssetId: FromAssetId = (assetId) => {
   const assetReference = shouldLowercaseAssetReference ? toLower(matches[4]) : matches[4]
   if (!chainNamespace || !chainReference)
     throw new Error(`fromAssetId: invalid AssetId: ${assetId}`)
-  const chainId = chainIdOrUndefined(`${chainNamespace}:${chainReference}`) // FIXME: use toChainId
+  const chainId = toChainId({ chainNamespace, chainReference })
 
   if (assetNamespace && assetReference && chainId) {
     return { chainId, chainReference, chainNamespace, assetNamespace, assetReference }

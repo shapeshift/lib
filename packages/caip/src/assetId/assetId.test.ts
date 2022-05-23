@@ -1,14 +1,8 @@
+import { ChainNamespace, ChainReference, toChainId } from '../chainId/chainId'
+import { ASSET_REFERENCE, CHAIN_NAMESPACE, CHAIN_REFERENCE } from '../constants'
 import {
-  CHAIN_NAMESPACE,
-  CHAIN_REFERENCE,
-  ChainNamespace,
-  ChainReference
-} from '../chainId/chainId'
-import {
-  ASSET_REFERENCE,
   AssetNamespace,
   AssetReference,
-  chainIdOrUndefined,
   fromAssetId,
   fromCAIP19,
   toAssetId,
@@ -351,7 +345,7 @@ describe('assetId', () => {
             chainReference,
             assetReference,
             assetNamespace,
-            chainId: chainIdOrUndefined(`${chainNamespace}:${chainReference}`)
+            chainId: toChainId({ chainNamespace, chainReference })
           })
         }
       )

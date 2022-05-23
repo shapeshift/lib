@@ -1,7 +1,7 @@
 import toLower from 'lodash/toLower'
 
 import { toAssetId } from '../../assetId/assetId'
-import { CHAIN_NAMESPACE, CHAIN_REFERENCE } from '../../chainId/chainId'
+import { CHAIN_NAMESPACE, CHAIN_REFERENCE } from '../../constants'
 import { assetIdToYearn, yearnToAssetId } from '.'
 
 describe('adapters:yearn', () => {
