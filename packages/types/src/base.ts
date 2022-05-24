@@ -8,13 +8,6 @@ export type BIP44Params = {
   index?: number
 }
 
-export enum ChainTypes {
-  Ethereum = 'ethereum',
-  Bitcoin = 'bitcoin',
-  Cosmos = 'cosmos',
-  Osmosis = 'osmosis'
-}
-
 const supportedChainIds = [
   'eip155:1',
   'bip122:000000000019d6689c085ae165831e93',
@@ -23,17 +16,6 @@ const supportedChainIds = [
 ] as const
 
 export type SupportedChainIds = typeof supportedChainIds[number]
-
-export enum NetworkTypes {
-  MAINNET = 'MAINNET',
-  TESTNET = 'TESTNET', // BTC, LTC, etc...
-  ETH_ROPSTEN = 'ETH_ROPSTEN',
-  ETH_RINKEBY = 'ETH_RINKEBY',
-  COSMOSHUB_MAINNET = 'COSMOSHUB_MAINNET',
-  COSMOSHUB_VEGA = 'COSMOSHUB_VEGA',
-  OSMOSIS_MAINNET = 'OSMOSIS_MAINNET',
-  OSMOSIS_TESTNET = 'OSMOSIS_TESTNET'
-}
 
 export enum WithdrawType {
   DELAYED,
@@ -51,10 +33,8 @@ export enum UtxoAccountType {
 type AbstractAsset = {
   assetId: string
   chainId: string
-  chain: ChainTypes
   description?: string
   isTrustedDescription?: boolean
-  network: NetworkTypes
   symbol: string
   name: string
   precision: number
