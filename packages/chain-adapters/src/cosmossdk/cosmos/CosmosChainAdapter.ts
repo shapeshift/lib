@@ -83,6 +83,8 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
   async signTransaction(signTxInput: chainAdapters.SignTxInput<CosmosSignTx>): Promise<string> {
     try {
       const { txToSign, wallet } = signTxInput
+      console.info('signTxInput: ', signTxInput.txToSign)
+      console.info('signTxInput: ', JSON.stringify(signTxInput.txToSign))
       if (supportsCosmos(wallet)) {
         const signedTx = await wallet.cosmosSignTx(txToSign)
 

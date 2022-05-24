@@ -1,0 +1,180 @@
+import { AssetService } from '@shapeshiftoss/asset-service'
+// @ts-ignore
+import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
+// @ts-ignore
+import { Asset, ChainTypes, SwapperType } from '@shapeshiftoss/types'
+import BigNumber from 'bignumber.js'
+import dotenv from 'dotenv'
+import readline from 'readline-sync'
+// import Web3 from 'web3'
+
+import { SwapperManager } from './manager/SwapperManager'
+import { OsmoSwapper } from './swappers/osmosis/OsmoSwapper'
+// import { ZrxSwapper } from './swappers/zrx/ZrxSwapper'
+
+dotenv.config()
+
+const {
+  // UNCHAINED_HTTP_API = 'http://localhost:31300',
+  // UNCHAINED_WS_API = 'wss://localhost:31300',
+  // ETH_NODE_URL = 'http://localhost:3000',
+  DEVICE_ID = 'device123',
+  MNEMONIC = 'all all all all all all all all all all all all'
+} = process.env
+
+const toBaseUnit = (amount: BigNumber | string, precision: number): string => {
+  return new BigNumber(amount)
+    .multipliedBy(new BigNumber(10).exponentiatedBy(new BigNumber(precision)))
+    .toString()
+}
+
+const fromBaseUnit = (amount: BigNumber | string, precision: number): string => {
+  return new BigNumber(amount).times(new BigNumber(10).exponentiatedBy(precision * -1)).toString()
+}
+
+const getWallet = async (): Promise<NativeHDWallet> => {
+  if (!MNEMONIC) {
+    throw new Error('Cannot init native wallet without mnemonic')
+  }
+  const nativeAdapterArgs: NativeAdapterArgs = {
+    mnemonic: MNEMONIC,
+    deviceId: DEVICE_ID
+  }
+  const wallet = new NativeHDWallet(nativeAdapterArgs)
+  await wallet.initialize()
+
+  return wallet
+}
+
+const main = async (): Promise<void> => {
+  const [, , ...args] = process.argv
+  const [sellSymbol, buySymbol, sellAmount] = args
+
+  console.info(`sellSymbol: sell ${sellAmount} of ${sellSymbol} to ${buySymbol}`)
+
+  if (!sellAmount || !sellSymbol || !buySymbol) {
+    console.error(`
+      Usage:
+      swapcli [sellSymbol] [buySymbol] [sellAmount](denominated in sell asset, not wei)
+    `)
+    return
+  }
+
+  const assetService = new AssetService('')
+  await assetService.initialize()
+  const assets = assetService.byNetwork()
+  // console.info('assets: ', assets)
+  //
+  // const testOsmo = assets.filter(function (e) {
+  //   return e.symbol === 'OSMO'
+  // })
+  // console.info('testOsmo: ', testOsmo)
+
+  if (!assets) {
+    console.error('No assets found in asset service')
+    return
+  }
+
+  const assetMap = assets.reduce((acc, val) => {
+    if (val) {
+      acc[val.symbol] = val
+    }
+    return acc
+  }, {} as Record<string, Asset>)
+
+  const sellAsset = assetMap[sellSymbol] as Asset
+  const buyAsset = assetMap[buySymbol] as Asset
+
+  if (!sellAsset) {
+    console.error(`No asset ${sellSymbol} found in asset service`)
+    return
+  }
+  if (!buyAsset) {
+    console.error(`No asset ${buySymbol} found in asset service`)
+    return
+  }
+
+  // Swapper Deps
+  const wallet = await getWallet()
+  const unchainedUrls = {
+    // [ChainTypes.Ethereum]: {
+    //   httpUrl: UNCHAINED_HTTP_API,
+    //   wsUrl: UNCHAINED_WS_API
+    // },
+    [ChainTypes.Cosmos]: {
+      httpUrl: 'http://api.cosmos.localhost',
+      wsUrl: 'ws://api.cosmos.localhost'
+    },
+    [ChainTypes.Osmosis]: {
+      httpUrl: 'http://api.osmosis.localhost',
+      wsUrl: 'ws://api.osmosis.localhost'
+    },
+    [ChainTypes.Bitcoin]: {
+      httpUrl: 'https://dev-api.bitcoin.shapeshift.com',
+      wsUrl: 'wss://dev-api.bitcoin.shapeshift.com'
+    }
+  }
+  const adapterManager = new ChainAdapterManager(unchainedUrls)
+  // const web3Provider = new Web3.providers.HttpProvider(ETH_NODE_URL)
+  // const web3 = new Web3(web3Provider)
+
+  // const zrxSwapperDeps = { wallet, adapterManager, web3 }
+  const osmoSwapperDeps = { wallet, adapterManager }
+
+  const manager = new SwapperManager()
+  // const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
+  // manager.addSwapper(SwapperType.Zrx, zrxSwapper)
+  // @ts-ignore
+  const osmoSwapper = new OsmoSwapper(osmoSwapperDeps)
+  manager.addSwapper(SwapperType.Osmosis, osmoSwapper)
+  const swapper = manager.getSwapper(SwapperType.Osmosis)
+  const sellAmountBase = toBaseUnit(sellAmount, sellAsset.precision)
+
+  let quote
+  try {
+    quote = await swapper.getTradeQuote({
+      sellAsset,
+      buyAsset,
+      sellAmount: sellAmountBase,
+      sellAssetAccountId: '0',
+      sendMax: false
+    })
+  } catch (e) {
+    console.error(e)
+  }
+
+  if (!quote) {
+    return
+  }
+
+  console.info('quote = ', JSON.stringify(quote))
+
+  if (!quote.success) {
+    console.error('Obtaining the quote failed: ', quote.statusReason)
+    return
+  }
+
+  const buyAmount = fromBaseUnit(quote.buyAmount || '0', buyAsset.precision)
+
+  const answer = readline.question(
+    `Swap ${sellAmount} ${sellAsset.symbol} for ${buyAmount} ${
+      buyAsset.symbol
+    } on ${swapper.getType()}? (y/n): `
+  )
+  if (answer === 'y') {
+    const trade = await swapper.buildTrade({
+      wallet,
+      buyAsset,
+      sendMax: false,
+      sellAmount,
+      sellAsset,
+      sellAssetAccountId: '0',
+      buyAssetAccountId: '0'
+    })
+    const txid = await swapper.executeTrade({ trade, wallet })
+    console.info('broadcast tx with id: ', txid)
+  }
+}
+
+main().then(() => console.info('Done'))
