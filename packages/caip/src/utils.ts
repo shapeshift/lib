@@ -16,8 +16,9 @@ import {
   VALID_CHAIN_IDS
 } from './constants'
 
+// https://regex101.com/r/f0xGqP/2
 export const parseAssetIdRegExp =
-  /([-a-z\d]{3,8}):([-a-zA-Z\d]{1,32})\/([-a-z\d]{3,8}):([-a-zA-Z\d]+)/
+  /(?<chainNamespace>[-a-z\d]{3,8}):(?<chainReference>[-a-zA-Z\d]{1,32})\/(?<assetNamespace>[-a-z\d]{3,8}):(?<assetReference>[-a-zA-Z\d]+)/
 
 // TODO(ryankk): this will be removed and replaced with something like `toAssetId(fromChainId(chainId))`
 // when `fromChainId` supports returning ChainNamespace and ChainReference.
