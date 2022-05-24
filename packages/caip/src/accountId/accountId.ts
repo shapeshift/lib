@@ -4,39 +4,43 @@ import { assertIsChainId, assertIsChainNamespace, assertIsChainReference } from 
 
 export type AccountId = string
 
-type ToAccountIdArgs =
-  | {
-      chainId?: never
-      account: string
-      chainNamespace: ChainNamespace
-      chainReference: ChainReference
-    }
-  | {
-      chainId: ChainId
-      account: string
-      chainNamespace?: never
-      chainReference?: never
-    }
+type ToAccountIdWithChainId = {
+  chainId: ChainId
+  account: string
+  chainNamespace?: never
+  chainReference?: never
+}
+
+type ToAccountIdWithChainIdParts = {
+  chainId?: never
+  account: string
+  chainNamespace: ChainNamespace
+  chainReference: ChainReference
+}
+
+type ToAccountIdArgs = ToAccountIdWithChainId | ToAccountIdWithChainIdParts
 
 type ToAccountId = (args: ToAccountIdArgs) => AccountId
 
 export const toAccountId: ToAccountId = ({
   chainId: maybeChainId,
-  chainNamespace,
-  chainReference,
+  chainNamespace: maybeChainNamespace,
+  chainReference: maybeChainReference,
   account
 }) => {
   if (!account) throw new Error(`toAccountId: account is required`)
 
-  const chainId = maybeChainId ?? toChainId({ chainNamespace, chainReference })
+  const chainId =
+    maybeChainId ??
+    toChainId({ chainNamespace: maybeChainNamespace, chainReference: maybeChainReference })
   assertIsChainId(chainId)
-  const { chainNamespace: chainNamespaceFromChainId } = fromChainId(chainId)
+  const { chainNamespace } = fromChainId(chainId)
 
   // we lowercase eth accounts as per the draft spec
   // it's not explicit, but cHecKsUM can be recovered from lowercase eth accounts
   // we don't lowercase bitcoin addresses as they'll fail checksum
   const outputAccount =
-    chainNamespaceFromChainId === CHAIN_NAMESPACE.Ethereum ? account.toLowerCase() : account
+    chainNamespace === CHAIN_NAMESPACE.Ethereum ? account.toLowerCase() : account
 
   return `${chainId}:${outputAccount}`
 }

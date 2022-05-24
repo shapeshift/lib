@@ -1,7 +1,7 @@
 // https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-19.md
 import toLower from 'lodash/toLower'
 
-import { ChainId, ChainNamespace, ChainReference, toChainId } from '../chainId/chainId'
+import { ChainId, ChainNamespace, ChainReference, fromChainId, toChainId } from '../chainId/chainId'
 import { ASSET_NAMESPACE_STRINGS, ASSET_REFERENCE, VALID_ASSET_NAMESPACE } from '../constants'
 import {
   assertIsAssetNamespace,
@@ -19,12 +19,23 @@ export type AssetNamespace = typeof ASSET_NAMESPACE_STRINGS[number]
 
 export type AssetReference = typeof ASSET_REFERENCE[keyof typeof ASSET_REFERENCE]
 
-type ToAssetIdArgs = {
-  chainNamespace: ChainNamespace
-  chainReference: ChainReference
+type ToAssetIdWithChainId = {
+  chainNamespace?: never
+  chainReference?: never
+  chainId: ChainId
   assetNamespace: AssetNamespace
   assetReference: AssetReference | string
 }
+
+type ToAssetIdWithChainIdParts = {
+  chainNamespace: ChainNamespace
+  chainReference: ChainReference
+  chainId?: never
+  assetNamespace: AssetNamespace
+  assetReference: AssetReference | string
+}
+
+export type ToAssetIdArgs = ToAssetIdWithChainId | ToAssetIdWithChainIdParts
 
 /**
  * validate that a value is a string slip44 value
@@ -39,13 +50,34 @@ const isValidSlip44 = (value: string) => {
 
 type ToAssetId = (args: ToAssetIdArgs) => AssetId
 
+const isToAssetIdWithChainIdArgs = (args: ToAssetIdArgs): args is ToAssetIdWithChainId =>
+  !!args.chainId
+
 export const toAssetId: ToAssetId = (args: ToAssetIdArgs): AssetId => {
-  const { chainNamespace, chainReference, assetNamespace, assetReference } = args
+  const { assetNamespace, assetReference } = args
   assertIsAssetNamespace(assetNamespace)
   if (!assetReference) throw new Error('toAssetId: No assetReference provided')
 
+  const { chainId, chainNamespace, chainReference } = (() => {
+    if (isToAssetIdWithChainIdArgs(args)) {
+      const fromChainIdResult = fromChainId(args.chainId)
+      return {
+        chainId: args.chainId,
+        chainNamespace: fromChainIdResult.chainNamespace,
+        chainReference: fromChainIdResult.chainReference
+      }
+    } else
+      return {
+        chainId: toChainId({
+          chainNamespace: args.chainNamespace,
+          chainReference: args.chainReference
+        }),
+        chainNamespace: args.chainNamespace,
+        chainReference: args.chainReference
+      }
+  })()
+
   const isContractAddress = Array<AssetNamespace>('erc20', 'erc721').includes(assetNamespace)
-  const chainId = toChainId({ chainNamespace, chainReference })
 
   assertIsChainNamespace(chainNamespace)
   assertIsChainReference(chainReference)
