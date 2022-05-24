@@ -39,7 +39,7 @@ describe('ZrxExecuteTrade', () => {
       fee: '0',
       chainSpecific: { approvalFee: '123600000', estimatedGas: '1235', gasPrice: '1236' }
     },
-    sources: [],
+    sources: []
   }
 
   const execTradeInput: ExecuteTradeInput<'eip155:1'> = {
