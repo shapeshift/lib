@@ -7,7 +7,7 @@
 yarn
 ```
 
-If you're working in this repo, you're likely also working in [web](https://github.com/shapeshift/web). Run the following command to automatically `yarn link` all the packages in this repo so they can also be linked in `web`
+If you're working in this repo, you're likely also working in [web][1]. Run the following command to automatically `yarn link` all the packages in this repo so they can also be linked in `web`
 
 ```bash
 ➜ yarn link-packages
@@ -61,12 +61,26 @@ yarn test
 
 # Runs the full w/ the watch flag and coverage reports
 yarn test:dev
+
+# e2e: emulate release
+yarn test:e2e
 ```
 
 **Helpful Testing Process**
 
 One technique that can helpful when writing tests, is to reference the coverage report for the file/function/feature you're testing. To do this, run `yarn test:dev` from your terminal. This will generate a coverage report for the project in the `coverage` directory. To view the report, open the file `coverage/lcov-report/index.html`.
 
+**About e2e Test**
+
+The e2e test for releases will install [Verdaccio][2], a private package repository registry, 
+locally and publish packages there. If one is wanting to use Verdaccio locally when developing,
+the [local-registry.sh][3] file may serve as a helpful reference.
+
 ## Contributing
 
-Please see the [Contributing Guidelines](CONTRIBUTING.md) document for this repo's specific contributing guidelines.
+Please see the [Contributing Guidelines][4] document for this repo's specific contributing guidelines.
+
+[1]: https://github.com/shapeshift/web
+[2]: https://verdaccio.org/
+[3]: ./scripts/e2e/local-registry.sh
+[4]: CONTRIBUTING.md
