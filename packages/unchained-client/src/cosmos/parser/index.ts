@@ -8,6 +8,7 @@ import { valuesFromMsgEvents } from './utils'
 
 export interface TransactionParserArgs {
   chainId: ChainId
+  assetId?: AssetId
 }
 
 export class TransactionParser {
@@ -17,11 +18,13 @@ export class TransactionParser {
   constructor(args: TransactionParserArgs) {
     this.chainId = args.chainId
 
-    this.assetId = toAssetId({
-      ...fromChainId(this.chainId),
-      assetNamespace: 'slip44',
-      assetReference: ASSET_REFERENCE.Cosmos
-    })
+    this.assetId =
+      args?.assetId ??
+      toAssetId({
+        ...fromChainId(this.chainId),
+        assetNamespace: 'slip44',
+        assetReference: ASSET_REFERENCE.Cosmos
+      })
   }
 
   async parse(tx: CosmosTx, address: string): Promise<ParsedTx> {
