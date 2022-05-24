@@ -23,7 +23,8 @@
     "compile": "tsc -p tsconfig.build.json",
     "dev": "tsc --watch",
     "prepare": "yarn build",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "cli": "yarn build && node ./dist/yearncli.js"
   },
   "dependencies": {
     "@ethersproject/providers": "^5.5.3",

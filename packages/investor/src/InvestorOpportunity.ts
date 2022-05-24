@@ -1,16 +1,19 @@
-import type { ETHWallet } from '@shapeshiftoss/hdwallet-core'
-import type { BigNumber } from 'bignumber.js'
 import type { ChainAdapter } from '@shapeshiftoss/chain-adapters'
+import type { ETHWallet } from '@shapeshiftoss/hdwallet-core'
 import { ChainTypes } from '@shapeshiftoss/types'
+import type { BigNumber } from 'bignumber.js'
 
 // @TODO: Add EventEmitter support? We may want to raise an 'updated' event
 // so React can listen and re-render on data change?
 // Maybe just take a callback?
 
-export type DepositWithdrawArgs = { address: string; amount: BigNumber; wallet: ETHWallet }
+export type DepositWithdrawArgs = { address: string; amount: BigNumber; }
 
-export abstract class InvestorOpportunity<TxType, T = unknown> {
-  static create: <TxType, U = unknown>(details: { address: string }) => Promise<InvestorOpportunity<TxType, U>>
+export abstract class InvestorOpportunity<
+  ChainType extends ChainTypes,
+  TxType = unknown,
+  MetaData = unknown
+> {
   readonly id: string // opportunity address (contract address / validator address)
   readonly displayName: string
   readonly underlyingAsset: {
@@ -28,12 +31,15 @@ export abstract class InvestorOpportunity<TxType, T = unknown> {
     usdcBalance?: BigNumber // 1 = 1 USDC
   } // TVL in terms of UnderlyingAsset
   // readonly supply: BigNumber // Position Asset - we may not need this
-  readonly metadata: T
+  readonly metadata: MetaData
 
   prepareWithdrawal: (input: DepositWithdrawArgs) => Promise<TxType>
   prepareDeposit: (input: DepositWithdrawArgs) => Promise<TxType>
   /**
    * @returns {string} TXID
    */
-  signAndBroadcast: <T extends ChainTypes>(deps: { wallet: ETHWallet; chainAdapter: ChainAdapter<T> }, tx: TxType) => Promise<string>
+  signAndBroadcast: (
+    deps: { wallet: ETHWallet; chainAdapter: ChainAdapter<ChainType> },
+    tx: TxType
+  ) => Promise<string>
 }

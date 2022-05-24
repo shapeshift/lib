@@ -1,13 +1,14 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Investor } from '@shapeshiftoss/investor'
-import { VaultMetadata, Yearn, ChainId } from '@yfi/sdk'
-import find from 'lodash/find'
+import { type ChainId, type VaultMetadata, Yearn } from '@yfi/sdk'
+import filter from 'lodash/filter'
 import first from 'lodash/first'
+import type { ChainTypes } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 import { Contract } from 'web3-eth-contract'
 
 import { ssRouterAbi, ssRouterContractAddress } from './constants'
-import { YearnOpportunity, PreparedTransaction } from './YearnOpportunity'
+import { PreparedTransaction, YearnOpportunity } from './YearnOpportunity'
 
 type ConstructorArgs = {
   dryRun?: true,
@@ -15,7 +16,7 @@ type ConstructorArgs = {
   network?: ChainId
 }
 
-export class YearnInvestor implements Investor<PreparedTransaction, VaultMetadata> {
+export class YearnInvestor implements Investor<PreparedTransaction, ChainTypes.Ethereum, VaultMetadata> {
   #deps: {
     web3: Web3
     yearnSdk: Yearn<1>
@@ -27,11 +28,12 @@ export class YearnInvestor implements Investor<PreparedTransaction, VaultMetadat
     const httpProvider = new Web3.providers.HttpProvider(providerUrl)
     const jsonRpcProvider = new JsonRpcProvider(providerUrl)
 
+    const web3 = new Web3(httpProvider)
     this.#deps = Object.freeze({
       dryRun,
-      web3: new Web3(httpProvider),
+      web3,
       yearnSdk: new Yearn(network, { provider: jsonRpcProvider }),
-      contract: new Contract(ssRouterAbi, ssRouterContractAddress)
+      contract: new web3.eth.Contract(ssRouterAbi, ssRouterContractAddress)
     })
   }
 
@@ -54,6 +56,6 @@ export class YearnInvestor implements Investor<PreparedTransaction, VaultMetadat
   }
 
   async findByUnderlyingAssetId(assetId: string) {
-    return find(await this.findAll(), { underlyingAsset: { assetId } })
+    return filter(await this.findAll(), { underlyingAsset: { assetId } })
   }
 }

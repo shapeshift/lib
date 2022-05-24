@@ -2,16 +2,10 @@ import type { BigNumber } from 'bignumber.js'
 
 export interface RebasingToken {}
 
-export type ApproveInput = {
-  accountNumber?: number
-  dryRun?: boolean
-  address: string
-}
-
 export interface ApprovalRequired {
   isApprovalRequired: true
   allowance: (address: string) => Promise<unknown>
-  prepareApprove: (input: ApproveInput) => Promise<unknown>
+  prepareApprove: (address: string) => Promise<unknown>
 }
 
 export interface ClaimableReward {

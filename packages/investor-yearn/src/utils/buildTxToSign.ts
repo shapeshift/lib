@@ -1,11 +1,13 @@
 import { BIP44Params } from '@shapeshiftoss/types'
 import { numberToHex } from 'web3-utils'
+import type { BigNumber } from 'bignumber.js'
+import { PreparedTransaction } from '..'
 
 type BuildTxToSignInput = {
   chainId: number
   data: string
-  estimatedGas: string
-  gasPrice: string
+  estimatedGas: BigNumber
+  gasPrice: BigNumber
   nonce: string
   value: string
   to: string
@@ -28,14 +30,14 @@ export function buildTxToSign({
   nonce,
   to,
   value
-}: BuildTxToSignInput) {
+}: BuildTxToSignInput): PreparedTransaction {
   return {
     value: numberToHex(value),
     to,
     chainId, // TODO: implement for multiple chains
     data,
     nonce: numberToHex(nonce),
-    gasLimit: numberToHex(estimatedGas),
+    gasLimit: numberToHex(estimatedGas.times(1.5).integerValue().toString()),
     gasPrice // Convert to hex in signAndBroadcast
   }
 }
