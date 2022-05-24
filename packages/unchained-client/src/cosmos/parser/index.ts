@@ -8,7 +8,7 @@ import { valuesFromMsgEvents } from './utils'
 
 export interface TransactionParserArgs {
   chainId: ChainId
-  assetId?: AssetId
+  assetId?: AssetId // we should ultimately extend for a base comsos parser with an osmosis parser that has the correct asset reference
 }
 
 export class TransactionParser {
