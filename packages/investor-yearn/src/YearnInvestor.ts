@@ -16,7 +16,7 @@ type ConstructorArgs = {
   network?: ChainId
 }
 
-export class YearnInvestor implements Investor<PreparedTransaction, ChainTypes.Ethereum, VaultMetadata> {
+export class YearnInvestor implements Investor<ChainTypes.Ethereum, PreparedTransaction, VaultMetadata> {
   #deps: {
     web3: Web3
     yearnSdk: Yearn<1>
