@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { AssetId } from '@shapeshiftoss/caip'
 import {
   ApprovalNeededOutput,
@@ -10,10 +11,23 @@ import {
 } from '@shapeshiftoss/types'
 
 import { Swapper, Trade, TradeQuote } from '../../api'
+import { InitializeInput } from '../zrx/types'
+import { midgardService } from './utils'
 
 export class ThorchainSwapper implements Swapper {
+  // ETH, BTC
+  private supportedChainIds = ['eip155:1', 'bip122:000000000019d6689c085ae165831e93']
+
   getType() {
     return SwapperType.Thorchain
+  }
+
+  async initialize(input: InitializeInput) {
+    console.log('initialize', input)
+    console.log('supportedChainIds', this.supportedChainIds)
+    const poolsResponse = await midgardService.get('/v2/pools')
+
+    console.log('poolsResponse', poolsResponse)
   }
 
   getUsdRate(input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> {

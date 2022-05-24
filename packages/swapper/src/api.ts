@@ -11,6 +11,7 @@ import {
   SupportedChainIds,
   SwapperType
 } from '@shapeshiftoss/types'
+import { InitializeInput } from './swappers/zrx/types'
 
 export const SwapError = createErrorClass('SwapError')
 
@@ -135,6 +136,9 @@ export enum SwapErrorTypes {
 }
 
 export interface Swapper {
+  /** perform any necessary async initialization */
+  initialize(input: InitializeInput): Promise<void>
+
   /** Returns the swapper type */
   getType(): SwapperType
 
