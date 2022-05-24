@@ -2810,6 +2810,11 @@
     tsoa "^3.4.0"
     ws "^8.3.0"
 
+"@shapeshiftoss/caip@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/caip/-/caip-4.0.1.tgz#e1afdfafd540769c2d9ee9c2236fbbf4136467f6"
+  integrity sha512-kwb2S3QUKLJ5lPhumi6FYm1x9/bhzjJqPVR4NvEqU6kQgE03Ovf4zVT6FWxWPqcqNGK6w4DJIsmvy2YBRmdCEQ==
+
 "@shapeshiftoss/common-api@^6.11.0":
   version "6.11.0"
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/common-api/-/common-api-6.11.0.tgz#cea7fc9acc02645bef376ef77a8b4977b31441c4"
@@ -2910,6 +2915,11 @@
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/types/-/types-3.1.3.tgz#26b1d626d2b342b107e2ea538b5aedb0bee896ab"
   integrity sha512-Nhrs8gQelmsFAQQHTEq8TS3wueBKqjBf0pX6VxOiIQyasordSHQT4Di6WQOL1NWhciYptJ2nHPbarmhKOD63Eg==
+
+"@shapeshiftoss/types@^4.0.0", "@shapeshiftoss/types@^4.1.0", "@shapeshiftoss/types@^4.3.0":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/types/-/types-4.3.1.tgz#81172c284ec41f5d333b0e4a6c1bd5142f0e7fa1"
+  integrity sha512-scF2x6d4+SpYdlREQ5u0uFDQM6q9oW3WIbQBL79AVwRFhmXqymjR/S/GMwGHrCVTXSSq3UzHV56ripff/GeixQ==
 
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
