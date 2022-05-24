@@ -38,15 +38,12 @@ type AbstractAsset = {
   symbol: string
   name: string
   precision: number
-  slip44: number
   color: string
   secondaryColor: string
   icon: string
   explorer: string
   explorerTxLink: string
   explorerAddressLink: string
-  sendSupport: boolean
-  receiveSupport: boolean
 }
 
 type OmittedTokenAssetFields =
