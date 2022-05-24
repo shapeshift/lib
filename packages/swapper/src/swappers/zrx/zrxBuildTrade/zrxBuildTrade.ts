@@ -1,8 +1,9 @@
+import { fromAssetId } from '@shapeshiftoss/caip'
 import { SupportedChainIds } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 
-import { BuildTradeInput, SwapError, SwapErrorTypes, Trade } from '../../..'
+import { BuildTradeInput, SwapError, SwapErrorTypes, ZrxTrade } from '../../..'
 import { ZrxQuoteResponse } from '../types'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
@@ -20,7 +21,7 @@ import { ZrxSwapperDeps } from '../ZrxSwapper'
 export async function zrxBuildTrade(
   { adapterManager, web3 }: ZrxSwapperDeps,
   input: BuildTradeInput
-): Promise<Trade<SupportedChainIds>> {
+): Promise<ZrxTrade<SupportedChainIds>> {
   const {
     sellAsset,
     buyAsset,
@@ -31,8 +32,13 @@ export async function zrxBuildTrade(
     wallet
   } = input
   try {
-    const buyToken = buyAsset.tokenId || buyAsset.symbol
-    const sellToken = sellAsset.tokenId || sellAsset.symbol
+    const { assetReference: buyAssetErc20Address, assetNamespace: buyAssetNamespace } = fromAssetId(
+      buyAsset.assetId
+    )
+    const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
+      fromAssetId(sellAsset.assetId)
+    const buyToken = buyAssetNamespace === 'erc20' ? buyAssetErc20Address : buyAsset.symbol
+    const sellToken = sellAssetNamespace === 'erc20' ? sellAssetErc20Address : sellAsset.symbol
 
     if (buyAsset.chainId !== 'eip155:1') {
       throw new SwapError('[ZrxBuildTrade] - buyAsset must be on chainId eip155:1', {
@@ -77,7 +83,7 @@ export async function zrxBuildTrade(
         params: {
           buyToken,
           sellToken,
-          sellAmount: normalizeAmount(sellAmount?.toString()),
+          sellAmount: normalizeAmount(sellAmount),
           takerAddress: receiveAddress,
           slippagePercentage,
           skipValidation: false,
@@ -90,7 +96,7 @@ export async function zrxBuildTrade(
 
     const estimatedGas = bnOrZero(data.gas || 0)
 
-    const trade: Trade<'eip155:1'> = {
+    const trade: ZrxTrade<'eip155:1'> = {
       sellAsset,
       buyAsset,
       success: true,
