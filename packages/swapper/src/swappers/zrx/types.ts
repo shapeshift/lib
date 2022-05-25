@@ -1,5 +1,3 @@
-import { Asset } from '@shapeshiftoss/types'
-
 import { SwapSource } from '../../api'
 
 export type ZrxCommonResponse = {
@@ -19,8 +17,4 @@ export type ZrxQuoteResponse = ZrxCommonResponse & {
   to: string
   data: string
   gas: string
-}
-
-export type InitializeInput = {
-  assets: Asset[]
 }

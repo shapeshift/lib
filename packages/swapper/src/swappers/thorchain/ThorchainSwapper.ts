@@ -9,25 +9,48 @@ import {
   SupportedChainIds,
   SwapperType
 } from '@shapeshiftoss/types'
+import axios from 'axios'
 
 import { Swapper, Trade, TradeQuote } from '../../api'
-import { InitializeInput } from '../zrx/types'
 import { midgardService } from './utils'
 
 export class ThorchainSwapper implements Swapper {
+  // Map our caip chain ids to symbols understood by thorchain
+  private supportedChainIdToSymbol = {
+    'eip155:1': 'ETH'
+  }
+
   // ETH, BTC
-  private supportedChainIds = ['eip155:1', 'bip122:000000000019d6689c085ae165831e93']
+  private supportedChainIds = Object.keys(this.supportedChainIdToSymbol)
+
+  // Populated by initialize()
+  // private supportedAssetIds = []
 
   getType() {
     return SwapperType.Thorchain
   }
 
-  async initialize(input: InitializeInput) {
-    console.log('initialize', input)
-    console.log('supportedChainIds', this.supportedChainIds)
-    const poolsResponse = await midgardService.get('/v2/pools')
+  async initialize() {
+    console.log('supportedChainIds!', this.supportedChainIds)
 
-    console.log('poolsResponse', poolsResponse)
+    try {
+      console.log('fuck!!')
+      const res = await axios.get(
+        'https://thor-midgard.cointainers.prod.chiefhappinessofficerellie.org/'
+      )
+      console.log('res is', res)
+      const poolsResponse = await midgardService.get('/v2/pools')
+      console.log('poolsResponse!', poolsResponse)
+    } catch (e) {
+      console.log('e is', { e })
+    }
+
+    // assetId: toAssetId({
+    //   chain: ChainTypes.Ethereum,
+    //   network: NetworkTypes.MAINNET,
+    //   assetNamespace: 'erc20',
+    //   assetReference: token.address
+    // })
   }
 
   getUsdRate(input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> {
