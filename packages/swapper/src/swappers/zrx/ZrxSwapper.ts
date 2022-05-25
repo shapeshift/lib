@@ -9,7 +9,7 @@ import {
   SupportedChainIds,
   SwapperType
 } from '@shapeshiftoss/types'
-import Web3 from 'web3'
+// import Web3 from 'web3'
 
 import {
   ApprovalNeededInput,
@@ -33,7 +33,7 @@ import { zrxExecuteTrade } from './zrxExecuteTrade/zrxExecuteTrade'
 
 export type ZrxSwapperDeps = {
   adapterManager: ChainAdapterManager
-  web3: Web3
+  web3: any
 }
 
 export class ZrxSwapper implements Swapper {
