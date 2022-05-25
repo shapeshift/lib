@@ -21,7 +21,11 @@
     "test": "jest test",
     "type-check": "tsc --project ./tsconfig.build.json --noEmit"
   },
+  "peerDependencies": {
+    "@shapeshiftoss/caip": "^5.0.1"
+  },
   "devDependencies": {
-    "@shapeshiftoss/hdwallet-core": "^1.20.0"
+    "@shapeshiftoss/hdwallet-core": "^1.20.0",
+    "@shapeshiftoss/caip": "^5.0.1"
   }
 }
