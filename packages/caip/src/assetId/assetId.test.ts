@@ -574,9 +574,9 @@ describe('assetId', () => {
     })
 
     it('should lower case assetReference for assetNamespace ERC721', () => {
-      const AssetId = 'eip155:3/erc721:0xc770EEfAd204B5180dF6a14Ee197D99d808ee52d' as AssetId
+      const assetId = 'eip155:3/erc721:0xc770EEfAd204B5180dF6a14Ee197D99d808ee52d' as AssetId
       const { chainId, chainReference, chainNamespace, assetNamespace, assetReference } =
-        fromAssetId(AssetId)
+        fromAssetId(assetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Ethereum)
       expect(chainReference).toEqual(CHAIN_REFERENCE.EthereumRopsten)
       expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
