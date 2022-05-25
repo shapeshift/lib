@@ -1,6 +1,6 @@
 {
-  "name": "@shapeshiftoss/swapper",
-  "version": "5.1.5",
+  "name": "@shapeshiftoss/staker",
+  "version": "5.0.1",
   "description": "TODO: description",
   "repository": "https://github.com/shapeshift/lib",
   "license": "MIT",
@@ -20,7 +20,7 @@
     "prepare": "yarn build",
     "test": "jest test src/swappers/osmosis/OsmoSwapper.test.ts",
     "type-check": "tsc --project ./tsconfig.build.json --noEmit",
-    "swapcli": "yarn build && node dist/swappercli.js ATOM OSMO 0.01"
+    "stakercli": "yarn build && node dist/stakercli.js ATOM OSMO 0.01"
   },
   "dependencies": {
     "@types/wait-promise": "^0.4.0",
@@ -33,7 +33,7 @@
   },
   "peerDependencies": {
     "@shapeshiftoss/asset-service": "^3.0.0",
-    "@shapeshiftoss/caip": "^5.0.0",
+    "@shapeshiftoss/caip": "^4.0.0",
     "@shapeshiftoss/chain-adapters": "^4.0.0",
     "@shapeshiftoss/errors": "^1.1.0",
     "@shapeshiftoss/hdwallet-core": "1.20.0",
@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@shapeshiftoss/asset-service": "^3.0.0",
-    "@shapeshiftoss/caip": "^5.0.0",
+    "@shapeshiftoss/caip": "^4.0.0",
     "@shapeshiftoss/chain-adapters": "^4.0.0",
     "@shapeshiftoss/errors": "^1.1.0",
     "@shapeshiftoss/hdwallet-core": "^1.20.0",

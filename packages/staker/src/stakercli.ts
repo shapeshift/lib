@@ -123,22 +123,12 @@ const main = async (): Promise<void> => {
   const osmoSwapperDeps = { wallet, adapterManager }
 
   const manager = new SwapperManager()
-// <<<<<<< HEAD
-//   const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
-//   manager.addSwapper(SwapperType.Zrx, zrxSwapper)
-//   const swapper = await manager.getBestSwapper({
-//     sellAssetId: 'eip155:1/slip44:60',
-//     buyAssetId: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
-//   })
-
-//   if (!swapper) return
-// =======
   // const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
   // manager.addSwapper(SwapperType.Zrx, zrxSwapper)
   // @ts-ignore
   const osmoSwapper = new OsmoSwapper(osmoSwapperDeps)
   manager.addSwapper(SwapperType.Osmosis, osmoSwapper)
-  const swapper = manager.getSwapper(SwapperType.Osmosis) // TODO: use getBestSwapper
+  const swapper = manager.getSwapper(SwapperType.Osmosis)
   const sellAmountBase = toBaseUnit(sellAmount, sellAsset.precision)
 
   let quote

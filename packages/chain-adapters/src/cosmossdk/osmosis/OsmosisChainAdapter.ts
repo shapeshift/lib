@@ -15,7 +15,7 @@ import { bnOrZero } from '../../utils/bignumber'
 import { ChainAdapterArgs, CosmosSdkBaseAdapter } from '../CosmosSdkBaseAdapter'
 
 export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Osmosis> {
-  protected readonly supportedChainIds = ['cosmos:osmosis-1']
+  protected readonly supportedChainIds = ['cosmos:osmosis-1', 'cosmos:osmo-testnet-1']
   protected readonly chainId = this.supportedChainIds[0]
   protected readonly assetId: AssetId
   protected readonly CHAIN_VALIDATOR_PREFIX_MAPPING = {
