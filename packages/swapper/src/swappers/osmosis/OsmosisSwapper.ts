@@ -11,7 +11,9 @@ import {
 } from '@shapeshiftoss/types'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 
-import { BuyAssetBySellIdInput, Swapper, Trade, TradeQuote } from '../../api'
+import { BuyAssetBySellIdInput, CommonTradeInput, Swapper, Trade, TradeQuote } from '../../api'
+import { getRateInfo } from './utils/helpers'
+import { DEFAULT_SOURCE } from './utils/constants'
 
 export type OsmoSwapperDeps = {
   wallet: HDWallet
@@ -38,11 +40,14 @@ export class OsmosisSwapper implements Swapper {
 
   getMinMax(input: GetMinMaxInput): Promise<MinMaxOutput> {
     console.info(input)
-    throw new Error('OsmosisSwapper: getMinMax unimplemented')
+    return Promise.resolve({ // TODO: fix
+      minimum: '0',
+      maximum: '1000'
+    })
   }
 
   async approvalNeeded(): Promise<ApprovalNeededOutput> {
-    throw new Error('OsmosisSwapper: approvalNeeded unimplemented')
+    return { approvalNeeded: false }
   }
 
   async approveInfinite(): Promise<string> {
@@ -63,8 +68,33 @@ export class OsmosisSwapper implements Swapper {
     throw new Error('OsmosisSwapper: buildTrade unimplemented')
   }
 
-  async getTradeQuote(): Promise<TradeQuote<SupportedChainIds>> {
-    throw new Error('OsmosisSwapper: getTradeQuote unimplemented')
+  async getTradeQuote(input: CommonTradeInput): Promise<any> {
+    const { sellAsset, buyAsset, sellAmount } = input
+
+    if (!sellAmount) {
+      throw new Error('sellAmount is required')
+    }
+
+    const { rate, buyAmount } = await getRateInfo(
+      sellAsset,
+      buyAsset,
+      sellAmount !== '0' ? sellAmount : '1'
+    )
+    // console.log('******: ', { rate, priceImpact, tradeFee, buyAmount })
+
+    return {
+      buyAsset,
+      feeData: { fee: '100' },
+      maximum: '100',
+      minimum: '10000',
+      sellAssetAccountId: '0',
+      rate,
+      sellAsset,
+      success: true,
+      sellAmount,
+      buyAmount,
+      sources: DEFAULT_SOURCE
+    }
   }
 
   async executeTrade(): Promise<ExecQuoteOutput> {
