@@ -3,6 +3,8 @@ export type MarketData = {
   marketCap: string
   volume: string
   changePercent24Hr: number
+  supply?: string
+  maxSupply?: string
 }
 
 export enum HistoryTimeframe {
@@ -20,12 +22,12 @@ export type HistoryData = {
 }
 
 export type PriceHistoryArgs = {
-  caip19: string
+  assetId: string
   timeframe: HistoryTimeframe
 }
 
 export type MarketDataArgs = {
-  caip19: string
+  assetId: string
 }
 
 export type FindAllMarketType = (args: FindAllMarketArgs) => Promise<MarketCapResult>

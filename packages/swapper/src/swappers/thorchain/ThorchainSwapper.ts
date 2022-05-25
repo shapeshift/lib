@@ -1,46 +1,29 @@
-import { CAIP19 } from '@shapeshiftoss/caip'
+import { AssetId } from '@shapeshiftoss/caip'
 import {
   ApprovalNeededOutput,
   Asset,
-  ChainTypes,
   ExecQuoteOutput,
-  GetQuoteInput,
+  GetMinMaxInput,
   MinMaxOutput,
-  Quote,
+  SupportedChainIds,
   SwapperType
 } from '@shapeshiftoss/types'
 
-import { Swapper } from '../../api'
+import { Swapper, Trade, TradeQuote } from '../../api'
 
 export class ThorchainSwapper implements Swapper {
   getType() {
     return SwapperType.Thorchain
   }
 
-  async getQuote(): Promise<Quote<ChainTypes>> {
-    throw new Error('ThorchainSwapper: getQuote unimplemented')
-  }
-
-  async buildQuoteTx(): Promise<Quote<ChainTypes>> {
-    throw new Error('ThorchainSwapper: getQuote unimplemented')
-  }
-
-  getUsdRate(input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string> {
+  getUsdRate(input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> {
     console.info(input)
     throw new Error('ThorchainSwapper: getUsdRate unimplemented')
   }
 
-  getMinMax(input: GetQuoteInput): Promise<MinMaxOutput> {
+  getMinMax(input: GetMinMaxInput): Promise<MinMaxOutput> {
     console.info(input)
     throw new Error('ThorchainSwapper: getMinMax unimplemented')
-  }
-
-  async executeQuote(): Promise<ExecQuoteOutput> {
-    throw new Error('ThorchainSwapper: executeQuote unimplemented')
-  }
-
-  getDefaultPair(): [CAIP19, CAIP19] {
-    throw new Error('ThorchainSwapper: getDefaultPair unimplemented')
   }
 
   async approvalNeeded(): Promise<ApprovalNeededOutput> {
@@ -51,11 +34,23 @@ export class ThorchainSwapper implements Swapper {
     throw new Error('ThorchainSwapper: approveInfinite unimplemented')
   }
 
-  filterBuyAssetsBySellAssetId(): CAIP19[] {
+  filterBuyAssetsBySellAssetId(): AssetId[] {
     return []
   }
 
-  filterAssetIdsBySellable(): CAIP19[] {
+  filterAssetIdsBySellable(): AssetId[] {
     return []
+  }
+
+  async buildTrade(): Promise<Trade<SupportedChainIds>> {
+    throw new Error('ThorchainSwapper: buildTrade unimplemented')
+  }
+
+  async getTradeQuote(): Promise<TradeQuote<SupportedChainIds>> {
+    throw new Error('ThorchainSwapper: getTradeQuote unimplemented')
+  }
+
+  async executeTrade(): Promise<ExecQuoteOutput> {
+    throw new Error('ThorchainSwapper: executeTrade unimplemented')
   }
 }

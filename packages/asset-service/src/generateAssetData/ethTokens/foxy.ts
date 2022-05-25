@@ -1,27 +1,17 @@
-import { AssetNamespace, caip2, caip19 } from '@shapeshiftoss/caip'
-import { AssetDataSource, ChainTypes, NetworkTypes, TokenAsset } from '@shapeshiftoss/types'
+import { ethChainId as chainId, toAssetId } from '@shapeshiftoss/caip'
+import { AssetDataSource, TokenAsset } from '@shapeshiftoss/types'
 
 export const getFoxyToken = (): TokenAsset[] => {
-  const chain = ChainTypes.Ethereum
-  const network = NetworkTypes.MAINNET
-  const assetNamespace = AssetNamespace.ERC20
+  const assetNamespace = 'erc20'
   const assetReference = '0xDc49108ce5C57bc3408c3A5E95F3d864eC386Ed3' // FOXy contract address
 
   const result: TokenAsset = {
-    assetId: caip19.toCAIP19({
-      chain,
-      network,
+    assetId: toAssetId({
+      chainId,
       assetNamespace,
       assetReference
     }),
-    chainId: caip2.toCAIP2({ chain, network }),
-    caip19: caip19.toCAIP19({
-      chain,
-      network,
-      assetNamespace,
-      assetReference
-    }),
-    caip2: caip2.toCAIP2({ chain, network }),
+    chainId,
     dataSource: AssetDataSource.CoinGecko,
     name: 'FOX Yieldy',
     precision: 18,

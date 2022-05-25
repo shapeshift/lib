@@ -1,8 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { AssetNamespace, caip19 } from '@shapeshiftoss/caip'
-import { ChainReference } from '@shapeshiftoss/caip/dist/caip2/caip2'
+import { CHAIN_NAMESPACE, CHAIN_REFERENCE, ChainReference, toAssetId } from '@shapeshiftoss/caip'
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
-import { ChainTypes, NetworkTypes, WithdrawType } from '@shapeshiftoss/types'
+import { ChainTypes, WithdrawType } from '@shapeshiftoss/types'
 import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
 import { toLower } from 'lodash'
@@ -54,14 +53,16 @@ import {
 
 export * from './foxy-types'
 
+type EthereumChainReference =
+  | typeof CHAIN_REFERENCE.EthereumMainnet
+  | typeof CHAIN_REFERENCE.EthereumRinkeby
+  | typeof CHAIN_REFERENCE.EthereumRopsten
+
 export type ConstructorArgs = {
   adapter: ChainAdapter<ChainTypes.Ethereum>
   providerUrl: string
   foxyAddresses: FoxyAddressesType
-  network?:
-    | ChainReference.EthereumMainnet
-    | ChainReference.EthereumRinkeby
-    | ChainReference.EthereumRopsten
+  chainReference?: EthereumChainReference
 }
 
 export const transformData = ({ tvl, apy, expired, ...contractData }: FoxyOpportunityInputData) => {
@@ -89,14 +90,14 @@ export class FoxyApi {
   public web3: Web3
   private foxyStakingContracts: Contract[]
   private liquidityReserveContracts: Contract[]
-  private network: ChainReference
+  private readonly ethereumChainReference: ChainReference
   private foxyAddresses: FoxyAddressesType
 
   constructor({
     adapter,
     providerUrl,
     foxyAddresses,
-    network = ChainReference.EthereumMainnet
+    chainReference = CHAIN_REFERENCE.EthereumMainnet
   }: ConstructorArgs) {
     this.adapter = adapter
     this.provider = new Web3.providers.HttpProvider(providerUrl)
@@ -108,7 +109,7 @@ export class FoxyApi {
     this.liquidityReserveContracts = foxyAddresses.map(
       (addresses) => new this.web3.eth.Contract(liquidityReserveAbi, addresses.liquidityReserve)
     )
-    this.network = network
+    this.ethereumChainReference = chainReference
     this.providerUrl = providerUrl
     this.foxyAddresses = foxyAddresses
   }
@@ -407,11 +408,11 @@ export class FoxyApi {
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const bip44Params = this.adapter.buildBIP44Params({ accountNumber })
-    const chainId = Number(this.network)
+    const chainReferenceAsNumber = Number(this.ethereumChainReference)
     const estimatedGas = estimatedGasBN.toString()
     const payload = {
       bip44Params,
-      chainId,
+      chainId: chainReferenceAsNumber,
       data,
       estimatedGas,
       gasPrice,
@@ -473,10 +474,10 @@ export class FoxyApi {
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const estimatedGas = estimatedGasBN.toString()
     const bip44Params = this.adapter.buildBIP44Params({ accountNumber })
-    const chainId = Number(this.network)
+    const chainReferenceAsNumber = Number(this.ethereumChainReference)
     const payload = {
       bip44Params,
-      chainId,
+      chainId: chainReferenceAsNumber,
       data,
       estimatedGas,
       gasPrice,
@@ -523,10 +524,10 @@ export class FoxyApi {
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const estimatedGas = estimatedGasBN.toString()
     const bip44Params = this.adapter.buildBIP44Params({ accountNumber })
-    const chainId = Number(this.network)
+    const chainReferenceAsNumber = Number(this.ethereumChainReference)
     const payload = {
       bip44Params,
-      chainId,
+      chainId: chainReferenceAsNumber,
       data,
       estimatedGas,
       gasPrice,
@@ -638,10 +639,10 @@ export class FoxyApi {
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const estimatedGas = estimatedGasBN.toString()
     const bip44Params = this.adapter.buildBIP44Params({ accountNumber })
-    const chainId = Number(this.network)
+    const chainReferenceAsNumber = Number(this.ethereumChainReference)
     const payload = {
       bip44Params,
-      chainId,
+      chainId: chainReferenceAsNumber,
       data,
       estimatedGas,
       gasPrice,
@@ -748,10 +749,10 @@ export class FoxyApi {
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const estimatedGas = estimatedGasBN.toString()
     const bip44Params = this.adapter.buildBIP44Params({ accountNumber })
-    const chainId = Number(this.network)
+    const chainReferenceAsNumber = Number(this.ethereumChainReference)
     const payload = {
       bip44Params,
-      chainId,
+      chainId: chainReferenceAsNumber,
       data,
       estimatedGas,
       gasPrice,
@@ -796,10 +797,10 @@ export class FoxyApi {
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const estimatedGas = estimatedGasBN.toString()
     const bip44Params = this.adapter.buildBIP44Params({ accountNumber })
-    const chainId = Number(this.network)
+    const chainReferenceAsNumber = Number(this.ethereumChainReference)
     const payload = {
       bip44Params,
-      chainId,
+      chainId: chainReferenceAsNumber,
       data,
       estimatedGas,
       gasPrice,
@@ -843,10 +844,10 @@ export class FoxyApi {
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const estimatedGas = estimatedGasBN.toString()
     const bip44Params = this.adapter.buildBIP44Params({ accountNumber })
-    const chainId = Number(this.network)
+    const chainReferenceAsNumber = Number(this.ethereumChainReference)
     const payload = {
       bip44Params,
-      chainId,
+      chainId: chainReferenceAsNumber,
       data,
       estimatedGas,
       gasPrice,
@@ -1079,12 +1080,12 @@ export class FoxyApi {
       }
     })
 
-    const chain = ChainTypes.Ethereum
-    const network = NetworkTypes.MAINNET
-    const assetNamespace = AssetNamespace.ERC20
+    const chainNamespace = CHAIN_NAMESPACE.Ethereum
+    const chainReference = CHAIN_REFERENCE.EthereumMainnet
+    const assetNamespace = 'erc20'
     const assetReference = tokenContractAddress
     // foxy assetId
-    const assetId = caip19.toCAIP19({ chain, network, assetNamespace, assetReference })
+    const assetId = toAssetId({ chainNamespace, chainReference, assetNamespace, assetReference })
 
     const results = await Promise.allSettled(
       events.map(async (event) => {

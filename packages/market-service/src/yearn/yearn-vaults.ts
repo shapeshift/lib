@@ -1,13 +1,11 @@
-import { adapters, AssetNamespace, caip19 } from '@shapeshiftoss/caip'
+import { adapters, CHAIN_NAMESPACE, CHAIN_REFERENCE, toAssetId } from '@shapeshiftoss/caip'
 import {
-  ChainTypes,
   FindAllMarketArgs,
   HistoryData,
   HistoryTimeframe,
   MarketCapResult,
   MarketData,
   MarketDataArgs,
-  NetworkTypes,
   PriceHistoryArgs
 } from '@shapeshiftoss/types'
 import { ChainId, Yearn } from '@yfi/sdk'
@@ -54,10 +52,10 @@ export class YearnVaultMarketCapService implements MarketService {
             : -1
         )
         .reduce((acc, yearnItem) => {
-          const assetId = caip19.toCAIP19({
-            chain: ChainTypes.Ethereum,
-            network: NetworkTypes.MAINNET,
-            assetNamespace: AssetNamespace.ERC20,
+          const assetId = toAssetId({
+            chainNamespace: CHAIN_NAMESPACE.Ethereum,
+            chainReference: CHAIN_REFERENCE.EthereumMainnet,
+            assetNamespace: 'erc20',
             assetReference: yearnItem.address
           })
           // if amountUsdc of a yearn asset is 0, the asset has not price or value
@@ -123,8 +121,8 @@ export class YearnVaultMarketCapService implements MarketService {
     }
   }
 
-  findByCaip19 = async ({ caip19: assetId }: MarketDataArgs): Promise<MarketData | null> => {
-    const id = adapters.CAIP19ToYearn(assetId)
+  findByAssetId = async ({ assetId }: MarketDataArgs): Promise<MarketData | null> => {
+    const id = adapters.assetIdToYearn(assetId)
     if (!id) return null
     try {
       const vaults = await rateLimiter(() => this.yearnSdk.vaults.get([id]))
@@ -184,7 +182,7 @@ export class YearnVaultMarketCapService implements MarketService {
       }
     } catch (e) {
       console.warn(e)
-      throw new Error('YearnMarketService(findByCaip19): error fetching market data')
+      throw new Error('YearnMarketService(findByAssetId): error fetching market data')
     }
   }
 
@@ -194,11 +192,11 @@ export class YearnVaultMarketCapService implements MarketService {
     return date
   }
 
-  findPriceHistoryByCaip19 = async ({
-    caip19: assetId,
+  findPriceHistoryByAssetId = async ({
+    assetId,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
-    const id = adapters.CAIP19ToYearn(assetId)
+    const id = adapters.assetIdToYearn(assetId)
     if (!id) return []
     try {
       let daysAgo

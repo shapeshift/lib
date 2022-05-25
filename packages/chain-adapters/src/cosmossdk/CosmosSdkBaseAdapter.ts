@@ -1,4 +1,4 @@
-import { AssetId, CAIP2, CAIP19, ChainId } from '@shapeshiftoss/caip'
+import { AssetId, ChainId } from '@shapeshiftoss/caip'
 import { CosmosSignTx } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
@@ -11,10 +11,10 @@ import { getStatus, getType, toRootDerivationPath } from '../utils'
 export type CosmosChainTypes = ChainTypes.Cosmos | ChainTypes.Osmosis
 
 export interface ChainAdapterArgs {
-  chainId?: ChainId | CAIP2
+  chainId?: ChainId
   providers: {
-    http: unchained.cosmos.V1Api
-    ws: unchained.ws.Client<unchained.cosmos.Tx>
+    http: unchained.cosmos.V1Api | unchained.osmosis.V1Api
+    ws: unchained.ws.Client<unchained.cosmos.Tx> | unchained.ws.Client<unchained.osmosis.Tx>
   }
   coinName: string
 }
@@ -29,19 +29,19 @@ const transformValidator = (
 ): chainAdapters.cosmos.Validator => ({
   address: validator.address,
   moniker: validator.moniker,
+  tokens: validator.tokens,
   commission: validator.commission.rate,
-  apr: validator.apr,
-  tokens: validator.tokens
+  apr: validator.apr
 })
 
 export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implements IChainAdapter<T> {
-  protected readonly chainId: ChainId | CAIP2
-  protected readonly assetId: AssetId | CAIP19 // This is the CAIP19/AssetId for native token on the chain (ATOM/OSMO/etc)
+  protected readonly chainId: ChainId
+  protected readonly assetId: AssetId // This is the AssetId for native token on the chain (ATOM/OSMO/etc)
   protected readonly supportedChainIds: ChainId[]
   protected readonly coinName: string
   protected readonly providers: {
-    http: unchained.cosmos.V1Api
-    ws: unchained.ws.Client<unchained.cosmos.Tx>
+    http: unchained.cosmos.V1Api | unchained.osmosis.V1Api
+    ws: unchained.ws.Client<unchained.cosmos.Tx> | unchained.ws.Client<unchained.osmosis.Tx>
   }
 
   protected parser: unchained.cosmos.TransactionParser
@@ -62,29 +62,14 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
 
   abstract getType(): T
 
-  getChainId(): ChainId | CAIP2 {
+  getChainId(): ChainId {
     return this.chainId
   }
 
-  getCaip2(): ChainId | CAIP2 {
-    return this.chainId
-  }
-
-  async getInfo(): Promise<chainAdapters.cosmos.Info> {
-    try {
-      const { data } = await this.providers.http.getInfo()
-      return {
-        totalSupply: data.totalSupply,
-        bondedTokens: data.bondedTokens
-      }
-    } catch (err) {
-      return ErrorHandler(err)
-    }
-  }
+  abstract getFeeAssetId(): AssetId
 
   async getAccount(pubkey: string): Promise<chainAdapters.Account<T>> {
     try {
-      const caip = this.getCaip2()
       const { data } = await this.providers.http.getAccount({ pubkey })
 
       const delegations = data.delegations.map<chainAdapters.cosmos.Delegation>((delegation) => ({
@@ -126,15 +111,15 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
 
       return {
         balance: data.balance,
-        caip2: caip,
-        caip19: this.assetId,
+        chainId: this.chainId,
+        assetId: this.assetId,
         chain: this.getType(),
         chainSpecific: {
           accountNumber: data.accountNumber.toString(),
-          delegations: delegations,
-          redelegations: redelegations,
-          undelegations: undelegations,
-          rewards: rewards,
+          delegations,
+          redelegations,
+          undelegations,
+          rewards,
           sequence: data.sequence.toString()
         },
         pubkey: data.pubkey
@@ -170,7 +155,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
             blockHash: parsedTx.blockHash,
             blockHeight: parsedTx.blockHeight,
             blockTime: parsedTx.blockTime,
-            caip2: this.getCaip2(),
+            chainId: parsedTx.chainId,
             chain: this.getType(),
             confirmations: parsedTx.confirmations,
             txid: parsedTx.txid,
@@ -178,7 +163,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
             status: getStatus(parsedTx.status),
             tradeDetails: parsedTx.trade,
             transfers: parsedTx.transfers.map((transfer) => ({
-              caip19: transfer.caip19,
+              assetId: transfer.assetId,
               from: transfer.from,
               to: transfer.to,
               type: getType(transfer.type),
@@ -266,14 +251,14 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
           blockHash: tx.blockHash,
           blockHeight: tx.blockHeight,
           blockTime: tx.blockTime,
-          caip2: tx.caip2,
+          chainId: tx.chainId,
           chain: this.getType(),
           confirmations: tx.confirmations,
           fee: tx.fee,
           status: getStatus(tx.status),
           tradeDetails: tx.trade,
           transfers: tx.transfers.map((transfer) => ({
-            caip19: transfer.caip19,
+            assetId: transfer.assetId,
             from: transfer.from,
             to: transfer.to,
             type: getType(transfer.type),

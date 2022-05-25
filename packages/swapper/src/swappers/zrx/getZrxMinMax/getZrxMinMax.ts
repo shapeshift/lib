@@ -1,44 +1,26 @@
-import { ChainTypes, GetQuoteInput, MinMaxOutput, QuoteResponse } from '@shapeshiftoss/types'
-import BigNumber from 'bignumber.js'
+import { Asset, MinMaxOutput } from '@shapeshiftoss/types'
 
+import { SwapError, SwapErrorTypes } from '../../../api'
+import { bn, bnOrZero } from '../utils/bignumber'
 import { MAX_ZRX_TRADE } from '../utils/constants'
-import { getUsdRate, normalizeAmount } from '../utils/helpers/helpers'
-import { zrxService } from '../utils/zrxService'
-import { ZrxError } from '../ZrxSwapper'
+import { getUsdRate } from '../utils/helpers/helpers'
 
-export const getZrxMinMax = async (
-  input: Pick<GetQuoteInput, 'sellAsset' | 'buyAsset'>
-): Promise<MinMaxOutput> => {
-  const { sellAsset, buyAsset } = input
-
-  if (sellAsset.chain !== ChainTypes.Ethereum || buyAsset.chain !== ChainTypes.Ethereum) {
-    throw new ZrxError('getZrxMinMax - must be eth assets')
-  }
-  const buyToken = buyAsset.tokenId || buyAsset.symbol
-  const sellToken = sellAsset.tokenId || sellAsset.symbol
-
-  const usdRate = await getUsdRate({
-    symbol: sellAsset.symbol,
-    tokenId: sellAsset.tokenId
-  })
-
-  const minimumWeiAmount = new BigNumber(1)
-    .dividedBy(new BigNumber(usdRate))
-    .times(new BigNumber(10).exponentiatedBy(sellAsset.precision))
-
-  const minimum = new BigNumber(1).dividedBy(new BigNumber(usdRate)).toString()
-  const minimumPriceResult = await zrxService.get<QuoteResponse>('/swap/v1/price', {
-    params: {
-      sellToken,
-      buyToken,
-      sellAmount: normalizeAmount(minimumWeiAmount.toString())
+export const getZrxMinMax = async (sellAsset: Asset, buyAsset: Asset): Promise<MinMaxOutput> => {
+  try {
+    if (sellAsset.chainId !== 'eip155:1' || buyAsset.chainId !== 'eip155:1') {
+      throw new SwapError('[getZrxMinMax]', { code: SwapErrorTypes.UNSUPPORTED_PAIR })
     }
-  })
-  const minimumPrice = new BigNumber(minimumPriceResult?.data?.price).toString()
 
-  return {
-    minimum,
-    minimumPrice,
-    maximum: MAX_ZRX_TRADE
+    const usdRate = await getUsdRate({ ...sellAsset })
+
+    const minimum = bn(1).dividedBy(bnOrZero(usdRate)).toString() // $1 worth of the sell token.
+    const maximum = MAX_ZRX_TRADE // Arbitrarily large value. 10e+28 here.
+    return {
+      minimum,
+      maximum
+    }
+  } catch (e) {
+    if (e instanceof SwapError) throw e
+    throw new SwapError('[getZrxMinMax]', { cause: e, code: SwapErrorTypes.MIN_MAX_FAILED })
   }
 }

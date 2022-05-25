@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/errors",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Common set of typed errors",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -15,10 +15,12 @@
     "access": "public"
   },
   "scripts": {
-    "build": "yarn clean && tsc --project tsconfig.build.json",
-    "clean": "rm -rf dist",
+    "build": "yarn clean && yarn compile",
+    "clean": "rm -rf dist && rm -rf tsconfig.build.tsbuildinfo",
+    "compile": "tsc -p tsconfig.build.json",
     "dev": "tsc --watch",
-    "test": "jest test",
+    "prepare": "yarn build",
+    "test": "jest --coverage",
     "type-check": "tsc --project ./tsconfig.json --noEmit"
   },
   "dependencies": {

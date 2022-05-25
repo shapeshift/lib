@@ -1,3 +1,97 @@
+# [@shapeshiftoss/market-service-v4.2.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.2.1...@shapeshiftoss/market-service-v4.2.2) (2022-05-25)
+
+# [@shapeshiftoss/market-service-v4.2.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.2.0...@shapeshiftoss/market-service-v4.2.1) (2022-05-24)
+
+# [@shapeshiftoss/market-service-v4.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.1.0...@shapeshiftoss/market-service-v4.2.0) (2022-05-20)
+
+
+### Features
+
+* add supply and maxSupply fields to market service response ([#670](https://github.com/shapeshift/lib/issues/670)) ([9ad837b](https://github.com/shapeshift/lib/commit/9ad837bc8b56d105dc4892c242bd25ed15cb0cf0))
+
+# [@shapeshiftoss/market-service-v4.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.0.3...@shapeshiftoss/market-service-v4.1.0) (2022-05-20)
+
+
+### Features
+
+* chain and asset utility functions ([#654](https://github.com/shapeshift/lib/issues/654)) ([4e12ce6](https://github.com/shapeshift/lib/commit/4e12ce6fd10cd8bf34e059e63c2a162fb6576932))
+
+# [@shapeshiftoss/market-service-v4.0.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.0.2...@shapeshiftoss/market-service-v4.0.3) (2022-05-19)
+
+
+### Bug Fixes
+
+* timeframes for fiat rates ([#667](https://github.com/shapeshift/lib/issues/667)) ([38f3d12](https://github.com/shapeshift/lib/commit/38f3d12f0a375a0723755a9402dfd9f3be51ebf8))
+
+# [@shapeshiftoss/market-service-v4.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.0.1...@shapeshiftoss/market-service-v4.0.2) (2022-05-18)
+
+
+### Bug Fixes
+
+* fetch multiple years for fiat price history ([#660](https://github.com/shapeshift/lib/issues/660)) ([810c899](https://github.com/shapeshift/lib/commit/810c89977614b6fa86a6d855376765f1f52724c3))
+
+# [@shapeshiftoss/market-service-v4.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.0.0...@shapeshiftoss/market-service-v4.0.1) (2022-05-18)
+
+# [@shapeshiftoss/market-service-v4.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v3.0.2...@shapeshiftoss/market-service-v4.0.0) (2022-05-18)
+
+
+### Performance Improvements
+
+* replace enums with dynamically derived object literals ([#656](https://github.com/shapeshift/lib/issues/656)) ([6d2d821](https://github.com/shapeshift/lib/commit/6d2d821318da9db4afec97b1247cf006a5fc42d2))
+
+
+### BREAKING CHANGES
+
+* the enum removal will need to be handled by consumers to use the new constants.
+
+* chore: remove toString() and associated comment
+
+* chore: remove string litirals
+
+* chore: optimise imports
+
+* chore: use string union for AssetNamespace
+
+* chore: update README
+
+# [@shapeshiftoss/market-service-v3.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v3.0.1...@shapeshiftoss/market-service-v3.0.2) (2022-05-16)
+
+
+### Bug Fixes
+
+* sort fiat price history by time correctly ([#647](https://github.com/shapeshift/lib/issues/647)) ([845d4dc](https://github.com/shapeshift/lib/commit/845d4dc8f464a25cf4c4cc7498bdac9a9ef22185))
+
+# [@shapeshiftoss/market-service-v3.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v3.0.0...@shapeshiftoss/market-service-v3.0.1) (2022-05-12)
+
+# [@shapeshiftoss/market-service-v3.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v2.3.0...@shapeshiftoss/market-service-v3.0.0) (2022-05-10)
+
+
+### Performance Improvements
+
+* **marketService:** replace caip properties with their high-level counterparts ([#607](https://github.com/shapeshift/lib/issues/607)) ([85a7cd2](https://github.com/shapeshift/lib/commit/85a7cd2b7004b425badc7c965385553fe9823ce8))
+
+
+### BREAKING CHANGES
+
+* **marketService:** updates the market service with caip-free types and vernacular.
+
+* chore: use local FindByAssetIdMarketType
+
+* chore: do not import from source
+
+Co-authored-by: kaladinlight <35275952+kaladinlight@users.noreply.github.com>
+
+# [@shapeshiftoss/market-service-v2.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v2.2.3...@shapeshiftoss/market-service-v2.3.0) (2022-05-06)
+
+
+### Features
+
+* **caip:** flatten exports ([#560](https://github.com/shapeshift/lib/issues/560)) ([e326522](https://github.com/shapeshift/lib/commit/e3265223dca3c2126b2822395353f6650c4b0342))
+
+# [@shapeshiftoss/market-service-v2.2.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v2.2.2...@shapeshiftoss/market-service-v2.2.3) (2022-05-05)
+
+# [@shapeshiftoss/market-service-v2.2.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v2.2.1...@shapeshiftoss/market-service-v2.2.2) (2022-05-03)
+
 # [@shapeshiftoss/market-service-v2.2.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v2.2.0...@shapeshiftoss/market-service-v2.2.1) (2022-05-02)
 
 

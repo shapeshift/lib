@@ -1,13 +1,7 @@
 import realFs from 'fs'
 
-import {
-  makeBtcData,
-  makeCosmosHubData,
-  makeOsmosisData,
-  parseData,
-  parseEthData,
-  writeFiles
-} from './utils'
+import { makeBtcData, makeCosmosHubData, makeOsmosisData } from '../../utils'
+import { parseData, parseEthData, writeFiles } from './utils'
 
 const makeEthMockCoincapResponse = () => ({
   id: 'ethereum',
@@ -155,27 +149,27 @@ describe('adapters:coincap:utils', () => {
     it('can writeFiles', async () => {
       const data = {
         foo: {
-          caip19abc: 'bitcorn',
-          caip19def: 'efferium'
+          assetIdAbc: 'bitcorn',
+          assetIdDef: 'efferium'
         },
         bar: {
-          caip19ghi: 'fox',
-          caip19jkl: 'shib'
+          assetIdGhi: 'fox',
+          assetIdJkl: 'shib'
         }
       }
-      const fooCaips = JSON.stringify(data.foo)
-      const barCaips = JSON.stringify(data.bar)
+      const fooAssetIds = JSON.stringify(data.foo)
+      const barAssetIds = JSON.stringify(data.bar)
       console.info = jest.fn()
       await writeFiles(data)
       expect(realFs.promises.writeFile).toBeCalledWith(
         './src/adapters/coincap/generated/foo/adapter.json',
-        fooCaips
+        fooAssetIds
       )
       expect(realFs.promises.writeFile).toBeCalledWith(
         './src/adapters/coincap/generated/bar/adapter.json',
-        barCaips
+        barAssetIds
       )
-      expect(console.info).toBeCalledWith('Generated CoinCap CAIP19 adapter data.')
+      expect(console.info).toBeCalledWith('Generated CoinCap AssetId adapter data.')
     })
   })
 })

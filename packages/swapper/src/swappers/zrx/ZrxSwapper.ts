@@ -1,40 +1,39 @@
-import { CAIP19 } from '@shapeshiftoss/caip'
+import { AssetId } from '@shapeshiftoss/caip'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import {
-  ApprovalNeededInput,
   ApprovalNeededOutput,
-  ApproveInfiniteInput,
   Asset,
-  BuildQuoteTxInput,
-  ChainTypes,
-  ExecQuoteInput,
   ExecQuoteOutput,
-  GetQuoteInput,
+  GetMinMaxInput,
   MinMaxOutput,
-  Quote,
+  SupportedChainIds,
   SwapperType
 } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
-import { BuyAssetBySellIdInput, Swapper } from '../../api'
+import {
+  ApprovalNeededInput,
+  ApproveInfiniteInput,
+  BuildTradeInput,
+  BuyAssetBySellIdInput,
+  ExecuteTradeInput,
+  GetTradeQuoteInput,
+  Swapper,
+  TradeQuote,
+  ZrxTrade
+} from '../../api'
 import { getZrxMinMax } from './getZrxMinMax/getZrxMinMax'
-import { getZrxQuote } from './getZrxQuote/getZrxQuote'
+import { getZrxTradeQuote } from './getZrxTradeQuote/getZrxTradeQuote'
+import { UNSUPPORTED_ASSETS } from './utils/blacklist'
 import { getUsdRate } from './utils/helpers/helpers'
 import { ZrxApprovalNeeded } from './ZrxApprovalNeeded/ZrxApprovalNeeded'
 import { ZrxApproveInfinite } from './ZrxApproveInfinite/ZrxApproveInfinite'
-import { ZrxBuildQuoteTx } from './ZrxBuildQuoteTx/ZrxBuildQuoteTx'
-import { ZrxExecuteQuote } from './ZrxExecuteQuote/ZrxExecuteQuote'
+import { zrxBuildTrade } from './zrxBuildTrade/zrxBuildTrade'
+import { zrxExecuteTrade } from './zrxExecuteTrade/zrxExecuteTrade'
 
 export type ZrxSwapperDeps = {
   adapterManager: ChainAdapterManager
   web3: Web3
-}
-
-export class ZrxError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.message = `ZrxError:${message}`
-  }
 }
 
 export class ZrxSwapper implements Swapper {
@@ -49,47 +48,47 @@ export class ZrxSwapper implements Swapper {
     return SwapperType.Zrx
   }
 
-  async buildQuoteTx(args: BuildQuoteTxInput): Promise<Quote<ChainTypes>> {
-    return ZrxBuildQuoteTx(this.deps, args)
+  async buildTrade(args: BuildTradeInput): Promise<ZrxTrade<SupportedChainIds>> {
+    return zrxBuildTrade(this.deps, args)
   }
 
-  async getQuote(input: GetQuoteInput): Promise<Quote<ChainTypes>> {
-    return getZrxQuote(input)
+  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<SupportedChainIds>> {
+    return getZrxTradeQuote(input)
   }
 
-  async getUsdRate(input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string> {
+  async getUsdRate(input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> {
     return getUsdRate(input)
   }
 
-  async getMinMax(input: GetQuoteInput): Promise<MinMaxOutput> {
-    return getZrxMinMax(input)
+  async getMinMax(input: GetMinMaxInput): Promise<MinMaxOutput> {
+    return getZrxMinMax(input.sellAsset, input.buyAsset)
   }
 
-  getDefaultPair(): [CAIP19, CAIP19] {
-    const ETH = 'eip155:1/slip44:60'
-    const FOX = 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
-    return [ETH, FOX]
+  async executeTrade(args: ExecuteTradeInput<SupportedChainIds>): Promise<ExecQuoteOutput> {
+    return zrxExecuteTrade(this.deps, args)
   }
 
-  async executeQuote(args: ExecQuoteInput<ChainTypes>): Promise<ExecQuoteOutput> {
-    return ZrxExecuteQuote(this.deps, args)
-  }
-
-  async approvalNeeded(args: ApprovalNeededInput<ChainTypes>): Promise<ApprovalNeededOutput> {
+  async approvalNeeded(
+    args: ApprovalNeededInput<SupportedChainIds>
+  ): Promise<ApprovalNeededOutput> {
     return ZrxApprovalNeeded(this.deps, args)
   }
 
-  async approveInfinite(args: ApproveInfiniteInput<ChainTypes>): Promise<string> {
+  async approveInfinite(args: ApproveInfiniteInput<SupportedChainIds>): Promise<string> {
     return ZrxApproveInfinite(this.deps, args)
   }
 
-  filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): CAIP19[] {
-    const { assetIds, sellAssetId } = args
-    // TODO: pending changes to caip lib, we may want to import caip2 value instead.
-    return assetIds.filter((id) => id.startsWith('eip155:1') && sellAssetId.startsWith('eip155:1'))
+  filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): AssetId[] {
+    const { assetIds = [], sellAssetId } = args
+    return assetIds.filter(
+      (id) =>
+        id.startsWith('eip155:1') &&
+        sellAssetId?.startsWith('eip155:1') &&
+        !UNSUPPORTED_ASSETS.includes(id)
+    )
   }
 
-  filterAssetIdsBySellable(assetIds: CAIP19[]): CAIP19[] {
-    return assetIds.filter((id) => id.startsWith('eip155:1'))
+  filterAssetIdsBySellable(assetIds: AssetId[] = []): AssetId[] {
+    return assetIds.filter((id) => id.startsWith('eip155:1') && !UNSUPPORTED_ASSETS.includes(id))
   }
 }

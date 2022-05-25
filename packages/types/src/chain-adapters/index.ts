@@ -1,4 +1,10 @@
-import { BTCSignTx, CosmosSignTx, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
+import {
+  BTCSignTx,
+  CosmosSignTx,
+  ETHSignTx,
+  HDWallet,
+  OsmosisSignTx
+} from '@shapeshiftoss/hdwallet-core'
 
 import { BIP44Params, ChainTypes, UtxoAccountType } from '../base'
 import { ChainSpecific } from '../utility'
@@ -21,14 +27,14 @@ type ChainSpecificAccount<T> = ChainSpecific<
 export type Account<T extends ChainTypes> = {
   balance: string
   pubkey: string
-  caip2: string
-  caip19: string
+  chainId: string
+  assetId: string
   chain: T
 } & ChainSpecificAccount<T>
 
 export type AssetBalance = {
   balance: string
-  caip19: string
+  assetId: string
 }
 
 export enum FeeDataKey {
@@ -37,25 +43,15 @@ export enum FeeDataKey {
   Fast = 'fast'
 }
 
-type ChainSpecificQuoteFeeData<T1> = ChainSpecific<
-  T1,
-  {
-    [ChainTypes.Ethereum]: ethereum.QuoteFeeData
-  }
->
-
 type ChainSpecificFeeData<T> = ChainSpecific<
   T,
   {
     [ChainTypes.Ethereum]: ethereum.FeeData
     [ChainTypes.Bitcoin]: bitcoin.FeeData
     [ChainTypes.Cosmos]: cosmos.FeeData
+    [ChainTypes.Osmosis]: osmosis.FeeData
   }
 >
-
-export type QuoteFeeData<T1 extends ChainTypes> = {
-  fee: string
-} & ChainSpecificQuoteFeeData<T1>
 
 // ChainTypes.Ethereum:
 // feePerUnit = gasPrice
@@ -82,7 +78,7 @@ export type SubscribeTxsInput = {
 }
 
 export type TxFee = {
-  caip19: string
+  assetId: string
   value: string
 }
 
@@ -106,7 +102,7 @@ export type Transaction<T extends ChainTypes> = {
   blockHeight: number
   blockTime: number
   chain: T
-  caip2: string
+  chainId: string
   confirmations: number
   txid: string
   fee?: TxFee
@@ -133,7 +129,7 @@ export interface TxMetadata {
 }
 
 export type TxTransfer = {
-  caip19: string
+  assetId: string
   from: string
   to: string
   type: TxType
@@ -154,6 +150,7 @@ type ChainTxTypeInner = {
   [ChainTypes.Ethereum]: ETHSignTx
   [ChainTypes.Bitcoin]: BTCSignTx
   [ChainTypes.Cosmos]: CosmosSignTx
+  [ChainTypes.Osmosis]: OsmosisSignTx
 }
 
 export type ChainTxType<T> = T extends keyof ChainTxTypeInner ? ChainTxTypeInner[T] : never

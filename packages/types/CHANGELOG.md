@@ -1,3 +1,69 @@
+# [@shapeshiftoss/types-v4.3.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v4.3.0...@shapeshiftoss/types-v4.3.1) (2022-05-24)
+
+# [@shapeshiftoss/types-v4.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v4.2.0...@shapeshiftoss/types-v4.3.0) (2022-05-20)
+
+
+### Features
+
+* add supply and maxSupply to marketData ([#673](https://github.com/shapeshift/lib/issues/673)) ([773b632](https://github.com/shapeshift/lib/commit/773b6325acf5ff1122aa2dde9f2dc34f41eab4ad))
+
+# [@shapeshiftoss/types-v4.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v4.1.0...@shapeshiftoss/types-v4.2.0) (2022-05-18)
+
+
+### Features
+
+* osmosis adapter ([#664](https://github.com/shapeshift/lib/issues/664)) ([8bcdfd1](https://github.com/shapeshift/lib/commit/8bcdfd17a9902fb08239c4b4a2db3ae6b6e15183))
+
+# [@shapeshiftoss/types-v4.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v4.0.1...@shapeshiftoss/types-v4.1.0) (2022-05-12)
+
+
+### Features
+
+* replace ChainTypes to SupportedChainIds in Swapper ([#630](https://github.com/shapeshift/lib/issues/630)) ([9c86118](https://github.com/shapeshift/lib/commit/9c86118b4766b11467c08fad0bed7017ecba40ac))
+
+# [@shapeshiftoss/types-v4.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v4.0.0...@shapeshiftoss/types-v4.0.1) (2022-05-12)
+
+# [@shapeshiftoss/types-v4.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v3.1.5...@shapeshiftoss/types-v4.0.0) (2022-05-05)
+
+
+### Performance Improvements
+
+* **types:** trigger major version bump ([#617](https://github.com/shapeshift/lib/issues/617)) ([212b1e7](https://github.com/shapeshift/lib/commit/212b1e75442e34ccba24ac1fca969d12ba87f990))
+
+
+### BREAKING CHANGES
+
+* **types:** trigger the major version bump that should have occurred with the changes in 3.1.4
+
+# [@shapeshiftoss/types-v3.1.5](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v3.1.4...@shapeshiftoss/types-v3.1.5) (2022-05-05)
+
+
+### chore
+
+* **types:** trigger major version bump ([#616](https://github.com/shapeshift/lib/issues/616)) ([18f21ce](https://github.com/shapeshift/lib/commit/18f21ce9aba34597c0e4af361cddf62411536555))
+
+
+### BREAKING CHANGES
+
+* **types:** trigger the major version bump that should have occurred with the changes in 3.1.4
+
+Also fix the README header...
+
+# [@shapeshiftoss/types-v3.1.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v3.1.3...@shapeshiftoss/types-v3.1.4) (2022-05-05)
+
+# [@shapeshiftoss/types-v3.1.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v3.1.2...@shapeshiftoss/types-v3.1.3) (2022-05-05)
+
+# [@shapeshiftoss/types-v3.1.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v3.1.1...@shapeshiftoss/types-v3.1.2) (2022-05-03)
+
+# [@shapeshiftoss/types-v3.1.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v3.1.0...@shapeshiftoss/types-v3.1.1) (2022-05-02)
+
+# [@shapeshiftoss/types-v3.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v3.0.1...@shapeshiftoss/types-v3.1.0) (2022-05-02)
+
+
+### Features
+
+* make caip2, caip19 fields optional ([#593](https://github.com/shapeshift/lib/issues/593)) ([0ac7a81](https://github.com/shapeshift/lib/commit/0ac7a815ed189ee5b842d7488752e14f8a84f8f4))
+
 # [@shapeshiftoss/types-v3.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v3.0.0...@shapeshiftoss/types-v3.0.1) (2022-05-02)
 
 

@@ -10,7 +10,7 @@ import {
 import axios from 'axios'
 
 import { MarketService } from '../api'
-import { bnOrZero } from '../utils/bignumber'
+import { bn, bnOrZero } from '../utils/bignumber'
 import { isValidDate } from '../utils/isValidDate'
 import { OsmosisHistoryData, OsmosisMarketCap } from './osmosis-types'
 
@@ -25,14 +25,15 @@ export class OsmosisMarketService implements MarketService {
         .map((data) => data ?? []) // filter out rate limited results
         .sort((a, b) => (a.liquidity < b.liquidity ? 1 : -1))
         .reduce((acc, token) => {
-          const caip19 = adapters.osmosisToCAIP19(token.denom)
-          if (!caip19) return acc
+          const assetId = adapters.osmosisToAssetId(token.denom)
+          if (!assetId) return acc
 
-          acc[caip19] = {
+          acc[assetId] = {
             price: token.price.toString(),
             marketCap: token.liquidity.toString(),
             volume: token.volume_24h.toString(),
-            changePercent24Hr: token.price_24h_change
+            changePercent24Hr: token.price_24h_change,
+            supply: bnOrZero(token.liquidity).div(token.price).toString()
           }
 
           return acc
@@ -44,11 +45,11 @@ export class OsmosisMarketService implements MarketService {
     }
   }
 
-  findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData | null> => {
-    if (!adapters.CAIP19ToOsmosis(caip19)) return null
+  findByAssetId = async ({ assetId }: MarketDataArgs): Promise<MarketData | null> => {
+    if (!adapters.assetIdToOsmosis(assetId)) return null
 
     try {
-      const symbol = adapters.CAIP19ToOsmosis(caip19)
+      const symbol = adapters.assetIdToOsmosis(assetId)
       const { data }: { data: OsmosisMarketCap[] } = await axios.get(
         `${this.baseUrl}/tokens/v2/${symbol}`
       )
@@ -60,20 +61,21 @@ export class OsmosisMarketService implements MarketService {
         price: marketData.price.toString(),
         marketCap: marketData.liquidity.toString(),
         volume: marketData.volume_24h.toString(),
-        changePercent24Hr: bnOrZero(marketData.price_24h_change).toNumber()
+        changePercent24Hr: bnOrZero(marketData.price_24h_change).toNumber(),
+        supply: bnOrZero(marketData.liquidity).div(marketData.price).toString()
       }
     } catch (e) {
       console.warn(e)
-      throw new Error('MarketService(findByCaip19): error fetching market data')
+      throw new Error('MarketService(findByAssetId): error fetching market data')
     }
   }
 
-  findPriceHistoryByCaip19 = async ({
-    caip19,
+  findPriceHistoryByAssetId = async ({
+    assetId,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
-    if (!adapters.CAIP19ToOsmosis(caip19)) return []
-    const symbol = adapters.CAIP19ToOsmosis(caip19)
+    if (!adapters.assetIdToOsmosis(assetId)) return []
+    const symbol = adapters.assetIdToOsmosis(assetId)
 
     let range
     let isV1
@@ -92,17 +94,17 @@ export class OsmosisMarketService implements MarketService {
       case HistoryTimeframe.WEEK:
         range = '7d'
         isV1 = true
-        start = bnOrZero(24).times(7).toNumber()
+        start = bn(24).times(7).toNumber()
         break
       case HistoryTimeframe.MONTH:
         range = '1mo'
         isV1 = true
-        start = bnOrZero(24).times(30).toNumber()
+        start = bn(24).times(30).toNumber()
         break
       case HistoryTimeframe.YEAR:
         range = '1y'
         isV1 = true
-        start = bnOrZero(24).times(365).toNumber()
+        start = bn(24).times(365).toNumber()
         break
       case HistoryTimeframe.ALL:
         // TODO: currently the 'all' range for v2 is returning 500 errors. Using 1y for the time being.
@@ -145,7 +147,7 @@ export class OsmosisMarketService implements MarketService {
       }, [])
     } catch (e) {
       console.warn(e)
-      throw new Error('MarketService(findPriceHistoryByCaip19): error fetching price history')
+      throw new Error('MarketService(findPriceHistoryByAssetId): error fetching price history')
     }
   }
 }

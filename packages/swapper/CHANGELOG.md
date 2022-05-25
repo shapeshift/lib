@@ -1,3 +1,121 @@
+# [@shapeshiftoss/swapper-v5.1.5](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.1.4...@shapeshiftoss/swapper-v5.1.5) (2022-05-25)
+
+# [@shapeshiftoss/swapper-v5.1.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.1.3...@shapeshiftoss/swapper-v5.1.4) (2022-05-24)
+
+# [@shapeshiftoss/swapper-v5.1.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.1.2...@shapeshiftoss/swapper-v5.1.3) (2022-05-24)
+
+# [@shapeshiftoss/swapper-v5.1.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.1.1...@shapeshiftoss/swapper-v5.1.2) (2022-05-23)
+
+# [@shapeshiftoss/swapper-v5.1.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.1.0...@shapeshiftoss/swapper-v5.1.1) (2022-05-20)
+
+
+### Bug Fixes
+
+* add blacklist and make getBestSwapper return possibly undefined ([#672](https://github.com/shapeshift/lib/issues/672)) ([c2e3834](https://github.com/shapeshift/lib/commit/c2e38345a74af92c94890ccdcf1c6da2e30f99c1))
+
+# [@shapeshiftoss/swapper-v5.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.0.1...@shapeshiftoss/swapper-v5.1.0) (2022-05-20)
+
+
+### Features
+
+* chain and asset utility functions ([#654](https://github.com/shapeshift/lib/issues/654)) ([4e12ce6](https://github.com/shapeshift/lib/commit/4e12ce6fd10cd8bf34e059e63c2a162fb6576932))
+
+# [@shapeshiftoss/swapper-v5.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.0.0...@shapeshiftoss/swapper-v5.0.1) (2022-05-18)
+
+# [@shapeshiftoss/swapper-v5.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v4.1.3...@shapeshiftoss/swapper-v5.0.0) (2022-05-18)
+
+
+### Performance Improvements
+
+* replace enums with dynamically derived object literals ([#656](https://github.com/shapeshift/lib/issues/656)) ([6d2d821](https://github.com/shapeshift/lib/commit/6d2d821318da9db4afec97b1247cf006a5fc42d2))
+
+
+### BREAKING CHANGES
+
+* the enum removal will need to be handled by consumers to use the new constants.
+
+* chore: remove toString() and associated comment
+
+* chore: remove string litirals
+
+* chore: optimise imports
+
+* chore: use string union for AssetNamespace
+
+* chore: update README
+
+# [@shapeshiftoss/swapper-v4.1.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v4.1.2...@shapeshiftoss/swapper-v4.1.3) (2022-05-17)
+
+# [@shapeshiftoss/swapper-v4.1.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v4.1.1...@shapeshiftoss/swapper-v4.1.2) (2022-05-17)
+
+# [@shapeshiftoss/swapper-v4.1.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v4.1.0...@shapeshiftoss/swapper-v4.1.1) (2022-05-13)
+
+
+### Bug Fixes
+
+* swapper mixup ([#645](https://github.com/shapeshift/lib/issues/645)) ([0ebb4a4](https://github.com/shapeshift/lib/commit/0ebb4a435c39eadec21054c1fce8a40769a98e60))
+
+# [@shapeshiftoss/swapper-v4.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v4.0.4...@shapeshiftoss/swapper-v4.1.0) (2022-05-12)
+
+
+### Features
+
+* replace ChainTypes to SupportedChainIds in Swapper ([#630](https://github.com/shapeshift/lib/issues/630)) ([9c86118](https://github.com/shapeshift/lib/commit/9c86118b4766b11467c08fad0bed7017ecba40ac))
+
+# [@shapeshiftoss/swapper-v4.0.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v4.0.3...@shapeshiftoss/swapper-v4.0.4) (2022-05-12)
+
+# [@shapeshiftoss/swapper-v4.0.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v4.0.2...@shapeshiftoss/swapper-v4.0.3) (2022-05-12)
+
+# [@shapeshiftoss/swapper-v4.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v4.0.1...@shapeshiftoss/swapper-v4.0.2) (2022-05-11)
+
+
+### Bug Fixes
+
+* dont crash when passing undefined to filterBuyAssetsBySellAssetId ([#634](https://github.com/shapeshift/lib/issues/634)) ([c014a7b](https://github.com/shapeshift/lib/commit/c014a7b0bc3616a34fa4aeac11e56e7470b98ac0))
+
+# [@shapeshiftoss/swapper-v4.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v4.0.0...@shapeshiftoss/swapper-v4.0.1) (2022-05-10)
+
+# [@shapeshiftoss/swapper-v4.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v3.0.7...@shapeshiftoss/swapper-v4.0.0) (2022-05-10)
+
+
+### Performance Improvements
+
+* **chainAdapters:** replace caip properties with their high-level counterparts ([#606](https://github.com/shapeshift/lib/issues/606)) ([49e8fef](https://github.com/shapeshift/lib/commit/49e8fefabb6eaaecb357ddc16e11ad2080eb3082))
+
+
+### BREAKING CHANGES
+
+* **chainAdapters:** updates chain adapters with caip-free types and vernacular.
+
+* cleanup unchained commit cherry-pick
+
+* Remove caip comment
+
+* bump chain-adapters version and regen yarn lock
+
+* chore: update yarn.lock
+
+* chore: update yarn.lock
+
+Co-authored-by: kaladinlight <35275952+kaladinlight@users.noreply.github.com>
+
+# [@shapeshiftoss/swapper-v3.0.7](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v3.0.6...@shapeshiftoss/swapper-v3.0.7) (2022-05-05)
+
+# [@shapeshiftoss/swapper-v3.0.6](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v3.0.5...@shapeshiftoss/swapper-v3.0.6) (2022-05-05)
+
+# [@shapeshiftoss/swapper-v3.0.5](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v3.0.4...@shapeshiftoss/swapper-v3.0.5) (2022-05-03)
+
+# [@shapeshiftoss/swapper-v3.0.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v3.0.3...@shapeshiftoss/swapper-v3.0.4) (2022-05-02)
+
+# [@shapeshiftoss/swapper-v3.0.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v3.0.2...@shapeshiftoss/swapper-v3.0.3) (2022-05-02)
+
+# [@shapeshiftoss/swapper-v3.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v3.0.1...@shapeshiftoss/swapper-v3.0.2) (2022-05-02)
+
+
+### Bug Fixes
+
+* removes 3 unnecessary api calls from zrxswapper.  ([#586](https://github.com/shapeshift/lib/issues/586)) ([57d59c8](https://github.com/shapeshift/lib/commit/57d59c8488cceb05cd5e0778b49690d0d2c97b68))
+
 # [@shapeshiftoss/swapper-v3.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v3.0.0...@shapeshiftoss/swapper-v3.0.1) (2022-05-02)
 
 

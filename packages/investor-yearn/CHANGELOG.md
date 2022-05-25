@@ -1,3 +1,40 @@
+# [@shapeshiftoss/investor-yearn-v2.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v2.0.1...@shapeshiftoss/investor-yearn-v2.0.2) (2022-05-24)
+
+# [@shapeshiftoss/investor-yearn-v2.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v2.0.0...@shapeshiftoss/investor-yearn-v2.0.1) (2022-05-18)
+
+# [@shapeshiftoss/investor-yearn-v2.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v1.4.8...@shapeshiftoss/investor-yearn-v2.0.0) (2022-05-10)
+
+
+### Performance Improvements
+
+* **chainAdapters:** replace caip properties with their high-level counterparts ([#606](https://github.com/shapeshift/lib/issues/606)) ([49e8fef](https://github.com/shapeshift/lib/commit/49e8fefabb6eaaecb357ddc16e11ad2080eb3082))
+
+
+### BREAKING CHANGES
+
+* **chainAdapters:** updates chain adapters with caip-free types and vernacular.
+
+* cleanup unchained commit cherry-pick
+
+* Remove caip comment
+
+* bump chain-adapters version and regen yarn lock
+
+* chore: update yarn.lock
+
+* chore: update yarn.lock
+
+Co-authored-by: kaladinlight <35275952+kaladinlight@users.noreply.github.com>
+
+# [@shapeshiftoss/investor-yearn-v1.4.8](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v1.4.7...@shapeshiftoss/investor-yearn-v1.4.8) (2022-05-05)
+
+# [@shapeshiftoss/investor-yearn-v1.4.7](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v1.4.6...@shapeshiftoss/investor-yearn-v1.4.7) (2022-05-02)
+
+
+### Bug Fixes
+
+* removes 3 unnecessary api calls from zrxswapper.  ([#586](https://github.com/shapeshift/lib/issues/586)) ([57d59c8](https://github.com/shapeshift/lib/commit/57d59c8488cceb05cd5e0778b49690d0d2c97b68))
+
 # [@shapeshiftoss/investor-yearn-v1.4.6](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v1.4.5...@shapeshiftoss/investor-yearn-v1.4.6) (2022-05-02)
 
 

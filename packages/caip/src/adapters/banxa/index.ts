@@ -1,7 +1,10 @@
 import entries from 'lodash/entries'
 import toLower from 'lodash/toLower'
 
-const CAIP19ToBanxaTickerMap = {
+import { fromAssetId } from '../../assetId/assetId'
+import { ChainId } from '../../chainId/chainId'
+
+const AssetIdToBanxaTickerMap = {
   'bip122:000000000019d6689c085ae165831e93/slip44:0': 'btc',
   'cosmos:cosmoshub-4/slip44:118': 'atom',
   'eip155:1/slip44:60': 'eth',
@@ -35,15 +38,40 @@ const CAIP19ToBanxaTickerMap = {
 const invert = <T extends Record<string, string>>(data: T) =>
   Object.entries(data).reduce((acc, [k, v]) => ((acc[v] = k), acc), {} as Record<string, string>)
 
-const banxaTickerToCAIP19Map = invert(CAIP19ToBanxaTickerMap)
+const banxaTickerToAssetIdMap = invert(AssetIdToBanxaTickerMap)
 
-export const banxaTickerToCAIP19 = (id: string): string | undefined => banxaTickerToCAIP19Map[id]
+export const banxaTickerToAssetId = (id: string): string | undefined => banxaTickerToAssetIdMap[id]
 
-export const CAIP19ToBanxaTicker = (caip19: string): string | undefined =>
-  CAIP19ToBanxaTickerMap[toLower(caip19)]
+export const AssetIdToBanxaTicker = (assetId: string): string | undefined =>
+  AssetIdToBanxaTickerMap[toLower(assetId)]
 
 export const getSupportedBanxaAssets = () =>
-  entries(CAIP19ToBanxaTickerMap).map(([CAIP19, ticker]) => ({
-    CAIP19,
+  entries(AssetIdToBanxaTickerMap).map(([assetId, ticker]) => ({
+    assetId,
     ticker
   }))
+
+/**
+ * map ChainIds to Banxa blockchain codes (ETH, BTC, COSMOS),
+ * since some Banxa assets could be on multiple chains and their default
+ * chain won't be exactly the same as ours.
+ */
+const chainIdToBanxaBlockchainCodeMap: Record<ChainId, string> = {
+  'eip155:1': 'ETH',
+  'bip122:000000000019d6689c085ae165831e93': 'BTC',
+  'cosmos:cosmoshub-4': 'COSMOS'
+} as const
+
+/**
+ * Convert a banxa asset identifier to a Banxa chain identifier for use in Banxa HTTP URLs
+ *
+ * @param {string} banxaAssetId - a Banxa asset string referencing a specific asset; e.g., 'atom'
+ * @returns {string} - a Banxa chain identifier; e.g., 'cosmos'
+ */
+export const getBanxaBlockchainFromBanxaAssetTicker = (banxaAssetId: string): string => {
+  const assetId = banxaTickerToAssetId(banxaAssetId.toLowerCase())
+  if (!assetId)
+    throw new Error(`getBanxaBlockchainFromBanxaAssetTicker: ${banxaAssetId} is not supported`)
+  const { chainId } = fromAssetId(assetId)
+  return chainIdToBanxaBlockchainCodeMap[chainId]
+}

@@ -1,4 +1,11 @@
-import { AssetNamespace, AssetReference, CAIP2, caip2, caip19 } from '@shapeshiftoss/caip'
+import {
+  ASSET_REFERENCE,
+  AssetId,
+  CHAIN_NAMESPACE,
+  ChainId,
+  fromChainId,
+  toAssetId
+} from '@shapeshiftoss/caip'
 import {
   bip32ToAddressNList,
   BTCOutputAddressType,
@@ -35,7 +42,13 @@ export class ChainAdapter
   }
   public static readonly defaultUtxoAccountType: UtxoAccountType = UtxoAccountType.SegwitNative
 
-  protected readonly supportedChainIds: CAIP2[] = [
+  private static readonly supportedAccountTypes: UtxoAccountType[] = [
+    UtxoAccountType.SegwitNative,
+    UtxoAccountType.SegwitP2sh,
+    UtxoAccountType.P2pkh
+  ]
+
+  protected readonly supportedChainIds: ChainId[] = [
     'bip122:000000000019d6689c085ae165831e93',
     'bip122:000000000933ea01ad0ee984209779ba'
   ]
@@ -50,16 +63,17 @@ export class ChainAdapter
     } else {
       this.chainId = this.supportedChainIds[0]
     }
-    const { chain, network } = caip2.fromCAIP2(this.chainId)
-    if (chain !== ChainTypes.Bitcoin) {
+
+    const chainId = this.chainId
+    const { chainNamespace } = fromChainId(chainId)
+    if (chainNamespace !== CHAIN_NAMESPACE.Bitcoin) {
       throw new Error('chainId must be a bitcoin chain type')
     }
     this.coinName = args.coinName
-    this.assetId = caip19.toCAIP19({
-      chain,
-      network,
-      assetNamespace: AssetNamespace.Slip44,
-      assetReference: AssetReference.Bitcoin
+    this.assetId = toAssetId({
+      chainId,
+      assetNamespace: 'slip44',
+      assetReference: ASSET_REFERENCE.Bitcoin
     })
   }
 
@@ -67,9 +81,17 @@ export class ChainAdapter
     return ChainTypes.Bitcoin
   }
 
+  getFeeAssetId(): AssetId {
+    return 'bip122:000000000019d6689c085ae165831e93/slip44:0'
+  }
+
+  getSupportedAccountTypes() {
+    return ChainAdapter.supportedAccountTypes
+  }
+
   async getTxHistory(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    input: chainAdapters.TxHistoryInput
+    // @ts-ignore: keep type signature with unimplemented state
+    input: chainAdapters.TxHistoryInput // eslint-disable-line @typescript-eslint/no-unused-vars
   ): Promise<chainAdapters.TxHistoryResponse<ChainTypes.Bitcoin>> {
     throw new Error('Method not implemented.')
   }
@@ -337,7 +359,7 @@ export class ChainAdapter
       { topic: 'txs', addresses },
       ({ data: tx }) => {
         const transfers = tx.transfers.map<chainAdapters.TxTransfer>((transfer) => ({
-          caip19: transfer.caip19,
+          assetId: transfer.assetId,
           from: transfer.from,
           to: transfer.to,
           type: getType(transfer.type),
@@ -349,7 +371,7 @@ export class ChainAdapter
           blockHash: tx.blockHash,
           blockHeight: tx.blockHeight,
           blockTime: tx.blockTime,
-          caip2: tx.caip2,
+          chainId: tx.chainId,
           chain: ChainTypes.Bitcoin,
           confirmations: tx.confirmations,
           fee: tx.fee,

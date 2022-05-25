@@ -1,3 +1,129 @@
+# [@shapeshiftoss/caip-v5.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v5.0.0...@shapeshiftoss/caip-v5.0.1) (2022-05-24)
+
+# [@shapeshiftoss/caip-v5.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v4.0.1...@shapeshiftoss/caip-v5.0.0) (2022-05-24)
+
+
+### Features
+
+* **caip:** update to & from type signatures ([#676](https://github.com/shapeshift/lib/issues/676)) ([9e97c56](https://github.com/shapeshift/lib/commit/9e97c564e19bf2d8368de8539d6c2d31c6bc664c))
+
+
+### BREAKING CHANGES
+
+* **caip:** changes type signatures of chainId, assetId, and accountId helpers
+
+* refactor: and spread chainId
+
+* chore: add utility tests
+
+* refactor: split out type guards, rename vars
+
+* chore: kick ci
+
+* chore: manually bump caip package to 5.0.0 for CI
+
+* chore: update README
+
+* chore: add chainId to toAssetId and refactor
+
+* chore: regex improvements
+
+# [@shapeshiftoss/caip-v4.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v4.0.0...@shapeshiftoss/caip-v4.0.1) (2022-05-19)
+
+# [@shapeshiftoss/caip-v4.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v3.1.0...@shapeshiftoss/caip-v4.0.0) (2022-05-18)
+
+
+### Performance Improvements
+
+* replace enums with dynamically derived object literals ([#656](https://github.com/shapeshift/lib/issues/656)) ([6d2d821](https://github.com/shapeshift/lib/commit/6d2d821318da9db4afec97b1247cf006a5fc42d2))
+
+
+### BREAKING CHANGES
+
+* the enum removal will need to be handled by consumers to use the new constants.
+
+* chore: remove toString() and associated comment
+
+* chore: remove string litirals
+
+* chore: optimise imports
+
+* chore: use string union for AssetNamespace
+
+* chore: update README
+
+# [@shapeshiftoss/caip-v3.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v3.0.0...@shapeshiftoss/caip-v3.1.0) (2022-05-12)
+
+
+### Features
+
+* **caip:** add caip alias methods ([#640](https://github.com/shapeshift/lib/issues/640)) ([3bacb05](https://github.com/shapeshift/lib/commit/3bacb05bd00918c27ee66e02cc17f5ab19e39944))
+
+# [@shapeshiftoss/caip-v3.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v2.6.0...@shapeshiftoss/caip-v3.0.0) (2022-05-09)
+
+
+### Performance Improvements
+
+* **caip:** bump caip version ([#629](https://github.com/shapeshift/lib/issues/629)) ([acb7c29](https://github.com/shapeshift/lib/commit/acb7c290178d2a25f72ac52c62023006d0afaa10))
+
+
+### BREAKING CHANGES
+
+* **caip:** properly bump major version
+
+# [@shapeshiftoss/caip-v2.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v2.5.2...@shapeshiftoss/caip-v2.6.0) (2022-05-09)
+
+
+### Features
+
+* **caip:** major bump commit ([#628](https://github.com/shapeshift/lib/issues/628)) ([c22a2dc](https://github.com/shapeshift/lib/commit/c22a2dc61448c338f8d4ac1000d60f59fdda5b25))
+
+# [@shapeshiftoss/caip-v2.5.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v2.5.1...@shapeshiftoss/caip-v2.5.2) (2022-05-09)
+
+
+### Performance Improvements
+
+* **caip:** breaking readme change ([#627](https://github.com/shapeshift/lib/issues/627)) ([69a786d](https://github.com/shapeshift/lib/commit/69a786db0177d20ff874c8ce169b39c768a0008b))
+
+# [@shapeshiftoss/caip-v2.5.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v2.5.0...@shapeshiftoss/caip-v2.5.1) (2022-05-09)
+
+
+### Performance Improvements
+
+* **caip:** remove caip vernacular ([#625](https://github.com/shapeshift/lib/issues/625)) ([f92b4f0](https://github.com/shapeshift/lib/commit/f92b4f0ed89f4f3352dd0130757fa686a214c6d4))
+
+# [@shapeshiftoss/caip-v2.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v2.4.0...@shapeshiftoss/caip-v2.5.0) (2022-05-06)
+
+
+### Features
+
+* **caip:** banxa chain map ([#546](https://github.com/shapeshift/lib/issues/546)) ([337ba5c](https://github.com/shapeshift/lib/commit/337ba5c44fb52a7389e63372f3c12678dc5387ba))
+
+# [@shapeshiftoss/caip-v2.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v2.3.0...@shapeshiftoss/caip-v2.4.0) (2022-05-06)
+
+
+### Features
+
+* **caip:** flatten exports ([#560](https://github.com/shapeshift/lib/issues/560)) ([e326522](https://github.com/shapeshift/lib/commit/e3265223dca3c2126b2822395353f6650c4b0342))
+
+# [@shapeshiftoss/caip-v2.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v2.2.5...@shapeshiftoss/caip-v2.3.0) (2022-05-06)
+
+
+### Features
+
+* **caip:** add caip-related utils/constants to caip package ([#572](https://github.com/shapeshift/lib/issues/572)) ([0d91a3b](https://github.com/shapeshift/lib/commit/0d91a3b11490af6f056f2c3f83c6f671e8743bdd))
+
+# [@shapeshiftoss/caip-v2.2.5](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v2.2.4...@shapeshiftoss/caip-v2.2.5) (2022-05-05)
+
+# [@shapeshiftoss/caip-v2.2.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v2.2.3...@shapeshiftoss/caip-v2.2.4) (2022-05-05)
+
+# [@shapeshiftoss/caip-v2.2.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v2.2.2...@shapeshiftoss/caip-v2.2.3) (2022-05-02)
+
+
+### Bug Fixes
+
+* removes 3 unnecessary api calls from zrxswapper.  ([#586](https://github.com/shapeshift/lib/issues/586)) ([57d59c8](https://github.com/shapeshift/lib/commit/57d59c8488cceb05cd5e0778b49690d0d2c97b68))
+
 # [@shapeshiftoss/caip-v2.2.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v2.2.1...@shapeshiftoss/caip-v2.2.2) (2022-05-02)
 
 

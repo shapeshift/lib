@@ -1,10 +1,11 @@
-import { CAIP2, caip2 } from '@shapeshiftoss/caip'
+import { ChainId, isChainId } from '@shapeshiftoss/caip'
 import { ChainTypes } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 
 import { ChainAdapter } from './api'
 import * as bitcoin from './bitcoin'
 import * as cosmos from './cosmossdk/cosmos'
+import * as osmosis from './cosmossdk/osmosis'
 import * as ethereum from './ethereum'
 
 export type UnchainedUrl = {
@@ -50,6 +51,17 @@ export class ChainAdapterManager {
             return this.addChain(
               type,
               () => new cosmos.ChainAdapter({ providers: { http, ws }, coinName: 'Cosmos' })
+            )
+          }
+
+          case ChainTypes.Osmosis: {
+            const http = new unchained.osmosis.V1Api(
+              new unchained.osmosis.Configuration({ basePath: httpUrl })
+            )
+            const ws = new unchained.ws.Client<unchained.osmosis.Tx>(wsUrl)
+            return this.addChain(
+              type,
+              () => new osmosis.ChainAdapter({ providers: { http, ws }, coinName: 'Osmosis' })
             )
           }
           default:
@@ -115,14 +127,14 @@ export class ChainAdapterManager {
     return adapter as ChainAdapter<T>
   }
 
-  async byChainId(chainId: CAIP2) {
+  byChainId(chainId: ChainId) {
     // this function acts like a validation function and throws if the check doesn't pass
-    caip2.isCAIP2(chainId)
+    isChainId(chainId)
 
     for (const [chain] of this.supported) {
       // byChain calls the factory function so we need to call it to create the instances
       const adapter = this.byChain(chain)
-      if ((await adapter.getCaip2()) === chainId) return adapter
+      if (adapter.getChainId() === chainId) return adapter
     }
 
     throw new Error(`Chain [${chainId}] is not supported`)

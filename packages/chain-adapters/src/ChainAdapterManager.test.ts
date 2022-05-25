@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ChainTypes } from '@shapeshiftoss/types'
 
-import { UnchainedUrls } from './ChainAdapterManager'
-import { ChainAdapterManager } from './ChainAdapterManager'
+import { ChainAdapterManager, UnchainedUrls } from './ChainAdapterManager'
 import * as ethereum from './ethereum'
 
 const getCAM = (opts?: UnchainedUrls) => {
@@ -112,34 +111,33 @@ describe('ChainAdapterManager', () => {
 
   describe('getSupportedAdapters', () => {
     it('should return array of adapter classes', () => {
-      // @ts-ignore
       expect(getCAM().getSupportedAdapters()).toStrictEqual([expect.any(Function)])
     })
   })
 
   describe('byChainId', () => {
-    it('should find a supported chain adapter', async () => {
+    it('should find a supported chain adapter', () => {
       const cam = new ChainAdapterManager({})
       // @ts-ignore
       cam.addChain(ChainTypes.Bitcoin, () => ({
-        getCaip2: () => 'bip122:000000000019d6689c085ae165831e93'
+        getChainId: () => 'bip122:000000000019d6689c085ae165831e93'
       }))
       // @ts-ignore
       cam.addChain(ChainTypes.Ethereum, () => ({
-        getCaip2: () => 'eip155:1'
+        getChainId: () => 'eip155:1'
       }))
 
-      await expect(cam.byChainId('eip155:1')).resolves.toBeTruthy()
+      expect(cam.byChainId('eip155:1')).toBeTruthy()
     })
 
-    it('should throw an error for an invalid ChainId', async () => {
+    it('should throw an error for an invalid ChainId', () => {
       const cam = new ChainAdapterManager({})
-      await expect(cam.byChainId('fake:caip2')).rejects.toThrow('invalid')
+      expect(() => cam.byChainId('fake:chainId')).toThrow('Chain [fake:chainId] is not supported')
     })
 
-    it('should throw an error if there is no supported adapter', async () => {
+    it('should throw an error if there is no supported adapter', () => {
       const cam = new ChainAdapterManager({})
-      await expect(cam.byChainId('eip155:1')).rejects.toThrow('not supported')
+      expect(() => cam.byChainId('eip155:1')).toThrow('Chain [eip155:1] is not supported')
     })
   })
 })

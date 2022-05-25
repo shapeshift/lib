@@ -1,12 +1,12 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import { Token, Vault, Yearn } from '@yfi/sdk'
 import fs from 'fs'
 import toLower from 'lodash/toLower'
 import uniqBy from 'lodash/uniqBy'
 
-import { toCAIP2 } from '../../caip2/caip2'
-import { AssetNamespace, toCAIP19 } from '../../caip19/caip19'
+import { toAssetId } from '../../assetId/assetId'
+import { toChainId } from '../../chainId/chainId'
+import { CHAIN_NAMESPACE, CHAIN_REFERENCE } from '../../constants'
 
 const network = 1 // 1 for mainnet
 const provider = new JsonRpcProvider(process.env.REACT_APP_ETHEREUM_NODE_URL)
@@ -18,7 +18,7 @@ export const writeFiles = async (data: Record<string, Record<string, string>>) =
   const writeFile = async ([k, v]: [string, unknown]) =>
     await fs.promises.writeFile(`${path}${k}${file}`.replace(':', '_'), JSON.stringify(v))
   await Promise.all(Object.entries(data).map(writeFile))
-  console.info('Generated Yearn CAIP19 adapter data.')
+  console.info('Generated Yearn AssetId adapter data.')
 }
 
 export const fetchData = async () => {
@@ -33,25 +33,29 @@ export const fetchData = async () => {
 }
 
 export const parseEthData = (data: (Token | Vault)[]) => {
-  const chain = ChainTypes.Ethereum
-  const assetNamespace = AssetNamespace.ERC20
+  const assetNamespace = 'erc20'
+  const chainNamespace = CHAIN_NAMESPACE.Ethereum
+  const chainReference = CHAIN_REFERENCE.EthereumMainnet
 
   return data.reduce((acc, datum) => {
     const { address } = datum
     const id = address
     const assetReference = toLower(address)
-    const caip19 = toCAIP19({
-      chain,
-      network: NetworkTypes.MAINNET,
+    const assetId = toAssetId({
+      chainNamespace,
+      chainReference,
       assetNamespace,
       assetReference
     })
-    acc[caip19] = id
+    acc[assetId] = id
     return acc
   }, {} as Record<string, string>)
 }
 
 export const parseData = (d: (Token | Vault)[]) => {
-  const ethMainnet = toCAIP2({ chain: ChainTypes.Ethereum, network: NetworkTypes.MAINNET })
+  const ethMainnet = toChainId({
+    chainNamespace: CHAIN_NAMESPACE.Ethereum,
+    chainReference: CHAIN_REFERENCE.EthereumMainnet
+  })
   return { [ethMainnet]: parseEthData(d) }
 }

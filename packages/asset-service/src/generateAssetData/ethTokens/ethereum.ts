@@ -1,4 +1,4 @@
-import { caip19 } from '@shapeshiftoss/caip'
+import { fromAssetId } from '@shapeshiftoss/caip'
 import { BaseAsset, TokenAsset } from '@shapeshiftoss/types'
 import axios from 'axios'
 import chunk from 'lodash/chunk'
@@ -10,6 +10,7 @@ import { generateTrustWalletUrl } from '../../service/TrustWalletService'
 import { ethereum } from '../baseAssets'
 import { getFoxyToken } from './foxy'
 import { getUniswapTokens } from './uniswap'
+import { getUniswapV2Pools } from './uniswapV2Pools'
 import {
   getIronBankTokens,
   getUnderlyingVaultTokens,
@@ -19,32 +20,41 @@ import {
 
 export const addTokensToEth = async (): Promise<BaseAsset> => {
   const baseAsset = ethereum
-  const [ethTokens, yearnVaults, ironBankTokens, zapperTokens, underlyingTokens, foxyToken] =
-    await Promise.all([
-      getUniswapTokens(),
-      getYearnVaults(),
-      getIronBankTokens(),
-      getZapperTokens(),
-      getUnderlyingVaultTokens(),
-      getFoxyToken()
-    ])
+  const [
+    ethTokens,
+    yearnVaults,
+    ironBankTokens,
+    zapperTokens,
+    underlyingTokens,
+    foxyToken,
+    uniV2Token
+  ] = await Promise.all([
+    getUniswapTokens(),
+    getYearnVaults(),
+    getIronBankTokens(),
+    getZapperTokens(),
+    getUnderlyingVaultTokens(),
+    getFoxyToken(),
+    getUniswapV2Pools()
+  ])
   const tokens = [
     ...ethTokens,
     ...yearnVaults,
     ...ironBankTokens,
     ...zapperTokens,
     ...underlyingTokens,
-    ...foxyToken
+    ...foxyToken,
+    ...uniV2Token
   ]
-  const uniqueTokens = orderBy(uniqBy(tokens, 'caip19'), 'caip19') // Remove dups and order for PR readability
+  const uniqueTokens = orderBy(uniqBy(tokens, 'assetId'), 'assetId') // Remove dups and order for PR readability
   const batchSize = 100 // tune this to keep rate limiting happy
   const tokenBatches = chunk(uniqueTokens, batchSize)
   let modifiedTokens: TokenAsset[] = []
   for (const [i, batch] of tokenBatches.entries()) {
     console.info(`processing batch ${i + 1} of ${tokenBatches.length}`)
     const promises = batch.map(async (token) => {
-      const { chain } = caip19.fromCAIP19(token.assetId)
-      const { info } = generateTrustWalletUrl({ chain, tokenId: token.tokenId })
+      const { chainNamespace } = fromAssetId(token.assetId)
+      const { info } = generateTrustWalletUrl({ chainNamespace, tokenId: token.tokenId })
       return axios.head(info) // return promise
     })
     const result = await Promise.allSettled(promises)
@@ -70,8 +80,11 @@ export const addTokensToEth = async (): Promise<BaseAsset> => {
         }
         return uniqueTokens[key] // token without modified icon
       } else {
-        const { chain } = caip19.fromCAIP19(uniqueTokens[key].assetId)
-        const { icon } = generateTrustWalletUrl({ chain, tokenId: uniqueTokens[key].tokenId })
+        const { chainNamespace } = fromAssetId(uniqueTokens[key].assetId)
+        const { icon } = generateTrustWalletUrl({
+          chainNamespace,
+          tokenId: uniqueTokens[key].tokenId
+        })
         return { ...uniqueTokens[key], icon }
       }
     })

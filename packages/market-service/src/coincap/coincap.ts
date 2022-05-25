@@ -51,18 +51,21 @@ export class CoinCapMarketService implements MarketService {
         .reduce((acc, cur) => {
           const { id } = cur
           try {
-            const caip19 = adapters.coincapToCAIP19(id)
-            if (!caip19) return acc
+            const assetId = adapters.coincapToAssetId(id)
+            if (!assetId) return acc
             const curWithoutId = omit(cur, 'id') // don't leak this through to clients
-            acc[caip19] = {
+            acc[assetId] = {
               price: curWithoutId.priceUsd.toString(),
               marketCap: curWithoutId.marketCapUsd.toString(),
               volume: curWithoutId.volumeUsd24Hr.toString(),
-              changePercent24Hr: parseFloat(curWithoutId.changePercent24Hr)
+              changePercent24Hr: parseFloat(curWithoutId.changePercent24Hr),
+              supply: curWithoutId.supply,
+              maxSupply: curWithoutId.maxSupply?.toString()
             }
+
             return acc
           } catch {
-            return acc // no caip found, we don't support this asset
+            return acc // no AssetId found, we don't support this asset
           }
         }, {} as MarketCapResult)
     } catch (e) {
@@ -70,10 +73,10 @@ export class CoinCapMarketService implements MarketService {
     }
   }
 
-  findByCaip19 = async ({ caip19 }: MarketDataArgs): Promise<MarketData | null> => {
-    if (!adapters.CAIP19ToCoinCap(caip19)) return null
+  findByAssetId = async ({ assetId }: MarketDataArgs): Promise<MarketData | null> => {
+    if (!adapters.assetIdToCoinCap(assetId)) return null
     try {
-      const id = adapters.CAIP19ToCoinCap(caip19)
+      const id = adapters.assetIdToCoinCap(assetId)
 
       const { data } = await axios.get(`${this.baseUrl}/assets/${id}`)
 
@@ -82,20 +85,22 @@ export class CoinCapMarketService implements MarketService {
         price: marketData.priceUsd,
         marketCap: marketData.marketCapUsd,
         changePercent24Hr: parseFloat(marketData.changePercent24Hr),
-        volume: marketData.volumeUsd24Hr
+        volume: marketData.volumeUsd24Hr,
+        supply: marketData.supply,
+        maxSupply: marketData.maxSupply?.toString()
       }
     } catch (e) {
       console.warn(e)
-      throw new Error('MarketService(findByCaip19): error fetching market data')
+      throw new Error('MarketService(findByAssetId): error fetching market data')
     }
   }
 
-  findPriceHistoryByCaip19 = async ({
-    caip19,
+  findPriceHistoryByAssetId = async ({
+    assetId,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> => {
-    if (!adapters.CAIP19ToCoinCap(caip19)) return []
-    const id = adapters.CAIP19ToCoinCap(caip19)
+    if (!adapters.assetIdToCoinCap(assetId)) return []
+    const id = adapters.assetIdToCoinCap(assetId)
 
     const end = dayjs().startOf('minute')
     let start
@@ -164,7 +169,7 @@ export class CoinCapMarketService implements MarketService {
       }, [])
     } catch (e) {
       console.warn(e)
-      throw new Error('MarketService(findPriceHistoryByCaip19): error fetching price history')
+      throw new Error('MarketService(findPriceHistoryByAssetId): error fetching price history')
     }
   }
 }

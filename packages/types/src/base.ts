@@ -1,7 +1,3 @@
-import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-
-import { QuoteFeeData, SignTxInput } from './chain-adapters'
-
 /** Common */
 
 export type BIP44Params = {
@@ -18,6 +14,15 @@ export enum ChainTypes {
   Cosmos = 'cosmos',
   Osmosis = 'osmosis'
 }
+
+const supportedChainIds = [
+  'eip155:1',
+  'bip122:000000000019d6689c085ae165831e93',
+  'cosmos:cosmoshub-4',
+  'cosmos:osmosis-1'
+] as const
+
+export type SupportedChainIds = typeof supportedChainIds[number]
 
 export enum NetworkTypes {
   MAINNET = 'MAINNET',
@@ -52,8 +57,6 @@ export enum AssetDataSource {
 
 type AbstractAsset = {
   assetId: string
-  caip2: string
-  caip19: string
   chainId: string
   chain: ChainTypes
   description?: string
@@ -105,105 +108,19 @@ export type SwapSource = {
 export interface MinMaxOutput {
   minimum: string
   maximum: string
-  minimumPrice?: string
 }
 
-export type QuoteResponse = {
-  price: string
-  guaranteedPrice: string
-  to: string
-  data?: string
-  value?: string
-  gas?: string
-  estimatedGas?: string
-  gasPrice?: string
-  protocolFee?: string
-  minimumProtocolFee?: string
-  buyTokenAddress?: string
-  sellTokenAddress?: string
-  buyAmount?: string
-  sellAmount?: string
-  allowanceTarget?: string
-  sources?: Array<SwapSource>
-}
-
-export type ThorVaultInfo = {
-  routerContractAddress?: string
-  vaultAddress: string
-  timestamp: string
-}
-
-export type BuildThorTradeOutput = SignTxInput<unknown> & ThorVaultInfo
-
-export type Quote<C extends ChainTypes> = {
-  success: boolean
-  statusCode?: number
-  statusReason?: string
-  sellAssetAccountId?: string
-  buyAssetAccountId?: string
+export type GetMinMaxInput = {
   sellAsset: Asset
   buyAsset: Asset
-  feeData?: QuoteFeeData<C>
-  rate?: string
-  depositAddress?: string // this is dex contract address for eth swaps
-  receiveAddress?: string
-  buyAmount?: string
-  sellAmount?: string
-  minimum?: string | null
-  maximum?: string | null
-  guaranteedPrice?: string
-  slipScore?: string
-  txData?: string
-  value?: string
-  allowanceContract?: string
-  allowanceGrantRequired?: boolean
-  slippage?: string
-  priceImpact?: string
-  orderId?: string
-  sources?: Array<SwapSource>
-  timestamp?: number
-}
-
-export type GetQuoteInput = {
-  sellAsset: Asset
-  buyAsset: Asset
-  sellAmount?: string
-  buyAmount?: string
-  sellAssetAccountId?: string
-  buyAssetAccountId?: string
-  slippage?: string
-  priceImpact?: string
-  sendMax?: boolean
-  minimumPrice?: string
-  minimum?: string
-}
-
-export type BuildQuoteTxInput = {
-  input: GetQuoteInput
-  wallet: HDWallet
-}
-
-export type ExecQuoteInput<C extends ChainTypes> = {
-  quote: Quote<C>
-  wallet: HDWallet
 }
 
 export type ExecQuoteOutput = {
   txid: string
 }
 
-export type ApprovalNeededInput<C extends ChainTypes> = {
-  quote: Quote<C>
-  wallet: HDWallet
-}
-
 export type ApprovalNeededOutput = {
   approvalNeeded: boolean
   gas?: string
   gasPrice?: string
-}
-
-export type ApproveInfiniteInput<C extends ChainTypes> = {
-  quote: Quote<C>
-  wallet: HDWallet
 }
