@@ -1,9 +1,9 @@
 import { ChainId, ChainNamespace, ChainReference, fromChainId, toChainId } from '../chainId/chainId'
 import { CHAIN_NAMESPACE } from '../constants'
 import { assertIsChainId, assertIsChainNamespace, assertIsChainReference } from '../typeGuards'
-import { Brand } from '../utils'
+import { Nominal } from '../utils'
 
-export type AccountId = Brand<string, 'AccountId'>
+export type AccountId = Nominal<string, 'AccountId'>
 
 type ToAccountIdWithChainId = {
   chainId: ChainId
@@ -43,7 +43,7 @@ export const toAccountId: ToAccountId = ({
   const outputAccount =
     chainNamespace === CHAIN_NAMESPACE.Ethereum ? account.toLowerCase() : account
 
-  return `${chainId}:${outputAccount}` as AccountId
+  return `${chainId}:${outputAccount}`
 }
 
 type FromAccountIdReturn = {

@@ -7,9 +7,9 @@ import {
   assertIsChainReference,
   assertValidChainPartsPair
 } from '../typeGuards'
-import { Brand } from '../utils'
+import { Nominal } from '../utils'
 
-export type ChainId = Brand<string, 'ChainId'>
+export type ChainId = Nominal<string, 'ChainId'>
 
 export type ChainNamespace = typeof CHAIN_NAMESPACE[keyof typeof CHAIN_NAMESPACE]
 export type ChainReference = typeof CHAIN_REFERENCE[keyof typeof CHAIN_REFERENCE]

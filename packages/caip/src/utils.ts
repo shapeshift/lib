@@ -84,4 +84,7 @@ export const makeOsmosisData = () => {
   })
   return { [assetId]: 'osmosis' }
 }
-export type Brand<K, T> = K & { __brand: T }
+interface Flavoring<FlavorT> {
+  _type?: FlavorT
+}
+export type Nominal<T, FlavorT> = T & Flavoring<FlavorT>
