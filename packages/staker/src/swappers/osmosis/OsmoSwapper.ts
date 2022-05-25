@@ -221,40 +221,41 @@ export class OsmoSwapper implements Swapper {
 
     //TODO check balance if > 1 element
     //if < amount new amount = diff
-    if (ibcAtomOsmo.length === 0 && pair === 'ATOM_OSMO') {
-      console.info('Checkpoint perform IBC deposit!')
-
-      //perform IBC deposit
-      const transfer = {
-        sender: sellAddress,
-        receiver: buyAddress,
-        amount: sellAmount
-      }
-      const txid = await this.performIbcTransfer(transfer, cosmosAdapter, wallet)
-
-      //wait till confirmed
-      console.info('txid: ', txid)
-      let confirmed = false
-      while (!confirmed) {
-        //get info
-        try {
-          let txInfo = await axios({
-            method: 'GET',
-            url: `${atomUrl}/cosmos/tx/v1beta1/txs/${txid.txid}`
-          })
-          txInfo = txInfo.data
-          console.info('txInfo: ', txInfo)
-
-          //@ts-ignore
-          if (txInfo?.tx_response?.height) confirmed = true
-        } catch (e) {
-          console.info('txid Not found yet!')
-        }
-
-        await sleep(3000)
-      }
-    }
-    console.info('Completed IBC deposit!')
+    // if needed
+    // if (true) {
+    //   console.info('Checkpoint perform IBC deposit!')
+    //
+    //   //perform IBC deposit
+    //   const transfer = {
+    //     sender: sellAddress,
+    //     receiver: buyAddress,
+    //     amount: sellAmount
+    //   }
+    //   const txid = await this.performIbcTransfer(transfer, cosmosAdapter, wallet)
+    //
+    //   //wait till confirmed
+    //   console.info('txid: ', txid)
+    //   let confirmed = false
+    //   while (!confirmed) {
+    //     //get info
+    //     try {
+    //       let txInfo = await axios({
+    //         method: 'GET',
+    //         url: `${atomUrl}/cosmos/tx/v1beta1/txs/${txid.txid}`
+    //       })
+    //       txInfo = txInfo.data
+    //       console.info('txInfo: ', txInfo)
+    //
+    //       //@ts-ignore
+    //       if (txInfo?.tx_response?.height) confirmed = true
+    //     } catch (e) {
+    //       console.info('txid Not found yet!')
+    //     }
+    //
+    //     await sleep(3000)
+    //   }
+    // }
+    // console.info('Completed IBC deposit!')
 
     //verify IBC balance
 
@@ -295,20 +296,21 @@ export class OsmoSwapper implements Swapper {
       signatures: null,
       msg: [
         {
-          type: 'osmosis/gamm/swap-exact-amount-in',
-          value: {
-            sender,
-            routes: [
+          "type": "osmosis/gamm/join-pool",
+          "value": {
+            "sender": osmoAddress,
+            "poolId": "1",
+            "shareOutAmount": "402238349184328773",
+            "tokenInMaxs": [
               {
-                poolId: '1', // TODO should probably get this from the util pool call
-                tokenOutDenom: buyAssetDenom
+                "denom": ibcVoucherAtomOsmo,
+                "amount": sellAmount
+              },
+              {
+                "denom": "uosmo",
+                "amount": buyAmount
               }
-            ],
-            tokenIn: {
-              denom: sellAssetDenom,
-              amount: sellAmount
-            },
-            tokenOutMinAmount: '1' // TODO slippage tolerance
+            ]
           }
         }
       ]
