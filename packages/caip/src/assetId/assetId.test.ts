@@ -3,11 +3,13 @@ import { omit } from 'lodash'
 import { ChainNamespace, ChainReference, toChainId } from '../chainId/chainId'
 import { ASSET_REFERENCE, CHAIN_NAMESPACE, CHAIN_REFERENCE } from '../constants'
 import {
+  AssetId,
   AssetNamespace,
   AssetReference,
   fromAssetId,
   fromCAIP19,
   toAssetId,
+  ToAssetIdArgs,
   toCAIP19
 } from './assetId'
 
@@ -30,9 +32,11 @@ describe('assetId', () => {
         ['cosmos:osmosis-1/ibc:346786EA82F41FE55FAD14BF69AD8BA9B36985406E43F3CB23E6C45A285A9593'],
         ['cosmos:osmo-testnet-1/slip44:118']
       ])('returns an AssetId from the result of fromAssetId for %s', (assetId) => {
-        const result = fromAssetId(assetId)
+        const result = fromAssetId(assetId as AssetId)
         expect(toAssetId(omit(result, 'chainId'))).toBe(assetId)
-        expect(toAssetId(omit(result, ['chainNamespace', 'chainReference']))).toBe(assetId)
+        expect(toAssetId(omit(result, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)).toBe(
+          assetId
+        )
       })
     })
 
@@ -48,9 +52,9 @@ describe('assetId', () => {
       }
       const expected = 'eip155:1/slip44:60'
       expect(toAssetId(omit(assetIdArgSuperset, 'chainId'))).toEqual(expected)
-      expect(toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))).toEqual(
-        expected
-      )
+      expect(
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
+      ).toEqual(expected)
     })
 
     it('can make eth AssetId on ropsten', () => {
@@ -65,9 +69,9 @@ describe('assetId', () => {
       }
       const expected = 'eip155:3/slip44:60'
       expect(toAssetId(omit(assetIdArgSuperset, 'chainId'))).toEqual(expected)
-      expect(toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))).toEqual(
-        expected
-      )
+      expect(
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
+      ).toEqual(expected)
     })
 
     it('throws with invalid eth network', () => {
@@ -80,9 +84,14 @@ describe('assetId', () => {
         assetReference: ASSET_REFERENCE.Ethereum,
         chainId: `${chainNamespace}:${chainReference}`
       }
-      expect(() => toAssetId(omit(assetIdArgSuperset, 'chainId'))).toThrow()
+      expect(() => toAssetId(omit(assetIdArgSuperset, 'chainId') as ToAssetIdArgs)).toThrow()
       expect(() =>
-        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))
+        toAssetId(
+          omit(assetIdArgSuperset, [
+            'chainNamespace',
+            'chainReference'
+          ]) as ToAssetIdArgs as ToAssetIdArgs
+        )
       ).toThrow()
     })
 
@@ -98,7 +107,7 @@ describe('assetId', () => {
       }
       expect(() => toAssetId(omit(assetIdArgSuperset, 'chainId'))).toThrow()
       expect(() =>
-        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
       ).toThrow()
     })
 
@@ -114,9 +123,9 @@ describe('assetId', () => {
       }
       const expected = 'cosmos:cosmoshub-4/slip44:118'
       expect(toAssetId(omit(assetIdArgSuperset, 'chainId'))).toEqual(expected)
-      expect(toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))).toEqual(
-        expected
-      )
+      expect(
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
+      ).toEqual(expected)
     })
 
     it('can make Osmosis AssetId on Osmosis mainnet with slip44 reference', () => {
@@ -131,9 +140,9 @@ describe('assetId', () => {
       }
       const expected = 'cosmos:osmosis-1/slip44:118'
       expect(toAssetId(omit(assetIdArgSuperset, 'chainId'))).toEqual(expected)
-      expect(toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))).toEqual(
-        expected
-      )
+      expect(
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
+      ).toEqual(expected)
     })
 
     it('can return ibc AssetId for osmosis', () => {
@@ -149,9 +158,9 @@ describe('assetId', () => {
       const expected =
         'cosmos:osmosis-1/ibc:346786EA82F41FE55FAD14BF69AD8BA9B36985406E43F3CB23E6C45A285A9593'
       expect(toAssetId(omit(assetIdArgSuperset, 'chainId'))).toEqual(expected)
-      expect(toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))).toEqual(
-        expected
-      )
+      expect(
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
+      ).toEqual(expected)
     })
 
     it('can return native AssetId for osmosis', () => {
@@ -166,9 +175,9 @@ describe('assetId', () => {
       }
       const expected = 'cosmos:osmosis-1/native:uion'
       expect(toAssetId(omit(assetIdArgSuperset, 'chainId'))).toEqual(expected)
-      expect(toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))).toEqual(
-        expected
-      )
+      expect(
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
+      ).toEqual(expected)
     })
 
     it('can return cw20 AssetId for osmosis', () => {
@@ -183,9 +192,9 @@ describe('assetId', () => {
       }
       const expected = 'cosmos:osmosis-1/cw20:canlab'
       expect(toAssetId(omit(assetIdArgSuperset, 'chainId'))).toEqual(expected)
-      expect(toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))).toEqual(
-        expected
-      )
+      expect(
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
+      ).toEqual(expected)
     })
 
     it('can return cw721 AssetId for osmosis', () => {
@@ -200,9 +209,9 @@ describe('assetId', () => {
       }
       const expected = 'cosmos:osmosis-1/cw721:osmosiskitty'
       expect(toAssetId(omit(assetIdArgSuperset, 'chainId'))).toEqual(expected)
-      expect(toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))).toEqual(
-        expected
-      )
+      expect(
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
+      ).toEqual(expected)
     })
 
     it('can make Cosmos AssetId on CosmosHub vega', () => {
@@ -217,9 +226,9 @@ describe('assetId', () => {
       }
       const expected = 'cosmos:vega-testnet/slip44:118'
       expect(toAssetId(omit(assetIdArgSuperset, 'chainId'))).toEqual(expected)
-      expect(toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))).toEqual(
-        expected
-      )
+      expect(
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
+      ).toEqual(expected)
     })
 
     it('throws with invalid Cosmos network', () => {
@@ -234,7 +243,7 @@ describe('assetId', () => {
       }
       expect(() => toAssetId(omit(assetIdArgSuperset, 'chainId'))).toThrow()
       expect(() =>
-        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
       ).toThrow()
     })
 
@@ -250,7 +259,7 @@ describe('assetId', () => {
       }
       expect(() => toAssetId(omit(assetIdArgSuperset, 'chainId'))).toThrow()
       expect(() =>
-        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
       ).toThrow()
     })
 
@@ -266,7 +275,7 @@ describe('assetId', () => {
       }
       expect(() => toAssetId(omit(assetIdArgSuperset, 'chainId'))).toThrow()
       expect(() =>
-        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
       ).toThrow()
     })
 
@@ -282,9 +291,9 @@ describe('assetId', () => {
       }
       const expected = 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
       expect(toAssetId(omit(assetIdArgSuperset, 'chainId'))).toEqual(expected)
-      expect(toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))).toEqual(
-        expected
-      )
+      expect(
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
+      ).toEqual(expected)
     })
 
     it('should lower case ERC20 asset references', () => {
@@ -299,9 +308,9 @@ describe('assetId', () => {
       }
       const expected = 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
       expect(toAssetId(omit(assetIdArgSuperset, 'chainId'))).toEqual(expected)
-      expect(toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))).toEqual(
-        expected
-      )
+      expect(
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
+      ).toEqual(expected)
     })
 
     it('should lower case ERC721 asset references', () => {
@@ -316,9 +325,9 @@ describe('assetId', () => {
       }
       const expected = 'eip155:1/erc721:0xc770eefad204b5180df6a14ee197d99d808ee52d'
       expect(toAssetId(omit(assetIdArgSuperset, 'chainId'))).toEqual(expected)
-      expect(toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))).toEqual(
-        expected
-      )
+      expect(
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
+      ).toEqual(expected)
     })
 
     it('can make FOX AssetId on ropsten', () => {
@@ -333,9 +342,9 @@ describe('assetId', () => {
       }
       const expected = 'eip155:3/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
       expect(toAssetId(omit(assetIdArgSuperset, 'chainId'))).toEqual(expected)
-      expect(toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))).toEqual(
-        expected
-      )
+      expect(
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
+      ).toEqual(expected)
     })
 
     it('throws with invalid assetReference length', () => {
@@ -350,7 +359,7 @@ describe('assetId', () => {
       }
       expect(() => toAssetId(omit(assetIdArgSuperset, 'chainId'))).toThrow()
       expect(() =>
-        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
       ).toThrow()
     })
 
@@ -366,7 +375,7 @@ describe('assetId', () => {
       }
       expect(() => toAssetId(omit(assetIdArgSuperset, 'chainId'))).toThrow()
       expect(() =>
-        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
       ).toThrow()
     })
 
@@ -382,7 +391,7 @@ describe('assetId', () => {
       }
       expect(() => toAssetId(omit(assetIdArgSuperset, 'chainId'))).toThrow()
       expect(() =>
-        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
       ).toThrow()
     })
 
@@ -398,7 +407,7 @@ describe('assetId', () => {
       }
       expect(() => toAssetId(omit(assetIdArgSuperset, 'chainId'))).toThrow()
       expect(() =>
-        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
       ).toThrow()
     })
 
@@ -414,9 +423,9 @@ describe('assetId', () => {
       }
       const expected = 'bip122:000000000019d6689c085ae165831e93/slip44:0'
       expect(toAssetId(omit(assetIdArgSuperset, 'chainId'))).toEqual(expected)
-      expect(toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))).toEqual(
-        expected
-      )
+      expect(
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
+      ).toEqual(expected)
     })
 
     it('can make bitcoin AssetId on testnet', () => {
@@ -431,9 +440,9 @@ describe('assetId', () => {
       }
       const expected = 'bip122:000000000933ea01ad0ee984209779ba/slip44:0'
       expect(toAssetId(omit(assetIdArgSuperset, 'chainId'))).toEqual(expected)
-      expect(toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']))).toEqual(
-        expected
-      )
+      expect(
+        toAssetId(omit(assetIdArgSuperset, ['chainNamespace', 'chainReference']) as ToAssetIdArgs)
+      ).toEqual(expected)
     })
   })
 
@@ -499,9 +508,9 @@ describe('assetId', () => {
     })
 
     it('can return chain, network from eth AssetId on mainnet', () => {
-      const AssetId = 'eip155:1/slip44:60'
+      const assetId = 'eip155:1/slip44:60' as AssetId
       const { chainId, chainReference, chainNamespace, assetNamespace, assetReference } =
-        fromAssetId(AssetId)
+        fromAssetId(assetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Ethereum)
       expect(chainReference).toEqual(CHAIN_REFERENCE.EthereumMainnet)
       expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
@@ -510,9 +519,9 @@ describe('assetId', () => {
     })
 
     it('can return chain, network from eth AssetId on ropsten', () => {
-      const AssetId = 'eip155:3/slip44:60'
+      const assetId = 'eip155:3/slip44:60' as AssetId
       const { chainId, chainReference, chainNamespace, assetNamespace, assetReference } =
-        fromAssetId(AssetId)
+        fromAssetId(assetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Ethereum)
       expect(chainReference).toEqual(CHAIN_REFERENCE.EthereumRopsten)
       expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
@@ -521,9 +530,9 @@ describe('assetId', () => {
     })
 
     it('can return chain, network from bitcoin AssetId on mainnet', () => {
-      const AssetId = 'bip122:000000000019d6689c085ae165831e93/slip44:0'
+      const assetId = 'bip122:000000000019d6689c085ae165831e93/slip44:0' as AssetId
       const { chainId, chainReference, chainNamespace, assetNamespace, assetReference } =
-        fromAssetId(AssetId)
+        fromAssetId(assetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Bitcoin)
       expect(chainReference).toEqual(CHAIN_REFERENCE.BitcoinMainnet)
       expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
@@ -532,9 +541,9 @@ describe('assetId', () => {
     })
 
     it('can return chain, network from bitcoin AssetId on testnet', () => {
-      const AssetId = 'bip122:000000000933ea01ad0ee984209779ba/slip44:0'
+      const assetId = 'bip122:000000000933ea01ad0ee984209779ba/slip44:0' as AssetId
       const { chainId, chainReference, chainNamespace, assetNamespace, assetReference } =
-        fromAssetId(AssetId)
+        fromAssetId(assetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Bitcoin)
       expect(chainReference).toEqual(CHAIN_REFERENCE.BitcoinTestnet)
       expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
@@ -543,9 +552,9 @@ describe('assetId', () => {
     })
 
     it('can return chainId, chainReference, chainNamespace, assetNamespace, assetReference from FOX AssetId on mainnet', () => {
-      const AssetId = 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
+      const assetId = 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d' as AssetId
       const { chainId, chainReference, chainNamespace, assetNamespace, assetReference } =
-        fromAssetId(AssetId)
+        fromAssetId(assetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Ethereum)
       expect(chainReference).toEqual(CHAIN_REFERENCE.EthereumMainnet)
       expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
@@ -554,9 +563,9 @@ describe('assetId', () => {
     })
 
     it('should lower case assetReference for assetNamespace ERC20', () => {
-      const AssetId = 'eip155:3/erc20:0xc770EEfAd204B5180dF6a14Ee197D99d808ee52d'
+      const assetId = 'eip155:3/erc20:0xc770EEfAd204B5180dF6a14Ee197D99d808ee52d' as AssetId
       const { chainId, chainReference, chainNamespace, assetNamespace, assetReference } =
-        fromAssetId(AssetId)
+        fromAssetId(assetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Ethereum)
       expect(chainReference).toEqual(CHAIN_REFERENCE.EthereumRopsten)
       expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
@@ -565,7 +574,7 @@ describe('assetId', () => {
     })
 
     it('should lower case assetReference for assetNamespace ERC721', () => {
-      const AssetId = 'eip155:3/erc721:0xc770EEfAd204B5180dF6a14Ee197D99d808ee52d'
+      const AssetId = 'eip155:3/erc721:0xc770EEfAd204B5180dF6a14Ee197D99d808ee52d' as AssetId
       const { chainId, chainReference, chainNamespace, assetNamespace, assetReference } =
         fromAssetId(AssetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Ethereum)
@@ -576,9 +585,9 @@ describe('assetId', () => {
     })
 
     it('can return chainId, chainReference, chainNamespace, assetNamespace, assetReference from FOX AssetId on ropsten', () => {
-      const AssetId = 'eip155:3/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
+      const assetId = 'eip155:3/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d' as AssetId
       const { chainId, chainReference, chainNamespace, assetNamespace, assetReference } =
-        fromAssetId(AssetId)
+        fromAssetId(assetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Ethereum)
       expect(chainReference).toEqual(CHAIN_REFERENCE.EthereumRopsten)
       expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
@@ -587,9 +596,9 @@ describe('assetId', () => {
     })
 
     it('can parse a cosmoshub native token', () => {
-      const AssetId = 'cosmos:cosmoshub-4/slip44:118'
+      const assetId = 'cosmos:cosmoshub-4/slip44:118' as AssetId
       const { chainId, chainReference, chainNamespace, assetNamespace, assetReference } =
-        fromAssetId(AssetId)
+        fromAssetId(assetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Cosmos)
       expect(chainReference).toEqual(CHAIN_REFERENCE.CosmosHubMainnet)
       expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
@@ -598,9 +607,9 @@ describe('assetId', () => {
     })
 
     it('can parse an osmosis native token', () => {
-      const AssetId = 'cosmos:osmosis-1/slip44:118'
+      const assetId = 'cosmos:osmosis-1/slip44:118' as AssetId
       const { chainId, chainReference, chainNamespace, assetNamespace, assetReference } =
-        fromAssetId(AssetId)
+        fromAssetId(assetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Cosmos)
       expect(chainReference).toEqual(CHAIN_REFERENCE.OsmosisMainnet)
       expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
@@ -609,10 +618,10 @@ describe('assetId', () => {
     })
 
     it('can parse an osmosis ibc token', () => {
-      const AssetId =
-        'cosmos:osmosis-1/ibc:346786EA82F41FE55FAD14BF69AD8BA9B36985406E43F3CB23E6C45A285A9593'
+      const assetId =
+        'cosmos:osmosis-1/ibc:346786EA82F41FE55FAD14BF69AD8BA9B36985406E43F3CB23E6C45A285A9593' as AssetId
       const { chainId, chainReference, chainNamespace, assetNamespace, assetReference } =
-        fromAssetId(AssetId)
+        fromAssetId(assetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Cosmos)
       expect(chainReference).toEqual(CHAIN_REFERENCE.OsmosisMainnet)
       expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
@@ -623,9 +632,9 @@ describe('assetId', () => {
     })
 
     it('can parse an osmosis cw20 token', () => {
-      const AssetId = 'cosmos:osmosis-1/cw20:canlab'
+      const assetId = 'cosmos:osmosis-1/cw20:canlab' as AssetId
       const { chainId, chainReference, chainNamespace, assetNamespace, assetReference } =
-        fromAssetId(AssetId)
+        fromAssetId(assetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Cosmos)
       expect(chainReference).toEqual(CHAIN_REFERENCE.OsmosisMainnet)
       expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
@@ -634,9 +643,9 @@ describe('assetId', () => {
     })
 
     it('can parse an osmosis cw721 token', () => {
-      const AssetId = 'cosmos:osmosis-1/cw721:osmokitty'
+      const assetId = 'cosmos:osmosis-1/cw721:osmokitty' as AssetId
       const { chainId, chainReference, chainNamespace, assetNamespace, assetReference } =
-        fromAssetId(AssetId)
+        fromAssetId(assetId)
       expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Cosmos)
       expect(chainReference).toEqual(CHAIN_REFERENCE.OsmosisMainnet)
       expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
@@ -645,18 +654,18 @@ describe('assetId', () => {
     })
 
     it('errors for an invalid AssetId format', () => {
-      expect(() => fromAssetId('invalid')).toThrow()
+      expect(() => fromAssetId('invalid' as AssetId)).toThrow()
     })
 
     it('errors for invalid chaintype', () => {
-      expect(() => fromAssetId('invalid:cosmoshub-4/slip44:118')).toThrow()
+      expect(() => fromAssetId('invalid:cosmoshub-4/slip44:118' as AssetId)).toThrow()
     })
 
     it('errors for invalid network type', () => {
-      expect(() => fromAssetId('cosmos:invalid/slip44:118')).toThrow()
+      expect(() => fromAssetId('cosmos:invalid/slip44:118' as AssetId)).toThrow()
     })
     it('errors for invalid osmosis asset namespace', () => {
-      expect(() => fromAssetId('cosmos:osmosis-1/invalid:118')).toThrow()
+      expect(() => fromAssetId('cosmos:osmosis-1/invalid:118' as AssetId)).toThrow()
     })
   })
 })
