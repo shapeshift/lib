@@ -11,9 +11,9 @@ import {
   isAssetId,
   isAssetNamespace
 } from '../typeGuards'
-import { parseAssetIdRegExp } from '../utils'
+import { Brand, parseAssetIdRegExp } from '../utils'
 
-export type AssetId = string
+export type AssetId = Brand<string, 'AssetId'>
 
 export type AssetNamespace = typeof ASSET_NAMESPACE_STRINGS[number]
 
@@ -109,7 +109,7 @@ export const toAssetId: ToAssetId = (args: ToAssetIdArgs): AssetId => {
     ? assetReference.toLowerCase()
     : assetReference
 
-  return `${chainId}/${assetNamespace}:${assetReferenceCaseCorrected}`
+  return `${chainId}/${assetNamespace}:${assetReferenceCaseCorrected}` as AssetId
 }
 
 type FromAssetIdReturn = {
