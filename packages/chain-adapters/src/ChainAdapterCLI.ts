@@ -59,6 +59,9 @@ const testBitcoin = async (
   const account = await chainAdapter.getAccount(address)
   console.log('bitcoin: account:', account)
 
+  const txHistory = await chainAdapter.getTxHistory({ pubkey: address })
+  console.log('bitcoin: txHistory:', txHistory)
+
   await chainAdapter.subscribeTxs(
     { wallet, bip44Params, accountType: UtxoAccountType.SegwitNative },
     (msg) => console.log('bitcoin: tx:', msg),
