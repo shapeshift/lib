@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-console */
-import { HDWallet, OsmosisWallet } from '@shapeshiftoss/hdwallet-core'
+// import { HDWallet, OsmosisWallet } from '@shapeshiftoss/hdwallet-core'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 import { find } from 'lodash'
@@ -95,27 +95,27 @@ export const getRateInfo = async (sellAsset: any, buyAsset: any, sellAmount: str
     return getInfoFromPool(sellAmount, pool, sellAssetIndex, buyAssetIndex)
 }
 
-const txStatus = async (txid: string, baseUrl: string): Promise<string> => {
-    try {
-        const txResponse = await axios.get(`${baseUrl}/txs/${txid}`)
-        if (!txResponse?.data?.codespace && !!txResponse?.data?.gas_used) return 'success'
-        if (txResponse?.data?.codespace) return 'failed'
-        // eslint-disable-next-line no-empty
-    } catch (e) {}
-    return 'not found'
-}
+// const txStatus = async (txid: string, baseUrl: string): Promise<string> => {
+//     try {
+//         const txResponse = await axios.get(`${baseUrl}/txs/${txid}`)
+//         if (!txResponse?.data?.codespace && !!txResponse?.data?.gas_used) return 'success'
+//         if (txResponse?.data?.codespace) return 'failed'
+//         // eslint-disable-next-line no-empty
+//     } catch (e) {}
+//     return 'not found'
+// }
 
-const atomChannelBalance = async (address: string) => {
-    const osmoResponseBalance = await axios.get(`${osmoUrl}/bank/balances/${address}`)
-    let toAtomChannelBalance = 0
-    try {
-        const { amount } = find(
-            osmoResponseBalance.data.result,
-            (b) => b.denom === symbolDenomMapping.ATOM
-        )
-        toAtomChannelBalance = Number(amount)
-    } catch(e) {
-        console.log('no channel balance')
-    }
-    return toAtomChannelBalance
-}
+// const atomChannelBalance = async (address: string) => {
+//     const osmoResponseBalance = await axios.get(`${osmoUrl}/bank/balances/${address}`)
+//     let toAtomChannelBalance = 0
+//     try {
+//         const { amount } = find(
+//             osmoResponseBalance.data.result,
+//             (b) => b.denom === symbolDenomMapping.ATOM
+//         )
+//         toAtomChannelBalance = Number(amount)
+//     } catch(e) {
+//         console.log('no channel balance')
+//     }
+//     return toAtomChannelBalance
+// }

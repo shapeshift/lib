@@ -24,7 +24,7 @@ import {
   SwapperType
 } from '@shapeshiftoss/types'
 import axios from 'axios'
-import { sleep } from 'wait-promise'
+// import { sleep } from 'wait-promise'
 
 // import { getRate } from '../../api'
 import {
