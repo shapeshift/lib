@@ -1,4 +1,4 @@
-import { btcChainId, ChainId, cosmosChainId, ethChainId, osmosisChainId } from '@shapeshiftoss/caip'
+import { btcChainId, cosmosChainId, ethChainId, osmosisChainId } from '@shapeshiftoss/caip'
 import {
   BTCSignTx,
   CosmosSignTx,
@@ -7,7 +7,7 @@ import {
   OsmosisSignTx
 } from '@shapeshiftoss/hdwallet-core'
 
-import { BIP44Params, UtxoAccountType } from '../base'
+import { BIP44Params, SupportedChainIds, UtxoAccountType } from '../base'
 import { ChainSpecific } from '../utility'
 import * as bitcoin from './bitcoin'
 import * as cosmos from './cosmos'
@@ -19,7 +19,6 @@ export { bitcoin, cosmos, ethereum }
 type ChainSpecificAccount<T> = ChainSpecific<
   T,
   {
-    // FIXME: use some concept of supported chainIds?
     [ethChainId]: ethereum.Account
     [btcChainId]: bitcoin.Account
     [cosmosChainId]: cosmos.Account
@@ -27,7 +26,7 @@ type ChainSpecificAccount<T> = ChainSpecific<
   }
 >
 
-export type Account<T extends ChainId> = {
+export type Account<T extends SupportedChainIds> = {
   balance: string
   pubkey: string
   chainId: T
@@ -48,7 +47,6 @@ export enum FeeDataKey {
 type ChainSpecificFeeData<T> = ChainSpecific<
   T,
   {
-    // FIXME: use some concept of supported chainIds?
     [ethChainId]: ethereum.FeeData
     [btcChainId]: bitcoin.FeeData
     [cosmosChainId]: cosmos.FeeData
@@ -64,11 +62,11 @@ type ChainSpecificFeeData<T> = ChainSpecific<
 // ChainTypes.Bitcoin:
 // feePerUnit = sats/kbyte
 
-export type FeeData<T extends ChainId> = {
+export type FeeData<T extends SupportedChainIds> = {
   txFee: string
 } & ChainSpecificFeeData<T>
 
-export type FeeDataEstimate<T extends ChainId> = {
+export type FeeDataEstimate<T extends SupportedChainIds> = {
   [FeeDataKey.Slow]: FeeData<T>
   [FeeDataKey.Average]: FeeData<T>
   [FeeDataKey.Fast]: FeeData<T>
@@ -99,7 +97,7 @@ export enum TxStatus {
   Unknown = 'unknown'
 }
 
-export type Transaction<T extends ChainId> = {
+export type Transaction<T extends SupportedChainIds> = {
   address: string
   blockHash?: string
   blockHeight: number
@@ -143,7 +141,7 @@ export type SubscribeError = {
   message: string
 }
 
-export type TxHistoryResponse<T extends ChainId> = {
+export type TxHistoryResponse<T extends SupportedChainIds> = {
   cursor: string
   pubkey: string
   transactions: Array<Transaction<T>>
@@ -158,7 +156,7 @@ type ChainTxTypeInner = {
 
 export type ChainTxType<T> = T extends keyof ChainTxTypeInner ? ChainTxTypeInner[T] : never
 
-export type BuildDelegateTxInput<T extends ChainId> = {
+export type BuildDelegateTxInput<T extends SupportedChainIds> = {
   validator: string
   value: string
   wallet: HDWallet
@@ -166,7 +164,7 @@ export type BuildDelegateTxInput<T extends ChainId> = {
   memo?: string
 } & ChainSpecificBuildTxData<T>
 
-export type BuildUndelegateTxInput<T extends ChainId> = {
+export type BuildUndelegateTxInput<T extends SupportedChainIds> = {
   validator: string
   value: string
   wallet: HDWallet
@@ -174,7 +172,7 @@ export type BuildUndelegateTxInput<T extends ChainId> = {
   memo?: string
 } & ChainSpecificBuildTxData<T>
 
-export type BuildRedelegateTxInput<T extends ChainId> = {
+export type BuildRedelegateTxInput<T extends SupportedChainIds> = {
   fromValidator: string
   toValidator: string
   value: string
@@ -183,14 +181,14 @@ export type BuildRedelegateTxInput<T extends ChainId> = {
   memo?: string
 } & ChainSpecificBuildTxData<T>
 
-export type BuildClaimRewardsTxInput<T extends ChainId> = {
+export type BuildClaimRewardsTxInput<T extends SupportedChainIds> = {
   validator: string
   wallet: HDWallet
   bip44Params?: BIP44Params
   memo?: string
 } & ChainSpecificBuildTxData<T>
 
-export type BuildSendTxInput<T extends ChainId> = {
+export type BuildSendTxInput<T extends SupportedChainIds> = {
   to: string
   value: string
   wallet: HDWallet
@@ -238,7 +236,7 @@ type ChainSpecificGetFeeDataInput<T> = ChainSpecific<
     [btcChainId]: bitcoin.GetFeeDataInput
   }
 >
-export type GetFeeDataInput<T extends ChainId> = {
+export type GetFeeDataInput<T extends SupportedChainIds> = {
   to: string
   value: string
   sendMax?: boolean
