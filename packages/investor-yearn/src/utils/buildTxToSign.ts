@@ -37,6 +37,7 @@ export function buildTxToSign({
     chainId, // TODO: implement for multiple chains
     data,
     nonce: numberToHex(nonce),
+    // TODO: move numberToHex and safety factor into signAndBroadcast.
     gasLimit: numberToHex(estimatedGas.times(1.5).integerValue().toString()),
     gasPrice // Convert to hex in signAndBroadcast
   }

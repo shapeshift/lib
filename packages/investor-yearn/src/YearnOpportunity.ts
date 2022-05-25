@@ -149,7 +149,7 @@ export class YearnOpportunity
     deps: { wallet: ETHWallet; chainAdapter: ChainAdapter<ChainTypes.Ethereum> },
     preparedTx: PreparedTransaction
   ): Promise<string> {
-    if (!preparedTx.feePriority) throw new Error('Missing feePriority')
+    if (isNil(preparedTx.feePriority)) throw new Error('Missing feePriority')
     const wallet = deps.wallet
 
     // We must have an Ethereum ChainAdapter
