@@ -9,7 +9,8 @@ import {
   SwapperType,
   ThorTradeResult,
   Trade,
-  TradeQuote
+  TradeQuote,
+  TradeStatus
 } from '../../api'
 export class ThorchainSwapper implements Swapper {
   getType() {
@@ -55,6 +56,10 @@ export class ThorchainSwapper implements Swapper {
   }
 
   async executeTrade(): Promise<ThorTradeResult> {
+    throw new Error('ThorchainSwapper: executeTrade unimplemented')
+  }
+
+  async getTradeStatus(): Promise<TradeStatus> {
     throw new Error('ThorchainSwapper: executeTrade unimplemented')
   }
 }

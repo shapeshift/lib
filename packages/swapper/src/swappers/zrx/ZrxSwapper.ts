@@ -16,9 +16,14 @@ import {
   Swapper,
   SwapperType,
   TradeQuote,
+<<<<<<< HEAD
   TradeStatus,
   ZrxTrade,
   ZrxTradeResult
+=======
+  TradeResult,
+  ZrxTrade
+>>>>>>> main
 } from '../../api'
 import { getZrxMinMax } from './getZrxMinMax/getZrxMinMax'
 import { getZrxTradeQuote } from './getZrxTradeQuote/getZrxTradeQuote'

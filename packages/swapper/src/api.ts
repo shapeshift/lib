@@ -135,7 +135,7 @@ export enum SwapperType {
 }
 
 export type TradeStatus = {
-  sellTxid: string,
+  sellTxid: string
   buyTxid?: string
 }
 
