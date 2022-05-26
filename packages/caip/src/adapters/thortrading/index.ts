@@ -3,7 +3,7 @@ import { btcAssetId, ethAssetId, ethChainId } from '../../constants'
 import { AssetId } from './../../assetId/assetId'
 import { btcChainId } from './../../constants'
 
-// https://regex101.com/r/j0zGtX/1
+// https://regex101.com/r/d3Lgl9/1
 const thorIdRegex =
   /(?<THORChainChain>[A-Z]+)\.(?<symbol>[A-Z]+)(-(?<contractAddress>[A-Z0-9]{42}))?/
 
