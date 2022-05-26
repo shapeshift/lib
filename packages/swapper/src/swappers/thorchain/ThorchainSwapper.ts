@@ -1,11 +1,12 @@
 import { AssetId } from '@shapeshiftoss/caip'
-import { Asset, SupportedChainIds, SwapperType } from '@shapeshiftoss/types'
+import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
 
 import {
   ApprovalNeededOutput,
   GetMinMaxInput,
   MinMaxOutput,
   Swapper,
+  SwapperType,
   Trade,
   TradeQuote,
   TradeResult

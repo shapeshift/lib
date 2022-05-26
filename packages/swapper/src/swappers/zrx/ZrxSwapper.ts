@@ -1,6 +1,6 @@
 import { AssetId } from '@shapeshiftoss/caip'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import { Asset, SupportedChainIds, SwapperType } from '@shapeshiftoss/types'
+import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import {
@@ -14,6 +14,7 @@ import {
   GetTradeQuoteInput,
   MinMaxOutput,
   Swapper,
+  SwapperType,
   TradeQuote,
   TradeResult,
   ZrxTrade

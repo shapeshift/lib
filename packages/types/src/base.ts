@@ -93,7 +93,7 @@ export type BaseAsset = AbstractAsset & { tokens?: TokenAsset[] }
 export type Asset = AbstractAsset & Partial<TokenAssetFields>
 
 // swapper
-
+// TODO remove this once web is using the type from swapper
 export enum SwapperType {
   Zrx = '0x',
   Thorchain = 'Thorchain',
