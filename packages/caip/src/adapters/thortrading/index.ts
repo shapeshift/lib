@@ -11,21 +11,28 @@ const thorIdRegex = /(?<THORChainChain>[A-Z]+)\.(?<symbol>[A-Z]+)-(?<contractAdd
  * see https://dev.thorchain.org/thorchain-dev/memos#asset-notation for reference
  */
 export const poolAssetIdToAssetId = (id: string): AssetId | undefined => {
-  if (id === 'BTC.BTC') return btcAssetId
-  if (id === 'ETH.ETH') return ethAssetId
+  const THORChainChain = id.split('.')[0]
+  switch (THORChainChain) {
+    case 'ETH': {
+      if (id === 'ETH.ETH') return ethAssetId
+      const matches = thorIdRegex.exec(id)?.groups
+      const contractAddress = matches?.contractAddress
+      const symbol = matches?.symbol
+      if (THORChainChain === 'ETH' && symbol === 'ETH') return ethAssetId
+      if (!contractAddress) return undefined
 
-  // ERC20's
-  if (id.startsWith('ETH.')) {
-    const matches = thorIdRegex.exec(id)?.groups
+      const chainId = ethChainId
+      const assetNamespace = 'erc20'
+      const assetReference = contractAddress.toLowerCase()
 
-    const contractAddress = matches?.contractAddress
-    if (!contractAddress) return undefined
-
-    const chainId = ethChainId
-    const assetNamespace = 'erc20'
-    const assetReference = contractAddress.toLowerCase()
-
-    return toAssetId({ chainId, assetNamespace, assetReference })
+      return toAssetId({ chainId, assetNamespace, assetReference })
+    }
+    case 'BTC': {
+      return btcAssetId
+    }
+    default: {
+      return undefined
+    }
   }
 
   return undefined
@@ -45,6 +52,8 @@ export const assetIdToPoolAssetId = ({
       case ethChainId: {
         if (assetId === ethAssetId) return 'ETH.ETH'
         if (!symbol) return undefined
+        // this is predicated on the assumption that the symbol from the asset service
+        // and the contract address are static, correct, and won't ever change
         return `ETH.${symbol}-${assetReference.toUpperCase()}`
       }
       case btcChainId: {
