@@ -2,8 +2,8 @@ import { toAssetId } from '../../assetId/assetId'
 import { btcAssetId, ethAssetId, ethChainId } from '../../constants'
 
 /*
-* Note: this only works with thorchain assets we support
-*/
+ * Note: this only works with thorchain assets we support
+ */
 export const poolAssetIdToAssetId = (id: string): string | undefined => {
   if (id === 'BTC.BTC') return btcAssetId
   if (id === 'ETH.ETH') return ethAssetId

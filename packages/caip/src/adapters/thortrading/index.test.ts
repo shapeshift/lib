@@ -1,5 +1,5 @@
+import { btcAssetId, ethAssetId } from '../../constants'
 import { poolAssetIdToAssetId } from './index'
-import { ethAssetId, btcAssetId } from '../../constants'
 
 describe('thortrading', () => {
   describe('poolAssetIdToAssetId', () => {
