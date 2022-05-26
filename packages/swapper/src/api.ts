@@ -122,7 +122,6 @@ export type ApprovalNeededOutput = {
   gasPrice?: string
 }
 
-
 // Swap Errors
 export enum SwapErrorTypes {
   ALLOWANCE_REQUIRED_FAILED = 'ALLOWANCE_REQUIRED_FAILED',
