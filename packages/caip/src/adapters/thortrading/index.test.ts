@@ -18,5 +18,10 @@ describe('thortrading', () => {
       const result = poolAssetIdToAssetId('ETH.USDC-0XA0B86991C6218B36C1D19D4A2E9EB0CE3606EB48')
       expect(result).toEqual(usdcAssetId)
     })
+
+    it('returns undefined for an asset we dont support', () => {
+      const result = poolAssetIdToAssetId('BNB.AVA-645')
+      expect(result).toEqual(undefined)
+    })
   })
 })

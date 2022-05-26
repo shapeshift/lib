@@ -20,7 +20,7 @@ export const chainIdToPoolChain = (assetId: string): string | undefined =>
 /*
 * Note: this only works with thorchain assets we support
 */
-export const poolAssetIdToAssetId = (id: string) => {
+export const poolAssetIdToAssetId = (id: string): string | undefined => {
   if (id === 'BTC.BTC') return btcAssetId
   if (id === 'ETH.ETH') return ethAssetId
 
@@ -33,5 +33,7 @@ export const poolAssetIdToAssetId = (id: string) => {
       assetNamespace: 'erc20',
       assetReference: address.toLowerCase()
     })
-  } else throw new Error(`Cant convert thor pool asset ${id} to asset id`)
+  }
+
+  return undefined
 }
