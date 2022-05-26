@@ -25,7 +25,7 @@ export class SwapperManager {
    * @param swapperInstance swapper instance {Swapper}
    * @returns {SwapperManager}
    */
-  async addSwapper(swapperType: SwapperType, swapperInstance: Swapper): Promise<this> {
+  addSwapper(swapperType: SwapperType, swapperInstance: Swapper): this {
     const swapper = this.swappers.get(swapperType)
     if (swapper)
       throw new SwapError('[addSwapper] - swapper already exists', {
@@ -33,7 +33,6 @@ export class SwapperManager {
         details: { swapperType }
       })
     validateSwapper(swapperInstance)
-    await swapperInstance.initialize()
     this.swappers.set(swapperType, swapperInstance)
     return this
   }
