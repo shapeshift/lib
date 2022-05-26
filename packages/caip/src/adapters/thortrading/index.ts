@@ -4,21 +4,24 @@ import { AssetId } from './../../assetId/assetId'
 import { btcChainId } from './../../constants'
 
 // https://regex101.com/r/j0zGtX/1
-const thorIdRegex = /(?<THORChainChain>[A-Z]+)\.(?<symbol>[A-Z]+)-(?<contractAddress>[A-Z0-9]{42})/
+const thorIdRegex =
+  /(?<THORChainChain>[A-Z]+)\.(?<symbol>[A-Z]+)(-(?<contractAddress>[A-Z0-9]{42}))?/
 
 /*
  * Note: this only works with thorchain assets we support
  * see https://dev.thorchain.org/thorchain-dev/memos#asset-notation for reference
  */
 export const poolAssetIdToAssetId = (id: string): AssetId | undefined => {
-  const THORChainChain = id.split('.')[0]
+  const matches = thorIdRegex.exec(id)?.groups
+  const THORChainChain = matches?.THORChainChain
+  const symbol = matches?.symbol
+
   switch (THORChainChain) {
     case 'ETH': {
       if (id === 'ETH.ETH') return ethAssetId
-      const matches = thorIdRegex.exec(id)?.groups
-      const contractAddress = matches?.contractAddress
-      const symbol = matches?.symbol
       if (THORChainChain === 'ETH' && symbol === 'ETH') return ethAssetId
+
+      const contractAddress = matches?.contractAddress
       if (!contractAddress) return undefined
 
       const chainId = ethChainId
@@ -34,8 +37,6 @@ export const poolAssetIdToAssetId = (id: string): AssetId | undefined => {
       return undefined
     }
   }
-
-  return undefined
 }
 
 export const assetIdToPoolAssetId = ({
