@@ -52,6 +52,8 @@ export class TransactionParser {
   }
 
   async parse(tx: EthereumTx, address: string): Promise<ParsedTx> {
+    address = ethers.utils.getAddress(address)
+
     // We expect only one Parser to return a result. If multiple do, we take the first and early exit.
     const contractParserResult = await findAsyncSequential<SubParser, TxSpecific>(
       this.parsers,
