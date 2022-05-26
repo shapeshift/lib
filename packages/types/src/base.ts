@@ -8,7 +8,7 @@ export type BIP44Params = {
   index?: number
 }
 
-const SUPPORTED_CHAIN_IDS = {
+export const SUPPORTED_CHAIN_IDS = {
   EthereumMainnet: 'eip155:1',
   BitcoinMainnet: 'bip122:000000000019d6689c085ae165831e93',
   CosmosMainnet: 'cosmos:cosmoshub-4',

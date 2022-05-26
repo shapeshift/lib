@@ -7,7 +7,7 @@ import {
   OsmosisSignTx
 } from '@shapeshiftoss/hdwallet-core'
 
-import { BIP44Params, SupportedChainId, UtxoAccountType } from '../base'
+import { BIP44Params, SUPPORTED_CHAIN_IDS, SupportedChainId, UtxoAccountType } from '../base'
 import { ChainSpecific } from '../utility'
 import * as bitcoin from './bitcoin'
 import * as cosmos from './cosmos'
@@ -19,10 +19,10 @@ export { bitcoin, cosmos, ethereum }
 type ChainSpecificAccount<T> = ChainSpecific<
   T,
   {
-    [ethChainId]: ethereum.Account
-    [btcChainId]: bitcoin.Account
-    [cosmosChainId]: cosmos.Account
-    [osmosisChainId]: osmosis.Account
+    [SUPPORTED_CHAIN_IDS.EthereumMainnet]: ethereum.Account
+    [SUPPORTED_CHAIN_IDS.BitcoinMainnet]: bitcoin.Account
+    [SUPPORTED_CHAIN_IDS.CosmosMainnet]: cosmos.Account
+    [SUPPORTED_CHAIN_IDS.OsmosisMainnet]: osmosis.Account
   }
 >
 
@@ -47,10 +47,10 @@ export enum FeeDataKey {
 type ChainSpecificFeeData<T> = ChainSpecific<
   T,
   {
-    [ethChainId]: ethereum.FeeData
-    [btcChainId]: bitcoin.FeeData
-    [cosmosChainId]: cosmos.FeeData
-    [osmosisChainId]: osmosis.FeeData
+    [SUPPORTED_CHAIN_IDS.EthereumMainnet]: ethereum.FeeData
+    [SUPPORTED_CHAIN_IDS.BitcoinMainnet]: bitcoin.FeeData
+    [SUPPORTED_CHAIN_IDS.CosmosMainnet]: cosmos.FeeData
+    [SUPPORTED_CHAIN_IDS.OsmosisMainnet]: osmosis.FeeData
   }
 >
 
