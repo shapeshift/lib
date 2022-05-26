@@ -1,7 +1,9 @@
 import { btcAssetId, ethAssetId } from '../../constants'
-import { poolAssetIdToAssetId } from './index'
+import { assetIdToPoolAssetId, poolAssetIdToAssetId } from './index'
 
 describe('thortrading', () => {
+  const usdcAssetId = 'eip155:1/erc20:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+
   describe('poolAssetIdToAssetId', () => {
     it('returns Ethereum assetId when poolAssetId is ETH.ETH', () => {
       const result = poolAssetIdToAssetId('ETH.ETH')
@@ -14,7 +16,6 @@ describe('thortrading', () => {
     })
 
     it('returns ERC20 assetId when poolAssetId is in ERC20 format', () => {
-      const usdcAssetId = 'eip155:1/erc20:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
       const result = poolAssetIdToAssetId('ETH.USDC-0XA0B86991C6218B36C1D19D4A2E9EB0CE3606EB48')
       expect(result).toEqual(usdcAssetId)
     })
@@ -22,6 +23,37 @@ describe('thortrading', () => {
     it('returns undefined for an asset we dont support', () => {
       const result = poolAssetIdToAssetId('BNB.AVA-645')
       expect(result).toEqual(undefined)
+    })
+  })
+
+  describe('assetIdToPoolAssetId', () => {
+    it('returns Ethereum pool when assetId is ethAssetId', () => {
+      const assetId = ethAssetId
+      const result = assetIdToPoolAssetId({ assetId })
+      const poolAssetId = 'ETH.ETH'
+      expect(result).toEqual(poolAssetId)
+    })
+
+    it('returns bitcoin pool when assetId is btcAssetId', () => {
+      const assetId = btcAssetId
+      const result = assetIdToPoolAssetId({ assetId })
+      const poolAssetId = 'BTC.BTC'
+      expect(result).toEqual(poolAssetId)
+    })
+
+    it('returns USDC pool when assetId is usdc', () => {
+      const assetId = usdcAssetId
+      const symbol = 'USDC'
+      const result = assetIdToPoolAssetId({ assetId, symbol })
+      const poolAssetId = 'ETH.USDC-0XA0B86991C6218B36C1D19D4A2E9EB0CE3606EB48'
+      expect(result).toEqual(poolAssetId)
+    })
+
+    it('returns undefined for an unsupported asset', () => {
+      const assetId = 'foobar'
+      const result = assetIdToPoolAssetId({ assetId })
+      const poolAssetId = undefined
+      expect(result).toEqual(poolAssetId)
     })
   })
 })
