@@ -27,9 +27,11 @@
   },
   "dependencies": {},
   "peerDependencies": {
+    "@shapeshiftoss/chain-adapters": "^4.3.0",
     "@shapeshiftoss/types": "^4.1.0"
   },
   "devDependencies": {
+    "@shapeshiftoss/chain-adapters": "^4.3.0",
     "@shapeshiftoss/hdwallet-core": "^1.22.0",
     "@shapeshiftoss/types": "^4.1.0",
     "bignumber.js": "^9.0.2"
