@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { AssetId } from '@shapeshiftoss/caip'
 import {
   ApprovalNeededOutput,
