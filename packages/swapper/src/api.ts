@@ -88,9 +88,15 @@ export type ExecuteTradeInput<C extends SupportedChainIds> = {
 }
 
 export type TradeResult = {
-  txid: string
+  txid: string // TODO remove this once web changes are in
 }
 
+export type ZrxTradeResult = TradeResult & {
+  swapTxid: string // zrx trades happen in a single swap tx
+}
+export type ThorTradeResult = TradeResult & {
+  sellTxid: string // We only know about the sell asset txid for thorchain on broadcast
+}
 export type ApproveInfiniteInput<C extends SupportedChainIds> = {
   quote: TradeQuote<C>
   wallet: HDWallet
@@ -126,6 +132,11 @@ export enum SwapperType {
   Zrx = '0x',
   Thorchain = 'Thorchain',
   Test = 'Test'
+}
+
+export type TradeStatus = {
+  sellTxid: string,
+  buyTxid?: string
 }
 
 // Swap Errors
@@ -198,4 +209,6 @@ export interface Swapper {
    * Get supported sell assetIds
    */
   filterAssetIdsBySellable(assetIds: AssetId[]): AssetId[]
+
+  getTradeStatus(tradeResult: TradeResult): Promise<TradeStatus>
 }

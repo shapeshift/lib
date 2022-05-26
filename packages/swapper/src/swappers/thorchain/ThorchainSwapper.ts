@@ -7,9 +7,9 @@ import {
   MinMaxOutput,
   Swapper,
   SwapperType,
+  ThorTradeResult,
   Trade,
-  TradeQuote,
-  TradeResult
+  TradeQuote
 } from '../../api'
 export class ThorchainSwapper implements Swapper {
   getType() {
@@ -54,7 +54,7 @@ export class ThorchainSwapper implements Swapper {
     throw new Error('ThorchainSwapper: getTradeQuote unimplemented')
   }
 
-  async executeTrade(): Promise<TradeResult> {
+  async executeTrade(): Promise<ThorTradeResult> {
     throw new Error('ThorchainSwapper: executeTrade unimplemented')
   }
 }
