@@ -8,15 +8,21 @@ export const poolAssetIdToAssetId = (id: string): string | undefined => {
   if (id === 'BTC.BTC') return btcAssetId
   if (id === 'ETH.ETH') return ethAssetId
 
-  // Erc20's
-  if (id.startsWith('ETH.') && id.length > 4) {
-    const address = id.split('-')[1]
+  // ERC20's
+  if (id.startsWith('ETH.')) {
+    // https://regex101.com/r/a0odJd/1
+    const thorIdRegex =
+      /(?<THORChainChain>[A-Z]+)\.(?<symbol>[A-Z]+)-(?<contractAddress>[A-Z0-9]{42})/
+    const matches = thorIdRegex.exec(id)?.groups
 
-    return toAssetId({
-      chainId: ethChainId,
-      assetNamespace: 'erc20',
-      assetReference: address.toLowerCase()
-    })
+    const contractAddress = matches?.contractAddress
+    if (!contractAddress) return undefined
+
+    const chainId = ethChainId
+    const assetNamespace = 'erc20'
+    const assetReference = contractAddress.toLowerCase()
+
+    return toAssetId({ chainId, assetNamespace, assetReference })
   }
 
   return undefined
