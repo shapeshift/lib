@@ -1,14 +1,16 @@
 import { AssetId } from '@shapeshiftoss/caip'
+import { Asset, SupportedChainIds, SwapperType } from '@shapeshiftoss/types'
+
 import {
   ApprovalNeededOutput,
-  Asset,
+  BuyAssetBySellIdInput,
   GetMinMaxInput,
   MinMaxOutput,
-  SupportedChainIds,
-  SwapperType
-} from '@shapeshiftoss/types'
-
-import { BuyAssetBySellIdInput, Swapper, Trade, TradeQuote, TradeResult } from '../../api'
+  Swapper,
+  Trade,
+  TradeQuote,
+  TradeResult
+} from '../../api'
 
 /**
  * Playground for testing different scenarios of multiple swappers in the manager.

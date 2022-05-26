@@ -1,22 +1,18 @@
 import { AssetId } from '@shapeshiftoss/caip'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import {
-  ApprovalNeededOutput,
-  Asset,
-  GetMinMaxInput,
-  MinMaxOutput,
-  SupportedChainIds,
-  SwapperType
-} from '@shapeshiftoss/types'
+import { Asset, SupportedChainIds, SwapperType } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import {
   ApprovalNeededInput,
+  ApprovalNeededOutput,
   ApproveInfiniteInput,
   BuildTradeInput,
   BuyAssetBySellIdInput,
   ExecuteTradeInput,
+  GetMinMaxInput,
   GetTradeQuoteInput,
+  MinMaxOutput,
   Swapper,
   TradeQuote,
   TradeResult,

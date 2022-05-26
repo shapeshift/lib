@@ -1,14 +1,15 @@
 import { AssetId } from '@shapeshiftoss/caip'
+import { Asset, SupportedChainIds, SwapperType } from '@shapeshiftoss/types'
+
 import {
   ApprovalNeededOutput,
-  Asset,
   GetMinMaxInput,
   MinMaxOutput,
-  SupportedChainIds,
-  SwapperType
-} from '@shapeshiftoss/types'
-
-import { Swapper, Trade, TradeQuote, TradeResult } from '../../api'
+  Swapper,
+  Trade,
+  TradeQuote,
+  TradeResult
+} from '../../api'
 export class ThorchainSwapper implements Swapper {
   getType() {
     return SwapperType.Thorchain

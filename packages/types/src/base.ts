@@ -99,24 +99,3 @@ export enum SwapperType {
   Thorchain = 'Thorchain',
   Test = 'Test'
 }
-
-export type SwapSource = {
-  name: string
-  proportion: string
-}
-
-export interface MinMaxOutput {
-  minimum: string
-  maximum: string
-}
-
-export type GetMinMaxInput = {
-  sellAsset: Asset
-  buyAsset: Asset
-}
-
-export type ApprovalNeededOutput = {
-  approvalNeeded: boolean
-  gas?: string
-  gasPrice?: string
-}
