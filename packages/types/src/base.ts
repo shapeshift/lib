@@ -115,10 +115,6 @@ export type GetMinMaxInput = {
   buyAsset: Asset
 }
 
-export type ExecQuoteOutput = {
-  txid: string
-}
-
 export type ApprovalNeededOutput = {
   approvalNeeded: boolean
   gas?: string

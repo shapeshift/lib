@@ -2,14 +2,13 @@ import { AssetId } from '@shapeshiftoss/caip'
 import {
   ApprovalNeededOutput,
   Asset,
-  ExecQuoteOutput,
   GetMinMaxInput,
   MinMaxOutput,
   SupportedChainIds,
   SwapperType
 } from '@shapeshiftoss/types'
 
-import { BuyAssetBySellIdInput, Swapper, Trade, TradeQuote } from '../../api'
+import { BuyAssetBySellIdInput, Swapper, Trade, TradeQuote, TradeResult } from '../../api'
 
 /**
  * Playground for testing different scenarios of multiple swappers in the manager.
@@ -70,7 +69,7 @@ export class TestSwapper implements Swapper {
     throw new Error('TestSwapper: getTradeQuote unimplemented')
   }
 
-  async executeTrade(): Promise<ExecQuoteOutput> {
+  async executeTrade(): Promise<TradeResult> {
     throw new Error('TestSwapper: executeTrade unimplemented')
   }
 }

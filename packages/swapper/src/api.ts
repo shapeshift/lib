@@ -5,7 +5,6 @@ import {
   ApprovalNeededOutput,
   Asset,
   ChainSpecific,
-  ExecQuoteOutput,
   GetMinMaxInput,
   MinMaxOutput,
   SupportedChainIds,
@@ -164,7 +163,7 @@ export interface Swapper {
   /**
    * Execute a trade built with buildTrade by signing and broadcasting
    */
-  executeTrade(args: ExecuteTradeInput<SupportedChainIds>): Promise<ExecQuoteOutput>
+  executeTrade(args: ExecuteTradeInput<SupportedChainIds>): Promise<TradeResult>
 
   /**
    * Get a boolean if a quote needs approval

@@ -3,7 +3,6 @@ import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import {
   ApprovalNeededOutput,
   Asset,
-  ExecQuoteOutput,
   GetMinMaxInput,
   MinMaxOutput,
   SupportedChainIds,
@@ -20,6 +19,7 @@ import {
   GetTradeQuoteInput,
   Swapper,
   TradeQuote,
+  TradeResult,
   ZrxTrade
 } from '../../api'
 import { getZrxMinMax } from './getZrxMinMax/getZrxMinMax'
@@ -68,7 +68,7 @@ export class ZrxSwapper implements Swapper {
     return getZrxMinMax(input.sellAsset, input.buyAsset)
   }
 
-  async executeTrade(args: ExecuteTradeInput<SupportedChainIds>): Promise<ExecQuoteOutput> {
+  async executeTrade(args: ExecuteTradeInput<SupportedChainIds>): Promise<TradeResult> {
     return zrxExecuteTrade(this.deps, args)
   }
 
