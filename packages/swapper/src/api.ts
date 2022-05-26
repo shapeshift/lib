@@ -1,7 +1,7 @@
 import { AssetId } from '@shapeshiftoss/caip'
 import { createErrorClass } from '@shapeshiftoss/errors'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { Asset, ChainSpecific, SupportedChainIds, SwapperType } from '@shapeshiftoss/types'
+import { Asset, ChainSpecific, SupportedChainIds } from '@shapeshiftoss/types'
 
 export const SwapError = createErrorClass('SwapError')
 
@@ -120,6 +120,12 @@ export type ApprovalNeededOutput = {
   approvalNeeded: boolean
   gas?: string
   gasPrice?: string
+}
+
+export enum SwapperType {
+  Zrx = '0x',
+  Thorchain = 'Thorchain',
+  Test = 'Test'
 }
 
 // Swap Errors
