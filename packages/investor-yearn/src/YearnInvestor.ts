@@ -53,7 +53,10 @@ export class YearnInvestor
   }
 
   async findByOpportunityId(opportunityId: string) {
-    return find(await this.findAll(), (opp: YearnOpportunity) => opp.id === opportunityId)
+    return find(
+      await this.findAll(),
+      (opp: YearnOpportunity) => opp.positionAsset.assetId === opportunityId
+    )
   }
 
   async findByUnderlyingAssetId(assetId: string) {
