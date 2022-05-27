@@ -58,7 +58,7 @@ export class ZrxSwapper implements Swapper {
     return getZrxTradeQuote(input)
   }
 
-  async getUsdRate(input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> {
+  async getUsdRate(input: Asset): Promise<string> {
     return getUsdRate(input)
   }
 

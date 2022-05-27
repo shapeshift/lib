@@ -54,43 +54,27 @@ export enum AssetDataSource {
 }
 
 // asset-service
-
-type AbstractAsset = {
+export type Asset = {
   assetId: string
   chainId: string
   chain: ChainTypes
   description?: string
   isTrustedDescription?: boolean
-  dataSource: AssetDataSource
+  dataSource?: AssetDataSource
   network: NetworkTypes
   symbol: string
   name: string
   precision: number
-  slip44: number
+  slip44?: number
   color: string
-  secondaryColor: string
+  secondaryColor?: string
   icon: string
   explorer: string
   explorerTxLink: string
   explorerAddressLink: string
-  sendSupport: boolean
-  receiveSupport: boolean
+  sendSupport?: boolean
+  receiveSupport?: boolean
 }
-
-type OmittedTokenAssetFields =
-  | 'chain'
-  | 'network'
-  | 'slip44'
-  | 'explorer'
-  | 'explorerTxLink'
-  | 'explorerAddressLink'
-type TokenAssetFields = {
-  tokenId: string
-  contractType: 'erc20' | 'erc721' // Don't want to import caip here to prevent circular dependencies
-}
-export type TokenAsset = Omit<AbstractAsset, OmittedTokenAssetFields> & TokenAssetFields
-export type BaseAsset = AbstractAsset & { tokens?: TokenAsset[] }
-export type Asset = AbstractAsset & Partial<TokenAssetFields>
 
 // swapper
 // TODO remove this once web is using the type from swapper
