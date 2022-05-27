@@ -13,24 +13,10 @@ import {
   TradeResult,
   TradeTxs
 } from '../../api'
+import { MidguardResponse } from './types'
 
 export type ThorchainSwapperDeps = {
   midgardUrl: string
-}
-
-export type MidguardResponse = {
-  asset: string
-  assetDepth: string
-  assetPrice: string
-  assetPriceUSD: string
-  liquidityUnits: string
-  poolAPY: string
-  runeDepth: string
-  status: string
-  synthSupply: string
-  synthUnits: string
-  units: string
-  volume24h: string
 }
 
 export class ThorchainSwapper implements Swapper {
