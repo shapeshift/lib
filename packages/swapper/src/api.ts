@@ -210,5 +210,5 @@ export interface Swapper {
    */
   filterAssetIdsBySellable(assetIds: AssetId[]): AssetId[]
 
-  getTradeStatus(tradeResult: TradeResult): Promise<TradeStatus>
+  getTradeTxs(tradeResult: TradeResult): Promise<TradeStatus>
 }

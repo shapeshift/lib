@@ -77,7 +77,7 @@ export class TestSwapper implements Swapper {
     throw new Error('TestSwapper: executeTrade unimplemented')
   }
 
-  async getTradeStatus(): Promise<TradeStatus> {
+  async getTradeTxs(): Promise<TradeStatus> {
     throw new Error('TestSwapper: executeTrade unimplemented')
   }
 }

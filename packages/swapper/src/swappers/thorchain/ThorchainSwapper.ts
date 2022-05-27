@@ -59,7 +59,7 @@ export class ThorchainSwapper implements Swapper {
     throw new Error('ThorchainSwapper: executeTrade unimplemented')
   }
 
-  async getTradeStatus(): Promise<TradeStatus> {
+  async getTradeTxs(): Promise<TradeStatus> {
     throw new Error('ThorchainSwapper: executeTrade unimplemented')
   }
 }
