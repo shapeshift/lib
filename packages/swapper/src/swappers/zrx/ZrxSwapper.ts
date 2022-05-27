@@ -1,26 +1,23 @@
 import { AssetId } from '@shapeshiftoss/caip'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import {
-  ApprovalNeededOutput,
-  Asset,
-  ExecQuoteOutput,
-  GetMinMaxInput,
-  MinMaxOutput,
-  SupportedChainIds,
-  SwapperType
-} from '@shapeshiftoss/types'
+import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import {
   ApprovalNeededInput,
+  ApprovalNeededOutput,
   ApproveInfiniteInput,
   BuildTradeInput,
   BuyAssetBySellIdInput,
   ExecuteTradeInput,
+  GetMinMaxInput,
   GetTradeQuoteInput,
+  MinMaxOutput,
   Swapper,
-  Trade,
-  TradeQuote
+  SwapperType,
+  TradeQuote,
+  TradeResult,
+  ZrxTrade
 } from '../../api'
 import { getZrxMinMax } from './getZrxMinMax/getZrxMinMax'
 import { getZrxTradeQuote } from './getZrxTradeQuote/getZrxTradeQuote'
@@ -44,11 +41,15 @@ export class ZrxSwapper implements Swapper {
     this.deps = deps
   }
 
+  // noop for zrx
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  async initialize() {}
+
   getType() {
     return SwapperType.Zrx
   }
 
-  async buildTrade(args: BuildTradeInput): Promise<Trade<SupportedChainIds>> {
+  async buildTrade(args: BuildTradeInput): Promise<ZrxTrade<SupportedChainIds>> {
     return zrxBuildTrade(this.deps, args)
   }
 
@@ -56,7 +57,7 @@ export class ZrxSwapper implements Swapper {
     return getZrxTradeQuote(input)
   }
 
-  async getUsdRate(input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string> {
+  async getUsdRate(input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> {
     return getUsdRate(input)
   }
 
@@ -64,7 +65,7 @@ export class ZrxSwapper implements Swapper {
     return getZrxMinMax(input.sellAsset, input.buyAsset)
   }
 
-  async executeTrade(args: ExecuteTradeInput<SupportedChainIds>): Promise<ExecQuoteOutput> {
+  async executeTrade(args: ExecuteTradeInput<SupportedChainIds>): Promise<TradeResult> {
     return zrxExecuteTrade(this.deps, args)
   }
 

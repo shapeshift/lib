@@ -1,10 +1,4 @@
-import {
-  ASSET_REFERENCE,
-  AssetId,
-  CHAIN_REFERENCE,
-  fromChainId,
-  toAssetId
-} from '@shapeshiftoss/caip'
+import { ASSET_REFERENCE, AssetId, CHAIN_REFERENCE, toAssetId } from '@shapeshiftoss/caip'
 import {
   bip32ToAddressNList,
   OsmosisSignTx,
@@ -37,17 +31,19 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Osmosis> {
   constructor(args: ChainAdapterArgs) {
     super(args)
 
-    const { chain, network } = fromChainId(this.chainId)
+    const chainId = this.chainId
 
     this.assetId = toAssetId({
-      chain,
-      network,
+      chainId,
       assetNamespace: 'slip44',
       assetReference: ASSET_REFERENCE.Osmosis
     })
 
     // TODO this will need to change to the osmosis tx parser once we support osmosis specic things (trading, lping)
-    this.parser = new unchained.cosmos.TransactionParser({ chainId: this.chainId })
+    this.parser = new unchained.cosmos.TransactionParser({
+      chainId: this.chainId,
+      assetId: this.getFeeAssetId()
+    })
   }
 
   getFeeAssetId(): AssetId {

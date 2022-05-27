@@ -1,16 +1,7 @@
 import { AssetId } from '@shapeshiftoss/caip'
 import { createErrorClass } from '@shapeshiftoss/errors'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import {
-  ApprovalNeededOutput,
-  Asset,
-  ChainSpecific,
-  ExecQuoteOutput,
-  GetMinMaxInput,
-  MinMaxOutput,
-  SupportedChainIds,
-  SwapperType
-} from '@shapeshiftoss/types'
+import { Asset, ChainSpecific, SupportedChainIds } from '@shapeshiftoss/types'
 
 export const SwapError = createErrorClass('SwapError')
 
@@ -83,9 +74,12 @@ export interface TradeQuote<C extends SupportedChainIds> extends TradeBase<C> {
 }
 
 export interface Trade<C extends SupportedChainIds> extends TradeBase<C> {
+  receiveAddress: string
+}
+
+export interface ZrxTrade<C extends SupportedChainIds> extends Trade<C> {
   txData: string
   depositAddress: string
-  receiveAddress: string
 }
 
 export type ExecuteTradeInput<C extends SupportedChainIds> = {
@@ -97,11 +91,6 @@ export type TradeResult = {
   txid: string
 }
 
-export type SwapSource = {
-  name: string
-  proportion: string
-}
-
 export type ApproveInfiniteInput<C extends SupportedChainIds> = {
   quote: TradeQuote<C>
   wallet: HDWallet
@@ -110,6 +99,33 @@ export type ApproveInfiniteInput<C extends SupportedChainIds> = {
 export type ApprovalNeededInput<C extends SupportedChainIds> = {
   quote: TradeQuote<C>
   wallet: HDWallet
+}
+
+export type SwapSource = {
+  name: string
+  proportion: string
+}
+
+export interface MinMaxOutput {
+  minimum: string
+  maximum: string
+}
+
+export type GetMinMaxInput = {
+  sellAsset: Asset
+  buyAsset: Asset
+}
+
+export type ApprovalNeededOutput = {
+  approvalNeeded: boolean
+  gas?: string
+  gasPrice?: string
+}
+
+export enum SwapperType {
+  Zrx = '0x',
+  Thorchain = 'Thorchain',
+  Test = 'Test'
 }
 
 // Swap Errors
@@ -132,6 +148,9 @@ export enum SwapErrorTypes {
 }
 
 export interface Swapper {
+  /** perform any necessary async initialization */
+  initialize(): Promise<void>
+
   /** Returns the swapper type */
   getType(): SwapperType
 
@@ -158,7 +177,7 @@ export interface Swapper {
   /**
    * Execute a trade built with buildTrade by signing and broadcasting
    */
-  executeTrade(args: ExecuteTradeInput<SupportedChainIds>): Promise<ExecQuoteOutput>
+  executeTrade(args: ExecuteTradeInput<SupportedChainIds>): Promise<TradeResult>
 
   /**
    * Get a boolean if a quote needs approval

@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/asset-service",
-  "version": "4.2.1",
+  "version": "4.3.0",
   "description": "Service to return supported asset details",
   "homepage": "",
   "license": "MIT",
@@ -34,13 +34,13 @@
     "lodash": "^4.17.21"
   },
   "peerDependencies": {
-    "@shapeshiftoss/caip": "^4.0.1",
-    "@shapeshiftoss/types": "^4.0.0"
+    "@shapeshiftoss/caip": "^5.0.0",
+    "@shapeshiftoss/types": "^4.3.1"
   },
   "devDependencies": {
     "@ethersproject/providers": "^5.5.2",
-    "@shapeshiftoss/caip": "^4.0.1",
-    "@shapeshiftoss/types": "^4.0.0",
+    "@shapeshiftoss/caip": "^5.0.0",
+    "@shapeshiftoss/types": "^4.3.1",
     "@types/lodash": "^4.14.172",
     "@yfi/sdk": "^1.0.30",
     "dotenv": "^14.3.0",

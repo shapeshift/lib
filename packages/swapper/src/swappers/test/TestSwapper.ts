@@ -1,15 +1,17 @@
 import { AssetId } from '@shapeshiftoss/caip'
+import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
+
 import {
   ApprovalNeededOutput,
-  Asset,
-  ExecQuoteOutput,
+  BuyAssetBySellIdInput,
   GetMinMaxInput,
   MinMaxOutput,
-  SupportedChainIds,
-  SwapperType
-} from '@shapeshiftoss/types'
-
-import { BuyAssetBySellIdInput, Swapper, Trade, TradeQuote } from '../../api'
+  Swapper,
+  SwapperType,
+  Trade,
+  TradeQuote,
+  TradeResult
+} from '../../api'
 
 /**
  * Playground for testing different scenarios of multiple swappers in the manager.
@@ -17,6 +19,10 @@ import { BuyAssetBySellIdInput, Swapper, Trade, TradeQuote } from '../../api'
  */
 export class TestSwapper implements Swapper {
   supportAssets: string[]
+
+  // noop for test
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  async initialize() {}
 
   getType() {
     return SwapperType.Test
@@ -30,7 +36,7 @@ export class TestSwapper implements Swapper {
     ]
   }
 
-  getUsdRate(input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string> {
+  getUsdRate(input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> {
     console.info(input)
     throw new Error('TestSwapper: getUsdRate unimplemented')
   }
@@ -66,7 +72,7 @@ export class TestSwapper implements Swapper {
     throw new Error('TestSwapper: getTradeQuote unimplemented')
   }
 
-  async executeTrade(): Promise<ExecQuoteOutput> {
+  async executeTrade(): Promise<TradeResult> {
     throw new Error('TestSwapper: executeTrade unimplemented')
   }
 }

@@ -1,3 +1,21 @@
+# [@shapeshiftoss/chain-adapters-v4.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v4.3.3...@shapeshiftoss/chain-adapters-v4.4.0) (2022-05-26)
+
+
+### Features
+
+* thorswapper initialize ([#703](https://github.com/shapeshift/lib/issues/703)) ([73cc081](https://github.com/shapeshift/lib/commit/73cc081b66cc58177415bf425f7899b289cc33af))
+
+# [@shapeshiftoss/chain-adapters-v4.3.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v4.3.2...@shapeshiftoss/chain-adapters-v4.3.3) (2022-05-25)
+
+# [@shapeshiftoss/chain-adapters-v4.3.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v4.3.1...@shapeshiftoss/chain-adapters-v4.3.2) (2022-05-24)
+
+
+### Bug Fixes
+
+* fix osmosis assets & parsing ([#689](https://github.com/shapeshift/lib/issues/689)) ([5360fba](https://github.com/shapeshift/lib/commit/5360fba40c050ef9e793b4b44ab5527cbf73d455))
+
+# [@shapeshiftoss/chain-adapters-v4.3.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v4.3.0...@shapeshiftoss/chain-adapters-v4.3.1) (2022-05-24)
+
 # [@shapeshiftoss/chain-adapters-v4.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v4.2.0...@shapeshiftoss/chain-adapters-v4.3.0) (2022-05-20)
 
 
