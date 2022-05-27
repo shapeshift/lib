@@ -1,5 +1,6 @@
-import { AssetId } from '@shapeshiftoss/caip'
+import { AssetId, poolAssetIdToAssetId } from '@shapeshiftoss/caip'
 import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
+import axios from 'axios'
 
 import {
   ApprovalNeededOutput,
@@ -12,14 +13,44 @@ import {
   TradeResult,
   TradeTxs
 } from '../../api'
+
+export type ThorchainSwapperDeps = {
+  midgardUrl: string
+}
+
+export type MidguardResponse = {
+  asset: string
+  assetDepth: string
+  assetPrice: string
+  assetPriceUSD: string
+  liquidityUnits: string
+  poolAPY: string
+  runeDepth: string
+  status: string
+  synthSupply: string
+  synthUnits: string
+  units: string
+  volume24h: string
+}
+
 export class ThorchainSwapper implements Swapper {
+  public supportedAssetIds: AssetId[]
+  deps: ThorchainSwapperDeps
+
+  constructor(deps: ThorchainSwapperDeps) {
+    this.deps = deps
+  }
+
+  async initialize() {
+    const { data: responseData } = await axios.get<MidguardResponse[]>(this.deps.midgardUrl)
+    this.supportedAssetIds = responseData
+      .map((midgardPool) => poolAssetIdToAssetId(midgardPool.asset))
+      .filter((assetId) => assetId) // remove any undefined values that may come back from `poolAssetIdToAssetId`
+  }
+
   getType() {
     return SwapperType.Thorchain
   }
-
-  // TODO populate supported assets from midgard
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  async initialize() {}
 
   getUsdRate(input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> {
     console.info(input)
