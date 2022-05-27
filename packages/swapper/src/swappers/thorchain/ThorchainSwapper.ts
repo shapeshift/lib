@@ -3,6 +3,7 @@ import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
 
 import {
   ApprovalNeededOutput,
+  BuyAssetBySellIdInput,
   GetMinMaxInput,
   MinMaxOutput,
   Swapper,
@@ -38,12 +39,15 @@ export class ThorchainSwapper implements Swapper {
     throw new Error('ThorchainSwapper: approveInfinite unimplemented')
   }
 
-  filterBuyAssetsBySellAssetId(): AssetId[] {
-    return []
+  filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): AssetId[] {
+    const { assetIds = [], sellAssetId } = args
+    return assetIds.filter(
+      (assetId) => this.supportedAssetIds.includes(assetId) && assetId !== sellAssetId
+    )
   }
 
   filterAssetIdsBySellable(): AssetId[] {
-    return []
+    return this.supportedAssetIds
   }
 
   async buildTrade(): Promise<Trade<SupportedChainIds>> {
