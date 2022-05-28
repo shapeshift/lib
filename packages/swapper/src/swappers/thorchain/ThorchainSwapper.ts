@@ -1,20 +1,24 @@
 import { AssetId } from '@shapeshiftoss/caip'
+import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
+
 import {
   ApprovalNeededOutput,
-  Asset,
-  ExecQuoteOutput,
   GetMinMaxInput,
   MinMaxOutput,
-  SupportedChainIds,
-  SwapperType
-} from '@shapeshiftoss/types'
-
-import { Swapper, Trade, TradeQuote } from '../../api'
-
+  Swapper,
+  SwapperType,
+  Trade,
+  TradeQuote,
+  TradeResult
+} from '../../api'
 export class ThorchainSwapper implements Swapper {
   getType() {
     return SwapperType.Thorchain
   }
+
+  // TODO populate supported assets from midgard
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  async initialize() {}
 
   getUsdRate(input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> {
     console.info(input)
@@ -50,7 +54,7 @@ export class ThorchainSwapper implements Swapper {
     throw new Error('ThorchainSwapper: getTradeQuote unimplemented')
   }
 
-  async executeTrade(): Promise<ExecQuoteOutput> {
+  async executeTrade(): Promise<TradeResult> {
     throw new Error('ThorchainSwapper: executeTrade unimplemented')
   }
 }
