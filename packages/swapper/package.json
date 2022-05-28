@@ -31,19 +31,19 @@
   },
   "peerDependencies": {
     "@shapeshiftoss/asset-service": "^4.2.4",
-    "@shapeshiftoss/caip": "^5.0.0",
-    "@shapeshiftoss/chain-adapters": "^4.3.3",
+    "@shapeshiftoss/caip": "^5.1.0",
+    "@shapeshiftoss/chain-adapters": "^4.4.0",
     "@shapeshiftoss/hdwallet-core": "1.20.0",
-    "@shapeshiftoss/types": "^4.3.1",
-    "@shapeshiftoss/errors": "^1.1.0"
+    "@shapeshiftoss/types": "^4.3.2",
+    "@shapeshiftoss/errors": "^1.1.1"
   },
   "devDependencies": {
-    "@shapeshiftoss/asset-service": "^4.2.4",
-    "@shapeshiftoss/caip": "^5.0.0",
-    "@shapeshiftoss/chain-adapters": "^4.3.3",
+    "@shapeshiftoss/asset-service": "^4.3.0",
+    "@shapeshiftoss/caip": "^5.1.0",
+    "@shapeshiftoss/chain-adapters": "^4.4.0",
     "@shapeshiftoss/hdwallet-core": "^1.20.0",
-    "@shapeshiftoss/types": "^4.3.1",
-    "@shapeshiftoss/errors": "^1.1.0",
+    "@shapeshiftoss/types": "^4.3.2",
+    "@shapeshiftoss/errors": "^1.1.1",
     "@types/readline-sync": "^1.4.4",
     "readline-sync": "^1.4.10",
     "web3-utils": "^1.5.2"
