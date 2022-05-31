@@ -40,8 +40,16 @@ export class OsmosisSwapper implements Swapper {
   async initialize() { }
 
   async getUsdRate(input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> {
-    console.info(input)
-    return Promise.resolve('1')
+    const { symbol } = input
+    const sellAssetSymbol = symbol
+    const buyAssetSymbol = 'USDC'
+    const sellAmount = '1'
+    const { rate } = await getRateInfo(
+      sellAssetSymbol,
+      buyAssetSymbol,
+      sellAmount)
+
+    return rate
   }
 
   async getMinMax(input: GetMinMaxInput): Promise<MinMaxOutput> {
@@ -49,7 +57,7 @@ export class OsmosisSwapper implements Swapper {
     const usdRate = await this.getUsdRate({ ...sellAsset })
     const minimum = bn(1).dividedBy(bnOrZero(usdRate)).toString()
     const maximum = MAX_SWAPPER_SELL
-    
+
     return {
       minimum,
       maximum
@@ -86,8 +94,8 @@ export class OsmosisSwapper implements Swapper {
     }
 
     const { rate, buyAmount } = await getRateInfo(
-      sellAsset,
-      buyAsset,
+      sellAsset.symbol,
+      buyAsset.symbol,
       sellAmount !== '0' ? sellAmount : '1'
     )
     // console.log('******: ', { rate, priceImpact, tradeFee, buyAmount })

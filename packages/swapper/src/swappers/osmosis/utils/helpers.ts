@@ -1,71 +1,32 @@
 import axios from "axios"
-import { fromAssetId } from "@shapeshiftoss/caip"
-import { SwapError, SwapErrorTypes } from "../../../index"
-import { Asset } from "@shapeshiftoss/types"
+import { SwapError } from "../../../index"
 import { bn, bnOrZero } from "../../zrx/utils/bignumber"
 import { find } from "lodash"
 
 export interface IsymbolDenomMapping {
     OSMO: string
     ATOM: string
+    USDC: string
 }
 
 export const symbolDenomMapping = {
     OSMO: 'uosmo',
-    ATOM: 'ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2'
+    ATOM: 'ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2',
+    USDC: 'ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858',
 }
 
 // TODO: pass in env variables
-export const osmoUrl = 'https://osmosis-mainnet-rpc.allthatnode.com:1317/'
-export const atomUrl = 'https://cosmos-mainnet-rpc.allthatnode.com:1317/'
+export const osmoUrl = 'https://lcd-osmosis.blockapsis.com/'
+export const atomUrl = 'https://cosmoshub.stakesystems.io/'
 
-export const getUsdRate = async (input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> => {
-    const { assetId } = input
-
-    const { assetReference: erc20Address } = fromAssetId(assetId)
-
-    try {
-        const USDC_CONTRACT_ADDRESS = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
-        if (erc20Address?.toLowerCase() === USDC_CONTRACT_ADDRESS) return '1' // Will break if comparing against usdc
-        //   const rateResponse: AxiosResponse<ZrxPriceResponse> = await zrxService.get<ZrxPriceResponse>(
-        //     '/swap/v1/price',
-        //     {
-        //       params: {
-        //         buyToken: USDC_CONTRACT_ADDRESS,
-        //         buyAmount: '1000000000', // rate is imprecise for low $ values, hence asking for $1000
-        //         sellToken: assetNamespace === 'erc20' ? erc20Address : symbol
-        //       }
-        //     }
-        //   )
-
-        //   const price = bnOrZero(rateResponse.data.price)
-
-        //   if (!price.gt(0))
-        //     throw new SwapError('[getUsdRate] - Failed to get price data', {
-        //       code: SwapErrorTypes.RESPONSE_ERROR
-        //     })
-
-        return '1' // bn(1).dividedBy(price).toString()
-    } catch (e) {
-        if (e instanceof SwapError) throw e
-        throw new SwapError('[getUsdRate]', {
-            cause: e,
-            code: SwapErrorTypes.USD_RATE_FAILED
-        })
-    }
-}
-
-const findPool = async (sellAsset: any, buyAsset: any) => {
-    const sellAssetDenom = symbolDenomMapping[sellAsset.symbol as keyof IsymbolDenomMapping]
-    const buyAssetDenom = symbolDenomMapping[buyAsset.symbol as keyof IsymbolDenomMapping]
+const findPool = async (sellAssetSymbol: string, buyAssetSymbol: string) => {
+    const sellAssetDenom = symbolDenomMapping[sellAssetSymbol as keyof IsymbolDenomMapping]
+    const buyAssetDenom = symbolDenomMapping[buyAssetSymbol as keyof IsymbolDenomMapping]
 
     const poolsUrl =
-        osmoUrl+'osmosis/gamm/v1beta1/pools'
+        osmoUrl+'osmosis/gamm/v1beta1/pools?pagination.limit=1000'
 
-    console.log("poolsUrl: ",poolsUrl)
     const poolsResponse = (await axios.get(poolsUrl))
-    // console.log("poolsResponse: ",poolsResponse)
-
     const foundPool = find(poolsResponse.data.pools, (pool) => {
         const token0Denom = pool.poolAssets[0].token.denom
         const token1Denom = pool.poolAssets[1].token.denom
