@@ -1,17 +1,18 @@
 import { AssetId } from '@shapeshiftoss/caip'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import {
-  ApprovalNeededOutput,
   Asset,
-  ExecQuoteOutput,
-  GetMinMaxInput,
-  MinMaxOutput,
   SupportedChainIds,
   SwapperType
 } from '@shapeshiftoss/types'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 
-import { BuyAssetBySellIdInput, CommonTradeInput, Swapper, Trade } from '../../api'
+import {
+  BuyAssetBySellIdInput, CommonTradeInput, Swapper, Trade, ApprovalNeededOutput,
+  GetMinMaxInput,
+  MinMaxOutput,
+  TradeResult,
+} from '../../api'
 import { getRateInfo } from './utils/helpers'
 import { DEFAULT_SOURCE } from './utils/constants'
 
@@ -32,6 +33,9 @@ export class OsmosisSwapper implements Swapper {
     this.deps = deps
     this.supportAssets = ['cosmos:cosmoshub-4/slip44:118', 'cosmos:osmosis-1/slip44:118']
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  async initialize() { }
 
   getUsdRate(input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> {
     console.info(input)
@@ -97,7 +101,7 @@ export class OsmosisSwapper implements Swapper {
     }
   }
 
-  async executeTrade(): Promise<ExecQuoteOutput> {
+  async executeTrade(): Promise<TradeResult> {
     throw new Error('OsmosisSwapper: executeTrade unimplemented')
   }
 }

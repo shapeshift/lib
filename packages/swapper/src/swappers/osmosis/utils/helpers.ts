@@ -15,8 +15,9 @@ export const symbolDenomMapping = {
     ATOM: 'ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2'
 }
 
-export const osmoUrl = process.env['OSMO_NODE']
-export const atomUrl = process.env['ATOM_NODE']
+// TODO: pass in env variables
+export const osmoUrl = 'https://osmosis-1--lcd--full.datahub.figment.io/apikey/0180433904229d03ca0e8370b0ff3fb8/'
+export const atomUrl = 'https://cosmoshub-4--lcd--full.datahub.figment.io/apikey/06fa766d1a458fe25081e83ffdf085ae/'
 
 export const getUsdRate = async (input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> => {
     const { assetId } = input
