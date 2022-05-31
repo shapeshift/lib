@@ -16,7 +16,7 @@ import {
   Swapper,
   SwapperType,
   TradeQuote,
-  TradeStatus,
+  TradeTxs,
   ZrxTrade,
   ZrxTradeResult
 } from '../../api'
@@ -94,7 +94,7 @@ export class ZrxSwapper implements Swapper {
     return assetIds.filter((id) => id.startsWith('eip155:1') && !UNSUPPORTED_ASSETS.includes(id))
   }
 
-  async getTradeTxs(tradeResult: ZrxTradeResult): Promise<TradeStatus> {
+  async getTradeTxs(tradeResult: ZrxTradeResult): Promise<TradeTxs> {
     return {
       sellTxid: tradeResult.swapTxid,
       buyTxid: tradeResult.swapTxid

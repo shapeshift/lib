@@ -134,7 +134,7 @@ export enum SwapperType {
   Test = 'Test'
 }
 
-export type TradeStatus = {
+export type TradeTxs = {
   sellTxid: string
   buyTxid?: string
 }
@@ -210,5 +210,5 @@ export interface Swapper {
    */
   filterAssetIdsBySellable(assetIds: AssetId[]): AssetId[]
 
-  getTradeTxs(tradeResult: TradeResult): Promise<TradeStatus>
+  getTradeTxs(tradeResult: TradeResult): Promise<TradeTxs>
 }

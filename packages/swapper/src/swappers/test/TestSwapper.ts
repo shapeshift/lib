@@ -11,7 +11,7 @@ import {
   Trade,
   TradeQuote,
   TradeResult,
-  TradeStatus
+  TradeTxs
 } from '../../api'
 
 /**
@@ -77,7 +77,7 @@ export class TestSwapper implements Swapper {
     throw new Error('TestSwapper: executeTrade unimplemented')
   }
 
-  async getTradeTxs(): Promise<TradeStatus> {
+  async getTradeTxs(): Promise<TradeTxs> {
     throw new Error('TestSwapper: executeTrade unimplemented')
   }
 }

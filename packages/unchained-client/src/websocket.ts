@@ -45,7 +45,7 @@ export class Client<T> {
     if (!connection) return
 
     connection.pingTimeout && clearTimeout(connection.pingTimeout)
-    connection.pingTimeout = setTimeout(() => connection?.ws.close(), 10000 + 5000)
+    connection.pingTimeout = setTimeout(() => connection?.ws.close(), 10000 + 15000)
   }
 
   private onOpen(topic: Topics, resolve: (value: unknown) => void): void {
