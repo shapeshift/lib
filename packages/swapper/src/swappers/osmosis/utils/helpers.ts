@@ -16,8 +16,23 @@ export const symbolDenomMapping = {
 }
 
 // TODO: pass in env variables
-export const osmoUrl = 'https://lcd-osmosis.blockapsis.com/'
-export const atomUrl = 'https://cosmoshub.stakesystems.io/'
+export const osmoUrl = 'https://lcd-osmosis.blockapsis.com'
+export const atomUrl = 'https://cosmoshub.stakesystems.io'
+
+export const getAtomChannelBalance = async (address: string) => {
+    const osmoResponseBalance = await axios.get(`${osmoUrl}bank/balances/${address}`)
+    let toAtomChannelBalance = 0
+    try {
+        const { amount } = find(
+            osmoResponseBalance.data.result,
+            (b) => b.denom === symbolDenomMapping.ATOM
+        )
+        toAtomChannelBalance = Number(amount)
+    } catch(e) {
+        console.log('no channel balance')
+    }
+    return toAtomChannelBalance
+}
 
 const findPool = async (sellAssetSymbol: string, buyAssetSymbol: string) => {
     const sellAssetDenom = symbolDenomMapping[sellAssetSymbol as keyof IsymbolDenomMapping]
