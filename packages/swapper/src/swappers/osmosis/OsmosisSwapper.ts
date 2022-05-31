@@ -12,9 +12,11 @@ import {
   GetMinMaxInput,
   MinMaxOutput,
   TradeResult,
+  TradeTxs,
 } from '../../api'
 import { getRateInfo } from './utils/helpers'
-import { DEFAULT_SOURCE } from './utils/constants'
+import { DEFAULT_SOURCE, MAX_SWAPPER_SELL } from './utils/constants'
+import { bn, bnOrZero } from '../zrx/utils/bignumber'
 
 export type OsmoSwapperDeps = {
   wallet: HDWallet
@@ -37,17 +39,21 @@ export class OsmosisSwapper implements Swapper {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   async initialize() { }
 
-  getUsdRate(input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> {
+  async getUsdRate(input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> {
     console.info(input)
     return Promise.resolve('1')
   }
 
-  getMinMax(input: GetMinMaxInput): Promise<MinMaxOutput> {
-    console.info(input)
-    return Promise.resolve({ // TODO: fix
-      minimum: '0',
-      maximum: '1000'
-    })
+  async getMinMax(input: GetMinMaxInput): Promise<MinMaxOutput> {
+    const { sellAsset } = input
+    const usdRate = await this.getUsdRate({ ...sellAsset })
+    const minimum = bn(1).dividedBy(bnOrZero(usdRate)).toString()
+    const maximum = MAX_SWAPPER_SELL
+    
+    return {
+      minimum,
+      maximum
+    }
   }
 
   async approvalNeeded(): Promise<ApprovalNeededOutput> {
@@ -103,5 +109,12 @@ export class OsmosisSwapper implements Swapper {
 
   async executeTrade(): Promise<TradeResult> {
     throw new Error('OsmosisSwapper: executeTrade unimplemented')
+  }
+
+  async getTradeTxs(tradeResult: TradeResult): Promise<TradeTxs> {
+    return {
+      sellTxid: tradeResult.tradeId,
+      buyTxid: tradeResult.tradeId
+    }
   }
 }
