@@ -1,8 +1,8 @@
-import { Asset, AssetDataSource, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
+import { Asset, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import axios from 'axios'
 
-import { AssetService, flattenAssetData, indexAssetData } from './AssetService'
-import { mockAssets, mockBaseAssets, mockIndexedAssetData } from './AssetServiceTestData'
+import { AssetService } from './AssetService'
+import { mockBaseAssets, mockIndexedAssetData } from './AssetServiceTestData'
 import descriptions from './descriptions.json'
 
 jest.mock('axios')
@@ -13,20 +13,15 @@ const EthAsset: Asset = {
   assetId: 'eip155:3/slip44:60',
   chainId: 'eip155:3',
   chain: ChainTypes.Ethereum,
-  dataSource: AssetDataSource.CoinGecko,
   network: NetworkTypes.ETH_ROPSTEN,
   symbol: 'ETH',
   name: 'Ropsten Testnet Ethereum',
   precision: 18,
-  slip44: 1,
   color: '#FFFFFF',
-  secondaryColor: '#FFFFFF',
   icon: 'https://assets.coincap.io/assets/icons/eth@2x.png',
   explorer: 'https://ropsten.etherscan.io/',
   explorerTxLink: 'https://ropsten.etherscan.io/tx/',
-  explorerAddressLink: 'https://ropsten.etherscan.io/address/',
-  sendSupport: false,
-  receiveSupport: false
+  explorerAddressLink: 'https://ropsten.etherscan.io/address/'
 }
 
 jest.mock(
@@ -39,18 +34,6 @@ jest.mock(
 
 describe('AssetService', () => {
   const assetFileUrl = 'http://example.com'
-  describe('utilities', () => {
-    describe('flattenAssetData', () => {
-      it('should flatten data correctly', () => {
-        expect(flattenAssetData(mockBaseAssets)).toEqual(mockAssets)
-      })
-    })
-    describe('indexAssetData', () => {
-      it('should index data correctly', () => {
-        expect(indexAssetData(flattenAssetData(mockBaseAssets))).toEqual(mockIndexedAssetData)
-      })
-    })
-  })
 
   describe('byNetwork', () => {
     it('should throw if not initialized', () => {
@@ -171,18 +154,11 @@ describe('AssetService', () => {
         network: NetworkTypes.MAINNET,
         name: 'Test Token',
         precision: 18,
-        tokenId: '0x1da00b6fc705f2ce4c25d7e7add25a3cc045e54a',
-        contractType: 'erc20',
         color: '#FFFFFF',
-        dataSource: AssetDataSource.CoinGecko,
-        secondaryColor: '#FFFFFF',
-        slip44: 60,
         icon: 'https://assets.coingecko.com/coins/images/17049/thumb/BUNNY.png?1626148809',
-        sendSupport: true,
-        receiveSupport: true,
         symbol: 'TST'
       }
-      const expectedErrorMessage = `AssetService:description: no description availble for ${tokenData.tokenId} on chain ${chain}`
+      const expectedErrorMessage = `AssetService:description: no description available for ${tokenData.tokenId} on chain ${chain}`
       await expect(
         assetService.description({
           asset: tokenData

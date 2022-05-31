@@ -48,7 +48,6 @@ export const BTCMockedAsset: Asset = {
   name: 'Bitcoin',
   precision: 8,
   color: '#FFFFFF',
-  secondaryColor: '#FFFFFF',
   icon: 'https://assets.coincap.io/assets/icons/btc@2x.png',
   explorer: 'https://live.blockcypher.com',
   explorerTxLink: 'https://live.blockcypher.com/btc/tx/',

@@ -16,7 +16,7 @@ export type AssetsById = {
 }
 
 export class AssetService {
-  private assets: AssetsById
+  private readonly assets: AssetsById
 
   constructor() {
     this.assets = localAssetData as AssetsById
