@@ -1,19 +1,13 @@
 import { numberToHex } from 'web3-utils'
 
-import {
-  ExecuteTradeInput,
-  SwapError,
-  SwapErrorTypes,
-  ZrxTrade,
-  ZrxTradeResult
-} from '../../../api'
+import { ExecuteTradeInput, SwapError, SwapErrorTypes, TradeResult, ZrxTrade } from '../../../api'
 import { bnOrZero } from '../utils/bignumber'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function zrxExecuteTrade(
   { adapterManager }: ZrxSwapperDeps,
   { trade, wallet }: ExecuteTradeInput<'eip155:1'>
-): Promise<ZrxTradeResult> {
+): Promise<TradeResult> {
   const zrxTrade = trade as ZrxTrade<'eip155:1'>
   const { sellAsset } = zrxTrade
   try {
@@ -44,14 +38,14 @@ export async function zrxExecuteTrade(
 
       const txid = await adapter.broadcastTransaction(signedTx)
 
-      return { txid, swapTxid: txid }
+      return { tradeId: txid }
     } else if (wallet.supportsBroadcast() && adapter.signAndBroadcastTransaction) {
       const txid = await adapter.signAndBroadcastTransaction?.({
         txToSign: txWithQuoteData,
         wallet
       })
 
-      return { txid, swapTxid: txid }
+      return { tradeId: txid }
     } else {
       throw new SwapError('[zrxExecuteTrade]', {
         code: SwapErrorTypes.SIGN_AND_BROADCAST_FAILED

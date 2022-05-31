@@ -88,15 +88,9 @@ export type ExecuteTradeInput<C extends SupportedChainIds> = {
 }
 
 export type TradeResult = {
-  txid: string // TODO remove this once web changes are in
+  tradeId: string
 }
 
-export type ZrxTradeResult = TradeResult & {
-  swapTxid: string // zrx trades happen in a single swap tx
-}
-export type ThorTradeResult = TradeResult & {
-  sellTxid: string // We only know about the sell asset txid for thorchain on broadcast
-}
 export type ApproveInfiniteInput<C extends SupportedChainIds> = {
   quote: TradeQuote<C>
   wallet: HDWallet
