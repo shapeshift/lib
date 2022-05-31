@@ -1,6 +1,6 @@
-import axios, { AxiosResponse } from "axios"
-import { fromAssetId } from "packages/caip"
-import { SwapError, SwapErrorTypes } from "@shapeshiftoss/swapper"
+import axios from "axios"
+import { fromAssetId } from "@shapeshiftoss/caip"
+import { SwapError, SwapErrorTypes } from "../../../index"
 import { Asset } from "@shapeshiftoss/types"
 import { bn, bnOrZero } from "../../zrx/utils/bignumber"
 import { find } from "lodash"
@@ -19,9 +19,9 @@ export const osmoUrl = process.env['OSMO_NODE']
 export const atomUrl = process.env['ATOM_NODE']
 
 export const getUsdRate = async (input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> => {
-    const { symbol, assetId } = input
+    const { assetId } = input
 
-    const { assetReference: erc20Address, assetNamespace } = fromAssetId(assetId)
+    const { assetReference: erc20Address } = fromAssetId(assetId)
 
     try {
         const USDC_CONTRACT_ADDRESS = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'

@@ -11,7 +11,7 @@ import {
 } from '@shapeshiftoss/types'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 
-import { BuyAssetBySellIdInput, CommonTradeInput, Swapper, Trade, TradeQuote } from '../../api'
+import { BuyAssetBySellIdInput, CommonTradeInput, Swapper, Trade } from '../../api'
 import { getRateInfo } from './utils/helpers'
 import { DEFAULT_SOURCE } from './utils/constants'
 
