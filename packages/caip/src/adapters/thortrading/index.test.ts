@@ -20,8 +20,25 @@ describe('thortrading', () => {
       expect(result).toEqual(usdcAssetId)
     })
 
+    it('returns correct assetId when chain and ticker are lowercased', () => {
+      const chain = 'Eth'
+      const ticker = 'usdc'
+      const result = poolAssetIdToAssetId(
+        `${chain}.${ticker}-0XA0B86991C6218B36C1D19D4A2E9EB0CE3606EB48`
+      )
+      expect(result).toEqual(usdcAssetId)
+    })
+
     it('returns undefined for an asset we dont support', () => {
       const result = poolAssetIdToAssetId('BNB.AVA-645')
+      expect(result).toEqual(undefined)
+    })
+
+    it('returns undefined for an asset that uses asset abbreviations', () => {
+      // Ignore console.error for test
+      jest.spyOn(console, 'error').mockReturnValue(undefined)
+
+      const result = poolAssetIdToAssetId('ETH.USDT-ec7')
       expect(result).toEqual(undefined)
     })
   })
