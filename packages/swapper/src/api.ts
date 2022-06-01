@@ -1,6 +1,6 @@
 import { AssetId } from '@shapeshiftoss/caip'
 import { createErrorClass } from '@shapeshiftoss/errors'
-import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { BTCSignTx, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { Asset, ChainSpecific, SupportedChainIds } from '@shapeshiftoss/types'
 
 export const SwapError = createErrorClass('SwapError')
@@ -81,6 +81,17 @@ export interface ZrxTrade<C extends SupportedChainIds> extends Trade<C> {
   txData: string
   depositAddress: string
 }
+export interface ThorTrade<C extends SupportedChainIds> extends Trade<C> {
+  tradeTxData: ChainSpecificThorTradeData<C>
+}
+
+type ChainSpecificThorTradeData<T1> = ChainSpecific<
+  T1,
+  {
+    'eip155:1': ETHSignTx
+    'bip122:000000000019d6689c085ae165831e93': BTCSignTx
+  }
+>
 
 export type ExecuteTradeInput<C extends SupportedChainIds> = {
   trade: Trade<C>
