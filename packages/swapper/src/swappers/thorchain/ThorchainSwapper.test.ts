@@ -21,6 +21,4 @@ describe('ThorchainSwapper', () => {
       )
     })
   })
-  describe('calls filterBuyAssetsBySellAssetId on swapper.filterBuyAssetsBySellAssetId', () => {
-  })
 })
