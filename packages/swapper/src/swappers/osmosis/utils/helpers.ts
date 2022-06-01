@@ -20,7 +20,7 @@ export const osmoUrl = 'https://lcd-osmosis.blockapsis.com'
 export const atomUrl = 'https://cosmoshub.stakesystems.io'
 
 export const getAtomChannelBalance = async (address: string) => {
-    const osmoResponseBalance = await axios.get(`${osmoUrl}bank/balances/${address}`)
+    const osmoResponseBalance = await axios.get(`${osmoUrl}/bank/balances/${address}`)
     let toAtomChannelBalance = 0
     try {
         const { amount } = find(
@@ -39,7 +39,7 @@ const findPool = async (sellAssetSymbol: string, buyAssetSymbol: string) => {
     const buyAssetDenom = symbolDenomMapping[buyAssetSymbol as keyof IsymbolDenomMapping]
 
     const poolsUrl =
-        osmoUrl+'osmosis/gamm/v1beta1/pools?pagination.limit=1000'
+        osmoUrl+'/osmosis/gamm/v1beta1/pools?pagination.limit=1000'
 
     const poolsResponse = (await axios.get(poolsUrl))
     const foundPool = find(poolsResponse.data.pools, (pool) => {

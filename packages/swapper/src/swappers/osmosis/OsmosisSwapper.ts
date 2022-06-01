@@ -46,6 +46,13 @@ export class OsmosisSwapper implements Swapper {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   async initialize() { }
 
+  async getTradeTxs(tradeResult: TradeResult): Promise<TradeTxs> {
+    return {
+      sellTxid: tradeResult.tradeId,
+      buyTxid: tradeResult.tradeId
+    }
+  }
+
   async getUsdRate(input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> {
     const { symbol } = input
     const sellAssetSymbol = symbol
@@ -215,7 +222,6 @@ export class OsmosisSwapper implements Swapper {
 
   async getTradeQuote(input: CommonTradeInput): Promise<any> {
     const { sellAsset, buyAsset, sellAmount } = input
-
     if (!sellAmount) {
       throw new Error('sellAmount is required')
     }
@@ -227,7 +233,6 @@ export class OsmosisSwapper implements Swapper {
     )
 
     const { minimum, maximum } = await this.getMinMax(input)
-    // console.log('******: ', { rate, priceImpact, tradeFee, buyAmount })
 
     return {
       buyAsset,
@@ -245,11 +250,6 @@ export class OsmosisSwapper implements Swapper {
   }
 
   async executeTrade(args: any): Promise<TradeResult> {
-    console.info('args: ', args)
-    // const {
-    //   // @ts-ignore
-    //   quote: { sellAsset, buyAsset, sellAmount }
-    // } = args.quote
     const sellAsset = args.trade.sellAsset
     const buyAsset = args.trade.buyAsset
     const sellAmount = args.trade.sellAmount
@@ -260,43 +260,29 @@ export class OsmosisSwapper implements Swapper {
     if (!wallet) throw Error('missing wallet')
 
     const pair = sellAsset.symbol + '_' + buyAsset.symbol
-    console.info('pair: ', pair)
     const sellAssetDenom = symbolDenomMapping[sellAsset.symbol as keyof IsymbolDenomMapping]
     const buyAssetDenom = symbolDenomMapping[buyAsset.symbol as keyof IsymbolDenomMapping]
-    console.info('sellAssetDenom: ', sellAssetDenom)
-    console.info('buyAssetDenom: ', buyAssetDenom)
 
 
-    const fee = '100'
+    const fee = '10000'
     const gas = '1350000'
 
-    console.info('sellAsset.chain: ', sellAsset.chain)
-    console.info('deps: ', this.deps)
     const osmosisAdapter = this.deps.adapterManager.byChain(ChainTypes.Osmosis) as OsmosisChainAdapter
-    console.info('osmosisAdapter: ', osmosisAdapter)
-
     const cosmosAdapter = this.deps.adapterManager.byChain(ChainTypes.Cosmos) as OsmosisChainAdapter
-    console.info('cosmosAdapter: ', cosmosAdapter)
-
-    console.info('args: ', args)
-    console.info('wallet: ', wallet)
     const osmoAddress = await (wallet as OsmosisWallet).osmosisGetAddress({
       addressNList: bip32ToAddressNList("m/44'/118'/0'/0/0")
     })
     const atomAddress = await (wallet as CosmosWallet).cosmosGetAddress({
       addressNList: bip32ToAddressNList("m/44'/118'/0'/0/0")
     })
+
     if (!osmoAddress) throw Error("Failed to get osmoAddress!")
     if (!atomAddress) throw Error("Failed to get atomAddress!")
-    //get IBC balance
-    //if ibc balance low
-    //then do ibc deposit FIRST
-    //wait
+
     let sellAddress
     let buyAddress
-    //if pair
+
     if (pair === 'ATOM_OSMO') {
-      //check IBC balance
       //TODO verify input balance
       console.info('osmoAddress: ', osmoAddress)
       let atomChannelBalance = await getAtomChannelBalance(osmoAddress)
@@ -305,7 +291,6 @@ export class OsmosisSwapper implements Swapper {
       sellAddress = atomAddress
       buyAddress = osmoAddress
 
-      //perform IBC deposit
       const transfer = {
         sender: sellAddress,
         receiver: buyAddress,
@@ -346,17 +331,12 @@ export class OsmosisSwapper implements Swapper {
 
     if (!sellAddress) throw new Error('no sell address')
     if (!buyAddress) throw new Error('no buy address')
-    console.info('sellAddress: ', sellAddress)
-    console.info('buyAddress: ', buyAddress)
+
     let sender = osmoAddress
     const accountUrl = `${osmoUrl}/auth/accounts/${sender}`
-    console.info('accountUrl: ', accountUrl)
     const responseAccount = await axios.get(accountUrl)
-    console.info('responseAccount: ', responseAccount.data)
     const accountNumber = responseAccount.data.result.value.account_number || 0
     const sequence = responseAccount.data.result.value.sequence || 0
-    console.info('accountNumber: ', accountNumber)
-    console.info('sequence: ', sequence)
     const osmoAddressNList = bip32ToAddressNList("m/44'/118'/0'/0/0")
 
 
@@ -404,23 +384,11 @@ export class OsmosisSwapper implements Swapper {
       },
       wallet
     }
-    console.info('signTxInput: ', signTxInput)
+
     console.info('signTxInput: ', JSON.stringify(signTxInput))
     const signed = await osmosisAdapter.signTransaction(signTxInput)
     console.info('signed: ', signed)
-
-    //if broadcast
-    const payload = {
-      tx_bytes: signed,
-      mode: 'BROADCAST_MODE_SYNC'
-    }
-    const urlRemote = osmoUrl + '/cosmos/tx/v1beta1/txs'
-    let txid1 = await axios({
-      url: urlRemote,
-      method: 'POST',
-      data: payload
-    })
-    txid1 = txid1.data?.tx_response.txhash
+    const txid1 = await osmosisAdapter.broadcastTransaction(signed)
     console.info('txid1: ', txid1)
 
     if (pair === 'OSMO_ATOM') {
@@ -456,18 +424,9 @@ export class OsmosisSwapper implements Swapper {
       }
       const txid = await this.performIbcTransfer(transfer, cosmosAdapter, wallet)
       console.info('txid: ', txid)
-
-
     }
 
     // @ts-ignore
     return { txid: txid1 || 'error' }
-  }
-
-  async getTradeTxs(tradeResult: TradeResult): Promise<TradeTxs> {
-    return {
-      sellTxid: tradeResult.tradeId,
-      buyTxid: tradeResult.tradeId
-    }
   }
 }
