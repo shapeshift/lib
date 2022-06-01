@@ -10,8 +10,7 @@ import {
   Trade,
   TradeQuote,
   TradeResult,
-  TradeTxs,
-  ThorTrade
+  TradeTxs
 } from '../../api'
 export class ThorchainSwapper implements Swapper {
   getType() {
