@@ -30,6 +30,7 @@ export type OsmoSwapperDeps = {
   adapterManager: ChainAdapterManager
 }
 
+const fee = '10000'
 export class OsmosisSwapper implements Swapper {
   supportAssets: string[]
   deps: OsmoSwapperDeps
@@ -101,7 +102,6 @@ export class OsmosisSwapper implements Swapper {
     let { sender, receiver, amount } = input
     console.info('performIbcTransfer input: ', input)
 
-    // const fee = '100'
     const gas = '1350000'
 
     //get block height
@@ -200,19 +200,19 @@ export class OsmosisSwapper implements Swapper {
     )
 
     //convert amount to base
-    let amountBaseSell: number = parseFloat(sellAmount) * 1000000
-    amountBaseSell = parseInt(String(amountBaseSell))
-    const amountBaseSellString = amountBaseSell.toString()
+    // let amountBaseSell: number = parseFloat(sellAmount) * 1000000
+    // amountBaseSell = parseInt(String(amountBaseSell))
+    // const amountBaseSellString = amountBaseSell.toString()
 
     // @ts-ignore
     return {
       buyAmount,
       buyAsset,
       depositAddress: '',
-      feeData: { fee: '100' },
+      feeData: { fee },
       rate,
       receiveAddress: '',
-      sellAmount: amountBaseSellString,
+      sellAmount: sellAmount !== '0' ? sellAmount : '1',
       sellAsset,
       sellAssetAccountId: '0',
       sources: [{ name: 'Osmosis', proportion: '100' }],
@@ -236,7 +236,7 @@ export class OsmosisSwapper implements Swapper {
 
     return {
       buyAsset,
-      feeData: { fee: '100' },
+      feeData: { fee },
       maximum,
       minimum,
       sellAssetAccountId: '0',
@@ -263,8 +263,6 @@ export class OsmosisSwapper implements Swapper {
     const sellAssetDenom = symbolDenomMapping[sellAsset.symbol as keyof IsymbolDenomMapping]
     const buyAssetDenom = symbolDenomMapping[buyAsset.symbol as keyof IsymbolDenomMapping]
 
-
-    const fee = '10000'
     const gas = '1350000'
 
     const osmosisAdapter = this.deps.adapterManager.byChain(ChainTypes.Osmosis) as OsmosisChainAdapter
@@ -297,7 +295,6 @@ export class OsmosisSwapper implements Swapper {
         amount: sellAmount
       }
       const txid = await this.performIbcTransfer(transfer, cosmosAdapter, wallet)
-      console.info('txid: ', txid)
 
       //wait till confirmed
       console.info('txid: ', txid)
@@ -392,8 +389,6 @@ export class OsmosisSwapper implements Swapper {
     console.info('txid1: ', txid1)
 
     if (pair === 'OSMO_ATOM') {
-      //wait till confirmed
-      console.info('txid1: ', txid1)
       let confirmed = false
       let timeStart = new Date().getTime()
       while (!confirmed) {
