@@ -7,7 +7,7 @@ const MAX_LENGTH = 80
 
 /**
  * @returns thorchain memo shortened to a max of 80 characters as described:
- * https://dev.thorchain.org/thorchain-dev/memos
+ * https://dev.thorchain.org/thorchain-dev/memos#mechanism-for-transaction-intent
  */
 export const makeSwapMemo = ({
   buyAssetId,
@@ -31,7 +31,16 @@ export const makeSwapMemo = ({
 
   const fullMemoLength = fullMemo.length
   const truncateAmount = fullMemoLength - MAX_LENGTH
-  const thorIdSymbol = thorId.slice(0, thorId.indexOf('-'))
+
+  const delimeterIndex = thorId.indexOf('-')
+
+  if (delimeterIndex === -1) {
+    throw new SwapError('[makeSwapMemo] - unable to abbreviate asset, no delimeter found', {
+      code: SwapErrorTypes.MAKE_MEMO_FAILED
+    })
+  }
+
+  const thorIdSymbol = thorId.slice(0, delimeterIndex)
   const thorIdReferenceTruncated = thorId.slice(thorId.length - truncateAmount, thorId.length)
   const truncatedThorId = `${thorIdSymbol}-${thorIdReferenceTruncated}`
   const shortenedMemo = `s:${truncatedThorId}:${destinationAddress}:${limit}`
