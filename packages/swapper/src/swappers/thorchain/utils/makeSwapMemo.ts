@@ -20,8 +20,9 @@ export const makeSwapMemo = ({
 }): string => {
   const thorId = adapters.assetIdToPoolAssetId({ assetId: buyAssetId })
   if (!thorId)
-    throw new SwapError('[makeSwapMemo] - undefined thorId', {
-      code: SwapErrorTypes.MAKE_MEMO_FAILED
+    throw new SwapError('[makeSwapMemo] - undefined thorId for given buyAssetId', {
+      code: SwapErrorTypes.MAKE_MEMO_FAILED,
+      details: { buyAssetId }
     })
 
   const fullMemo = `s:${thorId}:${destinationAddress}:${limit}`
