@@ -2,7 +2,7 @@ import { AssetId } from './../../assetId/assetId'
 
 // derived from https://midgard.thorchain.info/v2/pools
 // Rarely changes. Will need to be updated as we add additional assets to thor swapper
-const thorPoolIdAssetIdSymbolMap = {
+const thorPoolIdAssetIdSymbolMap: Record<string, AssetId> = {
   'ETH.YFI-0X0BC529C00C6401AEF6D220BE8C6EA1667F6AD93E':
     'eip155:1/erc20:0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e',
   'ETH.XRUNE-0X69FA0FEE221AD11012BAB0FDB45D444D3D2CE71C':
@@ -49,14 +49,14 @@ const thorPoolIdAssetIdSymbolMap = {
     'eip155:1/erc20:0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
   'BTC.BTC': 'bip122:000000000019d6689c085ae165831e93/slip44:0',
   'ETH.ETH': 'eip155:1/slip44:60'
-} as Record<string, string>
+}
 
 const invert = <T extends Record<string, string>>(data: T) =>
   Object.entries(data).reduce((acc, [k, v]) => ((acc[v] = k), acc), {} as Record<string, string>)
 
 const assetIdToPoolAssetIdMap = invert(thorPoolIdAssetIdSymbolMap)
 
-export const poolAssetIdToAssetId = (id: string): string | undefined =>
+export const poolAssetIdToAssetId = (id: string): AssetId | undefined =>
   thorPoolIdAssetIdSymbolMap[id.toUpperCase()]
 
 export const assetIdToPoolAssetId = ({ assetId }: { assetId: AssetId }): string | undefined =>
