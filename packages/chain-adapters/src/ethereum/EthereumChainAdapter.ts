@@ -390,7 +390,7 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
           txid: tx.txid,
           ...(tx.data && {
             data: {
-              method: tx.data.method,
+              ...tx.data,
               parser: tx.data.parser ?? 'unknown'
             }
           })
