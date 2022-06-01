@@ -19,7 +19,7 @@ import {
   TradeTxs,
   BuildTradeInput,
 } from '../../api'
-import { atomUrl, getAtomChannelBalance, getRateInfo, IsymbolDenomMapping, osmoUrl, pollForComplete, symbolDenomMapping } from './utils/helpers'
+import { atomUrl, getAtomChannelBalance, getRateInfo, IsymbolDenomMapping, osmoUrl, pollForAtomChannelBalance, pollForComplete, symbolDenomMapping } from './utils/helpers'
 import { DEFAULT_SOURCE, MAX_SWAPPER_SELL } from './utils/constants'
 import { bn, bnOrZero } from '../zrx/utils/bignumber'
 import axios from 'axios'
@@ -45,7 +45,7 @@ export class OsmosisSwapper implements Swapper {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  async initialize() { 
+  async initialize() {
   }
 
   async getTradeTxs(tradeResult: TradeResult): Promise<TradeTxs> {
@@ -99,26 +99,31 @@ export class OsmosisSwapper implements Swapper {
   }
 
   // TODO: clean up
-  async performIbcTransfer(input: any, adapter: any, wallet: any, accountUrl: any): Promise<any> {
+  async performIbcTransfer(input: any, adapter: any, wallet: any, baseUrl: any, denom: string, sourceChannel: string): Promise<any> {
     let { sender, receiver, amount } = input
     console.info('performIbcTransfer input: ', input)
 
     const gas = '1350000'
 
     //get block height
-    const atomResponseLatestBlock = await axios.get(`${atomUrl}/blocks/latest`)
-    const atomLatestBlock = atomResponseLatestBlock.data.block.header.height
-    console.info('atomLatestBlock: ', atomLatestBlock)
+    const responseLatestBlock = await axios.get(`${atomUrl}/blocks/latest`)
+    const latestBlock = responseLatestBlock.data.block.header.height
+    console.info('atomLatestBlock: ', latestBlock)
 
     const addressNList = bip32ToAddressNList("m/44'/118'/0'/0/0")
 
+    const accountUrl = `${baseUrl}/auth/accounts/${sender}`
     const responseAccount = await axios.get(accountUrl)
     console.info('responseAccount: ', responseAccount)
     const accountNumber = responseAccount.data.result.value.account_number
     const sequence = responseAccount.data.result.value.sequence
     console.info('accountNumber: ', accountNumber)
     console.info('sequence: ', sequence)
-    amount = amount
+    console.info('denom: ', denom)
+    console.info('sourceChannel: ', sourceChannel)
+    console.info('amount: ', amount)
+
+
     if (!accountNumber) throw new Error('no atom account number')
 
     const tx1 = {
@@ -126,7 +131,7 @@ export class OsmosisSwapper implements Swapper {
       fee: {
         amount: [
           {
-            amount: '0', // having a fee here causes error
+            amount: fee.toString(), // having a fee here causes error
             denom: 'uosmo'
           }
         ],
@@ -138,16 +143,16 @@ export class OsmosisSwapper implements Swapper {
           type: 'cosmos-sdk/MsgTransfer',
           value: {
             source_port: 'transfer',
-            source_channel: 'channel-141',
+            source_channel: sourceChannel,
             token: {
-              denom: 'uatom',
+              denom,
               amount
             },
             sender,
             receiver,
             timeout_height: {
               revision_number: '4',
-              revision_height: String(Number(atomLatestBlock) + 100)
+              revision_height: String(Number(latestBlock) + 100)
             }
           }
         }
@@ -159,11 +164,11 @@ export class OsmosisSwapper implements Swapper {
       txToSign: {
         tx: tx1,
         addressNList,
-        chain_id: 'cosmoshub-4',
+        chain_id: 'osmosis-1',
         account_number: accountNumber,
         sequence: sequence
       },
-      wallet: wallet as CosmosWallet
+      wallet: wallet as any
     })
     console.info('signed:', signed)
 
@@ -189,9 +194,9 @@ export class OsmosisSwapper implements Swapper {
     )
 
     //convert amount to base
-    // let amountBaseSell: number = parseFloat(sellAmount) * 1000000
-    // amountBaseSell = parseInt(String(amountBaseSell))
-    // const amountBaseSellString = amountBaseSell.toString()
+    let amountBaseSell: number = parseFloat(sellAmount)
+    amountBaseSell = parseInt(String(amountBaseSell))
+    const amountBaseSellString = amountBaseSell.toString()
 
     // @ts-ignore
     return {
@@ -201,7 +206,7 @@ export class OsmosisSwapper implements Swapper {
       feeData: { fee },
       rate,
       receiveAddress: '',
-      sellAmount: sellAmount !== '0' ? sellAmount : '1',
+      sellAmount: amountBaseSellString,
       sellAsset,
       sellAssetAccountId: '0',
       sources: [{ name: 'Osmosis', proportion: '100' }],
@@ -242,10 +247,13 @@ export class OsmosisSwapper implements Swapper {
     const sellAsset = args.trade.sellAsset
     const buyAsset = args.trade.buyAsset
     const sellAmount = args.trade.sellAmount
+    const buyAmount = args.trade.buyAmount
     const wallet = args.wallet
+
     if (!sellAsset) throw Error('missing sellAsset')
     if (!buyAsset) throw Error('missing buyAsset')
     if (!sellAmount) throw Error('missing sellAmount')
+    if (!buyAmount) throw Error('missing buyAmount')
     if (!wallet) throw Error('missing wallet')
 
     const pair = sellAsset.symbol + '_' + buyAsset.symbol
@@ -270,6 +278,7 @@ export class OsmosisSwapper implements Swapper {
     let buyAddress
 
     if (pair === 'ATOM_OSMO') {
+      console.log('atom trade')
       //TODO verify input balance
       console.info('osmoAddress: ', osmoAddress)
       let atomChannelBalance = await getAtomChannelBalance(osmoAddress)
@@ -277,19 +286,19 @@ export class OsmosisSwapper implements Swapper {
 
       sellAddress = atomAddress
       buyAddress = osmoAddress
+      const amount = await pollForAtomChannelBalance(buyAddress)
 
       const transfer = {
         sender: sellAddress,
         receiver: buyAddress,
-        amount: sellAmount
+        amount: String(amount)
       }
-      
-      const accountUrl = `${atomUrl}/auth/accounts/${sellAddress}`
-      const txid = await this.performIbcTransfer(transfer, cosmosAdapter, wallet, accountUrl)
+
+      const txid = await this.performIbcTransfer(transfer, cosmosAdapter, wallet, atomUrl, 'uosmo', 'channel-141')
       //wait till confirmed
       console.info('txid: ', txid)
       const pollResult = await pollForComplete(txid, osmoUrl)
-      if(pollResult !== 'success')
+      if (pollResult !== 'success')
         throw new Error('ibc transfer failed')
 
     } else if (pair === 'OSMO_ATOM') {
@@ -303,12 +312,12 @@ export class OsmosisSwapper implements Swapper {
     if (!buyAddress) throw new Error('no buy address')
 
     let sender = osmoAddress
-    const accountUrl = `${atomUrl}/auth/accounts/${sender}`
+    const accountUrl = `${osmoUrl}/auth/accounts/${sender}`
     const responseAccount = await axios.get(accountUrl)
     const accountNumber = responseAccount.data.result.value.account_number || 0
     const sequence = responseAccount.data.result.value.sequence || 0
     const osmoAddressNList = bip32ToAddressNList("m/44'/118'/0'/0/0")
-
+    console.log('first sequence: ', sequence)
 
 
     const tx1 = {
@@ -344,6 +353,7 @@ export class OsmosisSwapper implements Swapper {
       ]
     }
 
+    // @ts-ignore
     const signTxInput = {
       txToSign: {
         tx: tx1,
@@ -363,17 +373,19 @@ export class OsmosisSwapper implements Swapper {
 
     if (pair === 'OSMO_ATOM') {
       const pollResult = await pollForComplete(txid1, osmoUrl)
-      if(pollResult !== 'success')
+      console.log('pollResult', pollResult)
+      if (pollResult !== 'success')
         throw new Error('osmo swap failed')
 
+      const amount = await pollForAtomChannelBalance(sender)
       //perform IBC deposit
       const transfer = {
         sender: sellAddress,
         receiver: buyAddress,
-        amount: sellAmount
+        amount: String(amount)
       }
-      const accountUrl = `${osmoUrl}/auth/accounts/${sellAddress}`
-      const txid = await this.performIbcTransfer(transfer, osmosisAdapter, wallet, accountUrl)
+
+      const txid = await this.performIbcTransfer(transfer, osmosisAdapter, wallet, osmoUrl, buyAssetDenom, 'channel-0')
       console.info('txid: ', txid)
     }
 

@@ -17,7 +17,7 @@ export const symbolDenomMapping = {
 
 // TODO: pass in env variables
 export const osmoUrl = 'https://lcd-osmosis.blockapsis.com'
-export const atomUrl = 'https://cosmos-testnet-rpc.allthatnode.com:1317'
+export const atomUrl = 'https://cosmos-mainnet-rpc.allthatnode.com:1317'
 
 const txStatus = async (txid: string, baseUrl: string): Promise<string> => {
     try {
@@ -37,17 +37,56 @@ export const pollForComplete = async (txid: string, baseUrl: string): Promise<st
   
       const poll = async function() {
         const status = await txStatus(txid, baseUrl)
+        console.log('status', status)
         if (status === 'success') {
           resolve(status)
         } else if ((Date.now() - startTime) > timeout) {
           reject(new Error(`Couldnt find tx ${txid}`))
         } else {
+          console.log('timeout')
           setTimeout(poll, interval)
         }
       }
       poll()
     })
 }
+
+const atomChannelBalance = async (address: string) => {
+    const osmoResponseBalance = await axios.get(`${osmoUrl}/bank/balances/${address}`)
+    let toAtomChannelBalance = 0
+    try {
+      const { amount } = find(
+        osmoResponseBalance.data.result,
+        (b) => b.denom === symbolDenomMapping.ATOM
+      )
+      toAtomChannelBalance = Number(amount)
+    } catch(e) {
+      console.log('no channel balance')
+    }
+    return toAtomChannelBalance
+  }
+  
+export  const pollForAtomChannelBalance = async (address: string): Promise<number> => {
+    console.log('pollForAtomChannelBalance')
+    return new Promise((resolve, reject) => {
+      const timeout = 120000 // 2 mins
+      const startTime = Date.now()
+      const interval = 5000 // 5 seconds
+  
+      const poll = async function() {
+        const balance = await atomChannelBalance(address)
+        if (balance > 0) {
+          console.log('returning balane ', balance)
+          resolve(balance)
+        } else if ((Date.now() - startTime) > timeout) {
+          reject(new Error(`Couldnt find channel balance for ${address}`))
+        } else {
+          setTimeout(poll, interval)
+        }
+      }
+      poll()
+    })
+  }
 
 export const getAtomChannelBalance = async (address: string) => {
     const osmoResponseBalance = await axios.get(`${osmoUrl}/bank/balances/${address}`)
@@ -65,9 +104,6 @@ export const getAtomChannelBalance = async (address: string) => {
 }
 
 const findPool = async (sellAssetSymbol: string, buyAssetSymbol: string) => {
-    const atomAccountUrl = `${atomUrl}/blocks/latest`
-    const atomResponseAccount = await axios.get(atomAccountUrl)
-    console.log('atomResponseAccount', atomResponseAccount)
     const sellAssetDenom = symbolDenomMapping[sellAssetSymbol as keyof IsymbolDenomMapping]
     const buyAssetDenom = symbolDenomMapping[buyAssetSymbol as keyof IsymbolDenomMapping]
 
