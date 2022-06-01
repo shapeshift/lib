@@ -22,7 +22,7 @@ export type ThorchainSwapperDeps = {
 }
 
 export class ThorchainSwapper implements Swapper {
-  public supportedAssetIds: AssetId[] = []
+  private supportedAssetIds: AssetId[] = []
   deps: ThorchainSwapperDeps
 
   constructor(deps: ThorchainSwapperDeps) {
