@@ -25,26 +25,15 @@ export const makeSwapMemo = ({
       details: { buyAssetId }
     })
 
-  const fullMemo = `s:${thorId}:${destinationAddress}:${limit}`
-
-  if (fullMemo.length <= MAX_LENGTH) return fullMemo
-
-  const fullMemoLength = fullMemo.length
-  const truncateAmount = fullMemoLength - MAX_LENGTH
-
-  // delimeter between ticker and id allowing us to abbreviate the id:
-  // https://dev.thorchain.org/thorchain-dev/memos#asset-notation
-  const delimeterIndex = thorId.indexOf('-')
-
-  if (delimeterIndex === -1) {
+  const memo = `s:${thorId}:${destinationAddress}:${limit}`
+  if (memo.length <= MAX_LENGTH) return memo
+  const abbreviationAmount = memo.length - MAX_LENGTH
+  // delimeter between ticker and id allowing us to abbreviate the id: https://dev.thorchain.org/thorchain-dev/memos#asset-notation
+  const delimeterIndex = memo.indexOf('-') + 1
+  if (!delimeterIndex) {
     throw new SwapError('[makeSwapMemo] - unable to abbreviate asset, no delimeter found', {
       code: SwapErrorTypes.MAKE_MEMO_FAILED
     })
   }
-
-  const thorIdSymbol = thorId.slice(0, delimeterIndex)
-  const thorIdReferenceTruncated = thorId.slice(thorId.length - truncateAmount, thorId.length)
-  const truncatedThorId = `${thorIdSymbol}-${thorIdReferenceTruncated}`
-  const shortenedMemo = `s:${truncatedThorId}:${destinationAddress}:${limit}`
-  return shortenedMemo
+  return memo.replace(memo.slice(delimeterIndex, delimeterIndex + abbreviationAmount), '')
 }

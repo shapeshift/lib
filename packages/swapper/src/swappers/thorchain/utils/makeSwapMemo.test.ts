@@ -8,7 +8,7 @@ describe('makeSwapMemo', () => {
       limit: '420'
     })
     expect(memo).toEqual(
-      's:ETH.USDC-9D4A2E9EB0CE3606EB48:0x8a65ac0E23F31979db06Ec62Af62b132a6dF4741:420'
+      's:ETH.USDC-D19D4A2E9EB0CE3606EB48:0x8a65ac0E23F31979db06Ec62Af62b132a6dF4741:420'
     )
   })
   it('should make a trade to eth memo', () => {
