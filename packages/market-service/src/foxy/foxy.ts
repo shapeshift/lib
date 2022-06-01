@@ -1,4 +1,8 @@
+import { ethChainId } from '@shapeshiftoss/caip'
+import { ChainAdapter, ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+import { foxyAddresses, FoxyApi } from '@shapeshiftoss/investor-foxy'
 import {
+  ChainTypes,
   HistoryData,
   HistoryTimeframe,
   MarketCapResult,
@@ -17,8 +21,18 @@ import { rateLimitedAxios } from '../utils/rateLimiters'
 
 export const FOXY_ASSET_ID = 'eip155:1/erc20:0xDc49108ce5C57bc3408c3A5E95F3d864eC386Ed3'
 const FOX_COINCAP_ID = 'fox-token'
+const FOXY_ASSET_PRECISION = '18'
 
 const axios = rateLimitedAxios(RATE_LIMIT_THRESHOLDS_PER_MINUTE.COINCAP)
+
+const unchainedUrls = {
+  [ChainTypes.Ethereum]: {
+    // from web env, both are always defined despite what the typings suggest
+    httpUrl: process.env.REACT_APP_UNCHAINED_ETHEREUM_HTTP_URL as string,
+    wsUrl: process.env.REACT_APP_UNCHAINED_ETHEREUM_WS_URL as string
+  }
+}
+const adapterManager = new ChainAdapterManager(unchainedUrls)
 
 export class FoxyMarketService implements MarketService {
   baseUrl = 'https://api.coincap.io/v2'
@@ -45,11 +59,23 @@ export class FoxyMarketService implements MarketService {
       const { data } = await axios.get(`${this.baseUrl}/assets/${FOX_COINCAP_ID}`)
       const marketData = data.data as CoinCapMarketCap
 
+      // Make maxSupply as an additional field, effectively EIP-20's totalSupply
+      const api = new FoxyApi({
+        adapter: adapterManager.byChainId(ethChainId) as ChainAdapter<ChainTypes.Ethereum>,
+        providerUrl: process.env.REACT_APP_ETHEREUM_NODE_URL as string, // from web env, always defined despite what the typings suggest
+        foxyAddresses
+      })
+      const tokenContractAddress = foxyAddresses[0].foxy
+      const foxyTotalSupply = await api.totalSupply({ tokenContractAddress })
+      const supply = await api.tvl({ tokenContractAddress })
+
       return {
         price: marketData.priceUsd,
         marketCap: '0', // TODO: add marketCap once able to get foxy marketCap data
         changePercent24Hr: parseFloat(marketData.changePercent24Hr),
-        volume: '0' // TODO: add volume once able to get foxy volume data
+        volume: '0', // TODO: add volume once able to get foxy volume data
+        supply: supply?.div(`1e+${FOXY_ASSET_PRECISION}`).toString(),
+        maxSupply: foxyTotalSupply?.div(`1e+${FOXY_ASSET_PRECISION}`).toString()
       }
     } catch (e) {
       console.warn(e)
