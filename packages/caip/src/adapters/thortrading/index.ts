@@ -1,82 +1,63 @@
-import { fromAssetId, toAssetId } from '../../assetId/assetId'
-import { btcAssetId, ethAssetId, ethChainId } from '../../constants'
 import { AssetId } from './../../assetId/assetId'
-import { btcChainId } from './../../constants'
 
-// naming convention for regex variables are taken from thorchian docs
-// https://dev.thorchain.org/thorchain-dev/memos#asset-notation
-// https://regex101.com/r/MAj4WA/1
-const thorIdRegex = /(?<chain>[A-Za-z]+)\.(?<ticker>[A-Za-z]+)(-(?<id>[A-Za-z0-9]+))?/
+// derived from midgard /v2/pools endpoint
+// Rarely changes. Will need to be updated as we add additional assets to thor swapper
+const thorPoolIdAssetIdSymbolMap = {
+  'ETH.YFI-0X0BC529C00C6401AEF6D220BE8C6EA1667F6AD93E':
+    'eip155:1/erc20:0X0BC529C00C6401AEF6D220BE8C6EA1667F6AD93E'.toLowerCase(),
+  'ETH.XRUNE-0X69FA0FEE221AD11012BAB0FDB45D444D3D2CE71C':
+    'eip155:1/erc20:0X69FA0FEE221AD11012BAB0FDB45D444D3D2CE71C'.toLowerCase(),
+  'ETH.XDEFI-0X72B886D09C117654AB7DA13A14D603001DE0B777':
+    'eip155:1/erc20:0X72B886D09C117654AB7DA13A14D603001DE0B777'.toLowerCase(),
+  'ETH.WBTC-0X2260FAC5E5542A773AA44FBCFEDF7C193BC2C599':
+    'eip155:1/erc20:0X2260FAC5E5542A773AA44FBCFEDF7C193BC2C599'.toLowerCase(),
+  'ETH.USDT-0XDAC17F958D2EE523A2206206994597C13D831EC7':
+    'eip155:1/erc20:0XDAC17F958D2EE523A2206206994597C13D831EC7'.toLowerCase(),
+  'ETH.USDC-0XA0B86991C6218B36C1D19D4A2E9EB0CE3606EB48':
+    'eip155:1/erc20:0XA0B86991C6218B36C1D19D4A2E9EB0CE3606EB48'.toLowerCase(),
+  'ETH.UOS-0XD13C7342E1EF687C5AD21B27C2B65D772CAB5C8C':
+    'eip155:1/erc20:0XD13C7342E1EF687C5AD21B27C2B65D772CAB5C8C'.toLowerCase(),
+  'ETH.THOR-0XA5F2211B9B8170F694421F2046281775E8468044':
+    'eip155:1/erc20:0XA5F2211B9B8170F694421F2046281775E8468044'.toLowerCase(),
+  'ETH.TGT-0X108A850856DB3F85D0269A2693D896B394C80325':
+    'eip155:1/erc20:0X108A850856DB3F85D0269A2693D896B394C80325'.toLowerCase(),
+  'ETH.SUSHI-0X6B3595068778DD592E39A122F4F5A5CF09C90FE2':
+    'eip155:1/erc20:0X6B3595068778DD592E39A122F4F5A5CF09C90FE2'.toLowerCase(),
+  'ETH.SNX-0XC011A73EE8576FB46F5E1C5751CA3B9FE0AF2A6F':
+    'eip155:1/erc20:0XC011A73EE8576FB46F5E1C5751CA3B9FE0AF2A6F'.toLowerCase(),
+  'ETH.RAZE-0X5EAA69B29F99C84FE5DE8200340B4E9B4AB38EAC"':
+    'eip155:1/erc20:0X5EAA69B29F99C84FE5DE8200340B4E9B4AB38EAC'.toLowerCase(),
+  'ETH.PERP-0XBC396689893D065F41BC2C6ECBEE5E0085233447':
+    'eip155:1/erc20:0XBC396689893D065F41BC2C6ECBEE5E0085233447'.toLowerCase(),
+  'ETH.KYL-0X67B6D479C7BB412C54E03DCA8E1BC6740CE6B99C':
+    'eip155:1/erc20:0X67B6D479C7BB412C54E03DCA8E1BC6740CE6B99C'.toLowerCase(),
+  'ETH.HOT-0X6C6EE5E31D828DE241282B9606C8E98EA48526E2':
+    'eip155:1/erc20:0X6C6EE5E31D828DE241282B9606C8E98EA48526E2'.toLowerCase(),
+  'ETH.HEGIC-0X584BC13C7D411C00C01A62E8019472DE68768430':
+    'eip155:1/erc20:0X584BC13C7D411C00C01A62E8019472DE68768430'.toLowerCase(),
+  'ETH.FOX-0XC770EEFAD204B5180DF6A14EE197D99D808EE52D':
+    'eip155:1/erc20:0XC770EEFAD204B5180DF6A14EE197D99D808EE52D'.toLowerCase(),
+  'ETH.DAI-0X6B175474E89094C44DA98B954EEDEAC495271D0F':
+    'eip155:1/erc20:0X6B175474E89094C44DA98B954EEDEAC495271D0F'.toLowerCase(),
+  'ETH.CREAM-0X2BA592F78DB6436527729929AAF6C908497CB200':
+    'eip155:1/erc20:0X2BA592F78DB6436527729929AAF6C908497CB200'.toLowerCase(),
+  'ETH.ALPHA-0XA1FAA113CBE53436DF28FF0AEE54275C13B40975':
+    'eip155:1/erc20:0XA1FAA113CBE53436DF28FF0AEE54275C13B40975'.toLowerCase(),
+  'ETH.ALCX-0XDBDB4D16EDA451D0503B854CF79D55697F90C8DF':
+    'eip155:1/erc20:0XDBDB4D16EDA451D0503B854CF79D55697F90C8DF'.toLowerCase(),
+  'ETH.AAVE-0X7FC66500C84A76AD7E9C93437BFC5AC33E2DDAE9':
+    'eip155:1/erc20:0X7FC66500C84A76AD7E9C93437BFC5AC33E2DDAE9'.toLowerCase(),
+  'BTC.BTC': 'bip122:000000000019d6689c085ae165831e93/slip44:0'.toLowerCase(),
+  'ETH.ETH': 'eip155:1/slip44:60'.toLowerCase()
+} as Record<string, string>
 
-/*
- * Note: this only works with thorchain assets we support
- * see https://dev.thorchain.org/thorchain-dev/memos#asset-notation for reference
- *
- * We are also not supporting asset abbreviations using fuzzy logic at this time
- * see https://dev.thorchain.org/thorchain-dev/memos#asset-abbreviations
- */
-export const poolAssetIdToAssetId = (id: string): AssetId | undefined => {
-  const matches = thorIdRegex.exec(id)?.groups
-  // To avoid any case sensitive issues, uppercase both chain and ticker.
-  const chain = matches?.chain.toUpperCase()
-  const ticker = matches?.ticker.toUpperCase()
-  const contractAddress = matches?.id
+const invert = <T extends Record<string, string>>(data: T) =>
+  Object.entries(data).reduce((acc, [k, v]) => ((acc[v] = k), acc), {} as Record<string, string>)
 
-  switch (chain) {
-    case 'ETH': {
-      if (ticker === 'ETH') return ethAssetId
+const assetIdToPoolAssetIdMap = invert(thorPoolIdAssetIdSymbolMap)
 
-      // We make Eth contract addresses lower case to simplify comparisons
-      const assetReference = contractAddress?.toLowerCase()
-      if (!assetReference) return undefined
+export const poolAssetIdToAssetId = (id: string): string | undefined =>
+  thorPoolIdAssetIdSymbolMap[id]
 
-      const chainId = ethChainId
-      const assetNamespace = 'erc20'
-
-      try {
-        return toAssetId({ chainId, assetNamespace, assetReference })
-      } catch (e) {
-        console.error(e)
-        return undefined
-      }
-    }
-    case 'BTC': {
-      return btcAssetId
-    }
-    default: {
-      return undefined
-    }
-  }
-}
-
-export const assetIdToPoolAssetId = ({
-  assetId,
-  symbol
-}: {
-  assetId: AssetId
-  symbol?: string
-}): string | undefined => {
-  try {
-    const { chainId, assetReference } = fromAssetId(assetId)
-    // https://dev.thorchain.org/thorchain-dev/memos#asset-notation
-    switch (chainId) {
-      case ethChainId: {
-        if (assetId === ethAssetId) return 'ETH.ETH'
-        if (!symbol) return undefined
-        // this is predicated on the assumption that the symbol from the asset service
-        // and the contract address are static, correct, and won't ever change. Midgard
-        // also returns the asset notation with the assetReference in uppercase format,
-        // so we will keep that consistent here and uppercase it.
-        return `ETH.${symbol}-${assetReference.toUpperCase()}`
-      }
-      case btcChainId: {
-        return 'BTC.BTC'
-      }
-      default: {
-        return undefined
-      }
-    }
-  } catch (e) {
-    return undefined
-  }
-}
+export const assetIdToPoolAssetId = ({ assetId }: { assetId: AssetId }): string | undefined =>
+  assetIdToPoolAssetIdMap[assetId]
