@@ -1,4 +1,4 @@
-import { AssetId, ChainId } from '@shapeshiftoss/caip'
+import { AssetId } from '@shapeshiftoss/caip'
 import { createErrorClass } from '@shapeshiftoss/errors'
 import { BTCSignTx, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { Asset, ChainSpecific, SupportedChainIds } from '@shapeshiftoss/types'
