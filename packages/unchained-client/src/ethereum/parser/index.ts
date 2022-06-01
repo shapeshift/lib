@@ -13,6 +13,7 @@ import { getInternalMultisigAddress, getSigHash, SENDMULTISIG_SIG_HASH } from '.
 import * as weth from './weth'
 import * as yearn from './yearn'
 import * as zrx from './zrx'
+import * as erc20Approve from './erc20Approve'
 
 export interface TransactionParserArgs {
   chainId: ChainId
@@ -29,6 +30,7 @@ export class TransactionParser {
   private readonly yearn: yearn.Parser
   private readonly foxy: foxy.Parser
   private readonly weth: weth.Parser
+  private readonly erc20Approve: erc20Approve.Parser
   private readonly parsers: Array<SubParser>
 
   constructor(args: TransactionParserArgs) {
@@ -48,8 +50,9 @@ export class TransactionParser {
     this.yearn = new yearn.Parser({ provider, chainId: this.chainId })
     this.foxy = new foxy.Parser()
     this.weth = new weth.Parser({ chainId: this.chainId, provider })
+    this.erc20Approve = new erc20Approve.Parser({ chainId: this.chainId, provider })
 
-    this.parsers = [this.zrx, this.thor, this.uniV2, this.yearn, this.foxy, this.weth]
+    this.parsers = [this.zrx, this.thor, this.uniV2, this.yearn, this.foxy, this.weth, this.erc20Approve]
   }
 
   // return any addresses that can be detected
