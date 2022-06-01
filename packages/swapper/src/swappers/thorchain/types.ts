@@ -12,4 +12,3 @@ export type MidguardResponse = {
   units: string
   volume24h: string
 }
-

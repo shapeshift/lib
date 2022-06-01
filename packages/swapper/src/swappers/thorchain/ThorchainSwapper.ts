@@ -1,4 +1,4 @@
-import { AssetId, poolAssetIdToAssetId } from '@shapeshiftoss/caip'
+import { adapters, AssetId } from '@shapeshiftoss/caip'
 import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
 import axios from 'axios'
 
@@ -6,6 +6,8 @@ import {
   ApprovalNeededOutput,
   GetMinMaxInput,
   MinMaxOutput,
+  SwapError,
+  SwapErrorTypes,
   Swapper,
   SwapperType,
   Trade,
@@ -20,7 +22,7 @@ export type ThorchainSwapperDeps = {
 }
 
 export class ThorchainSwapper implements Swapper {
-  public supportedAssetIds: AssetId[]
+  public supportedAssetIds: AssetId[] = []
   deps: ThorchainSwapperDeps
 
   constructor(deps: ThorchainSwapperDeps) {
@@ -28,10 +30,23 @@ export class ThorchainSwapper implements Swapper {
   }
 
   async initialize() {
-    const { data: responseData } = await axios.get<MidguardResponse[]>(this.deps.midgardUrl)
-    this.supportedAssetIds = responseData
-      .map((midgardPool) => poolAssetIdToAssetId(midgardPool.asset))
-      .filter((assetId) => assetId) // remove any undefined values that may come back from `poolAssetIdToAssetId`
+    try {
+      const { data: responseData } = await axios.get<MidguardResponse[]>(this.deps.midgardUrl)
+
+      const supportedAssetIds = responseData.reduce<AssetId[]>((acc, midgardPool) => {
+        const assetId = adapters.poolAssetIdToAssetId(midgardPool.asset)
+        if (!assetId) return acc
+        acc.push(assetId)
+        return acc
+      }, [])
+
+      this.supportedAssetIds = supportedAssetIds
+    } catch (e) {
+      throw new SwapError('[thorchainInitialize]: initialize failed to set supportedAssetIds', {
+        code: SwapErrorTypes.INITIALIZE_FAILED,
+        cause: e
+      })
+    }
   }
 
   getType() {
