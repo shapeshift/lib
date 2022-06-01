@@ -32,6 +32,8 @@ export const makeSwapMemo = ({
   const fullMemoLength = fullMemo.length
   const truncateAmount = fullMemoLength - MAX_LENGTH
 
+  // delimeter between ticker and id allowing us to abbreviate the id:
+  // https://dev.thorchain.org/thorchain-dev/memos#asset-notation
   const delimeterIndex = thorId.indexOf('-')
 
   if (delimeterIndex === -1) {
