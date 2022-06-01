@@ -4,12 +4,12 @@ describe('makeSwapMemo', () => {
   it('make a trade to usdc memo with', () => {
     const memo = makeSwapMemo({
       buyAssetId: 'eip155:1/erc20:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-      thorchainSymbol: 'USDT',
+      thorchainSymbol: 'USDC',
       destinationAddress: '0x8a65ac0E23F31979db06Ec62Af62b132a6dF4741',
       limit: '420'
     })
     expect(memo).toEqual(
-      's:ETH.USDT-9D4A2E9EB0CE3606EB48:0x8a65ac0E23F31979db06Ec62Af62b132a6dF4741:420'
+      's:ETH.USDC-9D4A2E9EB0CE3606EB48:0x8a65ac0E23F31979db06Ec62Af62b132a6dF4741:420'
     )
   })
   it('make a trade to eth memo', () => {
