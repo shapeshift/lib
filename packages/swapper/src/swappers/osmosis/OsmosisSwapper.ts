@@ -246,7 +246,7 @@ export class OsmosisSwapper implements Swapper {
   async executeTrade(args: any): Promise<TradeResult> {
     const sellAsset = args.trade.sellAsset
     const buyAsset = args.trade.buyAsset
-    const sellAmount = args.trade.sellAmount
+    let sellAmount = args.trade.sellAmount
     const buyAmount = args.trade.buyAmount
     const wallet = args.wallet
 
@@ -286,12 +286,11 @@ export class OsmosisSwapper implements Swapper {
 
       sellAddress = atomAddress
       buyAddress = osmoAddress
-      const amount = await pollForAtomChannelBalance(buyAddress)
 
       const transfer = {
         sender: sellAddress,
         receiver: buyAddress,
-        amount: String(amount)
+        amount: String(sellAmount)
       }
 
       const txid = await this.performIbcTransfer(transfer, cosmosAdapter, wallet, atomUrl, 'uosmo', 'channel-141')
@@ -300,6 +299,8 @@ export class OsmosisSwapper implements Swapper {
       const pollResult = await pollForComplete(txid, osmoUrl)
       if (pollResult !== 'success')
         throw new Error('ibc transfer failed')
+
+      sellAmount = await pollForAtomChannelBalance(buyAddress)
 
     } else if (pair === 'OSMO_ATOM') {
       sellAddress = osmoAddress
