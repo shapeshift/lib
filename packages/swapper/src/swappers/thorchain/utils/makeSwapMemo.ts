@@ -11,19 +11,14 @@ const MAX_LENGTH = 80
  */
 export const makeSwapMemo = ({
   buyAssetId,
-  thorchainSymbol,
   destinationAddress,
   limit
 }: {
   buyAssetId: string
-  thorchainSymbol: string
   destinationAddress: string
   limit: string
 }): string => {
-  const thorId = adapters.assetIdToPoolAssetId({
-    assetId: buyAssetId,
-    symbol: thorchainSymbol
-  })
+  const thorId = adapters.assetIdToPoolAssetId({ assetId: buyAssetId })
   if (!thorId)
     throw new SwapError('[makeSwapMemo] - undefined thorId', {
       code: SwapErrorTypes.MAKE_MEMO_FAILED
