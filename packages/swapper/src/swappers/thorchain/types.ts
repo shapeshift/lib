@@ -1,4 +1,4 @@
-export type MidguardResponse = {
+export type MidgardResponse = {
   asset: string
   assetDepth: string
   assetPrice: string
