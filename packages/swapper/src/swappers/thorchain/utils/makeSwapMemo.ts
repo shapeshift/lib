@@ -28,6 +28,11 @@ export const makeSwapMemo = ({
   const memo = `s:${thorId}:${destinationAddress}:${limit}`
   if (memo.length <= MAX_LENGTH) return memo
   const abbreviationAmount = memo.length - MAX_LENGTH
+
+  if (abbreviationAmount > 39)
+    throw new SwapError('[makeSwapMemo] - too much abbreviation for accurate matching', {
+      code: SwapErrorTypes.MAKE_MEMO_FAILED
+    })
   // delimeter between ticker and id allowing us to abbreviate the id: https://dev.thorchain.org/thorchain-dev/memos#asset-notation
   const delimeterIndex = memo.indexOf('-') + 1
   if (!delimeterIndex) {
