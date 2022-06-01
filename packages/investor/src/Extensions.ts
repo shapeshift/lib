@@ -1,7 +1,11 @@
-export interface ApprovalRequired {
+import type { BigNumber } from 'bignumber.js'
+
+export type FeePriority = 'fast' | 'average' | 'slow'
+
+export interface ApprovalRequired<T> {
   isApprovalRequired: true
-  allowance: (address: string) => Promise<unknown>
-  prepareApprove: (address: string) => Promise<unknown>
+  allowance: (address: string) => Promise<BigNumber>
+  prepareApprove: (address: string) => Promise<T>
 }
 
 /*

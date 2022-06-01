@@ -1,14 +1,12 @@
-import type { ChainTypes } from '@shapeshiftoss/types'
-
 import { InvestorOpportunity } from './InvestorOpportunity'
 
-export interface Investor<C extends ChainTypes, TxType = unknown, MetaData = unknown> {
+export interface Investor<TxType = unknown, MetaData = unknown> {
   initialize: () => Promise<void>
-  findAll: () => Promise<Array<InvestorOpportunity<C, TxType, MetaData>>>
+  findAll: () => Promise<Array<InvestorOpportunity<TxType, MetaData>>>
   findByOpportunityId: (
     opportunityId: string
-  ) => Promise<InvestorOpportunity<C, TxType, MetaData> | undefined>
+  ) => Promise<InvestorOpportunity<TxType, MetaData> | undefined>
   findByUnderlyingAssetId: (
     assetId: string
-  ) => Promise<Array<InvestorOpportunity<C, TxType, MetaData>>>
+  ) => Promise<Array<InvestorOpportunity<TxType, MetaData>>>
 }
