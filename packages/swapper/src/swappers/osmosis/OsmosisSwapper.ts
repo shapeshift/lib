@@ -19,11 +19,10 @@ import {
   TradeTxs,
   BuildTradeInput,
 } from '../../api'
-import { atomUrl, getAtomChannelBalance, getRateInfo, IsymbolDenomMapping, osmoUrl, symbolDenomMapping } from './utils/helpers'
+import { atomUrl, getAtomChannelBalance, getRateInfo, IsymbolDenomMapping, osmoUrl, pollForComplete, symbolDenomMapping } from './utils/helpers'
 import { DEFAULT_SOURCE, MAX_SWAPPER_SELL } from './utils/constants'
 import { bn, bnOrZero } from '../zrx/utils/bignumber'
 import axios from 'axios'
-import { sleep } from 'wait-promise'
 
 export type OsmoSwapperDeps = {
   wallet: HDWallet
@@ -42,10 +41,12 @@ export class OsmosisSwapper implements Swapper {
   constructor(deps: OsmoSwapperDeps) {
     this.deps = deps
     this.supportAssets = ['cosmos:cosmoshub-4/slip44:118', 'cosmos:osmosis-1/slip44:118']
+
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  async initialize() { }
+  async initialize() { 
+  }
 
   async getTradeTxs(tradeResult: TradeResult): Promise<TradeTxs> {
     return {
@@ -98,7 +99,7 @@ export class OsmosisSwapper implements Swapper {
   }
 
   // TODO: clean up
-  async performIbcTransfer(input: any, adapter: any, wallet: any): Promise<any> {
+  async performIbcTransfer(input: any, adapter: any, wallet: any, accountUrl: any): Promise<any> {
     let { sender, receiver, amount } = input
     console.info('performIbcTransfer input: ', input)
 
@@ -111,15 +112,14 @@ export class OsmosisSwapper implements Swapper {
 
     const addressNList = bip32ToAddressNList("m/44'/118'/0'/0/0")
 
-    const atomAccountUrl = `${atomUrl}/auth/accounts/${sender}`
-    const atomResponseAccount = await axios.get(atomAccountUrl)
-    console.info('atomResponseAccount: ', atomResponseAccount)
-    const atomAccountNumber = atomResponseAccount.data.result.value.account_number
-    const atomSequence = atomResponseAccount.data.result.value.sequence
-    console.info('atomAccountNumber: ', atomAccountNumber)
-    console.info('atomSequence: ', atomSequence)
-    amount = amount / 1000000
-    if (!atomAccountNumber) throw new Error('no atom account number')
+    const responseAccount = await axios.get(accountUrl)
+    console.info('responseAccount: ', responseAccount)
+    const accountNumber = responseAccount.data.result.value.account_number
+    const sequence = responseAccount.data.result.value.sequence
+    console.info('accountNumber: ', accountNumber)
+    console.info('sequence: ', sequence)
+    amount = amount
+    if (!accountNumber) throw new Error('no atom account number')
 
     const tx1 = {
       memo: '',
@@ -160,25 +160,14 @@ export class OsmosisSwapper implements Swapper {
         tx: tx1,
         addressNList,
         chain_id: 'cosmoshub-4',
-        account_number: atomAccountNumber,
-        sequence: atomSequence
+        account_number: accountNumber,
+        sequence: sequence
       },
       wallet: wallet as CosmosWallet
     })
     console.info('signed:', signed)
 
-    const payload = {
-      tx_bytes: signed,
-      mode: 'BROADCAST_MODE_SYNC'
-    }
-    const urlRemote = atomUrl + '/cosmos/tx/v1beta1/txs'
-    let txid1 = await axios({
-      url: urlRemote,
-      method: 'POST',
-      data: payload
-    })
-    console.info('txid1.data: ', txid1.data)
-    txid1 = txid1.data?.tx_response.txhash
+    const txid1 = await adapter.broadcastTransaction(signed)
     console.info('txid1: ', txid1)
 
     return {
@@ -294,31 +283,15 @@ export class OsmosisSwapper implements Swapper {
         receiver: buyAddress,
         amount: sellAmount
       }
-      const txid = await this.performIbcTransfer(transfer, cosmosAdapter, wallet)
-
+      
+      const accountUrl = `${atomUrl}/auth/accounts/${sellAddress}`
+      const txid = await this.performIbcTransfer(transfer, cosmosAdapter, wallet, accountUrl)
       //wait till confirmed
       console.info('txid: ', txid)
-      let confirmed = false
-      let timeStart = new Date().getTime()
-      while (!confirmed) {
-        //get info
-        try {
-          let txInfo = await axios({
-            method: 'GET',
-            url: `${atomUrl}/cosmos/tx/v1beta1/txs/${txid.txid}`
-          })
-          txInfo = txInfo.data
-          console.info('txInfo: ', txInfo)
+      const pollResult = await pollForComplete(txid, osmoUrl)
+      if(pollResult !== 'success')
+        throw new Error('ibc transfer failed')
 
-          //@ts-ignore
-          if (txInfo?.tx_response?.height) confirmed = true
-        } catch (e) {
-          let timeNow = new Date().getTime()
-          let duration = timeNow - timeStart
-          console.info('txid Not found yet! duration: ' + duration / 1000)
-        }
-        await sleep(3000)
-      }
     } else if (pair === 'OSMO_ATOM') {
       sellAddress = osmoAddress
       buyAddress = atomAddress
@@ -330,7 +303,7 @@ export class OsmosisSwapper implements Swapper {
     if (!buyAddress) throw new Error('no buy address')
 
     let sender = osmoAddress
-    const accountUrl = `${osmoUrl}/auth/accounts/${sender}`
+    const accountUrl = `${atomUrl}/auth/accounts/${sender}`
     const responseAccount = await axios.get(accountUrl)
     const accountNumber = responseAccount.data.result.value.account_number || 0
     const sequence = responseAccount.data.result.value.sequence || 0
@@ -389,27 +362,9 @@ export class OsmosisSwapper implements Swapper {
     console.info('txid1: ', txid1)
 
     if (pair === 'OSMO_ATOM') {
-      let confirmed = false
-      let timeStart = new Date().getTime()
-      while (!confirmed) {
-        //get info
-        try {
-          let txInfo = await axios({
-            method: 'GET',
-            url: `${osmoUrl}/cosmos/tx/v1beta1/txs/${txid1}`
-          })
-          txInfo = txInfo.data
-          console.info('txInfo: ', txInfo)
-
-          //@ts-ignore
-          if (txInfo?.tx_response?.height) confirmed = true
-        } catch (e) {
-          let timeNow = new Date().getTime()
-          let duration = timeStart - timeNow
-          console.info('txid Not found yet! duration: ' + duration / 1000)
-        }
-        await sleep(3000)
-      }
+      const pollResult = await pollForComplete(txid1, osmoUrl)
+      if(pollResult !== 'success')
+        throw new Error('osmo swap failed')
 
       //perform IBC deposit
       const transfer = {
@@ -417,7 +372,8 @@ export class OsmosisSwapper implements Swapper {
         receiver: buyAddress,
         amount: sellAmount
       }
-      const txid = await this.performIbcTransfer(transfer, cosmosAdapter, wallet)
+      const accountUrl = `${osmoUrl}/auth/accounts/${sellAddress}`
+      const txid = await this.performIbcTransfer(transfer, osmosisAdapter, wallet, accountUrl)
       console.info('txid: ', txid)
     }
 
