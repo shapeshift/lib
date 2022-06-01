@@ -31,7 +31,7 @@ export const makeSwapMemo = ({
 
   const fullMemo = `s:${thorId}:${destinationAddress}:${limit}`
 
-  if (fullMemo.length <= 80) return fullMemo
+  if (fullMemo.length <= MAX_LENGTH) return fullMemo
 
   const fullMemoLength = fullMemo.length
   const truncateAmount = fullMemoLength - MAX_LENGTH
