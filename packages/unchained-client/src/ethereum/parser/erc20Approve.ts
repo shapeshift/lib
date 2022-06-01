@@ -2,7 +2,7 @@ import { Tx as BlockbookTx } from '@shapeshiftoss/blockbook'
 import { ChainId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
 import { ethers } from 'ethers'
 
-import { SubParser, TxSpecific, TxMethod, EthereumTxParser } from '../types'
+import { EthereumTxParser, SubParser, TxMethod, TxSpecific } from '../types'
 import erc20 from './abi/erc20'
 import { getSigHash } from './utils'
 
@@ -18,7 +18,7 @@ export class Parser implements SubParser {
   readonly erc20Interface = new ethers.utils.Interface(erc20)
 
   readonly supportedERC20Functions = {
-    approveSigHash: this.erc20Interface.getSighash('approve'),
+    approveSigHash: this.erc20Interface.getSighash('approve')
   }
 
   constructor(args: ParserArgs) {
@@ -45,11 +45,13 @@ export class Parser implements SubParser {
 
     return {
       data: {
-        assetId: receiveAddress ? toAssetId({
-          ...fromChainId(this.chainId),
-          assetNamespace: 'erc20',
-          assetReference: receiveAddress
-        }) : undefined,
+        assetId: receiveAddress
+          ? toAssetId({
+              ...fromChainId(this.chainId),
+              assetNamespace: 'erc20',
+              assetReference: receiveAddress
+            })
+          : undefined,
         method: TxMethod.Approve,
         parser: EthereumTxParser.ERC20Approve
       }

@@ -1,9 +1,9 @@
 import { Tx as BlockbookTx } from '@shapeshiftoss/blockbook'
 
-import { StandardTx, StandardTxMetadata, BaseTxMetadata } from '../types'
+import { BaseTxMetadata, StandardTx, StandardTxMetadata } from '../types'
 
 export enum EthereumTxParser {
-  ERC20Approve = "erc20Approve"
+  ERC20Approve = 'erc20Approve'
 }
 
 export enum TxMethod {

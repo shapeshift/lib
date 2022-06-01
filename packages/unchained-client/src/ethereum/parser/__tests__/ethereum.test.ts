@@ -731,7 +731,7 @@ describe('parseTx', () => {
         chainId: 'eip155:1',
         confirmations: tx.confirmations,
         data: {
-          assetId: "eip155:1/erc20:0x470e8de2ebaef52014a47cb5e6af86884947f08c",
+          assetId: 'eip155:1/erc20:0x470e8de2ebaef52014a47cb5e6af86884947f08c',
           method: TxMethod.Approve,
           parser: EthereumTxParser.ERC20Approve
         },
