@@ -57,7 +57,7 @@ const invert = <T extends Record<string, string>>(data: T) =>
 const assetIdToPoolAssetIdMap = invert(thorPoolIdAssetIdSymbolMap)
 
 export const poolAssetIdToAssetId = (id: string): string | undefined =>
-  thorPoolIdAssetIdSymbolMap[id]
+  thorPoolIdAssetIdSymbolMap[id.toUpperCase()]
 
 export const assetIdToPoolAssetId = ({ assetId }: { assetId: AssetId }): string | undefined =>
   assetIdToPoolAssetIdMap[assetId]
