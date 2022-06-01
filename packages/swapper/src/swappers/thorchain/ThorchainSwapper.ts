@@ -15,7 +15,7 @@ import {
   TradeResult,
   TradeTxs
 } from '../../api'
-import { MidguardResponse } from './types'
+import { MidgardResponse } from './types'
 
 export type ThorchainSwapperDeps = {
   midgardUrl: string
@@ -31,7 +31,7 @@ export class ThorchainSwapper implements Swapper {
 
   async initialize() {
     try {
-      const { data: responseData } = await axios.get<MidguardResponse[]>(this.deps.midgardUrl)
+      const { data: responseData } = await axios.get<MidgardResponse[]>(this.deps.midgardUrl)
 
       const supportedAssetIds = responseData.reduce<AssetId[]>((acc, midgardPool) => {
         const assetId = adapters.poolAssetIdToAssetId(midgardPool.asset)
