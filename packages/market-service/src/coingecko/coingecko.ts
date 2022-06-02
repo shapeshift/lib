@@ -38,10 +38,13 @@ type CoinGeckoAssetData = {
 }
 
 export class CoinGeckoMarketService implements MarketService {
-  // if we have a key - use the pro- api
-  baseUrl = `https://${
-    process.env.REACT_APP_COINGECKO_API_KEY ? 'pro-' : ''
-  }api.coingecko.com/api/v3`
+  baseUrl: string
+
+  constructor(args: { apiKey: string }) {
+    const { apiKey } = args
+    // if we have a key - use the pro- api
+    this.baseUrl = `https://${apiKey ? 'pro-' : ''}api.coingecko.com/api/v3`
+  }
 
   private readonly defaultGetByMarketCapArgs: FindAllMarketArgs = {
     count: 2500
