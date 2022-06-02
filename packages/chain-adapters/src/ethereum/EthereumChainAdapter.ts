@@ -202,15 +202,28 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     }
   }
 
-  async buildCustomTx(tx: {
-    wallet: HDWallet
-    bip44Params: BIP44Params
-    to: string
-    data: string
-    value: string
-    gasPrice: string
-    gasLimit: string
-  }): Promise<{
+  async buildCustomTx(
+    tx: {
+      wallet: HDWallet
+      bip44Params: BIP44Params
+      to: string
+      data: string
+      value: string
+      gasLimit: string
+    } & (
+      | {
+          /** types from ethSignTx in hdwallet */
+          gasPrice: string
+          maxFeePerGas?: never
+          maxPriorityFeePerGas?: never
+        }
+      | {
+          gasPrice?: never
+          maxFeePerGas: string
+          maxPriorityFeePerGas: string
+        }
+    )
+  ): Promise<{
     txToSign: ETHSignTx
   }> {
     try {
@@ -221,7 +234,9 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
         data,
         value,
         gasPrice,
-        gasLimit
+        gasLimit,
+        maxFeePerGas,
+        maxPriorityFeePerGas
       } = tx
 
       const path = toPath(bip44Params)
@@ -230,6 +245,15 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
       const from = await this.getAddress({ bip44Params, wallet })
       const { chainSpecific } = await this.getAccount(from)
 
+      const gasInfo = gasPrice
+        ? {
+            gasPrice: numberToHex(gasPrice)
+          }
+        : {
+            maxFeePerGas: numberToHex(maxFeePerGas ?? '0'),
+            maxPriorityFeePerGas: numberToHex(maxPriorityFeePerGas ?? '0')
+          }
+
       const txToSign: ETHSignTx = {
         addressNList,
         value,
@@ -237,9 +261,8 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
         chainId: 1, // TODO: implement for multiple chains
         data,
         nonce: numberToHex(chainSpecific.nonce),
-        // TODO make compatible with maxFeePerGas & maxPriorityFeePerGas
         gasLimit: numberToHex(gasLimit),
-        gasPrice: numberToHex(gasPrice)
+        ...gasInfo
       }
       return { txToSign }
     } catch (err) {

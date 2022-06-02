@@ -5,7 +5,7 @@
     "outDir": "./dist",
     "rootDir": "src",
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/**/*.json"],
   "exclude": ["node_modules", "**/*.test.ts", "**/*.spec.ts"],
   "references": [
     { "path": "../asset-service/tsconfig.build.json" },
