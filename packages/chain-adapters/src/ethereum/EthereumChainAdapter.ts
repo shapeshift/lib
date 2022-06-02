@@ -202,6 +202,54 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     }
   }
 
+  async buildCustomTx(tx: any): Promise<{
+    txToSign: ETHSignTx
+  }> {
+    try {
+      const {
+        wallet,
+        bip44Params = ChainAdapter.defaultBIP44Params,
+        to,
+        data,
+        value,
+        gasPrice,
+        gasLimit,
+        maxFeePerGas,
+        maxPriorityFeePerGas
+      } = tx
+
+      const path = toPath(bip44Params)
+      const addressNList = bip32ToAddressNList(path)
+
+      const from = await this.getAddress({ bip44Params, wallet })
+      const { chainSpecific } = await this.getAccount(from)
+
+      const txToSign: ETHSignTx = {
+        addressNList,
+        value,
+        to,
+        chainId: 1, // TODO: implement for multiple chains
+        data,
+        nonce: numberToHex(chainSpecific.nonce),
+        gasLimit: numberToHex(gasLimit),
+        ...(gasPrice !== undefined
+          ? {
+              gasPrice: numberToHex(gasPrice)
+            }
+          : {
+              // (The type system guarantees that on this branch both of these will be set)
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              maxFeePerGas: numberToHex(maxFeePerGas!),
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              maxPriorityFeePerGas: numberToHex(maxPriorityFeePerGas!)
+            })
+      }
+      return { txToSign }
+    } catch (err) {
+      return ErrorHandler(err)
+    }
+  }
+
   async signTransaction(signTxInput: chainAdapters.SignTxInput<ETHSignTx>): Promise<string> {
     try {
       const { txToSign, wallet } = signTxInput
