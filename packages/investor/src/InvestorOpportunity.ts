@@ -30,19 +30,21 @@ export abstract class InvestorOpportunity<TxType = unknown, MetaData = unknown> 
      */
     assetId: string
     /**
-     * The amount of the position asset, not the underlying asset
+     * The amount of the position asset belonging to the user
+     *
+     * This represents the value of their staked/delegated position
+     *
+     * Amount is an integer value without precision applied
      */
     balance: BigNumber // This is probably a wallet concern not a opportunity concern
     /**
      * The ratio of value between the underlying asset and the position asset
      * in terms of underlying asset per position asset.
      *
-     * Multiply the position asset by this value to calculate the amount of underlying asset
-     * that will be received for a withdrawal
-     *
-     * Amount is an integer value without precision applied
+     * Multiply the position asset amount by this value to calculate the amount of
+     * underlying asset that will be received for a withdrawal
      */
-    pricePerUnderlying: BigNumber
+    underlyingPerPosition: BigNumber
   }
   readonly feeAsset: {
     /**
@@ -52,8 +54,6 @@ export abstract class InvestorOpportunity<TxType = unknown, MetaData = unknown> 
   }
   /**
    * The estimated return on deposited assets
-   *
-   * Amount is an integer value without precision applied
    *
    * @example An APY of "1.0" means 100%
    */
