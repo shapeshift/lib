@@ -3,7 +3,12 @@ import type { BigNumber } from 'bignumber.js'
 
 import { FeePriority } from './Extensions'
 
-export type DepositWithdrawArgs = { address: string; amount: BigNumber }
+export type DepositWithdrawArgs = {
+  /** User's wallet address */
+  address: string
+  /** Amount of asset as an Integer without precision applied */
+  amount: BigNumber
+}
 
 export abstract class InvestorOpportunity<TxType = unknown, MetaData = unknown> {
   /**
@@ -30,13 +35,14 @@ export abstract class InvestorOpportunity<TxType = unknown, MetaData = unknown> 
     balance: BigNumber // This is probably a wallet concern not a opportunity concern
     /**
      * The ratio of value between the underlying asset and the position asset
+     * in terms of underlying asset per position asset.
      *
      * Multiply the position asset by this value to calculate the amount of underlying asset
      * that will be received for a withdrawal
      *
      * Amount is an integer value without precision applied
      */
-    price: BigNumber
+    pricePerUnderlying: BigNumber
   }
   readonly feeAsset: {
     /**
@@ -55,6 +61,8 @@ export abstract class InvestorOpportunity<TxType = unknown, MetaData = unknown> 
   readonly tvl: {
     /**
      * Asset that represents the total volume locked in the opportunity
+     *
+     * Should be the same as either the underlying or position assetId
      */
     assetId: string
     /**
@@ -88,13 +96,12 @@ export abstract class InvestorOpportunity<TxType = unknown, MetaData = unknown> 
 
   /**
    * Sign and broadcast a previously prepared transaction
-   *
-   * @param deps.wallet - HDWallet instance
-   * @param args.tx - Prepared unsigned transaction (from prepareWithdrawal/Deposit)
-   * @param args.feePriority - Specify the user's preferred fee priority (fast/average/slow)
    */
-  signAndBroadcast: (
-    deps: { wallet: HDWallet },
-    args: { tx: TxType; feePriority?: FeePriority }
-  ) => Promise<string>
+  signAndBroadcast: (input: {
+    wallet: HDWallet
+    /** Prepared unsigned transaction (from prepareWithdrawal/Deposit) */
+    tx: TxType
+    /** Specify the user's preferred fee priority (fast/average/slow) */
+    feePriority?: FeePriority
+  }) => Promise<string>
 }
