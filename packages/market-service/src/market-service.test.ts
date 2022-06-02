@@ -7,8 +7,7 @@ import {
 } from './coingecko/coingeckoMockData'
 import { FOXY_ASSET_ID } from './foxy/foxy'
 import { mockFoxyMarketData, mockFoxyPriceHistoryData } from './foxy/foxyMockData'
-import { findAll, findByAssetId, findPriceHistoryByAssetId } from './index'
-import { MarketProviders } from './market-providers'
+import { MarketServiceManager } from './market-service-manager'
 import {
   mockOsmosisFindAllData,
   mockOsmosisFindByAssetId,
@@ -83,43 +82,41 @@ jest.mock('./foxy/foxy', () => ({
 jest.mock('@yfi/sdk')
 
 describe('market service', () => {
+  const marketServiceManager = new MarketServiceManager({
+    coinGeckoAPIKey: '',
+    yearnChainReference: 1,
+    jsonRpcProviderUrl: ''
+  })
+
   describe('findAll', () => {
     it('can return from first market service and skip the next', async () => {
-      await findAll()
+      await marketServiceManager.findAll({ count: Number() })
       expect(MarketProviders[0].findAll).toHaveBeenCalledTimes(1)
       expect(MarketProviders[1].findAll).toHaveBeenCalledTimes(0)
     })
     it('can call the next market service if the first fails', async () => {
-      // @ts-ignore
       MarketProviders[0].findAll.mockRejectedValueOnce({ error: 'error' })
-      await findAll()
+      await marketServiceManager.findAll({ count: Number() })
       expect(MarketProviders[1].findAll).toHaveBeenCalledTimes(1)
     })
     it('errors if no data found', async () => {
-      // @ts-ignore
       MarketProviders[0].findAll.mockRejectedValueOnce({ error: 'error' })
-      // @ts-ignore
       MarketProviders[1].findAll.mockRejectedValueOnce({ error: 'error' })
-      // @ts-ignore
       MarketProviders[2].findAll.mockRejectedValueOnce({ error: 'error' })
-      // @ts-ignore
       MarketProviders[3].findAll.mockRejectedValueOnce({ error: 'error' })
-      // @ts-ignore
       MarketProviders[4].findAll.mockRejectedValueOnce({ error: 'error' })
-      // @ts-ignore
       MarketProviders[5].findAll.mockRejectedValueOnce({ error: 'error' })
-      await expect(findAll()).rejects.toEqual(
+      await expect(marketServiceManager.findAll({ count: Number() })).rejects.toEqual(
         new Error('Cannot find market service provider for market data.')
       )
     })
     it('returns market service data if exists', async () => {
-      const result = await findAll()
+      const result = await marketServiceManager.findAll({ count: Number() })
       expect(result).toEqual(mockCGFindAllData)
     })
     it('returns next market service data if previous data does not exist', async () => {
-      // @ts-ignore
       MarketProviders[0].findAll.mockRejectedValueOnce({ error: 'error' })
-      const result = await findAll()
+      const result = await marketServiceManager.findAll({ count: Number() })
       expect(result).toEqual(mockYearnServiceFindAllData)
     })
   })
@@ -129,29 +126,22 @@ describe('market service', () => {
       assetId: 'eip155:1/slip44:60'
     }
     it('can return from first market service and skip the next', async () => {
-      const result = await findByAssetId(args)
+      const result = await marketServiceManager.findByAssetId(args)
       expect(result).toEqual(mockCGFindByAssetIdData)
     })
     it('can return from next market service if first is not found', async () => {
-      // @ts-ignore
       MarketProviders[0].findByAssetId.mockRejectedValueOnce({ error: 'error' })
-      const result = await findByAssetId(args)
+      const result = await marketServiceManager.findByAssetId(args)
       expect(result).toEqual(mockYearnFindByAssetIdData)
     })
     it('can return null if no data found', async () => {
-      // @ts-ignore
       MarketProviders[0].findByAssetId.mockRejectedValueOnce({ error: 'error' })
-      // @ts-ignore
       MarketProviders[1].findByAssetId.mockRejectedValueOnce({ error: 'error' })
-      // @ts-ignore
       MarketProviders[2].findByAssetId.mockRejectedValueOnce({ error: 'error' })
-      // @ts-ignore
       MarketProviders[3].findByAssetId.mockRejectedValueOnce({ error: 'error' })
-      // @ts-ignore
       MarketProviders[4].findByAssetId.mockRejectedValueOnce({ error: 'error' })
-      // @ts-ignore
       MarketProviders[5].findByAssetId.mockRejectedValueOnce({ error: 'error' })
-      const result = await findByAssetId(args)
+      const result = await marketServiceManager.findByAssetId(args)
       expect(result).toBeNull()
     })
   })
@@ -162,31 +152,23 @@ describe('market service', () => {
       timeframe: HistoryTimeframe.HOUR
     }
     it('can return from fist market service and skip the next', async () => {
-      const result = await findPriceHistoryByAssetId(args)
+      const result = await marketServiceManager.findPriceHistoryByAssetId(args)
       expect(result).toEqual(mockCGPriceHistoryData)
     })
     it('can return from the next market service if the first is not found', async () => {
-      // @ts-ignore
       MarketProviders[0].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-      // @ts-ignore
       MarketProviders[1].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-      const result = await findPriceHistoryByAssetId(args)
+      const result = await marketServiceManager.findPriceHistoryByAssetId(args)
       expect(result).toEqual(mockYearnPriceHistoryData)
     })
     it('can return null if no data found', async () => {
-      // @ts-ignore
       MarketProviders[0].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-      // @ts-ignore
       MarketProviders[1].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-      // @ts-ignore
       MarketProviders[2].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-      // @ts-ignore
       MarketProviders[3].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-      // @ts-ignore
       MarketProviders[4].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-      // @ts-ignore
       MarketProviders[5].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-      const result = await findPriceHistoryByAssetId(args)
+      const result = await marketServiceManager.findPriceHistoryByAssetId(args)
       expect(result).toEqual([])
     })
   })
