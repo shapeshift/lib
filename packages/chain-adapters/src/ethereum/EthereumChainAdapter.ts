@@ -250,8 +250,11 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
             gasPrice: numberToHex(gasPrice)
           }
         : {
-            maxFeePerGas: numberToHex(maxFeePerGas ?? '0'),
-            maxPriorityFeePerGas: numberToHex(maxPriorityFeePerGas ?? '0')
+            // (The type system guarantees that on this branch both of these will be set)
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            maxFeePerGas: numberToHex(maxFeePerGas!),
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            maxPriorityFeePerGas: numberToHex(maxPriorityFeePerGas!)
           }
 
       const txToSign: ETHSignTx = {
