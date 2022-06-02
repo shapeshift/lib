@@ -1,19 +1,19 @@
-import { bip32ToAddressNList, ETHSignTx } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params } from '@shapeshiftoss/types'
 import { numberToHex } from 'web3-utils'
+import type { BigNumber } from 'bignumber.js'
+import { PreparedTransaction } from '..'
 
 type BuildTxToSignInput = {
-  bip44Params: BIP44Params
   chainId: number
   data: string
-  estimatedGas: string
-  gasPrice: string
+  estimatedGas: BigNumber
+  gasPrice: BigNumber
   nonce: string
   value: string
   to: string
 }
 
-function toPath(bip44Params: BIP44Params): string {
+export function toPath(bip44Params: BIP44Params): string {
   const { purpose, coinType, accountNumber, isChange = false, index = 0 } = bip44Params
   if (typeof purpose === 'undefined') throw new Error('toPath: bip44Params.purpose is required')
   if (typeof coinType === 'undefined') throw new Error('toPath: bip44Params.coinType is required')
@@ -23,7 +23,6 @@ function toPath(bip44Params: BIP44Params): string {
 }
 
 export function buildTxToSign({
-  bip44Params,
   chainId = 1,
   data,
   estimatedGas,
@@ -31,18 +30,15 @@ export function buildTxToSign({
   nonce,
   to,
   value
-}: BuildTxToSignInput): ETHSignTx {
-  const path = toPath(bip44Params)
-  const addressNList = bip32ToAddressNList(path)
-
+}: BuildTxToSignInput): PreparedTransaction {
   return {
-    addressNList,
     value: numberToHex(value),
     to,
     chainId, // TODO: implement for multiple chains
     data,
     nonce: numberToHex(nonce),
-    gasPrice: numberToHex(gasPrice),
-    gasLimit: numberToHex(estimatedGas)
+    // TODO: move numberToHex and safety factor into signAndBroadcast.
+    gasLimit: numberToHex(estimatedGas.times(1.5).integerValue().toString()),
+    gasPrice // Convert to hex in signAndBroadcast
   }
 }

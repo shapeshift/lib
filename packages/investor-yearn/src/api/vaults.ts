@@ -1,10 +1,10 @@
 import { ChainTypes } from '@shapeshiftoss/types'
+import { Vault } from '@yfi/sdk'
 
 import { transformVault } from '../utils'
-import { YearnVault } from './api'
 import { yearnSdk } from './yearn-sdk'
 
-export type SupportedYearnVault = YearnVault & {
+export type SupportedYearnVault = Vault & {
   vaultAddress: string
   name: string
   symbol: string
