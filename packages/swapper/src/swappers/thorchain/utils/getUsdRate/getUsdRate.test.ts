@@ -20,16 +20,16 @@ describe('getUsdRate', () => {
     expect(rate).toEqual('0.15399605260336216')
   })
 
-  it('should return empty string if no midgard response is returned', async () => {
+  it('should throw if no midgard usd rate is returned', async () => {
     const assetId = 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
     ;(thorService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data: {} }))
 
-    const rate = await getUsdRate({
-      deps,
-      input: { assetId }
-    })
-
-    expect(rate).toEqual('')
+    await expect(
+      getUsdRate({
+        deps,
+        input: { assetId }
+      })
+    ).rejects.toThrow('[getUsdRate]: No rate found')
   })
 
   it('should throw if no poolAssetId is found for specified assetId', async () => {

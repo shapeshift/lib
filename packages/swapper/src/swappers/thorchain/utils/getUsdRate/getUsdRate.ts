@@ -25,7 +25,14 @@ export const getUsdRate = async ({
       `${deps.midgardUrl}/pool/${thorchainPoolId}`
     )
 
-    return responseData?.assetPriceUSD ?? ''
+    const rate = responseData?.assetPriceUSD
+
+    if (!rate)
+      throw new SwapError(`[getUsdRate]: No rate found`, {
+        code: SwapErrorTypes.USD_RATE_FAILED
+      })
+
+    return rate
   } catch (e) {
     if (e instanceof SwapError) throw e
     throw new SwapError('[getUsdRate]: Thorchain getUsdRate failed', {
