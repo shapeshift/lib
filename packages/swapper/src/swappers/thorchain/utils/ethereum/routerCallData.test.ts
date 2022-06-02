@@ -3,7 +3,7 @@ import { deposit } from './routerCallData'
 const ROUTER = '0x3624525075b88b24ecc29ce226b0cec1ffcb6976'
 const VAULT = '0x78E4E10dCAcB0A8261eB3D5e57fFb98AE8D4dFF1'
 
-describe('routerCallData', () => {
+describe('routerCalldata', () => {
   it('should create valid trade data for the deposit() call', async () => {
     const data = await deposit(
       ROUTER,
