@@ -50,7 +50,7 @@ export class Client<T> {
     connection.pingTimeout = setTimeout(() => {
       logger.warn({ fn: 'pingTimeout' }, `${topic} heartbeat failed`)
       connection?.ws.close()
-    }, this.pingInterval + 1000)
+    }, this.pingInterval + 5000)
   }
 
   /**
