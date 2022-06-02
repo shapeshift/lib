@@ -202,7 +202,6 @@ export class ChainAdapter implements IChainAdapter<ChainTypes.Ethereum> {
     }
   }
 
-  // TODO make compatible with maxFeePerGas & maxPriorityFeePerGas
   async buildCustomTx(tx: {
     wallet: HDWallet
     bip44Params: BIP44Params
