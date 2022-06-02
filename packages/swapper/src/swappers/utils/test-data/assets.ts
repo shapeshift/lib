@@ -64,3 +64,25 @@ export const FOX: Asset = {
   receiveSupport: true,
   symbol: 'FOX'
 }
+
+export const WBTC: Asset = {
+  assetId: 'eip155:1/erc20:0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
+  chainId: 'eip155:1',
+  color: '#FFFFFF',
+  contractType: 'erc20',
+  chain: ChainTypes.Ethereum,
+  dataSource: AssetDataSource.CoinGecko,
+  explorer: 'https://etherscan.io',
+  explorerAddressLink: 'https://etherscan.io/address/',
+  explorerTxLink: 'https://etherscan.io/tx/',
+  icon: 'https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png',
+  name: 'Wrapped Bitcoin',
+  network: NetworkTypes.MAINNET,
+  precision: 8,
+  receiveSupport: true,
+  secondaryColor: '#FFFFFF',
+  sendSupport: true,
+  slip44: 60,
+  symbol: 'WBTC',
+  tokenId: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'
+}

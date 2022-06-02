@@ -1,3 +1,4 @@
+import { AssetService } from '@shapeshiftoss/asset-service'
 import { AssetId } from '@shapeshiftoss/caip'
 import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
 
@@ -18,9 +19,19 @@ import {
   TradeResult,
   TradeTxs
 } from '../../api'
+import { getUsdRate } from './utils/helpers/helpers'
+
+export type CowSwapperDeps = {
+  assetService: AssetService
+}
 
 export class CowSwapper implements Swapper {
   public static swapperName = 'CowSwapper'
+  deps: CowSwapperDeps
+
+  constructor(deps: CowSwapperDeps) {
+    this.deps = deps
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   async initialize() {}
@@ -39,9 +50,8 @@ export class CowSwapper implements Swapper {
     throw new Error('CowSwapper: getTradeQuote unimplemented')
   }
 
-  getUsdRate(input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> {
-    console.info(input)
-    throw new Error('CowSwapper: getUsdRate unimplemented')
+  async getUsdRate(input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> {
+    return getUsdRate(this.deps, input)
   }
 
   getMinMax(input: GetMinMaxInput): Promise<MinMaxOutput> {

@@ -1,9 +1,9 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import Web3 from 'web3'
 
+import { bn, bnOrZero } from '../../../utils/bignumber'
 import { erc20Abi } from '../abi/erc20-abi'
 import { erc20AllowanceAbi } from '../abi/erc20Allowance-abi'
-import { bn, bnOrZero } from '../bignumber'
 import {
   getAllowanceRequired,
   getUsdRate,
