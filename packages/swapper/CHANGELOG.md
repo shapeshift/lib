@@ -1,3 +1,39 @@
+# [@shapeshiftoss/swapper-v5.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.6.0...@shapeshiftoss/swapper-v5.7.0) (2022-06-02)
+
+
+### Features
+
+* add getUsdRate for thorchainSwapper ([#737](https://github.com/shapeshift/lib/issues/737)) ([f629780](https://github.com/shapeshift/lib/commit/f62978047f95670672cc8d948b3e2981cc3362c7))
+
+# [@shapeshiftoss/swapper-v5.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.5.0...@shapeshiftoss/swapper-v5.6.0) (2022-06-02)
+
+
+### Features
+
+* get call data for router deposit call ([#739](https://github.com/shapeshift/lib/issues/739)) ([807e547](https://github.com/shapeshift/lib/commit/807e547a02928f6d4aac03599ba386ab6efc9ced))
+
+# [@shapeshiftoss/swapper-v5.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.4.0...@shapeshiftoss/swapper-v5.5.0) (2022-06-02)
+
+
+### Features
+
+* implements cowswapper skeleton ([#732](https://github.com/shapeshift/lib/issues/732)) ([dd6e935](https://github.com/shapeshift/lib/commit/dd6e9357a0f97e23a50c0b51a9dd2d9ec07b2d1b))
+
+# [@shapeshiftoss/swapper-v5.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.3.0...@shapeshiftoss/swapper-v5.4.0) (2022-06-01)
+
+
+### Features
+
+* implement initialize, filterBuyAssetsBySellAssetId, and filterAssetIdsBySellable method for ThorchainSwapper ([#708](https://github.com/shapeshift/lib/issues/708)) ([19eae25](https://github.com/shapeshift/lib/commit/19eae258ce6363abb79337b699a84951dc548ba6))
+* thor trade types for eth or btc tx data ([#730](https://github.com/shapeshift/lib/issues/730)) ([2591230](https://github.com/shapeshift/lib/commit/259123080c9acbea93e9fbc673bf3aac5763a9c7))
+
+# [@shapeshiftoss/swapper-v5.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.2.3...@shapeshiftoss/swapper-v5.3.0) (2022-06-01)
+
+
+### Features
+
+* thorchain memo support ([#716](https://github.com/shapeshift/lib/issues/716)) ([fe9762f](https://github.com/shapeshift/lib/commit/fe9762fd7656ef17d93885ff154a991978c3e93b))
+
 # [@shapeshiftoss/swapper-v5.2.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.2.2...@shapeshiftoss/swapper-v5.2.3) (2022-05-31)
 
 

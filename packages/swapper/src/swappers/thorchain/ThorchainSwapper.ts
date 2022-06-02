@@ -1,10 +1,13 @@
-import { AssetId } from '@shapeshiftoss/caip'
+import { adapters, AssetId } from '@shapeshiftoss/caip'
 import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
 
 import {
   ApprovalNeededOutput,
+  BuyAssetBySellIdInput,
   GetMinMaxInput,
   MinMaxOutput,
+  SwapError,
+  SwapErrorTypes,
   Swapper,
   SwapperType,
   Trade,
@@ -12,18 +15,46 @@ import {
   TradeResult,
   TradeTxs
 } from '../../api'
+import { MidgardResponse, ThorchainSwapperDeps } from './types'
+import { getUsdRate } from './utils/getUsdRate/getUsdRate'
+import { thorService } from './utils/thorService'
+
 export class ThorchainSwapper implements Swapper {
+  private supportedAssetIds: AssetId[] = []
+  deps: ThorchainSwapperDeps
+
+  constructor(deps: ThorchainSwapperDeps) {
+    this.deps = deps
+  }
+
+  async initialize() {
+    try {
+      const { data: responseData } = await thorService.get<MidgardResponse[]>(
+        `${this.deps.midgardUrl}/pools`
+      )
+
+      const supportedAssetIds = responseData.reduce<AssetId[]>((acc, midgardPool) => {
+        const assetId = adapters.poolAssetIdToAssetId(midgardPool.asset)
+        if (!assetId) return acc
+        acc.push(assetId)
+        return acc
+      }, [])
+
+      this.supportedAssetIds = supportedAssetIds
+    } catch (e) {
+      throw new SwapError('[thorchainInitialize]: initialize failed to set supportedAssetIds', {
+        code: SwapErrorTypes.INITIALIZE_FAILED,
+        cause: e
+      })
+    }
+  }
+
   getType() {
     return SwapperType.Thorchain
   }
 
-  // TODO populate supported assets from midgard
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  async initialize() {}
-
   getUsdRate(input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> {
-    console.info(input)
-    throw new Error('ThorchainSwapper: getUsdRate unimplemented')
+    return getUsdRate({ deps: this.deps, input })
   }
 
   getMinMax(input: GetMinMaxInput): Promise<MinMaxOutput> {
@@ -39,12 +70,15 @@ export class ThorchainSwapper implements Swapper {
     throw new Error('ThorchainSwapper: approveInfinite unimplemented')
   }
 
-  filterBuyAssetsBySellAssetId(): AssetId[] {
-    return []
+  filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): AssetId[] {
+    const { assetIds = [], sellAssetId } = args
+    return assetIds.filter(
+      (assetId) => this.supportedAssetIds.includes(assetId) && assetId !== sellAssetId
+    )
   }
 
   filterAssetIdsBySellable(): AssetId[] {
-    return []
+    return this.supportedAssetIds
   }
 
   async buildTrade(): Promise<Trade<SupportedChainIds>> {

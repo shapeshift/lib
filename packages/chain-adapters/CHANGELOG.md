@@ -1,3 +1,17 @@
+# [@shapeshiftoss/chain-adapters-v4.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v4.5.0...@shapeshiftoss/chain-adapters-v4.6.0) (2022-06-02)
+
+
+### Features
+
+* custom eth transactions ([#736](https://github.com/shapeshift/lib/issues/736)) ([609e745](https://github.com/shapeshift/lib/commit/609e74596784cd798ccc71ca2bce03d82903613c))
+
+# [@shapeshiftoss/chain-adapters-v4.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v4.4.0...@shapeshiftoss/chain-adapters-v4.5.0) (2022-06-01)
+
+
+### Features
+
+* thorchain memo support ([#716](https://github.com/shapeshift/lib/issues/716)) ([fe9762f](https://github.com/shapeshift/lib/commit/fe9762fd7656ef17d93885ff154a991978c3e93b))
+
 # [@shapeshiftoss/chain-adapters-v4.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v4.3.3...@shapeshiftoss/chain-adapters-v4.4.0) (2022-05-26)
 
 

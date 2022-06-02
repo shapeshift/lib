@@ -1,6 +1,6 @@
 import { AssetId } from '@shapeshiftoss/caip'
 import { createErrorClass } from '@shapeshiftoss/errors'
-import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { BTCSignTx, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { Asset, ChainSpecific, SupportedChainIds } from '@shapeshiftoss/types'
 
 export const SwapError = createErrorClass('SwapError')
@@ -82,6 +82,18 @@ export interface ZrxTrade<C extends SupportedChainIds> extends Trade<C> {
   depositAddress: string
 }
 
+export interface BtcThorTrade<C extends SupportedChainIds> extends Trade<C> {
+  chainId: 'bip122:000000000019d6689c085ae165831e93'
+  txData: BTCSignTx
+}
+
+export interface EthThorTrade<C extends SupportedChainIds> extends Trade<C> {
+  chainId: 'eip155:1'
+  txData: ETHSignTx
+}
+
+export type ThorTrade<C extends SupportedChainIds> = BtcThorTrade<C> | EthThorTrade<C>
+
 export type ExecuteTradeInput<C extends SupportedChainIds> = {
   trade: Trade<C>
   wallet: HDWallet
@@ -125,6 +137,7 @@ export type ApprovalNeededOutput = {
 export enum SwapperType {
   Zrx = '0x',
   Thorchain = 'Thorchain',
+  CowSwap = 'CowSwap',
   Test = 'Test'
 }
 
@@ -141,6 +154,7 @@ export enum SwapErrorTypes {
   CHECK_APPROVAL_FAILED = 'CHECK_APPROVAL_FAILED',
   EXECUTE_TRADE_FAILED = 'EXECUTE_TRADE_FAILED',
   GRANT_ALLOWANCE_FAILED = 'GRANT_ALLOWANCE_FAILED',
+  INITIALIZE_FAILED = 'INITIALIZE_FAILED',
   MANAGER_ERROR = 'MANAGER_ERROR',
   MIN_MAX_FAILED = 'MIN_MAX_FAILED',
   RESPONSE_ERROR = 'RESPONSE_ERROR',
@@ -149,7 +163,8 @@ export enum SwapErrorTypes {
   UNSUPPORTED_PAIR = 'UNSUPPORTED_PAIR',
   USD_RATE_FAILED = 'USD_RATE_FAILED',
   UNSUPPORTED_CHAIN = 'UNSUPPORTED_CHAIN',
-  VALIDATION_FAILED = 'VALIDATION_FAILED'
+  VALIDATION_FAILED = 'VALIDATION_FAILED',
+  MAKE_MEMO_FAILED = 'MAKE_MEMO_FAILED'
 }
 
 export interface Swapper {

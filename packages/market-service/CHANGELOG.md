@@ -1,3 +1,17 @@
+# [@shapeshiftoss/market-service-v4.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.4.0...@shapeshiftoss/market-service-v4.5.0) (2022-06-02)
+
+
+### Features
+
+* support coingecko pro with api key ([#738](https://github.com/shapeshift/lib/issues/738)) ([b411cab](https://github.com/shapeshift/lib/commit/b411cab0a8e51d3930a688315a514d83df7d51eb))
+
+# [@shapeshiftoss/market-service-v4.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.3.0...@shapeshiftoss/market-service-v4.4.0) (2022-06-01)
+
+
+### Features
+
+* thorchain memo support ([#716](https://github.com/shapeshift/lib/issues/716)) ([fe9762f](https://github.com/shapeshift/lib/commit/fe9762fd7656ef17d93885ff154a991978c3e93b))
+
 # [@shapeshiftoss/market-service-v4.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.2.2...@shapeshiftoss/market-service-v4.3.0) (2022-05-26)
 
 
