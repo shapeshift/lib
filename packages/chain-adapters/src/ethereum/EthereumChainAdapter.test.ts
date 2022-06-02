@@ -701,7 +701,7 @@ describe('EthereumChainAdapter', () => {
       }
 
       const output = await adapter.buildCustomTx(txArgs)
-      console.log('output', output)
+
       const expectedOutput = {
         txToSign: {
           addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
