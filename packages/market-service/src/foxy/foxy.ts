@@ -15,6 +15,7 @@ import dayjs from 'dayjs'
 import { MarketService } from '../api'
 import { CoinCapMarketCap } from '../coincap/coincap-types'
 import { RATE_LIMIT_THRESHOLDS_PER_MINUTE } from '../config'
+import { ProviderUrls } from '../market-service-manager'
 import { bn } from '../utils/bignumber'
 import { isValidDate } from '../utils/isValidDate'
 import { rateLimitedAxios } from '../utils/rateLimiters'
@@ -25,17 +26,23 @@ const FOXY_ASSET_PRECISION = '18'
 
 const axios = rateLimitedAxios(RATE_LIMIT_THRESHOLDS_PER_MINUTE.COINCAP)
 
-const unchainedUrls = {
-  [ChainTypes.Ethereum]: {
-    // from web env, both are always defined despite what the typings suggest
-    httpUrl: process.env.REACT_APP_UNCHAINED_ETHEREUM_HTTP_URL as string,
-    wsUrl: process.env.REACT_APP_UNCHAINED_ETHEREUM_WS_URL as string
-  }
-}
-const adapterManager = new ChainAdapterManager(unchainedUrls)
-
 export class FoxyMarketService implements MarketService {
+  jsonRpcProviderUrl: string
+  adapterManager: ChainAdapterManager
   baseUrl = 'https://api.coincap.io/v2'
+
+  constructor(providerUrls: ProviderUrls) {
+    this.jsonRpcProviderUrl = providerUrls.jsonRpcProviderUrl
+
+    const unchainedUrls = {
+      [ChainTypes.Ethereum]: {
+        // from web env, both are always defined despite what the typings suggest
+        httpUrl: providerUrls.unchainedEthereumHttpUrl,
+        wsUrl: providerUrls.unchainedEthereumWsUrl
+      }
+    }
+    this.adapterManager = new ChainAdapterManager(unchainedUrls)
+  }
 
   async findAll() {
     try {
@@ -61,8 +68,8 @@ export class FoxyMarketService implements MarketService {
 
       // Make maxSupply as an additional field, effectively EIP-20's totalSupply
       const api = new FoxyApi({
-        adapter: adapterManager.byChainId(ethChainId) as ChainAdapter<ChainTypes.Ethereum>,
-        providerUrl: process.env.REACT_APP_ETHEREUM_NODE_URL as string, // from web env, always defined despite what the typings suggest
+        adapter: this.adapterManager.byChainId(ethChainId) as ChainAdapter<ChainTypes.Ethereum>,
+        providerUrl: this.jsonRpcProviderUrl,
         foxyAddresses
       })
       const tokenContractAddress = foxyAddresses[0].foxy
