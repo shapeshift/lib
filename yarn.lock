@@ -2896,6 +2896,11 @@
     google-protobuf "^3.17.0"
     long "^4.0.0"
 
+"@shapeshiftoss/types@^4.4.0":
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/types/-/types-4.4.0.tgz#b0dafb2bbf2d51269ab61517e8519c0e95dec5dc"
+  integrity sha512-Y5dlZjCBx0J4KyCFeFPuB7hoyjMa+CLVMO31uwmB0BAOhKDJi9aVShhYjfbnyt8VfKA6IHqN1F55CWcl+BUv8g==
+
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
