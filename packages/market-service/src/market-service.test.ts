@@ -21,12 +21,15 @@ import {
 
 const coingeckoFindAllMock = jest.fn().mockImplementation(() => mockCGFindAllData)
 const coingeckoFindByAssetIdMock = jest.fn().mockImplementation(() => mockCGFindByAssetIdData)
+const coingeckoFindPriceHistoryByAssetIdMock = jest
+  .fn()
+  .mockImplementation(() => mockCGPriceHistoryData)
 
 jest.mock('./coingecko/coingecko', () => ({
   CoinGeckoMarketService: jest.fn().mockImplementation(() => ({
     findAll: coingeckoFindAllMock,
     findByAssetId: coingeckoFindByAssetIdMock,
-    findPriceHistoryByAssetId: jest.fn(() => mockCGPriceHistoryData)
+    findPriceHistoryByAssetId: coingeckoFindPriceHistoryByAssetIdMock
   }))
 }))
 
@@ -34,65 +37,80 @@ const coingeckoMock = jest.mocked(CoinGeckoMarketService, true)
 
 const coincapFindAllMock = jest.fn().mockImplementation(() => mockCGFindAllData)
 const coincapFindByAssetIdMock = jest.fn().mockImplementation(() => mockCGFindByAssetIdData)
+const coincapFindPriceHistoryByAssetIdMock = jest
+  .fn()
+  .mockImplementation(() => mockCGPriceHistoryData)
 
 jest.mock('./coincap/coincap', () => ({
   CoinCapMarketService: jest.fn().mockImplementation(() => {
     return {
       findAll: coincapFindAllMock,
       findByAssetId: coincapFindByAssetIdMock,
-      findPriceHistoryByAssetId: jest.fn(() => mockYearnPriceHistoryData)
+      findPriceHistoryByAssetId: coincapFindPriceHistoryByAssetIdMock
     }
   })
 }))
 
 const yearnVaultFindAllMock = jest.fn().mockImplementation(() => mockYearnServiceFindAllData)
 const yearnVaultFindByAssetIdMock = jest.fn().mockImplementation(() => mockYearnFindByAssetIdData)
+const yearnVaultFindPriceHistoryByAssetIdMock = jest
+  .fn()
+  .mockImplementation(() => mockYearnPriceHistoryData)
 
 jest.mock('./yearn/yearn-vaults', () => ({
   YearnVaultMarketCapService: jest.fn().mockImplementation(() => {
     return {
       findAll: yearnVaultFindAllMock,
       findByAssetId: yearnVaultFindByAssetIdMock,
-      findPriceHistoryByAssetId: jest.fn(() => mockYearnPriceHistoryData)
+      findPriceHistoryByAssetId: yearnVaultFindPriceHistoryByAssetIdMock
     }
   })
 }))
 
 const yearnTokenFindAllMock = jest.fn().mockImplementation(() => mockYearnServiceFindAllData)
 const yearnTokenFindByAssetIdMock = jest.fn().mockImplementation(() => mockYearnFindByAssetIdData)
+const yearnTokenFindPriceHistoryByAssetIdMock = jest
+  .fn()
+  .mockImplementation(() => mockYearnPriceHistoryData)
 
 jest.mock('./yearn/yearn-tokens', () => ({
   YearnTokenMarketCapService: jest.fn().mockImplementation(() => {
     return {
       findAll: yearnTokenFindAllMock,
       findByAssetId: yearnTokenFindByAssetIdMock,
-      findPriceHistoryByAssetId: jest.fn(() => mockYearnPriceHistoryData)
+      findPriceHistoryByAssetId: yearnTokenFindPriceHistoryByAssetIdMock
     }
   })
 }))
 
 const osmosisFindAllMock = jest.fn().mockImplementation(() => mockOsmosisFindAllData)
 const osmosisFindByAssetIdMock = jest.fn().mockImplementation(() => mockOsmosisFindByAssetId)
+const osmosisFindPriceHistoryByAssetIdMock = jest
+  .fn()
+  .mockImplementation(() => mockOsmosisYearlyHistoryData)
 
 jest.mock('./osmosis/osmosis', () => ({
   OsmosisMarketService: jest.fn().mockImplementation(() => {
     return {
       findAll: osmosisFindAllMock,
       findByAssetId: osmosisFindByAssetIdMock,
-      findPriceHistoryByAssetId: jest.fn(() => mockOsmosisYearlyHistoryData)
+      findPriceHistoryByAssetId: osmosisFindPriceHistoryByAssetIdMock
     }
   })
 }))
 
 const foxyFindAllMock = jest.fn().mockImplementation(() => mockFoxyMarketData)
 const foxyFindByAssetIdMock = jest.fn().mockImplementation(() => mockFoxyMarketData)
+const foxyFindPriceHistoryByAssetIdMock = jest
+  .fn()
+  .mockImplementation(() => mockFoxyPriceHistoryData)
 
 jest.mock('./foxy/foxy', () => ({
   FoxyMarketService: jest.fn().mockImplementation(() => {
     return {
       findAll: foxyFindAllMock,
       findByAssetId: foxyFindByAssetIdMock,
-      findPriceHistoryByAssetId: jest.fn(() => mockFoxyPriceHistoryData)
+      findPriceHistoryByAssetId: foxyFindPriceHistoryByAssetIdMock
     }
   })
 }))
@@ -204,25 +222,29 @@ describe('market service', () => {
       )
       expect(result).toEqual(mockCGPriceHistoryData)
     })
-    // it('can return from the next market service if the first is not found', async () => {
-    //   MarketProviders[0].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-    //   MarketProviders[1].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-    //   const result = await marketServiceManager.findPriceHistoryByAssetId(
-    //     findPriceHistoryByAssetIdArgs
-    //   )
-    //   expect(result).toEqual(mockYearnPriceHistoryData)
-    // })
-    // it('can return null if no data found', async () => {
-    //   MarketProviders[0].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-    //   MarketProviders[1].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-    //   MarketProviders[2].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-    //   MarketProviders[3].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-    //   MarketProviders[4].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-    //   MarketProviders[5].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-    //   const result = await marketServiceManager.findPriceHistoryByAssetId(
-    //     findPriceHistoryByAssetIdArgs
-    //   )
-    //   expect(result).toEqual([])
-    // })
+
+    it('can return from the next market service if the first is not found', async () => {
+      coingeckoFindPriceHistoryByAssetIdMock.mockRejectedValueOnce({ error: 'error' })
+      coincapFindPriceHistoryByAssetIdMock.mockRejectedValueOnce({ error: 'error' })
+      const marketServiceManager = new MarketServiceManager(marketServiceManagerArgs)
+      const result = await marketServiceManager.findPriceHistoryByAssetId(
+        findPriceHistoryByAssetIdArgs
+      )
+      expect(result).toEqual(mockYearnPriceHistoryData)
+    })
+
+    it('can return null if no data found', async () => {
+      coingeckoFindPriceHistoryByAssetIdMock.mockRejectedValueOnce({ error: 'error' })
+      coincapFindPriceHistoryByAssetIdMock.mockRejectedValueOnce({ error: 'error' })
+      yearnVaultFindPriceHistoryByAssetIdMock.mockRejectedValueOnce({ error: 'error' })
+      yearnTokenFindPriceHistoryByAssetIdMock.mockRejectedValueOnce({ error: 'error' })
+      osmosisFindPriceHistoryByAssetIdMock.mockRejectedValueOnce({ error: 'error' })
+      foxyFindPriceHistoryByAssetIdMock.mockRejectedValueOnce({ error: 'error' })
+      const marketServiceManager = new MarketServiceManager(marketServiceManagerArgs)
+      const result = await marketServiceManager.findPriceHistoryByAssetId(
+        findPriceHistoryByAssetIdArgs
+      )
+      expect(result).toEqual([])
+    })
   })
 })
