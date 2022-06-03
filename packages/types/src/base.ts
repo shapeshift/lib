@@ -22,6 +22,13 @@ const supportedChainIds = [
   'cosmos:osmosis-1'
 ] as const
 
+// export enum SUPPORTED_CHAIN_IDS {
+//   EthereumMainnet = 'eip155:1',
+//   BitcoinMainnet = 'bip122:000000000019d6689c085ae165831e93',
+//   CosmosMainnet = 'cosmos:cosmoshub-4',
+//   OsmosisMainnet = 'cosmos:osmosis-1'
+// }
+
 export type SupportedChainIds = typeof supportedChainIds[number]
 
 export enum NetworkTypes {
@@ -54,43 +61,34 @@ export enum AssetDataSource {
 }
 
 // asset-service
-
-type AbstractAsset = {
+export type Asset = {
   assetId: string
   chainId: string
+  /** @deprecated: do not use. This will be removed once consumers have handled it */
   chain: ChainTypes
   description?: string
   isTrustedDescription?: boolean
-  dataSource: AssetDataSource
+  /** @deprecated: do not use. This will be removed once consumers have handled it */
+  dataSource?: AssetDataSource
+  /** @deprecated: do not use. This will be removed once consumers have handled it */
   network: NetworkTypes
   symbol: string
   name: string
   precision: number
-  slip44: number
+  /** @deprecated: do not use. This will be removed once consumers have handled it */
+  slip44?: number
   color: string
-  secondaryColor: string
+  /** @deprecated: do not use. This will be removed once consumers have handled it */
+  secondaryColor?: string
   icon: string
   explorer: string
   explorerTxLink: string
   explorerAddressLink: string
-  sendSupport: boolean
-  receiveSupport: boolean
+  /** @deprecated: do not use. This will be removed once consumers have handled it */
+  sendSupport?: boolean
+  /** @deprecated: do not use. This will be removed once consumers have handled it */
+  receiveSupport?: boolean
 }
-
-type OmittedTokenAssetFields =
-  | 'chain'
-  | 'network'
-  | 'slip44'
-  | 'explorer'
-  | 'explorerTxLink'
-  | 'explorerAddressLink'
-type TokenAssetFields = {
-  tokenId: string
-  contractType: 'erc20' | 'erc721' // Don't want to import caip here to prevent circular dependencies
-}
-export type TokenAsset = Omit<AbstractAsset, OmittedTokenAssetFields> & TokenAssetFields
-export type BaseAsset = AbstractAsset & { tokens?: TokenAsset[] }
-export type Asset = AbstractAsset & Partial<TokenAssetFields>
 
 // swapper
 // TODO remove this once web is using the type from swapper
