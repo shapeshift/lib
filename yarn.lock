@@ -2800,6 +2800,11 @@
     tsoa "^3.4.0"
     ws "^8.3.0"
 
+"@shapeshiftoss/caip@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/caip/-/caip-4.0.1.tgz#e1afdfafd540769c2d9ee9c2236fbbf4136467f6"
+  integrity sha512-kwb2S3QUKLJ5lPhumi6FYm1x9/bhzjJqPVR4NvEqU6kQgE03Ovf4zVT6FWxWPqcqNGK6w4DJIsmvy2YBRmdCEQ==
+
 "@shapeshiftoss/common-api@^6.11.0":
   version "6.11.0"
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/common-api/-/common-api-6.11.0.tgz#cea7fc9acc02645bef376ef77a8b4977b31441c4"
@@ -2843,6 +2848,16 @@
   version "1.20.0"
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/hdwallet-core/-/hdwallet-core-1.20.0.tgz#e56db068b9fb8f7dafc371b64c3c56eb03807265"
   integrity sha512-07RkwJEglyw5kPe49Axr5wKTZNdxYlUjNX7Z2iN00i/2g0d6PokqXZOoAB7y4kHrgg+9l1Tddk+SZzHM1pl+kA==
+  dependencies:
+    eventemitter2 "^5.0.1"
+    lodash "^4.17.21"
+    rxjs "^6.4.0"
+    type-assertions "^1.1.0"
+
+"@shapeshiftoss/hdwallet-core@^1.22.0", "@shapeshiftoss/hdwallet-core@^1.23.0":
+  version "1.23.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/hdwallet-core/-/hdwallet-core-1.23.0.tgz#8e7552b684d9c4600381cf3131c9d304df4b169a"
+  integrity sha512-CP0ysBeyRMtjx1OTSj+EmuhYWeh3YGxrbobj7HZDYYl8kHyUseJTTQ3s42ezS1AfXkDf/YidKDxa7p6+v7/0sw==
   dependencies:
     eventemitter2 "^5.0.1"
     lodash "^4.17.21"

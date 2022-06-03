@@ -1,10 +1,10 @@
 import { adapters } from '@shapeshiftoss/caip'
 import type { ChainAdapter } from '@shapeshiftoss/chain-adapters'
-import { bip32ToAddressNList, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
+import { bip32ToAddressNList, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import {
   ApprovalRequired,
   DepositWithdrawArgs,
-  Fee,
+  FeePriority,
   InvestorOpportunity
 } from '@shapeshiftoss/investor'
 import { Logger } from '@shapeshiftoss/logger'
@@ -27,6 +27,7 @@ type YearnOpportunityDeps = {
   logger?: Logger
   web3: Web3
   yearnSdk: Yearn<1>
+  chainAdapter: ChainAdapter<ChainTypes.Ethereum>
 }
 
 export type PreparedTransaction = Omit<
@@ -34,19 +35,19 @@ export type PreparedTransaction = Omit<
   'addressNList' | 'maxFeePerGas' | 'maxPriorityFeePerGas' | 'gasPrice'
 > & {
   gasPrice: BigNumber
-  feePriority?: Fee
+  feePriority?: FeePriority
 }
 
-const feeMultipier: Record<Fee, number> = Object.freeze({
-  [Fee.High]: 1,
-  [Fee.Medium]: 0.8,
-  [Fee.Low]: 0.5
+const feeMultipier: Record<FeePriority, number> = Object.freeze({
+  fast: 1,
+  average: 0.8,
+  slow: 0.5
 })
 
 export class YearnOpportunity
   implements
-    InvestorOpportunity<ChainTypes.Ethereum, PreparedTransaction, VaultMetadata>,
-    ApprovalRequired
+    InvestorOpportunity<PreparedTransaction, VaultMetadata>,
+    ApprovalRequired<PreparedTransaction>
 {
   readonly #internals: {
     routerContract: Contract
@@ -55,19 +56,25 @@ export class YearnOpportunity
     vault: Vault
     web3: Web3
     yearn: Yearn<ChainId>
+    chainAdapter: ChainAdapter<ChainTypes.Ethereum>
   }
-  public readonly apr: BigNumber
+  public readonly apy: BigNumber
   public readonly displayName: string
   public readonly id: string
   public readonly isApprovalRequired: true
   public readonly metadata: VaultMetadata
   public readonly underlyingAsset: { assetId: string; balance: BigNumber }
-  public readonly positionAsset: { assetId: string; balance: BigNumber; price: BigNumber }
+  public readonly positionAsset: {
+    assetId: string
+    balance: BigNumber
+    underlyingPerPosition: BigNumber
+  }
+  public readonly feeAsset: { assetId: string }
   public readonly price: BigNumber
   public readonly supply: BigNumber
   public readonly tvl: {
-    assetBalance: BigNumber
-    usdcBalance?: BigNumber
+    assetId: string
+    balance: BigNumber
   }
 
   constructor(deps: YearnOpportunityDeps, vault: Vault) {
@@ -77,18 +84,19 @@ export class YearnOpportunity
       logger: deps.logger ?? new Logger({ name: 'Yearn Opportunity' }),
       yearn: deps.yearnSdk,
       web3: deps.web3,
-      vault
+      vault,
+      chainAdapter: deps.chainAdapter
     }
 
     this.id = vault.address
     this.metadata = vault.metadata
     this.displayName = vault.metadata.displayName || vault.name
-    this.apr = bnOrZero(vault.metadata.apy?.net_apy)
+    this.apy = bnOrZero(vault.metadata.apy?.net_apy)
     // @TODO TotalSupply from the API awas 0
     this.supply = bnOrZero(vault.metadata.totalSupply)
     this.tvl = {
-      assetBalance: bnOrZero(vault.underlyingTokenBalance.amount),
-      usdcBalance: bnOrZero(vault.underlyingTokenBalance.amountUsdc)
+      balance: bnOrZero(vault.underlyingTokenBalance.amount),
+      assetId: adapters.yearnToAssetId(vault.tokenId)
     }
     this.underlyingAsset = {
       balance: bnOrZero(0),
@@ -96,11 +104,16 @@ export class YearnOpportunity
     }
     this.positionAsset = {
       balance: bnOrZero(0),
-      assetId: adapters.yearnToAssetId(vault.address),
-      price: bnOrZero(vault.metadata.pricePerShare)
+      assetId: adapters.yearnToAssetId(this.id),
+      underlyingPerPosition: bnOrZero(vault.metadata.pricePerShare)
+    }
+    this.feeAsset = {
+      assetId: 'eip155:1/slip44:60'
     }
   }
 
+  // TODO(theobold): think through this function to see if we want to call this after yearn
+  // transactions have confirmed on chain.
   // private async update() {
   //   // re-fetch data and update state
   //   const contract = new this.#internals.web3.eth.Contract(yv2VaultAbi, this.id)
@@ -145,23 +158,20 @@ export class YearnOpportunity
     return id
   }
 
-  async signAndBroadcast(
-    deps: { wallet: ETHWallet; chainAdapter: ChainAdapter<ChainTypes.Ethereum> },
-    preparedTx: PreparedTransaction
-  ): Promise<string> {
-    if (isNil(preparedTx.feePriority)) throw new Error('Missing feePriority')
-    const wallet = deps.wallet
-
-    // We must have an Ethereum ChainAdapter
-    const chainAdapter = deps.chainAdapter
+  async signAndBroadcast(input: {
+    wallet: HDWallet
+    tx: PreparedTransaction
+    feePriority?: FeePriority
+  }): Promise<string> {
+    const { wallet, tx, feePriority } = input
+    const feeSpeed: FeePriority = feePriority ? feePriority : 'fast'
+    const chainAdapter = this.#internals.chainAdapter
 
     const path = toPath(chainAdapter.buildBIP44Params({ accountNumber: 0 }))
     const addressNList = bip32ToAddressNList(path)
-    const gasPrice = numberToHex(
-      bnOrZero(preparedTx.gasPrice).times(feeMultipier[preparedTx.feePriority]).toString()
-    )
+    const gasPrice = numberToHex(bnOrZero(tx.gasPrice).times(feeMultipier[feeSpeed]).toString())
     const txToSign: ETHSignTx = {
-      ...omit(preparedTx, ['feePriority', 'gasPrice']),
+      ...omit(tx, ['feePriority', 'gasPrice']),
       addressNList,
       gasPrice
     }
@@ -245,14 +255,16 @@ export class YearnOpportunity
     })
   }
 
-  public allowance(address: string): Promise<string> {
+  public async allowance(address: string): Promise<BigNumber> {
     const depositTokenContract: Contract = new this.#internals.web3.eth.Contract(
       erc20Abi,
       this.#internals.vault.tokenId
     )
-    return depositTokenContract.methods
+    const allowance = await depositTokenContract.methods
       .allowance(address, this.#internals.routerContract.options.address)
       .call()
+
+    return bnOrZero(allowance)
   }
 
   async prepareApprove(address: string): Promise<PreparedTransaction> {
@@ -290,12 +302,12 @@ export class YearnOpportunity
       id: this.id,
       metadata: this.metadata,
       displayName: this.displayName,
-      apr: this.apr.toString(),
+      apy: this.apy.toString(),
       // @TODO TotalSupply from the API awas 0
       supply: this.supply.toString(),
       tvl: {
-        assetBalance: this.tvl.assetBalance.toString(),
-        usdcBalance: this.tvl.usdcBalance?.toString()
+        assetId: this.tvl.assetId,
+        balance: this.tvl.balance.toString()
       },
       underlyingAsset: {
         balance: this.underlyingAsset.balance.toString(),
@@ -304,7 +316,7 @@ export class YearnOpportunity
       positionAsset: {
         balance: this.positionAsset.balance.toString(),
         assetId: this.positionAsset.assetId,
-        price: this.positionAsset.price.toString()
+        price: this.positionAsset.underlyingPerPosition.toString()
       }
     }
   }

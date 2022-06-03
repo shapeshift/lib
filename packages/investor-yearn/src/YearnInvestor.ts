@@ -1,4 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
+import type { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { Investor } from '@shapeshiftoss/investor'
 import type { ChainTypes } from '@shapeshiftoss/types'
 import { type ChainId, type VaultMetadata, Yearn } from '@yfi/sdk'
@@ -14,29 +15,30 @@ type ConstructorArgs = {
   dryRun?: true
   providerUrl: string
   network?: ChainId
+  chainAdapter: ChainAdapter<ChainTypes.Ethereum>
 }
 
-export class YearnInvestor
-  implements Investor<ChainTypes.Ethereum, PreparedTransaction, VaultMetadata>
-{
+export class YearnInvestor implements Investor<PreparedTransaction, VaultMetadata> {
   #deps: {
     web3: Web3
     yearnSdk: Yearn<1>
     contract: Contract
     dryRun?: true
+    chainAdapter: ChainAdapter<ChainTypes.Ethereum>
   }
   #opportunities: YearnOpportunity[]
 
-  constructor({ dryRun, providerUrl, network = 1 }: ConstructorArgs) {
+  constructor({ dryRun, providerUrl, network = 1, chainAdapter }: ConstructorArgs) {
     const httpProvider = new Web3.providers.HttpProvider(providerUrl)
     const jsonRpcProvider = new JsonRpcProvider(providerUrl)
 
     const web3 = new Web3(httpProvider)
     this.#deps = Object.freeze({
+      chainAdapter,
       dryRun,
       web3,
       yearnSdk: new Yearn(network, { provider: jsonRpcProvider }),
-      contract: new web3.eth.Contract(ssRouterAbi, ssRouterContractAddress),
+      contract: new web3.eth.Contract(ssRouterAbi, ssRouterContractAddress)
     })
     this.#opportunities = []
   }
