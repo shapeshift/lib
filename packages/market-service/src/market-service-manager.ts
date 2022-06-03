@@ -4,8 +4,7 @@ import {
   MarketCapResult,
   MarketData,
   MarketDataArgs,
-  PriceHistoryArgs,
-  PriceHistoryType
+  PriceHistoryArgs
 } from '@shapeshiftoss/types'
 import { FindAllMarketArgs } from '@shapeshiftoss/types'
 import { Yearn } from '@yfi/sdk'
@@ -64,7 +63,7 @@ export class MarketServiceManager {
     return result
   }
 
-  findByAssetId = async ({ assetId }: MarketDataArgs) => {
+  async findByAssetId({ assetId }: MarketDataArgs) {
     let result: MarketData | null = null
     // Loop through market providers and look for asset market data. Once found, exit loop.
     for (let i = 0; i < this.marketProviders.length && !result; i++) {
@@ -79,10 +78,10 @@ export class MarketServiceManager {
     return result
   }
 
-  findPriceHistoryByAssetId: PriceHistoryType = async ({
+  async findPriceHistoryByAssetId({
     assetId,
     timeframe
-  }: PriceHistoryArgs): Promise<HistoryData[]> => {
+  }: PriceHistoryArgs): Promise<HistoryData[]> {
     let result: HistoryData[] | null = null
     // Loop through market providers and look for asset price history data. Once found, exit loop.
     for (let i = 0; i < this.marketProviders.length && !result?.length; i++) {
