@@ -136,7 +136,7 @@ describe('market service', () => {
       const marketServiceManager = new MarketServiceManager(marketServiceManagerArgs)
       const findAllArgs = { count: Number() }
       await marketServiceManager.findAll(findAllArgs)
-      expect(coingeckoMock).toBeCalledWith({ apiKey: 'dummyCoingeckoApiKey' }) // constructor
+      expect(coingeckoMock).toBeCalledWith({ coinGeckoAPIKey: 'dummyCoingeckoApiKey' }) // constructor
       expect(coingeckoFindAllMock).toBeCalledWith(findAllArgs) // this should return data
       expect(coincapFindAllMock).not.toBeCalled() // and the next provider should not be called
     })

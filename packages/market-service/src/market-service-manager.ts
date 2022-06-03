@@ -28,7 +28,7 @@ export class MarketServiceManager {
   marketProviders: MarketService[]
 
   constructor(args: MarketServiceManagerArgs) {
-    const { coinGeckoAPIKey, jsonRpcProviderUrl, yearnChainReference } = args
+    const { coinGeckoAPIKey = '', jsonRpcProviderUrl, yearnChainReference } = args
 
     // TODO(0xdef1cafe): after chain agnosticism, we need to dependency inject a chainReference here
     // YearnVaultMarketCapService deps
@@ -39,7 +39,7 @@ export class MarketServiceManager {
     this.marketProviders = [
       // Order of this MarketProviders array constitutes the order of provders we will be checking first.
       // More reliable providers should be listed first.
-      new CoinGeckoMarketService({ apiKey: coinGeckoAPIKey ?? '' }),
+      new CoinGeckoMarketService({ coinGeckoAPIKey }),
       new CoinCapMarketService(),
       new YearnVaultMarketCapService({ yearnSdk }),
       new YearnTokenMarketCapService({ yearnSdk }),

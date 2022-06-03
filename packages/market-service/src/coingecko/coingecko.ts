@@ -39,11 +39,13 @@ type CoinGeckoAssetData = {
 
 export class CoinGeckoMarketService implements MarketService {
   baseUrl: string
+  APIKey: string
 
-  constructor(args: { apiKey: string }) {
-    const { apiKey } = args
+  constructor(args: { coinGeckoAPIKey: string }) {
+    const { coinGeckoAPIKey } = args
+    this.APIKey = coinGeckoAPIKey
     // if we have a key - use the pro- api
-    this.baseUrl = `https://${apiKey ? 'pro-' : ''}api.coingecko.com/api/v3`
+    this.baseUrl = `https://${this.APIKey ? 'pro-' : ''}api.coingecko.com/api/v3`
   }
 
   private readonly defaultGetByMarketCapArgs: FindAllMarketArgs = {
@@ -51,9 +53,7 @@ export class CoinGeckoMarketService implements MarketService {
   }
 
   private maybeAddAPIKey = (): string => {
-    return process.env.REACT_APP_COINGECKO_API_KEY
-      ? `&x_cg_pro_api_key=${process.env.REACT_APP_COINGECKO_API_KEY}`
-      : ''
+    return this.APIKey ? `&x_cg_pro_api_key=${this.APIKey}` : ''
   }
 
   async findAll(args?: FindAllMarketArgs) {
