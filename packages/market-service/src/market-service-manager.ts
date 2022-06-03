@@ -19,7 +19,7 @@ import { YearnTokenMarketCapService } from './yearn/yearn-tokens'
 import { YearnVaultMarketCapService } from './yearn/yearn-vaults'
 
 export type MarketServiceManagerArgs = {
-  coinGeckoAPIKey?: string
+  coinGeckoAPIKey: string
   yearnChainReference: 1 | 250 | 1337 | 42161 // from @yfi/sdk
   jsonRpcProviderUrl: string
 }
