@@ -67,8 +67,10 @@ export const makeTradeTx = async ({
       `${deps.midgardUrl}/thorchain/inbound_addresses`
     )
 
-    const router = inboundAddresses.find((inbound) => inbound.chain === 'ETH')?.router
-    const vault = inboundAddresses.find((inbound) => inbound.chain === 'ETH')?.address
+    const ethInboundAddresses = inboundAddresses.find((inbound) => inbound.chain === 'ETH')
+
+    const vault = ethInboundAddresses?.address
+    const router = ethInboundAddresses?.router
 
     if (!vault || !router)
       throw new SwapError(`[getPriceRatio]: router or vault found for ETH`, {
