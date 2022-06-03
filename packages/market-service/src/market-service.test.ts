@@ -107,6 +107,14 @@ jest.mock('@yfi/sdk')
 
 describe('market service', () => {
   describe('findAll', () => {
+    beforeAll(() => {
+      jest.spyOn(console, 'info').mockImplementation()
+    })
+
+    afterAll(() => {
+      jest.restoreAllMocks()
+    })
+
     it('can return from first market service and skip the next', async () => {
       const args = {
         coinGeckoAPIKey: 'dummyCoingeckoApiKey',
@@ -153,15 +161,30 @@ describe('market service', () => {
         new Error('Cannot find market service provider for market data.')
       )
     })
-    // it('returns market service data if exists', async () => {
-    //   const result = await marketServiceManager.findAll({ count: Number() })
-    //   expect(result).toEqual(mockCGFindAllData)
-    // })
-    // it('returns next market service data if previous data does not exist', async () => {
-    //   MarketProviders[0].findAll.mockRejectedValueOnce({ error: 'error' })
-    //   const result = await marketServiceManager.findAll({ count: Number() })
-    //   expect(result).toEqual(mockYearnServiceFindAllData)
-    // })
+
+    it('returns market service data if exists', async () => {
+      const args = {
+        coinGeckoAPIKey: 'dummyCoingeckoApiKey',
+        yearnChainReference: 1 as const,
+        jsonRpcProviderUrl: ''
+      }
+      const marketServiceManager = new MarketServiceManager(args)
+      const result = await marketServiceManager.findAll({ count: Number() })
+      expect(result).toEqual(mockCGFindAllData)
+    })
+
+    it('returns next market service data if previous data does not exist', async () => {
+      coingeckoFindAllMock.mockRejectedValueOnce({ error: 'error' })
+      coincapFindAllMock.mockRejectedValueOnce({ error: 'error' })
+      const args = {
+        coinGeckoAPIKey: 'dummyCoingeckoApiKey',
+        yearnChainReference: 1 as const,
+        jsonRpcProviderUrl: ''
+      }
+      const marketServiceManager = new MarketServiceManager(args)
+      const result = await marketServiceManager.findAll({ count: Number() })
+      expect(result).toEqual(mockYearnServiceFindAllData)
+    })
   })
 
   /**
