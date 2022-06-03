@@ -4,7 +4,11 @@ import axios from 'axios'
 import { FOXY_ASSET_ID, FoxyMarketService } from './foxy'
 import { fox, mockFoxyMarketData } from './foxyMockData'
 
-const foxyMarketService = new FoxyMarketService()
+const foxyMarketService = new FoxyMarketService({
+  jsonRpcProviderUrl: '',
+  unchainedEthereumHttpUrl: '',
+  unchainedEthereumWsUrl: ''
+})
 
 jest.mock('axios')
 
