@@ -1,4 +1,4 @@
-import { adapters } from '@shapeshiftoss/caip'
+import { toAssetId } from '@shapeshiftoss/caip'
 import type { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { bip32ToAddressNList, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import {
@@ -61,8 +61,12 @@ export class YearnOpportunity
   }
   public readonly apy: BigNumber
   public readonly displayName: string
+  public readonly version: string
+  public readonly symbol: string
+  public readonly name: string
   public readonly id: string
   public readonly isApprovalRequired: true
+  public readonly isNew: boolean
   public readonly metadata: VaultMetadata
   public readonly underlyingAsset: { assetId: string; balance: BigNumber }
   public readonly positionAsset: {
@@ -76,6 +80,7 @@ export class YearnOpportunity
   public readonly tvl: {
     assetId: string
     balance: BigNumber
+    balanceUsdc: BigNumber
   }
 
   constructor(deps: YearnOpportunityDeps, vault: Vault) {
@@ -92,20 +97,38 @@ export class YearnOpportunity
     this.id = vault.address
     this.metadata = vault.metadata
     this.displayName = vault.metadata.displayName || vault.name
+    this.version = vault.version
+    this.symbol = vault.symbol
     this.apy = bnOrZero(vault.metadata.apy?.net_apy)
+    this.isNew = vault.metadata.apy?.type === 'new'
+    this.name = `${vault.metadata.displayName} ${vault.version}`
+    this.symbol = vault.metadata.symbol
     // @TODO TotalSupply from the API awas 0
     this.supply = bnOrZero(vault.metadata.totalSupply)
     this.tvl = {
       balance: bnOrZero(vault.underlyingTokenBalance.amount),
-      assetId: adapters.yearnToAssetId(vault.tokenId)
+      balanceUsdc: bnOrZero(vault.underlyingTokenBalance.amountUsdc),
+      assetId: toAssetId({
+        chainId: 'eip155:1',
+        assetNamespace: 'erc20',
+        assetReference: vault.tokenId || vault.token
+      })
     }
     this.underlyingAsset = {
       balance: bnOrZero(0),
-      assetId: adapters.yearnToAssetId(vault.tokenId || vault.token)
+      assetId: toAssetId({
+        chainId: 'eip155:1',
+        assetNamespace: 'erc20',
+        assetReference: vault.tokenId || vault.token
+      })
     }
     this.positionAsset = {
       balance: bnOrZero(0),
-      assetId: adapters.yearnToAssetId(this.id),
+      assetId: toAssetId({
+        chainId: 'eip155:1',
+        assetNamespace: 'erc20',
+        assetReference: this.id
+      }),
       underlyingPerPosition: bnOrZero(vault.metadata.pricePerShare)
     }
     this.feeAsset = {

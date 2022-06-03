@@ -1,7 +1,7 @@
 import { toChainId } from '@shapeshiftoss/caip'
 import { ChainAdapter, ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
+import { ChainTypes } from '@shapeshiftoss/types'
 import dotenv from 'dotenv'
 
 import { bnOrZero } from './utils'
@@ -35,7 +35,7 @@ const main = async (): Promise<void> => {
   const adapterManager = new ChainAdapterManager(unchainedUrls)
   const wallet = await getWallet()
   const chainAdapter = adapterManager.byChainId(
-    toChainId({ chain: ChainTypes.Ethereum, network: NetworkTypes.MAINNET })
+    toChainId({ chainNamespace: 'eip155', chainReference: '1' })
   ) as ChainAdapter<ChainTypes.Ethereum>
   const yearnInvestor = new YearnInvestor({
     providerUrl: 'https://daemon.ethereum.shapeshift.com', // 'https://api.ethereum.shapeshift.com',
@@ -51,7 +51,6 @@ const main = async (): Promise<void> => {
   const allOpportunities = await yearnInvestor.findAll()
 
   const usdcOpportunities = await yearnInvestor.findByUnderlyingAssetId(usdcCaip19)
-  // const opportunities = await yearnInvestor.findAll()
   const opportunity = usdcOpportunities[1]
 
   const allowance = await opportunity.allowance(address)
@@ -79,16 +78,6 @@ const main = async (): Promise<void> => {
       2
     )
   )
-
-  // for (let o of opportunities) {
-  //   try {
-  //   console.log('opportunity', o)
-  //   const result = await o?.allowance(address)
-  //   console.log('result', result)
-  //   } catch (e) {
-  //     console.log(e)
-  //   }
-  // }
 }
 
 main()
