@@ -187,7 +187,7 @@ export interface Swapper {
   /**
    * Get the usd rate from either the assets symbol or tokenId
    */
-  getUsdRate(input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string>
+  getUsdRate(input: Asset): Promise<string>
 
   /**
    * Get the minimum and maximum trade value of the sellAsset and buyAsset
