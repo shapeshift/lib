@@ -1,3 +1,5 @@
+import { HistoryTimeframe } from '@shapeshiftoss/types'
+
 import { CoinGeckoMarketService } from './coingecko/coingecko'
 import {
   mockCGFindAllData,
@@ -189,32 +191,38 @@ describe('market service', () => {
     })
   })
 
-  /**
   describe('findPriceHistoryByAssetId', () => {
-    const args = {
+    const findPriceHistoryByAssetIdArgs = {
       assetId: 'eip155:1/slip44:60',
       timeframe: HistoryTimeframe.HOUR
     }
-    it('can return from fist market service and skip the next', async () => {
-      const result = await marketServiceManager.findPriceHistoryByAssetId(args)
+
+    it('can return from first market service and skip the next', async () => {
+      const marketServiceManager = new MarketServiceManager(marketServiceManagerArgs)
+      const result = await marketServiceManager.findPriceHistoryByAssetId(
+        findPriceHistoryByAssetIdArgs
+      )
       expect(result).toEqual(mockCGPriceHistoryData)
     })
-    it('can return from the next market service if the first is not found', async () => {
-      MarketProviders[0].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-      MarketProviders[1].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-      const result = await marketServiceManager.findPriceHistoryByAssetId(args)
-      expect(result).toEqual(mockYearnPriceHistoryData)
-    })
-    it('can return null if no data found', async () => {
-      MarketProviders[0].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-      MarketProviders[1].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-      MarketProviders[2].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-      MarketProviders[3].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-      MarketProviders[4].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-      MarketProviders[5].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
-      const result = await marketServiceManager.findPriceHistoryByAssetId(args)
-      expect(result).toEqual([])
-    })
+    // it('can return from the next market service if the first is not found', async () => {
+    //   MarketProviders[0].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
+    //   MarketProviders[1].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
+    //   const result = await marketServiceManager.findPriceHistoryByAssetId(
+    //     findPriceHistoryByAssetIdArgs
+    //   )
+    //   expect(result).toEqual(mockYearnPriceHistoryData)
+    // })
+    // it('can return null if no data found', async () => {
+    //   MarketProviders[0].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
+    //   MarketProviders[1].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
+    //   MarketProviders[2].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
+    //   MarketProviders[3].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
+    //   MarketProviders[4].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
+    //   MarketProviders[5].findPriceHistoryByAssetId.mockRejectedValueOnce({ error: 'error' })
+    //   const result = await marketServiceManager.findPriceHistoryByAssetId(
+    //     findPriceHistoryByAssetIdArgs
+    //   )
+    //   expect(result).toEqual([])
+    // })
   })
-  */
 })
