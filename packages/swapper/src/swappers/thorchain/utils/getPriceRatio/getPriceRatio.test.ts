@@ -18,13 +18,26 @@ describe('getPriceRatio', () => {
       Promise.resolve({ data: [foxMidgardPool, ethMidgardPool] })
     )
 
-    const ratio = await getPriceRatio({
-      deps,
-      input: { buyAssetId: foxId, sellAssetId: ethId }
-    })
+    const ratio = await getPriceRatio(deps, { buyAssetId: foxId, sellAssetId: ethId })
 
     const expectedRatio = '0.00007843266864639218'
 
     expect(ratio).toEqual(expectedRatio)
+  })
+
+  it('should throw if  calculating a price for an unknown asset', async () => {
+    const deps: ThorchainSwapperDeps = {
+      midgardUrl: 'localhost:3000',
+      adapterManager: <ChainAdapterManager>{}
+    }
+    const derpId = 'eip155:1/erc20:derp'
+    const ethId = 'eip155:1/slip44:60'
+    ;(thorService.get as jest.Mock<unknown>).mockReturnValue(
+      Promise.resolve({ data: [foxMidgardPool, ethMidgardPool] })
+    )
+
+    await expect(getPriceRatio(deps, { buyAssetId: derpId, sellAssetId: ethId })).rejects.toThrow(
+      `[getPriceRatio]: No thorchain pool found`
+    )
   })
 })

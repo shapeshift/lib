@@ -67,7 +67,7 @@ export const makeTradeTx = async ({
       `${deps.midgardUrl}/thorchain/inbound_addresses`
     )
 
-    const router = inboundAddresses.find((inbound) => inbound?.chain === 'ETH')?.router
+    const router = inboundAddresses.find((inbound) => inbound.chain === 'ETH')?.router
     const vault = inboundAddresses.find((inbound) => inbound.chain === 'ETH')?.address
 
     if (!vault || !router)
@@ -76,17 +76,25 @@ export const makeTradeTx = async ({
         details: { inboundAddresses }
       })
 
-    const priceRatio = await getPriceRatio({
-      deps,
-      input: { buyAssetId: buyAsset.assetId, sellAssetId: sellAsset.assetId }
+    const priceRatio = await getPriceRatio(deps, {
+      buyAssetId: buyAsset.assetId,
+      sellAssetId: sellAsset.assetId
     })
     const expectedBuyAmount = toBaseUnit(
       fromBaseUnit(bnOrZero(sellAmount).dividedBy(priceRatio), sellAsset.precision),
       buyAsset.precision
     )
 
+    if (
+      !bnOrZero(expectedBuyAmount).gte(0) ||
+      !(bnOrZero(slippageTolerance).gte(0) && bnOrZero(slippageTolerance).lte(1))
+    )
+      throw new SwapError('[makeTradeTx]: bad expected buy amount or bad slippage tolerance', {
+        code: SwapErrorTypes.BUILD_TRADE_FAILED
+      })
+
     const limit = bnOrZero(expectedBuyAmount)
-      .times(bnOrZero(1).minus(slippageTolerance))
+      .times(new BigNumber(1).minus(slippageTolerance))
       .decimalPlaces(0)
       .toString()
 

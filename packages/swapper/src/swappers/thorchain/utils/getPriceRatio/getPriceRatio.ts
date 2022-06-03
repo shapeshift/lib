@@ -5,13 +5,10 @@ import { bnOrZero } from '../../../zrx/utils/bignumber'
 import { MidgardResponse, ThorchainSwapperDeps } from '../../types'
 import { thorService } from '../thorService'
 
-export const getPriceRatio = async ({
-  deps,
-  input
-}: {
-  deps: ThorchainSwapperDeps
+export const getPriceRatio = async (
+  deps: ThorchainSwapperDeps,
   input: { buyAssetId: AssetId; sellAssetId: AssetId }
-}): Promise<string> => {
+): Promise<string> => {
   const { buyAssetId, sellAssetId } = input
   try {
     const buyPoolId = adapters.assetIdToPoolAssetId({ assetId: buyAssetId })
