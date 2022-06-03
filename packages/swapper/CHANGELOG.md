@@ -1,3 +1,26 @@
+# [@shapeshiftoss/swapper-v5.9.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.8.1...@shapeshiftoss/swapper-v5.9.0) (2022-06-03)
+
+
+### Features
+
+* **assetService:** consume normalization of Asset properties & use static data ([#746](https://github.com/shapeshift/lib/issues/746)) ([ca87bee](https://github.com/shapeshift/lib/commit/ca87bee46419a03d490a826b2b42c90b49cc3079))
+
+# [@shapeshiftoss/swapper-v5.8.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.8.0...@shapeshiftoss/swapper-v5.8.1) (2022-06-03)
+
+# [@shapeshiftoss/swapper-v5.8.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.7.0...@shapeshiftoss/swapper-v5.8.0) (2022-06-03)
+
+
+### Features
+
+* eth make trade tx utility ([#742](https://github.com/shapeshift/lib/issues/742)) ([180ed39](https://github.com/shapeshift/lib/commit/180ed398e8cf8700825071893116a8b5f9f38ef9))
+
+# [@shapeshiftoss/swapper-v5.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.6.0...@shapeshiftoss/swapper-v5.7.0) (2022-06-02)
+
+
+### Features
+
+* add getUsdRate for thorchainSwapper ([#737](https://github.com/shapeshift/lib/issues/737)) ([f629780](https://github.com/shapeshift/lib/commit/f62978047f95670672cc8d948b3e2981cc3362c7))
+
 # [@shapeshiftoss/swapper-v5.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.5.0...@shapeshiftoss/swapper-v5.6.0) (2022-06-02)
 
 
