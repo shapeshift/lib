@@ -11,8 +11,8 @@ import { cowService } from '../cowService'
 const USDC_CONTRACT_ADDRESS = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
 
 export const getUsdRate = async (
-  { assetService }: CowSwapperDeps,
-  input: Pick<Asset, 'symbol' | 'assetId'>
+  { assetService, apiUrl }: CowSwapperDeps,
+  input: Pick<Asset, 'assetId'>
 ): Promise<string> => {
   const { assetId } = input
 
@@ -37,7 +37,7 @@ export const getUsdRate = async (
     // It returns the estimated amount in quoteToken for either buying or selling amount of baseToken.
     const rateResponse: AxiosResponse<CowSwapPriceResponse> =
       await cowService.get<CowSwapPriceResponse>(
-        '/v1/markets/' + USDC_CONTRACT_ADDRESS + '-' + erc20Address + '/buy/1000000000'
+        `${apiUrl}/v1/markets/${USDC_CONTRACT_ADDRESS}-${erc20Address}/buy/1000000000`
       )
 
     const tokenAmount = bnOrZero(rateResponse.data.amount).div(

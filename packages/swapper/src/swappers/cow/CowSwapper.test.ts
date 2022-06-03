@@ -8,6 +8,7 @@ import { getUsdRate } from './utils/helpers/helpers'
 jest.mock('./utils/helpers/helpers')
 
 const cowSwapperDeps: CowSwapperDeps = {
+  apiUrl: 'https://api.cow.fi/mainnet/api/',
   assetService: <AssetService>{}
 }
 

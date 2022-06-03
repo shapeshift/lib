@@ -23,6 +23,7 @@ import { getUsdRate } from './utils/helpers/helpers'
 
 export type CowSwapperDeps = {
   assetService: AssetService
+  apiUrl: string
 }
 
 export class CowSwapper implements Swapper {
