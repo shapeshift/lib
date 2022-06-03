@@ -9,6 +9,7 @@ import { CowSwapPriceResponse } from '../../types'
 import { cowService } from '../cowService'
 
 const USDC_CONTRACT_ADDRESS = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+const USDC_ASSET_PRECISION = 6
 
 export const getUsdRate = async (
   { assetService, apiUrl }: CowSwapperDeps,
@@ -31,13 +32,16 @@ export const getUsdRate = async (
     tokenId: erc20Address
   })
 
+  const buyAmountInDollars = 1000
+  const buyAmount = bn(buyAmountInDollars).times(bn(10).exponentiatedBy(USDC_ASSET_PRECISION))
+
   try {
     // rate is imprecise for low $ values, hence asking for $1000
     // cowSwap api used : markets/{baseToken}-{quoteToken}/{kind}/{amount}
     // It returns the estimated amount in quoteToken for either buying or selling amount of baseToken.
     const rateResponse: AxiosResponse<CowSwapPriceResponse> =
       await cowService.get<CowSwapPriceResponse>(
-        `${apiUrl}/v1/markets/${USDC_CONTRACT_ADDRESS}-${erc20Address}/buy/1000000000`
+        `${apiUrl}/v1/markets/${USDC_CONTRACT_ADDRESS}-${erc20Address}/buy/${buyAmount}`
       )
 
     const tokenAmount = bnOrZero(rateResponse.data.amount).div(
@@ -50,7 +54,7 @@ export const getUsdRate = async (
       })
 
     // dividing $1000 by amount of token received
-    return bn(1000).dividedBy(tokenAmount).toString()
+    return bn(buyAmountInDollars).dividedBy(tokenAmount).toString()
   } catch (e) {
     if (e instanceof SwapError) throw e
     throw new SwapError('[getUsdRate]', {
