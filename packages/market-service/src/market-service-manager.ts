@@ -36,7 +36,7 @@ export class MarketServiceManager {
     const yearnSdk = new Yearn(network, { provider })
 
     this.marketProviders = [
-      // Order of this MarketProviders array constitutes the order of provders we will be checking first.
+      // Order of this MarketProviders array constitutes the order of providers we will be checking first.
       // More reliable providers should be listed first.
       new CoinGeckoMarketService({ coinGeckoAPIKey }),
       new CoinCapMarketService(),
