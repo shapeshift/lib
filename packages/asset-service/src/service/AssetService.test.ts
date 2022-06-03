@@ -2,7 +2,6 @@ import { Asset, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import axios from 'axios'
 
 import { AssetService } from './AssetService'
-import { mockBaseAssets, mockIndexedAssetData } from './AssetServiceTestData'
 import descriptions from './descriptions.json'
 
 jest.mock('axios')
@@ -32,97 +31,20 @@ jest.mock(
   { virtual: true }
 )
 
+jest.mock(
+  './generatedAssetData.json',
+  () => ({
+    'eip155:3/slip44:60': 'a blue fox'
+  }),
+  { virtual: true }
+)
+
 describe('AssetService', () => {
-  const assetFileUrl = 'http://example.com'
-
-  describe('byNetwork', () => {
-    it('should throw if not initialized', () => {
-      const assetService = new AssetService(assetFileUrl)
-      mockedAxios.get.mockResolvedValue({ data: mockBaseAssets })
-      expect(() => assetService.byNetwork(NetworkTypes.MAINNET)).toThrow(Error)
-    })
-
-    it('should return assets by network', async () => {
-      const assetService = new AssetService(assetFileUrl)
-      mockedAxios.get.mockResolvedValue({ data: mockBaseAssets })
-      await assetService.initialize()
-      const ethAssets = assetService.byNetwork(NetworkTypes.MAINNET)
-      expect(ethAssets).toEqual(
-        Object.values(mockIndexedAssetData).filter((a: Asset) => a.network === NetworkTypes.MAINNET)
-      )
-    })
-
-    it('should return assets from all networks', async () => {
-      const assetService = new AssetService(assetFileUrl)
-      mockedAxios.get.mockResolvedValue({ data: mockBaseAssets })
-      await assetService.initialize()
-      const ethAssets = assetService.byNetwork()
-      expect(ethAssets).toEqual(Object.values(mockIndexedAssetData))
-    })
-  })
-
-  describe('byTokenId', () => {
-    const tokenId = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
-    it('should throw if not initialized', () => {
-      const assetService = new AssetService(assetFileUrl)
-      mockedAxios.get.mockResolvedValue({ data: mockBaseAssets })
-      const chain = ChainTypes.Ethereum
-      const network = NetworkTypes.MAINNET
-      const args = { chain, network, tokenId }
-      expect(() => assetService.byTokenId(args)).toThrow(Error)
-    })
-
-    it('should return base asset for chain given no tokenId', async () => {
-      const assetService = new AssetService(assetFileUrl)
-      mockedAxios.get.mockResolvedValue({ data: mockBaseAssets })
-      await assetService.initialize()
-      const chain = ChainTypes.Ethereum
-      const network = NetworkTypes.MAINNET
-      const args = { chain, network }
-      expect(assetService.byTokenId(args)).toEqual(
-        Object.values(mockIndexedAssetData).find(
-          ({ name, network: assetNetwork }: Asset) =>
-            name === 'Ethereum' && assetNetwork === NetworkTypes.MAINNET
-        )
-      )
-    })
-
-    it(`should return FOX on ${NetworkTypes.ETH_ROPSTEN} when specified`, async () => {
-      const assetService = new AssetService(assetFileUrl)
-      mockedAxios.get.mockResolvedValue({ data: mockBaseAssets })
-      await assetService.initialize()
-      const chain = ChainTypes.Ethereum
-      const network = NetworkTypes.ETH_ROPSTEN
-      const args = { chain, network, tokenId }
-      expect(assetService.byTokenId(args)).toEqual(
-        Object.values(mockIndexedAssetData).find(
-          ({ tokenId: assetTokenId, network: assetNetwork }: Asset) =>
-            assetTokenId === tokenId && assetNetwork === NetworkTypes.ETH_ROPSTEN
-        )
-      )
-    })
-
-    it(`should return FOX on ${NetworkTypes.MAINNET} when specified`, async () => {
-      const assetService = new AssetService(assetFileUrl)
-      mockedAxios.get.mockResolvedValue({ data: mockBaseAssets })
-      await assetService.initialize()
-      const chain = ChainTypes.Ethereum
-      const network = NetworkTypes.MAINNET
-      const args = { chain, network, tokenId }
-      expect(assetService.byTokenId(args)).toEqual(
-        Object.values(mockIndexedAssetData).find(
-          ({ tokenId: assetTokenId, network: assetNetwork }: Asset) =>
-            assetTokenId === tokenId && assetNetwork === NetworkTypes.MAINNET
-        )
-      )
-    })
-  })
-
   describe('description', () => {
     it('should return the overridden description if it exists', async () => {
-      const assetService = new AssetService(assetFileUrl)
+      const assetService = new AssetService()
 
-      await expect(assetService.description({ asset: EthAsset })).resolves.toEqual({
+      await expect(assetService.description(EthAsset.assetId)).resolves.toEqual({
         description: 'overridden description',
         isTrusted: true
       })
@@ -132,18 +54,17 @@ describe('AssetService', () => {
       const assetDescriptions = descriptions as Record<string, string>
       delete assetDescriptions[EthAsset.assetId]
 
-      const assetService = new AssetService(assetFileUrl)
+      const assetService = new AssetService()
       const description = { en: 'a blue fox' }
       mockedAxios.get.mockResolvedValue({ data: { description } })
-      await expect(assetService.description({ asset: EthAsset })).resolves.toEqual({
+      await expect(assetService.description(EthAsset.assetId)).resolves.toEqual({
         description: description.en
       })
     })
 
     it('should throw if not found', async () => {
-      const assetService = new AssetService(assetFileUrl)
+      const assetService = new AssetService()
       mockedAxios.get.mockRejectedValue({ data: null })
-      const chain = ChainTypes.Ethereum
       const tokenData: Asset = {
         assetId: 'eip155:3/erc20:0x1da00b6fc705f2ce4c25d7e7add25a3cc045e54a',
         chainId: 'eip155:3',
@@ -158,12 +79,10 @@ describe('AssetService', () => {
         icon: 'https://assets.coingecko.com/coins/images/17049/thumb/BUNNY.png?1626148809',
         symbol: 'TST'
       }
-      const expectedErrorMessage = `AssetService:description: no description available for ${tokenData.tokenId} on chain ${chain}`
-      await expect(
-        assetService.description({
-          asset: tokenData
-        })
-      ).rejects.toEqual(new Error(expectedErrorMessage))
+      const expectedErrorMessage = `AssetService:description: no description available for ${tokenData.assetId}`
+      await expect(assetService.description(tokenData.assetId)).rejects.toEqual(
+        new Error(expectedErrorMessage)
+      )
     })
   })
 })

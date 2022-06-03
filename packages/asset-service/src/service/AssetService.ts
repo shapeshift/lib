@@ -48,7 +48,7 @@ export class AssetService {
 
       return { description: data?.description?.en ?? '' }
     } catch (e) {
-      const errorMessage = `AssetService:description: no description availble for ${assetId}`
+      const errorMessage = `AssetService:description: no description available for ${assetId}`
       throw new Error(errorMessage)
     }
   }
