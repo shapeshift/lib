@@ -12,13 +12,12 @@ import { ChainTypes } from '@shapeshiftoss/types'
 import { type ChainId, type Vault, type VaultMetadata, Yearn } from '@yfi/sdk'
 import type { BigNumber } from 'bignumber.js'
 import isNil from 'lodash/isNil'
-import omit from 'lodash/omit'
 import Web3 from 'web3'
 import { Contract } from 'web3-eth-contract'
 import { numberToHex } from 'web3-utils'
 
 import { erc20Abi, MAX_ALLOWANCE, ssRouterContractAddress, yv2VaultAbi } from './constants'
-import { buildTxToSign, toPath } from './utils'
+import { toPath } from './utils'
 import { bnOrZero } from './utils/bignumber'
 
 type YearnOpportunityDeps = {
@@ -30,12 +29,14 @@ type YearnOpportunityDeps = {
   yearnSdk: Yearn<1>
 }
 
-export type PreparedTransaction = Omit<
-  ETHSignTx,
-  'addressNList' | 'maxFeePerGas' | 'maxPriorityFeePerGas' | 'gasPrice'
-> & {
+export type PreparedTransaction = {
+  chainId: number
+  data: string
+  estimatedGas: BigNumber
   gasPrice: BigNumber
-  feePriority?: FeePriority
+  nonce: string
+  to: string
+  value: '0'
 }
 
 const feeMultipier: Record<FeePriority, number> = Object.freeze({
@@ -171,9 +172,13 @@ export class YearnOpportunity
     const addressNList = bip32ToAddressNList(path)
     const gasPrice = numberToHex(bnOrZero(tx.gasPrice).times(feeMultipier[feeSpeed]).toString())
     const txToSign: ETHSignTx = {
-      ...omit(tx, ['feePriority', 'gasPrice']),
-      addressNList,
-      gasPrice
+      ...tx,
+      gasPrice,
+      // Gas limit safety factor of 50% to prevent out of gas errors on chain.
+      gasLimit: numberToHex(tx.estimatedGas.times(1.5).integerValue().toString()),
+      nonce: numberToHex(tx.nonce),
+      value: numberToHex(tx.value),
+      addressNList
     }
 
     if (wallet.supportsOfflineSigning()) {
@@ -218,7 +223,7 @@ export class YearnOpportunity
     const nonce = await this.#internals.web3.eth.getTransactionCount(address)
     const gasPrice = bnOrZero(await this.#internals.web3.eth.getGasPrice())
 
-    return buildTxToSign({
+    return {
       chainId: 1,
       data,
       estimatedGas,
@@ -226,7 +231,7 @@ export class YearnOpportunity
       nonce: String(nonce),
       to: this.id,
       value: '0'
-    })
+    }
   }
 
   async prepareWithdrawal(input: DepositWithdrawArgs): Promise<PreparedTransaction> {
@@ -244,7 +249,7 @@ export class YearnOpportunity
     const nonce = await this.#internals.web3.eth.getTransactionCount(address)
     const gasPrice = bnOrZero(await this.#internals.web3.eth.getGasPrice())
 
-    return buildTxToSign({
+    return {
       chainId: 1,
       data,
       estimatedGas,
@@ -252,7 +257,7 @@ export class YearnOpportunity
       nonce: String(nonce),
       to: this.id,
       value: '0'
-    })
+    }
   }
 
   public async allowance(address: string): Promise<BigNumber> {
@@ -282,7 +287,7 @@ export class YearnOpportunity
     const nonce: number = await this.#internals.web3.eth.getTransactionCount(address)
     const gasPrice = bnOrZero(await this.#internals.web3.eth.getGasPrice())
 
-    return buildTxToSign({
+    return {
       chainId: 1,
       data,
       estimatedGas,
@@ -290,7 +295,7 @@ export class YearnOpportunity
       nonce: String(nonce),
       to: this.#internals.vault.tokenId,
       value: '0'
-    })
+    }
   }
 
   /**

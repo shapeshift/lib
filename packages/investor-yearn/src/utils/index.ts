@@ -1,3 +1,3 @@
 export * from './bignumber'
-export * from './buildTxToSign'
+export * from './toPath'
 export * from './transformVault'

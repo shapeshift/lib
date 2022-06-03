@@ -1,8 +1,6 @@
-// @ts-nocheck
 import { toChainId } from '@shapeshiftoss/caip'
 import { ChainAdapter, ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { Fee } from '@shapeshiftoss/investor'
 import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 import dotenv from 'dotenv'
 
@@ -61,10 +59,11 @@ const main = async (): Promise<void> => {
   const withdrawPreparedTx = await opportunity.prepareDeposit({ address, amount: bnOrZero(1000) })
   const depositPreparedTx = await opportunity.prepareWithdrawal({ address, amount: bnOrZero(1000) })
 
-  const signedTx = await opportunity.signAndBroadcast(
-    { wallet, chainAdapter },
-    { ...depositPreparedTx, feePriority: Fee.High }
-  )
+  const signedTx = await opportunity.signAndBroadcast({
+    wallet,
+    tx: depositPreparedTx,
+    feePriority: 'fast'
+  })
   console.info(
     JSON.stringify(
       {
