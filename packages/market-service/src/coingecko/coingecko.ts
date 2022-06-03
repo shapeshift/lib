@@ -56,7 +56,7 @@ export class CoinGeckoMarketService implements MarketService {
       : ''
   }
 
-  findAll = async (args?: FindAllMarketArgs) => {
+  async findAll(args?: FindAllMarketArgs) {
     const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
     const { count } = argsToUse
     const perPage = count > 250 ? 250 : count
@@ -105,7 +105,7 @@ export class CoinGeckoMarketService implements MarketService {
     }
   }
 
-  findByAssetId = async ({ assetId }: MarketDataArgs): Promise<MarketData | null> => {
+  async findByAssetId({ assetId }: MarketDataArgs): Promise<MarketData | null> {
     try {
       if (!adapters.assetIdToCoingecko(assetId)) return null
       const { chainNamespace, assetReference } = fromAssetId(assetId)
@@ -139,10 +139,10 @@ export class CoinGeckoMarketService implements MarketService {
     }
   }
 
-  findPriceHistoryByAssetId = async ({
+  async findPriceHistoryByAssetId({
     assetId,
     timeframe
-  }: PriceHistoryArgs): Promise<HistoryData[]> => {
+  }: PriceHistoryArgs): Promise<HistoryData[]> {
     if (!adapters.assetIdToCoingecko(assetId)) return []
     try {
       const { chainNamespace, assetReference } = fromAssetId(assetId)
