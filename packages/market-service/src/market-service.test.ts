@@ -6,7 +6,6 @@ import {
   mockCGFindByAssetIdData,
   mockCGPriceHistoryData
 } from './coingecko/coingeckoMockData'
-import { FOXY_ASSET_ID } from './foxy/foxy'
 import { mockFoxyMarketData, mockFoxyPriceHistoryData } from './foxy/foxyMockData'
 import { MarketServiceManager } from './market-service-manager'
 import {
@@ -42,7 +41,8 @@ jest.mock('./coingecko/coingecko', () => ({
 
 const coingeckoMock = jest.mocked(CoinGeckoMarketService, true)
 
-const coincapFindAllMock = jest.fn(() => mockYearnServiceFindAllData)
+const coincapFindAllMock = jest.fn().mockImplementation(() => mockCGFindAllData)
+
 jest.mock('./coincap/coincap', () => ({
   CoinCapMarketService: jest.fn().mockImplementation(() => {
     return {
@@ -53,42 +53,50 @@ jest.mock('./coincap/coincap', () => ({
   })
 }))
 
-// const coincapMock = jest.mocked(CoinCapMarketService, true)
+const yearnVaultFindAllMock = jest.fn().mockImplementation(() => mockYearnServiceFindAllData)
 
 jest.mock('./yearn/yearn-vaults', () => ({
   YearnVaultMarketCapService: jest.fn().mockImplementation(() => {
     return {
-      findAll: jest.fn(() => mockYearnServiceFindAllData),
+      findAll: yearnVaultFindAllMock,
       findByAssetId: jest.fn(() => mockYearnFindByAssetIdData),
       findPriceHistoryByAssetId: jest.fn(() => mockYearnPriceHistoryData)
     }
   })
 }))
+
+// const yearnVaultMock = jest.mocked(YearnVaultMarketCapService, true)
+
+const yearnTokenFindAllMock = jest.fn().mockImplementation(() => mockYearnServiceFindAllData)
 
 jest.mock('./yearn/yearn-tokens', () => ({
   YearnTokenMarketCapService: jest.fn().mockImplementation(() => {
     return {
-      findAll: jest.fn(() => mockYearnServiceFindAllData),
+      findAll: yearnTokenFindAllMock,
       findByAssetId: jest.fn(() => mockYearnFindByAssetIdData),
       findPriceHistoryByAssetId: jest.fn(() => mockYearnPriceHistoryData)
     }
   })
 }))
 
+const osmosisFindAllMock = jest.fn().mockImplementation(() => mockOsmosisFindAllData)
+
 jest.mock('./osmosis/osmosis', () => ({
   OsmosisMarketService: jest.fn().mockImplementation(() => {
     return {
-      findAll: jest.fn(() => mockOsmosisFindAllData),
+      findAll: osmosisFindAllMock,
       findByAssetId: jest.fn(() => mockOsmosisFindByAssetId),
       findPriceHistoryByAssetId: jest.fn(() => mockOsmosisYearlyHistoryData)
     }
   })
 }))
 
+const foxyFindAllMock = jest.fn().mockImplementation(() => mockFoxyMarketData)
+
 jest.mock('./foxy/foxy', () => ({
   FoxyMarketService: jest.fn().mockImplementation(() => {
     return {
-      findAll: jest.fn(() => ({ [FOXY_ASSET_ID]: mockFoxyMarketData })),
+      findAll: foxyFindAllMock,
       findByAssetId: jest.fn(() => mockFoxyMarketData),
       findPriceHistoryByAssetId: jest.fn(() => mockFoxyPriceHistoryData)
     }
@@ -99,7 +107,7 @@ jest.mock('@yfi/sdk')
 
 describe('market service', () => {
   describe('findAll', () => {
-    it.only('can return from first market service and skip the next', async () => {
+    it('can return from first market service and skip the next', async () => {
       const args = {
         coinGeckoAPIKey: 'dummyCoingeckoApiKey',
         yearnChainReference: 1 as const,
@@ -112,33 +120,48 @@ describe('market service', () => {
       expect(coingeckoFindAllMock).toBeCalledWith(findAllArgs) // this should return data
       expect(coincapFindAllMock).not.toBeCalled() // and the next provider should not be called
     })
-    /**
+
     it('can call the next market service if the first fails', async () => {
-      MarketProviders[0].findAll.mockRejectedValueOnce({ error: 'error' })
-      await marketServiceManager.findAll({ count: Number() })
-      expect(MarketProviders[1].findAll).toHaveBeenCalledTimes(1)
+      const args = {
+        coinGeckoAPIKey: 'dummyCoingeckoApiKey',
+        yearnChainReference: 1 as const,
+        jsonRpcProviderUrl: ''
+      }
+      const marketServiceManager = new MarketServiceManager(args)
+      coingeckoFindAllMock.mockRejectedValueOnce({ error: 'error' })
+      const findAllArgs = { count: Number() }
+      const result = await marketServiceManager.findAll(findAllArgs)
+      expect(coingeckoFindAllMock).toBeCalledWith(findAllArgs) // this will mock error
+      expect(coincapFindAllMock).toBeCalledWith(findAllArgs) // this will return
+      expect(result).toEqual(mockCGFindAllData)
     })
+
     it('errors if no data found', async () => {
-      MarketProviders[0].findAll.mockRejectedValueOnce({ error: 'error' })
-      MarketProviders[1].findAll.mockRejectedValueOnce({ error: 'error' })
-      MarketProviders[2].findAll.mockRejectedValueOnce({ error: 'error' })
-      MarketProviders[3].findAll.mockRejectedValueOnce({ error: 'error' })
-      MarketProviders[4].findAll.mockRejectedValueOnce({ error: 'error' })
-      MarketProviders[5].findAll.mockRejectedValueOnce({ error: 'error' })
+      const args = {
+        coinGeckoAPIKey: 'dummyCoingeckoApiKey',
+        yearnChainReference: 1 as const,
+        jsonRpcProviderUrl: ''
+      }
+      const marketServiceManager = new MarketServiceManager(args)
+      coingeckoFindAllMock.mockRejectedValueOnce({ error: 'error' })
+      coincapFindAllMock.mockRejectedValueOnce({ error: 'error' })
+      yearnVaultFindAllMock.mockRejectedValueOnce({ error: 'error' })
+      yearnTokenFindAllMock.mockRejectedValueOnce({ error: 'error' })
+      osmosisFindAllMock.mockRejectedValueOnce({ error: 'error' })
+      foxyFindAllMock.mockRejectedValueOnce({ error: 'error' })
       await expect(marketServiceManager.findAll({ count: Number() })).rejects.toEqual(
         new Error('Cannot find market service provider for market data.')
       )
     })
-    it('returns market service data if exists', async () => {
-      const result = await marketServiceManager.findAll({ count: Number() })
-      expect(result).toEqual(mockCGFindAllData)
-    })
-    it('returns next market service data if previous data does not exist', async () => {
-      MarketProviders[0].findAll.mockRejectedValueOnce({ error: 'error' })
-      const result = await marketServiceManager.findAll({ count: Number() })
-      expect(result).toEqual(mockYearnServiceFindAllData)
-    })
- */
+    // it('returns market service data if exists', async () => {
+    //   const result = await marketServiceManager.findAll({ count: Number() })
+    //   expect(result).toEqual(mockCGFindAllData)
+    // })
+    // it('returns next market service data if previous data does not exist', async () => {
+    //   MarketProviders[0].findAll.mockRejectedValueOnce({ error: 'error' })
+    //   const result = await marketServiceManager.findAll({ count: Number() })
+    //   expect(result).toEqual(mockYearnServiceFindAllData)
+    // })
   })
 
   /**
