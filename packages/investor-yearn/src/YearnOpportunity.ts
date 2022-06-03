@@ -191,7 +191,7 @@ export class YearnOpportunity
       }
       return chainAdapter.signAndBroadcastTransaction({ txToSign, wallet })
     } else {
-      throw new Error('Invalid HDWallet configuration ')
+      throw new Error('Invalid HDWallet configuration')
     }
   }
 
