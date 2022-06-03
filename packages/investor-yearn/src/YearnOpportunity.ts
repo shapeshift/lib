@@ -22,12 +22,12 @@ import { buildTxToSign, toPath } from './utils'
 import { bnOrZero } from './utils/bignumber'
 
 type YearnOpportunityDeps = {
+  chainAdapter: ChainAdapter<ChainTypes.Ethereum>
   contract: Contract
   dryRun?: true
   logger?: Logger
   web3: Web3
   yearnSdk: Yearn<1>
-  chainAdapter: ChainAdapter<ChainTypes.Ethereum>
 }
 
 export type PreparedTransaction = Omit<
@@ -50,13 +50,13 @@ export class YearnOpportunity
     ApprovalRequired<PreparedTransaction>
 {
   readonly #internals: {
-    routerContract: Contract
+    chainAdapter: ChainAdapter<ChainTypes.Ethereum>
     dryRun?: true
     logger?: Logger
+    routerContract: Contract
     vault: Vault
     web3: Web3
     yearn: Yearn<ChainId>
-    chainAdapter: ChainAdapter<ChainTypes.Ethereum>
   }
   public readonly apy: BigNumber
   public readonly displayName: string
@@ -79,13 +79,13 @@ export class YearnOpportunity
 
   constructor(deps: YearnOpportunityDeps, vault: Vault) {
     this.#internals = {
+      chainAdapter: deps.chainAdapter,
       dryRun: deps.dryRun,
-      routerContract: deps.contract,
       logger: deps.logger ?? new Logger({ name: 'Yearn Opportunity' }),
-      yearn: deps.yearnSdk,
-      web3: deps.web3,
+      routerContract: deps.contract,
       vault,
-      chainAdapter: deps.chainAdapter
+      web3: deps.web3,
+      yearn: deps.yearnSdk
     }
 
     this.id = vault.address

@@ -41,7 +41,8 @@ const main = async (): Promise<void> => {
   ) as ChainAdapter<ChainTypes.Ethereum>
   const yearnInvestor = new YearnInvestor({
     providerUrl: 'https://daemon.ethereum.shapeshift.com', // 'https://api.ethereum.shapeshift.com',
-    dryRun: true
+    dryRun: true,
+    chainAdapter
   })
 
   const address = '0x358dae76Bb42Be167dD5A64f95E0d537b024834e'
@@ -64,16 +65,16 @@ const main = async (): Promise<void> => {
     { wallet, chainAdapter },
     { ...depositPreparedTx, feePriority: Fee.High }
   )
-  console.log(
+  console.info(
     JSON.stringify(
       {
-        // allOpportunities,
+        allOpportunities,
         opportunity,
-        // allowance,
-        // approvalPreparedTx,
-        // depositPreparedTx,
-        // withdrawPreparedTx,
-        // signedTx
+        allowance,
+        approvalPreparedTx,
+        depositPreparedTx,
+        withdrawPreparedTx,
+        signedTx
       },
       null,
       2

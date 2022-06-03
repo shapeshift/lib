@@ -12,33 +12,33 @@ import { ssRouterAbi, ssRouterContractAddress } from './constants'
 import { PreparedTransaction, YearnOpportunity } from './YearnOpportunity'
 
 type ConstructorArgs = {
-  dryRun?: true
-  providerUrl: string
-  network?: ChainId
   chainAdapter: ChainAdapter<ChainTypes.Ethereum>
+  dryRun?: true
+  network?: ChainId
+  providerUrl: string
 }
 
 export class YearnInvestor implements Investor<PreparedTransaction, VaultMetadata> {
   #deps: {
-    web3: Web3
-    yearnSdk: Yearn<1>
+    chainAdapter: ChainAdapter<ChainTypes.Ethereum>
     contract: Contract
     dryRun?: true
-    chainAdapter: ChainAdapter<ChainTypes.Ethereum>
+    web3: Web3
+    yearnSdk: Yearn<1>
   }
   #opportunities: YearnOpportunity[]
 
-  constructor({ dryRun, providerUrl, network = 1, chainAdapter }: ConstructorArgs) {
+  constructor({ chainAdapter, dryRun, providerUrl, network = 1 }: ConstructorArgs) {
     const httpProvider = new Web3.providers.HttpProvider(providerUrl)
     const jsonRpcProvider = new JsonRpcProvider(providerUrl)
 
     const web3 = new Web3(httpProvider)
     this.#deps = Object.freeze({
       chainAdapter,
+      contract: new web3.eth.Contract(ssRouterAbi, ssRouterContractAddress),
       dryRun,
       web3,
-      yearnSdk: new Yearn(network, { provider: jsonRpcProvider }),
-      contract: new web3.eth.Contract(ssRouterAbi, ssRouterContractAddress)
+      yearnSdk: new Yearn(network, { provider: jsonRpcProvider })
     })
     this.#opportunities = []
   }

@@ -1,6 +1,7 @@
 import { BIP44Params } from '@shapeshiftoss/types'
-import { numberToHex } from 'web3-utils'
 import type { BigNumber } from 'bignumber.js'
+import { numberToHex } from 'web3-utils'
+
 import { PreparedTransaction } from '..'
 
 type BuildTxToSignInput = {
