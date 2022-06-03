@@ -62,25 +62,15 @@ export type Asset = {
   description?: string
   isTrustedDescription?: boolean
   /** @deprecated: do not use. This will be removed once consumers have handled it */
-  dataSource?: AssetDataSource
-  /** @deprecated: do not use. This will be removed once consumers have handled it */
   network: NetworkTypes
   symbol: string
   name: string
   precision: number
-  /** @deprecated: do not use. This will be removed once consumers have handled it */
-  slip44?: number
   color: string
-  /** @deprecated: do not use. This will be removed once consumers have handled it */
-  secondaryColor?: string
   icon: string
   explorer: string
   explorerTxLink: string
   explorerAddressLink: string
-  /** @deprecated: do not use. This will be removed once consumers have handled it */
-  sendSupport?: boolean
-  /** @deprecated: do not use. This will be removed once consumers have handled it */
-  receiveSupport?: boolean
 }
 
 // swapper
