@@ -12,6 +12,7 @@ import { ChainTypes } from '@shapeshiftoss/types'
 import { type ChainId, type Vault, type VaultMetadata, Yearn } from '@yfi/sdk'
 import type { BigNumber } from 'bignumber.js'
 import isNil from 'lodash/isNil'
+import toLower from 'lodash/toLower'
 import Web3 from 'web3'
 import { Contract } from 'web3-eth-contract'
 import { numberToHex } from 'web3-utils'
@@ -74,6 +75,7 @@ export class YearnOpportunity
     balance: BigNumber
     underlyingPerPosition: BigNumber
   }
+  public readonly expired: boolean
   public readonly feeAsset: { assetId: string }
   public readonly price: BigNumber
   public readonly supply: BigNumber
@@ -94,7 +96,7 @@ export class YearnOpportunity
       yearn: deps.yearnSdk
     }
 
-    this.id = vault.address
+    this.id = toLower(vault.address)
     this.metadata = vault.metadata
     this.displayName = vault.metadata.displayName || vault.name
     this.version = vault.version
@@ -103,6 +105,7 @@ export class YearnOpportunity
     this.isNew = vault.metadata.apy?.type === 'new'
     this.name = `${vault.metadata.displayName} ${vault.version}`
     this.symbol = vault.metadata.symbol
+    this.expired = vault.metadata.depositsDisabled || bnOrZero(vault.metadata.depositLimit).lte(0)
     // @TODO TotalSupply from the API awas 0
     this.supply = bnOrZero(vault.metadata.totalSupply)
     this.tvl = {
