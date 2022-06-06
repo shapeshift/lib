@@ -3,8 +3,9 @@ import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import Web3 from 'web3'
 
 import { SwapperType } from '../api'
-import { ThorchainSwapper, ThorchainSwapperDeps, ZrxSwapper, ZrxSwapperDeps } from '../swappers'
+import { ThorchainSwapper, ZrxSwapper, ZrxSwapperDeps } from '../swappers'
 import { CowSwapper } from '../swappers/cow/CowSwapper'
+import { ThorchainSwapperDeps } from '../swappers/thorchain/types'
 import { SwapperManager } from './SwapperManager'
 
 describe('SwapperManager', () => {
@@ -14,7 +15,8 @@ describe('SwapperManager', () => {
   }
 
   const thorchainSwapperDeps: ThorchainSwapperDeps = {
-    midgardUrl: 'localhost:3000'
+    midgardUrl: 'localhost:3000',
+    adapterManager: <ChainAdapterManager>{}
   }
 
   describe('constructor', () => {

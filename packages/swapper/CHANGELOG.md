@@ -1,3 +1,40 @@
+# [@shapeshiftoss/swapper-v5.10.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.9.0...@shapeshiftoss/swapper-v5.10.0) (2022-06-03)
+
+
+### Features
+
+* **swapper:** consume normalization of Asset properties ([#744](https://github.com/shapeshift/lib/issues/744)) ([cdf8ae8](https://github.com/shapeshift/lib/commit/cdf8ae8d3c0a276d172410d0e0860cc8e400034b))
+
+# [@shapeshiftoss/swapper-v5.9.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.8.1...@shapeshiftoss/swapper-v5.9.0) (2022-06-03)
+
+
+### Features
+
+* **assetService:** consume normalization of Asset properties & use static data ([#746](https://github.com/shapeshift/lib/issues/746)) ([ca87bee](https://github.com/shapeshift/lib/commit/ca87bee46419a03d490a826b2b42c90b49cc3079))
+
+# [@shapeshiftoss/swapper-v5.8.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.8.0...@shapeshiftoss/swapper-v5.8.1) (2022-06-03)
+
+# [@shapeshiftoss/swapper-v5.8.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.7.0...@shapeshiftoss/swapper-v5.8.0) (2022-06-03)
+
+
+### Features
+
+* eth make trade tx utility ([#742](https://github.com/shapeshift/lib/issues/742)) ([180ed39](https://github.com/shapeshift/lib/commit/180ed398e8cf8700825071893116a8b5f9f38ef9))
+
+# [@shapeshiftoss/swapper-v5.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.6.0...@shapeshiftoss/swapper-v5.7.0) (2022-06-02)
+
+
+### Features
+
+* add getUsdRate for thorchainSwapper ([#737](https://github.com/shapeshift/lib/issues/737)) ([f629780](https://github.com/shapeshift/lib/commit/f62978047f95670672cc8d948b3e2981cc3362c7))
+
+# [@shapeshiftoss/swapper-v5.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.5.0...@shapeshiftoss/swapper-v5.6.0) (2022-06-02)
+
+
+### Features
+
+* get call data for router deposit call ([#739](https://github.com/shapeshift/lib/issues/739)) ([807e547](https://github.com/shapeshift/lib/commit/807e547a02928f6d4aac03599ba386ab6efc9ced))
+
 # [@shapeshiftoss/swapper-v5.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.4.0...@shapeshiftoss/swapper-v5.5.0) (2022-06-02)
 
 

@@ -1,15 +1,18 @@
+import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import axios from 'axios'
 
 import { ThorchainSwapper } from './ThorchainSwapper'
-jest.mock('axios')
+import { thorService } from './utils/thorService'
+jest.mock('./utils/thorService')
 
-const mockedAxios = axios as jest.Mocked<typeof axios>
+const mockedAxios = thorService as jest.Mocked<typeof axios>
 
 describe('ThorchainSwapper', () => {
   describe('initialize', () => {
     it('throws when api response', async () => {
       const swapper = new ThorchainSwapper({
-        midgardUrl: 'localhost:3000'
+        midgardUrl: 'localhost:3000',
+        adapterManager: <ChainAdapterManager>{}
       })
 
       mockedAxios.get.mockImplementation(() => {
