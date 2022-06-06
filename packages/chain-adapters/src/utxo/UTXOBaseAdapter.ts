@@ -35,6 +35,7 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
   protected chainId: ChainId
   protected assetId: AssetId
   protected coinName: string
+  protected accountAddresses: Record<string, Array<string>> = {}
   protected readonly supportedChainIds: ChainId[]
   protected readonly providers: {
     http: unchained.bitcoin.V1Api
@@ -96,6 +97,11 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
       const { data } = await this.providers.http.getAccount({ pubkey })
 
       const balance = bnOrZero(data.balance).plus(bnOrZero(data.unconfirmedBalance))
+
+      // cache addresses for getTxHistory to use without needing to make extra requests
+      this.accountAddresses[data.pubkey] = data.addresses?.map((address) => address.pubkey) ?? [
+        data.pubkey
+      ]
 
       return {
         balance: balance.toString(),

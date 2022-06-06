@@ -4,7 +4,6 @@ import { ethers } from 'ethers'
 import { EthereumTx } from '../../generated/ethereum'
 import { TransferType, TxParser } from '../../types'
 import { SubParser, TxSpecific } from '../types'
-import ERC20_ABI from './abi/erc20'
 import WETH_ABI from './abi/weth'
 import { WETH_CONTRACT_MAINNET, WETH_CONTRACT_ROPSTEN } from './constants'
 import { getSigHash, txInteractsWithContract } from './utils'
@@ -17,6 +16,7 @@ export interface ParserArgs {
 export class Parser implements SubParser {
   provider: ethers.providers.JsonRpcProvider
 
+  readonly name = 'weth'
   readonly chainId: ChainId
   readonly wethContract: string
   readonly abiInterface = new ethers.utils.Interface(WETH_ABI)
@@ -55,8 +55,6 @@ export class Parser implements SubParser {
     // failed to decode input data
     if (!decoded) return
 
-    const contract = new ethers.Contract(this.wethContract, ERC20_ABI, this.provider)
-
     const assetId = toAssetId({
       ...fromChainId(this.chainId),
       assetNamespace: 'erc20',
@@ -65,9 +63,9 @@ export class Parser implements SubParser {
 
     const token = {
       contract: this.wethContract,
-      decimals: await contract.decimals(),
-      name: await contract.name(),
-      symbol: await contract.symbol()
+      decimals: 18,
+      name: 'Wrapped Ether',
+      symbol: 'WETH'
     }
 
     const transfers = (() => {

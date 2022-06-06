@@ -48,7 +48,8 @@ export class TransactionParser {
     this.foxy = new foxy.Parser()
     this.weth = new weth.Parser({ chainId: this.chainId, provider })
 
-    this.parsers = [this.zrx, this.thor, this.uniV2, this.yearn, this.foxy, this.weth]
+    // order here matters currently as weth and yearn have the same sigHash for deposit() and the weth parser is stricter resulting in faster processing times
+    this.parsers = [this.zrx, this.thor, this.uniV2, this.weth, this.foxy, this.yearn]
   }
 
   async parse(tx: EthereumTx, address: string): Promise<ParsedTx> {

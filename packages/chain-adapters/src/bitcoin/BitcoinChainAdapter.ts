@@ -85,16 +85,15 @@ export class ChainAdapter
   async getTxHistory(
     input: chainAdapters.TxHistoryInput
   ): Promise<chainAdapters.TxHistoryResponse<ChainTypes.Bitcoin>> {
-    const account = await this.getAccount(input.pubkey)
+    if (!this.accountAddresses[input.pubkey]) {
+      await this.getAccount(input.pubkey)
+    }
+
     const { data } = await this.providers.http.getTxHistory({
       pubkey: input.pubkey,
       pageSize: input.pageSize,
       cursor: input.cursor
     })
-
-    const accountAddresses = account.chainSpecific.addresses?.map((addr) => addr.pubkey) ?? [
-      account.pubkey
-    ]
 
     const getAddresses = (tx: unchained.bitcoin.BitcoinTx): Array<string> => {
       const addresses: Array<string> = []
@@ -114,7 +113,9 @@ export class ChainAdapter
 
     const txs = await Promise.all(
       (data.txs ?? []).map(async (tx) => {
-        const addresses = getAddresses(tx).filter((addr) => accountAddresses.includes(addr))
+        const addresses = getAddresses(tx).filter((addr) =>
+          this.accountAddresses[input.pubkey].includes(addr)
+        )
 
         return await Promise.all(
           addresses.map(async (addr) => {
