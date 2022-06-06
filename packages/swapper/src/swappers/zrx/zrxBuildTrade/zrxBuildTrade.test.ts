@@ -77,8 +77,6 @@ describe('ZrxBuildTrade', () => {
 
   const buildTradeResponse = {
     sellAsset,
-    success: true,
-    statusReason: '',
     sellAmount: quoteResponse.sellAmount,
     buyAmount: '',
     depositAddress: quoteResponse.to,

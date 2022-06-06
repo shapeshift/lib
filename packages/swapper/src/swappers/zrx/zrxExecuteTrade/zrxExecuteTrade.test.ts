@@ -25,8 +25,6 @@ describe('ZrxExecuteTrade', () => {
   const trade: ZrxTrade<'eip155:1'> = {
     buyAsset,
     sellAsset,
-    success: true,
-    statusReason: '',
     sellAmount: '1',
     buyAmount: '',
     depositAddress: '0x123',
