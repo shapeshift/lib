@@ -99,8 +99,6 @@ export async function zrxBuildTrade(
     const trade: ZrxTrade<'eip155:1'> = {
       sellAsset,
       buyAsset,
-      success: true,
-      statusReason: '',
       sellAssetAccountNumber,
       receiveAddress,
       rate: data.price,
