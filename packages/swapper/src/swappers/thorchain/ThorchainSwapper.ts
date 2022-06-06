@@ -4,6 +4,7 @@ import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
 import {
   ApprovalNeededOutput,
   BuyAssetBySellIdInput,
+  GetTradeQuoteInput,
   SwapError,
   SwapErrorTypes,
   Swapper,
@@ -16,6 +17,7 @@ import {
 import { MidgardResponse, ThorchainSwapperDeps } from './types'
 import { getUsdRate } from './utils/getUsdRate/getUsdRate'
 import { thorService } from './utils/thorService'
+import { getTradeQuote } from './getTradeQuote/getTradeQuote'
 
 export class ThorchainSwapper implements Swapper {
   private supportedAssetIds: AssetId[] = []
@@ -78,8 +80,8 @@ export class ThorchainSwapper implements Swapper {
     throw new Error('ThorchainSwapper: buildTrade unimplemented')
   }
 
-  async getTradeQuote(): Promise<TradeQuote<SupportedChainIds>> {
-    throw new Error('ThorchainSwapper: getTradeQuote unimplemented')
+  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<SupportedChainIds>> {
+    return getTradeQuote(input)
   }
 
   async executeTrade(): Promise<TradeResult> {
