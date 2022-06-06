@@ -5,13 +5,13 @@ import {
   HDWallet,
   OsmosisSignTx
 } from '@shapeshiftoss/hdwallet-core'
+import { BIP44Params, ChainSpecific, ChainTypes, UtxoAccountType } from '@shapeshiftoss/types'
 
-import { BIP44Params, ChainTypes, UtxoAccountType } from '../base'
-import { ChainSpecific } from '../utility'
 import * as bitcoin from './bitcoin'
 import * as cosmos from './cosmos'
 import * as ethereum from './ethereum'
 import * as osmosis from './osmosis'
+
 export { bitcoin, cosmos, ethereum }
 
 type ChainSpecificAccount<T> = ChainSpecific<
