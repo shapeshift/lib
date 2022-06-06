@@ -38,7 +38,7 @@ const main = async (): Promise<void> => {
     toChainId({ chainNamespace: 'eip155', chainReference: '1' })
   ) as ChainAdapter<ChainTypes.Ethereum>
   const yearnInvestor = new YearnInvestor({
-    providerUrl: 'https://daemon.ethereum.shapeshift.com', // 'https://api.ethereum.shapeshift.com',
+    providerUrl: 'https://daemon.ethereum.shapeshift.com',
     dryRun: true,
     chainAdapter
   })
