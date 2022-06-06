@@ -1,5 +1,5 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
-import { Asset, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
+import { Asset } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
@@ -26,12 +26,8 @@ export const getUsdRate = async (
     })
   }
 
-  const asset = assetService.byTokenId({
-    chain: ChainTypes.Ethereum,
-    network: NetworkTypes.MAINNET,
-    tokenId: erc20Address
-  })
-
+  const assets = assetService.getAll()
+  const asset = assets[assetId]
   const buyAmountInDollars = 1000
   const buyAmount = bn(buyAmountInDollars).times(bn(10).exponentiatedBy(USDC_ASSET_PRECISION))
 

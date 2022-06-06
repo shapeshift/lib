@@ -1,5 +1,4 @@
 import { AssetService } from '@shapeshiftoss/asset-service'
-import { ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
 
 import { FOX, WBTC } from '../../../utils/test-data/assets'
 import { CowSwapperDeps } from '../../CowSwapper'
@@ -9,26 +8,20 @@ import { getUsdRate } from '../helpers/helpers'
 jest.mock('../cowService')
 jest.mock('@shapeshiftoss/asset-service')
 
-declare type ByTokenIdArgs = {
-  chain: ChainTypes
-  network?: NetworkTypes
-  tokenId?: string
-}
-
 // @ts-ignore
 AssetService.mockImplementation(() => ({
-  byTokenId: (args: ByTokenIdArgs) => {
-    if (args.tokenId === '0xc770eefad204b5180df6a14ee197d99d808ee52d') {
-      return FOX
+  getAll: () => {
+    return {
+      'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d': FOX,
+      'eip155:1/erc20:0x2260fac5e5542a773aa44fbcfedf7c193bc2c599': WBTC
     }
-    return WBTC
   }
 }))
 
 describe('utils', () => {
   const cowSwapperDeps: CowSwapperDeps = {
     apiUrl: 'https://api.cow.fi/mainnet/api/',
-    assetService: new AssetService('')
+    assetService: new AssetService()
   }
 
   describe('getUsdRate', () => {
