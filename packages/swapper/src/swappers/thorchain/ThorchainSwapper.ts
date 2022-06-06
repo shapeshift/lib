@@ -43,7 +43,6 @@ export class ThorchainSwapper implements Swapper {
       }, [])
 
       this.supportedAssetIds = supportedAssetIds
-
     } catch (e) {
       throw new SwapError('[thorchainInitialize]: initialize failed to set supportedAssetIds', {
         code: SwapErrorTypes.INITIALIZE_FAILED,
