@@ -139,19 +139,6 @@ export class YearnOpportunity
     }
   }
 
-  // TODO(theobold): think through this function to see if we want to call this after yearn
-  // transactions have confirmed on chain.
-  // private async update() {
-  //   // re-fetch data and update state
-  //   const contract = new this.#internals.web3.eth.Contract(yv2VaultAbi, this.id)
-  //   const pricePerShare = await contract.methods.pricePerShare().call()
-  //   return bnOrZero(pricePerShare)
-  //   const totalSupply = await contract.methods.totalSupply().call()
-  //   return bnOrZero(totalSupply)
-  //   const positionBalance = await contract.methods.balanceOf(userAddress).call()
-  //   return bnOrZero(positionBalance)
-  // }
-
   private checksumAddress(address: string): string {
     return this.#internals.web3.utils.toChecksumAddress(address)
   }
