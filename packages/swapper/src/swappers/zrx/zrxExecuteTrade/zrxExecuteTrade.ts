@@ -15,7 +15,7 @@ export async function zrxExecuteTrade(
     const value = sellAsset.assetId === 'eip155:1/slip44:60' ? trade.sellAmount : '0'
     const adapter = await adapterManager.byChainId(sellAsset.chainId)
     const bip44Params = adapter.buildBIP44Params({
-      accountNumber: bnOrZero(trade.sellAssetAccountId).toNumber()
+      accountNumber: bnOrZero(trade.sellAssetAccountNumber).toNumber()
     })
 
     const buildTxResponse = await adapter.buildSendTransaction({
