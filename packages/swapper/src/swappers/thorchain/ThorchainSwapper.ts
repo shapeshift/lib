@@ -44,8 +44,6 @@ export class ThorchainSwapper implements Swapper {
 
       this.supportedAssetIds = supportedAssetIds
 
-      // eslint-disable-next-line no-console
-      console.log('SETTING THOR SUPPORTED ASSETS', supportedAssetIds)
     } catch (e) {
       throw new SwapError('[thorchainInitialize]: initialize failed to set supportedAssetIds', {
         code: SwapErrorTypes.INITIALIZE_FAILED,
