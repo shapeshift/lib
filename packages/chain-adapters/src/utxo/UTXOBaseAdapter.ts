@@ -1,11 +1,27 @@
 import { AssetId, ChainId } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, HDWallet, PublicKey } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, chainAdapters, ChainTypes, UtxoAccountType } from '@shapeshiftoss/types'
+import { BIP44Params, ChainTypes, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import WAValidator from 'multicoin-address-validator'
 
 import { ChainAdapter as IChainAdapter } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
+import {
+  Account,
+  BuildSendTxInput,
+  ChainTxType,
+  FeeDataEstimate,
+  GetAddressInput,
+  GetFeeDataInput,
+  SignTxInput,
+  SubscribeError,
+  SubscribeTxsInput,
+  Transaction,
+  TxHistoryInput,
+  TxHistoryResponse,
+  ValidAddressResult,
+  ValidAddressResultType
+} from '../types'
 import { accountTypeToScriptType, convertXpubVersion, toRootDerivationPath } from '../utils'
 import { bnOrZero } from '../utils/bignumber'
 
@@ -48,34 +64,26 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
   /* Abstract Methods */
 
   abstract subscribeTxs(
-    input: chainAdapters.SubscribeTxsInput,
-    onMessage: (msg: chainAdapters.Transaction<T>) => void,
-    onError?: (err: chainAdapters.SubscribeError) => void
+    input: SubscribeTxsInput,
+    onMessage: (msg: Transaction<T>) => void,
+    onError?: (err: SubscribeError) => void
   ): Promise<void>
-  abstract unsubscribeTxs(input?: chainAdapters.SubscribeTxsInput): void
+  abstract unsubscribeTxs(input?: SubscribeTxsInput): void
   abstract closeTxs(): void
   abstract getType(): T
   abstract getSupportedAccountTypes(): UtxoAccountType[]
   abstract getFeeAssetId(): AssetId
-  abstract getTxHistory(
-    input: chainAdapters.TxHistoryInput
-  ): Promise<chainAdapters.TxHistoryResponse<T>>
+  abstract getTxHistory(input: TxHistoryInput): Promise<TxHistoryResponse<T>>
 
   abstract buildBIP44Params(params: Partial<BIP44Params>): BIP44Params
 
-  abstract buildSendTransaction(
-    tx: chainAdapters.BuildSendTxInput<T>
-  ): Promise<{ txToSign: chainAdapters.ChainTxType<T> }>
+  abstract buildSendTransaction(tx: BuildSendTxInput<T>): Promise<{ txToSign: ChainTxType<T> }>
 
-  abstract getAddress(input: chainAdapters.GetAddressInput): Promise<string>
+  abstract getAddress(input: GetAddressInput): Promise<string>
 
-  abstract getFeeData(
-    input: Partial<chainAdapters.GetFeeDataInput<T>>
-  ): Promise<chainAdapters.FeeDataEstimate<T>>
+  abstract getFeeData(input: Partial<GetFeeDataInput<T>>): Promise<FeeDataEstimate<T>>
 
-  abstract signTransaction(
-    signTxInput: chainAdapters.SignTxInput<chainAdapters.ChainTxType<T>>
-  ): Promise<string>
+  abstract signTransaction(signTxInput: SignTxInput<ChainTxType<T>>): Promise<string>
 
   /* public methods */
 
@@ -87,7 +95,7 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
     return this.assetId
   }
 
-  async getAccount(pubkey: string): Promise<chainAdapters.Account<T>> {
+  async getAccount(pubkey: string): Promise<Account<T>> {
     if (!pubkey) {
       return ErrorHandler('UTXOBaseAdapter: pubkey parameter is not defined')
     }
@@ -108,7 +116,7 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
           nextReceiveAddressIndex: data.nextReceiveAddressIndex
         },
         pubkey: data.pubkey
-      } as chainAdapters.Account<T>
+      } as Account<T>
     } catch (err) {
       return ErrorHandler(err)
     }
@@ -121,10 +129,10 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
     return data
   }
 
-  async validateAddress(address: string): Promise<chainAdapters.ValidAddressResult> {
+  async validateAddress(address: string): Promise<ValidAddressResult> {
     const isValidAddress = WAValidator.validate(address, this.getType())
-    if (isValidAddress) return { valid: true, result: chainAdapters.ValidAddressResultType.Valid }
-    return { valid: false, result: chainAdapters.ValidAddressResultType.Invalid }
+    if (isValidAddress) return { valid: true, result: ValidAddressResultType.Valid }
+    return { valid: false, result: ValidAddressResultType.Invalid }
   }
 
   /* protected / private methods */

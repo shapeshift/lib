@@ -1,5 +1,21 @@
 import { AssetId, ChainId } from '@shapeshiftoss/caip'
-import { BIP44Params, chainAdapters, ChainTypes, UtxoAccountType } from '@shapeshiftoss/types'
+import { BIP44Params, ChainTypes, UtxoAccountType } from '@shapeshiftoss/types'
+
+import {
+  Account,
+  BuildSendTxInput,
+  ChainTxType,
+  FeeDataEstimate,
+  GetAddressInput,
+  GetFeeDataInput,
+  SignTxInput,
+  SubscribeError,
+  SubscribeTxsInput,
+  Transaction,
+  TxHistoryInput,
+  TxHistoryResponse,
+  ValidAddressResult
+} from './types'
 
 export type ChainAdapter<T extends ChainTypes> = {
   /**
@@ -23,41 +39,35 @@ export type ChainAdapter<T extends ChainTypes> = {
   /**
    * Get the balance of an address
    */
-  getAccount(pubkey: string): Promise<chainAdapters.Account<T>>
+  getAccount(pubkey: string): Promise<Account<T>>
 
   buildBIP44Params(params: Partial<BIP44Params>): BIP44Params
 
-  getTxHistory(input: chainAdapters.TxHistoryInput): Promise<chainAdapters.TxHistoryResponse<T>>
+  getTxHistory(input: TxHistoryInput): Promise<TxHistoryResponse<T>>
 
-  buildSendTransaction(input: chainAdapters.BuildSendTxInput<T>): Promise<{
-    txToSign: chainAdapters.ChainTxType<T>
+  buildSendTransaction(input: BuildSendTxInput<T>): Promise<{
+    txToSign: ChainTxType<T>
   }>
 
-  getAddress(input: chainAdapters.GetAddressInput): Promise<string>
+  getAddress(input: GetAddressInput): Promise<string>
 
-  signTransaction(
-    signTxInput: chainAdapters.SignTxInput<chainAdapters.ChainTxType<T>>
-  ): Promise<string>
+  signTransaction(signTxInput: SignTxInput<ChainTxType<T>>): Promise<string>
 
-  signAndBroadcastTransaction?(
-    signTxInput: chainAdapters.SignTxInput<chainAdapters.ChainTxType<T>>
-  ): Promise<string>
+  signAndBroadcastTransaction?(signTxInput: SignTxInput<ChainTxType<T>>): Promise<string>
 
-  getFeeData(
-    input: Partial<chainAdapters.GetFeeDataInput<T>>
-  ): Promise<chainAdapters.FeeDataEstimate<T>>
+  getFeeData(input: Partial<GetFeeDataInput<T>>): Promise<FeeDataEstimate<T>>
 
   broadcastTransaction(hex: string): Promise<string>
 
-  validateAddress(address: string): Promise<chainAdapters.ValidAddressResult>
+  validateAddress(address: string): Promise<ValidAddressResult>
 
   subscribeTxs(
-    input: chainAdapters.SubscribeTxsInput,
-    onMessage: (msg: chainAdapters.Transaction<T>) => void,
-    onError?: (err: chainAdapters.SubscribeError) => void
+    input: SubscribeTxsInput,
+    onMessage: (msg: Transaction<T>) => void,
+    onError?: (err: SubscribeError) => void
   ): Promise<void>
 
-  unsubscribeTxs(input?: chainAdapters.SubscribeTxsInput): void
+  unsubscribeTxs(input?: SubscribeTxsInput): void
 
   closeTxs(): void
 }

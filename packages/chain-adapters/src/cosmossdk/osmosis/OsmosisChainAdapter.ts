@@ -5,11 +5,23 @@ import {
   OsmosisTx,
   supportsOsmosis
 } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
+import { BIP44Params, ChainTypes } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import { bech32 } from 'bech32'
 
 import { ErrorHandler } from '../../error/ErrorHandler'
+import {
+  BuildClaimRewardsTxInput,
+  BuildDelegateTxInput,
+  BuildRedelegateTxInput,
+  BuildSendTxInput,
+  BuildUndelegateTxInput,
+  FeeDataEstimate,
+  FeeDataKey,
+  GetAddressInput,
+  GetFeeDataInput,
+  SignTxInput
+} from '../../types'
 import { toPath } from '../../utils'
 import { bnOrZero } from '../../utils/bignumber'
 import { ChainAdapterArgs, CosmosSdkBaseAdapter } from '../CosmosSdkBaseAdapter'
@@ -53,7 +65,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Osmosis> {
     return ChainTypes.Osmosis
   }
 
-  async getAddress(input: chainAdapters.GetAddressInput): Promise<string> {
+  async getAddress(input: GetAddressInput): Promise<string> {
     const { wallet, bip44Params = ChainAdapter.defaultBIP44Params } = input
     const path = toPath(bip44Params)
     const addressNList = bip32ToAddressNList(path)
@@ -76,7 +88,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Osmosis> {
     }
   }
 
-  async signTransaction(signTxInput: chainAdapters.SignTxInput<OsmosisSignTx>): Promise<string> {
+  async signTransaction(signTxInput: SignTxInput<OsmosisSignTx>): Promise<string> {
     try {
       const { txToSign, wallet } = signTxInput
       if (supportsOsmosis(wallet)) {
@@ -94,7 +106,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Osmosis> {
   }
 
   async buildSendTransaction(
-    tx: chainAdapters.BuildSendTxInput<ChainTypes.Osmosis>
+    tx: BuildSendTxInput<ChainTypes.Osmosis>
   ): Promise<{ txToSign: OsmosisSignTx }> {
     try {
       const {
@@ -171,7 +183,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Osmosis> {
   }
 
   async buildDelegateTransaction(
-    tx: chainAdapters.BuildDelegateTxInput<ChainTypes.Osmosis>
+    tx: BuildDelegateTxInput<ChainTypes.Osmosis>
   ): Promise<{ txToSign: OsmosisSignTx }> {
     try {
       const {
@@ -243,7 +255,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Osmosis> {
   }
 
   async buildUndelegateTransaction(
-    tx: chainAdapters.BuildUndelegateTxInput<ChainTypes.Osmosis>
+    tx: BuildUndelegateTxInput<ChainTypes.Osmosis>
   ): Promise<{ txToSign: OsmosisSignTx }> {
     try {
       const {
@@ -314,7 +326,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Osmosis> {
   }
 
   async buildClaimRewardsTransaction(
-    tx: chainAdapters.BuildClaimRewardsTxInput<ChainTypes.Osmosis>
+    tx: BuildClaimRewardsTxInput<ChainTypes.Osmosis>
   ): Promise<{ txToSign: OsmosisSignTx }> {
     try {
       const {
@@ -379,7 +391,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Osmosis> {
   }
 
   async buildRedelegateTransaction(
-    tx: chainAdapters.BuildRedelegateTxInput<ChainTypes.Osmosis>
+    tx: BuildRedelegateTxInput<ChainTypes.Osmosis>
   ): Promise<{ txToSign: OsmosisSignTx }> {
     try {
       const {
@@ -461,30 +473,26 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Osmosis> {
   async getFeeData({
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars -- Disable no-unused-vars lint rule for unimplemented variable */
     sendMax
-  }: Partial<chainAdapters.GetFeeDataInput<ChainTypes.Osmosis>>): Promise<
-    chainAdapters.FeeDataEstimate<ChainTypes.Osmosis>
-  > {
+  }: Partial<GetFeeDataInput<ChainTypes.Osmosis>>): Promise<FeeDataEstimate<ChainTypes.Osmosis>> {
     // We currently don't have a way to query validators to get dynamic fees, so they are hard coded.
     // When we find a strategy to make this more dynamic, we can use 'sendMax' to define max amount.
     return {
-      [chainAdapters.FeeDataKey.Fast]: {
+      [FeeDataKey.Fast]: {
         txFee: '5000',
         chainSpecific: { gasLimit: '250000' }
       },
-      [chainAdapters.FeeDataKey.Average]: {
+      [FeeDataKey.Average]: {
         txFee: '3500',
         chainSpecific: { gasLimit: '250000' }
       },
-      [chainAdapters.FeeDataKey.Slow]: {
+      [FeeDataKey.Slow]: {
         txFee: '2500',
         chainSpecific: { gasLimit: '250000' }
       }
     }
   }
 
-  async signAndBroadcastTransaction(
-    signTxInput: chainAdapters.SignTxInput<OsmosisSignTx>
-  ): Promise<string> {
+  async signAndBroadcastTransaction(signTxInput: SignTxInput<OsmosisSignTx>): Promise<string> {
     const { wallet } = signTxInput
     try {
       if (supportsOsmosis(wallet)) {

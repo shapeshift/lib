@@ -1,6 +1,7 @@
 import { AssetNamespace } from '@shapeshiftoss/caip'
-import { chainAdapters } from '@shapeshiftoss/types'
 import { Status, TransferType } from '@shapeshiftoss/unchained-client'
+
+import { TxStatus, TxType } from '../types'
 
 export * from './bip44'
 export * from './utxoUtils'
@@ -11,17 +12,17 @@ export const getAssetNamespace = (type: string): AssetNamespace => {
   throw new Error(`Unknown asset namespace. type: ${type}`)
 }
 
-export const getStatus = (status: Status): chainAdapters.TxStatus => {
-  if (status === Status.Pending) return chainAdapters.TxStatus.Pending
-  if (status === Status.Confirmed) return chainAdapters.TxStatus.Confirmed
-  if (status === Status.Failed) return chainAdapters.TxStatus.Failed
+export const getStatus = (status: Status): TxStatus => {
+  if (status === Status.Pending) return TxStatus.Pending
+  if (status === Status.Confirmed) return TxStatus.Confirmed
+  if (status === Status.Failed) return TxStatus.Failed
 
-  return chainAdapters.TxStatus.Unknown
+  return TxStatus.Unknown
 }
 
-export const getType = (type: TransferType): chainAdapters.TxType => {
-  if (type === TransferType.Send) return chainAdapters.TxType.Send
-  if (type === TransferType.Receive) return chainAdapters.TxType.Receive
+export const getType = (type: TransferType): TxType => {
+  if (type === TransferType.Send) return TxType.Send
+  if (type === TransferType.Receive) return TxType.Receive
 
-  return chainAdapters.TxType.Unknown
+  return TxType.Unknown
 }

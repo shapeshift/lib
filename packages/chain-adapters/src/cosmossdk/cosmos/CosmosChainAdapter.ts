@@ -5,11 +5,23 @@ import {
   CosmosTx,
   supportsCosmos
 } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
+import { BIP44Params, ChainTypes } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import { bech32 } from 'bech32'
 
 import { ErrorHandler } from '../../error/ErrorHandler'
+import {
+  BuildClaimRewardsTxInput,
+  BuildDelegateTxInput,
+  BuildRedelegateTxInput,
+  BuildSendTxInput,
+  BuildUndelegateTxInput,
+  FeeDataEstimate,
+  FeeDataKey,
+  GetAddressInput,
+  GetFeeDataInput,
+  SignTxInput
+} from '../../types'
 import { toPath } from '../../utils'
 import { bnOrZero } from '../../utils/bignumber'
 import { ChainAdapterArgs, CosmosSdkBaseAdapter } from '../CosmosSdkBaseAdapter'
@@ -50,7 +62,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
     return 'cosmos:cosmoshub-4/slip44:118'
   }
 
-  async getAddress(input: chainAdapters.GetAddressInput): Promise<string> {
+  async getAddress(input: GetAddressInput): Promise<string> {
     const { wallet, bip44Params = ChainAdapter.defaultBIP44Params } = input
     const path = toPath(bip44Params)
     const addressNList = bip32ToAddressNList(path)
@@ -73,7 +85,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
     }
   }
 
-  async signTransaction(signTxInput: chainAdapters.SignTxInput<CosmosSignTx>): Promise<string> {
+  async signTransaction(signTxInput: SignTxInput<CosmosSignTx>): Promise<string> {
     try {
       const { txToSign, wallet } = signTxInput
       if (supportsCosmos(wallet)) {
@@ -91,7 +103,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
   }
 
   async buildSendTransaction(
-    tx: chainAdapters.BuildSendTxInput<ChainTypes.Cosmos>
+    tx: BuildSendTxInput<ChainTypes.Cosmos>
   ): Promise<{ txToSign: CosmosSignTx }> {
     try {
       const {
@@ -168,7 +180,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
   }
 
   async buildDelegateTransaction(
-    tx: chainAdapters.BuildDelegateTxInput<ChainTypes.Cosmos>
+    tx: BuildDelegateTxInput<ChainTypes.Cosmos>
   ): Promise<{ txToSign: CosmosSignTx }> {
     try {
       const {
@@ -240,7 +252,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
   }
 
   async buildUndelegateTransaction(
-    tx: chainAdapters.BuildUndelegateTxInput<ChainTypes.Cosmos>
+    tx: BuildUndelegateTxInput<ChainTypes.Cosmos>
   ): Promise<{ txToSign: CosmosSignTx }> {
     try {
       const {
@@ -311,7 +323,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
   }
 
   async buildClaimRewardsTransaction(
-    tx: chainAdapters.BuildClaimRewardsTxInput<ChainTypes.Cosmos>
+    tx: BuildClaimRewardsTxInput<ChainTypes.Cosmos>
   ): Promise<{ txToSign: CosmosSignTx }> {
     try {
       const {
@@ -376,7 +388,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
   }
 
   async buildRedelegateTransaction(
-    tx: chainAdapters.BuildRedelegateTxInput<ChainTypes.Cosmos>
+    tx: BuildRedelegateTxInput<ChainTypes.Cosmos>
   ): Promise<{ txToSign: CosmosSignTx }> {
     try {
       const {
@@ -458,30 +470,26 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
   async getFeeData({
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars -- Disable no-unused-vars lint rule for unimplemented variable */
     sendMax
-  }: Partial<chainAdapters.GetFeeDataInput<ChainTypes.Cosmos>>): Promise<
-    chainAdapters.FeeDataEstimate<ChainTypes.Cosmos>
-  > {
+  }: Partial<GetFeeDataInput<ChainTypes.Cosmos>>): Promise<FeeDataEstimate<ChainTypes.Cosmos>> {
     // We currently don't have a way to query validators to get dynamic fees, so they are hard coded.
     // When we find a strategy to make this more dynamic, we can use 'sendMax' to define max amount.
     return {
-      [chainAdapters.FeeDataKey.Fast]: {
+      [FeeDataKey.Fast]: {
         txFee: '5000',
         chainSpecific: { gasLimit: '250000' }
       },
-      [chainAdapters.FeeDataKey.Average]: {
+      [FeeDataKey.Average]: {
         txFee: '3500',
         chainSpecific: { gasLimit: '250000' }
       },
-      [chainAdapters.FeeDataKey.Slow]: {
+      [FeeDataKey.Slow]: {
         txFee: '2500',
         chainSpecific: { gasLimit: '250000' }
       }
     }
   }
 
-  async signAndBroadcastTransaction(
-    signTxInput: chainAdapters.SignTxInput<CosmosSignTx>
-  ): Promise<string> {
+  async signAndBroadcastTransaction(signTxInput: SignTxInput<CosmosSignTx>): Promise<string> {
     const { wallet } = signTxInput
     try {
       if (supportsCosmos(wallet)) {

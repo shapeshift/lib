@@ -1,5 +1,5 @@
-import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import { chainAdapters, ChainTypes } from '@shapeshiftoss/types'
+import { ChainAdapterManager, chainAdapters } from '@shapeshiftoss/chain-adapters'
+import { ChainTypes } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 jest.mock('@shapeshiftoss/chain-adapters')

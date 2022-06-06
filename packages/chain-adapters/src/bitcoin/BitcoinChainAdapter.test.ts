@@ -8,8 +8,9 @@
 
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { BIP44Params, chainAdapters, ChainTypes, UtxoAccountType } from '@shapeshiftoss/types'
+import { BIP44Params, ChainTypes, UtxoAccountType } from '@shapeshiftoss/types'
 
+import { Account, BuildSendTxInput } from '../types'
 import { ChainAdapterArgs } from '../utxo/UTXOBaseAdapter'
 import * as bitcoin from './BitcoinChainAdapter'
 
@@ -206,7 +207,7 @@ describe('BitcoinChainAdapter', () => {
       } as any
 
       const adapter = new bitcoin.ChainAdapter(args)
-      const expected: chainAdapters.Account<ChainTypes.Bitcoin> = {
+      const expected: Account<ChainTypes.Bitcoin> = {
         pubkey: '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx',
         chain: ChainTypes.Bitcoin,
         balance: '150',
@@ -300,7 +301,7 @@ describe('BitcoinChainAdapter', () => {
         isChange: false
       }
 
-      const txInput: chainAdapters.BuildSendTxInput<ChainTypes.Bitcoin> = {
+      const txInput: BuildSendTxInput<ChainTypes.Bitcoin> = {
         bip44Params,
         to: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4',
         value: '400',
@@ -367,7 +368,7 @@ describe('BitcoinChainAdapter', () => {
         isChange: false
       }
 
-      const txInput: chainAdapters.BuildSendTxInput<ChainTypes.Bitcoin> = {
+      const txInput: BuildSendTxInput<ChainTypes.Bitcoin> = {
         bip44Params,
         to: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4',
         value: '400',
