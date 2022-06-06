@@ -35,7 +35,8 @@ describe('ZrxExecuteTrade', () => {
     rate: '1',
     feeData: {
       fee: '0',
-      chainSpecific: { approvalFee: '123600000', estimatedGas: '1235', gasPrice: '1236' }
+      chainSpecific: { approvalFee: '123600000', estimatedGas: '1235', gasPrice: '1236' },
+      tradeFee: '0'
     },
     sources: []
   }
