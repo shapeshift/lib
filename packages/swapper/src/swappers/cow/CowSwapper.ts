@@ -1,4 +1,3 @@
-import { AssetService } from '@shapeshiftoss/asset-service'
 import { AssetId } from '@shapeshiftoss/caip'
 import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
 
@@ -19,8 +18,12 @@ import {
 } from '../../api'
 import { getUsdRate } from './utils/helpers/helpers'
 
+type AssetsById = {
+  [k: AssetId]: Asset
+}
+
 export type CowSwapperDeps = {
-  assetService: AssetService
+  assets: AssetsById
   apiUrl: string
 }
 

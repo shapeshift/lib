@@ -1,5 +1,3 @@
-import { AssetService } from '@shapeshiftoss/asset-service'
-
 import { SwapperType } from '../../api'
 import { FOX } from '../utils/test-data/assets'
 import { CowSwapper, CowSwapperDeps } from './CowSwapper'
@@ -9,7 +7,7 @@ jest.mock('./utils/helpers/helpers')
 
 const cowSwapperDeps: CowSwapperDeps = {
   apiUrl: 'https://api.cow.fi/mainnet/api/',
-  assetService: <AssetService>{}
+  assets: {}
 }
 
 describe('CowSwapper', () => {

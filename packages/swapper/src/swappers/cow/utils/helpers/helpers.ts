@@ -12,7 +12,7 @@ const USDC_CONTRACT_ADDRESS = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
 const USDC_ASSET_PRECISION = 6
 
 export const getUsdRate = async (
-  { assetService, apiUrl }: CowSwapperDeps,
+  { assets, apiUrl }: CowSwapperDeps,
   input: Pick<Asset, 'assetId'>
 ): Promise<string> => {
   const { assetId } = input
@@ -26,7 +26,6 @@ export const getUsdRate = async (
     })
   }
 
-  const assets = assetService.getAll()
   const asset = assets[assetId]
   const buyAmountInDollars = 1000
   const buyAmount = bn(buyAmountInDollars).times(bn(10).exponentiatedBy(USDC_ASSET_PRECISION))

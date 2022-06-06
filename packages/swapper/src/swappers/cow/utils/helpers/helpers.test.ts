@@ -1,27 +1,17 @@
-import { AssetService } from '@shapeshiftoss/asset-service'
-
 import { FOX, WBTC } from '../../../utils/test-data/assets'
 import { CowSwapperDeps } from '../../CowSwapper'
 import { cowService } from '../cowService'
 import { getUsdRate } from '../helpers/helpers'
 
 jest.mock('../cowService')
-jest.mock('@shapeshiftoss/asset-service')
-
-// @ts-ignore
-AssetService.mockImplementation(() => ({
-  getAll: () => {
-    return {
-      'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d': FOX,
-      'eip155:1/erc20:0x2260fac5e5542a773aa44fbcfedf7c193bc2c599': WBTC
-    }
-  }
-}))
 
 describe('utils', () => {
   const cowSwapperDeps: CowSwapperDeps = {
     apiUrl: 'https://api.cow.fi/mainnet/api/',
-    assetService: new AssetService()
+    assets: {
+      'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d': FOX,
+      'eip155:1/erc20:0x2260fac5e5542a773aa44fbcfedf7c193bc2c599': WBTC
+    }
   }
 
   describe('getUsdRate', () => {
