@@ -18,12 +18,7 @@ import {
 } from '../../api'
 import { getUsdRate } from './utils/helpers/helpers'
 
-type AssetsById = {
-  [k: AssetId]: Asset
-}
-
 export type CowSwapperDeps = {
-  assets: AssetsById
   apiUrl: string
 }
 
@@ -52,7 +47,7 @@ export class CowSwapper implements Swapper {
     throw new Error('CowSwapper: getTradeQuote unimplemented')
   }
 
-  async getUsdRate(input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> {
+  async getUsdRate(input: Asset): Promise<string> {
     return getUsdRate(this.deps, input)
   }
 
