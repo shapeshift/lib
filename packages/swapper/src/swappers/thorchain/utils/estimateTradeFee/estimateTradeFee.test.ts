@@ -8,7 +8,7 @@ jest.mock('../thorService')
 
 describe('estimateTradeFee', () => {
   const deps = { midgardUrl: 'localhost:3000', adapterManager: <ChainAdapterManager>{} }
-  it('should correcty estimate a trade fee for bitcoin', async () => {
+  it('should correctly estimate a trade fee for bitcoin', async () => {
     ;(thorService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: mockInboundAdresses })
     )
