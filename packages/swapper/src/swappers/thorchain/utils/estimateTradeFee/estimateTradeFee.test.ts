@@ -20,7 +20,7 @@ describe('estimateTradeFee', () => {
     const expectedResult = '16362'
     expect(estimatedTradeFee).toEqual(expectedResult)
   })
-  it('should correcty estimate a trade fee for ethereum', async () => {
+  it('should correctly estimate a trade fee for ethereum', async () => {
     ;(thorService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: mockInboundAdresses })
     )
