@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { adapters, AssetId, fromAssetId } from '@shapeshiftoss/caip'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
