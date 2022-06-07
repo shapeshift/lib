@@ -58,11 +58,11 @@ export type Asset = {
   assetId: string
   chainId: string
   /** @deprecated: do not use. This will be removed once consumers have handled it */
-  chain: ChainTypes
+  chain?: ChainTypes
   description?: string
   isTrustedDescription?: boolean
   /** @deprecated: do not use. This will be removed once consumers have handled it */
-  network: NetworkTypes
+  network?: NetworkTypes
   symbol: string
   name: string
   precision: number
