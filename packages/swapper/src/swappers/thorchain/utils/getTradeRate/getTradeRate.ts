@@ -1,8 +1,8 @@
 import { adapters } from '@shapeshiftoss/caip'
 import { Asset } from '@shapeshiftoss/types'
-import BigNumber from 'bignumber.js'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
+import { BN, bn } from '../../../utils/bignumber'
 import { PoolResponse, ThorchainSwapperDeps } from '../../types'
 import { fromBaseUnit, toBaseUnit } from '../ethereum/makeTradeTx'
 import { thorService } from '../thorService'
@@ -10,11 +10,11 @@ import { thorService } from '../thorService'
 const THOR_PRECISION = 8
 
 type PoolData = {
-  assetBalance: BigNumber
-  runeBalance: BigNumber
+  assetBalance: BN
+  runeBalance: BN
 }
 
-const getSwapOutput = (inputAmount: BigNumber, poolData: PoolData, toRune: boolean): BigNumber => {
+const getSwapOutput = (inputAmount: BN, poolData: PoolData, toRune: boolean): BN => {
   const x = inputAmount
   const X = toRune ? poolData.assetBalance : poolData.runeBalance
   const Y = toRune ? poolData.runeBalance : poolData.assetBalance
@@ -23,11 +23,7 @@ const getSwapOutput = (inputAmount: BigNumber, poolData: PoolData, toRune: boole
   return numerator.div(denominator)
 }
 
-const getDoubleSwapOutput = (
-  input: BigNumber,
-  inputPool: PoolData,
-  outputPool: PoolData
-): BigNumber => {
+const getDoubleSwapOutput = (input: BN, inputPool: PoolData, outputPool: PoolData): BN => {
   const runeToOutput = getSwapOutput(input, inputPool, true)
   return getSwapOutput(runeToOutput, outputPool, false)
 }
@@ -62,21 +58,21 @@ export const getTradeRate = async (
     })
 
   // All thorchain pool amounts are base 8 regardless of token precision
-  const sellBaseAmount = new BigNumber(
+  const sellBaseAmount = bn(
     toBaseUnit(fromBaseUnit(sellAmount, sellAsset.precision), THOR_PRECISION)
   )
 
   const sellAssetPoolData = {
-    assetBalance: new BigNumber(sellPool.assetDepth),
-    runeBalance: new BigNumber(sellPool.runeDepth)
+    assetBalance: bn(sellPool.assetDepth),
+    runeBalance: bn(sellPool.runeDepth)
   }
   const buyAssetPoolData = {
-    assetBalance: new BigNumber(buyPool.assetDepth),
-    runeBalance: new BigNumber(buyPool.runeDepth)
+    assetBalance: bn(buyPool.assetDepth),
+    runeBalance: bn(buyPool.runeDepth)
   }
   const outputAmountBase8 = getDoubleSwapOutput(sellBaseAmount, sellAssetPoolData, buyAssetPoolData)
 
   const outputAmount = fromBaseUnit(outputAmountBase8, THOR_PRECISION)
 
-  return new BigNumber(outputAmount).div(fromBaseUnit(sellAmount, sellAsset.precision)).toString()
+  return bn(outputAmount).div(fromBaseUnit(sellAmount, sellAsset.precision)).toString()
 }
