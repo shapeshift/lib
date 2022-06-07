@@ -51,6 +51,17 @@ import zrxTradeEthToMatic from './mockData/zrxTradeEthToMatic'
 import zrxTradeTetherToKishu from './mockData/zrxTradeTetherToKishu'
 import zrxTradeTribeToEth from './mockData/zrxTradeTribeToEth'
 
+jest.mock('@yfi/sdk', () => ({
+  Yearn: jest.fn().mockImplementation(() => ({
+    vaults: {
+      get: () => [
+        { address: '0x671a912C10bba0CFA74Cfc2d6Fba9BA1ed9530B2' },
+        { address: '0x5f18C75AbDAe578b483E5F43f12a39cF75b973a9' }
+      ]
+    }
+  }))
+}))
+
 const txParser = new TransactionParser({ rpcUrl: '', chainId: 'eip155:1' })
 
 describe('parseTx', () => {
@@ -734,7 +745,7 @@ describe('parseTx', () => {
         data: {
           assetId: 'eip155:1/erc20:0x470e8de2ebaef52014a47cb5e6af86884947f08c',
           method: 'approve',
-          parser: EthereumTxParser.ERC20Approve
+          parser: EthereumTxParser.ERC20
         },
         status: Status.Confirmed,
         fee: {

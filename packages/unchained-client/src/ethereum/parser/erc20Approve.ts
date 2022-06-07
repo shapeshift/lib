@@ -46,7 +46,7 @@ export class Parser implements SubParser {
           assetReference: tx.to
         }),
         method: decoded.name,
-        parser: TxParser.ERC20Approve
+        parser: TxParser.ERC20
       }
     }
   }
