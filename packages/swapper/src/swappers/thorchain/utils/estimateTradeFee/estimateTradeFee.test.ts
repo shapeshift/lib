@@ -29,7 +29,7 @@ describe('estimateTradeFee', () => {
     const expectedResult = '32241720000000000'
     expect(estimatedTradeFee).toEqual(expectedResult)
   })
-  it('should correcty estimate a trade fee for an ethereum erc20 asset', async () => {
+  it('should correctly estimate a trade fee for an ethereum erc20 asset', async () => {
     ;(thorService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: mockInboundAdresses })
     )
