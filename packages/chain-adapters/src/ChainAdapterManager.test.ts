@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { ChainTypes, SupportedChainIds } from '@shapeshiftoss/types'
+import { SupportedChainIds } from '@shapeshiftoss/types'
 
 import { ChainAdapterManager, UnchainedUrls } from './ChainAdapterManager'
 import * as ethereum from './ethereum'
@@ -119,7 +119,7 @@ describe('ChainAdapterManager', () => {
     it('should find a supported chain adapter', () => {
       const cam = new ChainAdapterManager({})
       // @ts-ignore
-      cam.addChain(ChainTypes.Bitcoin, () => ({
+      cam.addChain(SupportedChainIds.BitcoinMainnet, () => ({
         getChainId: () => 'bip122:000000000019d6689c085ae165831e93'
       }))
       // @ts-ignore
