@@ -50,29 +50,25 @@ export const estimateTradeFee = async (
   const gasRate = inboundInfo.gas_rate
   const { chainId, assetNamespace } = fromAssetId(buyAssetId)
 
-  const tradeFee = (() => {
-    switch (chainId) {
-      case 'bip122:000000000019d6689c085ae165831e93':
-        return btcEstimate(gasRate)
-      case 'eip155:1':
-        switch (assetNamespace) {
-          case 'slip44':
-            return ethEstimate(gasRate)
-          case 'erc20':
-            return erc20Estimate(gasRate)
-          default:
-            throw new SwapError('[estimateTradeFee] - unsupported asset namespace', {
-              code: SwapErrorTypes.VALIDATION_FAILED,
-              details: { assetNamespace }
-            })
-        }
-      default:
-        throw new SwapError('[estimateTradeFee] - unsupported chain id', {
-          code: SwapErrorTypes.VALIDATION_FAILED,
-          details: { chainId }
-        })
-    }
-  })()
-
-  return tradeFee
+  switch (chainId) {
+    case 'bip122:000000000019d6689c085ae165831e93':
+      return btcEstimate(gasRate)
+    case 'eip155:1':
+      switch (assetNamespace) {
+        case 'slip44':
+          return ethEstimate(gasRate)
+        case 'erc20':
+          return erc20Estimate(gasRate)
+        default:
+          throw new SwapError('[estimateTradeFee] - unsupported asset namespace', {
+            code: SwapErrorTypes.VALIDATION_FAILED,
+            details: { assetNamespace }
+          })
+      }
+    default:
+      throw new SwapError('[estimateTradeFee] - unsupported chain id', {
+        code: SwapErrorTypes.VALIDATION_FAILED,
+        details: { chainId }
+      })
+  }
 }
