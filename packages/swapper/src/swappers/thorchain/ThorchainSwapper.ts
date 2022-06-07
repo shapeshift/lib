@@ -81,7 +81,7 @@ export class ThorchainSwapper implements Swapper {
   }
 
   async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<SupportedChainIds>> {
-    return getTradeQuote(input)
+    return getTradeQuote({ deps: this.deps, input })
   }
 
   async executeTrade(): Promise<TradeResult> {
