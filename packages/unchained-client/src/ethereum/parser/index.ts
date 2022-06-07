@@ -6,6 +6,7 @@ import { EthereumTx } from '../../generated/ethereum'
 import { Status, Token, TransferType } from '../../types'
 import { aggregateTransfer, findAsyncSequential } from '../../utils'
 import { ParsedTx, SubParser, TxSpecific } from '../types'
+import * as erc20Approve from './erc20Approve'
 import * as foxy from './foxy'
 import * as thor from './thor'
 import * as uniV2 from './uniV2'
@@ -28,6 +29,7 @@ export class TransactionParser {
   private readonly yearn: yearn.Parser
   private readonly foxy: foxy.Parser
   private readonly weth: weth.Parser
+  private readonly erc20Approve: erc20Approve.Parser
   private readonly parsers: Array<SubParser>
 
   constructor(args: TransactionParserArgs) {
@@ -47,9 +49,18 @@ export class TransactionParser {
     this.yearn = new yearn.Parser({ provider, chainId: this.chainId })
     this.foxy = new foxy.Parser()
     this.weth = new weth.Parser({ chainId: this.chainId, provider })
+    this.erc20Approve = new erc20Approve.Parser({ chainId: this.chainId, provider })
 
     // order here matters currently as weth and yearn have the same sigHash for deposit() and the weth parser is stricter resulting in faster processing times
-    this.parsers = [this.zrx, this.thor, this.uniV2, this.weth, this.foxy, this.yearn]
+    this.parsers = [
+      this.zrx,
+      this.thor,
+      this.uniV2,
+      this.weth,
+      this.foxy,
+      this.erc20Approve,
+      this.yearn
+    ]
   }
 
   async parse(tx: EthereumTx, address: string): Promise<ParsedTx> {

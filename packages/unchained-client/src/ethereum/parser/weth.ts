@@ -16,7 +16,6 @@ export interface ParserArgs {
 export class Parser implements SubParser {
   provider: ethers.providers.JsonRpcProvider
 
-  readonly name = 'weth'
   readonly chainId: ChainId
   readonly wethContract: string
   readonly abiInterface = new ethers.utils.Interface(WETH_ABI)
