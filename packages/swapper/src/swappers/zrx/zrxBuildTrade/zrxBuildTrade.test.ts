@@ -1,6 +1,6 @@
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { ChainTypes } from '@shapeshiftoss/types'
+import { SUPPORTED_CHAIN_IDS } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import { BuildTradeInput } from '../../../api'
@@ -9,6 +9,7 @@ import { APPROVAL_GAS_LIMIT } from '../utils/constants'
 import { setupZrxTradeQuoteResponse } from '../utils/test-data/setupSwapQuote'
 import { zrxService } from '../utils/zrxService'
 import { zrxBuildTrade } from './zrxBuildTrade'
+
 jest.mock('web3')
 
 jest.mock('axios', () => {
@@ -40,7 +41,7 @@ Web3.mockImplementation(() => ({
 
 const setup = () => {
   const unchainedUrls = {
-    [ChainTypes.Ethereum]: {
+    [SUPPORTED_CHAIN_IDS.EthereumMainnet]: {
       httpUrl: 'http://localhost:31300',
       wsUrl: 'ws://localhost:31300'
     }

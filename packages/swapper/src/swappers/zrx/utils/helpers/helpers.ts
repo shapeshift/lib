@@ -1,7 +1,7 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
-import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+import { ChainAdapter, ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
+import { Asset, SUPPORTED_CHAIN_IDS, SupportedChainIds } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -148,7 +148,9 @@ export const grantAllowance = async ({
   try {
     const { assetReference: sellAssetErc20Address } = fromAssetId(quote.sellAsset.assetId)
 
-    const adapter = await adapterManager.byChainId('eip155:1')
+    const adapter = (await adapterManager.byChainId(
+      'eip155:1'
+    )) as ChainAdapter<SUPPORTED_CHAIN_IDS.EthereumMainnet> // FIXME: discriminate automatically
     const erc20Contract = new web3.eth.Contract(erc20Abi, sellAssetErc20Address)
     const approveTx = erc20Contract.methods
       .approve(quote.allowanceContract, quote.sellAmount)

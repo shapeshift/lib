@@ -1,3 +1,5 @@
+import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
+import { SUPPORTED_CHAIN_IDS } from '@shapeshiftoss/types'
 import { numberToHex } from 'web3-utils'
 
 import { ExecuteTradeInput, SwapError, SwapErrorTypes, TradeResult, ZrxTrade } from '../../../api'
@@ -13,7 +15,9 @@ export async function zrxExecuteTrade(
   try {
     // value is 0 for erc20s
     const value = sellAsset.assetId === 'eip155:1/slip44:60' ? trade.sellAmount : '0'
-    const adapter = await adapterManager.byChainId(sellAsset.chainId)
+    const adapter = (await adapterManager.byChainId(
+      sellAsset.chainId
+    )) as ChainAdapter<SUPPORTED_CHAIN_IDS.EthereumMainnet> // FIXME: discriminate automatically
     const bip44Params = adapter.buildBIP44Params({
       accountNumber: bnOrZero(trade.sellAssetAccountId).toNumber()
     })

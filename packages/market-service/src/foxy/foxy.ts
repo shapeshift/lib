@@ -2,13 +2,13 @@ import { ethChainId } from '@shapeshiftoss/caip'
 import { ChainAdapter, ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { foxyAddresses, FoxyApi } from '@shapeshiftoss/investor-foxy'
 import {
-  ChainTypes,
   HistoryData,
   HistoryTimeframe,
   MarketCapResult,
   MarketData,
   MarketDataArgs,
-  PriceHistoryArgs
+  PriceHistoryArgs,
+  SUPPORTED_CHAIN_IDS
 } from '@shapeshiftoss/types'
 import dayjs from 'dayjs'
 
@@ -35,7 +35,7 @@ export class FoxyMarketService implements MarketService {
     this.jsonRpcProviderUrl = providerUrls.jsonRpcProviderUrl
 
     const unchainedUrls = {
-      [ChainTypes.Ethereum]: {
+      [SUPPORTED_CHAIN_IDS.EthereumMainnet]: {
         // from web env, both are always defined despite what the typings suggest
         httpUrl: providerUrls.unchainedEthereumHttpUrl,
         wsUrl: providerUrls.unchainedEthereumWsUrl
@@ -68,7 +68,9 @@ export class FoxyMarketService implements MarketService {
 
       // Make maxSupply as an additional field, effectively EIP-20's totalSupply
       const api = new FoxyApi({
-        adapter: this.adapterManager.byChainId(ethChainId) as ChainAdapter<ChainTypes.Ethereum>,
+        adapter: this.adapterManager.byChainId(
+          ethChainId
+        ) as ChainAdapter<SUPPORTED_CHAIN_IDS.EthereumMainnet>,
         providerUrl: this.jsonRpcProviderUrl,
         foxyAddresses
       })

@@ -1,5 +1,5 @@
 import { ChainId, isChainId } from '@shapeshiftoss/caip'
-import { ChainTypes } from '@shapeshiftoss/types'
+import { SUPPORTED_CHAIN_IDS, SupportedChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 
 import { ChainAdapter } from './api'
@@ -12,11 +12,11 @@ export type UnchainedUrl = {
   httpUrl: string
   wsUrl: string
 }
-export type UnchainedUrls = Partial<Record<ChainTypes, UnchainedUrl>>
+export type UnchainedUrls = Partial<Record<SupportedChainIds, UnchainedUrl>>
 
 export class ChainAdapterManager {
-  private supported: Map<ChainTypes, () => ChainAdapter<ChainTypes>> = new Map()
-  private instances: Map<ChainTypes, ChainAdapter<ChainTypes>> = new Map()
+  private supported: Map<SupportedChainIds, () => ChainAdapter<SupportedChainIds>> = new Map()
+  private instances: Map<SupportedChainIds, ChainAdapter<SupportedChainIds>> = new Map()
 
   constructor(unchainedUrls: UnchainedUrls) {
     if (!unchainedUrls) {
@@ -25,43 +25,61 @@ export class ChainAdapterManager {
     ;(Object.entries(unchainedUrls) as Array<[keyof UnchainedUrls, UnchainedUrl]>).forEach(
       ([type, { httpUrl, wsUrl }]) => {
         switch (type) {
-          case ChainTypes.Ethereum: {
+          case SUPPORTED_CHAIN_IDS.EthereumMainnet: {
             const http = new unchained.ethereum.V1Api(
               new unchained.ethereum.Configuration({ basePath: httpUrl })
             )
             const ws = new unchained.ws.Client<unchained.ethereum.ParsedTx>(wsUrl)
-            return this.addChain(type, () => new ethereum.ChainAdapter({ providers: { http, ws } }))
+            return this.addChain(
+              type,
+              () =>
+                new ethereum.ChainAdapter({
+                  providers: { http, ws }
+                }) as unknown as ChainAdapter<'eip155:1'> // FIXME
+            )
           }
-          case ChainTypes.Bitcoin: {
+          case SUPPORTED_CHAIN_IDS.BitcoinMainnet: {
             const http = new unchained.bitcoin.V1Api(
               new unchained.bitcoin.Configuration({ basePath: httpUrl })
             )
             const ws = new unchained.ws.Client<unchained.Tx>(wsUrl)
             return this.addChain(
               type,
-              () => new bitcoin.ChainAdapter({ providers: { http, ws }, coinName: 'Bitcoin' })
+              () =>
+                new bitcoin.ChainAdapter({
+                  providers: { http, ws },
+                  coinName: 'Bitcoin'
+                }) as unknown as ChainAdapter<'bip122:000000000019d6689c085ae165831e93'> // FIXME
             )
           }
 
-          case ChainTypes.Cosmos: {
+          case SUPPORTED_CHAIN_IDS.CosmosMainnet: {
             const http = new unchained.cosmos.V1Api(
               new unchained.cosmos.Configuration({ basePath: httpUrl })
             )
             const ws = new unchained.ws.Client<unchained.cosmos.Tx>(wsUrl)
             return this.addChain(
               type,
-              () => new cosmos.ChainAdapter({ providers: { http, ws }, coinName: 'Cosmos' })
+              () =>
+                new cosmos.ChainAdapter({
+                  providers: { http, ws },
+                  coinName: 'Cosmos'
+                }) as unknown as ChainAdapter<'cosmos:cosmoshub-4'> // FIXME
             )
           }
 
-          case ChainTypes.Osmosis: {
+          case SUPPORTED_CHAIN_IDS.OsmosisMainnet: {
             const http = new unchained.osmosis.V1Api(
               new unchained.osmosis.Configuration({ basePath: httpUrl })
             )
             const ws = new unchained.ws.Client<unchained.osmosis.Tx>(wsUrl)
             return this.addChain(
               type,
-              () => new osmosis.ChainAdapter({ providers: { http, ws }, coinName: 'Osmosis' })
+              () =>
+                new osmosis.ChainAdapter({
+                  providers: { http, ws },
+                  coinName: 'Osmosis'
+                }) as unknown as ChainAdapter<'cosmos:osmosis-1'> // FIXME
             )
           }
           default:
@@ -81,15 +99,19 @@ export class ChainAdapterManager {
    * @param {ChainTypes} chain - Coin/network symbol from Asset query
    * @param {Function} factory - A function that returns a ChainAdapter instance
    */
-  addChain<T extends ChainTypes>(chain: T, factory: () => ChainAdapter<ChainTypes>): void {
+  addChain<T extends SupportedChainIds>(
+    chain: T,
+    factory: () => ChainAdapter<SupportedChainIds>
+  ): void {
     if (typeof chain !== 'string' || typeof factory !== 'function') {
       throw new Error('Parameter validation error')
     }
     this.supported.set(chain, factory)
   }
 
-  removeChain<T extends ChainTypes>(chain: T): void {
-    if (!Object.values(ChainTypes).includes(chain)) {
+  removeChain<T extends SupportedChainIds>(chain: T): void {
+    // FIXME: This is gross
+    if (!Object.values(SUPPORTED_CHAIN_IDS as unknown as T).includes(chain)) {
       throw new Error(`ChainAdapterManager: invalid chain ${chain}`)
     }
     if (!this.supported.has(chain)) {
@@ -98,16 +120,16 @@ export class ChainAdapterManager {
     this.supported.delete(chain)
   }
 
-  getSupportedChains(): Array<ChainTypes> {
+  getSupportedChains(): Array<SupportedChainIds> {
     return Array.from(this.supported.keys())
   }
 
-  getSupportedAdapters(): Array<() => ChainAdapter<ChainTypes>> {
+  getSupportedAdapters(): Array<() => ChainAdapter<SupportedChainIds>> {
     return Array.from(this.supported.values())
   }
 
   /*** Get a ChainAdapter instance for a network */
-  byChain<T extends ChainTypes>(chain: T): ChainAdapter<T> {
+  byChain<T extends SupportedChainIds>(chain: T): ChainAdapter<T> {
     let adapter = this.instances.get(chain)
     if (!adapter) {
       const factory = this.supported.get(chain)
@@ -127,7 +149,7 @@ export class ChainAdapterManager {
     return adapter as ChainAdapter<T>
   }
 
-  byChainId(chainId: ChainId) {
+  byChainId(chainId: ChainId): ChainAdapter<SupportedChainIds> {
     // this function acts like a validation function and throws if the check doesn't pass
     isChainId(chainId)
 

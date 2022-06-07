@@ -1,7 +1,7 @@
 import { CHAIN_NAMESPACE, CHAIN_REFERENCE, toChainId } from '@shapeshiftoss/caip'
 import { ChainAdapter, ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { ChainTypes, WithdrawType } from '@shapeshiftoss/types'
+import { SUPPORTED_CHAIN_IDS, WithdrawType } from '@shapeshiftoss/types'
 import dotenv from 'dotenv'
 import readline from 'readline-sync'
 
@@ -29,7 +29,7 @@ const getWallet = async (): Promise<NativeHDWallet> => {
 
 const main = async (): Promise<void> => {
   const unchainedUrls = {
-    [ChainTypes.Ethereum]: {
+    [SUPPORTED_CHAIN_IDS.EthereumMainnet]: {
       httpUrl: 'http://api.ethereum.shapeshift.com',
       wsUrl: 'ws://api.ethereum.shapeshift.com'
     }
@@ -49,7 +49,7 @@ const main = async (): Promise<void> => {
         chainNamespace: CHAIN_NAMESPACE.Ethereum,
         chainReference: CHAIN_REFERENCE.EthereumMainnet
       })
-    )) as ChainAdapter<ChainTypes.Ethereum>,
+    )) as ChainAdapter<SUPPORTED_CHAIN_IDS.EthereumMainnet>,
     providerUrl: process.env.ARCHIVE_NODE || 'http://127.0.0.1:8545/',
     foxyAddresses
   })

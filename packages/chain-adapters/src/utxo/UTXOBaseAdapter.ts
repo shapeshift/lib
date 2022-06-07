@@ -1,6 +1,6 @@
 import { AssetId, ChainId } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, HDWallet, PublicKey } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, ChainTypes, UtxoAccountType } from '@shapeshiftoss/types'
+import { BIP44Params, SUPPORTED_CHAIN_IDS, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import WAValidator from 'multicoin-address-validator'
 
@@ -22,10 +22,15 @@ import {
   ValidAddressResult,
   ValidAddressResultType
 } from '../types'
-import { accountTypeToScriptType, convertXpubVersion, toRootDerivationPath } from '../utils'
+import {
+  accountTypeToScriptType,
+  chainIdToChainLabel,
+  convertXpubVersion,
+  toRootDerivationPath
+} from '../utils'
 import { bnOrZero } from '../utils/bignumber'
 
-export type UTXOChainTypes = ChainTypes.Bitcoin // to be extended in the future to include other UTXOs
+export type UTXOChainTypes = SUPPORTED_CHAIN_IDS.BitcoinMainnet // to be extended in the future to include other UTXOs
 
 /**
  * Currently, we don't have a generic interact for UTXO providers, but will in the future.
@@ -130,7 +135,8 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
   }
 
   async validateAddress(address: string): Promise<ValidAddressResult> {
-    const isValidAddress = WAValidator.validate(address, this.getType())
+    const chainLabel = chainIdToChainLabel(this.chainId)
+    const isValidAddress = WAValidator.validate(address, chainLabel)
     if (isValidAddress) return { valid: true, result: ValidAddressResultType.Valid }
     return { valid: false, result: ValidAddressResultType.Invalid }
   }

@@ -1,7 +1,7 @@
 import { AssetService } from '@shapeshiftoss/asset-service'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { ChainTypes } from '@shapeshiftoss/types'
+import { SUPPORTED_CHAIN_IDS } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 import dotenv from 'dotenv'
 import readline from 'readline-sync'
@@ -11,6 +11,7 @@ import { SwapperType } from './api'
 import { SwapperManager } from './manager/SwapperManager'
 import { ThorchainSwapper } from './swappers/thorchain/ThorchainSwapper'
 import { ZrxSwapper } from './swappers/zrx/ZrxSwapper'
+
 dotenv.config()
 
 const {
@@ -77,7 +78,7 @@ const main = async (): Promise<void> => {
   // Swapper Deps
   const wallet = await getWallet()
   const unchainedUrls = {
-    [ChainTypes.Ethereum]: {
+    [SUPPORTED_CHAIN_IDS.EthereumMainnet]: {
       httpUrl: UNCHAINED_HTTP_API,
       wsUrl: UNCHAINED_WS_API
     }

@@ -5,7 +5,7 @@ import {
   CosmosTx,
   supportsCosmos
 } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, ChainTypes } from '@shapeshiftoss/types'
+import { BIP44Params, SUPPORTED_CHAIN_IDS } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import { bech32 } from 'bech32'
 
@@ -26,12 +26,12 @@ import { toPath } from '../../utils'
 import { bnOrZero } from '../../utils/bignumber'
 import { ChainAdapterArgs, CosmosSdkBaseAdapter } from '../CosmosSdkBaseAdapter'
 
-export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
+export class ChainAdapter extends CosmosSdkBaseAdapter<SUPPORTED_CHAIN_IDS.CosmosMainnet> {
   protected readonly supportedChainIds = ['cosmos:cosmoshub-4', 'cosmos:vega-testnet']
   protected readonly chainId = this.supportedChainIds[0]
   protected readonly assetId: AssetId
   protected readonly CHAIN_VALIDATOR_PREFIX_MAPPING = {
-    [ChainTypes.Cosmos]: 'cosmosvaloper'
+    [SUPPORTED_CHAIN_IDS.CosmosMainnet]: 'cosmosvaloper'
   }
 
   public static readonly defaultBIP44Params: BIP44Params = {
@@ -54,8 +54,8 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
     this.parser = new unchained.cosmos.TransactionParser({ chainId: this.chainId })
   }
 
-  getType(): ChainTypes.Cosmos {
-    return ChainTypes.Cosmos
+  getType(): SUPPORTED_CHAIN_IDS.CosmosMainnet {
+    return SUPPORTED_CHAIN_IDS.CosmosMainnet
   }
 
   getFeeAssetId(): AssetId {
@@ -103,7 +103,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
   }
 
   async buildSendTransaction(
-    tx: BuildSendTxInput<ChainTypes.Cosmos>
+    tx: BuildSendTxInput<SUPPORTED_CHAIN_IDS.CosmosMainnet>
   ): Promise<{ txToSign: CosmosSignTx }> {
     try {
       const {
@@ -180,7 +180,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
   }
 
   async buildDelegateTransaction(
-    tx: BuildDelegateTxInput<ChainTypes.Cosmos>
+    tx: BuildDelegateTxInput<SUPPORTED_CHAIN_IDS.CosmosMainnet>
   ): Promise<{ txToSign: CosmosSignTx }> {
     try {
       const {
@@ -252,7 +252,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
   }
 
   async buildUndelegateTransaction(
-    tx: BuildUndelegateTxInput<ChainTypes.Cosmos>
+    tx: BuildUndelegateTxInput<SUPPORTED_CHAIN_IDS.CosmosMainnet>
   ): Promise<{ txToSign: CosmosSignTx }> {
     try {
       const {
@@ -323,7 +323,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
   }
 
   async buildClaimRewardsTransaction(
-    tx: BuildClaimRewardsTxInput<ChainTypes.Cosmos>
+    tx: BuildClaimRewardsTxInput<SUPPORTED_CHAIN_IDS.CosmosMainnet>
   ): Promise<{ txToSign: CosmosSignTx }> {
     try {
       const {
@@ -388,7 +388,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
   }
 
   async buildRedelegateTransaction(
-    tx: BuildRedelegateTxInput<ChainTypes.Cosmos>
+    tx: BuildRedelegateTxInput<SUPPORTED_CHAIN_IDS.CosmosMainnet>
   ): Promise<{ txToSign: CosmosSignTx }> {
     try {
       const {
@@ -470,7 +470,9 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<ChainTypes.Cosmos> {
   async getFeeData({
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars -- Disable no-unused-vars lint rule for unimplemented variable */
     sendMax
-  }: Partial<GetFeeDataInput<ChainTypes.Cosmos>>): Promise<FeeDataEstimate<ChainTypes.Cosmos>> {
+  }: Partial<GetFeeDataInput<SUPPORTED_CHAIN_IDS.CosmosMainnet>>): Promise<
+    FeeDataEstimate<SUPPORTED_CHAIN_IDS.CosmosMainnet>
+  > {
     // We currently don't have a way to query validators to get dynamic fees, so they are hard coded.
     // When we find a strategy to make this more dynamic, we can use 'sendMax' to define max amount.
     return {

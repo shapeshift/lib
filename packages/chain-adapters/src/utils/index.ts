@@ -1,4 +1,12 @@
-import { AssetNamespace } from '@shapeshiftoss/caip'
+import {
+  AssetNamespace,
+  CHAIN_NAMESPACE,
+  CHAIN_REFERENCE,
+  ChainId,
+  ChainNamespace,
+  ChainReference,
+  fromChainId
+} from '@shapeshiftoss/caip'
 import { Status, TransferType } from '@shapeshiftoss/unchained-client'
 
 import { TxStatus, TxType } from '../types'
@@ -25,4 +33,29 @@ export const getType = (type: TransferType): TxType => {
   if (type === TransferType.Receive) return TxType.Receive
 
   return TxType.Unknown
+}
+
+export const chainPartsToChainLabel = (
+  chainNamespace: ChainNamespace,
+  chainReference?: ChainReference
+): string => {
+  return (() => {
+    switch (chainNamespace) {
+      case CHAIN_NAMESPACE.Bitcoin:
+        return 'bitcoin'
+      case CHAIN_NAMESPACE.Ethereum:
+        return 'ethereum'
+      case CHAIN_NAMESPACE.Cosmos:
+        return chainReference === CHAIN_REFERENCE.CosmosHubMainnet ? 'cosmos' : 'osmosis'
+      default:
+        throw new Error(
+          `chainNamespace ${chainNamespace}, chainReference ${chainReference} not supported.`
+        )
+    }
+  })()
+}
+
+export const chainIdToChainLabel = (chainId: ChainId): string => {
+  const { chainNamespace, chainReference } = fromChainId(chainId)
+  return chainPartsToChainLabel(chainNamespace, chainReference)
 }
