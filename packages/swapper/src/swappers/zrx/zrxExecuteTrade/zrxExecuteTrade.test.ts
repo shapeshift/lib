@@ -25,19 +25,17 @@ describe('ZrxExecuteTrade', () => {
   const trade: ZrxTrade<'eip155:1'> = {
     buyAsset,
     sellAsset,
-    success: true,
-    statusReason: '',
     sellAmount: '1',
     buyAmount: '',
     depositAddress: '0x123',
-    allowanceContract: 'allowanceTargetAddress',
     receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
     sellAssetAccountId: '0',
     txData: '0x123',
     rate: '1',
     feeData: {
       fee: '0',
-      chainSpecific: { approvalFee: '123600000', estimatedGas: '1235', gasPrice: '1236' }
+      chainSpecific: { approvalFee: '123600000', estimatedGas: '1235', gasPrice: '1236' },
+      tradeFee: '0'
     },
     sources: []
   }
