@@ -28,7 +28,7 @@ ChainAdapterManager.mockImplementation(() => ({
   byChainId: jest.fn(() => chainAdapterMockFuncs)
 }))
 
-export const setupZrxDeps = () => {
+export const setupDeps = () => {
   const unchainedUrls = {
     [ChainTypes.Bitcoin]: {
       httpUrl: 'https://api.bitcoin.shapeshift.com',

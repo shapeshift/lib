@@ -1,5 +1,7 @@
 import { AssetId } from '@shapeshiftoss/caip'
+import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
+import Web3 from 'web3'
 
 import {
   ApprovalNeededInput,
@@ -16,10 +18,13 @@ import {
   TradeResult,
   TradeTxs
 } from '../../api'
+import { CowApprovalNeeded } from './CowApprovalNeeded/CowApprovalNeeded'
 import { getUsdRate } from './utils/helpers/helpers'
 
 export type CowSwapperDeps = {
   apiUrl: string
+  adapterManager: ChainAdapterManager
+  web3: Web3
 }
 
 export class CowSwapper implements Swapper {
@@ -59,8 +64,7 @@ export class CowSwapper implements Swapper {
   async approvalNeeded(
     args: ApprovalNeededInput<SupportedChainIds>
   ): Promise<ApprovalNeededOutput> {
-    console.info(args)
-    throw new Error('CowSwapper: approvalNeeded unimplemented')
+    return CowApprovalNeeded(this.deps, args)
   }
 
   async approveInfinite(args: ApproveInfiniteInput<SupportedChainIds>): Promise<string> {

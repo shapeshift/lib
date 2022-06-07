@@ -1,9 +1,9 @@
 import { SupportedChainIds } from '@shapeshiftoss/types'
 
 import { ApproveInfiniteInput, SwapError, SwapErrorTypes } from '../../../api'
+import { grantAllowance } from '../../utils/helpers/helpers'
 import { erc20Abi } from '../utils/abi/erc20-abi'
 import { MAX_ALLOWANCE } from '../utils/constants'
-import { grantAllowance } from '../utils/helpers/helpers'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function ZrxApproveInfinite(

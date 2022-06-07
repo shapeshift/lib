@@ -1,13 +1,13 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import Web3 from 'web3'
 
+import { setupDeps } from '../../utils/test-data/setupDeps'
 import { setupQuote } from '../utils/test-data/setupSwapQuote'
-import { setupZrxDeps } from '../utils/test-data/setupZrxDeps'
 import { zrxService } from '../utils/zrxService'
 import { ZrxApproveInfinite } from '../ZrxApproveInfinite/ZrxApproveInfinite'
 
 jest.mock('web3')
-jest.mock('../utils/helpers/helpers', () => ({
+jest.mock('../../utils/helpers/helpers', () => ({
   grantAllowance: jest.fn(() => 'grantAllowanceTxId')
 }))
 jest.mock('axios', () => ({
@@ -32,7 +32,7 @@ Web3.mockImplementation(() => ({
 }))
 
 describe('ZrxApproveInfinite', () => {
-  const { web3Instance, adapterManager } = setupZrxDeps()
+  const { web3Instance, adapterManager } = setupDeps()
   const { tradeQuote } = setupQuote()
   const wallet = {
     ethGetAddress: jest.fn(() => Promise.resolve('0xc770eefad204b5180df6a14ee197d99d808ee52d')),

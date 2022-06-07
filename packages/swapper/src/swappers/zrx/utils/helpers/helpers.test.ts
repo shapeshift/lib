@@ -2,17 +2,13 @@ import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import Web3 from 'web3'
 
 import { bn, bnOrZero } from '../../../utils/bignumber'
+import { getAllowanceRequired, grantAllowance } from '../../../utils/helpers/helpers'
 import { FOX, WETH } from '../../../utils/test-data/assets'
+import { setupDeps } from '../../../utils/test-data/setupDeps'
 import { erc20Abi } from '../abi/erc20-abi'
 import { erc20AllowanceAbi } from '../abi/erc20Allowance-abi'
-import {
-  getAllowanceRequired,
-  getUsdRate,
-  grantAllowance,
-  normalizeAmount
-} from '../helpers/helpers'
+import { getUsdRate, normalizeAmount } from '../helpers/helpers'
 import { setupQuote } from '../test-data/setupSwapQuote'
-import { setupZrxDeps } from '../test-data/setupZrxDeps'
 import { zrxService } from '../zrxService'
 
 jest.mock('web3')
@@ -37,7 +33,7 @@ Web3.mockImplementation(() => ({
 
 describe('utils', () => {
   const { tradeQuote, sellAsset } = setupQuote()
-  const { web3Instance, adapterManager } = setupZrxDeps()
+  const { web3Instance, adapterManager } = setupDeps()
 
   describe('getUsdRate', () => {
     it('getUsdRate gets the usd rate of the symbol', async () => {

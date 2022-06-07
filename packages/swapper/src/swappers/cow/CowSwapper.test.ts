@@ -1,3 +1,6 @@
+import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+import Web3 from 'web3'
+
 import { SwapperType } from '../../api'
 import { FOX } from '../utils/test-data/assets'
 import { CowSwapper, CowSwapperDeps } from './CowSwapper'
@@ -6,7 +9,9 @@ import { getUsdRate } from './utils/helpers/helpers'
 jest.mock('./utils/helpers/helpers')
 
 const cowSwapperDeps: CowSwapperDeps = {
-  apiUrl: 'https://api.cow.fi/mainnet/api/'
+  apiUrl: 'https://api.cow.fi/mainnet/api/',
+  adapterManager: <ChainAdapterManager>{},
+  web3: <Web3>{}
 }
 
 describe('CowSwapper', () => {
