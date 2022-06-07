@@ -8,7 +8,7 @@ jest.mock('../thorService')
 
 describe('estimateTradeFee', () => {
   const deps = { midgardUrl: 'localhost:3000', adapterManager: <ChainAdapterManager>{} }
-  it('should correcty estimate a trade fee for bitcoin', async () => {
+  it('should correctly estimate a trade fee for bitcoin', async () => {
     ;(thorService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: mockInboundAdresses })
     )
@@ -20,7 +20,7 @@ describe('estimateTradeFee', () => {
     const expectedResult = '16362'
     expect(estimatedTradeFee).toEqual(expectedResult)
   })
-  it('should correcty estimate a trade fee for ethereum', async () => {
+  it('should correctly estimate a trade fee for ethereum', async () => {
     ;(thorService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: mockInboundAdresses })
     )
@@ -29,7 +29,7 @@ describe('estimateTradeFee', () => {
     const expectedResult = '32241720000000000'
     expect(estimatedTradeFee).toEqual(expectedResult)
   })
-  it('should correcty estimate a trade fee for an ethereum erc20 asset', async () => {
+  it('should correctly estimate a trade fee for an ethereum erc20 asset', async () => {
     ;(thorService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: mockInboundAdresses })
     )
