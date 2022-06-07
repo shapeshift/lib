@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { BIP44Params, SUPPORTED_CHAIN_IDS } from '@shapeshiftoss/types'
+import { BIP44Params, SupportedChainIds } from '@shapeshiftoss/types'
 import dotenv from 'dotenv'
 
 import { cosmossdk } from './'
@@ -23,15 +23,15 @@ const getWallet = async (): Promise<NativeHDWallet> => {
 }
 
 const unchainedUrls = {
-  [SUPPORTED_CHAIN_IDS.BitcoinMainnet]: {
+  [SupportedChainIds.BitcoinMainnet]: {
     httpUrl: 'https://dev-api.bitcoin.shapeshift.com',
     wsUrl: 'wss://dev-api.bitcoin.shapeshift.com'
   },
-  [SUPPORTED_CHAIN_IDS.EthereumMainnet]: {
+  [SupportedChainIds.EthereumMainnet]: {
     httpUrl: 'https://dev-api.ethereum.shapeshift.com',
     wsUrl: 'wss://dev-api.ethereum.shapeshift.com'
   },
-  [SUPPORTED_CHAIN_IDS.CosmosMainnet]: {
+  [SupportedChainIds.CosmosMainnet]: {
     httpUrl: 'https://dev-api.cosmos.shapeshift.com',
     wsUrl: 'wss://dev-api.cosmos.shapeshift.com'
   }
@@ -168,7 +168,7 @@ const main = async () => {
     // }
 
     /** COSMOS CLI */
-    const cosmosChainAdapter = chainAdapterManager.byChain(SUPPORTED_CHAIN_IDS.CosmosMainnet)
+    const cosmosChainAdapter = chainAdapterManager.byChain(SupportedChainIds.CosmosMainnet)
     const cosmosBip44Params: BIP44Params = { purpose: 44, coinType: 118, accountNumber: 0 }
 
     const cosmosAddress = await cosmosChainAdapter.getAddress({

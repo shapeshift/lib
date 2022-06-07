@@ -1,7 +1,7 @@
 import { AssetService } from '@shapeshiftoss/asset-service'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { SUPPORTED_CHAIN_IDS } from '@shapeshiftoss/types'
+import { SupportedChainIds } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 import dotenv from 'dotenv'
 import readline from 'readline-sync'
@@ -78,7 +78,7 @@ const main = async (): Promise<void> => {
   // Swapper Deps
   const wallet = await getWallet()
   const unchainedUrls = {
-    [SUPPORTED_CHAIN_IDS.EthereumMainnet]: {
+    [SupportedChainIds.EthereumMainnet]: {
       httpUrl: UNCHAINED_HTTP_API,
       wsUrl: UNCHAINED_WS_API
     }

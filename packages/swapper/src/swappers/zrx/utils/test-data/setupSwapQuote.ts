@@ -1,4 +1,4 @@
-import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
+import { Asset, SupportedChainId } from '@shapeshiftoss/types'
 
 import { GetTradeQuoteInput, TradeQuote } from '../../../../api'
 import { ZrxQuoteResponse } from '../../types'
@@ -7,7 +7,7 @@ import { FOX, WETH } from './assets'
 export const setupQuote = () => {
   const sellAsset: Asset = { ...FOX }
   const buyAsset: Asset = { ...WETH }
-  const tradeQuote: TradeQuote<SupportedChainIds> = {
+  const tradeQuote: TradeQuote<SupportedChainId> = {
     success: true,
     statusReason: '',
     buyAmount: '',

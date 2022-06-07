@@ -1,6 +1,6 @@
 import { AssetId, ChainId } from '@shapeshiftoss/caip'
 import { CosmosSignTx } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, SUPPORTED_CHAIN_IDS } from '@shapeshiftoss/types'
+import { BIP44Params, SupportedChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import { bech32 } from 'bech32'
 
@@ -25,9 +25,7 @@ import {
 } from '../types'
 import { getStatus, getType, toRootDerivationPath } from '../utils'
 
-export type CosmosChainTypes =
-  | SUPPORTED_CHAIN_IDS.CosmosMainnet
-  | SUPPORTED_CHAIN_IDS.OsmosisMainnet
+export type CosmosChainTypes = SupportedChainIds.CosmosMainnet | SupportedChainIds.OsmosisMainnet
 
 export interface ChainAdapterArgs {
   chainId?: ChainId
@@ -39,8 +37,8 @@ export interface ChainAdapterArgs {
 }
 
 const CHAIN_TO_BECH32_PREFIX_MAPPING = {
-  [SUPPORTED_CHAIN_IDS.CosmosMainnet]: 'cosmos',
-  [SUPPORTED_CHAIN_IDS.OsmosisMainnet]: 'osmo'
+  [SupportedChainIds.CosmosMainnet]: 'cosmos',
+  [SupportedChainIds.OsmosisMainnet]: 'osmo'
 }
 
 const transformValidator = (validator: unchained.cosmos.Validator): cosmos.Validator => ({

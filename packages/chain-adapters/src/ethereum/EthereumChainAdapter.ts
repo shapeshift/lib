@@ -9,7 +9,7 @@ import {
   toAssetId
 } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, ETHSignTx, ETHWallet, HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, SUPPORTED_CHAIN_IDS } from '@shapeshiftoss/types'
+import { BIP44Params, SupportedChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
@@ -60,7 +60,7 @@ async function getErc20Data(to: string, value: string, contractAddress?: string)
   return callData || ''
 }
 
-export class ChainAdapter implements IChainAdapter<SUPPORTED_CHAIN_IDS.EthereumMainnet> {
+export class ChainAdapter implements IChainAdapter<SupportedChainIds.EthereumMainnet> {
   private readonly providers: {
     http: unchained.ethereum.V1Api
     ws: unchained.ws.Client<unchained.ethereum.ParsedTx>
@@ -88,8 +88,8 @@ export class ChainAdapter implements IChainAdapter<SUPPORTED_CHAIN_IDS.EthereumM
     this.providers = args.providers
   }
 
-  getType(): SUPPORTED_CHAIN_IDS.EthereumMainnet {
-    return SUPPORTED_CHAIN_IDS.EthereumMainnet
+  getType(): SupportedChainIds.EthereumMainnet {
+    return SupportedChainIds.EthereumMainnet
   }
 
   getChainId(): ChainId {
@@ -100,7 +100,7 @@ export class ChainAdapter implements IChainAdapter<SUPPORTED_CHAIN_IDS.EthereumM
     return 'eip155:1/slip44:60'
   }
 
-  async getAccount(pubkey: string): Promise<Account<SUPPORTED_CHAIN_IDS.EthereumMainnet>> {
+  async getAccount(pubkey: string): Promise<Account<SupportedChainIds.EthereumMainnet>> {
     try {
       const chainId = this.getChainId()
       const { data } = await this.providers.http.getAccount({ pubkey })
@@ -115,7 +115,7 @@ export class ChainAdapter implements IChainAdapter<SUPPORTED_CHAIN_IDS.EthereumM
           assetNamespace: 'slip44',
           assetReference: ASSET_REFERENCE.Ethereum
         }),
-        chain: SUPPORTED_CHAIN_IDS.EthereumMainnet,
+        chain: SupportedChainIds.EthereumMainnet,
         chainSpecific: {
           nonce: data.nonce,
           tokens: data.tokens.map((token) => ({
@@ -143,12 +143,12 @@ export class ChainAdapter implements IChainAdapter<SUPPORTED_CHAIN_IDS.EthereumM
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     pubkey
   }: unchained.ethereum.V1ApiGetTxHistoryRequest): Promise<
-    TxHistoryResponse<SUPPORTED_CHAIN_IDS.EthereumMainnet>
+    TxHistoryResponse<SupportedChainIds.EthereumMainnet>
   > {
     throw new Error('Method not implemented.')
   }
 
-  async buildSendTransaction(tx: BuildSendTxInput<SUPPORTED_CHAIN_IDS.EthereumMainnet>): Promise<{
+  async buildSendTransaction(tx: BuildSendTxInput<SupportedChainIds.EthereumMainnet>): Promise<{
     txToSign: ETHSignTx
   }> {
     try {
@@ -331,8 +331,8 @@ export class ChainAdapter implements IChainAdapter<SUPPORTED_CHAIN_IDS.EthereumM
     value,
     chainSpecific: { contractAddress, from, contractData },
     sendMax = false
-  }: GetFeeDataInput<SUPPORTED_CHAIN_IDS.EthereumMainnet>): Promise<
-    FeeDataEstimate<SUPPORTED_CHAIN_IDS.EthereumMainnet>
+  }: GetFeeDataInput<SupportedChainIds.EthereumMainnet>): Promise<
+    FeeDataEstimate<SupportedChainIds.EthereumMainnet>
   > {
     const { data: responseData } = await axios.get<ZrxGasApiResponse>('https://gas.api.0x.org/')
     const fees = responseData.result.find((result) => result.source === 'MEDIAN')
@@ -445,7 +445,7 @@ export class ChainAdapter implements IChainAdapter<SUPPORTED_CHAIN_IDS.EthereumM
 
   async subscribeTxs(
     input: SubscribeTxsInput,
-    onMessage: (msg: Transaction<SUPPORTED_CHAIN_IDS.EthereumMainnet>) => void,
+    onMessage: (msg: Transaction<SupportedChainIds.EthereumMainnet>) => void,
     onError: (err: SubscribeError) => void
   ): Promise<void> {
     const { wallet, bip44Params = ChainAdapter.defaultBIP44Params } = input
@@ -471,7 +471,7 @@ export class ChainAdapter implements IChainAdapter<SUPPORTED_CHAIN_IDS.EthereumM
           blockHeight: tx.blockHeight,
           blockTime: tx.blockTime,
           chainId: tx.chainId,
-          chain: SUPPORTED_CHAIN_IDS.EthereumMainnet,
+          chain: SupportedChainIds.EthereumMainnet,
           confirmations: tx.confirmations,
           fee: tx.fee,
           status: getStatus(tx.status),

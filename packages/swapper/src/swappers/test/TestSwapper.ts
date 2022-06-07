@@ -1,5 +1,5 @@
 import { AssetId } from '@shapeshiftoss/caip'
-import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
+import { Asset, SupportedChainId } from '@shapeshiftoss/types'
 
 import {
   ApprovalNeededOutput,
@@ -58,11 +58,11 @@ export class TestSwapper implements Swapper {
     return this.supportAssets
   }
 
-  async buildTrade(): Promise<Trade<SupportedChainIds>> {
+  async buildTrade(): Promise<Trade<SupportedChainId>> {
     throw new Error('TestSwapper: buildTrade unimplemented')
   }
 
-  async getTradeQuote(): Promise<TradeQuote<SupportedChainIds>> {
+  async getTradeQuote(): Promise<TradeQuote<SupportedChainId>> {
     throw new Error('TestSwapper: getTradeQuote unimplemented')
   }
 

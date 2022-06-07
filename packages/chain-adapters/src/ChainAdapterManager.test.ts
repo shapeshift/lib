@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { ChainTypes, SUPPORTED_CHAIN_IDS } from '@shapeshiftoss/types'
+import { ChainTypes, SupportedChainIds } from '@shapeshiftoss/types'
 
 import { ChainAdapterManager, UnchainedUrls } from './ChainAdapterManager'
 import * as ethereum from './ethereum'
 
 const getCAM = (opts?: UnchainedUrls) => {
   const defaultAdapters: UnchainedUrls = {
-    [SUPPORTED_CHAIN_IDS.EthereumMainnet]: {
+    [SupportedChainIds.EthereumMainnet]: {
       httpUrl: 'http://localhost',
       wsUrl: ''
     }
@@ -50,7 +50,7 @@ describe('ChainAdapterManager', () => {
       const cam = new ChainAdapterManager({})
       expect(cam.getSupportedAdapters()).toHaveLength(0)
       // @ts-ignore
-      cam.addChain(SUPPORTED_CHAIN_IDS.EthereumMainnet, () => ({}))
+      cam.addChain(SupportedChainIds.EthereumMainnet, () => ({}))
       expect(cam.getSupportedAdapters()).toHaveLength(1)
     })
   })
@@ -67,7 +67,7 @@ describe('ChainAdapterManager', () => {
 
     it('should throw on unregistered chain', () => {
       const cam = getCAM()
-      const unregisteredChain = SUPPORTED_CHAIN_IDS.BitcoinMainnet
+      const unregisteredChain = SupportedChainIds.BitcoinMainnet
       expect(() => cam.removeChain(unregisteredChain)).toThrow(
         `ChainAdapterManager: chain ${unregisteredChain} not registered`
       )
@@ -75,7 +75,7 @@ describe('ChainAdapterManager', () => {
 
     it('should remove ethereum chain adapter', () => {
       const cam = getCAM()
-      const chain = SUPPORTED_CHAIN_IDS.EthereumMainnet
+      const chain = SupportedChainIds.EthereumMainnet
       const oldChains = cam.getSupportedAdapters().map((adapter) => adapter().getType())
       expect(oldChains.includes(chain)).toBeTruthy()
       expect(oldChains.length).toEqual(1)
@@ -95,8 +95,8 @@ describe('ChainAdapterManager', () => {
 
     it('should get an adapter factory', () => {
       const cam = getCAM()
-      const adapter = cam.byChain(SUPPORTED_CHAIN_IDS.EthereumMainnet)
-      const adapter2 = cam.byChain(SUPPORTED_CHAIN_IDS.EthereumMainnet)
+      const adapter = cam.byChain(SupportedChainIds.EthereumMainnet)
+      const adapter2 = cam.byChain(SupportedChainIds.EthereumMainnet)
       // @ts-ignore
       expect(adapter).toBeInstanceOf(ethereum.ChainAdapter)
       expect(adapter2).toBe(adapter)
@@ -105,7 +105,7 @@ describe('ChainAdapterManager', () => {
 
   describe('getSupportedChains', () => {
     it('should return array of keys', () => {
-      expect(getCAM().getSupportedChains()).toStrictEqual([SUPPORTED_CHAIN_IDS.EthereumMainnet])
+      expect(getCAM().getSupportedChains()).toStrictEqual([SupportedChainIds.EthereumMainnet])
     })
   })
 
@@ -123,7 +123,7 @@ describe('ChainAdapterManager', () => {
         getChainId: () => 'bip122:000000000019d6689c085ae165831e93'
       }))
       // @ts-ignore
-      cam.addChain(SUPPORTED_CHAIN_IDS.EthereumMainnet, () => ({
+      cam.addChain(SupportedChainIds.EthereumMainnet, () => ({
         getChainId: () => 'eip155:1'
       }))
 

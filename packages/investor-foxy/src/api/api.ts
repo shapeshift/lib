@@ -1,7 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { CHAIN_NAMESPACE, CHAIN_REFERENCE, ChainReference, toAssetId } from '@shapeshiftoss/caip'
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
-import { SUPPORTED_CHAIN_IDS, WithdrawType } from '@shapeshiftoss/types'
+import { SupportedChainIds, WithdrawType } from '@shapeshiftoss/types'
 import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
 import { toLower } from 'lodash'
@@ -59,7 +59,7 @@ type EthereumChainReference =
   | typeof CHAIN_REFERENCE.EthereumRopsten
 
 export type ConstructorArgs = {
-  adapter: ChainAdapter<SUPPORTED_CHAIN_IDS.EthereumMainnet>
+  adapter: ChainAdapter<SupportedChainIds.EthereumMainnet>
   providerUrl: string
   foxyAddresses: FoxyAddressesType
   chainReference?: EthereumChainReference
@@ -73,7 +73,7 @@ export const transformData = ({ tvl, apy, expired, ...contractData }: FoxyOpport
     contractAddress: contractData.staking,
     rewardToken: contractData.foxy,
     stakingToken: contractData.fox,
-    chain: SUPPORTED_CHAIN_IDS.EthereumMainnet,
+    chain: SupportedChainIds.EthereumMainnet,
     tvl,
     apy,
     expired
@@ -83,7 +83,7 @@ export const transformData = ({ tvl, apy, expired, ...contractData }: FoxyOpport
 const TOKE_IPFS_URL = 'https://ipfs.tokemaklabs.xyz/ipfs'
 
 export class FoxyApi {
-  public adapter: ChainAdapter<SUPPORTED_CHAIN_IDS.EthereumMainnet>
+  public adapter: ChainAdapter<SupportedChainIds.EthereumMainnet>
   public provider: HttpProvider
   private providerUrl: string
   public jsonRpcProvider: JsonRpcProvider

@@ -1,5 +1,5 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
-import { SupportedChainIds } from '@shapeshiftoss/types'
+import { SupportedChainId } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 
@@ -21,7 +21,7 @@ import { ZrxSwapperDeps } from '../ZrxSwapper'
 export async function zrxBuildTrade(
   { adapterManager, web3 }: ZrxSwapperDeps,
   input: BuildTradeInput
-): Promise<ZrxTrade<SupportedChainIds>> {
+): Promise<ZrxTrade<SupportedChainId>> {
   const {
     sellAsset,
     buyAsset,

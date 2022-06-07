@@ -1,5 +1,5 @@
 import { ChainId, isChainId } from '@shapeshiftoss/caip'
-import { SUPPORTED_CHAIN_IDS, SupportedChainIds } from '@shapeshiftoss/types'
+import { SupportedChainId, SupportedChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 
 import { ChainAdapter } from './api'
@@ -12,11 +12,11 @@ export type UnchainedUrl = {
   httpUrl: string
   wsUrl: string
 }
-export type UnchainedUrls = Partial<Record<SupportedChainIds, UnchainedUrl>>
+export type UnchainedUrls = Partial<Record<SupportedChainId, UnchainedUrl>>
 
 export class ChainAdapterManager {
-  private supported: Map<SupportedChainIds, () => ChainAdapter<SupportedChainIds>> = new Map()
-  private instances: Map<SupportedChainIds, ChainAdapter<SupportedChainIds>> = new Map()
+  private supported: Map<SupportedChainId, () => ChainAdapter<SupportedChainId>> = new Map()
+  private instances: Map<SupportedChainId, ChainAdapter<SupportedChainId>> = new Map()
 
   constructor(unchainedUrls: UnchainedUrls) {
     if (!unchainedUrls) {
@@ -25,7 +25,7 @@ export class ChainAdapterManager {
     ;(Object.entries(unchainedUrls) as Array<[keyof UnchainedUrls, UnchainedUrl]>).forEach(
       ([type, { httpUrl, wsUrl }]) => {
         switch (type) {
-          case SUPPORTED_CHAIN_IDS.EthereumMainnet: {
+          case SupportedChainIds.EthereumMainnet: {
             const http = new unchained.ethereum.V1Api(
               new unchained.ethereum.Configuration({ basePath: httpUrl })
             )
@@ -38,7 +38,7 @@ export class ChainAdapterManager {
                 }) as unknown as ChainAdapter<'eip155:1'> // FIXME
             )
           }
-          case SUPPORTED_CHAIN_IDS.BitcoinMainnet: {
+          case SupportedChainIds.BitcoinMainnet: {
             const http = new unchained.bitcoin.V1Api(
               new unchained.bitcoin.Configuration({ basePath: httpUrl })
             )
@@ -53,7 +53,7 @@ export class ChainAdapterManager {
             )
           }
 
-          case SUPPORTED_CHAIN_IDS.CosmosMainnet: {
+          case SupportedChainIds.CosmosMainnet: {
             const http = new unchained.cosmos.V1Api(
               new unchained.cosmos.Configuration({ basePath: httpUrl })
             )
@@ -68,7 +68,7 @@ export class ChainAdapterManager {
             )
           }
 
-          case SUPPORTED_CHAIN_IDS.OsmosisMainnet: {
+          case SupportedChainIds.OsmosisMainnet: {
             const http = new unchained.osmosis.V1Api(
               new unchained.osmosis.Configuration({ basePath: httpUrl })
             )
@@ -99,9 +99,9 @@ export class ChainAdapterManager {
    * @param {ChainTypes} chain - Coin/network symbol from Asset query
    * @param {Function} factory - A function that returns a ChainAdapter instance
    */
-  addChain<T extends SupportedChainIds>(
+  addChain<T extends SupportedChainId>(
     chain: T,
-    factory: () => ChainAdapter<SupportedChainIds>
+    factory: () => ChainAdapter<SupportedChainId>
   ): void {
     if (typeof chain !== 'string' || typeof factory !== 'function') {
       throw new Error('Parameter validation error')
@@ -109,9 +109,9 @@ export class ChainAdapterManager {
     this.supported.set(chain, factory)
   }
 
-  removeChain<T extends SupportedChainIds>(chain: T): void {
+  removeChain<T extends SupportedChainId>(chain: T): void {
     // FIXME: This is gross
-    if (!Object.values(SUPPORTED_CHAIN_IDS as unknown as T).includes(chain)) {
+    if (!Object.values(SupportedChainIds as unknown as T).includes(chain)) {
       throw new Error(`ChainAdapterManager: invalid chain ${chain}`)
     }
     if (!this.supported.has(chain)) {
@@ -120,16 +120,16 @@ export class ChainAdapterManager {
     this.supported.delete(chain)
   }
 
-  getSupportedChains(): Array<SupportedChainIds> {
+  getSupportedChains(): Array<SupportedChainId> {
     return Array.from(this.supported.keys())
   }
 
-  getSupportedAdapters(): Array<() => ChainAdapter<SupportedChainIds>> {
+  getSupportedAdapters(): Array<() => ChainAdapter<SupportedChainId>> {
     return Array.from(this.supported.values())
   }
 
   /*** Get a ChainAdapter instance for a network */
-  byChain<T extends SupportedChainIds>(chain: T): ChainAdapter<T> {
+  byChain<T extends SupportedChainId>(chain: T): ChainAdapter<T> {
     let adapter = this.instances.get(chain)
     if (!adapter) {
       const factory = this.supported.get(chain)
@@ -149,7 +149,7 @@ export class ChainAdapterManager {
     return adapter as ChainAdapter<T>
   }
 
-  byChainId(chainId: ChainId): ChainAdapter<SupportedChainIds> {
+  byChainId(chainId: ChainId): ChainAdapter<SupportedChainId> {
     // this function acts like a validation function and throws if the check doesn't pass
     isChainId(chainId)
 

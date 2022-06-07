@@ -1,6 +1,6 @@
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { SUPPORTED_CHAIN_IDS } from '@shapeshiftoss/types'
+import { SupportedChainIds } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import { BuildTradeInput } from '../../../api'
@@ -41,7 +41,7 @@ Web3.mockImplementation(() => ({
 
 const setup = () => {
   const unchainedUrls = {
-    [SUPPORTED_CHAIN_IDS.EthereumMainnet]: {
+    [SupportedChainIds.EthereumMainnet]: {
       httpUrl: 'http://localhost:31300',
       wsUrl: 'ws://localhost:31300'
     }

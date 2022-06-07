@@ -1,7 +1,7 @@
 import { AssetId } from '@shapeshiftoss/caip'
 import { createErrorClass } from '@shapeshiftoss/errors'
 import { BTCSignTx, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { Asset, ChainSpecific, SupportedChainIds } from '@shapeshiftoss/types'
+import { Asset, ChainSpecific, SupportedChainId } from '@shapeshiftoss/types'
 
 export const SwapError = createErrorClass('SwapError')
 
@@ -21,7 +21,7 @@ type ChainSpecificQuoteFeeData<T1> = ChainSpecific<
   }
 >
 
-export type QuoteFeeData<T1 extends SupportedChainIds> = {
+export type QuoteFeeData<T1 extends SupportedChainId> = {
   fee: string
 } & ChainSpecificQuoteFeeData<T1>
 
@@ -54,7 +54,7 @@ export type BuildTradeInput = CommonTradeInput & {
   wallet: HDWallet
 }
 
-interface TradeBase<C extends SupportedChainIds> {
+interface TradeBase<C extends SupportedChainId> {
   success: boolean // This will go away when we correctly handle errors
   statusReason: string // This will go away when we correctly handle errors
   buyAmount: string
@@ -68,33 +68,33 @@ interface TradeBase<C extends SupportedChainIds> {
   sellAssetAccountId: string
 }
 
-export interface TradeQuote<C extends SupportedChainIds> extends TradeBase<C> {
+export interface TradeQuote<C extends SupportedChainId> extends TradeBase<C> {
   minimum: string
   maximum: string
 }
 
-export interface Trade<C extends SupportedChainIds> extends TradeBase<C> {
+export interface Trade<C extends SupportedChainId> extends TradeBase<C> {
   receiveAddress: string
 }
 
-export interface ZrxTrade<C extends SupportedChainIds> extends Trade<C> {
+export interface ZrxTrade<C extends SupportedChainId> extends Trade<C> {
   txData: string
   depositAddress: string
 }
 
-export interface BtcThorTrade<C extends SupportedChainIds> extends Trade<C> {
+export interface BtcThorTrade<C extends SupportedChainId> extends Trade<C> {
   chainId: 'bip122:000000000019d6689c085ae165831e93'
   txData: BTCSignTx
 }
 
-export interface EthThorTrade<C extends SupportedChainIds> extends Trade<C> {
+export interface EthThorTrade<C extends SupportedChainId> extends Trade<C> {
   chainId: 'eip155:1'
   txData: ETHSignTx
 }
 
-export type ThorTrade<C extends SupportedChainIds> = BtcThorTrade<C> | EthThorTrade<C>
+export type ThorTrade<C extends SupportedChainId> = BtcThorTrade<C> | EthThorTrade<C>
 
-export type ExecuteTradeInput<C extends SupportedChainIds> = {
+export type ExecuteTradeInput<C extends SupportedChainId> = {
   trade: Trade<C>
   wallet: HDWallet
 }
@@ -103,12 +103,12 @@ export type TradeResult = {
   tradeId: string
 }
 
-export type ApproveInfiniteInput<C extends SupportedChainIds> = {
+export type ApproveInfiniteInput<C extends SupportedChainId> = {
   quote: TradeQuote<C>
   wallet: HDWallet
 }
 
-export type ApprovalNeededInput<C extends SupportedChainIds> = {
+export type ApprovalNeededInput<C extends SupportedChainId> = {
   quote: TradeQuote<C>
   wallet: HDWallet
 }
@@ -176,12 +176,12 @@ export interface Swapper {
   /**
    * Get builds a trade with definitive rate & txData that can be executed with executeTrade
    **/
-  buildTrade(args: BuildTradeInput): Promise<Trade<SupportedChainIds>>
+  buildTrade(args: BuildTradeInput): Promise<Trade<SupportedChainId>>
 
   /**
    * Get a trade quote
    */
-  getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<SupportedChainIds>>
+  getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<SupportedChainId>>
 
   /**
    * Get the usd rate from either the assets symbol or tokenId
@@ -191,17 +191,17 @@ export interface Swapper {
   /**
    * Execute a trade built with buildTrade by signing and broadcasting
    */
-  executeTrade(args: ExecuteTradeInput<SupportedChainIds>): Promise<TradeResult>
+  executeTrade(args: ExecuteTradeInput<SupportedChainId>): Promise<TradeResult>
 
   /**
    * Get a boolean if a quote needs approval
    */
-  approvalNeeded(args: ApprovalNeededInput<SupportedChainIds>): Promise<ApprovalNeededOutput>
+  approvalNeeded(args: ApprovalNeededInput<SupportedChainId>): Promise<ApprovalNeededOutput>
 
   /**
    * Get the txid of an approve infinite transaction
    */
-  approveInfinite(args: ApproveInfiniteInput<SupportedChainIds>): Promise<string>
+  approveInfinite(args: ApproveInfiniteInput<SupportedChainId>): Promise<string>
 
   /**
    * Get supported buyAssetId's by sellAssetId

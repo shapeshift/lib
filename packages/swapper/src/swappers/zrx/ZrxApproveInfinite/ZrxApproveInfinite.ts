@@ -1,4 +1,4 @@
-import { SupportedChainIds } from '@shapeshiftoss/types'
+import { SupportedChainId } from '@shapeshiftoss/types'
 
 import { ApproveInfiniteInput, SwapError, SwapErrorTypes } from '../../../api'
 import { erc20Abi } from '../utils/abi/erc20-abi'
@@ -8,7 +8,7 @@ import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function ZrxApproveInfinite(
   { adapterManager, web3 }: ZrxSwapperDeps,
-  { quote, wallet }: ApproveInfiniteInput<SupportedChainIds>
+  { quote, wallet }: ApproveInfiniteInput<SupportedChainId>
 ) {
   try {
     const allowanceGrantRequired = await grantAllowance({

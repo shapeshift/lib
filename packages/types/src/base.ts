@@ -15,14 +15,14 @@ export enum ChainTypes {
   Osmosis = 'osmosis'
 }
 
-export enum SUPPORTED_CHAIN_IDS {
+export enum SupportedChainIds {
   EthereumMainnet = 'eip155:1',
   BitcoinMainnet = 'bip122:000000000019d6689c085ae165831e93',
   CosmosMainnet = 'cosmos:cosmoshub-4',
   OsmosisMainnet = 'cosmos:osmosis-1'
 }
 
-export type SupportedChainIds = `${SUPPORTED_CHAIN_IDS}`
+export type SupportedChainId = `${SupportedChainIds}`
 
 export enum NetworkTypes {
   MAINNET = 'MAINNET',

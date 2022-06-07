@@ -1,6 +1,6 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
-import { SUPPORTED_CHAIN_IDS } from '@shapeshiftoss/types'
+import { SupportedChainIds } from '@shapeshiftoss/types'
 import { Vault, Yearn } from '@yfi/sdk'
 import { BigNumber } from 'bignumber.js'
 import { toLower } from 'lodash'
@@ -29,7 +29,7 @@ import {
 } from './yearn-types'
 
 export type ConstructorArgs = {
-  adapter: ChainAdapter<SUPPORTED_CHAIN_IDS.EthereumMainnet>
+  adapter: ChainAdapter<SupportedChainIds.EthereumMainnet>
   providerUrl: string
   network?: 1 | 250 | 1337 | 42161 // 1: 'ethereum', 250: 'fantom', 1337: 'ethereum', 42161: 'arbitrum'
 }
@@ -37,7 +37,7 @@ export type ConstructorArgs = {
 export type YearnVault = Vault
 
 export class YearnVaultApi {
-  public adapter: ChainAdapter<SUPPORTED_CHAIN_IDS.EthereumMainnet>
+  public adapter: ChainAdapter<SupportedChainIds.EthereumMainnet>
   public provider: HttpProvider
   public jsonRpcProvider: JsonRpcProvider
   public web3: Web3
