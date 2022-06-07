@@ -1,5 +1,5 @@
 import { Dex, Status, Trade, TradeType, TransferType, TxParser } from '../../../types'
-import { EthereumTxParser, ParsedTx as Tx, TxMethod } from '../../types'
+import { ParsedTx as Tx, TxParser as EthereumTxParser } from '../../types'
 import {
   FOXY_STAKING_CONTRACT,
   SHAPE_SHIFT_ROUTER_CONTRACT,
@@ -733,7 +733,7 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           assetId: 'eip155:1/erc20:0x470e8de2ebaef52014a47cb5e6af86884947f08c',
-          method: TxMethod.Approve,
+          method: 'approve',
           parser: EthereumTxParser.ERC20Approve
         },
         status: Status.Confirmed,

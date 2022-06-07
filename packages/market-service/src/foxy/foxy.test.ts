@@ -6,7 +6,7 @@ import { FOXY_ASSET_ID, FoxyMarketService } from './foxy'
 import { fox, mockFoxyMarketData } from './foxyMockData'
 
 const foxyMarketService = new FoxyMarketService({
-  jsonRpcProviderUrl: '',
+  jsonRpcProviderUrl: 'http://localhost',
   unchainedEthereumHttpUrl: '',
   unchainedEthereumWsUrl: ''
 })

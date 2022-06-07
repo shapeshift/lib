@@ -58,8 +58,8 @@ export class TransactionParser {
       this.uniV2,
       this.weth,
       this.foxy,
-      this.erc20Approve,
-      this.yearn
+      this.yearn,
+      this.erc20Approve
     ]
   }
 
