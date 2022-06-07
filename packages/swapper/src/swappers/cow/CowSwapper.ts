@@ -74,9 +74,8 @@ export class CowSwapper implements Swapper {
     if (
       !sellAssetId?.startsWith('eip155:1/erc20') ||
       COWSWAP_UNSUPPORTED_ASSETS.includes(sellAssetId)
-    ) {
+    )
       return []
-    }
 
     return assetIds.filter(
       (id) =>
