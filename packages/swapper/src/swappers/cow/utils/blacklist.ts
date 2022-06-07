@@ -1,3 +1,4 @@
+// CowSwap doesnt have an easily accessible master assets list.
 // We assume all erc20's are supported and remove these explicitely unsupported assets
 export const COWSWAP_UNSUPPORTED_ASSETS = Object.freeze([
   // Foxy token unsupported by cowswap
