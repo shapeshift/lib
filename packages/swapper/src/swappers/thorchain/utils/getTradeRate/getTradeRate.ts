@@ -1,6 +1,6 @@
 import { adapters } from '@shapeshiftoss/caip'
+import { Asset } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
-import { Asset } from 'packages/types/dist'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { PoolResponse, ThorchainSwapperDeps } from '../../types'
