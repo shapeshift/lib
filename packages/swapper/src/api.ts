@@ -130,8 +130,6 @@ export type GetMinMaxInput = {
 
 export type ApprovalNeededOutput = {
   approvalNeeded: boolean
-  gas?: string
-  gasPrice?: string
 }
 
 export enum SwapperType {
@@ -164,7 +162,8 @@ export enum SwapErrorTypes {
   USD_RATE_FAILED = 'USD_RATE_FAILED',
   UNSUPPORTED_CHAIN = 'UNSUPPORTED_CHAIN',
   VALIDATION_FAILED = 'VALIDATION_FAILED',
-  MAKE_MEMO_FAILED = 'MAKE_MEMO_FAILED'
+  MAKE_MEMO_FAILED = 'MAKE_MEMO_FAILED',
+  PRICE_RATIO_FAILED = 'PRICE_RATIO_FAILED'
 }
 
 export interface Swapper {
@@ -187,12 +186,7 @@ export interface Swapper {
   /**
    * Get the usd rate from either the assets symbol or tokenId
    */
-  getUsdRate(input: Pick<Asset, 'symbol' | 'tokenId'>): Promise<string>
-
-  /**
-   * Get the minimum and maximum trade value of the sellAsset and buyAsset
-   */
-  getMinMax(input: GetMinMaxInput): Promise<MinMaxOutput>
+  getUsdRate(input: Asset): Promise<string>
 
   /**
    * Execute a trade built with buildTrade by signing and broadcasting

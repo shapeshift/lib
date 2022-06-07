@@ -2,6 +2,7 @@ import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import Web3 from 'web3'
 
 import { bn, bnOrZero } from '../../../utils/bignumber'
+import { FOX, WETH } from '../../../utils/test-data/assets'
 import { erc20Abi } from '../abi/erc20-abi'
 import { erc20AllowanceAbi } from '../abi/erc20Allowance-abi'
 import {
@@ -43,10 +44,7 @@ describe('utils', () => {
       ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(
         Promise.resolve({ data: { price: '2' } })
       )
-      const rate = await getUsdRate({
-        symbol: 'FOX',
-        assetId: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
-      })
+      const rate = await getUsdRate(FOX)
       expect(rate).toBe('0.5')
       expect(zrxService.get).toHaveBeenCalledWith('/swap/v1/price', {
         params: {
@@ -58,12 +56,7 @@ describe('utils', () => {
     })
     it('getUsdRate fails', async () => {
       ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data: {} }))
-      await expect(
-        getUsdRate({
-          symbol: 'WETH',
-          assetId: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
-        })
-      ).rejects.toThrow('[getUsdRate]')
+      await expect(getUsdRate(WETH)).rejects.toThrow('[getUsdRate]')
     })
   })
 

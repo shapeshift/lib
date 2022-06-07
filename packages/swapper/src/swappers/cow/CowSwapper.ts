@@ -1,4 +1,3 @@
-import { AssetService } from '@shapeshiftoss/asset-service'
 import { AssetId } from '@shapeshiftoss/caip'
 import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
 
@@ -9,9 +8,7 @@ import {
   BuildTradeInput,
   BuyAssetBySellIdInput,
   ExecuteTradeInput,
-  GetMinMaxInput,
   GetTradeQuoteInput,
-  MinMaxOutput,
   Swapper,
   SwapperType,
   Trade,
@@ -23,7 +20,6 @@ import { UNSUPPORTED_ASSETS } from './utils/blacklist'
 import { getUsdRate } from './utils/helpers/helpers'
 
 export type CowSwapperDeps = {
-  assetService: AssetService
   apiUrl: string
 }
 
@@ -52,13 +48,8 @@ export class CowSwapper implements Swapper {
     throw new Error('CowSwapper: getTradeQuote unimplemented')
   }
 
-  async getUsdRate(input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> {
+  async getUsdRate(input: Asset): Promise<string> {
     return getUsdRate(this.deps, input)
-  }
-
-  getMinMax(input: GetMinMaxInput): Promise<MinMaxOutput> {
-    console.info(input)
-    throw new Error('CowSwapper: getMinMax unimplemented')
   }
 
   async executeTrade(args: ExecuteTradeInput<SupportedChainIds>): Promise<TradeResult> {

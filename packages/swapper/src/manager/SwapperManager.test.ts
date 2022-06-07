@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { AssetService } from '@shapeshiftoss/asset-service'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import Web3 from 'web3'
 
@@ -15,12 +14,12 @@ describe('SwapperManager', () => {
     adapterManager: <ChainAdapterManager>{}
   }
   const cowSwapperDeps: CowSwapperDeps = {
-    apiUrl: 'https://api.cow.fi/mainnet/api/',
-    assetService: <AssetService>{}
+    apiUrl: 'https://api.cow.fi/mainnet/api/'
   }
 
   const thorchainSwapperDeps: ThorchainSwapperDeps = {
-    midgardUrl: 'localhost:3000'
+    midgardUrl: 'localhost:3000',
+    adapterManager: <ChainAdapterManager>{}
   }
 
   describe('constructor', () => {

@@ -2849,6 +2849,16 @@
     rxjs "^6.4.0"
     type-assertions "^1.1.0"
 
+"@shapeshiftoss/hdwallet-core@^1.22.0":
+  version "1.23.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/hdwallet-core/-/hdwallet-core-1.23.0.tgz#8e7552b684d9c4600381cf3131c9d304df4b169a"
+  integrity sha512-CP0ysBeyRMtjx1OTSj+EmuhYWeh3YGxrbobj7HZDYYl8kHyUseJTTQ3s42ezS1AfXkDf/YidKDxa7p6+v7/0sw==
+  dependencies:
+    eventemitter2 "^5.0.1"
+    lodash "^4.17.21"
+    rxjs "^6.4.0"
+    type-assertions "^1.1.0"
+
 "@shapeshiftoss/hdwallet-core@latest":
   version "1.19.0"
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/hdwallet-core/-/hdwallet-core-1.19.0.tgz#7eeae9be9f90fff53887611c6ac02c334781baa3"
@@ -2895,6 +2905,11 @@
     cosmjs-types "^0.4.1"
     google-protobuf "^3.17.0"
     long "^4.0.0"
+
+"@shapeshiftoss/types@4.3.1":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/types/-/types-4.3.1.tgz#81172c284ec41f5d333b0e4a6c1bd5142f0e7fa1"
+  integrity sha512-scF2x6d4+SpYdlREQ5u0uFDQM6q9oW3WIbQBL79AVwRFhmXqymjR/S/GMwGHrCVTXSSq3UzHV56ripff/GeixQ==
 
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"

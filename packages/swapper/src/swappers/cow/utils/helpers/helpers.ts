@@ -1,5 +1,5 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
-import { Asset, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
+import { Asset } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
@@ -11,13 +11,9 @@ import { cowService } from '../cowService'
 const USDC_CONTRACT_ADDRESS = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
 const USDC_ASSET_PRECISION = 6
 
-export const getUsdRate = async (
-  { assetService, apiUrl }: CowSwapperDeps,
-  input: Pick<Asset, 'assetId'>
-): Promise<string> => {
-  const { assetId } = input
-
-  const { assetReference: erc20Address, assetNamespace } = fromAssetId(assetId)
+export const getUsdRate = async ({ apiUrl }: CowSwapperDeps, input: Asset): Promise<string> => {
+  const asset = input
+  const { assetReference: erc20Address, assetNamespace } = fromAssetId(asset.assetId)
 
   if (assetNamespace !== 'erc20') {
     throw new SwapError('[getUsdRate] - unsupported asset namespace', {
@@ -25,12 +21,6 @@ export const getUsdRate = async (
       details: { assetNamespace }
     })
   }
-
-  const asset = assetService.byTokenId({
-    chain: ChainTypes.Ethereum,
-    network: NetworkTypes.MAINNET,
-    tokenId: erc20Address
-  })
 
   const buyAmountInDollars = 1000
   const buyAmount = bn(buyAmountInDollars).times(bn(10).exponentiatedBy(USDC_ASSET_PRECISION))
