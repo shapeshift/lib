@@ -25,4 +25,3 @@ export const toBaseUnit = (amount: BigNumber.Value | undefined, precision: numbe
     .times(new BigNumber(10).exponentiatedBy(bnOrZero(precision)))
     .toFixed(0)
 }
-
