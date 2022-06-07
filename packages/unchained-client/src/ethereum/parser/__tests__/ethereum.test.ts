@@ -1,3 +1,5 @@
+import nock from 'nock'
+
 import { Dex, Status, Trade, TradeType, TransferType, TxParser } from '../../../types'
 import { EthereumTxParser, ParsedTx as Tx, TxMethod } from '../../types'
 import {
@@ -44,6 +46,7 @@ import wethWithdraw from './mockData/wethWithdraw'
 import yearnApproval from './mockData/yearnApproval'
 import yearnDeposit from './mockData/yearnDeposit'
 import yearnDepositShapeShiftRouter from './mockData/yearnDepositShapeShiftRouter'
+import yearnGet from './mockData/yearnGet'
 import yearnWithdrawal from './mockData/yearnWithdrawal'
 import zrxTradeBondToUni from './mockData/zrxTradeBondToUni'
 import zrxTradeEthToMatic from './mockData/zrxTradeEthToMatic'
@@ -53,6 +56,18 @@ import zrxTradeTribeToEth from './mockData/zrxTradeTribeToEth'
 const txParser = new TransactionParser({ rpcUrl: '', chainId: 'eip155:1' })
 
 describe('parseTx', () => {
+  beforeAll(() => {
+    nock('https://cache.yearn.finance')
+      .get('/v1/chains/1/vaults/get')
+      .reply(200, yearnGet)
+      .persist()
+
+    nock('https://raw.githack.com')
+      .get('/trustwallet/assets/master/blockchains/ethereum/tokenlist.json')
+      .reply(200, {})
+      .persist()
+  })
+
   describe('multiSig', () => {
     it('should be able to parse eth multi sig send', async () => {
       const { tx, internalTxs } = multiSigSendEth
