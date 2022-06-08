@@ -3,10 +3,10 @@ import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 
 import { BuildTradeInput, SwapError, SwapErrorTypes, ZrxTrade } from '../../..'
+import { bnOrZero } from '../../utils/bignumber'
 import { ZrxQuoteResponse } from '../types'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
-import { bnOrZero } from '../utils/bignumber'
 import {
   AFFILIATE_ADDRESS,
   APPROVAL_GAS_LIMIT,
@@ -97,8 +97,6 @@ export async function zrxBuildTrade(
     const trade: ZrxTrade = {
       sellAsset,
       buyAsset,
-      success: true,
-      statusReason: '',
       sellAssetAccountId,
       receiveAddress,
       rate: data.price,
@@ -108,12 +106,12 @@ export async function zrxBuildTrade(
         chainSpecific: {
           estimatedGas: estimatedGas.toString(),
           gasPrice: data.gasPrice
-        }
+        },
+        tradeFee: '0'
       },
       txData: data.data,
       sellAmount: data.sellAmount,
       buyAmount: data.buyAmount,
-      allowanceContract: data.allowanceTarget,
       sources: data.sources?.filter((s) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE
     }
 
@@ -132,7 +130,8 @@ export async function zrxBuildTrade(
         chainSpecific: {
           ...trade.feeData?.chainSpecific,
           approvalFee: bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(bnOrZero(data.gasPrice)).toString()
-        }
+        },
+        tradeFee: '0'
       }
     }
     return trade

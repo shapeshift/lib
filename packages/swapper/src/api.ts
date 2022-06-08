@@ -14,11 +14,16 @@ type ChainSpecificQuoteFeeData<T extends ChainNamespace> = ChainSpecific<
       approvalFee?: string
       totalFee?: string
     }
+    'bip122:000000000019d6689c085ae165831e93': {
+      byteCount: string
+      satsPerByte: string
+    }
   }
 >
 
 export type QuoteFeeData<T extends ChainNamespace> = {
   fee: string
+  tradeFee: string // fee taken out of the trade from the buyAsset
 } & ChainSpecificQuoteFeeData<T>
 
 export type ByPairInput = {
@@ -51,13 +56,10 @@ export type BuildTradeInput = CommonTradeInput & {
 }
 
 interface TradeBase<C extends ChainNamespace> {
-  success: boolean // This will go away when we correctly handle errors
-  statusReason: string // This will go away when we correctly handle errors
   buyAmount: string
   sellAmount: string
   feeData: QuoteFeeData<C>
   rate: string
-  allowanceContract: string
   sources: Array<SwapSource>
   buyAsset: Asset
   sellAsset: Asset
@@ -65,6 +67,7 @@ interface TradeBase<C extends ChainNamespace> {
 }
 
 export interface TradeQuote<C extends ChainNamespace> extends TradeBase<C> {
+  allowanceContract: string
   minimum: string
   maximum: string
 }

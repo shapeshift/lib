@@ -4,7 +4,7 @@ import { KnownChainIds } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import { BuildTradeInput } from '../../../api'
-import { bnOrZero } from '../utils/bignumber'
+import { bnOrZero } from '../../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../utils/constants'
 import { setupZrxTradeQuoteResponse } from '../utils/test-data/setupSwapQuote'
 import { zrxService } from '../utils/zrxService'
@@ -78,19 +78,17 @@ describe('ZrxBuildTrade', () => {
 
   const buildTradeResponse = {
     sellAsset,
-    success: true,
-    statusReason: '',
     sellAmount: quoteResponse.sellAmount,
     buyAmount: '',
     depositAddress: quoteResponse.to,
-    allowanceContract: 'allowanceTargetAddress',
     receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
     sellAssetAccountId: '0',
     txData: quoteResponse.data,
     rate: quoteResponse.price,
     feeData: {
       fee: (Number(quoteResponse.gas) * Number(quoteResponse.gasPrice)).toString(),
-      chainSpecific: { approvalFee: '123600000', estimatedGas: '1235', gasPrice: '1236' }
+      chainSpecific: { approvalFee: '123600000', estimatedGas: '1235', gasPrice: '1236' },
+      tradeFee: '0'
     },
     sources: []
   }
@@ -157,7 +155,8 @@ describe('ZrxBuildTrade', () => {
           gasPrice,
           estimatedGas
         },
-        fee: bnOrZero(gasPrice).multipliedBy(estimatedGas).toString()
+        fee: bnOrZero(gasPrice).multipliedBy(estimatedGas).toString(),
+        tradeFee: '0'
       },
       buyAsset
     })

@@ -1,15 +1,13 @@
 import { Asset } from '@shapeshiftoss/types'
 
 import { GetTradeQuoteInput, TradeQuote } from '../../../../api'
+import { FOX, WETH } from '../../../utils/test-data/assets'
 import { ZrxQuoteResponse } from '../../types'
-import { FOX, WETH } from './assets'
 
 export const setupQuote = () => {
   const sellAsset: Asset = { ...FOX }
   const buyAsset: Asset = { ...WETH }
   const tradeQuote: TradeQuote<'eip155'> = {
-    success: true,
-    statusReason: '',
     buyAmount: '',
     sellAmount: '1000000000000000000',
     sellAsset,
@@ -18,10 +16,7 @@ export const setupQuote = () => {
     sellAssetAccountId: '0',
     minimum: '0',
     maximum: '999999999999',
-    feeData: {
-      fee: '0',
-      chainSpecific: {}
-    },
+    feeData: { fee: '0', tradeFee: '0', chainSpecific: {} },
     rate: '1',
     sources: []
   }
@@ -89,11 +84,8 @@ export const setupExecuteTrade = () => {
     txData: '0x0',
     depositAddress: '0x0',
     receiveAddress: '0x0',
-    success: true,
-    statusReason: '',
-    feeData: { fee: '0', chainSpecific: {} },
+    feeData: { fee: '0', chainSpecific: {}, tradeFee: '0' },
     rate: '0',
-    allowanceContract: '0x0',
     sources: []
   }
   return { executeTradeInput, buyAsset, sellAsset }
