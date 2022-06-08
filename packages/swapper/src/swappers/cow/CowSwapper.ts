@@ -19,6 +19,7 @@ import {
   TradeTxs
 } from '../../api'
 import { CowApprovalNeeded } from './CowApprovalNeeded/CowApprovalNeeded'
+import { CowApproveInfinite } from './CowApproveInfinite/CowApproveInfinite'
 import { getUsdRate } from './utils/helpers/helpers'
 
 export type CowSwapperDeps = {
@@ -68,8 +69,7 @@ export class CowSwapper implements Swapper {
   }
 
   async approveInfinite(args: ApproveInfiniteInput<SupportedChainIds>): Promise<string> {
-    console.info(args)
-    throw new Error('CowSwapper: approveInfinite unimplemented')
+    return CowApproveInfinite(this.deps, args)
   }
 
   filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): AssetId[] {

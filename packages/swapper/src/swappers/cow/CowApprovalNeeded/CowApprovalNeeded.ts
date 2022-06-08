@@ -2,9 +2,9 @@ import { fromAssetId } from '@shapeshiftoss/caip'
 import { SupportedChainIds } from '@shapeshiftoss/types'
 
 import { ApprovalNeededInput, ApprovalNeededOutput, SwapError, SwapErrorTypes } from '../../../api'
+import { erc20AllowanceAbi } from '../../utils/abi/erc20Allowance-abi'
 import { bnOrZero } from '../../utils/bignumber'
 import { getERC20Allowance } from '../../utils/helpers/helpers'
-import { erc20AllowanceAbi } from '../../zrx/utils/abi/erc20Allowance-abi'
 import { CowSwapperDeps } from '../CowSwapper'
 
 const COW_SWAP_VAULT_RELAYER_ADDRESS = '0xc92e8bdf79f0507f65a392b0ab4667716bfe0110'

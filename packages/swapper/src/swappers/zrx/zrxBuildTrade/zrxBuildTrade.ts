@@ -4,10 +4,10 @@ import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 
 import { BuildTradeInput, SwapError, SwapErrorTypes, ZrxTrade } from '../../..'
+import { erc20AllowanceAbi } from '../../utils/abi/erc20Allowance-abi'
 import { bnOrZero } from '../../utils/bignumber'
 import { getAllowanceRequired } from '../../utils/helpers/helpers'
 import { ZrxQuoteResponse } from '../types'
-import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
 import {
   AFFILIATE_ADDRESS,
