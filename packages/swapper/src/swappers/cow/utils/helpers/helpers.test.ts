@@ -1,5 +1,6 @@
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import Web3 from 'web3'
+
 import { ETH, FOX, WBTC } from '../../../utils/test-data/assets'
 import { CowSwapperDeps } from '../../CowSwapper'
 import { cowService } from '../cowService'

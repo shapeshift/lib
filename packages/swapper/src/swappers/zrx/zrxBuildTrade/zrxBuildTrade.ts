@@ -100,8 +100,6 @@ export async function zrxBuildTrade(
     const trade: ZrxTrade<'eip155:1'> = {
       sellAsset,
       buyAsset,
-      success: true,
-      statusReason: '',
       sellAssetAccountId,
       receiveAddress,
       rate: data.price,
@@ -111,12 +109,12 @@ export async function zrxBuildTrade(
         chainSpecific: {
           estimatedGas: estimatedGas.toString(),
           gasPrice: data.gasPrice
-        }
+        },
+        tradeFee: '0'
       },
       txData: data.data,
       sellAmount: data.sellAmount,
       buyAmount: data.buyAmount,
-      allowanceContract: data.allowanceTarget,
       sources: data.sources?.filter((s) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE
     }
 
@@ -135,7 +133,8 @@ export async function zrxBuildTrade(
         chainSpecific: {
           ...trade.feeData?.chainSpecific,
           approvalFee: bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(bnOrZero(data.gasPrice)).toString()
-        }
+        },
+        tradeFee: '0'
       }
     }
     return trade
