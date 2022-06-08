@@ -3,16 +3,9 @@ import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { Asset, BIP44Params } from '@shapeshiftoss/types'
 import { getThorTxInfo } from '../ethereum/utils/getThorTxData'
-import BigNumber from 'bignumber.js'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
-import { bnOrZero } from '../../../utils/bignumber'
-import { InboundResponse, ThorchainSwapperDeps } from '../../types'
-import { getPriceRatio } from '../getPriceRatio/getPriceRatio'
-import { makeSwapMemo } from '../makeSwapMemo/makeSwapMemo'
-import { thorService } from '../thorService'
-import { deposit } from './routerCalldata'
-import { fromBaseUnit, toBaseUnit } from '../../../utils/bignumber'
+import {  ThorchainSwapperDeps } from '../../types'
 
 export const makeTradeTx = async ({
   wallet,
@@ -53,7 +46,6 @@ export const makeTradeTx = async ({
       sellAsset,
       buyAsset,
       sellAmount,
-      sellAssetReference: assetReference,
       slippageTolerance,
       destinationAddress,
       isErc20Trade

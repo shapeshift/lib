@@ -1,6 +1,7 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
+import { Asset } from '@shapeshiftoss/types'
 import { thorService } from '../../thorService'
-import { InboundResponse } from '../../../types'
+import { InboundResponse, ThorchainSwapperDeps } from '../../../types'
 import { SwapError, SwapErrorTypes } from '../../../../../api'
 import { getPriceRatio } from '../../getPriceRatio/getPriceRatio'
 import { makeSwapMemo } from '../../makeSwapMemo/makeSwapMemo'
@@ -12,10 +13,17 @@ export const getThorTxInfo = async ({
   sellAsset,
   buyAsset,
   sellAmount,
-  sellAssetReference,
   slippageTolerance,
   destinationAddress,
-  isErc20Trade = false
+  isErc20Trade
+}: {
+  deps: ThorchainSwapperDeps
+  sellAsset: Asset
+  buyAsset: Asset
+  sellAmount: string
+  slippageTolerance: string
+  destinationAddress: string
+  isErc20Trade: boolean
 }) => {
   const { assetReference } = fromAssetId(sellAsset.assetId)
 
@@ -64,8 +72,8 @@ export const getThorTxInfo = async ({
   })
 
   const data = await deposit(
-    vault,
     router,
+    vault,
     isErc20Trade ? assetReference : '0x0000000000000000000000000000000000000000',
     sellAmount,
     memo
