@@ -1,12 +1,13 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
 import { Asset } from '@shapeshiftoss/types'
-import { thorService } from '../../thorService'
-import { InboundResponse, ThorchainSwapperDeps } from '../../../types'
+
 import { SwapError, SwapErrorTypes } from '../../../../../api'
+import { bn, bnOrZero, fromBaseUnit, toBaseUnit } from '../../../../utils/bignumber'
+import { InboundResponse, ThorchainSwapperDeps } from '../../../types'
 import { getPriceRatio } from '../../getPriceRatio/getPriceRatio'
 import { makeSwapMemo } from '../../makeSwapMemo/makeSwapMemo'
+import { thorService } from '../../thorService'
 import { deposit } from '../routerCalldata'
-import { bn, bnOrZero, fromBaseUnit, toBaseUnit } from '../../../../utils/bignumber'
 
 export const getThorTxInfo = async ({
   deps,

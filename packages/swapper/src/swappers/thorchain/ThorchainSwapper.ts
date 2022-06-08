@@ -14,10 +14,10 @@ import {
   TradeResult,
   TradeTxs
 } from '../../api'
+import { getTradeQuote } from './getTradeQuote/getTradeQuote'
 import { PoolResponse, ThorchainSwapperDeps } from './types'
 import { getUsdRate } from './utils/getUsdRate/getUsdRate'
 import { thorService } from './utils/thorService'
-import { getTradeQuote } from './getTradeQuote/getTradeQuote'
 
 export class ThorchainSwapper implements Swapper {
   private swapSupportedChainIds: Record<ChainId, boolean> = {

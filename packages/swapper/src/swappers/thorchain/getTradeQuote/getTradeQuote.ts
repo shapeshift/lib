@@ -1,15 +1,16 @@
-import { fromAssetId, toChainId, getFeeAssetIdFromAssetId } from '@shapeshiftoss/caip'
-import { TradeQuote, GetTradeQuoteInput, SwapError, SwapErrorTypes } from '../../../api'
-import { fromBaseUnit } from '../../utils/bignumber'
+import { fromAssetId, getFeeAssetIdFromAssetId, toChainId } from '@shapeshiftoss/caip'
 import { SupportedChainIds } from '@shapeshiftoss/types'
-import { ThorchainSwapperDeps } from '../types'
-import { getPriceRatio } from '../utils/getPriceRatio/getPriceRatio'
+
+import { GetTradeQuoteInput, SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
+import { fromBaseUnit } from '../../utils/bignumber'
 import { bnOrZero } from '../../utils/bignumber'
-import { getEthTxFees } from '../utils/txFeeHelpers/ethTxFees/getEthTxFees'
-import { getThorTxInfo } from '../utils/ethereum/utils/getThorTxData'
 import { DEFAULT_SLIPPAGE } from '../../utils/constants'
-import { MAX_THORCHAIN_TRADE } from '../utils/constants'
 import { normalizeAmount } from '../../zrx/utils/helpers/helpers'
+import { ThorchainSwapperDeps } from '../types'
+import { MAX_THORCHAIN_TRADE } from '../utils/constants'
+import { getThorTxInfo } from '../utils/ethereum/utils/getThorTxData'
+import { getPriceRatio } from '../utils/getPriceRatio/getPriceRatio'
+import { getEthTxFees } from '../utils/txFeeHelpers/ethTxFees/getEthTxFees'
 
 export const getTradeQuote = async ({
   deps,
@@ -86,7 +87,7 @@ export const getTradeQuote = async ({
     minimum,
     maximum: MAX_THORCHAIN_TRADE,
     feeData,
-    sellAmount: sellAmount,
+    sellAmount,
     buyAmount,
     sources: [{ name: 'thorchain', proportion: '1' }],
     allowanceContract: router,

@@ -1,11 +1,12 @@
-import { ChainTypes, Asset, chainAdapters } from '@shapeshiftoss/types'
-import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { AssetReference } from '@shapeshiftoss/caip'
-import { bnOrZero } from '../../../../utils/bignumber'
+import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+import { Asset, chainAdapters, ChainTypes } from '@shapeshiftoss/types'
+
 import { QuoteFeeData } from '../../../../../api'
+import { bnOrZero } from '../../../../utils/bignumber'
+import { APPROVAL_GAS_LIMIT } from '../../../../utils/constants'
 import { ThorchainSwapperDeps } from '../../../types'
 import { estimateTradeFee } from '../../estimateTradeFee/estimateTradeFee'
-import { APPROVAL_GAS_LIMIT } from '../../../../utils/constants'
 
 export const getEthTxFees = async ({
   deps,

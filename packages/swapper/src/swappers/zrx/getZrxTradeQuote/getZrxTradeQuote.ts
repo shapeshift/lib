@@ -3,10 +3,10 @@ import { AxiosResponse } from 'axios'
 
 import { GetTradeQuoteInput, SwapError, SwapErrorTypes, SwapSource, TradeQuote } from '../../../api'
 import { bn, bnOrZero } from '../../utils/bignumber'
+import { APPROVAL_GAS_LIMIT } from '../../utils/constants'
 import { getZrxMinMax } from '../getZrxMinMax/getZrxMinMax'
 import { ZrxPriceResponse } from '../types'
 import { DEFAULT_SOURCE } from '../utils/constants'
-import { APPROVAL_GAS_LIMIT } from '../../utils/constants'
 import { normalizeAmount } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
 

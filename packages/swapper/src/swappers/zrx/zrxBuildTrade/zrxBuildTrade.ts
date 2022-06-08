@@ -5,15 +5,12 @@ import * as rax from 'retry-axios'
 
 import { BuildTradeInput, SwapError, SwapErrorTypes, ZrxTrade } from '../../..'
 import { bnOrZero } from '../../utils/bignumber'
+import { DEFAULT_SLIPPAGE } from '../../utils/constants'
+import { APPROVAL_GAS_LIMIT } from '../../utils/constants'
 import { ZrxQuoteResponse } from '../types'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
-import {
-  AFFILIATE_ADDRESS,
-  DEFAULT_SOURCE
-} from '../utils/constants'
-import { DEFAULT_SLIPPAGE } from '../../utils/constants'
-import { APPROVAL_GAS_LIMIT } from '../../utils/constants'
+import { AFFILIATE_ADDRESS, DEFAULT_SOURCE } from '../utils/constants'
 import { getAllowanceRequired, normalizeAmount } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
