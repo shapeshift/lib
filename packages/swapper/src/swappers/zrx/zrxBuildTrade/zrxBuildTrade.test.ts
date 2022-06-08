@@ -4,7 +4,7 @@ import { ChainTypes } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import { BuildTradeInput } from '../../../api'
-import { bnOrZero } from '../utils/bignumber'
+import { bnOrZero } from '../../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../utils/constants'
 import { setupZrxTradeQuoteResponse } from '../utils/test-data/setupSwapQuote'
 import { zrxService } from '../utils/zrxService'
@@ -80,7 +80,6 @@ describe('ZrxBuildTrade', () => {
     sellAmount: quoteResponse.sellAmount,
     buyAmount: '',
     depositAddress: quoteResponse.to,
-    allowanceContract: 'allowanceTargetAddress',
     receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
     sellAssetAccountId: '0',
     txData: quoteResponse.data,

@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/unchained-client",
-  "version": "8.6.0",
+  "version": "8.6.1",
   "license": "MIT",
   "main": "dist/index.js",
   "source": "src/index.ts",
@@ -23,22 +23,22 @@
   },
   "dependencies": {
     "@yfi/sdk": "^1.0.30",
-    "bignumber.js": "^9.0.1",
+    "bignumber.js": "^9.0.2",
     "ethers": "^5.5.3",
     "isomorphic-ws": "^4.0.1",
     "ws": "^8.3.0"
   },
   "peerDependencies": {
-    "@shapeshiftoss/caip": "^5.2.1",
+    "@shapeshiftoss/caip": "^5.2.2",
     "@shapeshiftoss/logger": "^1.1.2",
-    "@shapeshiftoss/types": "4.3.1"
+    "@shapeshiftoss/types": "^4.4.0"
   },
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.5.1",
-    "@shapeshiftoss/caip": "^5.2.1",
+    "@shapeshiftoss/caip": "^5.2.2",
     "@shapeshiftoss/common-api": "^7.0.0",
     "@shapeshiftoss/logger": "^1.1.2",
-    "@shapeshiftoss/types": "4.3.1",
+    "@shapeshiftoss/types": "^4.4.0",
     "@types/ws": "^8.2.1"
   }
 }
