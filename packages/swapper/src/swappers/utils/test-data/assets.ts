@@ -43,13 +43,11 @@ export const WBTC: Asset = {
   assetId: 'eip155:1/erc20:0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
   chainId: 'eip155:1',
   color: '#FFFFFF',
-  chain: ChainTypes.Ethereum,
   explorer: 'https://etherscan.io',
   explorerAddressLink: 'https://etherscan.io/address/',
   explorerTxLink: 'https://etherscan.io/tx/',
   icon: 'https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png',
   name: 'Wrapped Bitcoin',
-  network: NetworkTypes.MAINNET,
   precision: 8,
   symbol: 'WBTC'
 }
@@ -57,8 +55,6 @@ export const WBTC: Asset = {
 export const ETH: Asset = {
   assetId: 'eip155:1/slip44:60',
   chainId: 'eip155:1',
-  chain: ChainTypes.Ethereum,
-  network: NetworkTypes.MAINNET,
   symbol: 'ETH',
   name: 'Ethereum',
   precision: 18,
