@@ -2,6 +2,7 @@ import { AssetId, ChainId } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, HDWallet, PublicKey } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
+import { BitcoinAddress } from '@shapeshiftoss/unchained-client/src/generated/bitcoin'
 import WAValidator from 'multicoin-address-validator'
 
 import { ChainAdapter as IChainAdapter } from '../api'
@@ -10,6 +11,7 @@ import {
   Account,
   BuildSendTxInput,
   ChainTxType,
+  FeeData,
   FeeDataEstimate,
   GetAddressInput,
   GetFeeDataInput,
@@ -46,13 +48,14 @@ export interface ChainAdapterArgs {
   chainId?: ChainId
 }
 
+type BitcoinFeeData = FeeData & { cost: string }
 /**
  * Base chain adapter for all UTXO chains. When extending please add your ChainType to the
  * UTXOChainTypes. For example:
  *
  * `export type UTXOChainTypes = ChainTypes.Bitcoin | ChainTypes.Litecoin`
  */
-export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChainAdapter<T> {
+export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChainAdapter {
   protected chainId: ChainId
   protected assetId: AssetId
   protected coinName: string
@@ -86,7 +89,7 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
 
   abstract getAddress(input: GetAddressInput): Promise<string>
 
-  abstract getFeeData(input: Partial<GetFeeDataInput<T>>): Promise<FeeDataEstimate<T>>
+  abstract getFeeData(input: Partial<GetFeeDataInput<T>>): Promise<FeeDataEstimate<BitcoinFeeData>>
 
   abstract signTransaction(signTxInput: SignTxInput<ChainTxType<T>>): Promise<string>
 
@@ -100,7 +103,15 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
     return this.assetId
   }
 
-  async getAccount(pubkey: string): Promise<Account<T>> {
+  async getAccount(pubkey: string): Promise<
+    Account & {
+      chainSpecific: {
+        addresses?: BitcoinAddress[]
+        nextChangeAddressIndex?: number
+        nextReceiveAddressIndex?: number
+      }
+    }
+  > {
     if (!pubkey) {
       return ErrorHandler('UTXOBaseAdapter: pubkey parameter is not defined')
     }
@@ -112,7 +123,6 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
 
       return {
         balance: balance.toString(),
-        chain: this.getType(),
         chainId: this.chainId,
         assetId: this.assetId,
         chainSpecific: {
@@ -121,7 +131,7 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChai
           nextReceiveAddressIndex: data.nextReceiveAddressIndex
         },
         pubkey: data.pubkey
-      } as Account<T>
+      }
     } catch (err) {
       return ErrorHandler(err)
     }

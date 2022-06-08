@@ -15,13 +15,14 @@ export enum ChainTypes {
   Osmosis = 'osmosis'
 }
 
-// todo; change to object, call named chainIds
-export enum KnownChainIds {
-  EthereumMainnet = 'eip155:1',
-  BitcoinMainnet = 'bip122:000000000019d6689c085ae165831e93',
-  CosmosMainnet = 'cosmos:cosmoshub-4',
-  OsmosisMainnet = 'cosmos:osmosis-1'
-}
+export type EthereumMainnet = 'eip155:1'
+
+export const KnownChainIds = {
+  EthereumMainnet: 'eip155:1',
+  BitcoinMainnet: 'bip122:000000000019d6689c085ae165831e93',
+  CosmosMainnet: 'cosmos:cosmoshub-4',
+  OsmosisMainnet: 'cosmos:osmosis-1'
+} as const
 
 export enum NetworkTypes {
   MAINNET = 'MAINNET',

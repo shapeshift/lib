@@ -14,7 +14,7 @@ import {
   BTCSignTxOutput,
   supportsBTC
 } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
+import { BIP44Params, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import coinSelect from 'coinselect'
 import split from 'coinselect/split'
@@ -46,10 +46,8 @@ import {
 } from '../utils'
 import { ChainAdapterArgs, UTXOBaseAdapter } from '../utxo/UTXOBaseAdapter'
 
-export class ChainAdapter
-  extends UTXOBaseAdapter<KnownChainIds.BitcoinMainnet>
-  implements IChainAdapter<KnownChainIds.BitcoinMainnet>
-{
+type Bitcoin = 'bip122'
+export class ChainAdapter extends UTXOBaseAdapter<Bitcoin> implements IChainAdapter {
   public static readonly defaultBIP44Params: BIP44Params = {
     purpose: 84, // segwit native
     coinType: 0,
@@ -92,8 +90,8 @@ export class ChainAdapter
     })
   }
 
-  getType(): KnownChainIds.BitcoinMainnet {
-    return KnownChainIds.BitcoinMainnet
+  getType(): Bitcoin {
+    return 'bip122'
   }
 
   getFeeAssetId(): AssetId {
@@ -107,12 +105,16 @@ export class ChainAdapter
   async getTxHistory(
     // @ts-ignore: keep type signature with unimplemented state
     input: TxHistoryInput // eslint-disable-line @typescript-eslint/no-unused-vars
-  ): Promise<TxHistoryResponse<KnownChainIds.BitcoinMainnet>> {
+  ): Promise<TxHistoryResponse<Bitcoin>> {
     throw new Error('Method not implemented.')
   }
 
-  async buildSendTransaction(tx: BuildSendTxInput<KnownChainIds.BitcoinMainnet>): Promise<{
-    txToSign: ChainTxType<KnownChainIds.BitcoinMainnet>
+  async buildSendTransaction(
+    tx: BuildSendTxInput<Bitcoin> & {
+      chainSpecific: { satoshiPerByte: string; accountType: UtxoAccountType }
+    }
+  ): Promise<{
+    txToSign: ChainTxType<Bitcoin>
   }> {
     try {
       const {
@@ -216,9 +218,7 @@ export class ChainAdapter
     return { ...ChainAdapter.defaultBIP44Params, ...params }
   }
 
-  async signTransaction(
-    signTxInput: SignTxInput<ChainTxType<KnownChainIds.BitcoinMainnet>>
-  ): Promise<string> {
+  async signTransaction(signTxInput: SignTxInput<ChainTxType<Bitcoin>>): Promise<string> {
     try {
       const { txToSign, wallet } = signTxInput
       if (!supportsBTC(wallet))
@@ -238,9 +238,7 @@ export class ChainAdapter
     value,
     chainSpecific: { pubkey },
     sendMax = false
-  }: GetFeeDataInput<KnownChainIds.BitcoinMainnet>): Promise<
-    FeeDataEstimate<KnownChainIds.BitcoinMainnet>
-  > {
+  }: GetFeeDataInput<Bitcoin>): Promise<FeeDataEstimate<Bitcoin>> {
     const feeData = await this.providers.http.getNetworkFees()
 
     if (!to || !value || !pubkey) throw new Error('to, from, value and xpub are required')
@@ -355,7 +353,7 @@ export class ChainAdapter
 
   async subscribeTxs(
     input: SubscribeTxsInput,
-    onMessage: (msg: Transaction<KnownChainIds.BitcoinMainnet>) => void,
+    onMessage: (msg: Transaction<Bitcoin>) => void,
     onError: (err: SubscribeError) => void
   ): Promise<void> {
     const {
@@ -387,7 +385,7 @@ export class ChainAdapter
           blockHeight: tx.blockHeight,
           blockTime: tx.blockTime,
           chainId: tx.chainId,
-          chain: KnownChainIds.BitcoinMainnet,
+          chain: Bitcoin,
           confirmations: tx.confirmations,
           fee: tx.fee,
           status: getStatus(tx.status),

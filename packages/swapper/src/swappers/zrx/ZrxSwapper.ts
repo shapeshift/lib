@@ -32,7 +32,7 @@ export type ZrxSwapperDeps = {
 }
 
 // FIXME
-export class ZrxSwapper implements Swapper<'eip155' | 'cosmos'> {
+export class ZrxSwapper implements Swapper<'eip155'> {
   public static swapperName = 'ZrxSwapper'
   deps: ZrxSwapperDeps
 

@@ -1,7 +1,7 @@
-import { AssetId, ChainNamespace } from '@shapeshiftoss/caip'
+import { AssetId, ChainId, ChainNamespace } from '@shapeshiftoss/caip'
 import { createErrorClass } from '@shapeshiftoss/errors'
 import { BTCSignTx, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { Asset, ChainSpecific, KnownChainIds } from '@shapeshiftoss/types'
+import { Asset, ChainSpecific } from '@shapeshiftoss/types'
 
 export const SwapError = createErrorClass('SwapError')
 
@@ -14,7 +14,7 @@ type ChainSpecificQuoteFeeData<T extends ChainNamespace> = ChainSpecific<
       approvalFee?: string
       totalFee?: string
     }
-    'bip122:000000000019d6689c085ae165831e93': {
+    bip122: {
       byteCount: string
       satsPerByte: string
     }
@@ -81,17 +81,17 @@ export interface ZrxTrade extends Trade<'eip155'> {
   depositAddress: string
 }
 
-export interface BtcThorTrade<C extends ChainNamespace> extends Trade<C> {
-  chainId: KnownChainIds.BitcoinMainnet
+export interface BtcThorTrade extends Trade<'bip122'> {
+  chainId: ChainId
   txData: BTCSignTx
 }
 
-export interface EthThorTrade<C extends ChainNamespace> extends Trade<C> {
-  chainId: KnownChainIds.EthereumMainnet
+export interface EthThorTrade extends Trade<'eip155'> {
+  chainId: ChainId
   txData: ETHSignTx
 }
 
-export type ThorTrade<C extends ChainNamespace> = BtcThorTrade<C> | EthThorTrade<C>
+export type ThorTrade = BtcThorTrade | EthThorTrade
 
 export type ExecuteTradeInput<C extends ChainNamespace> = {
   trade: Trade<C>
@@ -198,7 +198,7 @@ export interface Swapper<T extends ChainNamespace, TxType = unknown> {
   approvalNeeded(args: ApprovalNeededInput<T>): Promise<ApprovalNeededOutput>
 
   /**
-   * Get the txid of an approve infinite transaction
+   * Get the txid of an approved infinite transaction
    */
   approveInfinite(args: ApproveInfiniteInput<T>): Promise<string>
 

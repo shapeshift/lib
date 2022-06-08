@@ -1,37 +1,28 @@
-import { ChainId } from '@shapeshiftoss/caip'
-import {
-  BTCSignTx,
-  CosmosSignTx,
-  ETHSignTx,
-  HDWallet,
-  OsmosisSignTx
-} from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, ChainSpecific, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
+import { ChainNamespace } from '@shapeshiftoss/caip'
+import { BTCSignTx, CosmosSignTx, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { BIP44Params, ChainSpecific, UtxoAccountType } from '@shapeshiftoss/types'
 
 import * as bitcoin from './bitcoin'
 import * as cosmos from './cosmos'
 import * as ethereum from './ethereum'
-import * as osmosis from './osmosis'
 
 export { bitcoin, cosmos, ethereum }
 
 type ChainSpecificAccount<T> = ChainSpecific<
   T,
   {
-    [KnownChainIds.EthereumMainnet]: ethereum.Account
-    [KnownChainIds.BitcoinMainnet]: bitcoin.Account
-    [KnownChainIds.CosmosMainnet]: cosmos.Account
-    [KnownChainIds.OsmosisMainnet]: osmosis.Account
+    eip155: ethereum.Account
+    bip122: bitcoin.Account
+    cosmos: cosmos.Account
   }
 >
 
-export type Account<T extends ChainId> = {
+export type Account = {
   balance: string
   pubkey: string
   chainId: string
   assetId: string
-  chain: T
-} & ChainSpecificAccount<T>
+}
 
 export type AssetBalance = {
   balance: string
@@ -47,10 +38,9 @@ export enum FeeDataKey {
 type ChainSpecificFeeData<T> = ChainSpecific<
   T,
   {
-    [KnownChainIds.EthereumMainnet]: ethereum.FeeData
-    [KnownChainIds.BitcoinMainnet]: bitcoin.FeeData
-    [KnownChainIds.CosmosMainnet]: cosmos.FeeData
-    [KnownChainIds.OsmosisMainnet]: osmosis.FeeData
+    eip155: ethereum.FeeData
+    bip122: bitcoin.FeeData
+    cosmos: cosmos.FeeData
   }
 >
 
@@ -62,14 +52,14 @@ type ChainSpecificFeeData<T> = ChainSpecific<
 // ChainTypes.Bitcoin:
 // feePerUnit = sats/kbyte
 
-export type FeeData<T extends ChainId> = {
+export type FeeData = {
   txFee: string
-} & ChainSpecificFeeData<T>
+}
 
-export type FeeDataEstimate<T extends ChainId> = {
-  [FeeDataKey.Slow]: FeeData<T>
-  [FeeDataKey.Average]: FeeData<T>
-  [FeeDataKey.Fast]: FeeData<T>
+export type FeeDataEstimate<T extends FeeData = FeeData> = {
+  [FeeDataKey.Slow]: T
+  [FeeDataKey.Average]: T
+  [FeeDataKey.Fast]: T
 }
 
 export type SubscribeTxsInput = {
@@ -97,7 +87,7 @@ export enum TxStatus {
   Unknown = 'unknown'
 }
 
-export type Transaction<T extends ChainId> = {
+export type Transaction<T extends ChainNamespace> = {
   address: string
   blockHash?: string
   blockHeight: number
@@ -141,22 +131,29 @@ export type SubscribeError = {
   message: string
 }
 
-export type TxHistoryResponse<T extends ChainId> = {
+export type TxHistoryResponse = {
   cursor: string
   pubkey: string
   transactions: Array<Transaction<T>>
 }
 
 type ChainTxTypeInner = {
-  [KnownChainIds.EthereumMainnet]: ETHSignTx
-  [KnownChainIds.BitcoinMainnet]: BTCSignTx
-  [KnownChainIds.CosmosMainnet]: CosmosSignTx
-  [KnownChainIds.OsmosisMainnet]: OsmosisSignTx
+  eip155: ETHSignTx
+  bip122: BTCSignTx
+  cosmos: CosmosSignTx
 }
 
 export type ChainTxType<T> = T extends keyof ChainTxTypeInner ? ChainTxTypeInner[T] : never
 
-export type BuildDelegateTxInput<T extends ChainId> = {
+export type BuildDelegateTxInput = {
+  validator: string
+  value: string
+  wallet: HDWallet
+  bip44Params?: BIP44Params
+  memo?: string
+}
+
+export type BuildUndelegateTxInput<T extends ChainNamespace> = {
   validator: string
   value: string
   wallet: HDWallet
@@ -164,48 +161,30 @@ export type BuildDelegateTxInput<T extends ChainId> = {
   memo?: string
 } & ChainSpecificBuildTxData<T>
 
-export type BuildUndelegateTxInput<T extends ChainId> = {
-  validator: string
-  value: string
-  wallet: HDWallet
-  bip44Params?: BIP44Params
-  memo?: string
-} & ChainSpecificBuildTxData<T>
-
-export type BuildRedelegateTxInput<T extends ChainId> = {
+export type BuildRedelegateTxInput = {
   fromValidator: string
   toValidator: string
   value: string
   wallet: HDWallet
   bip44Params?: BIP44Params
   memo?: string
-} & ChainSpecificBuildTxData<T>
+}
 
-export type BuildClaimRewardsTxInput<T extends ChainId> = {
+export type BuildClaimRewardsTxInput = {
   validator: string
   wallet: HDWallet
   bip44Params?: BIP44Params
   memo?: string
-} & ChainSpecificBuildTxData<T>
+}
 
-export type BuildSendTxInput<T extends ChainId> = {
+export type BuildSendTxInput = {
   to: string
   value: string
   wallet: HDWallet
   bip44Params?: BIP44Params // TODO maybe these shouldnt be optional
   sendMax?: boolean
   memo?: string
-} & ChainSpecificBuildTxData<T>
-
-type ChainSpecificBuildTxData<T> = ChainSpecific<
-  T,
-  {
-    [KnownChainIds.EthereumMainnet]: ethereum.BuildTxInput
-    [KnownChainIds.BitcoinMainnet]: bitcoin.BuildTxInput
-    [KnownChainIds.CosmosMainnet]: cosmos.BuildTxInput
-    [KnownChainIds.OsmosisMainnet]: cosmos.BuildTxInput
-  }
->
+}
 
 export type SignTxInput<TxType> = {
   txToSign: TxType
@@ -232,11 +211,11 @@ export type GetAddressInput = GetAddressInputBase | bitcoin.GetAddressInput
 type ChainSpecificGetFeeDataInput<T> = ChainSpecific<
   T,
   {
-    [KnownChainIds.EthereumMainnet]: ethereum.GetFeeDataInput
-    [KnownChainIds.BitcoinMainnet]: bitcoin.GetFeeDataInput
+    eip155: ethereum.GetFeeDataInput
+    bip122: bitcoin.GetFeeDataInput
   }
 >
-export type GetFeeDataInput<T extends ChainId> = {
+export type GetFeeDataInput<T extends ChainNamespace> = {
   to: string
   value: string
   sendMax?: boolean

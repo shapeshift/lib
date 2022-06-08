@@ -1,11 +1,11 @@
-import { AssetBalance } from '.'
+import { AssetBalance, FeeData } from '.'
 
 export type Account = {
   nonce: number
   tokens?: Array<AssetBalance>
 }
 
-export type FeeData = {
+export type EthereumFeeData = FeeData & {
   gasPrice: string
   gasLimit: string
   maxFeePerGas: string

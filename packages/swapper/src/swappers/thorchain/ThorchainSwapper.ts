@@ -1,4 +1,4 @@
-import { adapters, AssetId, ChainId, ChainNamespace, fromAssetId } from '@shapeshiftoss/caip'
+import { adapters, AssetId, ChainId, fromAssetId } from '@shapeshiftoss/caip'
 import { Asset } from '@shapeshiftoss/types'
 
 import {
@@ -17,7 +17,9 @@ import { PoolResponse, ThorchainSwapperDeps } from './types'
 import { getUsdRate } from './utils/getUsdRate/getUsdRate'
 import { thorService } from './utils/thorService'
 
-export class ThorchainSwapper implements Swapper<ChainNamespace> {
+type SupportedChains = 'eip155' | 'bip122'
+
+export class ThorchainSwapper implements Swapper<SupportedChains> {
   private swapSupportedChainIds: Record<ChainId, boolean> = {
     'eip155:1': true,
     'bip122:000000000019d6689c085ae165831e93': true
@@ -78,11 +80,11 @@ export class ThorchainSwapper implements Swapper<ChainNamespace> {
     return this.supportedAssetIds
   }
 
-  async buildTrade(): Promise<Trade<ChainNamespace>> {
+  async buildTrade(): Promise<Trade<SupportedChains>> {
     throw new Error('ThorchainSwapper: buildTrade unimplemented')
   }
 
-  async getTradeQuote(): Promise<TradeQuote<ChainNamespace>> {
+  async getTradeQuote(): Promise<TradeQuote<SupportedChains>> {
     throw new Error('ThorchainSwapper: getTradeQuote unimplemented')
   }
 

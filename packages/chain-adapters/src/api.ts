@@ -17,7 +17,7 @@ import {
   ValidAddressResult
 } from './types'
 
-export type ChainAdapter<T extends ChainId> = {
+export type ChainAdapter = {
   getChainId(): ChainId
 
   /**
@@ -34,23 +34,23 @@ export type ChainAdapter<T extends ChainId> = {
   /**
    * Get the balance of an address
    */
-  getAccount(pubkey: string): Promise<Account<T>>
+  getAccount(pubkey: string): Promise<Account>
 
   buildBIP44Params(params: Partial<BIP44Params>): BIP44Params
 
-  getTxHistory(input: TxHistoryInput): Promise<TxHistoryResponse<T>>
+  getTxHistory(input: TxHistoryInput): Promise<TxHistoryResponse>
 
-  buildSendTransaction(input: BuildSendTxInput<T>): Promise<{
-    txToSign: ChainTxType<T>
+  buildSendTransaction(input: BuildSendTxInput): Promise<{
+    txToSign: ChainTxType
   }>
 
   getAddress(input: GetAddressInput): Promise<string>
 
-  signTransaction(signTxInput: SignTxInput<ChainTxType<T>>): Promise<string>
+  signTransaction(signTxInput: SignTxInput<ChainTxType>): Promise<string>
 
-  signAndBroadcastTransaction?(signTxInput: SignTxInput<ChainTxType<T>>): Promise<string>
+  signAndBroadcastTransaction?(signTxInput: SignTxInput<ChainTxType>): Promise<string>
 
-  getFeeData(input: Partial<GetFeeDataInput<T>>): Promise<FeeDataEstimate<T>>
+  getFeeData(input: Partial<GetFeeDataInput>): Promise<FeeDataEstimate>
 
   broadcastTransaction(hex: string): Promise<string>
 
@@ -58,7 +58,7 @@ export type ChainAdapter<T extends ChainId> = {
 
   subscribeTxs(
     input: SubscribeTxsInput,
-    onMessage: (msg: Transaction<T>) => void,
+    onMessage: (msg: Transaction) => void,
     onError?: (err: SubscribeError) => void
   ): Promise<void>
 
