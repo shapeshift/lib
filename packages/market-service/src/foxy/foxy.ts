@@ -38,8 +38,7 @@ export class FoxyMarketService implements MarketService {
       [ChainTypes.Ethereum]: {
         // from web env, both are always defined despite what the typings suggest
         httpUrl: providerUrls.unchainedEthereumHttpUrl,
-        wsUrl: providerUrls.unchainedEthereumWsUrl,
-        rpcUrl: providerUrls.jsonRpcProviderUrl
+        wsUrl: providerUrls.unchainedEthereumWsUrl
       }
     }
     this.adapterManager = new ChainAdapterManager(unchainedUrls)
