@@ -18,7 +18,7 @@ describe('getTradeRate', () => {
     )
 
     // 1 eth
-    const rate = await getTradeRate(ETH, FOX, '1000000000000000000', deps)
+    const rate = await getTradeRate(ETH, FOX.assetId, '1000000000000000000', deps)
     const expectedRate = '12554.215976'
     expect(rate).toEqual(expectedRate)
   })
@@ -33,7 +33,7 @@ describe('getTradeRate', () => {
     )
 
     // 1 fox
-    const rate = await getTradeRate(FOX, ETH, '1000000000000000000', deps)
+    const rate = await getTradeRate(FOX, ETH.assetId, '1000000000000000000', deps)
     const expectedRate = '0.000078'
     expect(rate).toEqual(expectedRate)
   })
@@ -48,7 +48,7 @@ describe('getTradeRate', () => {
     )
 
     // 1 fox
-    const rate = await getTradeRate(FOX, BTC, '1000000000000000000', deps)
+    const rate = await getTradeRate(FOX, BTC.assetId, '1000000000000000000', deps)
     const expectedRate = '0.000005'
     expect(rate).toEqual(expectedRate)
   })
@@ -63,7 +63,7 @@ describe('getTradeRate', () => {
     )
 
     // 0.01 btc
-    const rate = await getTradeRate(BTC, FOX, '1000000', deps)
+    const rate = await getTradeRate(BTC, FOX.assetId, '1000000', deps)
     const expectedRate = '193385.0366'
     expect(rate).toEqual(expectedRate)
   })
@@ -77,8 +77,8 @@ describe('getTradeRate', () => {
       Promise.resolve({ data: [foxMidgardPool, ethMidgardPool] })
     )
 
-    await expect(getTradeRate(UNSUPPORTED, ETH, '1000000000000000000', deps)).rejects.toThrow(
-      '[getPriceRatio]: No thorchain pool found'
-    )
+    await expect(
+      getTradeRate(UNSUPPORTED, ETH.assetId, '1000000000000000000', deps)
+    ).rejects.toThrow('[getPriceRatio]: No thorchain pool found')
   })
 })

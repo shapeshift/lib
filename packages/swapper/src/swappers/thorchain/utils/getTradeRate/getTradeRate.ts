@@ -1,4 +1,4 @@
-import { adapters } from '@shapeshiftoss/caip'
+import { adapters, AssetId } from '@shapeshiftoss/caip'
 import { Asset } from '@shapeshiftoss/types'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
@@ -33,16 +33,17 @@ const getDoubleSwapOutput = (input: BN, inputPool: PoolData, outputPool: PoolDat
 // Rune swaps use a different calculation because its 1 hop between pools instead of 2
 export const getTradeRate = async (
   sellAsset: Asset,
-  buyAsset: Asset,
+  buyAssetId: AssetId,
   sellAmount: string,
   deps: ThorchainSwapperDeps
 ): Promise<string> => {
-  const buyPoolId = adapters.assetIdToPoolAssetId({ assetId: buyAsset.assetId })
+  const buyPoolId = adapters.assetIdToPoolAssetId({ assetId: buyAssetId })
   const sellPoolId = adapters.assetIdToPoolAssetId({ assetId: sellAsset.assetId })
 
   if (!buyPoolId || !sellPoolId)
     throw new SwapError(`[getPriceRatio]: No thorchain pool found`, {
-      code: SwapErrorTypes.RESPONSE_ERROR,
+      code: SwapErrorTypes.POOL_NOT_FOUND,
+      fn: 'getPriceRatio',
       details: { buyPoolId, sellPoolId }
     })
 
@@ -53,7 +54,7 @@ export const getTradeRate = async (
 
   if (!buyPool || !sellPool)
     throw new SwapError(`[getPriceRatio]: no pools found for`, {
-      code: SwapErrorTypes.RESPONSE_ERROR,
+      code: SwapErrorTypes.POOL_NOT_FOUND,
       details: { buyPoolId, sellPoolId }
     })
 
