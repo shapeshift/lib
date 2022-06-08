@@ -55,6 +55,7 @@ export const getTradeRate = async (
   if (!buyPool || !sellPool)
     throw new SwapError(`[getPriceRatio]: no pools found for`, {
       code: SwapErrorTypes.POOL_NOT_FOUND,
+      fn: 'getPriceRatio',
       details: { buyPoolId, sellPoolId }
     })
 
