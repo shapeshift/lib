@@ -8,7 +8,7 @@
 
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { BIP44Params, SupportedChainIds, UtxoAccountType } from '@shapeshiftoss/types'
+import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 
 import { Account, BuildSendTxInput } from '../types'
 import { ChainAdapterArgs } from '../utxo/UTXOBaseAdapter'
@@ -184,10 +184,10 @@ describe('BitcoinChainAdapter', () => {
   })
 
   describe('getType', () => {
-    it('should return SupportedChainIds.BitcoinMainnet', async () => {
+    it('should return KnownChainIds.BitcoinMainnet', async () => {
       const adapter = new bitcoin.ChainAdapter(args)
       const type = adapter.getType()
-      expect(type).toEqual(SupportedChainIds.BitcoinMainnet)
+      expect(type).toEqual(KnownChainIds.BitcoinMainnet)
     })
   })
 
@@ -207,9 +207,9 @@ describe('BitcoinChainAdapter', () => {
       } as any
 
       const adapter = new bitcoin.ChainAdapter(args)
-      const expected: Account<SupportedChainIds.BitcoinMainnet> = {
+      const expected: Account<KnownChainIds.BitcoinMainnet> = {
         pubkey: '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx',
-        chain: SupportedChainIds.BitcoinMainnet,
+        chain: KnownChainIds.BitcoinMainnet,
         balance: '150',
         chainId: 'bip122:000000000019d6689c085ae165831e93',
         assetId: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
@@ -301,7 +301,7 @@ describe('BitcoinChainAdapter', () => {
         isChange: false
       }
 
-      const txInput: BuildSendTxInput<SupportedChainIds.BitcoinMainnet> = {
+      const txInput: BuildSendTxInput<KnownChainIds.BitcoinMainnet> = {
         bip44Params,
         to: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4',
         value: '400',
@@ -368,7 +368,7 @@ describe('BitcoinChainAdapter', () => {
         isChange: false
       }
 
-      const txInput: BuildSendTxInput<SupportedChainIds.BitcoinMainnet> = {
+      const txInput: BuildSendTxInput<KnownChainIds.BitcoinMainnet> = {
         bip44Params,
         to: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4',
         value: '400',

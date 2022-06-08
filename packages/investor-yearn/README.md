@@ -11,13 +11,13 @@ yarn add @shapeshiftoss/investor-yearn
 ## Initialization
 
 ```javascript
-import { YearnVaultApi } from '@shapeshiftoss/investor-yearn'
+import {YearnVaultApi} from '@shapeshiftoss/investor-yearn'
 
-  const api = new YearnVaultApi({
-    adapter: adapters.byChain(SupportedChainIds.EthereumMainnet), // adapter is an ETH @shapeshiftoss/chain-adapters
-    providerUrl: '<your eth node privider url>'
-  })
-  await api.initialize()
+const api = new YearnVaultApi({
+  adapter: adapters.byChain(KnownChainIds.EthereumMainnet), // adapter is an ETH @shapeshiftoss/chain-adapters
+  providerUrl: '<your eth node privider url>'
+})
+await api.initialize()
 ```
 
 ### Functions

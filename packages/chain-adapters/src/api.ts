@@ -1,5 +1,5 @@
 import { AssetId, ChainId } from '@shapeshiftoss/caip'
-import { BIP44Params, SupportedChainId, UtxoAccountType } from '@shapeshiftoss/types'
+import { BIP44Params, UtxoAccountType } from '@shapeshiftoss/types'
 
 import {
   Account,
@@ -17,12 +17,7 @@ import {
   ValidAddressResult
 } from './types'
 
-export type ChainAdapter<T extends SupportedChainId> = {
-  /**
-   * Get type of adapter
-   */
-  getType(): T
-
+export type ChainAdapter<T extends ChainId> = {
   getChainId(): ChainId
 
   /**

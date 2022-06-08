@@ -11,7 +11,7 @@ import { SwapperManager } from './SwapperManager'
 describe('SwapperManager', () => {
   const zrxSwapperDeps: ZrxSwapperDeps = {
     web3: <Web3>{},
-    adapterManager: <ChainAdapterManager>{}
+    adapter: <ChainAdapterManager>{}
   }
 
   const thorchainSwapperDeps: ThorchainSwapperDeps = {

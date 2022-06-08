@@ -1,7 +1,7 @@
-import { CHAIN_NAMESPACE, CHAIN_REFERENCE, toChainId } from '@shapeshiftoss/caip'
-import { ChainAdapter, ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { SupportedChainIds, WithdrawType } from '@shapeshiftoss/types'
+import { WithdrawType } from '@shapeshiftoss/types'
+import * as unchained from '@shapeshiftoss/unchained-client'
 import dotenv from 'dotenv'
 import readline from 'readline-sync'
 
@@ -28,14 +28,20 @@ const getWallet = async (): Promise<NativeHDWallet> => {
 }
 
 const main = async (): Promise<void> => {
-  const unchainedUrls = {
-    [SupportedChainIds.EthereumMainnet]: {
-      httpUrl: 'http://api.ethereum.shapeshift.com',
-      wsUrl: 'ws://api.ethereum.shapeshift.com'
-    }
-  }
-  const adapterManager = new ChainAdapterManager(unchainedUrls)
   const wallet = await getWallet()
+
+  const ethChainAdapter = new ethereum.ChainAdapter({
+    providers: {
+      ws: new unchained.ws.Client<unchained.ethereum.ParsedTx>(
+        'wss://dev-api.ethereum.shapeshift.com'
+      ),
+      http: new unchained.ethereum.V1Api(
+        new unchained.ethereum.Configuration({
+          basePath: 'https://dev-api.ethereum.shapeshift.com'
+        })
+      )
+    }
+  })
 
   // using 0 value array since only one contract subset exists
   const foxyContractAddress = foxyAddresses[0].foxy
@@ -44,12 +50,7 @@ const main = async (): Promise<void> => {
   const liquidityReserveContractAddress = foxyAddresses[0].liquidityReserve
 
   const api = new FoxyApi({
-    adapter: (await adapterManager.byChainId(
-      toChainId({
-        chainNamespace: CHAIN_NAMESPACE.Ethereum,
-        chainReference: CHAIN_REFERENCE.EthereumMainnet
-      })
-    )) as ChainAdapter<SupportedChainIds.EthereumMainnet>,
+    adapter: ethChainAdapter,
     providerUrl: process.env.ARCHIVE_NODE || 'http://127.0.0.1:8545/',
     foxyAddresses
   })

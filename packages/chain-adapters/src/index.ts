@@ -1,4 +1,3 @@
-export * from './ChainAdapterManager'
 export * from './api'
 export * from './utils'
 export * as chainAdapters from './types'

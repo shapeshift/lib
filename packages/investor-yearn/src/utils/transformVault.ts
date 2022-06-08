@@ -1,4 +1,4 @@
-import { SupportedChainIds } from '@shapeshiftoss/types'
+import { KnownChainIds } from '@shapeshiftoss/types'
 import { Vault } from '@yfi/sdk'
 import { toLower } from 'lodash'
 
@@ -11,7 +11,7 @@ export const transformVault = (vault: Vault): SupportedYearnVault => {
     name: `${vault.name} ${vault.version}`,
     symbol: vault.symbol,
     tokenAddress: toLower(vault.token),
-    chainId: SupportedChainIds.EthereumMainnet,
+    chainId: KnownChainIds.EthereumMainnet,
     provider: DefiProvider.Yearn,
     type: DefiType.Vault,
     expired: vault.metadata.depositsDisabled || bnOrZero(vault.metadata.depositLimit).lte(0)

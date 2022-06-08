@@ -1,5 +1,5 @@
-import { adapters, AssetId } from '@shapeshiftoss/caip'
-import { Asset, SupportedChainId } from '@shapeshiftoss/types'
+import { adapters, AssetId, ChainNamespace } from '@shapeshiftoss/caip'
+import { Asset } from '@shapeshiftoss/types'
 
 import {
   ApprovalNeededOutput,
@@ -17,7 +17,7 @@ import { MidgardResponse, ThorchainSwapperDeps } from './types'
 import { getUsdRate } from './utils/getUsdRate/getUsdRate'
 import { thorService } from './utils/thorService'
 
-export class ThorchainSwapper implements Swapper {
+export class ThorchainSwapper implements Swapper<ChainNamespace> {
   private supportedAssetIds: AssetId[] = []
   deps: ThorchainSwapperDeps
 
@@ -74,11 +74,11 @@ export class ThorchainSwapper implements Swapper {
     return this.supportedAssetIds
   }
 
-  async buildTrade(): Promise<Trade<SupportedChainId>> {
+  async buildTrade(): Promise<Trade<ChainNamespace>> {
     throw new Error('ThorchainSwapper: buildTrade unimplemented')
   }
 
-  async getTradeQuote(): Promise<TradeQuote<SupportedChainId>> {
+  async getTradeQuote(): Promise<TradeQuote<ChainNamespace>> {
     throw new Error('ThorchainSwapper: getTradeQuote unimplemented')
   }
 

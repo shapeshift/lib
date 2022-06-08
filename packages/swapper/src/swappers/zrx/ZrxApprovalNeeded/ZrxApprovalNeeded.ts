@@ -1,5 +1,4 @@
-import { fromAssetId, getFeeAssetIdFromAssetId } from '@shapeshiftoss/caip'
-import { SupportedChainId } from '@shapeshiftoss/types'
+import { ChainNamespace, fromAssetId, getFeeAssetIdFromAssetId } from '@shapeshiftoss/caip'
 
 import { ApprovalNeededInput, ApprovalNeededOutput, SwapError, SwapErrorTypes } from '../../../api'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
@@ -8,8 +7,8 @@ import { getERC20Allowance } from '../utils/helpers/helpers'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function ZrxApprovalNeeded(
-  { adapterManager, web3 }: ZrxSwapperDeps,
-  { quote, wallet }: ApprovalNeededInput<SupportedChainId>
+  { adapter, web3 }: ZrxSwapperDeps,
+  { quote, wallet }: ApprovalNeededInput<ChainNamespace>
 ): Promise<ApprovalNeededOutput> {
   const { sellAsset } = quote
 
@@ -30,7 +29,6 @@ export async function ZrxApprovalNeeded(
 
     const accountNumber = bnOrZero(quote.sellAssetAccountId).toNumber()
 
-    const adapter = await adapterManager.byChainId(sellAsset.chainId)
     const bip44Params = adapter.buildBIP44Params({ accountNumber })
     const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 

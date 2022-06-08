@@ -1,5 +1,4 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
-import { SupportedChainId } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 
@@ -19,9 +18,9 @@ import { zrxService } from '../utils/zrxService'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function zrxBuildTrade(
-  { adapterManager, web3 }: ZrxSwapperDeps,
+  { adapter, web3 }: ZrxSwapperDeps,
   input: BuildTradeInput
-): Promise<ZrxTrade<SupportedChainId>> {
+): Promise<ZrxTrade> {
   const {
     sellAsset,
     buyAsset,
@@ -47,7 +46,6 @@ export async function zrxBuildTrade(
       })
     }
 
-    const adapter = await adapterManager.byChainId(buyAsset.chainId)
     const bip44Params = adapter.buildBIP44Params({ accountNumber: Number(buyAssetAccountId) })
     const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 
@@ -96,7 +94,7 @@ export async function zrxBuildTrade(
 
     const estimatedGas = bnOrZero(data.gas || 0)
 
-    const trade: ZrxTrade<'eip155:1'> = {
+    const trade: ZrxTrade = {
       sellAsset,
       buyAsset,
       success: true,

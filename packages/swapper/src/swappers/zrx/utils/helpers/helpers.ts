@@ -1,7 +1,7 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
-import { ChainAdapter, ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { Asset, SupportedChainId, SupportedChainIds } from '@shapeshiftoss/types'
+import { Asset } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -30,9 +30,9 @@ export type GetERC20AllowanceArgs = {
 }
 
 type GrantAllowanceArgs = {
-  quote: TradeQuote<SupportedChainId>
+  quote: TradeQuote<'eip155'>
   wallet: HDWallet
-  adapterManager: ChainAdapterManager
+  adapter: ethereum.ChainAdapter
   erc20Abi: AbiItem[]
   web3: Web3
 }
@@ -141,16 +141,13 @@ export const getUsdRate = async (asset: Asset): Promise<string> => {
 export const grantAllowance = async ({
   quote,
   wallet,
-  adapterManager,
+  adapter,
   erc20Abi,
   web3
 }: GrantAllowanceArgs): Promise<string> => {
   try {
     const { assetReference: sellAssetErc20Address } = fromAssetId(quote.sellAsset.assetId)
 
-    const adapter = (await adapterManager.byChainId(
-      'eip155:1'
-    )) as ChainAdapter<SupportedChainIds.EthereumMainnet> // FIXME: discriminate automatically
     const erc20Contract = new web3.eth.Contract(erc20Abi, sellAssetErc20Address)
     const approveTx = erc20Contract.methods
       .approve(quote.allowanceContract, quote.sellAmount)
@@ -166,8 +163,8 @@ export const grantAllowance = async ({
       value: '0',
       chainSpecific: {
         erc20ContractAddress: sellAssetErc20Address,
-        gasPrice: numberToHex(quote.feeData?.chainSpecific?.gasPrice || 0),
-        gasLimit: numberToHex(quote.feeData?.chainSpecific?.estimatedGas || 0)
+        gasPrice: numberToHex(quote.feeData.chainSpecific.gasPrice || 0),
+        gasLimit: numberToHex(quote.feeData.chainSpecific.estimatedGas || 0)
       }
     })
 

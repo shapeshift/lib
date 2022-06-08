@@ -60,7 +60,7 @@ For more in-depth examples, check out ./src/foxycli.ts
 ```javascript
 const api = new FoxyApi({
   adapter: await adapterManager.byChainId(
-    toChainId({ chainNamespace: CHAIN_NAMESPACE.Ethereum, chainReference: CHAIN_REFERENCE.EthereumMainnet })
+    toChainId({chainNamespace: CHAIN_NAMESPACE.Ethereum, chainReference: CHAIN_REFERENCE.EthereumMainnet})
   ),
   providerUrl: 'https://dev-api.ethereum.shapeshift.com'
 })

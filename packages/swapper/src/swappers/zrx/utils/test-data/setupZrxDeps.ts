@@ -1,5 +1,5 @@
-import { ChainAdapterManager, chainAdapters } from '@shapeshiftoss/chain-adapters'
-import { SupportedChainIds } from '@shapeshiftoss/types'
+import { ethereum } from '@shapeshiftoss/chain-adapters'
+import * as unchained from '@shapeshiftoss/unchained-client'
 import Web3 from 'web3'
 
 jest.mock('@shapeshiftoss/chain-adapters')
@@ -17,7 +17,7 @@ export const chainAdapterMockFuncs = {
   ),
   getFeeData: jest.fn(() =>
     Promise.resolve({
-      [chainAdapters.FeeDataKey.Average]: { txFee: '10000' }
+      average: { txFee: '10000' }
     })
   )
 }
@@ -29,20 +29,21 @@ ChainAdapterManager.mockImplementation(() => ({
 }))
 
 export const setupZrxDeps = () => {
-  const unchainedUrls = {
-    [SupportedChainIds.BitcoinMainnet]: {
-      httpUrl: 'https://api.bitcoin.shapeshift.com',
-      wsUrl: 'wss://api.bitcoin.shapeshift.com'
-    },
-    [SupportedChainIds.EthereumMainnet]: {
-      httpUrl: 'https://api.ethereum.shapeshift.com',
-      wsUrl: 'wss://api.ethereum.shapeshift.com'
+  const ethChainAdapter = new ethereum.ChainAdapter({
+    providers: {
+      ws: new unchained.ws.Client<unchained.ethereum.ParsedTx>(
+        'wss://dev-api.ethereum.shapeshift.com'
+      ),
+      http: new unchained.ethereum.V1Api(
+        new unchained.ethereum.Configuration({
+          basePath: 'https://dev-api.ethereum.shapeshift.com'
+        })
+      )
     }
-  }
-  const ethNodeUrl = 'http://localhost:1000'
-  const adapterManager = new ChainAdapterManager(unchainedUrls)
-  const web3Provider = new Web3.providers.HttpProvider(ethNodeUrl)
-  const web3Instance = new Web3(web3Provider)
+  })
 
-  return { web3Instance, adapterManager }
+  const ethNodeUrl = 'http://localhost:1000'
+  const web3Provider = new Web3.providers.HttpProvider(ethNodeUrl)
+
+  return { web3: new Web3(web3Provider), adapter: ethChainAdapter }
 }

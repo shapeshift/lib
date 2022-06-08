@@ -1,6 +1,6 @@
 import { AssetId, ChainId } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, HDWallet, PublicKey } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, SupportedChainIds, UtxoAccountType } from '@shapeshiftoss/types'
+import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import WAValidator from 'multicoin-address-validator'
 
@@ -30,7 +30,7 @@ import {
 } from '../utils'
 import { bnOrZero } from '../utils/bignumber'
 
-export type UTXOChainTypes = SupportedChainIds.BitcoinMainnet // to be extended in the future to include other UTXOs
+export type UTXOChainTypes = KnownChainIds.BitcoinMainnet // to be extended in the future to include other UTXOs
 
 /**
  * Currently, we don't have a generic interact for UTXO providers, but will in the future.

@@ -5,7 +5,7 @@ import {
   OsmosisTx,
   supportsOsmosis
 } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, SupportedChainIds } from '@shapeshiftoss/types'
+import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import { bech32 } from 'bech32'
 
@@ -26,12 +26,12 @@ import { toPath } from '../../utils'
 import { bnOrZero } from '../../utils/bignumber'
 import { ChainAdapterArgs, CosmosSdkBaseAdapter } from '../CosmosSdkBaseAdapter'
 
-export class ChainAdapter extends CosmosSdkBaseAdapter<SupportedChainIds.OsmosisMainnet> {
+export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.OsmosisMainnet> {
   protected readonly supportedChainIds = ['cosmos:osmosis-1']
   protected readonly chainId = this.supportedChainIds[0]
   protected readonly assetId: AssetId
   protected readonly CHAIN_VALIDATOR_PREFIX_MAPPING = {
-    [SupportedChainIds.OsmosisMainnet]: 'osmovaloper'
+    [KnownChainIds.OsmosisMainnet]: 'osmovaloper'
   }
 
   public static readonly defaultBIP44Params: BIP44Params = {
@@ -61,8 +61,8 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<SupportedChainIds.Osmosis
   getFeeAssetId(): AssetId {
     return 'cosmos:osmosis-1/slip44:118'
   }
-  getType(): SupportedChainIds.OsmosisMainnet {
-    return SupportedChainIds.OsmosisMainnet
+  getType(): KnownChainIds.OsmosisMainnet {
+    return KnownChainIds.OsmosisMainnet
   }
 
   async getAddress(input: GetAddressInput): Promise<string> {
@@ -106,7 +106,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<SupportedChainIds.Osmosis
   }
 
   async buildSendTransaction(
-    tx: BuildSendTxInput<SupportedChainIds.OsmosisMainnet>
+    tx: BuildSendTxInput<KnownChainIds.OsmosisMainnet>
   ): Promise<{ txToSign: OsmosisSignTx }> {
     try {
       const {
@@ -183,7 +183,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<SupportedChainIds.Osmosis
   }
 
   async buildDelegateTransaction(
-    tx: BuildDelegateTxInput<SupportedChainIds.OsmosisMainnet>
+    tx: BuildDelegateTxInput<KnownChainIds.OsmosisMainnet>
   ): Promise<{ txToSign: OsmosisSignTx }> {
     try {
       const {
@@ -255,7 +255,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<SupportedChainIds.Osmosis
   }
 
   async buildUndelegateTransaction(
-    tx: BuildUndelegateTxInput<SupportedChainIds.OsmosisMainnet>
+    tx: BuildUndelegateTxInput<KnownChainIds.OsmosisMainnet>
   ): Promise<{ txToSign: OsmosisSignTx }> {
     try {
       const {
@@ -326,7 +326,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<SupportedChainIds.Osmosis
   }
 
   async buildClaimRewardsTransaction(
-    tx: BuildClaimRewardsTxInput<SupportedChainIds.OsmosisMainnet>
+    tx: BuildClaimRewardsTxInput<KnownChainIds.OsmosisMainnet>
   ): Promise<{ txToSign: OsmosisSignTx }> {
     try {
       const {
@@ -391,7 +391,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<SupportedChainIds.Osmosis
   }
 
   async buildRedelegateTransaction(
-    tx: BuildRedelegateTxInput<SupportedChainIds.OsmosisMainnet>
+    tx: BuildRedelegateTxInput<KnownChainIds.OsmosisMainnet>
   ): Promise<{ txToSign: OsmosisSignTx }> {
     try {
       const {
@@ -473,8 +473,8 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<SupportedChainIds.Osmosis
   async getFeeData({
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars -- Disable no-unused-vars lint rule for unimplemented variable */
     sendMax
-  }: Partial<GetFeeDataInput<SupportedChainIds.OsmosisMainnet>>): Promise<
-    FeeDataEstimate<SupportedChainIds.OsmosisMainnet>
+  }: Partial<GetFeeDataInput<KnownChainIds.OsmosisMainnet>>): Promise<
+    FeeDataEstimate<KnownChainIds.OsmosisMainnet>
   > {
     // We currently don't have a way to query validators to get dynamic fees, so they are hard coded.
     // When we find a strategy to make this more dynamic, we can use 'sendMax' to define max amount.

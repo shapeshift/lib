@@ -1,6 +1,6 @@
-import { AssetId } from '@shapeshiftoss/caip'
-import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import { Asset, SupportedChainId } from '@shapeshiftoss/types'
+import { AssetId, ChainNamespace } from '@shapeshiftoss/caip'
+import { ethereum } from '@shapeshiftoss/chain-adapters'
+import { Asset } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import {
@@ -27,11 +27,12 @@ import { zrxBuildTrade } from './zrxBuildTrade/zrxBuildTrade'
 import { zrxExecuteTrade } from './zrxExecuteTrade/zrxExecuteTrade'
 
 export type ZrxSwapperDeps = {
-  adapterManager: ChainAdapterManager
+  adapter: ethereum.ChainAdapter
   web3: Web3
 }
 
-export class ZrxSwapper implements Swapper {
+// FIXME
+export class ZrxSwapper implements Swapper<'eip155' | 'cosmos'> {
   public static swapperName = 'ZrxSwapper'
   deps: ZrxSwapperDeps
 
@@ -47,11 +48,11 @@ export class ZrxSwapper implements Swapper {
     return SwapperType.Zrx
   }
 
-  async buildTrade(args: BuildTradeInput): Promise<ZrxTrade<SupportedChainId>> {
+  async buildTrade(args: BuildTradeInput): Promise<ZrxTrade> {
     return zrxBuildTrade(this.deps, args)
   }
 
-  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<SupportedChainId>> {
+  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ChainNamespace>> {
     return getZrxTradeQuote(input)
   }
 
@@ -59,15 +60,15 @@ export class ZrxSwapper implements Swapper {
     return getUsdRate(input)
   }
 
-  async executeTrade(args: ExecuteTradeInput<SupportedChainId>): Promise<TradeResult> {
+  async executeTrade(args: ExecuteTradeInput<ChainNamespace>): Promise<TradeResult> {
     return zrxExecuteTrade(this.deps, args)
   }
 
-  async approvalNeeded(args: ApprovalNeededInput<SupportedChainId>): Promise<ApprovalNeededOutput> {
+  async approvalNeeded(args: ApprovalNeededInput<ChainNamespace>): Promise<ApprovalNeededOutput> {
     return ZrxApprovalNeeded(this.deps, args)
   }
 
-  async approveInfinite(args: ApproveInfiniteInput<SupportedChainId>): Promise<string> {
+  async approveInfinite(args: ApproveInfiniteInput<ChainNamespace>): Promise<string> {
     return ZrxApproveInfinite(this.deps, args)
   }
 

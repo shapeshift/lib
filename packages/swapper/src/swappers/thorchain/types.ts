@@ -24,6 +24,7 @@ export type InboundResponse = {
   router?: string
 }
 
+// todo: can we kill adapterManager? I don't think it's used.
 export type ThorchainSwapperDeps = {
   midgardUrl: string
   adapterManager: ChainAdapterManager

@@ -1,5 +1,5 @@
-import { AssetId } from '@shapeshiftoss/caip'
-import { Asset, SupportedChainId } from '@shapeshiftoss/types'
+import { AssetId, ChainNamespace } from '@shapeshiftoss/caip'
+import { Asset } from '@shapeshiftoss/types'
 
 import {
   ApprovalNeededInput,
@@ -17,7 +17,7 @@ import {
   TradeTxs
 } from '../../api'
 
-export class CowSwapper implements Swapper {
+export class CowSwapper implements Swapper<ChainNamespace> {
   public static swapperName = 'CowSwapper'
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -27,12 +27,12 @@ export class CowSwapper implements Swapper {
     return SwapperType.CowSwap
   }
 
-  async buildTrade(args: BuildTradeInput): Promise<Trade<SupportedChainId>> {
+  async buildTrade(args: BuildTradeInput): Promise<Trade<ChainNamespace>> {
     console.info(args)
     throw new Error('CowSwapper: buildTrade unimplemented')
   }
 
-  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<SupportedChainId>> {
+  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ChainNamespace>> {
     console.info(input)
     throw new Error('CowSwapper: getTradeQuote unimplemented')
   }
@@ -42,17 +42,17 @@ export class CowSwapper implements Swapper {
     throw new Error('CowSwapper: getUsdRate unimplemented')
   }
 
-  async executeTrade(args: ExecuteTradeInput<SupportedChainId>): Promise<TradeResult> {
+  async executeTrade(args: ExecuteTradeInput<ChainNamespace>): Promise<TradeResult> {
     console.info(args)
     throw new Error('CowSwapper: executeTrade unimplemented')
   }
 
-  async approvalNeeded(args: ApprovalNeededInput<SupportedChainId>): Promise<ApprovalNeededOutput> {
+  async approvalNeeded(args: ApprovalNeededInput<ChainNamespace>): Promise<ApprovalNeededOutput> {
     console.info(args)
     throw new Error('CowSwapper: approvalNeeded unimplemented')
   }
 
-  async approveInfinite(args: ApproveInfiniteInput<SupportedChainId>): Promise<string> {
+  async approveInfinite(args: ApproveInfiniteInput<ChainNamespace>): Promise<string> {
     console.info(args)
     throw new Error('CowSwapper: approveInfinite unimplemented')
   }

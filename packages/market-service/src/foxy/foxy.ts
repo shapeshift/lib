@@ -4,11 +4,11 @@ import { foxyAddresses, FoxyApi } from '@shapeshiftoss/investor-foxy'
 import {
   HistoryData,
   HistoryTimeframe,
+  KnownChainIds,
   MarketCapResult,
   MarketData,
   MarketDataArgs,
-  PriceHistoryArgs,
-  SupportedChainIds
+  PriceHistoryArgs
 } from '@shapeshiftoss/types'
 import dayjs from 'dayjs'
 
@@ -35,7 +35,7 @@ export class FoxyMarketService implements MarketService {
     this.jsonRpcProviderUrl = providerUrls.jsonRpcProviderUrl
 
     const unchainedUrls = {
-      [SupportedChainIds.EthereumMainnet]: {
+      [KnownChainIds.EthereumMainnet]: {
         // from web env, both are always defined despite what the typings suggest
         httpUrl: providerUrls.unchainedEthereumHttpUrl,
         wsUrl: providerUrls.unchainedEthereumWsUrl
@@ -70,7 +70,7 @@ export class FoxyMarketService implements MarketService {
       const api = new FoxyApi({
         adapter: this.adapterManager.byChainId(
           ethChainId
-        ) as ChainAdapter<SupportedChainIds.EthereumMainnet>,
+        ) as ChainAdapter<KnownChainIds.EthereumMainnet>,
         providerUrl: this.jsonRpcProviderUrl,
         foxyAddresses
       })

@@ -9,7 +9,7 @@ import { APPROVAL_GAS_LIMIT, DEFAULT_SOURCE } from '../utils/constants'
 import { normalizeAmount } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
 
-export async function getZrxTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<'eip155:1'>> {
+export async function getZrxTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<'eip155'>> {
   try {
     const { sellAsset, buyAsset, sellAmount, sellAssetAccountId } = input
     if (buyAsset.chainId !== 'eip155:1' || sellAsset.chainId !== 'eip155:1') {
