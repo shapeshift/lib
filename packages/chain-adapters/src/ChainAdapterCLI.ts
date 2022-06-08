@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { BIP44Params } from '@shapeshiftoss/types'
@@ -12,8 +11,6 @@ import { ChainAdapter as OsmosisChainAdapter } from './cosmossdk/osmosis'
 import { ChainAdapter as EthereumChainAdapter } from './ethereum/EthereumChainAdapter'
 
 dotenv.config()
-
-// const foxContractAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
 
 const getWallet = async (): Promise<NativeHDWallet> => {
   const nativeAdapterArgs: NativeAdapterArgs = {
@@ -111,97 +108,74 @@ const main = async () => {
     // const btcAccount = await btcChainAdapter.getAccount(btcAddress)
     // console.log('btcAccount:', btcAccount)
 
-    // await btcChainAdapter.subscribeTxs(
-    //   { wallet, bip44Params: btcBip44Params, accountType: UtxoAccountType.SegwitNative },
-    //   (msg) => console.log(msg),
-    //   (err) => console.log(err)
-    // )
+    if (broadcast) {
+      const txid = await chainAdapter.broadcastTransaction(signedTx)
+      console.log('bitcoin: txid: ', txid)
+    }
+  } catch (err) {
+    console.log('bitcoin: tx error:', err.message)
+  }
+}
 
-    // const txInput = {
-    //   to: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4',
-    //   value: '400',
-    //   wallet,
-    //   bip44Params: btcBip44Params,
-    //   chainSpecific: { accountType: UtxoAccountType.P2pkh, satoshiPerByte: '4' }
-    // }
+// @ts-ignore:nextLine
+const testEthereum = async (
+  chainAdapterManager: ChainAdapterManager,
+  wallet: NativeHDWallet,
+  broadcast = false
+) => {
+  const chainAdapter = chainAdapterManager.byChain(ChainTypes.Ethereum)
+  const bip44Params: BIP44Params = { purpose: 44, coinType: 60, accountNumber: 0 }
 
-    // try {
-    //   const btcUnsignedTx = await btcChainAdapter.buildSendTransaction(txInput)
-    //   const btcSignedTx = await btcChainAdapter.signTransaction({
-    //     wallet,
-    //     txToSign: btcUnsignedTx.txToSign
-    //   })
-    //   console.log('btcSignedTx:', btcSignedTx)
-    //   // const btcTxID = await btcChainAdapter.broadcastTransaction(btcSignedTx)
-    //   // console.log('btcTxID: ', btcTxID)
-    // } catch (err) {
-    //   console.log('btcTx error:', err.message)
-    // }
+  const address = await chainAdapter.getAddress({ wallet, bip44Params })
+  console.log('ethereum: address:', address)
 
     // /** ETHEREUM CLI */
     // const ethBip44Params: BIP44Params = { purpose: 44, coinType: 60, accountNumber: 0 }
 
-    // const ethAddress = await ethChainAdapter.getAddress({ wallet, bip44Params: ethBip44Params })
-    // console.log('ethAddress:', ethAddress)
+  const txHistory = await chainAdapter.getTxHistory({ pubkey: address })
+  console.log('ethereum: txHistory:', txHistory)
 
-    // const ethAccount = await ethChainAdapter.getAccount(ethAddress)
-    // console.log('ethAccount:', ethAccount)
+  await chainAdapter.subscribeTxs(
+    { wallet, bip44Params },
+    (msg) => console.log('ethereum: tx:', msg),
+    (err) => console.log(err)
+  )
 
-    // await ethChainAdapter.subscribeTxs(
-    //   { wallet, bip44Params: ethBip44Params },
-    //   (msg) => console.log(msg),
-    //   (err) => console.log(err)
-    // )
+  try {
+    const feeData = await chainAdapter.getFeeData({
+      to: '0x642F4Bda144C63f6DC47EE0fDfbac0a193e2eDb7',
+      value: '123',
+      chainSpecific: {
+        from: '0x0000000000000000000000000000000000000000',
+        contractData: '0x'
+      }
+    })
+    console.log('ethereum: feeData', feeData)
+  } catch (err) {
+    console.log('ethereum: feeData error:', err.message)
+  }
 
-    // // estimate gas fees
-    // try {
-    //   const feeData = await ethChainAdapter.getFeeData({
-    //     to: '0x642F4Bda144C63f6DC47EE0fDfbac0a193e2eDb7',
-    //     value: '123',
-    //     chainSpecific: {
-    //       from: '0x0000000000000000000000000000000000000000',
-    //       contractData: '0x'
-    //     }
-    //   })
-    //   console.log('getFeeData', feeData)
-    // } catch (err) {
-    //   console.log('getFeeDataError:', err.message)
-    // }
+  // send eth example
+  try {
+    const unsignedTx = await chainAdapter.buildSendTransaction({
+      to: `0x47CB53752e5dc0A972440dA127DCA9FBA6C2Ab6F`,
+      value: '1',
+      wallet,
+      bip44Params,
+      chainSpecific: { gasPrice: '0', gasLimit: '0' }
+    })
 
-    // // send eth example
-    // try {
-    //   const ethUnsignedTx = await ethChainAdapter.buildSendTransaction({
-    //     to: `0x47CB53752e5dc0A972440dA127DCA9FBA6C2Ab6F`,
-    //     value: '1',
-    //     wallet,
-    //     bip44Params: ethBip44Params,
-    //     chainSpecific: { gasPrice: '0', gasLimit: '0' }
-    //   })
-    //   const ethSignedTx = await ethChainAdapter.signTransaction({
-    //     wallet,
-    //     txToSign: ethUnsignedTx.txToSign
-    //   })
-    //   console.log('ethSignedTx:', ethSignedTx)
-    //   // const ethTxID = await ethChainAdapter.broadcastTransaction(ethSignedTx)
-    //   // console.log('ethTxID:', ethTxID)
-    // } catch (err) {
-    //   console.log('ethTx error:', err.message)
-    // }
-
-    // // send fox example (erc20)
-    // try {
-    //   const erc20UnsignedTx = await ethChainAdapter.buildSendTransaction({
-    //     to: `0x47CB53752e5dc0A972440dA127DCA9FBA6C2Ab6F`,
-    //     value: '1',
-    //     wallet,
-    //     bip44Params: ethBip44Params,
-    //     chainSpecific: { gasPrice: '0', gasLimit: '0', erc20ContractAddress: foxContractAddress }
-    //   })
-    //   const erc20SignedTx = await ethChainAdapter.signTransaction({
-    //     wallet,
-    //     txToSign: erc20UnsignedTx.txToSign
-    //   })
-    //   console.log('erc20SignedTx:', erc20SignedTx)
+    //const unsignedTx = await chainAdapter.buildSendTransaction({
+    //  to: `0x47CB53752e5dc0A972440dA127DCA9FBA6C2Ab6F`,
+    //  value: '1',
+    //  wallet,
+    //  bip44Params,
+    //  chainSpecific: {
+    //    gasPrice: '0',
+    //    gasLimit: '0',
+    //    erc20ContractAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d' // FOX
+    //  }
+    //})
 
     //   //const erc20TxID = await ethChainAdapter.broadcastTransaction(erc20SignedTx)
     //   //console.log('erc20TxID:', erc20TxID)
@@ -214,9 +188,18 @@ const main = async () => {
 
     const cosmosAddress = await adapters.cosmos.getAddress({
       wallet,
-      bip44Params: cosmosBip44Params
+      txToSign: unsignedTx.txToSign
     })
-    console.log('cosmosAddress:', cosmosAddress)
+    console.log('ethereum: signedTx:', signedTx)
+
+    if (broadcast) {
+      const txid = await chainAdapter.broadcastTransaction(signedTx)
+      console.log('ethereum: txid:', txid)
+    }
+  } catch (err) {
+    console.log('ethereum: tx error:', err.message)
+  }
+}
 
     const cosmosAccount = await adapters.cosmos.getAccount(cosmosAddress)
     console.log('cosmosAccount:', cosmosAccount)
@@ -264,8 +247,7 @@ const main = async () => {
         toValidator: 'cosmosvaloper199mlc7fr6ll5t54w7tts7f4s0cvnqgc59nmuxf', // ShapeShift DAO validator
         value: '100000000000',
         wallet,
-        bip44Params: cosmosBip44Params,
-        chainSpecific: { gas, fee }
+        txToSign: unsignedTx.txToSign
       })
       if (!adapters.cosmos.signAndBroadcastTransaction) return
 

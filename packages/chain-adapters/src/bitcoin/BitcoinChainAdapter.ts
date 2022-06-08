@@ -1,11 +1,4 @@
-import {
-  ASSET_REFERENCE,
-  AssetId,
-  CHAIN_NAMESPACE,
-  ChainId,
-  fromChainId,
-  toAssetId
-} from '@shapeshiftoss/caip'
+import { ASSET_REFERENCE, AssetId, ChainId, toAssetId } from '@shapeshiftoss/caip'
 import {
   bip32ToAddressNList,
   BTCOutputAddressType,
@@ -67,29 +60,29 @@ export class ChainAdapter
     'bip122:000000000019d6689c085ae165831e93',
     'bip122:000000000933ea01ad0ee984209779ba'
   ]
-  chainId = this.supportedChainIds[0]
+
+  protected chainId = this.supportedChainIds[0]
+
+  private parser: unchained.bitcoin.TransactionParser
 
   constructor(args: ChainAdapterArgs) {
     super(args)
-    if (args.chainId && !this.supportedChainIds.includes(args.chainId))
+
+    if (args.chainId && !this.supportedChainIds.includes(args.chainId)) {
       throw new Error(`Bitcoin chainId ${args.chainId} not supported`)
-    if (args.chainId) {
-      this.chainId = args.chainId
-    } else {
-      this.chainId = this.supportedChainIds[0]
     }
 
-    const chainId = this.chainId
-    const { chainNamespace } = fromChainId(chainId)
-    if (chainNamespace !== CHAIN_NAMESPACE.Bitcoin) {
-      throw new Error('chainId must be a bitcoin chain type')
+    if (args.chainId) {
+      this.chainId = args.chainId
     }
+
     this.coinName = args.coinName
     this.assetId = toAssetId({
-      chainId,
+      chainId: this.chainId,
       assetNamespace: 'slip44',
       assetReference: ASSET_REFERENCE.Bitcoin
     })
+    this.parser = new unchained.bitcoin.TransactionParser({ chainId: this.chainId })
   }
 
   getType(): KnownChainIds.BitcoinMainnet {
@@ -372,14 +365,8 @@ export class ChainAdapter
     await this.providers.ws.subscribeTxs(
       subscriptionId,
       { topic: 'txs', addresses },
-      ({ data: tx }) => {
-        const transfers = tx.transfers.map<TxTransfer>((transfer) => ({
-          assetId: transfer.assetId,
-          from: transfer.from,
-          to: transfer.to,
-          type: getType(transfer.type),
-          value: transfer.totalValue
-        }))
+      async (msg) => {
+        const tx = await this.parser.parse(msg.data, msg.address)
 
         onMessage({
           address: tx.address,
@@ -392,7 +379,13 @@ export class ChainAdapter
           fee: tx.fee,
           status: getStatus(tx.status),
           tradeDetails: tx.trade,
-          transfers,
+          transfers: tx.transfers.map((transfer) => ({
+            assetId: transfer.assetId,
+            from: transfer.from,
+            to: transfer.to,
+            type: getType(transfer.type),
+            value: transfer.totalValue
+          })),
           txid: tx.txid
         })
       },

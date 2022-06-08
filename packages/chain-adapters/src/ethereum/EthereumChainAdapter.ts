@@ -48,9 +48,10 @@ import erc20Abi from './erc20Abi.json'
 export interface ChainAdapterArgs {
   providers: {
     http: unchained.ethereum.V1Api
-    ws: unchained.ws.Client<unchained.ethereum.ParsedTx>
+    ws: unchained.ws.Client<unchained.ethereum.EthereumTx>
   }
   chainId?: ChainId
+  rpcUrl: string
 }
 
 async function getErc20Data(to: string, value: string, contractAddress?: string) {
@@ -61,17 +62,19 @@ async function getErc20Data(to: string, value: string, contractAddress?: string)
 }
 
 export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet> {
+  private readonly chainId: ChainId = 'eip155:1'
   private readonly providers: {
     http: unchained.ethereum.V1Api
-    ws: unchained.ws.Client<unchained.ethereum.ParsedTx>
+    ws: unchained.ws.Client<unchained.ethereum.EthereumTx>
   }
+
+  private parser: unchained.ethereum.TransactionParser
+
   public static readonly defaultBIP44Params: BIP44Params = {
     purpose: 44,
     coinType: 60,
     accountNumber: 0
   }
-
-  private readonly chainId: ChainId = 'eip155:1'
 
   constructor(args: ChainAdapterArgs) {
     if (args.chainId) {
@@ -85,7 +88,12 @@ export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet
         throw new Error(`The ChainID ${args.chainId} is not supported`)
       }
     }
+
     this.providers = args.providers
+    this.parser = new unchained.ethereum.TransactionParser({
+      chainId: this.chainId,
+      rpcUrl: args.rpcUrl
+    })
   }
 
   getType(): KnownChainIds.EthereumMainnet {
@@ -138,14 +146,48 @@ export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet
     return { ...ChainAdapter.defaultBIP44Params, ...params }
   }
 
-  // @ts-ignore: keep type signature with unimplemented state
-  async getTxHistory({
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    pubkey
-  }: unchained.ethereum.V1ApiGetTxHistoryRequest): Promise<
-    TxHistoryResponse<KnownChainIds.EthereumMainnet>
-  > {
-    throw new Error('Method not implemented.')
+  async getTxHistory(
+    input: chainAdapters.TxHistoryInput
+  ): Promise<TxHistoryResponse<KnownChainIds.EthereumMainnet>> {
+    const { data } = await this.providers.http.getTxHistory({
+      pubkey: input.pubkey,
+      pageSize: input.pageSize,
+      cursor: input.cursor
+    })
+
+    const txs = await Promise.all(
+      data.txs.map(async (tx) => {
+        const parsedTx = await this.parser.parse(tx, input.pubkey)
+
+        return {
+          address: input.pubkey,
+          blockHash: parsedTx.blockHash,
+          blockHeight: parsedTx.blockHeight,
+          blockTime: parsedTx.blockTime,
+          chainId: parsedTx.chainId,
+          chain: this.getType(),
+          confirmations: parsedTx.confirmations,
+          txid: parsedTx.txid,
+          fee: parsedTx.fee,
+          status: getStatus(parsedTx.status),
+          tradeDetails: parsedTx.trade,
+          transfers: parsedTx.transfers.map((transfer) => ({
+            assetId: transfer.assetId,
+            from: transfer.from,
+            to: transfer.to,
+            type: getType(transfer.type),
+            value: transfer.totalValue
+          })),
+          data: parsedTx.data
+        }
+      })
+    )
+
+    return {
+      cursor: data.cursor ?? '',
+      pubkey: input.pubkey,
+      transactions: txs
+    }
   }
 
   async buildSendTransaction(tx: BuildSendTxInput<KnownChainIds.EthereumMainnet>): Promise<{
@@ -456,14 +498,8 @@ export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet
     await this.providers.ws.subscribeTxs(
       subscriptionId,
       { topic: 'txs', addresses: [address] },
-      ({ data: tx }) => {
-        const transfers = tx.transfers.map<TxTransfer>((transfer) => ({
-          assetId: transfer.assetId,
-          from: transfer.from,
-          to: transfer.to,
-          type: getType(transfer.type),
-          value: transfer.totalValue
-        }))
+      async (msg) => {
+        const tx = await this.parser.parse(msg.data, msg.address)
 
         onMessage({
           address: tx.address,
@@ -476,14 +512,15 @@ export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet
           fee: tx.fee,
           status: getStatus(tx.status),
           tradeDetails: tx.trade,
-          transfers,
+          transfers: tx.transfers.map((transfer) => ({
+            assetId: transfer.assetId,
+            from: transfer.from,
+            to: transfer.to,
+            type: getType(transfer.type),
+            value: transfer.totalValue
+          })),
           txid: tx.txid,
-          ...(tx.data && {
-            data: {
-              ...tx.data,
-              parser: tx.data.parser ?? 'unknown'
-            }
-          })
+          data: tx.data
         })
       },
       (err) => onError({ message: err.message })

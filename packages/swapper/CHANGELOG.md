@@ -1,3 +1,41 @@
+# [@shapeshiftoss/swapper-v6.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v6.1.0...@shapeshiftoss/swapper-v6.2.0) (2022-06-08)
+
+
+### Features
+
+* thorchain price calculation ([#763](https://github.com/shapeshift/lib/issues/763)) ([8f42b6d](https://github.com/shapeshift/lib/commit/8f42b6db48dfc92b3ad44687387434c09bbc95f2))
+
+# [@shapeshiftoss/swapper-v6.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v6.0.1...@shapeshiftoss/swapper-v6.1.0) (2022-06-08)
+
+
+### Features
+
+* thorchain eth execute trade support ([#766](https://github.com/shapeshift/lib/issues/766)) ([4455e4d](https://github.com/shapeshift/lib/commit/4455e4d149c3ca56b19cfad1b6b1f5430243bd8e))
+
+# [@shapeshiftoss/swapper-v6.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v6.0.0...@shapeshiftoss/swapper-v6.0.1) (2022-06-08)
+
+# [@shapeshiftoss/swapper-v6.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.12.1...@shapeshiftoss/swapper-v6.0.0) (2022-06-08)
+
+
+### Features
+
+* update btc/eth to use historical tx history and new ws payloads ([#674](https://github.com/shapeshift/lib/issues/674)) ([0189e3b](https://github.com/shapeshift/lib/commit/0189e3b4dd5a3b998ddf285e761ae11dea72f94b))
+
+
+### BREAKING CHANGES
+
+* unchained-client and chain-adapters
+
+* revert pre release package versions
+
+* revert changes to no breaking packages
+
+* dependencies
+
+* pin package versions
+
+# [@shapeshiftoss/swapper-v5.12.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.12.0...@shapeshiftoss/swapper-v5.12.1) (2022-06-08)
+
 # [@shapeshiftoss/swapper-v5.12.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.11.0...@shapeshiftoss/swapper-v5.12.0) (2022-06-07)
 
 
