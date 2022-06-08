@@ -80,7 +80,9 @@ export const getTradeQuote = async ({
   const rate = bnOrZero(1).div(priceRatio).toString()
   const buyAmount = normalizeAmount(bnOrZero(sellAmount).times(rate))
   const sellAssetTradeFee = bnOrZero(feeData.tradeFee).times(bnOrZero(feeAssetRatio))
-  const minimum = fromBaseUnit(sellAssetTradeFee.times(1.2).toString(), sellAsset.precision)
+
+  // padding minimum by 1.5 the trade fee to avoid thorchain "not enough to cover fee" errors.
+  const minimum = fromBaseUnit(sellAssetTradeFee.times(1.5).toString(), sellAsset.precision)
 
   return {
     rate,
