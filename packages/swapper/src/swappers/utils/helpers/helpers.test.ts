@@ -1,11 +1,11 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import Web3 from 'web3'
 
-import { setupQuote } from '../../zrx/utils/test-data/setupSwapQuote'
 import { erc20Abi } from '../abi/erc20-abi'
 import { erc20AllowanceAbi } from '../abi/erc20Allowance-abi'
 import { bn, bnOrZero } from '../bignumber'
 import { setupDeps } from '../test-data/setupDeps'
+import { setupQuote } from '../test-data/setupSwapQuote'
 import { getAllowanceRequired, grantAllowance } from './helpers'
 
 jest.mock('web3')

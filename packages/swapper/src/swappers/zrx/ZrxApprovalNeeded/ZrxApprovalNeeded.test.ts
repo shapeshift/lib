@@ -2,7 +2,7 @@ import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import Web3 from 'web3'
 
 import { setupDeps } from '../../utils/test-data/setupDeps'
-import { setupQuote } from '../utils/test-data/setupSwapQuote'
+import { setupQuote } from '../../utils/test-data/setupSwapQuote'
 import { zrxService } from '../utils/zrxService'
 import { ZrxApprovalNeeded } from './ZrxApprovalNeeded'
 

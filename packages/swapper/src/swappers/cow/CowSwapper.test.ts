@@ -4,11 +4,11 @@ import Web3 from 'web3'
 
 import { SwapperType } from '../../api'
 import { FOX } from '../utils/test-data/assets'
+import { setupQuote } from '../utils/test-data/setupSwapQuote'
 import { CowApprovalNeeded } from './CowApprovalNeeded/CowApprovalNeeded'
 import { CowApproveInfinite } from './CowApproveInfinite/CowApproveInfinite'
 import { CowSwapper, CowSwapperDeps } from './CowSwapper'
 import { getUsdRate } from './utils/helpers/helpers'
-import { setupQuote } from './utils/test-data/setupSwapQuote'
 
 jest.mock('./utils/helpers/helpers')
 

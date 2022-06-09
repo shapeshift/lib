@@ -1,7 +1,7 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 
 import { ExecuteTradeInput, ZrxTrade } from '../../../api'
-import { setupQuote } from '../utils/test-data/setupSwapQuote'
+import { setupQuote } from '../../utils/test-data/setupSwapQuote'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 import { zrxExecuteTrade } from './zrxExecuteTrade'
 

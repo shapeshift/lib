@@ -1,7 +1,7 @@
 import { Asset } from '@shapeshiftoss/types'
 
-import { TradeQuote } from '../../../../api'
-import { FOX, WETH } from '../../../utils/test-data/assets'
+import { GetTradeQuoteInput, TradeQuote } from '../../../api'
+import { FOX, WETH } from './assets'
 
 export const setupQuote = () => {
   const sellAsset: Asset = { ...FOX }
@@ -20,5 +20,12 @@ export const setupQuote = () => {
     sources: []
   }
 
-  return { tradeQuote, sellAsset }
+  const quoteInput: GetTradeQuoteInput = {
+    sellAmount: '1000000000000000000',
+    sellAsset,
+    buyAsset,
+    sellAssetAccountId: '0',
+    sendMax: false
+  }
+  return { quoteInput, tradeQuote, buyAsset, sellAsset }
 }

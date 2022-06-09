@@ -3,8 +3,8 @@ import Web3 from 'web3'
 
 import { ZrxSwapper } from '../..'
 import { bn, bnOrZero } from '../../utils/bignumber'
+import { setupQuote } from '../../utils/test-data/setupSwapQuote'
 import { normalizeAmount } from '../utils/helpers/helpers'
-import { setupQuote } from '../utils/test-data/setupSwapQuote'
 import { zrxService } from '../utils/zrxService'
 
 const axios = jest.createMockFromModule('axios')

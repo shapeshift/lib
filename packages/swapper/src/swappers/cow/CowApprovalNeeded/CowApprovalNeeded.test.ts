@@ -3,7 +3,7 @@ import Web3 from 'web3'
 
 import { BTC, ETH } from '../../utils/test-data/assets'
 import { setupDeps } from '../../utils/test-data/setupDeps'
-import { setupQuote } from '../utils/test-data/setupSwapQuote'
+import { setupQuote } from '../../utils/test-data/setupSwapQuote'
 import { CowApprovalNeeded } from './CowApprovalNeeded'
 
 jest.mock('web3')

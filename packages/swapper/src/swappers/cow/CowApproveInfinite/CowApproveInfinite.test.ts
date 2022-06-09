@@ -2,8 +2,8 @@ import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import Web3 from 'web3'
 
 import { setupDeps } from '../../utils/test-data/setupDeps'
+import { setupQuote } from '../../utils/test-data/setupSwapQuote'
 import { CowApproveInfinite } from '../CowApproveInfinite/CowApproveInfinite'
-import { setupQuote } from '../utils/test-data/setupSwapQuote'
 
 jest.mock('web3')
 jest.mock('../../utils/helpers/helpers', () => ({
