@@ -1,11 +1,11 @@
-import { AssetId, ChainNamespace } from '@shapeshiftoss/caip'
+import { AssetId, ChainId } from '@shapeshiftoss/caip'
 import { createErrorClass } from '@shapeshiftoss/errors'
 import { BTCSignTx, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { Asset, ChainSpecific, KnownChainIds } from '@shapeshiftoss/types'
 
 export const SwapError = createErrorClass('SwapError')
 
-type ChainSpecificQuoteFeeData<T extends ChainNamespace> = ChainSpecific<
+type ChainSpecificQuoteFeeData<T extends ChainId> = ChainSpecific<
   T,
   {
     eip155: {
@@ -21,7 +21,7 @@ type ChainSpecificQuoteFeeData<T extends ChainNamespace> = ChainSpecific<
   }
 >
 
-export type QuoteFeeData<T extends ChainNamespace> = {
+export type QuoteFeeData<T extends ChainId> = {
   fee: string
   tradeFee: string // fee taken out of the trade from the buyAsset
 } & ChainSpecificQuoteFeeData<T>
@@ -55,7 +55,7 @@ export type BuildTradeInput = CommonTradeInput & {
   wallet: HDWallet
 }
 
-interface TradeBase<C extends ChainNamespace> {
+interface TradeBase<C extends ChainId> {
   buyAmount: string
   sellAmount: string
   feeData: QuoteFeeData<C>
@@ -66,13 +66,13 @@ interface TradeBase<C extends ChainNamespace> {
   sellAssetAccountId: string
 }
 
-export interface TradeQuote<C extends ChainNamespace> extends TradeBase<C> {
+export interface TradeQuote<C extends ChainId> extends TradeBase<C> {
   allowanceContract: string
   minimum: string
   maximum: string
 }
 
-export interface Trade<C extends ChainNamespace> extends TradeBase<C> {
+export interface Trade<C extends ChainId> extends TradeBase<C> {
   receiveAddress: string
 }
 
@@ -81,19 +81,19 @@ export interface ZrxTrade extends Trade<'eip155'> {
   depositAddress: string
 }
 
-export interface BtcThorTrade<C extends ChainNamespace> extends Trade<C> {
+export interface BtcThorTrade<C extends ChainId> extends Trade<C> {
   chainId: KnownChainIds.BitcoinMainnet
   txData: BTCSignTx
 }
 
-export interface EthThorTrade<C extends ChainNamespace> extends Trade<C> {
+export interface EthThorTrade<C extends ChainId> extends Trade<C> {
   chainId: KnownChainIds.EthereumMainnet
   txData: ETHSignTx
 }
 
-export type ThorTrade<C extends ChainNamespace> = BtcThorTrade<C> | EthThorTrade<C>
+export type ThorTrade<C extends ChainId> = BtcThorTrade<C> | EthThorTrade<C>
 
-export type ExecuteTradeInput<C extends ChainNamespace> = {
+export type ExecuteTradeInput<C extends ChainId> = {
   trade: Trade<C>
   wallet: HDWallet
 }
@@ -102,12 +102,12 @@ export type TradeResult = {
   tradeId: string
 }
 
-export type ApproveInfiniteInput<C extends ChainNamespace> = {
+export type ApproveInfiniteInput<C extends ChainId> = {
   quote: TradeQuote<C>
   wallet: HDWallet
 }
 
-export type ApprovalNeededInput<C extends ChainNamespace> = {
+export type ApprovalNeededInput<C extends ChainId> = {
   quote: TradeQuote<C>
   wallet: HDWallet
 }
@@ -166,7 +166,7 @@ export enum SwapErrorTypes {
   POOL_NOT_FOUND = 'POOL_NOT_FOUND'
 }
 
-export interface Swapper<T extends ChainNamespace, TxType = unknown> {
+export interface Swapper<T extends ChainId, TxType = unknown> {
   /** perform any necessary async initialization */
   initialize(): Promise<void>
 

@@ -1,7 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import type { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { Investor } from '@shapeshiftoss/investor'
-import type { ChainTypes } from '@shapeshiftoss/types'
+import { KnownChainIds } from '@shapeshiftoss/types'
 import { type ChainId, type VaultMetadata, Yearn } from '@yfi/sdk'
 import { find } from 'lodash'
 import filter from 'lodash/filter'
@@ -12,7 +12,7 @@ import { ssRouterAbi, ssRouterContractAddress } from './constants'
 import { PreparedTransaction, YearnOpportunity } from './YearnOpportunity'
 
 type ConstructorArgs = {
-  chainAdapter: ChainAdapter<ChainTypes.Ethereum>
+  chainAdapter: ChainAdapter<KnownChainIds.EthereumMainnet>
   dryRun?: true
   network?: ChainId
   providerUrl: string
@@ -20,7 +20,7 @@ type ConstructorArgs = {
 
 export class YearnInvestor implements Investor<PreparedTransaction, VaultMetadata> {
   #deps: {
-    chainAdapter: ChainAdapter<ChainTypes.Ethereum>
+    chainAdapter: ChainAdapter<KnownChainIds.EthereumMainnet>
     contract: Contract
     dryRun?: true
     web3: Web3

@@ -1,7 +1,7 @@
 import { AssetService } from '@shapeshiftoss/asset-service'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import * as unchained from '@shapeshiftoss/unchained-client/*'
+import * as unchained from '@shapeshiftoss/unchained-client'
 import BigNumber from 'bignumber.js'
 import dotenv from 'dotenv'
 import readline from 'readline-sync'
@@ -79,13 +79,14 @@ const main = async (): Promise<void> => {
 
   const ethChainAdapter = new ethereum.ChainAdapter({
     providers: {
-      ws: new unchained.ws.Client<unchained.ethereum.ParsedTx>(UNCHAINED_WS_API),
+      ws: new unchained.ws.Client<unchained.ethereum.EthereumTx>(UNCHAINED_WS_API),
       http: new unchained.ethereum.V1Api(
         new unchained.ethereum.Configuration({
           basePath: UNCHAINED_HTTP_API
         })
       )
-    }
+    },
+    rpcUrl: 'https://mainnet.infura.io/v3/d734c7eebcdf400185d7eb67322a7e57'
   })
 
   const web3Provider = new Web3.providers.HttpProvider(ETH_NODE_URL)

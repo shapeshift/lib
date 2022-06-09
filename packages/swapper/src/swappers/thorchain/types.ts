@@ -1,4 +1,5 @@
-import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+import { ChainId } from '@shapeshiftoss/caip'
+import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 
 export type PoolResponse = {
   asset: string
@@ -24,8 +25,9 @@ export type InboundResponse = {
   router?: string
 }
 
-// todo: can we kill adapterManager? I don't think it's used.
+type ChainIdChainNamespace = Map<ChainId, ChainAdapter<ChainId>>
+
 export type ThorchainSwapperDeps = {
   midgardUrl: string
-  adapterManager: ChainAdapterManager
+  adapterMap: ChainIdChainNamespace
 }

@@ -28,8 +28,8 @@ import {
   SubscribeError,
   SubscribeTxsInput,
   Transaction,
+  TxHistoryInput,
   TxHistoryResponse,
-  TxTransfer,
   ValidAddressResult,
   ValidAddressResultType,
   ZrxGasApiResponse
@@ -147,7 +147,7 @@ export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet
   }
 
   async getTxHistory(
-    input: chainAdapters.TxHistoryInput
+    input: TxHistoryInput
   ): Promise<TxHistoryResponse<KnownChainIds.EthereumMainnet>> {
     const { data } = await this.providers.http.getTxHistory({
       pubkey: input.pubkey,

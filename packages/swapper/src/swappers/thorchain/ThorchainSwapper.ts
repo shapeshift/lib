@@ -1,4 +1,6 @@
-import { adapters, AssetId, ChainId, ChainNamespace, fromAssetId } from '@shapeshiftoss/caip'
+import { adapters, AssetId, ChainId, fromAssetId } from '@shapeshiftoss/caip'
+import { ethereum } from '@shapeshiftoss/chain-adapters'
+import { ETHSignTx } from '@shapeshiftoss/hdwallet-core'
 import { Asset } from '@shapeshiftoss/types'
 
 import {
@@ -19,7 +21,7 @@ import { PoolResponse, ThorchainSwapperDeps } from './types'
 import { getUsdRate } from './utils/getUsdRate/getUsdRate'
 import { thorService } from './utils/thorService'
 
-export class ThorchainSwapper implements Swapper<ChainNamespace> {
+export class ThorchainSwapper implements Swapper<ChainId> {
   private swapSupportedChainIds: Record<ChainId, boolean> = {
     'eip155:1': true,
     'bip122:000000000019d6689c085ae165831e93': true
@@ -80,21 +82,24 @@ export class ThorchainSwapper implements Swapper<ChainNamespace> {
     return this.supportedAssetIds
   }
 
-  async buildTrade(): Promise<Trade<ChainNamespace>> {
+  async buildTrade(): Promise<Trade<ChainId>> {
     throw new Error('ThorchainSwapper: buildTrade unimplemented')
   }
 
-  async getTradeQuote(): Promise<TradeQuote<ChainNamespace>> {
+  async getTradeQuote(): Promise<TradeQuote<ChainId>> {
     throw new Error('ThorchainSwapper: getTradeQuote unimplemented')
   }
 
-  async executeTrade(args: ExecuteTradeInput<SupportedChainIds>): Promise<TradeResult> {
+  async executeTrade(args: ExecuteTradeInput<ChainId>): Promise<TradeResult> {
     const { trade, wallet } = args
-    const adapter = await this.deps.adapterManager.byChainId(trade.sellAsset.chainId)
+    const adapter = this.deps.adapterMap.get(trade.sellAsset.chainId)
 
-    if (trade.sellAsset.chainId === 'eip155:1') {
+    if (trade.sellAsset.chainId === 'eip155:1' && adapter instanceof ethereum.ChainAdapter) {
       const thorTradeEth = trade as ThorTrade<'eip155:1'>
-      const signedTx = await adapter.signTransaction({ txToSign: thorTradeEth.txData, wallet })
+      const signedTx = await (adapter as ethereum.ChainAdapter).signTransaction({
+        txToSign: thorTradeEth.txData as ETHSignTx,
+        wallet
+      })
       const txid = await adapter.broadcastTransaction(signedTx)
       return { tradeId: txid }
     } else {

@@ -32,7 +32,7 @@ const main = async (): Promise<void> => {
 
   const ethChainAdapter = new ethereum.ChainAdapter({
     providers: {
-      ws: new unchained.ws.Client<unchained.ethereum.ParsedTx>(
+      ws: new unchained.ws.Client<unchained.ethereum.EthereumTx>(
         'wss://dev-api.ethereum.shapeshift.com'
       ),
       http: new unchained.ethereum.V1Api(
@@ -40,7 +40,8 @@ const main = async (): Promise<void> => {
           basePath: 'https://dev-api.ethereum.shapeshift.com'
         })
       )
-    }
+    },
+    rpcUrl: 'https://mainnet.infura.io/v3/d734c7eebcdf400185d7eb67322a7e57'
   })
 
   // using 0 value array since only one contract subset exists

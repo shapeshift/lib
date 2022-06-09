@@ -68,8 +68,6 @@ export const ETH: Asset = {
 export const UNSUPPORTED: Asset = {
   assetId: 'eip155:1/slip44:420',
   chainId: 'eip155:1',
-  chain: ChainTypes.Ethereum,
-  network: NetworkTypes.MAINNET,
   symbol: 'ETH',
   name: 'Ethereum',
   precision: 18,

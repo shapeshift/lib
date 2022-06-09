@@ -26,8 +26,7 @@ import {
   SubscribeTxsInput,
   Transaction,
   TxHistoryInput,
-  TxHistoryResponse,
-  TxTransfer
+  TxHistoryResponse
 } from '../types'
 import {
   accountTypeToOutputScriptType,
