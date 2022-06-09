@@ -32,7 +32,6 @@ export const getPriceRatio = async (
       })
     return bnOrZero(buyUsdPrice).dividedBy(sellUsdPrice).toString()
   } catch (e) {
-    console.log({ e })
     if (e instanceof SwapError) throw e
     throw new SwapError('[getUsdRate]: Thorchain getUsdRate failed', {
       code: SwapErrorTypes.PRICE_RATIO_FAILED,

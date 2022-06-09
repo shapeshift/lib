@@ -103,6 +103,9 @@ export const getThorTradeQuote = async ({
     }
   } catch (e) {
     if (e instanceof SwapError) throw e
-    throw new SwapError('[getThorTradeQuote]', { cause: e, code: SwapErrorTypes.TRADE_QUOTE_FAILED })
+    throw new SwapError('[getThorTradeQuote]', {
+      cause: e,
+      code: SwapErrorTypes.TRADE_QUOTE_FAILED
+    })
   }
 }

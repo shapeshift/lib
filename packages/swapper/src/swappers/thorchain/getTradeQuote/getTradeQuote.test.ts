@@ -1,12 +1,13 @@
-import axios from 'axios'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { getThorTradeQuote } from './getTradeQuote'
-import { setupQuote } from '../../zrx/utils/test-data/setupSwapQuote'
-import { ThorchainSwapperDeps } from '../types'
+import axios from 'axios'
+
 import { TradeQuote } from '../../../api'
 import { ETH, FOX } from '../../utils/test-data/assets'
-import { thorService } from '../utils/thorService'
+import { setupQuote } from '../../zrx/utils/test-data/setupSwapQuote'
+import { ThorchainSwapperDeps } from '../types'
 import { ethMidgardPool, foxMidgardPool } from '../utils/test-data/midgardResponse'
+import { thorService } from '../utils/thorService'
+import { getThorTradeQuote } from './getTradeQuote'
 
 jest.mock('../utils/thorService')
 
@@ -52,7 +53,7 @@ describe('getTradeQuote', () => {
     adapterManager
   } as unknown as ThorchainSwapperDeps
 
-  let wallet = {
+  const wallet = {
     supportsOfflineSigning: jest.fn(() => true)
   } as unknown as HDWallet
 
@@ -60,10 +61,12 @@ describe('getTradeQuote', () => {
     const input = {
       ...quoteInput,
       buyAsset: ETH,
-      sellAsset: FOX,
+      sellAsset: FOX
     }
 
-    await expect(getThorTradeQuote({ deps, input })).rejects.toThrow('[getTradeQuote] - wallet is required')
+    await expect(getThorTradeQuote({ deps, input })).rejects.toThrow(
+      '[getTradeQuote] - wallet is required'
+    )
   })
 
   it('should get a thorchain quote for a thorchain trade', async () => {
