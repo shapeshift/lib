@@ -6,7 +6,7 @@ import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function ZrxApproveInfinite(
   { adapter, web3 }: ZrxSwapperDeps,
-  { quote, wallet }: ApproveInfiniteInput<'eip155'>
+  { quote, wallet }: ApproveInfiniteInput<'eip155:1'>
 ) {
   try {
     const allowanceGrantRequired = await grantAllowance({

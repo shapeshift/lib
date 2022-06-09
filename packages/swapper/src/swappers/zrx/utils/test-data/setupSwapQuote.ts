@@ -7,7 +7,7 @@ import { ZrxQuoteResponse } from '../../types'
 export const setupQuote = () => {
   const sellAsset: Asset = { ...FOX }
   const buyAsset: Asset = { ...WETH }
-  const tradeQuote: TradeQuote<'eip155'> = {
+  const tradeQuote: TradeQuote<'eip155:1'> = {
     buyAmount: '',
     sellAmount: '1000000000000000000',
     sellAsset,

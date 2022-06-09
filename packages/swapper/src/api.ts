@@ -8,7 +8,7 @@ export const SwapError = createErrorClass('SwapError')
 type ChainSpecificQuoteFeeData<T extends ChainId> = ChainSpecific<
   T,
   {
-    eip155: {
+    'eip155:1': {
       estimatedGas?: string
       gasPrice?: string
       approvalFee?: string
@@ -76,7 +76,7 @@ export interface Trade<C extends ChainId> extends TradeBase<C> {
   receiveAddress: string
 }
 
-export interface ZrxTrade extends Trade<'eip155'> {
+export interface ZrxTrade extends Trade<'eip155:1'> {
   txData: string
   depositAddress: string
 }

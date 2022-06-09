@@ -6,7 +6,7 @@ import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function zrxExecuteTrade(
   { adapter }: ZrxSwapperDeps,
-  { trade, wallet }: ExecuteTradeInput<'eip155'>
+  { trade, wallet }: ExecuteTradeInput<'eip155:1'>
 ): Promise<TradeResult> {
   const zrxTrade = trade as ZrxTrade
   const { sellAsset } = zrxTrade

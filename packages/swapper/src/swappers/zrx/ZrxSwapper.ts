@@ -31,8 +31,7 @@ export type ZrxSwapperDeps = {
   web3: Web3
 }
 
-// FIXME
-export class ZrxSwapper implements Swapper<'eip155' | 'cosmos'> {
+export class ZrxSwapper implements Swapper<'eip155:1'> {
   public static swapperName = 'ZrxSwapper'
   deps: ZrxSwapperDeps
 
@@ -52,7 +51,7 @@ export class ZrxSwapper implements Swapper<'eip155' | 'cosmos'> {
     return zrxBuildTrade(this.deps, args)
   }
 
-  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<'eip155'>> {
+  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<'eip155:1'>> {
     return getZrxTradeQuote(input)
   }
 
@@ -60,15 +59,15 @@ export class ZrxSwapper implements Swapper<'eip155' | 'cosmos'> {
     return getUsdRate(input)
   }
 
-  async executeTrade(args: ExecuteTradeInput<'eip155'>): Promise<TradeResult> {
+  async executeTrade(args: ExecuteTradeInput<'eip155:1'>): Promise<TradeResult> {
     return zrxExecuteTrade(this.deps, args)
   }
 
-  async approvalNeeded(args: ApprovalNeededInput<'eip155'>): Promise<ApprovalNeededOutput> {
+  async approvalNeeded(args: ApprovalNeededInput<'eip155:1'>): Promise<ApprovalNeededOutput> {
     return ZrxApprovalNeeded(this.deps, args)
   }
 
-  async approveInfinite(args: ApproveInfiniteInput<'eip155'>): Promise<string> {
+  async approveInfinite(args: ApproveInfiniteInput<'eip155:1'>): Promise<string> {
     return ZrxApproveInfinite(this.deps, args)
   }
 

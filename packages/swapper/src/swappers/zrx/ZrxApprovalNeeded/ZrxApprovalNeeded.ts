@@ -1,4 +1,4 @@
-import { ChainNamespace, fromAssetId, getFeeAssetIdFromAssetId } from '@shapeshiftoss/caip'
+import { fromAssetId, getFeeAssetIdFromAssetId } from '@shapeshiftoss/caip'
 
 import { ApprovalNeededInput, ApprovalNeededOutput, SwapError, SwapErrorTypes } from '../../../api'
 import { bnOrZero } from '../../utils/bignumber'
@@ -8,7 +8,7 @@ import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function ZrxApprovalNeeded(
   { adapter, web3 }: ZrxSwapperDeps,
-  { quote, wallet }: ApprovalNeededInput<ChainNamespace>
+  { quote, wallet }: ApprovalNeededInput<'eip155:1'>
 ): Promise<ApprovalNeededOutput> {
   const { sellAsset } = quote
 

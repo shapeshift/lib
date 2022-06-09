@@ -1,17 +1,16 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+import { ethereum } from '@shapeshiftoss/chain-adapters'
 import Web3 from 'web3'
 
 import { SwapperType } from '../api'
 import { ThorchainSwapper, ZrxSwapper, ZrxSwapperDeps } from '../swappers'
 import { CowSwapper, CowSwapperDeps } from '../swappers/cow/CowSwapper'
-import { ThorchainSwapperDeps } from '../swappers/thorchain/types'
+import { ChainIdToAdapterMap, ThorchainSwapperDeps } from '../swappers/thorchain/types'
 import { SwapperManager } from './SwapperManager'
 
 describe('SwapperManager', () => {
   const zrxSwapperDeps: ZrxSwapperDeps = {
     web3: <Web3>{},
-    adapter: <ChainAdapterManager>{}
+    adapter: <ethereum.ChainAdapter>{}
   }
   const cowSwapperDeps: CowSwapperDeps = {
     apiUrl: 'https://api.cow.fi/mainnet/api/'
@@ -19,7 +18,7 @@ describe('SwapperManager', () => {
 
   const thorchainSwapperDeps: ThorchainSwapperDeps = {
     midgardUrl: 'localhost:3000',
-    adapterManager: <ChainAdapterManager>{}
+    adapterMap: <ChainIdToAdapterMap>{}
   }
 
   describe('constructor', () => {

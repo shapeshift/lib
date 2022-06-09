@@ -1,8 +1,6 @@
 jest.mock('../thorService')
-import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-
 import { BTC, ETH, FOX, UNSUPPORTED } from '../../../utils/test-data/assets'
-import { ThorchainSwapperDeps } from '../../types'
+import { ChainIdToAdapterMap, ThorchainSwapperDeps } from '../../types'
 import { btcMidgardPool, ethMidgardPool, foxMidgardPool } from '../test-data/midgardResponse'
 import { thorService } from '../thorService'
 import { getTradeRate } from './getTradeRate'
@@ -11,7 +9,7 @@ describe('getTradeRate', () => {
   it('should calculate a correct rate for trading fox to eth', async () => {
     const deps: ThorchainSwapperDeps = {
       midgardUrl: 'localhost:3000',
-      adapterManager: <ChainAdapterManager>{}
+      adapterMap: <ChainIdToAdapterMap>{}
     }
     ;(thorService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: [foxMidgardPool, ethMidgardPool] })
@@ -26,7 +24,7 @@ describe('getTradeRate', () => {
   it('should calculate a correct rate for trading eth to fox', async () => {
     const deps: ThorchainSwapperDeps = {
       midgardUrl: 'localhost:3000',
-      adapterManager: <ChainAdapterManager>{}
+      adapterMap: <ChainIdToAdapterMap>{}
     }
     ;(thorService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: [foxMidgardPool, ethMidgardPool] })
@@ -41,7 +39,7 @@ describe('getTradeRate', () => {
   it('should calculate a correct rate for trading fox to btc', async () => {
     const deps: ThorchainSwapperDeps = {
       midgardUrl: 'localhost:3000',
-      adapterManager: <ChainAdapterManager>{}
+      adapterMap: <ChainIdToAdapterMap>{}
     }
     ;(thorService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: [foxMidgardPool, btcMidgardPool] })
@@ -56,7 +54,7 @@ describe('getTradeRate', () => {
   it('should calculate a correct rate for trading btc to fox', async () => {
     const deps: ThorchainSwapperDeps = {
       midgardUrl: 'localhost:3000',
-      adapterManager: <ChainAdapterManager>{}
+      adapterMap: <ChainIdToAdapterMap>{}
     }
     ;(thorService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: [foxMidgardPool, btcMidgardPool] })
@@ -71,7 +69,7 @@ describe('getTradeRate', () => {
   it('should throw if trying to caculate a rate for an unsupported asset', async () => {
     const deps: ThorchainSwapperDeps = {
       midgardUrl: 'localhost:3000',
-      adapterManager: <ChainAdapterManager>{}
+      adapterMap: <ChainIdToAdapterMap>{}
     }
     ;(thorService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: [foxMidgardPool, ethMidgardPool] })

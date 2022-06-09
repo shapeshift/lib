@@ -30,7 +30,7 @@ export type GetERC20AllowanceArgs = {
 }
 
 type GrantAllowanceArgs = {
-  quote: TradeQuote<'eip155'>
+  quote: TradeQuote<'eip155:1'>
   wallet: HDWallet
   adapter: ethereum.ChainAdapter
   erc20Abi: AbiItem[]
@@ -164,10 +164,10 @@ export const grantAllowance = async ({
       chainSpecific: {
         erc20ContractAddress: sellAssetErc20Address,
         gasPrice: numberToHex(
-          (quote as TradeQuote<'eip155'>).feeData?.chainSpecific?.gasPrice || 0
+          (quote as TradeQuote<'eip155:1'>).feeData?.chainSpecific?.gasPrice || 0
         ),
         gasLimit: numberToHex(
-          (quote as TradeQuote<'eip155'>).feeData?.chainSpecific?.estimatedGas || 0
+          (quote as TradeQuote<'eip155:1'>).feeData?.chainSpecific?.estimatedGas || 0
         )
       }
     })

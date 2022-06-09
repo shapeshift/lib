@@ -25,9 +25,9 @@ export type InboundResponse = {
   router?: string
 }
 
-type ChainIdChainNamespace = Map<ChainId, ChainAdapter<ChainId>>
+export type ChainIdToAdapterMap = Map<ChainId, ChainAdapter<ChainId>>
 
 export type ThorchainSwapperDeps = {
   midgardUrl: string
-  adapterMap: ChainIdChainNamespace
+  adapterMap: ChainIdToAdapterMap
 }
