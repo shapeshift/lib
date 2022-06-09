@@ -34,7 +34,7 @@ const quoteResponse: TradeQuote<'eip155:1'> = {
   sources: [{ name: 'thorchain', proportion: '1' }],
   buyAsset: ETH,
   sellAsset: FOX,
-  sellAssetAccountId: '0'
+  sellAssetAccountNumber: 0
 }
 
 const adapterManager = {
