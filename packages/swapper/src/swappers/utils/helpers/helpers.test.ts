@@ -6,7 +6,7 @@ import { erc20AllowanceAbi } from '../abi/erc20Allowance-abi'
 import { bn, bnOrZero } from '../bignumber'
 import { setupDeps } from '../test-data/setupDeps'
 import { setupQuote } from '../test-data/setupSwapQuote'
-import { getAllowanceRequired, grantAllowance } from './helpers'
+import { getAllowanceRequired, grantAllowance, normalizeAmount } from './helpers'
 
 jest.mock('web3')
 
@@ -131,6 +131,13 @@ describe('utils', () => {
       expect(
         await grantAllowance({ quote, wallet, adapterManager, erc20Abi, web3: web3Instance })
       ).toEqual('broadcastedTx')
+    })
+  })
+
+  describe('normalizeAmount', () => {
+    it('should return a string number rounded to the 16th decimal place', () => {
+      const result = normalizeAmount('586084736227728377283728272309128120398')
+      expect(result).toEqual('586084736227728400000000000000000000000')
     })
   })
 })

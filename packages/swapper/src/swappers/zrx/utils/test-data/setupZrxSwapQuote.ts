@@ -31,8 +31,8 @@ export const setupBuildTrade = () => {
     buyAmount: '',
     buyAsset,
     sendMax: false,
-    sellAssetAccountId: '0',
-    buyAssetAccountId: '0',
+    sellAssetAccountNumber: 0,
+    buyAssetAccountNumber: 0,
     sellAsset
   }
   return { buildTradeInput, buyAsset, sellAsset }
@@ -52,7 +52,7 @@ export const setupExecuteTrade = () => {
     buyAsset,
     sellAsset,
     sendMax: false,
-    sellAssetAccountId: '0',
+    sellAssetAccountNumber: 0,
     txData: '0x0',
     depositAddress: '0x0',
     receiveAddress: '0x0',

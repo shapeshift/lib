@@ -1,4 +1,5 @@
-import { UtxoAccountType } from '../base'
+import { UtxoAccountType } from '@shapeshiftoss/types'
+
 import { GetAddressInputBase } from '.'
 
 export type Account = {

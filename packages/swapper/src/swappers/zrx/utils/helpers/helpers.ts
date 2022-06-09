@@ -1,24 +1,11 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
 import { Asset } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
-import BigNumber from 'bignumber.js'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { bn, bnOrZero } from '../../../utils/bignumber'
 import { ZrxPriceResponse } from '../../types'
 import { zrxService } from '../zrxService'
-
-/**
- * Very large amounts like those found in ERC20s with a precision of 18 get converted
- * to exponential notation ('1.6e+21') in javascript. The 0x api doesn't play well with
- * exponential notation so we need to ensure that it is represented as an integer string.
- * This function keeps 17 significant digits, so even if we try to trade 1 Billion of an
- * ETH or ERC20, we still keep 7 decimal places.
- * @param amount
- */
-export const normalizeAmount = (amount: string | number | BigNumber): string => {
-  return bnOrZero(amount).toNumber().toLocaleString('fullwide', { useGrouping: false })
-}
 
 export const getUsdRate = async (asset: Asset): Promise<string> => {
   const { assetReference: erc20Address, assetNamespace } = fromAssetId(asset.assetId)

@@ -7,7 +7,7 @@ import Web3 from 'web3'
 import { AbiItem, numberToHex } from 'web3-utils'
 
 import { SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
-import { bn, bnOrZero } from '../../utils/bignumber'
+import { BN, bn, bnOrZero } from '../bignumber'
 
 export type GetAllowanceRequiredArgs = {
   receiveAddress: string
@@ -104,7 +104,7 @@ export const grantAllowance = async ({
       .approve(quote.allowanceContract, quote.sellAmount)
       .encodeABI()
 
-    const accountNumber = bnOrZero(quote.sellAssetAccountId).toNumber()
+    const accountNumber = quote.sellAssetAccountNumber
     const bip44Params = adapter.buildBIP44Params({ accountNumber })
 
     const { txToSign } = await adapter.buildSendTransaction({
@@ -152,4 +152,13 @@ export const grantAllowance = async ({
       code: SwapErrorTypes.GRANT_ALLOWANCE_FAILED
     })
   }
+}
+
+/**
+ * This function keeps 17 significant digits, so even if we try to trade 1 Billion of an
+ * ETH or ERC20, we still keep 7 decimal places.
+ * @param amount
+ */
+export const normalizeAmount = (amount: string | number | BN): string => {
+  return bnOrZero(amount).toNumber().toLocaleString('fullwide', { useGrouping: false })
 }
