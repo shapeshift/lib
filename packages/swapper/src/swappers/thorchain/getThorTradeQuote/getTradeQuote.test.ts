@@ -1,5 +1,4 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import axios from 'axios'
 
 import { TradeQuote } from '../../../api'
 import { ETH, FOX } from '../../utils/test-data/assets'
@@ -11,7 +10,7 @@ import { getThorTradeQuote } from './getTradeQuote'
 
 jest.mock('../utils/thorService')
 
-const mockedAxios = thorService as jest.Mocked<typeof axios>
+const mockedAxios = jest.mocked(thorService, true)
 
 const feeData = {
   fast: {

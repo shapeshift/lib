@@ -16,7 +16,7 @@ import {
   TradeResult,
   TradeTxs
 } from '../../api'
-import { getThorTradeQuote } from './getTradeQuote/getTradeQuote'
+import { getThorTradeQuote } from './getThorTradeQuote/getTradeQuote'
 import { PoolResponse, ThorchainSwapperDeps } from './types'
 import { getUsdRate } from './utils/getUsdRate/getUsdRate'
 import { thorService } from './utils/thorService'
