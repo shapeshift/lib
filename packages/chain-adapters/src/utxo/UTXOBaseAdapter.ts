@@ -30,7 +30,7 @@ import {
 } from '../utils'
 import { bnOrZero } from '../utils/bignumber'
 
-export type UTXOChainTypes = KnownChainIds.BitcoinMainnet // to be extended in the future to include other UTXOs
+export type UTXOChainIds = KnownChainIds.BitcoinMainnet // to be extended in the future to include other UTXOs
 
 /**
  * Currently, we don't have a generic interact for UTXO providers, but will in the future.
@@ -47,12 +47,12 @@ export interface ChainAdapterArgs {
 }
 
 /**
- * Base chain adapter for all UTXO chains. When extending please add your ChainType to the
- * UTXOChainTypes. For example:
+ * Base chain adapter for all UTXO chains. When extending please add your ChainId to the
+ * UTXOChainIds. For example:
  *
- * `export type UTXOChainTypes = ChainTypes.Bitcoin | ChainTypes.Litecoin`
+ * `export type UTXOChainIds = KnownChainIds.BitcoinMainnet | KnownChainIds.Litecoin`
  */
-export abstract class UTXOBaseAdapter<T extends UTXOChainTypes> implements IChainAdapter<T> {
+export abstract class UTXOBaseAdapter<T extends UTXOChainIds> implements IChainAdapter<T> {
   protected chainId: ChainId
   protected assetId: AssetId
   protected coinName: string

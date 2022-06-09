@@ -25,7 +25,7 @@ import {
 } from '../types'
 import { getStatus, getType, toRootDerivationPath } from '../utils'
 
-export type CosmosChainTypes = KnownChainIds.CosmosMainnet | KnownChainIds.OsmosisMainnet
+export type CosmosChainIds = KnownChainIds.CosmosMainnet | KnownChainIds.OsmosisMainnet
 
 export interface ChainAdapterArgs {
   chainId?: ChainId
@@ -49,7 +49,7 @@ const transformValidator = (validator: unchained.cosmos.Validator): cosmos.Valid
   apr: validator.apr
 })
 
-export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implements IChainAdapter<T> {
+export abstract class CosmosSdkBaseAdapter<T extends CosmosChainIds> implements IChainAdapter<T> {
   protected readonly chainId: ChainId
   protected readonly assetId: AssetId // This is the AssetId for native token on the chain (ATOM/OSMO/etc)
   protected readonly supportedChainIds: ChainId[]
@@ -218,7 +218,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosChainTypes> implement
       const { prefix } = bech32.decode(address)
 
       if (CHAIN_TO_BECH32_PREFIX_MAPPING[chain] !== prefix) {
-        throw new Error(`Invalid address ${address} for ChainType: ${chain}`)
+        throw new Error(`Invalid address ${address} for ChainId: ${chain}`)
       }
 
       return {
