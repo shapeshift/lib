@@ -25,8 +25,8 @@ export async function zrxBuildTrade(
     buyAsset,
     sellAmount,
     slippage,
-    sellAssetAccountId,
-    buyAssetAccountId,
+    sellAssetAccountNumber,
+    buyAssetAccountNumber,
     wallet
   } = input
   try {
@@ -46,7 +46,7 @@ export async function zrxBuildTrade(
     }
 
     const adapter = await adapterManager.byChainId(buyAsset.chainId)
-    const bip44Params = adapter.buildBIP44Params({ accountNumber: Number(buyAssetAccountId) })
+    const bip44Params = adapter.buildBIP44Params({ accountNumber: buyAssetAccountNumber })
     const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 
     const slippagePercentage = slippage ? bnOrZero(slippage).div(100).toString() : DEFAULT_SLIPPAGE
@@ -97,7 +97,7 @@ export async function zrxBuildTrade(
     const trade: ZrxTrade<'eip155:1'> = {
       sellAsset,
       buyAsset,
-      sellAssetAccountId,
+      sellAssetAccountNumber,
       receiveAddress,
       rate: data.price,
       depositAddress: data.to,
