@@ -11,6 +11,7 @@ const axios = jest.createMockFromModule('axios')
 //@ts-ignore
 axios.create = jest.fn(() => axios)
 jest.mock('../utils/helpers/helpers')
+jest.mock('../../utils/helpers/helpers')
 jest.mock('../utils/zrxService')
 
 describe('getZrxTradeQuote', () => {
