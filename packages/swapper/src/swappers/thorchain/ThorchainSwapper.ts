@@ -4,8 +4,8 @@ import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
 import {
   ApprovalNeededOutput,
   BuyAssetBySellIdInput,
-  GetTradeQuoteInput,
   ExecuteTradeInput,
+  GetTradeQuoteInput,
   SwapError,
   SwapErrorTypes,
   Swapper,
