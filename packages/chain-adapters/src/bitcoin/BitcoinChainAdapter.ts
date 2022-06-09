@@ -36,6 +36,7 @@ import {
   toPath,
   toRootDerivationPath
 } from '../utils'
+import { bn } from '../utils/bignumber'
 import { ChainAdapterArgs, UTXOBaseAdapter } from '../utxo/UTXOBaseAdapter'
 
 export class ChainAdapter
@@ -176,9 +177,21 @@ export class ChainAdapter
         to,
         wallet,
         bip44Params = ChainAdapter.defaultBIP44Params,
-        chainSpecific: { satoshiPerByte, accountType },
+        chainSpecific: { satoshiPerByte, accountType, opReturnData },
         sendMax = false
       } = tx
+
+      // coinselect doesnt work with op_return outputs
+      // This hack adjusts the fee up proportionally to the op_return length
+      // op_return is ultimately added to the transaction upon signing but not here
+      // Imperfect because the assumption of 300 bytes for a standard tx could vary with different inputs/outputs
+      // Another solution would be to write our own coinselect algorithm
+      const standardTxBytes = 300
+      const opReturnTxBytes = standardTxBytes + (opReturnData?.length ?? 0)
+      const adjustedSatsPerByte = bn(satoshiPerByte)
+        .times(bn(opReturnTxBytes).div(standardTxBytes))
+        .dp(0)
+        .toString()
 
       if (!value || !to) {
         throw new Error('BitcoinChainAdapter: (to and value) are required')
@@ -202,12 +215,12 @@ export class ChainAdapter
 
       let coinSelectResult
       if (sendMax) {
-        coinSelectResult = split(mappedUtxos, [{ address: to }], Number(satoshiPerByte))
+        coinSelectResult = split(mappedUtxos, [{ address: to }], Number(adjustedSatsPerByte))
       } else {
         coinSelectResult = coinSelect<MappedUtxos, bitcoin.Recipient>(
           mappedUtxos,
           [{ value: Number(value), address: to }],
-          Number(satoshiPerByte)
+          Number(adjustedSatsPerByte)
         )
       }
       if (!coinSelectResult || !coinSelectResult.inputs || !coinSelectResult.outputs) {
@@ -260,7 +273,8 @@ export class ChainAdapter
       const txToSign: BTCSignTx = {
         coin: this.coinName,
         inputs: signTxInputs,
-        outputs: signTxOutputs
+        outputs: signTxOutputs,
+        opReturnData
       }
       return { txToSign }
     } catch (err) {

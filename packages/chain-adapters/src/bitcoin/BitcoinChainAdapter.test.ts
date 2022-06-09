@@ -284,6 +284,7 @@ describe('BitcoinChainAdapter', () => {
               hex: '010000000180457afc57604fed35cc8cee29e602432c87125b9cabbcc8fc407749fe0fabfe010000006b483045022100cd627a0577d35454ced7f0a6ef8a3d3cf11c0f8696bda18062025478e0fc866002206c8ac559dc6bd851bdf00e33c1602fcaeee9d16b35d21b548529825f12dfe5ad0121027751a74f251ba2657ec2a2f374ce7d5ba1548359749823a59314c54a0670c126ffffffff02d97c0000000000001600140c0585f37ff3f9f127c9788941d6082cf7aa012173df0000000000001976a914b22138dfe140e4611b98bdb728eed04beed754c488ac00000000'
             }
           ],
+          opReturnData: 'nm, u',
           outputs: [
             {
               addressType: 'spend',
@@ -307,7 +308,49 @@ describe('BitcoinChainAdapter', () => {
   })
 
   describe('signTransaction', () => {
-    it('should sign a properly formatted signTxInput object', async () => {
+    it('should sign a properly formatted signTxInput object without op_return_data', async () => {
+      const wallet: any = await getWallet()
+
+      args.providers.http = {
+        getUtxos: jest.fn<any, any>().mockResolvedValue(getUtxosMockResponse),
+        getTransaction: jest.fn<any, any>().mockResolvedValue(getTransactionMockResponse),
+        getAccount: jest.fn().mockResolvedValue(getAccountMockResponse),
+        getNetworkFees: jest.fn().mockResolvedValue(getNetworkFeesMockedResponse)
+      } as any
+
+      const adapter = new bitcoin.ChainAdapter(args)
+
+      const bip44Params: BIP44Params = {
+        purpose: 84,
+        coinType: 0,
+        accountNumber: 0,
+        isChange: false
+      }
+
+      const txInput: chainAdapters.BuildSendTxInput<ChainTypes.Bitcoin> = {
+        bip44Params,
+        to: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4',
+        value: '400',
+        wallet,
+        chainSpecific: {
+          opReturnData: 'sup fool',
+          accountType: UtxoAccountType.SegwitNative,
+          satoshiPerByte: '1'
+        }
+      }
+
+      const unsignedTx = await adapter.buildSendTransaction(txInput)
+
+      const signedTx = await adapter.signTransaction({
+        wallet,
+        txToSign: unsignedTx?.txToSign
+      })
+
+      expect(signedTx).toEqual(
+        '0100000000010105abd41ac558c186429b77a2344106bdd978955fc407e3363239864cb479b9ad0000000000ffffffff03900100000000000016001408450440a15ea38314c52d5c9ae6201857d7cf7a677a000000000000160014bf44db911ae5acc9cffcc1bbb9622ddda4a1112b00000000000000000a6a0873757020666f6f6c02483045022100c917450ad06fd3e50b0e1222ef93ce6ba0d046af49b1dbd21cf41b61bd6fef0102207ba6268078c987d0daaad675d8b6a7623b01a24e80f47020021bb3ae004df92a0121029dc27a53da073b1fea5601cf370d02d3b33cf572156c3a6df9d5c03c5dbcdcd700000000'
+      )
+    })
+    it('should sign a properly formatted signTxInput object with op_return_data', async () => {
       const wallet: any = await getWallet()
 
       args.providers.http = {
@@ -346,7 +389,7 @@ describe('BitcoinChainAdapter', () => {
       })
 
       expect(signedTx).toEqual(
-        '0100000000010105abd41ac558c186429b77a2344106bdd978955fc407e3363239864cb479b9ad0000000000ffffffff02900100000000000016001408450440a15ea38314c52d5c9ae6201857d7cf7a677a000000000000160014bf44db911ae5acc9cffcc1bbb9622ddda4a1112b024730440220106d6510888c70719b98069ccfa9dc92db248c1f5b7572d5cf86f3db1d371bf40220118ca57a08ed36f94772a5fbd2491a713fcb250a5ccb5e498ba70de8653763ff0121029dc27a53da073b1fea5601cf370d02d3b33cf572156c3a6df9d5c03c5dbcdcd700000000'
+        '0100000000010105abd41ac558c186429b77a2344106bdd978955fc407e3363239864cb479b9ad0000000000ffffffff03900100000000000016001408450440a15ea38314c52d5c9ae6201857d7cf7a677a000000000000160014bf44db911ae5acc9cffcc1bbb9622ddda4a1112b00000000000000000a6a0873757020666f6f6c02483045022100c917450ad06fd3e50b0e1222ef93ce6ba0d046af49b1dbd21cf41b61bd6fef0102207ba6268078c987d0daaad675d8b6a7623b01a24e80f47020021bb3ae004df92a0121029dc27a53da073b1fea5601cf370d02d3b33cf572156c3a6df9d5c03c5dbcdcd700000000'
       )
     })
   })
