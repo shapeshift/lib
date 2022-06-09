@@ -14,7 +14,7 @@ import {
   TradeResult,
   TradeTxs
 } from '../../api'
-import { getTradeQuote } from './getTradeQuote/getTradeQuote'
+import { getThorTradeQuote } from './getTradeQuote/getTradeQuote'
 import { PoolResponse, ThorchainSwapperDeps } from './types'
 import { getUsdRate } from './utils/getUsdRate/getUsdRate'
 import { thorService } from './utils/thorService'
@@ -85,7 +85,7 @@ export class ThorchainSwapper implements Swapper {
   }
 
   async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<SupportedChainIds>> {
-    return getTradeQuote({ deps: this.deps, input })
+    return getThorTradeQuote({ deps: this.deps, input })
   }
 
   async executeTrade(): Promise<TradeResult> {

@@ -8,8 +8,7 @@ import { erc20AllowanceAbi } from '../abi/erc20Allowance-abi'
 import {
   getAllowanceRequired,
   getUsdRate,
-  grantAllowance,
-  normalizeAmount
+  grantAllowance
 } from '../helpers/helpers'
 import { setupQuote } from '../test-data/setupSwapQuote'
 import { setupZrxDeps } from '../test-data/setupZrxDeps'
@@ -57,13 +56,6 @@ describe('utils', () => {
     it('getUsdRate fails', async () => {
       ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data: {} }))
       await expect(getUsdRate(WETH)).rejects.toThrow('[getUsdRate]')
-    })
-  })
-
-  describe('normalizeAmount', () => {
-    it('should return a string number rounded to the 16th decimal place', () => {
-      const result = normalizeAmount('586084736227728377283728272309128120398')
-      expect(result).toEqual('586084736227728400000000000000000000000')
     })
   })
 
