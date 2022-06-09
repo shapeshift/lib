@@ -28,7 +28,6 @@ describe('CowApprovalNeeded', () => {
   const wallet = {
     ethGetAddress: jest.fn(() => Promise.resolve(walletAddress))
   } as unknown as HDWallet
-
   const { tradeQuote } = setupQuote()
 
   it('returns false if sellAsset assetId is ETH / non ERC-20', async () => {
