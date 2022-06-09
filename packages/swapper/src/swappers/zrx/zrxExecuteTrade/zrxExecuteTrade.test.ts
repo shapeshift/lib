@@ -22,7 +22,7 @@ describe('ZrxExecuteTrade', () => {
   }
   const deps = { adapterManager } as unknown as ZrxSwapperDeps
 
-  const trade: ZrxTrade<'eip155:1'> = {
+  const trade: ZrxTrade = {
     buyAsset,
     sellAsset,
     sellAmount: '1',
