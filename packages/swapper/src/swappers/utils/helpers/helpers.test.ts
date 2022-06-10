@@ -127,12 +127,11 @@ describe('utils', () => {
           }))
         }
       }))
-
       ;(adapter.buildSendTransaction as jest.Mock).mockResolvedValueOnce({ txToSign: {} })
       ;(adapter.broadcastTransaction as jest.Mock).mockResolvedValueOnce('broadcastedTx')
-      expect(
-        await grantAllowance({ quote, wallet, adapter, erc20Abi, web3 })
-      ).toEqual('broadcastedTx')
+      expect(await grantAllowance({ quote, wallet, adapter, erc20Abi, web3 })).toEqual(
+        'broadcastedTx'
+      )
     })
   })
 
