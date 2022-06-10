@@ -8,7 +8,7 @@ import { normalizeIntegerAmount } from '../../utils/helpers/helpers'
 import { CowSwapperDeps } from '../CowSwapper'
 import { getCowSwapMinMax } from '../getCowSwapMinMax/getCowSwapMinMax'
 import { CowSwapQuoteResponse } from '../types'
-import { DEFAULT_ADDRESS, DEFAULT_APP_DATA, DEFAULT_SOURCE } from '../utils/constants'
+import { COW_SWAP_VAULT_RELAYER_ADDRESS, DEFAULT_ADDRESS, DEFAULT_APP_DATA, DEFAULT_SOURCE } from '../utils/constants'
 import { cowService } from '../utils/cowService'
 import { getUsdRate } from '../utils/helpers/helpers'
 
@@ -18,6 +18,7 @@ export async function getCowSwapTradeQuote(
 ): Promise<TradeQuote<'eip155:1'>> {
   try {
     const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber } = input
+    const { adapterManager } = deps
 
     const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
       fromAssetId(sellAsset.assetId)
@@ -73,12 +74,17 @@ export async function getCowSwapTradeQuote(
     const { data } = quoteResponse
     const quote = data.quote
 
-    //const estimatedGas = bnOrZero(data.estimatedGas).times(1.5)
     const rate = bn(quote.buyAmount)
       .div(quote.sellAmount)
       .times(bn(10).exponentiatedBy(sellAsset.precision - buyAsset.precision))
       .toString()
     const gasPrice = '50000' // TODO
+    const adapter = adapterManager.byChainId('eip155:1')
+    const feeDataOptions = await adapter.getFeeData({
+      to: COW_SWAP_VAULT_RELAYER_ADDRESS,
+      value: sellAmount,
+      chainSpecific: { from: receiveAddress }
+    })
 
     const usdRateSellAsset = await getUsdRate(deps, sellAsset)
     const feeUsd = bnOrZero(quote.feeAmount)

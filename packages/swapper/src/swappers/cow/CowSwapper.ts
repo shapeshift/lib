@@ -1,4 +1,5 @@
 import { AssetId } from '@shapeshiftoss/caip'
+import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
 
 import {
@@ -22,6 +23,7 @@ import { getUsdRate } from './utils/helpers/helpers'
 
 export type CowSwapperDeps = {
   apiUrl: string
+  adapterManager: ChainAdapterManager
 }
 
 export class CowSwapper implements Swapper {

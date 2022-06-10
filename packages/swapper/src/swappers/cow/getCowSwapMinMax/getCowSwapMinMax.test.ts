@@ -1,3 +1,4 @@
+import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { BTC, ETH, FOX, WETH } from '../../utils/test-data/assets'
 import { MAX_COWSWAP_TRADE } from '../utils/constants'
 import { getCowSwapMinMax } from './getCowSwapMinMax'
@@ -7,7 +8,8 @@ jest.mock('../utils/helpers/helpers', () => ({
 }))
 
 const DEPS = {
-  apiUrl: ''
+  apiUrl: '',
+  adapterManager: <ChainAdapterManager>{},
 }
 
 describe('getCowSwapMinMax', () => {

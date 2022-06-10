@@ -1,5 +1,3 @@
 describe('getCowTradeQuote', () => {
-    it('should', async () => {
-
-    })
-  })
+  it('should', async () => {})
+})
