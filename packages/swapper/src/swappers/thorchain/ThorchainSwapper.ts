@@ -1,4 +1,4 @@
-import { adapters, AssetId, ChainId, ChainNamespace, fromAssetId } from '@shapeshiftoss/caip'
+import { adapters, AssetId, ChainId, fromAssetId } from '@shapeshiftoss/caip'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import type { ETHSignTx } from '@shapeshiftoss/hdwallet-core'
 import type { Asset } from '@shapeshiftoss/types'
@@ -88,7 +88,7 @@ export class ThorchainSwapper implements Swapper<ChainId> {
     throw new Error('ThorchainSwapper: buildTrade unimplemented')
   }
 
-  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ChainNamespace>> {
+  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ChainId>> {
     return getThorTradeQuote({ deps: this.deps, input })
   }
 
