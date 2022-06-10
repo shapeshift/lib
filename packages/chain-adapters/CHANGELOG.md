@@ -1,3 +1,48 @@
+# [@shapeshiftoss/chain-adapters-v6.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v6.0.0...@shapeshiftoss/chain-adapters-v6.0.1) (2022-06-10)
+
+
+### Bug Fixes
+
+* **chain-adapters:** correct the ChainAdapterManager type to use ChainId ([#784](https://github.com/shapeshift/lib/issues/784)) ([0e9b3b6](https://github.com/shapeshift/lib/commit/0e9b3b61782d10d0b65bc724bd147865c83ae101))
+
+# [@shapeshiftoss/chain-adapters-v6.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v5.0.1...@shapeshiftoss/chain-adapters-v6.0.0) (2022-06-09)
+
+
+### Features
+
+* **chain-adapters:** replace ChainTypes with ChainId ([#776](https://github.com/shapeshift/lib/issues/776)) ([aa3d44b](https://github.com/shapeshift/lib/commit/aa3d44b34d535fb3b0f174e25612bca03b086597))
+
+
+### BREAKING CHANGES
+
+* **chain-adapters:** Removed ChainAdapterManager
+
+ChainAdapterManager wasn't doing anything a regular Map doesn't do
+
+# [@shapeshiftoss/chain-adapters-v5.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v5.0.0...@shapeshiftoss/chain-adapters-v5.0.1) (2022-06-08)
+
+# [@shapeshiftoss/chain-adapters-v5.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v4.8.1...@shapeshiftoss/chain-adapters-v5.0.0) (2022-06-08)
+
+
+### Features
+
+* update btc/eth to use historical tx history and new ws payloads ([#674](https://github.com/shapeshift/lib/issues/674)) ([0189e3b](https://github.com/shapeshift/lib/commit/0189e3b4dd5a3b998ddf285e761ae11dea72f94b))
+
+
+### BREAKING CHANGES
+
+* unchained-client and chain-adapters
+
+* revert pre release package versions
+
+* revert changes to no breaking packages
+
+* dependencies
+
+* pin package versions
+
+# [@shapeshiftoss/chain-adapters-v4.8.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v4.8.0...@shapeshiftoss/chain-adapters-v4.8.1) (2022-06-08)
+
 # [@shapeshiftoss/chain-adapters-v4.8.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v4.7.0...@shapeshiftoss/chain-adapters-v4.8.0) (2022-06-07)
 
 

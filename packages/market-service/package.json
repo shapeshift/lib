@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/market-service",
-  "version": "4.6.0",
+  "version": "6.0.0",
   "description": "ShapeShift market data service",
   "homepage": "",
   "license": "MIT",
@@ -27,23 +27,27 @@
     "marketcli": "yarn build && node ./dist/marketDataCLI.js"
   },
   "dependencies": {
-    "@ethersproject/providers": "^5.5.1",
+    "@ethersproject/providers": "^5.5.3",
     "@yfi/sdk": "^1.0.30",
-    "axios": "^0.26.0",
+    "axios": "^0.26.1",
     "axios-rate-limit": "^1.3.0",
-    "bignumber.js": "^9.0.1",
+    "bignumber.js": "^9.0.2",
     "dayjs": "^1.10.6",
-    "p-ratelimit": "^1.0.1",
-    "@shapeshiftoss/chain-adapters": "^4.6.0",
-    "@shapeshiftoss/investor-foxy": "^3.3.0"
+    "p-ratelimit": "^1.0.1"
   },
   "peerDependencies": {
-    "@shapeshiftoss/caip": "^5.2.1",
-    "@shapeshiftoss/types": "^4.3.1"
+    "@shapeshiftoss/caip": "^5.3.0",
+    "@shapeshiftoss/chain-adapters": "^6.0.0",
+    "@shapeshiftoss/investor-foxy": "^4.0.0",
+    "@shapeshiftoss/types": "^5.0.0",
+    "@shapeshiftoss/unchained-client": "^9.0.0"
   },
   "devDependencies": {
-    "@shapeshiftoss/caip": "^5.2.1",
-    "@shapeshiftoss/types": "^4.3.1",
+    "@shapeshiftoss/caip": "^5.3.0",
+    "@shapeshiftoss/types": "^5.0.0",
+    "@shapeshiftoss/chain-adapters": "^6.0.0",
+    "@shapeshiftoss/investor-foxy": "^4.0.0",
+    "@shapeshiftoss/unchained-client": "^9.0.0",
     "limiter": "^2.1.0"
   }
 }

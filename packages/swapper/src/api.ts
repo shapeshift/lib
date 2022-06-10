@@ -49,12 +49,13 @@ export type CommonTradeInput = {
   buyAsset: Asset
   sellAmount: string
   sendMax: boolean
-  sellAssetAccountId: string
+  sellAssetAccountNumber: number
+  wallet?: HDWallet
 }
 export type GetTradeQuoteInput = CommonTradeInput
 
 export type BuildTradeInput = CommonTradeInput & {
-  buyAssetAccountId: string
+  buyAssetAccountNumber: number
   slippage?: string
   wallet: HDWallet
 }
@@ -67,7 +68,7 @@ interface TradeBase<C extends SupportedChainIds> {
   sources: Array<SwapSource>
   buyAsset: Asset
   sellAsset: Asset
-  sellAssetAccountId: string
+  sellAssetAccountNumber: number
 }
 
 export interface TradeQuote<C extends SupportedChainIds> extends TradeBase<C> {
@@ -166,7 +167,8 @@ export enum SwapErrorTypes {
   UNSUPPORTED_CHAIN = 'UNSUPPORTED_CHAIN',
   VALIDATION_FAILED = 'VALIDATION_FAILED',
   MAKE_MEMO_FAILED = 'MAKE_MEMO_FAILED',
-  PRICE_RATIO_FAILED = 'PRICE_RATIO_FAILED'
+  PRICE_RATIO_FAILED = 'PRICE_RATIO_FAILED',
+  POOL_NOT_FOUND = 'POOL_NOT_FOUND'
 }
 
 export interface Swapper {

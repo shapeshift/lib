@@ -1,3 +1,39 @@
+# [@shapeshiftoss/market-service-v6.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v5.0.1...@shapeshiftoss/market-service-v6.0.0) (2022-06-09)
+
+
+### Features
+
+* **market-service:** removed usage of ChainAdapterManager ([#780](https://github.com/shapeshift/lib/issues/780)) ([ee30485](https://github.com/shapeshift/lib/commit/ee30485e312f112f98e65e0b0f4d86d45478186e))
+
+
+### BREAKING CHANGES
+
+* **market-service:** Requires updated peerDependencies
+
+# [@shapeshiftoss/market-service-v5.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v5.0.0...@shapeshiftoss/market-service-v5.0.1) (2022-06-08)
+
+# [@shapeshiftoss/market-service-v5.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.6.1...@shapeshiftoss/market-service-v5.0.0) (2022-06-08)
+
+
+### Features
+
+* update btc/eth to use historical tx history and new ws payloads ([#674](https://github.com/shapeshift/lib/issues/674)) ([0189e3b](https://github.com/shapeshift/lib/commit/0189e3b4dd5a3b998ddf285e761ae11dea72f94b))
+
+
+### BREAKING CHANGES
+
+* unchained-client and chain-adapters
+
+* revert pre release package versions
+
+* revert changes to no breaking packages
+
+* dependencies
+
+* pin package versions
+
+# [@shapeshiftoss/market-service-v4.6.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.6.0...@shapeshiftoss/market-service-v4.6.1) (2022-06-08)
+
 # [@shapeshiftoss/market-service-v4.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.5.1...@shapeshiftoss/market-service-v4.6.0) (2022-06-03)
 
 

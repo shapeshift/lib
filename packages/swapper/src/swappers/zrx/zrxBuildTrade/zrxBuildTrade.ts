@@ -5,16 +5,14 @@ import * as rax from 'retry-axios'
 
 import { BuildTradeInput, SwapError, SwapErrorTypes, ZrxTrade } from '../../..'
 import { bnOrZero } from '../../utils/bignumber'
+import { DEFAULT_SLIPPAGE } from '../../utils/constants'
+import { APPROVAL_GAS_LIMIT } from '../../utils/constants'
+import { normalizeAmount } from '../../utils/helpers/helpers'
 import { ZrxQuoteResponse } from '../types'
 import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
-import {
-  AFFILIATE_ADDRESS,
-  APPROVAL_GAS_LIMIT,
-  DEFAULT_SLIPPAGE,
-  DEFAULT_SOURCE
-} from '../utils/constants'
-import { getAllowanceRequired, normalizeAmount } from '../utils/helpers/helpers'
+import { AFFILIATE_ADDRESS, DEFAULT_SOURCE } from '../utils/constants'
+import { getAllowanceRequired } from '../utils/helpers/helpers'
 import { zrxService } from '../utils/zrxService'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 
@@ -27,8 +25,8 @@ export async function zrxBuildTrade(
     buyAsset,
     sellAmount,
     slippage,
-    sellAssetAccountId,
-    buyAssetAccountId,
+    sellAssetAccountNumber,
+    buyAssetAccountNumber,
     wallet
   } = input
   try {
@@ -48,7 +46,7 @@ export async function zrxBuildTrade(
     }
 
     const adapter = await adapterManager.byChainId(buyAsset.chainId)
-    const bip44Params = adapter.buildBIP44Params({ accountNumber: Number(buyAssetAccountId) })
+    const bip44Params = adapter.buildBIP44Params({ accountNumber: buyAssetAccountNumber })
     const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 
     const slippagePercentage = slippage ? bnOrZero(slippage).div(100).toString() : DEFAULT_SLIPPAGE
@@ -99,7 +97,7 @@ export async function zrxBuildTrade(
     const trade: ZrxTrade<'eip155:1'> = {
       sellAsset,
       buyAsset,
-      sellAssetAccountId,
+      sellAssetAccountNumber,
       receiveAddress,
       rate: data.price,
       depositAddress: data.to,

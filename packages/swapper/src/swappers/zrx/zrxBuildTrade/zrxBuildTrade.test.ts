@@ -5,7 +5,7 @@ import Web3 from 'web3'
 
 import { BuildTradeInput } from '../../../api'
 import { bnOrZero } from '../../utils/bignumber'
-import { APPROVAL_GAS_LIMIT } from '../utils/constants'
+import { APPROVAL_GAS_LIMIT } from '../../utils/constants'
 import { setupZrxTradeQuoteResponse } from '../utils/test-data/setupSwapQuote'
 import { zrxService } from '../utils/zrxService'
 import { zrxBuildTrade } from './zrxBuildTrade'
@@ -42,7 +42,8 @@ const setup = () => {
   const unchainedUrls = {
     [ChainTypes.Ethereum]: {
       httpUrl: 'http://localhost:31300',
-      wsUrl: 'ws://localhost:31300'
+      wsUrl: 'ws://localhost:31300',
+      rpcUrl: 'http://localhost:1000'
     }
   }
   const ethNodeUrl = 'http://localhost:1000'
@@ -70,8 +71,8 @@ describe('ZrxBuildTrade', () => {
     sellAsset,
     buyAsset,
     sellAmount: '1000000000000000000',
-    sellAssetAccountId: '0',
-    buyAssetAccountId: '0',
+    sellAssetAccountNumber: 0,
+    buyAssetAccountNumber: 0,
     wallet
   }
 
@@ -81,7 +82,7 @@ describe('ZrxBuildTrade', () => {
     buyAmount: '',
     depositAddress: quoteResponse.to,
     receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
-    sellAssetAccountId: '0',
+    sellAssetAccountNumber: 0,
     txData: quoteResponse.data,
     rate: quoteResponse.price,
     feeData: {

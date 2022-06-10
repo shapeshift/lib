@@ -1,3 +1,55 @@
+# [@shapeshiftoss/swapper-v6.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v6.2.1...@shapeshiftoss/swapper-v6.3.0) (2022-06-09)
+
+
+### Features
+
+* thorswap get trade quote ([#765](https://github.com/shapeshift/lib/issues/765)) ([a643be3](https://github.com/shapeshift/lib/commit/a643be3c74183d0c67100e6f288fc957db0cba45))
+
+# [@shapeshiftoss/swapper-v6.2.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v6.2.0...@shapeshiftoss/swapper-v6.2.1) (2022-06-09)
+
+
+### Bug Fixes
+
+* change asset account number name and type ([#775](https://github.com/shapeshift/lib/issues/775)) ([5b62783](https://github.com/shapeshift/lib/commit/5b62783661e7ade1a5d00de28ca75db82e9e10a8))
+
+# [@shapeshiftoss/swapper-v6.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v6.1.0...@shapeshiftoss/swapper-v6.2.0) (2022-06-08)
+
+
+### Features
+
+* thorchain price calculation ([#763](https://github.com/shapeshift/lib/issues/763)) ([8f42b6d](https://github.com/shapeshift/lib/commit/8f42b6db48dfc92b3ad44687387434c09bbc95f2))
+
+# [@shapeshiftoss/swapper-v6.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v6.0.1...@shapeshiftoss/swapper-v6.1.0) (2022-06-08)
+
+
+### Features
+
+* thorchain eth execute trade support ([#766](https://github.com/shapeshift/lib/issues/766)) ([4455e4d](https://github.com/shapeshift/lib/commit/4455e4d149c3ca56b19cfad1b6b1f5430243bd8e))
+
+# [@shapeshiftoss/swapper-v6.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v6.0.0...@shapeshiftoss/swapper-v6.0.1) (2022-06-08)
+
+# [@shapeshiftoss/swapper-v6.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.12.1...@shapeshiftoss/swapper-v6.0.0) (2022-06-08)
+
+
+### Features
+
+* update btc/eth to use historical tx history and new ws payloads ([#674](https://github.com/shapeshift/lib/issues/674)) ([0189e3b](https://github.com/shapeshift/lib/commit/0189e3b4dd5a3b998ddf285e761ae11dea72f94b))
+
+
+### BREAKING CHANGES
+
+* unchained-client and chain-adapters
+
+* revert pre release package versions
+
+* revert changes to no breaking packages
+
+* dependencies
+
+* pin package versions
+
+# [@shapeshiftoss/swapper-v5.12.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.12.0...@shapeshiftoss/swapper-v5.12.1) (2022-06-08)
+
 # [@shapeshiftoss/swapper-v5.12.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.11.0...@shapeshiftoss/swapper-v5.12.0) (2022-06-07)
 
 

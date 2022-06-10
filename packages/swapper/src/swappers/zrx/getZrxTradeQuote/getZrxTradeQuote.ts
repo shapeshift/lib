@@ -3,15 +3,16 @@ import { AxiosResponse } from 'axios'
 
 import { GetTradeQuoteInput, SwapError, SwapErrorTypes, SwapSource, TradeQuote } from '../../../api'
 import { bn, bnOrZero } from '../../utils/bignumber'
+import { APPROVAL_GAS_LIMIT } from '../../utils/constants'
+import { normalizeAmount } from '../../utils/helpers/helpers'
 import { getZrxMinMax } from '../getZrxMinMax/getZrxMinMax'
 import { ZrxPriceResponse } from '../types'
-import { APPROVAL_GAS_LIMIT, DEFAULT_SOURCE } from '../utils/constants'
-import { normalizeAmount } from '../utils/helpers/helpers'
+import { DEFAULT_SOURCE } from '../utils/constants'
 import { zrxService } from '../utils/zrxService'
 
 export async function getZrxTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<'eip155:1'>> {
   try {
-    const { sellAsset, buyAsset, sellAmount, sellAssetAccountId } = input
+    const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber } = input
     if (buyAsset.chainId !== 'eip155:1' || sellAsset.chainId !== 'eip155:1') {
       throw new SwapError(
         '[getZrxTradeQuote] - Both assets need to be on the Ethereum chain to use Zrx',
@@ -87,7 +88,7 @@ export async function getZrxTradeQuote(input: GetTradeQuoteInput): Promise<Trade
       allowanceContract: data.allowanceTarget,
       buyAsset,
       sellAsset,
-      sellAssetAccountId
+      sellAssetAccountNumber
     }
   } catch (e) {
     if (e instanceof SwapError) throw e

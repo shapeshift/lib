@@ -4,15 +4,19 @@ import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
 import {
   ApprovalNeededOutput,
   BuyAssetBySellIdInput,
+  ExecuteTradeInput,
+  GetTradeQuoteInput,
   SwapError,
   SwapErrorTypes,
   Swapper,
   SwapperType,
+  ThorTrade,
   Trade,
   TradeQuote,
   TradeResult,
   TradeTxs
 } from '../../api'
+import { getThorTradeQuote } from './getThorTradeQuote/getTradeQuote'
 import { PoolResponse, ThorchainSwapperDeps } from './types'
 import { getUsdRate } from './utils/getUsdRate/getUsdRate'
 import { thorService } from './utils/thorService'
@@ -82,12 +86,25 @@ export class ThorchainSwapper implements Swapper {
     throw new Error('ThorchainSwapper: buildTrade unimplemented')
   }
 
-  async getTradeQuote(): Promise<TradeQuote<SupportedChainIds>> {
-    throw new Error('ThorchainSwapper: getTradeQuote unimplemented')
+  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<SupportedChainIds>> {
+    return getThorTradeQuote({ deps: this.deps, input })
   }
 
-  async executeTrade(): Promise<TradeResult> {
-    throw new Error('ThorchainSwapper: executeTrade unimplemented')
+  async executeTrade(args: ExecuteTradeInput<SupportedChainIds>): Promise<TradeResult> {
+    const { trade, wallet } = args
+    const adapter = await this.deps.adapterManager.byChainId(trade.sellAsset.chainId)
+
+    if (trade.sellAsset.chainId === 'eip155:1') {
+      const thorTradeEth = trade as ThorTrade<'eip155:1'>
+      const signedTx = await adapter.signTransaction({ txToSign: thorTradeEth.txData, wallet })
+      const txid = await adapter.broadcastTransaction(signedTx)
+      return { tradeId: txid }
+    } else {
+      throw new SwapError('[executeTrade]: unsupported trade', {
+        code: SwapErrorTypes.SIGN_AND_BROADCAST_FAILED,
+        fn: 'executeTrade'
+      })
+    }
   }
 
   async getTradeTxs(): Promise<TradeTxs> {
