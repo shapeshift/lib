@@ -1,6 +1,6 @@
 import { AssetId } from '@shapeshiftoss/caip'
-import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
+import { ethereum } from '@shapeshiftoss/chain-adapters'
+import { Asset } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import {
@@ -20,15 +20,16 @@ import {
 } from '../../api'
 import { CowApprovalNeeded } from './CowApprovalNeeded/CowApprovalNeeded'
 import { CowApproveInfinite } from './CowApproveInfinite/CowApproveInfinite'
+import { COWSWAP_UNSUPPORTED_ASSETS } from './utils/blacklist'
 import { getUsdRate } from './utils/helpers/helpers'
 
 export type CowSwapperDeps = {
   apiUrl: string
-  adapterManager: ChainAdapterManager
+  adapter: ethereum.ChainAdapter
   web3: Web3
 }
 
-export class CowSwapper implements Swapper {
+export class CowSwapper implements Swapper<'eip155:1'> {
   public static swapperName = 'CowSwapper'
   deps: CowSwapperDeps
 
@@ -43,12 +44,12 @@ export class CowSwapper implements Swapper {
     return SwapperType.CowSwap
   }
 
-  async buildTrade(args: BuildTradeInput): Promise<Trade<SupportedChainIds>> {
+  async buildTrade(args: BuildTradeInput): Promise<Trade<'eip155:1'>> {
     console.info(args)
     throw new Error('CowSwapper: buildTrade unimplemented')
   }
 
-  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<SupportedChainIds>> {
+  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<'eip155:1'>> {
     console.info(input)
     throw new Error('CowSwapper: getTradeQuote unimplemented')
   }
@@ -57,29 +58,39 @@ export class CowSwapper implements Swapper {
     return getUsdRate(this.deps, input)
   }
 
-  async executeTrade(args: ExecuteTradeInput<SupportedChainIds>): Promise<TradeResult> {
+  async executeTrade(args: ExecuteTradeInput<'eip155:1'>): Promise<TradeResult> {
     console.info(args)
     throw new Error('CowSwapper: executeTrade unimplemented')
   }
 
-  async approvalNeeded(
-    args: ApprovalNeededInput<SupportedChainIds>
-  ): Promise<ApprovalNeededOutput> {
+  async approvalNeeded(args: ApprovalNeededInput<'eip155:1'>): Promise<ApprovalNeededOutput> {
     return CowApprovalNeeded(this.deps, args)
   }
 
-  async approveInfinite(args: ApproveInfiniteInput<SupportedChainIds>): Promise<string> {
+  async approveInfinite(args: ApproveInfiniteInput<'eip155:1'>): Promise<string> {
     return CowApproveInfinite(this.deps, args)
   }
 
   filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): AssetId[] {
-    console.info(args)
-    return []
+    const { assetIds = [], sellAssetId } = args
+    if (
+      !sellAssetId?.startsWith('eip155:1/erc20') ||
+      COWSWAP_UNSUPPORTED_ASSETS.includes(sellAssetId)
+    )
+      return []
+
+    return assetIds.filter(
+      (id) =>
+        id !== sellAssetId &&
+        id.startsWith('eip155:1/erc20') &&
+        !COWSWAP_UNSUPPORTED_ASSETS.includes(id)
+    )
   }
 
   filterAssetIdsBySellable(assetIds: AssetId[]): AssetId[] {
-    console.info(assetIds)
-    return []
+    return assetIds.filter(
+      (id) => id.startsWith('eip155:1/erc20') && !COWSWAP_UNSUPPORTED_ASSETS.includes(id)
+    )
   }
 
   async getTradeTxs(): Promise<TradeTxs> {

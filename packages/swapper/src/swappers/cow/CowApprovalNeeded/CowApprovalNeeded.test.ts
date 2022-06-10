@@ -22,23 +22,20 @@ Web3.mockImplementation(() => ({
 }))
 
 describe('CowApprovalNeeded', () => {
-  const { web3Instance: web3, adapterManager } = setupDeps()
-  const args = { web3, adapterManager, apiUrl: '' }
-  const walletAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
-  const wallet = {
-    ethGetAddress: jest.fn(() => Promise.resolve(walletAddress))
-  } as unknown as HDWallet
+  const { web3, adapter } = setupDeps()
+  const args = { web3, adapter, apiUrl: '' }
+  ;(adapter.getAddress as jest.Mock).mockResolvedValue('0xc770eefad204b5180df6a14ee197d99d808ee52d')
   const { tradeQuote } = setupQuote()
 
   it('returns false if sellAsset assetId is ETH / non ERC-20', async () => {
     const input1 = {
       quote: { ...tradeQuote, sellAsset: ETH },
-      wallet
+      wallet: <HDWallet>{}
     }
 
     const input2 = {
       quote: { ...tradeQuote, sellAsset: BTC },
-      wallet
+      wallet: <HDWallet>{}
     }
 
     await expect(CowApprovalNeeded(args, input1)).rejects.toThrow(
@@ -56,7 +53,7 @@ describe('CowApprovalNeeded', () => {
         ...tradeQuote,
         sellAmount: '10'
       },
-      wallet
+      wallet: <HDWallet>{}
     }
     const mockedAllowance = jest.fn(() => ({
       call: jest.fn(() => allowanceOnChain)
@@ -72,7 +69,7 @@ describe('CowApprovalNeeded', () => {
     })
     expect(mockedAllowance).toHaveBeenCalledTimes(1)
     expect(mockedAllowance).toHaveBeenCalledWith(
-      'address',
+      '0xc770eefad204b5180df6a14ee197d99d808ee52d',
       '0xc92e8bdf79f0507f65a392b0ab4667716bfe0110'
     )
   })
@@ -84,7 +81,7 @@ describe('CowApprovalNeeded', () => {
         ...tradeQuote,
         sellAmount: '10'
       },
-      wallet
+      wallet: <HDWallet>{}
     }
 
     const mockedAllowance = jest.fn(() => ({
@@ -101,7 +98,7 @@ describe('CowApprovalNeeded', () => {
     })
     expect(mockedAllowance).toHaveBeenCalledTimes(1)
     expect(mockedAllowance).toHaveBeenCalledWith(
-      'address',
+      '0xc770eefad204b5180df6a14ee197d99d808ee52d',
       '0xc92e8bdf79f0507f65a392b0ab4667716bfe0110'
     )
   })

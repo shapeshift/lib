@@ -1,3 +1,29 @@
+# [@shapeshiftoss/swapper-v7.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.0.0...@shapeshiftoss/swapper-v7.1.0) (2022-06-10)
+
+
+### Features
+
+* cowswap getcowswapminmax and filtering methods implementation ([#757](https://github.com/shapeshift/lib/issues/757)) ([d58e1c1](https://github.com/shapeshift/lib/commit/d58e1c1fd9503811e2f365d1d5d70cd541e8366b))
+
+# [@shapeshiftoss/swapper-v7.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v6.3.0...@shapeshiftoss/swapper-v7.0.0) (2022-06-10)
+
+
+### Features
+
+* **swapper:** remove usage of "ChainTypes" ([#782](https://github.com/shapeshift/lib/issues/782)) ([9a548c9](https://github.com/shapeshift/lib/commit/9a548c981139fc551838763c2e1c59dfde853698))
+
+
+### BREAKING CHANGES
+
+* **swapper:** replace usage of ChainTypes with ChainId
+
+# [@shapeshiftoss/swapper-v6.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v6.2.1...@shapeshiftoss/swapper-v6.3.0) (2022-06-09)
+
+
+### Features
+
+* thorswap get trade quote ([#765](https://github.com/shapeshift/lib/issues/765)) ([a643be3](https://github.com/shapeshift/lib/commit/a643be3c74183d0c67100e6f288fc957db0cba45))
+
 # [@shapeshiftoss/swapper-v6.2.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v6.2.0...@shapeshiftoss/swapper-v6.2.1) (2022-06-09)
 
 

@@ -1,7 +1,7 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
-import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
+import { Asset } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { AbiItem, numberToHex } from 'web3-utils'
@@ -27,9 +27,9 @@ export type GetERC20AllowanceArgs = {
 }
 
 type GrantAllowanceArgs = {
-  quote: TradeQuote<SupportedChainIds>
+  quote: TradeQuote<'eip155:1'>
   wallet: HDWallet
-  adapterManager: ChainAdapterManager
+  adapter: ethereum.ChainAdapter
   erc20Abi: AbiItem[]
   web3: Web3
 }
@@ -91,14 +91,13 @@ export const getAllowanceRequired = async ({
 export const grantAllowance = async ({
   quote,
   wallet,
-  adapterManager,
+  adapter,
   erc20Abi,
   web3
 }: GrantAllowanceArgs): Promise<string> => {
   try {
     const { assetReference: sellAssetErc20Address } = fromAssetId(quote.sellAsset.assetId)
 
-    const adapter = await adapterManager.byChainId('eip155:1')
     const erc20Contract = new web3.eth.Contract(erc20Abi, sellAssetErc20Address)
     const approveTx = erc20Contract.methods
       .approve(quote.allowanceContract, quote.sellAmount)

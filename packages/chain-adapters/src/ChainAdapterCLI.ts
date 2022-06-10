@@ -17,8 +17,8 @@ const btcChainAdapter = new BitcoinChainAdapter({
       'wss://dev-api.bitcoin.shapeshift.com'
     ),
     http: new unchained.bitcoin.V1Api(
-      new unchained.ethereum.Configuration({
-        basePath: 'https://dev-api.ethereum.shapeshift.com'
+      new unchained.bitcoin.Configuration({
+        basePath: 'https://dev-api.bitcoin.shapeshift.com'
       })
     )
   },
@@ -117,7 +117,7 @@ const testBitcoin = async (wallet: NativeHDWallet, broadcast = false) => {
       value: '400',
       wallet,
       bip44Params,
-      chainSpecific: { accountType: UtxoAccountType.P2pkh, satoshiPerByte: '4' }
+      chainSpecific: { accountType: UtxoAccountType.SegwitNative, satoshiPerByte: '4' }
     })
 
     const signedTx = await chainAdapter.signTransaction({ wallet, txToSign: unsignedTx.txToSign })
