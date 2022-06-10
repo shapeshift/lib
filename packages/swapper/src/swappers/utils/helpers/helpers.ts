@@ -8,3 +8,10 @@ import { BN, bnOrZero } from '../bignumber'
 export const normalizeAmount = (amount: string | number | BN): string => {
   return bnOrZero(amount).toNumber().toLocaleString('fullwide', { useGrouping: false })
 }
+
+export const normalizeIntegerAmount = (amount: string | number | BN): string => {
+  return bnOrZero(amount)
+    .integerValue()
+    .toNumber()
+    .toLocaleString('fullwide', { useGrouping: false })
+}

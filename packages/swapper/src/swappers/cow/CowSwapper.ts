@@ -16,6 +16,7 @@ import {
   TradeResult,
   TradeTxs
 } from '../../api'
+import { getCowSwapTradeQuote } from './getCowSwapTradeQuote/getCowSwapTradeQuote'
 import { COWSWAP_UNSUPPORTED_ASSETS } from './utils/blacklist'
 import { getUsdRate } from './utils/helpers/helpers'
 
@@ -44,8 +45,7 @@ export class CowSwapper implements Swapper {
   }
 
   async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<SupportedChainIds>> {
-    console.info(input)
-    throw new Error('CowSwapper: getTradeQuote unimplemented')
+    return getCowSwapTradeQuote(this.deps, input)
   }
 
   async getUsdRate(input: Asset): Promise<string> {

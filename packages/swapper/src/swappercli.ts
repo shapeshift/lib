@@ -9,6 +9,7 @@ import Web3 from 'web3'
 
 import { SwapperType } from './api'
 import { SwapperManager } from './manager/SwapperManager'
+import { CowSwapper } from './swappers/cow/CowSwapper'
 import { ThorchainSwapper } from './swappers/thorchain/ThorchainSwapper'
 import { ZrxSwapper } from './swappers/zrx/ZrxSwapper'
 dotenv.config()
@@ -79,9 +80,11 @@ const main = async (): Promise<void> => {
   const unchainedUrls = {
     [ChainTypes.Ethereum]: {
       httpUrl: UNCHAINED_HTTP_API,
-      wsUrl: UNCHAINED_WS_API
+      wsUrl: UNCHAINED_WS_API,
+      rpcUrl: ETH_NODE_URL
     }
   }
+
   const adapterManager = new ChainAdapterManager(unchainedUrls)
   const web3Provider = new Web3.providers.HttpProvider(ETH_NODE_URL)
   const web3 = new Web3(web3Provider)
@@ -92,12 +95,20 @@ const main = async (): Promise<void> => {
     adapterManager
   }
 
+  const cowSwapperDeps = {
+    apiUrl: 'https://api.cow.fi/mainnet/api/',
+    web3,
+    adapterManager
+  }
+
+  const cowSwapper = new CowSwapper(cowSwapperDeps)
   const manager = new SwapperManager()
   const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
   const thorchainSwapper = new ThorchainSwapper(thorchainSwapperDeps)
   await thorchainSwapper.initialize()
   manager.addSwapper(SwapperType.Zrx, zrxSwapper)
   manager.addSwapper(SwapperType.Thorchain, thorchainSwapper)
+  manager.addSwapper(SwapperType.CowSwap, cowSwapper)
   const swapper = await manager.getBestSwapper({
     sellAssetId: 'eip155:1/slip44:60',
     buyAssetId: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'

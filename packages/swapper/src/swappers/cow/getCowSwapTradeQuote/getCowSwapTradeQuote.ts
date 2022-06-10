@@ -3,12 +3,12 @@ import { AxiosResponse } from 'axios'
 
 import { GetTradeQuoteInput, SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
 import { bn, bnOrZero } from '../../utils/bignumber'
-import { APPROVAL_GAS_LIMIT, DEFAULT_SOURCE } from '../../zrx/utils/constants'
-// TODO change normalizeAmount import when merged / conflicts
-import { normalizeAmount } from '../../zrx/utils/helpers/helpers'
+import { APPROVAL_GAS_LIMIT } from '../../utils/constants'
+import { normalizeIntegerAmount } from '../../utils/helpers/helpers'
 import { CowSwapperDeps } from '../CowSwapper'
 import { getCowSwapMinMax } from '../getCowSwapMinMax/getCowSwapMinMax'
 import { CowSwapQuoteResponse } from '../types'
+import { DEFAULT_ADDRESS, DEFAULT_APP_DATA, DEFAULT_SOURCE } from '../utils/constants'
 import { cowService } from '../utils/cowService'
 import { getUsdRate } from '../utils/helpers/helpers'
 
@@ -17,7 +17,7 @@ export async function getCowSwapTradeQuote(
   input: GetTradeQuoteInput
 ): Promise<TradeQuote<'eip155:1'>> {
   try {
-    const { sellAsset, buyAsset, sellAmount, sellAssetAccountId } = input
+    const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber } = input
 
     const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
       fromAssetId(sellAsset.assetId)
@@ -32,12 +32,12 @@ export async function getCowSwapTradeQuote(
       })
     }
 
-    const useSellAmount = !!sellAmount
     const { minimum, maximum } = await getCowSwapMinMax(deps, sellAsset, buyAsset)
 
     const minQuoteSellAmount = bnOrZero(minimum).times(bn(10).exponentiatedBy(sellAsset.precision))
 
-    const normalizedSellAmount = normalizeAmount(
+    // making sure we do not have decimals for cowswap api (can happen at least from minQuoteSellAmount)
+    const normalizedSellAmount = normalizeIntegerAmount(
       bnOrZero(sellAmount).eq(0) ? minQuoteSellAmount : sellAmount
     )
 
@@ -48,7 +48,7 @@ export async function getCowSwapTradeQuote(
      * buyToken: contractAddress of token to buy
      * receiver: receiver address can be defaulted to "0x0000000000000000000000000000000000000000"
      * validTo: time duration during which quote is valid (eg : 1654851610 as timestamp)
-     * appData: appData for the CowSwap quote that can be used later
+     * appData: appData for the CowSwap quote that can be used later, can be defaulted to "0x0000000000000000000000000000000000000000000000000000000000000000"
      * partiallyFillable: false
      * from: sender address can be defaulted to "0x0000000000000000000000000000000000000000"
      * kind: "sell" or "buy"
@@ -61,11 +61,11 @@ export async function getCowSwapTradeQuote(
       await cowService.post<CowSwapQuoteResponse>(`${deps.apiUrl}/v1/quote/`, {
         sellToken: sellAssetErc20Address,
         buyToken: buyAssetErc20Address,
-        receiver: '0x0000000000000000000000000000000000000000',
-        validTo: '4294967295', // TODO,
-        appData: '0x0000000000000000000000000000000000000000',
+        receiver: DEFAULT_ADDRESS,
+        validTo: 4294967295, // TODO,
+        appData: DEFAULT_APP_DATA,
         partiallyFillable: false,
-        from: '0x0000000000000000000000000000000000000000',
+        from: DEFAULT_ADDRESS,
         kind: 'sell',
         sellAmountBeforeFee: normalizedSellAmount
       })
@@ -74,8 +74,10 @@ export async function getCowSwapTradeQuote(
     const quote = data.quote
 
     //const estimatedGas = bnOrZero(data.estimatedGas).times(1.5)
-    //const rate = quote.sellAmount
-    const rate = useSellAmount ? quote.sellAmount : bn(1).div(quote.sellAmount).toString()
+    const rate = bn(quote.buyAmount)
+      .div(quote.sellAmount)
+      .times(bn(10).exponentiatedBy(sellAsset.precision - buyAsset.precision))
+      .toString()
     const gasPrice = '50000' // TODO
 
     const usdRateSellAsset = await getUsdRate(deps, sellAsset)
@@ -90,23 +92,20 @@ export async function getCowSwapTradeQuote(
       maximum,
       feeData: {
         fee: feeUsd,
-        //fee: bnOrZero(estimatedGas).multipliedBy(bnOrZero(gasPrice)).toString(),
         chainSpecific: {
           estimatedGas: '0',
           gasPrice,
-          approvalFee:
-            sellAssetErc20Address &&
-            bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(bnOrZero(gasPrice)).toString()
+          approvalFee: bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(bnOrZero(gasPrice)).toString()
         },
         tradeFee: '0'
       },
       sellAmount: quote.sellAmount,
       buyAmount: quote.buyAmount,
       sources: DEFAULT_SOURCE,
-      allowanceContract: '', //data.allowanceTarget,
+      allowanceContract: '',
       buyAsset,
       sellAsset,
-      sellAssetAccountId
+      sellAssetAccountNumber
     }
   } catch (e) {
     if (e instanceof SwapError) throw e
