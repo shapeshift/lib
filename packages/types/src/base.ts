@@ -8,13 +8,6 @@ export type BIP44Params = {
   index?: number
 }
 
-export enum ChainTypes {
-  Ethereum = 'ethereum',
-  Bitcoin = 'bitcoin',
-  Cosmos = 'cosmos',
-  Osmosis = 'osmosis'
-}
-
 export enum KnownChainIds {
   EthereumMainnet = 'eip155:1',
   BitcoinMainnet = 'bip122:000000000019d6689c085ae165831e93',
