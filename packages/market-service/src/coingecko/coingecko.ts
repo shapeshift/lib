@@ -1,6 +1,5 @@
 import { adapters, CHAIN_NAMESPACE, fromAssetId } from '@shapeshiftoss/caip'
 import {
-  ChainTypes,
   FindAllMarketArgs,
   HistoryData,
   HistoryTimeframe,
@@ -21,9 +20,16 @@ import { CoinGeckoMarketCap } from './coingecko-types'
 
 const axios = rateLimitedAxios(RATE_LIMIT_THRESHOLDS_PER_MINUTE.COINGECKO)
 
+// See https://www.coingecko.com/en/api/documentation - asset_platforms
+enum AssetPlatforms {
+  Ethereum = 'ethereum',
+  Cosmos = 'cosmos',
+  Osmosis = 'osmosis'
+}
+
 // tons more params here: https://www.coingecko.com/en/api/documentation
 type CoinGeckoAssetData = {
-  chain: ChainTypes
+  chain: AssetPlatforms
   market_data: {
     current_price: { [key: string]: string }
     market_cap: { [key: string]: string }
