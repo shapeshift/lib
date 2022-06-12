@@ -15,17 +15,6 @@ export enum KnownChainIds {
   OsmosisMainnet = 'cosmos:osmosis-1'
 }
 
-export enum NetworkTypes {
-  MAINNET = 'MAINNET',
-  TESTNET = 'TESTNET', // BTC, LTC, etc...
-  ETH_ROPSTEN = 'ETH_ROPSTEN',
-  ETH_RINKEBY = 'ETH_RINKEBY',
-  COSMOSHUB_MAINNET = 'COSMOSHUB_MAINNET',
-  COSMOSHUB_VEGA = 'COSMOSHUB_VEGA',
-  OSMOSIS_MAINNET = 'OSMOSIS_MAINNET',
-  OSMOSIS_TESTNET = 'OSMOSIS_TESTNET'
-}
-
 export enum WithdrawType {
   DELAYED,
   INSTANT
@@ -50,8 +39,6 @@ export type Asset = {
   chainId: string
   description?: string
   isTrustedDescription?: boolean
-  /** @deprecated: do not use. This will be removed once consumers have handled it */
-  network?: NetworkTypes
   symbol: string
   name: string
   precision: number
