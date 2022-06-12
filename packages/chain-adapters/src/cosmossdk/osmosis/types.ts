@@ -1,4 +1,4 @@
-import { cosmos } from '.'
+import { cosmos } from '../../types'
 
 export type Account = cosmos.Account
 
