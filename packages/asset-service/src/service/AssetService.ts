@@ -4,6 +4,7 @@ import { ASSET_REFERENCE } from '@shapeshiftoss/caip/src/constants'
 import { Asset } from '@shapeshiftoss/types'
 import axios from 'axios'
 
+import { chainIdToCoingeckoAssetPlatform } from '../utils'
 import assetsDescriptions from './descriptions.json'
 import { getRenderedIdenticonBase64, IdenticonOptions } from './GenerateAssetIcon'
 import localAssetData from './generatedAssetData.json'
@@ -41,8 +42,7 @@ export class AssetService {
           en: string
         }
       }
-      // TODO(0xdef1cafe): this is dumb luck, add a coingecko specific map here
-      const chain = this.assets[assetId].chain
+      const chain = chainIdToCoingeckoAssetPlatform(this.assets[assetId].chainId)
       const assetReference = fromAssetId(assetId).assetReference.toLowerCase()
       const maybeContractAddress = !Object.values(ASSET_REFERENCE).includes(
         assetReference as AssetReference
