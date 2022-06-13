@@ -96,8 +96,6 @@ describe('utxoSelect', () => {
   it('should return correct inputs and outputs and fee for a sendmax tx with opReturnData', () => {
     const result = utxoSelect({ ...utxoSelectInputOpReturn, sendMax: true })
 
-    console.log('result is', JSON.stringify(result, null, 2))
-
     const expectedResult = {
       inputs: [
         {
