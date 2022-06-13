@@ -9,8 +9,6 @@ import {
 } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
-import coinSelect from 'coinselect'
-import split from 'coinselect/split'
 
 import { ChainAdapter as IChainAdapter } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
@@ -36,8 +34,8 @@ import {
   toPath,
   toRootDerivationPath
 } from '../utils'
-import { bn } from '../utils/bignumber'
 import { ChainAdapterArgs, UTXOBaseAdapter } from '../utxo/UTXOBaseAdapter'
+import { utxoSelect } from './utxoSelect'
 
 export class ChainAdapter
   extends UTXOBaseAdapter<KnownChainIds.BitcoinMainnet>
@@ -181,18 +179,6 @@ export class ChainAdapter
         sendMax = false
       } = tx
 
-      // coinselect doesnt work with op_return outputs
-      // This hack adjusts the fee up proportionally to the op_return length
-      // op_return is ultimately added to the transaction upon signing but not here
-      // Imperfect because the assumption of 300 bytes for a standard tx could vary with different inputs/outputs
-      // Another solution would be to write our own coinselect algorithm
-      const standardTxBytes = 300
-      const opReturnTxBytes = standardTxBytes + (opReturnData?.length ?? 0)
-      const adjustedSatsPerByte = bn(satoshiPerByte)
-        .times(bn(opReturnTxBytes).div(standardTxBytes))
-        .dp(0)
-        .toString()
-
       if (!value || !to) {
         throw new Error('BitcoinChainAdapter: (to and value) are required')
       }
@@ -210,19 +196,14 @@ export class ChainAdapter
 
       const account = await this.getAccount(pubkey.xpub)
 
-      type MappedUtxos = Omit<unchained.bitcoin.Utxo, 'value'> & { value: number }
-      const mappedUtxos: MappedUtxos[] = utxos.map((x) => ({ ...x, value: Number(x.value) }))
-
-      let coinSelectResult
-      if (sendMax) {
-        coinSelectResult = split(mappedUtxos, [{ address: to }], Number(adjustedSatsPerByte))
-      } else {
-        coinSelectResult = coinSelect<MappedUtxos, bitcoin.Recipient>(
-          mappedUtxos,
-          [{ value: Number(value), address: to }],
-          Number(adjustedSatsPerByte)
-        )
-      }
+      const coinSelectResult = utxoSelect({
+        utxos,
+        to,
+        satoshiPerByte,
+        sendMax,
+        value,
+        opReturnData
+      })
       if (!coinSelectResult || !coinSelectResult.inputs || !coinSelectResult.outputs) {
         throw new Error("BitcoinChainAdapter: coinSelect didn't select coins")
       }
@@ -307,7 +288,8 @@ export class ChainAdapter
     to,
     value,
     chainSpecific: { pubkey },
-    sendMax = false
+    sendMax = false,
+    opReturnData
   }: GetFeeDataInput<KnownChainIds.BitcoinMainnet>): Promise<
     FeeDataEstimate<KnownChainIds.BitcoinMainnet>
   > {
@@ -330,42 +312,27 @@ export class ChainAdapter
       pubkey
     })
 
-    type MappedUtxos = Omit<unchained.bitcoin.Utxo, 'value'> & { value: number }
-    const mappedUtxos: MappedUtxos[] = utxos.map((x) => ({ ...x, value: Number(x.value) }))
-
-    let fastFee
-    let averageFee
-    let slowFee
-    if (sendMax) {
-      fastFee = 0
-      averageFee = 0
-      slowFee = 0
-      const sendMaxResultFast = split(mappedUtxos, [{ address: to }], Number(fastPerByte))
-      const sendMaxResultAverage = split(mappedUtxos, [{ address: to }], Number(averagePerByte))
-      const sendMaxResultSlow = split(mappedUtxos, [{ address: to }], Number(slowPerByte))
-      fastFee = sendMaxResultFast.fee
-      averageFee = sendMaxResultAverage.fee
-      slowFee = sendMaxResultSlow.fee
-    } else {
-      const { fee: fast } = coinSelect<MappedUtxos, bitcoin.Recipient>(
-        mappedUtxos,
-        [{ value: Number(value), address: to }],
-        Number(fastPerByte)
-      )
-      const { fee: average } = coinSelect<MappedUtxos, bitcoin.Recipient>(
-        mappedUtxos,
-        [{ value: Number(value), address: to }],
-        Number(averagePerByte)
-      )
-      const { fee: slow } = coinSelect<MappedUtxos, bitcoin.Recipient>(
-        mappedUtxos,
-        [{ value: Number(value), address: to }],
-        Number(slowPerByte)
-      )
-      fastFee = fast
-      averageFee = average
-      slowFee = slow
+    const utxoSelectInput = {
+      to,
+      value,
+      opReturnData,
+      utxos,
+      satoshiPerByte: fastPerByte,
+      sendMax
     }
+
+    const { fee: fastFee } = utxoSelect({
+      ...utxoSelectInput,
+      satoshiPerByte: fastPerByte
+    })
+    const { fee: averageFee } = utxoSelect({
+      ...utxoSelectInput,
+      satoshiPerByte: fastPerByte
+    })
+    const { fee: slowFee } = utxoSelect({
+      ...utxoSelectInput,
+      satoshiPerByte: slowPerByte
+    })
 
     return {
       [FeeDataKey.Fast]: {
