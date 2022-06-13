@@ -27,6 +27,7 @@ export type TransactionSpecific = {
 export type Recipient = {
   value: number
   address?: string
+  script?: Uint8Array
 }
 
 export type ScriptSig = {

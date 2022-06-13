@@ -23,7 +23,6 @@ const standardTx = ({
   if (sendMax) {
     return split(mappedUtxos, [{ address: to }], Number(satoshiPerByte))
   } else {
-    console.log('doing standard tx')
     return coinSelect<MappedUtxos, bitcoin.Recipient>(
       mappedUtxos,
       [{ value: Number(value), address: to }],
@@ -49,20 +48,27 @@ const opReturnTx = ({
 }) => {
   const mappedUtxos: MappedUtxos[] = utxos.map((x) => ({ ...x, value: Number(x.value) }))
 
+  // value set to 1 sat because of bug in coinselect
+  // where split doesnt work with 0 values for script
   const opReturnOutput = {
-    value: 0,
+    value: 1,
     script: new TextEncoder().encode(opReturnData)
   }
 
-  // TODO strip off the op_return output before returning
   if (sendMax) {
-    return split(mappedUtxos, [{ address: to }, opReturnOutput], Number(satoshiPerByte))
+    const result = split(mappedUtxos, [{ address: to }, opReturnOutput], Number(satoshiPerByte))
+    if (!result.outputs) throw new Error('no outputs')
+    const filteredOutputs = result.outputs.filter((output) => !output.script)
+    return { ...result, outputs: filteredOutputs }
   } else {
-    return coinSelect<MappedUtxos, bitcoin.Recipient>(
+    const result = coinSelect<MappedUtxos, bitcoin.Recipient>(
       mappedUtxos,
       [{ value: Number(value), address: to }, opReturnOutput],
       Number(satoshiPerByte)
     )
+    if (!result.outputs) throw new Error('no outputs')
+    const filteredOutputs = result.outputs.filter((output) => !output.script)
+    return { ...result, outputs: filteredOutputs }
   }
 }
 
