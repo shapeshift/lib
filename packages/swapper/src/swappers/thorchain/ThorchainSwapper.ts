@@ -21,6 +21,7 @@ import {
 import { getThorTradeQuote } from './getThorTradeQuote/getTradeQuote'
 import { PoolResponse, ThorchainSwapperDeps } from './types'
 import { getUsdRate } from './utils/getUsdRate/getUsdRate'
+import { thorTradeApprovalNeeded } from './thorTradeApprovalNeeded/thorTradeApprovalNeeded'
 import { thorService } from './utils/thorService'
 
 export class ThorchainSwapper implements Swapper<ChainId> {
@@ -65,8 +66,8 @@ export class ThorchainSwapper implements Swapper<ChainId> {
     return getUsdRate({ deps: this.deps, input })
   }
 
-  async approvalNeeded(): Promise<ApprovalNeededOutput> {
-    throw new Error('ThorchainSwapper: approvalNeeded unimplemented')
+  async approvalNeeded(input: ApprovalNeededInput): Promise<ApprovalNeededOutput> {
+    return thorTradeApprovalNeeded()
   }
 
   async approveInfinite(): Promise<string> {
