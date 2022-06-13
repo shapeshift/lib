@@ -13,8 +13,6 @@ import * as cosmos from './cosmossdk/cosmos'
 import * as osmosis from './cosmossdk/osmosis'
 import * as ethereum from './ethereum'
 
-export { bitcoin, cosmos, ethereum }
-
 type ChainSpecificAccount<T> = ChainSpecific<
   T,
   {
