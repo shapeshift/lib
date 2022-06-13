@@ -5,6 +5,7 @@ import type { Asset } from '@shapeshiftoss/types'
 
 import {
   ApprovalNeededOutput,
+  ApprovalNeededInput,
   BuyAssetBySellIdInput,
   ExecuteTradeInput,
   GetTradeQuoteInput,
@@ -66,8 +67,8 @@ export class ThorchainSwapper implements Swapper<ChainId> {
     return getUsdRate({ deps: this.deps, input })
   }
 
-  async approvalNeeded(input: ApprovalNeededInput): Promise<ApprovalNeededOutput> {
-    return thorTradeApprovalNeeded()
+  async approvalNeeded(input: ApprovalNeededInput<'eip155:1'>): Promise<ApprovalNeededOutput> {
+    return thorTradeApprovalNeeded({ deps: this.deps, input })
   }
 
   async approveInfinite(): Promise<string> {
