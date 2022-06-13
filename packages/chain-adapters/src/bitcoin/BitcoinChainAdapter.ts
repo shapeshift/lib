@@ -327,7 +327,7 @@ export class ChainAdapter
     })
     const { fee: averageFee } = utxoSelect({
       ...utxoSelectInput,
-      satoshiPerByte: fastPerByte
+      satoshiPerByte: averagePerByte
     })
     const { fee: slowFee } = utxoSelect({
       ...utxoSelectInput,
