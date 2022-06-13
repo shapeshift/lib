@@ -1,9 +1,12 @@
-import { ApprovalNeededOutput, ApprovalNeededInput } from '../../../api'
-import { ThorchainSwapperDeps } from '../types'
-import { fromAssetId, getFeeAssetIdFromAssetId } from '@shapeshiftoss/caip'
+import { fromAssetId, fromChainId, getFeeAssetIdFromAssetId } from '@shapeshiftoss/caip'
+import Web3 from 'web3'
+
+import { ApprovalNeededInput, ApprovalNeededOutput } from '../../../api'
 import { SwapError, SwapErrorTypes } from '../../../api'
-import { getERC20Allowance } from '../../utils/helpers/helpers'
+import { erc20AllowanceAbi } from '../../utils/abi/erc20Allowance-abi'
 import { bnOrZero } from '../../utils/bignumber'
+import { getERC20Allowance } from '../../utils/helpers/helpers'
+import { ThorchainSwapperDeps } from '../types'
 
 export const thorTradeApprovalNeeded = async ({
   deps,
@@ -12,19 +15,23 @@ export const thorTradeApprovalNeeded = async ({
   deps: ThorchainSwapperDeps
   input: ApprovalNeededInput<'eip155:1'>
 }): Promise<ApprovalNeededOutput> => {
-  const { quote } = input
+  const { quote, wallet } = input
   const { sellAsset } = quote
-  const { adapter, wallet } = deps
+  const { adapterManager } = deps
+  const web3 = new Web3()
 
   const { assetReference: sellAssetErc20Address } = fromAssetId(sellAsset.assetId)
+  const { chainNamespace } = fromChainId(sellAsset.chainId)
 
   try {
-    // TODO: fix this to be expandable for multiple ETH networks
-    if (sellAsset.chainId !== 'eip155:1') {
-      throw new SwapError('[thorTradeApprovalNeeded] - sellAsset chainId is not supported', {
-        code: SwapErrorTypes.UNSUPPORTED_CHAIN,
-        details: { chainId: sellAsset.chainId }
-      })
+    if (chainNamespace !== 'eip155') {
+      throw new SwapError(
+        '[thorTradeApprovalNeeded] - sellAsset chain namespace is not supported',
+        {
+          code: SwapErrorTypes.UNSUPPORTED_CHAIN,
+          details: { chainNamespace }
+        }
+      )
     }
 
     // No approval needed for selling a fee asset
@@ -33,6 +40,17 @@ export const thorTradeApprovalNeeded = async ({
     }
 
     const accountNumber = quote.sellAssetAccountNumber
+
+    const adapter = adapterManager.get(sellAsset.chainId)
+
+    if (!adapter)
+      throw new SwapError(
+        `[thorTradeApprovalNeeded] - no chain adapter found for chain Id: ${sellAsset.chainId}`,
+        {
+          code: SwapErrorTypes.UNSUPPORTED_CHAIN,
+          details: { chainId: sellAsset.chainId }
+        }
+      )
 
     const bip44Params = adapter.buildBIP44Params({ accountNumber })
     const receiveAddress = await adapter.getAddress({ wallet, bip44Params })

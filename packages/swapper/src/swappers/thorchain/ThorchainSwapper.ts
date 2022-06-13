@@ -4,8 +4,8 @@ import type { ETHSignTx } from '@shapeshiftoss/hdwallet-core'
 import type { Asset } from '@shapeshiftoss/types'
 
 import {
-  ApprovalNeededOutput,
   ApprovalNeededInput,
+  ApprovalNeededOutput,
   BuyAssetBySellIdInput,
   ExecuteTradeInput,
   GetTradeQuoteInput,
@@ -20,9 +20,9 @@ import {
   TradeTxs
 } from '../../api'
 import { getThorTradeQuote } from './getThorTradeQuote/getTradeQuote'
+import { thorTradeApprovalNeeded } from './thorTradeApprovalNeeded/thorTradeApprovalNeeded'
 import { PoolResponse, ThorchainSwapperDeps } from './types'
 import { getUsdRate } from './utils/getUsdRate/getUsdRate'
-import { thorTradeApprovalNeeded } from './thorTradeApprovalNeeded/thorTradeApprovalNeeded'
 import { thorService } from './utils/thorService'
 
 export class ThorchainSwapper implements Swapper<ChainId> {
