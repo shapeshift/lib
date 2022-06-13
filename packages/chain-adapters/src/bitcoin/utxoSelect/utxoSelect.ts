@@ -2,75 +2,12 @@ import * as unchained from '@shapeshiftoss/unchained-client'
 import coinSelect from 'coinselect'
 import split from 'coinselect/split'
 
-const standardTx = ({
-  utxos,
-  value,
-  to,
-  satoshiPerByte,
-  sendMax
-}: {
-  utxos: unchained.bitcoin.Utxo[]
-  to: string
-  value: string
-  satoshiPerByte: string
-  sendMax: boolean
-}) => {
-  const mappedUtxos = utxos.map((x) => ({ ...x, value: Number(x.value) }))
-  if (sendMax) {
-    return split(mappedUtxos, [{ address: to }], Number(satoshiPerByte))
-  } else {
-    return coinSelect(mappedUtxos, [{ value: Number(value), address: to }], Number(satoshiPerByte))
-  }
-}
-
-const opReturnTx = ({
-  utxos,
-  value,
-  to,
-  satoshiPerByte,
-  opReturnData,
-  sendMax
-}: {
-  utxos: unchained.bitcoin.Utxo[]
-  to: string
-  value: string
-  satoshiPerByte: string
-  opReturnData?: string
-  sendMax: boolean
-}) => {
-  const mappedUtxos = utxos.map((x) => ({ ...x, value: Number(x.value) }))
-
-  // value set to 1 sat because of bug in coinselect
-  // where split doesnt work with 0 values for script
-  const opReturnOutput = {
-    value: 1,
-    script: new TextEncoder().encode(opReturnData)
-  }
-
-  if (sendMax) {
-    const result = split(mappedUtxos, [{ address: to }, opReturnOutput], Number(satoshiPerByte))
-    const filteredOutputs = result.outputs?.filter((output) => !output.script)
-    return { ...result, outputs: filteredOutputs }
-  } else {
-    const result = coinSelect(
-      mappedUtxos,
-      [{ value: Number(value), address: to }, opReturnOutput],
-      Number(satoshiPerByte)
-    )
-    const filteredOutputs = result.outputs?.filter((output) => !output.script)
-    return { ...result, outputs: filteredOutputs }
-  }
-}
-
 /**
- * Returns necessary utxo inputs & outputs for a desired tx at a given fee
- * Handles standard "send" txs and "send" txs that will have an additional OP_RETURN output
+ * Returns necessary utxo inputs & outputs for a desired tx at a given fee with OP_RETURN data considered if provided
  *
- * NOTE: opReturnData is never attached as an "output" here
- * opReturnData is ultimately attached during signing
- * its used here to determine the correct fee for the tx with the assumption that it will be added upon signing
+ * _opReturnData is filtered out of the return payload as it is added during transaction signing_
  */
-export const utxoSelect = (input: {
+ export const utxoSelect = (input: {
   utxos: unchained.bitcoin.Utxo[]
   to: string
   value: string
@@ -78,6 +15,20 @@ export const utxoSelect = (input: {
   opReturnData?: string
   sendMax: boolean
 }) => {
-  if (input.opReturnData) return opReturnTx(input)
-  else return standardTx(input)
+  const mappedUtxos = input.utxos.map((x) => ({ ...x, value: Number(x.value) }))
+  const script = new TextEncoder().encode(input.opReturnData)
+
+  const extraOutput = input.opReturnData ? [{ value: 1, script }] : []
+
+  const result = (() => {
+    if (input.sendMax) {
+      const outputs = [{ address: input.to }, ...extraOutput]
+      return split(mappedUtxos, outputs, Number(input.satoshiPerByte))
+    }
+
+    const outputs = [{ value: Number(input.value), address: input.to }, ...extraOutput]
+    return coinSelect(mappedUtxos, outputs, Number(input.satoshiPerByte))
+  })()
+
+  return { ...result, outputs: result.outputs?.filter((o) => !o.script) }
 }

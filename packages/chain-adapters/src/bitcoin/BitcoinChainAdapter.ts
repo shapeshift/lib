@@ -35,7 +35,7 @@ import {
   toRootDerivationPath
 } from '../utils'
 import { ChainAdapterArgs, UTXOBaseAdapter } from '../utxo/UTXOBaseAdapter'
-import { utxoSelect } from './utxoSelect/utxoSelect'
+import { utxoSelect } from './utxoSelect'
 
 export class ChainAdapter
   extends UTXOBaseAdapter<KnownChainIds.BitcoinMainnet>
