@@ -35,7 +35,7 @@ import {
   toRootDerivationPath
 } from '../utils'
 import { ChainAdapterArgs, UTXOBaseAdapter } from '../utxo/UTXOBaseAdapter'
-import { utxoSelect } from './utxoSelect'
+import { utxoSelect } from './utxoSelect/utxoSelect'
 
 export class ChainAdapter
   extends UTXOBaseAdapter<KnownChainIds.BitcoinMainnet>
@@ -204,6 +204,7 @@ export class ChainAdapter
         value,
         opReturnData
       })
+
       if (!coinSelectResult || !coinSelectResult.inputs || !coinSelectResult.outputs) {
         throw new Error("BitcoinChainAdapter: coinSelect didn't select coins")
       }
