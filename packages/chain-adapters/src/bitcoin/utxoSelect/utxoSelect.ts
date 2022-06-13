@@ -2,10 +2,6 @@ import * as unchained from '@shapeshiftoss/unchained-client'
 import coinSelect from 'coinselect'
 import split from 'coinselect/split'
 
-import { bitcoin } from '../../types'
-
-export type MappedUtxos = Omit<unchained.bitcoin.Utxo, 'value'> & { value: number }
-
 const standardTx = ({
   utxos,
   value,
@@ -19,15 +15,11 @@ const standardTx = ({
   satoshiPerByte: string
   sendMax: boolean
 }) => {
-  const mappedUtxos: MappedUtxos[] = utxos.map((x) => ({ ...x, value: Number(x.value) }))
+  const mappedUtxos = utxos.map((x) => ({ ...x, value: Number(x.value) }))
   if (sendMax) {
     return split(mappedUtxos, [{ address: to }], Number(satoshiPerByte))
   } else {
-    return coinSelect<MappedUtxos, bitcoin.Recipient>(
-      mappedUtxos,
-      [{ value: Number(value), address: to }],
-      Number(satoshiPerByte)
-    )
+    return coinSelect(mappedUtxos, [{ value: Number(value), address: to }], Number(satoshiPerByte))
   }
 }
 
@@ -46,7 +38,7 @@ const opReturnTx = ({
   opReturnData?: string
   sendMax: boolean
 }) => {
-  const mappedUtxos: MappedUtxos[] = utxos.map((x) => ({ ...x, value: Number(x.value) }))
+  const mappedUtxos = utxos.map((x) => ({ ...x, value: Number(x.value) }))
 
   // value set to 1 sat because of bug in coinselect
   // where split doesnt work with 0 values for script
@@ -60,7 +52,7 @@ const opReturnTx = ({
     const filteredOutputs = result.outputs?.filter((output) => !output.script)
     return { ...result, outputs: filteredOutputs }
   } else {
-    const result = coinSelect<MappedUtxos, bitcoin.Recipient>(
+    const result = coinSelect(
       mappedUtxos,
       [{ value: Number(value), address: to }, opReturnOutput],
       Number(satoshiPerByte)

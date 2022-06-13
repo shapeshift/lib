@@ -1,13 +1,12 @@
 declare module 'coinselect' {
-  type Item = {
-    script?: Uint8Array
-    value: number
-  }
-  declare function coinSelect<T extends Item, U extends Item>(
-    utxos: T[],
-    outputs: U[],
+  declare function coinSelect(
+    utxos: MappedUtxos[],
+    outputs: bitcoin.Recipient[],
     feeRate: number
-  ): { fee: number } & ({ inputs: T[]; outputs: U[] } | { inputs: undefined; outputs: undefined })
+  ): { fee: number } & (
+    | { inputs: MappedUtxos[]; outputs: bitcoin.Recipient[] }
+    | { inputs: undefined; outputs: undefined }
+  )
   export = coinSelect
 }
 declare module 'coinselect/split' {
@@ -20,6 +19,9 @@ declare module 'coinselect/split' {
     utxos: Item[],
     outputs: Item[],
     feeRate: number
-  ): { fee: number } & ({ inputs: T[]; outputs: U[] } | { inputs: undefined; outputs: undefined })
+  ): { fee: number } & (
+    | { inputs: MappedUtxos[]; outputs: bitcoin.Recipient[] }
+    | { inputs: undefined; outputs: undefined }
+  )
   export = split
 }
