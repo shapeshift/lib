@@ -55,7 +55,6 @@ describe('utxoSelect', () => {
       fee: 226
     }
     const result = utxoSelect({ ...utxoSelectInputStandard, sendMax: false })
-    console.log('result is', result)
     expect(result).toEqual(expectedOutput)
   })
   it('should return correct inputs and outputs and fee for a send max tx', () => {
