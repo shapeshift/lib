@@ -1,5 +1,6 @@
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import Web3 from 'web3'
 
 import { TradeQuote } from '../../../api'
 import { ETH, FOX, WETH } from '../../utils/test-data/assets'
@@ -60,13 +61,14 @@ const expectedTradeQuote: TradeQuote<'eip155:1'> = {
   sellAssetAccountNumber: 0
 }
 
+const defaultDeps = {
+  apiUrl: '',
+  adapter: <ethereum.ChainAdapter>{},
+  web3: <Web3>{}
+}
+
 describe('getCowTradeQuote', () => {
   it('should throw an exception if wallet is not defined', async () => {
-    const deps = {
-      apiUrl: '',
-      adapter: <ethereum.ChainAdapter>{}
-    }
-
     const input = {
       sellAsset: WETH,
       buyAsset: FOX,
@@ -75,16 +77,12 @@ describe('getCowTradeQuote', () => {
       sellAssetAccountNumber: 1
     }
 
-    await expect(getCowSwapTradeQuote(deps, input)).rejects.toThrow(
+    await expect(getCowSwapTradeQuote(defaultDeps, input)).rejects.toThrow(
       '[getTradeQuote] - wallet is required'
     )
   })
 
   it('should throw an exception if both assets are not erc20s', async () => {
-    const deps = {
-      apiUrl: '',
-      adapter: <ethereum.ChainAdapter>{}
-    }
     const input = {
       sellAsset: ETH,
       buyAsset: FOX,
@@ -94,7 +92,7 @@ describe('getCowTradeQuote', () => {
       wallet: <HDWallet>{}
     }
 
-    await expect(getCowSwapTradeQuote(deps, input)).rejects.toThrow(
+    await expect(getCowSwapTradeQuote(defaultDeps, input)).rejects.toThrow(
       '[getCowSwapTradeQuote] - Both assets need to be ERC-20 to use CowSwap'
     )
   })
@@ -105,7 +103,8 @@ describe('getCowTradeQuote', () => {
       adapter: {
         getAddress: jest.fn(() => Promise.resolve('address11')),
         getFeeData: jest.fn(() => Promise.resolve(feeData))
-      } as unknown as ethereum.ChainAdapter
+      } as unknown as ethereum.ChainAdapter,
+      web3: <Web3>{}
     }
 
     const input = {

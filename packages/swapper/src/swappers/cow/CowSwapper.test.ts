@@ -1,17 +1,30 @@
 import { ethereum } from '@shapeshiftoss/chain-adapters'
+import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import Web3 from 'web3'
 
 import { SwapperType } from '../../api'
 import { BTC, ETH, FOX, WBTC, WETH } from '../utils/test-data/assets'
-import { setupQuote } from '../zrx/utils/test-data/setupSwapQuote'
+import { setupQuote } from '../utils/test-data/setupSwapQuote'
+import { CowApprovalNeeded } from './CowApprovalNeeded/CowApprovalNeeded'
+import { CowApproveInfinite } from './CowApproveInfinite/CowApproveInfinite'
 import { CowSwapper, CowSwapperDeps } from './CowSwapper'
 import { getCowSwapTradeQuote } from './getCowSwapTradeQuote/getCowSwapTradeQuote'
 import { getUsdRate } from './utils/helpers/helpers'
 
 jest.mock('./utils/helpers/helpers')
 
+jest.mock('./CowApprovalNeeded/CowApprovalNeeded', () => ({
+  CowApprovalNeeded: jest.fn()
+}))
+
+jest.mock('./CowApproveInfinite/CowApproveInfinite', () => ({
+  CowApproveInfinite: jest.fn()
+}))
+
 const COW_SWAPPER_DEPS: CowSwapperDeps = {
   apiUrl: 'https://api.cow.fi/mainnet/api/',
-  adapter: <ethereum.ChainAdapter>{}
+  adapter: <ethereum.ChainAdapter>{},
+  web3: <Web3>{}
 }
 
 jest.mock('./getCowSwapTradeQuote/getCowSwapTradeQuote', () => ({
@@ -21,6 +34,7 @@ jest.mock('./getCowSwapTradeQuote/getCowSwapTradeQuote', () => ({
 const ASSET_IDS = [ETH.assetId, WBTC.assetId, WETH.assetId, BTC.assetId, FOX.assetId]
 
 describe('CowSwapper', () => {
+  const wallet = <HDWallet>{}
   const swapper = new CowSwapper(COW_SWAPPER_DEPS)
 
   describe('static properties', () => {
@@ -124,6 +138,26 @@ describe('CowSwapper', () => {
       await swapper.getTradeQuote(quoteInput)
       expect(getCowSwapTradeQuote).toHaveBeenCalledTimes(1)
       expect(getCowSwapTradeQuote).toHaveBeenCalledWith(COW_SWAPPER_DEPS, quoteInput)
+    })
+  })
+
+  describe('CowApprovalNeeded', () => {
+    it('calls CowApprovalNeeded on swapper.approvalNeeded', async () => {
+      const { tradeQuote } = setupQuote()
+      const args = { quote: tradeQuote, wallet }
+      await swapper.approvalNeeded(args)
+      expect(CowApprovalNeeded).toHaveBeenCalledTimes(1)
+      expect(CowApprovalNeeded).toHaveBeenCalledWith(COW_SWAPPER_DEPS, args)
+    })
+  })
+
+  describe('CowApproveInfinite', () => {
+    it('calls CowApproveInfinite on swapper.approveInfinite', async () => {
+      const { tradeQuote } = setupQuote()
+      const args = { quote: tradeQuote, wallet }
+      await swapper.approveInfinite(args)
+      expect(CowApproveInfinite).toHaveBeenCalledTimes(1)
+      expect(CowApproveInfinite).toHaveBeenCalledWith(COW_SWAPPER_DEPS, args)
     })
   })
 })

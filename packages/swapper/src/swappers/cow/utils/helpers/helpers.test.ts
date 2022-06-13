@@ -1,4 +1,5 @@
 import { ethereum } from '@shapeshiftoss/chain-adapters'
+import Web3 from 'web3'
 
 import { ETH, FOX, WBTC } from '../../../utils/test-data/assets'
 import { CowSwapperDeps } from '../../CowSwapper'
@@ -10,7 +11,8 @@ jest.mock('../cowService')
 describe('utils', () => {
   const cowSwapperDeps: CowSwapperDeps = {
     apiUrl: 'https://api.cow.fi/mainnet/api/',
-    adapter: <ethereum.ChainAdapter>{}
+    adapter: <ethereum.ChainAdapter>{},
+    web3: <Web3>{}
   }
 
   describe('getUsdRate', () => {
