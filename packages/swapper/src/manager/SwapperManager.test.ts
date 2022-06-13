@@ -14,7 +14,8 @@ describe('SwapperManager', () => {
     adapterManager: <ChainAdapterManager>{}
   }
   const cowSwapperDeps: CowSwapperDeps = {
-    apiUrl: 'https://api.cow.fi/mainnet/api/'
+    apiUrl: 'https://api.cow.fi/mainnet/api/',
+    adapterManager: <ChainAdapterManager>{}
   }
 
   const thorchainSwapperDeps: ThorchainSwapperDeps = {

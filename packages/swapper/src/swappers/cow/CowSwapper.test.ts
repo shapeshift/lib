@@ -1,4 +1,5 @@
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+
 import { SwapperType } from '../../api'
 import { BTC, ETH, FOX, WBTC, WETH } from '../utils/test-data/assets'
 import { setupQuote } from '../zrx/utils/test-data/setupSwapQuote'

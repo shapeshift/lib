@@ -1,4 +1,5 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
+import { chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 
 import { GetTradeQuoteInput, SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
@@ -8,7 +9,14 @@ import { normalizeIntegerAmount } from '../../utils/helpers/helpers'
 import { CowSwapperDeps } from '../CowSwapper'
 import { getCowSwapMinMax } from '../getCowSwapMinMax/getCowSwapMinMax'
 import { CowSwapQuoteResponse } from '../types'
-import { COW_SWAP_VAULT_RELAYER_ADDRESS, DEFAULT_ADDRESS, DEFAULT_APP_DATA, DEFAULT_SOURCE } from '../utils/constants'
+import {
+  COW_SWAP_VAULT_RELAYER_ADDRESS,
+  DEFAULT_ADDRESS,
+  DEFAULT_APP_DATA,
+  DEFAULT_SOURCE,
+  DEFAULT_VALIDTO_TIMESTAMP,
+  ORDER_KIND_SELL
+} from '../utils/constants'
 import { cowService } from '../utils/cowService'
 import { getUsdRate } from '../utils/helpers/helpers'
 
@@ -17,7 +25,7 @@ export async function getCowSwapTradeQuote(
   input: GetTradeQuoteInput
 ): Promise<TradeQuote<'eip155:1'>> {
   try {
-    const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber } = input
+    const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, wallet } = input
     const { adapterManager } = deps
 
     const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
@@ -25,6 +33,11 @@ export async function getCowSwapTradeQuote(
     const { assetReference: buyAssetErc20Address, assetNamespace: buyAssetNamespace } = fromAssetId(
       buyAsset.assetId
     )
+
+    if (!wallet)
+      throw new SwapError('[getTradeQuote] - wallet is required', {
+        code: SwapErrorTypes.VALIDATION_FAILED
+      })
 
     if (buyAssetNamespace !== 'erc20' || sellAssetNamespace !== 'erc20') {
       throw new SwapError('[getCowSwapTradeQuote] - Both assets need to be ERC-20 to use CowSwap', {
@@ -63,11 +76,11 @@ export async function getCowSwapTradeQuote(
         sellToken: sellAssetErc20Address,
         buyToken: buyAssetErc20Address,
         receiver: DEFAULT_ADDRESS,
-        validTo: 4294967295, // TODO,
+        validTo: DEFAULT_VALIDTO_TIMESTAMP,
         appData: DEFAULT_APP_DATA,
         partiallyFillable: false,
         from: DEFAULT_ADDRESS,
-        kind: 'sell',
+        kind: ORDER_KIND_SELL,
         sellAmountBeforeFee: normalizedSellAmount
       })
 
@@ -78,13 +91,16 @@ export async function getCowSwapTradeQuote(
       .div(quote.sellAmount)
       .times(bn(10).exponentiatedBy(sellAsset.precision - buyAsset.precision))
       .toString()
-    const gasPrice = '50000' // TODO
+
     const adapter = adapterManager.byChainId('eip155:1')
+    const receiveAddress = await adapter.getAddress({ wallet })
     const feeDataOptions = await adapter.getFeeData({
       to: COW_SWAP_VAULT_RELAYER_ADDRESS,
-      value: sellAmount,
-      chainSpecific: { from: receiveAddress }
+      value: normalizedSellAmount,
+      chainSpecific: { from: receiveAddress, contractAddress: sellAssetErc20Address },
+      sendMax: true
     })
+    const feeData = feeDataOptions['fast'] as chainAdapters.FeeData<ChainTypes.Ethereum>
 
     const usdRateSellAsset = await getUsdRate(deps, sellAsset)
     const feeUsd = bnOrZero(quote.feeAmount)
@@ -99,9 +115,11 @@ export async function getCowSwapTradeQuote(
       feeData: {
         fee: feeUsd,
         chainSpecific: {
-          estimatedGas: '0',
-          gasPrice,
-          approvalFee: bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(bnOrZero(gasPrice)).toString()
+          estimatedGas: feeData.chainSpecific.gasLimit,
+          gasPrice: feeData.chainSpecific.gasPrice,
+          approvalFee: bnOrZero(APPROVAL_GAS_LIMIT)
+            .multipliedBy(bnOrZero(feeData.chainSpecific.gasPrice))
+            .toString()
         },
         tradeFee: '0'
       },
