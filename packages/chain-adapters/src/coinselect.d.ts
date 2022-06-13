@@ -1,27 +1,36 @@
+type Utxo = {
+  value: number
+  script?: string | Uint8Array
+}
+
+type Output = {
+  address?: string
+  value?: number
+  script?: string | Uint8Array
+}
+
+type CoinSelectResult<T> = {
+  fee: number
+  inputs?: Array<T>
+  outputs?: Array<Output>
+}
+
 declare module 'coinselect' {
-  declare function coinSelect(
-    utxos: MappedUtxos[],
-    outputs: bitcoin.Recipient[],
+  declare function coinSelect<T = unknown>(
+    utxos: Array<Utxo>,
+    outputs: Array<Output>,
     feeRate: number
-  ): { fee: number } & (
-    | { inputs: MappedUtxos[]; outputs: bitcoin.Recipient[] }
-    | { inputs: undefined; outputs: undefined }
-  )
+  ): CoinSelectResult<Omit<T, 'value'> & { value: number }>
+
   export = coinSelect
 }
+
 declare module 'coinselect/split' {
-  type Item = {
-    script?: Uint8Array
-    value?: number
-    address?: string
-  }
-  declare function split(
-    utxos: Item[],
-    outputs: Item[],
+  declare function split<T = unknown>(
+    utxos: Array<Utxo>,
+    outputs: Array<Output>,
     feeRate: number
-  ): { fee: number } & (
-    | { inputs: MappedUtxos[]; outputs: bitcoin.Recipient[] }
-    | { inputs: undefined; outputs: undefined }
-  )
+  ): CoinSelectResult<Omit<T, 'value'> & { value: number }>
+
   export = split
 }

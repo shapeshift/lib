@@ -1,4 +1,4 @@
-import { utxoSelect } from './utxoSelect'
+import { utxoSelect } from './'
 
 const utxoSelectInputStandard = {
   utxos: [
@@ -119,7 +119,7 @@ describe('utxoSelect', () => {
       outputs: [
         {
           address: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4',
-          value: 33129
+          value: 33130
         }
       ],
       fee: 429
@@ -151,7 +151,7 @@ describe('utxoSelect', () => {
           address: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4'
         },
         {
-          value: 31245
+          value: 31246
         }
       ],
       fee: 315
