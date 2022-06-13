@@ -1,4 +1,4 @@
-import { AssetId } from '@shapeshiftoss/caip'
+import { AssetId, ChainId } from '@shapeshiftoss/caip'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { Asset } from '@shapeshiftoss/types'
 
@@ -26,7 +26,7 @@ export type CowSwapperDeps = {
   adapter: ethereum.ChainAdapter
 }
 
-export class CowSwapper implements Swapper<'eip155:1'> {
+export class CowSwapper implements Swapper<ChainId> {
   public static swapperName = 'CowSwapper'
   deps: CowSwapperDeps
 
@@ -41,12 +41,12 @@ export class CowSwapper implements Swapper<'eip155:1'> {
     return SwapperType.CowSwap
   }
 
-  async buildTrade(args: BuildTradeInput): Promise<Trade<'eip155:1'>> {
+  async buildTrade(args: BuildTradeInput): Promise<Trade<ChainId>> {
     console.info(args)
     throw new Error('CowSwapper: buildTrade unimplemented')
   }
 
-  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<'eip155:1'>> {
+  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ChainId>> {
     return getCowSwapTradeQuote(this.deps, input)
   }
 
@@ -54,17 +54,17 @@ export class CowSwapper implements Swapper<'eip155:1'> {
     return getUsdRate(this.deps, input)
   }
 
-  async executeTrade(args: ExecuteTradeInput<'eip155:1'>): Promise<TradeResult> {
+  async executeTrade(args: ExecuteTradeInput<ChainId>): Promise<TradeResult> {
     console.info(args)
     throw new Error('CowSwapper: executeTrade unimplemented')
   }
 
-  async approvalNeeded(args: ApprovalNeededInput<'eip155:1'>): Promise<ApprovalNeededOutput> {
+  async approvalNeeded(args: ApprovalNeededInput<ChainId>): Promise<ApprovalNeededOutput> {
     console.info(args)
     throw new Error('CowSwapper: approvalNeeded unimplemented')
   }
 
-  async approveInfinite(args: ApproveInfiniteInput<'eip155:1'>): Promise<string> {
+  async approveInfinite(args: ApproveInfiniteInput<ChainId>): Promise<string> {
     console.info(args)
     throw new Error('CowSwapper: approveInfinite unimplemented')
   }
