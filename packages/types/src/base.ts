@@ -16,7 +16,7 @@ export enum KnownChainIds {
 }
 
 // https://api.coingecko.com/api/v3/asset_platforms
-export enum CoingeckoAssetPlatforms {
+export enum CoingeckoAssetPlatform {
   Ethereum = 'ethereum',
   Cosmos = 'cosmos',
   Osmosis = 'osmosis'
