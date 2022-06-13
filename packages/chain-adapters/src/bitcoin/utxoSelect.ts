@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import * as unchained from '@shapeshiftoss/unchained-client'
 import coinSelect from 'coinselect'
 import split from 'coinselect/split'
