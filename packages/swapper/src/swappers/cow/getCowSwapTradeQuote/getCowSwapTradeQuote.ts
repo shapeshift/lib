@@ -1,5 +1,4 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
-import { chainAdapters, ChainTypes } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 
 import { GetTradeQuoteInput, SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
@@ -26,7 +25,7 @@ export async function getCowSwapTradeQuote(
 ): Promise<TradeQuote<'eip155:1'>> {
   try {
     const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, wallet } = input
-    const { adapterManager } = deps
+    const { adapter } = deps
 
     const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
       fromAssetId(sellAsset.assetId)
@@ -67,8 +66,6 @@ export async function getCowSwapTradeQuote(
      * from: sender address can be defaulted to "0x0000000000000000000000000000000000000000"
      * kind: "sell" or "buy"
      * sellAmountBeforeFee / buyAmountAfterFee: amount in base unit
-     *
-     *
      * }
      */
     const quoteResponse: AxiosResponse<CowSwapQuoteResponse> =
@@ -92,7 +89,6 @@ export async function getCowSwapTradeQuote(
       .times(bn(10).exponentiatedBy(sellAsset.precision - buyAsset.precision))
       .toString()
 
-    const adapter = adapterManager.byChainId('eip155:1')
     const receiveAddress = await adapter.getAddress({ wallet })
     const feeDataOptions = await adapter.getFeeData({
       to: COW_SWAP_VAULT_RELAYER_ADDRESS,
@@ -100,7 +96,7 @@ export async function getCowSwapTradeQuote(
       chainSpecific: { from: receiveAddress, contractAddress: sellAssetErc20Address },
       sendMax: true
     })
-    const feeData = feeDataOptions['fast'] as chainAdapters.FeeData<ChainTypes.Ethereum>
+    const feeData = feeDataOptions['fast']
 
     const usdRateSellAsset = await getUsdRate(deps, sellAsset)
     const feeUsd = bnOrZero(quote.feeAmount)
