@@ -317,7 +317,6 @@ export class ChainAdapter
       value,
       opReturnData,
       utxos,
-      satoshiPerByte: fastPerByte,
       sendMax
     }
 
