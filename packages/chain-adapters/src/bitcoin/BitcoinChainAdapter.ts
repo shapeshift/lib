@@ -206,7 +206,7 @@ export class ChainAdapter
       })
 
       if (!coinSelectResult || !coinSelectResult.inputs || !coinSelectResult.outputs) {
-        throw new Error("BitcoinChainAdapter: coinSelect didn't select coins")
+        throw new Error(`BitcoinChainAdapter: coinSelect didn't select coins`)
       }
 
       const { inputs, outputs } = coinSelectResult

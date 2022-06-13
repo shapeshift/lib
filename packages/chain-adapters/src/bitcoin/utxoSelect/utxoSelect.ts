@@ -23,6 +23,7 @@ const standardTx = ({
   if (sendMax) {
     return split(mappedUtxos, [{ address: to }], Number(satoshiPerByte))
   } else {
+    console.log('doing standard tx')
     return coinSelect<MappedUtxos, bitcoin.Recipient>(
       mappedUtxos,
       [{ value: Number(value), address: to }],
@@ -31,7 +32,6 @@ const standardTx = ({
   }
 }
 
-// TODO this will be implemented in another PR to keep concerns separated and make review easier
 const opReturnTx = ({
   utxos,
   value,
@@ -47,15 +47,23 @@ const opReturnTx = ({
   opReturnData?: string
   sendMax: boolean
 }) => {
-  console.info('opReturnTx', {
-    utxos,
-    value,
-    to,
-    satoshiPerByte,
-    opReturnData,
-    sendMax
-  })
-  throw new Error('not implemented')
+  const mappedUtxos: MappedUtxos[] = utxos.map((x) => ({ ...x, value: Number(x.value) }))
+
+  const opReturnOutput = {
+    value: 0,
+    script: new TextEncoder().encode(opReturnData)
+  }
+
+  // TODO strip off the op_return output before returning
+  if (sendMax) {
+    return split(mappedUtxos, [{ address: to }, opReturnOutput], Number(satoshiPerByte))
+  } else {
+    return coinSelect<MappedUtxos, bitcoin.Recipient>(
+      mappedUtxos,
+      [{ value: Number(value), address: to }, opReturnOutput],
+      Number(satoshiPerByte)
+    )
+  }
 }
 
 /**
