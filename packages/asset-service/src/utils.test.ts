@@ -1,11 +1,12 @@
 import { btcChainId, ethChainId } from '@shapeshiftoss/caip'
+import { CoingeckoAssetPlatform } from '@shapeshiftoss/types'
 
 import { chainIdToCoingeckoAssetPlatform } from './utils'
 
 describe('chainIdToCoingeckoAssetPlatform', () => {
   it('can get Coingecko asset platform from ChainId', () => {
     const chainId = ethChainId
-    expect(chainIdToCoingeckoAssetPlatform(chainId)).toEqual('ethereum')
+    expect(chainIdToCoingeckoAssetPlatform(chainId)).toEqual(CoingeckoAssetPlatform.Ethereum)
   })
 
   it('throws on invalid ChainId', () => {
