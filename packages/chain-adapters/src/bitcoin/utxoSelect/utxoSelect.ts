@@ -57,8 +57,7 @@ const opReturnTx = ({
 
   if (sendMax) {
     const result = split(mappedUtxos, [{ address: to }, opReturnOutput], Number(satoshiPerByte))
-    if (!result.outputs) throw new Error('no outputs')
-    const filteredOutputs = result.outputs.filter((output) => !output.script)
+    const filteredOutputs = result.outputs?.filter((output) => !output.script)
     return { ...result, outputs: filteredOutputs }
   } else {
     const result = coinSelect<MappedUtxos, bitcoin.Recipient>(
@@ -66,8 +65,7 @@ const opReturnTx = ({
       [{ value: Number(value), address: to }, opReturnOutput],
       Number(satoshiPerByte)
     )
-    if (!result.outputs) throw new Error('no outputs')
-    const filteredOutputs = result.outputs.filter((output) => !output.script)
+    const filteredOutputs = result.outputs?.filter((output) => !output.script)
     return { ...result, outputs: filteredOutputs }
   }
 }
