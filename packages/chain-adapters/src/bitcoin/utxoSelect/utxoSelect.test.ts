@@ -1,5 +1,3 @@
-/* eslint-disable jest/no-focused-tests */
-/* eslint-disable jest/no-disabled-tests */
 import { utxoSelect } from './utxoSelect'
 
 const utxoSelectInputStandard = {
@@ -34,7 +32,7 @@ const utxoSelectInputOpReturn = {
 }
 
 describe('utxoSelect', () => {
-  it('should return correct inputs and outputs for a standard tx', () => {
+  it('should return correct inputs and outputs and fee for a standard tx', () => {
     const expectedOutput = {
       inputs: [
         {
@@ -60,7 +58,7 @@ describe('utxoSelect', () => {
     console.log('result is', result)
     expect(result).toEqual(expectedOutput)
   })
-  it('should return correct inputs and outputs for a send max tx', () => {
+  it('should return correct inputs and outputs and fee for a send max tx', () => {
     const expectedOutput = {
       inputs: [
         {
@@ -95,7 +93,7 @@ describe('utxoSelect', () => {
     expect(result).toEqual(expectedOutput)
   })
 
-  it('should return correct inputs and outputs for a sendmax tx with opReturnData', () => {
+  it('should return correct inputs and outputs and fee for a sendmax tx with opReturnData', () => {
     const result = utxoSelect({ ...utxoSelectInputOpReturn, sendMax: true })
 
     console.log('result is', JSON.stringify(result, null, 2))
@@ -132,7 +130,7 @@ describe('utxoSelect', () => {
     expect(result).toEqual(expectedResult)
   })
 
-  it('should return correct inputs and outputs for a tx with opReturnData', () => {
+  it('should return correct inputs and outputs and fee for a tx with opReturnData', () => {
     const result = utxoSelect({
       ...utxoSelectInputOpReturn,
       sendMax: false
