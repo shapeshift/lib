@@ -10,10 +10,10 @@ import {
 import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 
+import { bitcoin } from '../'
 import { ChainAdapter as IChainAdapter } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
 import {
-  bitcoin,
   BuildSendTxInput,
   ChainTxType,
   FeeDataEstimate,

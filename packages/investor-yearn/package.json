@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/investor-yearn",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "An api layer for interaction with the ShapeShift Yearn Router Contract and the Yearn Vault contracts",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -47,6 +47,7 @@
     "@shapeshiftoss/chain-adapters": "^6.0.0",
     "@shapeshiftoss/hdwallet-core": "^1.23.0",
     "@shapeshiftoss/investor": "^1.0.1",
-    "@shapeshiftoss/types": "^5.0.0"
+    "@shapeshiftoss/types": "^5.0.0",
+    "@shapeshiftoss/unchained-client": "^9.0.0"
   }
 }
