@@ -29,3 +29,21 @@ export const setupQuote = () => {
   }
   return { quoteInput, tradeQuote, buyAsset, sellAsset }
 }
+
+export const setupBuildTrade = () => {
+  const sellAsset: Asset = { ...FOX }
+  const buyAsset: Asset = { ...WETH }
+  const buildTradeInput = {
+    sellAmount: '1000000000000000000',
+    allowanceTarget: 'allowanceTargetAddress',
+    price: '1',
+    to: '0x123',
+    buyAmount: '',
+    buyAsset,
+    sendMax: false,
+    sellAssetAccountNumber: 0,
+    buyAssetAccountNumber: 0,
+    sellAsset
+  }
+  return { buildTradeInput, buyAsset, sellAsset }
+}

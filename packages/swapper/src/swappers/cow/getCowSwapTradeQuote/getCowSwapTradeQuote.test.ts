@@ -67,7 +67,7 @@ const defaultDeps = {
   web3: <Web3>{}
 }
 
-describe('getCowTradeQuote', () => {
+describe('getCowSwapTradeQuote', () => {
   it('should throw an exception if wallet is not defined', async () => {
     const input = {
       sellAsset: WETH,
@@ -78,7 +78,7 @@ describe('getCowTradeQuote', () => {
     }
 
     await expect(getCowSwapTradeQuote(defaultDeps, input)).rejects.toThrow(
-      '[getTradeQuote] - wallet is required'
+      '[getCowSwapTradeQuote] - wallet is required'
     )
   })
 
