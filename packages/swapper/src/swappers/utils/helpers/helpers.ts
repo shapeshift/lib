@@ -1,7 +1,7 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
-import { ethereum } from '@shapeshiftoss/chain-adapters'
+import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { Asset } from '@shapeshiftoss/types'
+import { Asset, KnownChainIds } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { AbiItem, numberToHex } from 'web3-utils'
@@ -29,7 +29,7 @@ export type GetERC20AllowanceArgs = {
 type GrantAllowanceArgs = {
   quote: TradeQuote<'eip155:1'>
   wallet: HDWallet
-  adapter: ethereum.ChainAdapter
+  adapter: ChainAdapter<KnownChainIds.EthereumMainnet>
   erc20Abi: AbiItem[]
   web3: Web3
 }
