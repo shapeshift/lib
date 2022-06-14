@@ -23,11 +23,11 @@ export const utxoSelect = (input: UTXOSelectInput) => {
   const result = (() => {
     if (input.sendMax) {
       const outputs = [{ address: input.to }, ...extraOutput]
-      return split<typeof utxos>(utxos, outputs, Number(input.satoshiPerByte))
+      return split<unchained.bitcoin.Utxo>(utxos, outputs, Number(input.satoshiPerByte))
     }
 
     const outputs = [{ value: Number(input.value), address: input.to }, ...extraOutput]
-    return coinSelect<typeof utxos>(utxos, outputs, Number(input.satoshiPerByte))
+    return coinSelect<unchained.bitcoin.Utxo>(utxos, outputs, Number(input.satoshiPerByte))
   })()
 
   return { ...result, outputs: result.outputs?.filter((o) => !o.script) }
