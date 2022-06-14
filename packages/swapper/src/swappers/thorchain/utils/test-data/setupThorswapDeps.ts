@@ -1,7 +1,7 @@
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
+import Web3 from 'web3'
 
 import { ThorchainSwapperDeps } from '../../types'
-import Web3 from 'web3'
 
 jest.mock('web3')
 export const setupThorswapDeps = (): ThorchainSwapperDeps => {

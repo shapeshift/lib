@@ -1,4 +1,5 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import Web3 from 'web3'
 
 import { TradeQuote } from '../../../api'
 import { ETH, FOX } from '../../utils/test-data/assets'
@@ -8,7 +9,6 @@ import { ethMidgardPool, foxMidgardPool } from '../utils/test-data/midgardRespon
 import { setupThorswapDeps } from '../utils/test-data/setupThorswapDeps'
 import { thorService } from '../utils/thorService'
 import { getThorTradeQuote } from './getTradeQuote'
-import Web3 from 'web3'
 
 jest.mock('../utils/thorService')
 jest.mock('web3')
@@ -19,7 +19,7 @@ Web3.mockImplementation(() => ({
     Contract: jest.fn(() => ({
       methods: {
         deposit: jest.fn(() => ({
-          encodeABI: jest.fn(() => 'data')
+          encodeABI: jest.fn(() => '0x1234')
         }))
       }
     }))
