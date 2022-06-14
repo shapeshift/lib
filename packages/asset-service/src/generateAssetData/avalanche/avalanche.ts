@@ -1,9 +1,9 @@
 import {
   avalancheAssetId,
+  avalancheChainId,
   CHAIN_NAMESPACE,
   CHAIN_REFERENCE,
-  toAssetId,
-  toChainId
+  toAssetId
 } from '@shapeshiftoss/caip'
 import { Asset } from '@shapeshiftoss/types'
 import axios from 'axios'
@@ -43,7 +43,7 @@ export const getAvalancheAssets: GetAvalancheAssets = async () => {
   const chainNamespace = CHAIN_NAMESPACE.Ethereum
   const chainReference = CHAIN_REFERENCE.AvalancheCChain
 
-  const chainId = toChainId({ chainNamespace, chainReference })
+  const chainId = avalancheChainId
   const explorer = 'https://snowtrace.io/'
   const explorerAddressLink = `${explorer}address`
   const explorerTxLink = `${explorer}tx`
