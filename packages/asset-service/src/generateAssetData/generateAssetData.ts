@@ -7,6 +7,7 @@ import filter from 'lodash/filter'
 import orderBy from 'lodash/orderBy'
 
 import { AssetsById } from '../service/AssetService'
+import { getAvalancheAssets } from './avalanche/avalanche'
 import { atom, bitcoin, tBitcoin } from './baseAssets'
 import blacklist from './blacklist.json'
 import { getOsmosisAssets } from './cosmos/getOsmosisAssets'
@@ -15,9 +16,17 @@ import { addTokensToEth } from './ethTokens'
 const generateAssetData = async () => {
   const ethAssets = await addTokensToEth()
   const osmosisAssets = await getOsmosisAssets()
+  const avalancheAssets = await getAvalancheAssets()
 
   // all assets, included assets to be blacklisted
-  const unfilteredAssetData: Asset[] = [bitcoin, tBitcoin, ...ethAssets, atom, ...osmosisAssets]
+  const unfilteredAssetData: Asset[] = [
+    bitcoin,
+    tBitcoin,
+    ...ethAssets,
+    atom,
+    ...osmosisAssets,
+    ...avalancheAssets
+  ]
   // remove blacklisted assets
   const filteredAssetData = filter(
     unfilteredAssetData,
