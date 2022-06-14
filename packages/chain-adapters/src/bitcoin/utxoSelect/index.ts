@@ -17,19 +17,17 @@ export type UTXOSelectInput = {
  * _opReturnData is filtered out of the return payload as it is added during transaction signing_
  */
 export const utxoSelect = (input: UTXOSelectInput) => {
-  const mappedUtxos = input.utxos.map((x) => ({ ...x, value: Number(x.value) }))
-  const script = new TextEncoder().encode(input.opReturnData)
-
-  const extraOutput = input.opReturnData ? [{ value: 0, script }] : []
+  const utxos = input.utxos.map((x) => ({ ...x, value: Number(x.value) }))
+  const extraOutput = input.opReturnData ? [{ value: 0, script: input.opReturnData }] : []
 
   const result = (() => {
     if (input.sendMax) {
       const outputs = [{ address: input.to }, ...extraOutput]
-      return split<unchained.bitcoin.Utxo>(mappedUtxos, outputs, Number(input.satoshiPerByte))
+      return split<typeof utxos>(utxos, outputs, Number(input.satoshiPerByte))
     }
 
     const outputs = [{ value: Number(input.value), address: input.to }, ...extraOutput]
-    return coinSelect<unchained.bitcoin.Utxo>(mappedUtxos, outputs, Number(input.satoshiPerByte))
+    return coinSelect<typeof utxos>(utxos, outputs, Number(input.satoshiPerByte))
   })()
 
   return { ...result, outputs: result.outputs?.filter((o) => !o.script) }

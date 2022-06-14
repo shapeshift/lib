@@ -1,12 +1,12 @@
 type Utxo = {
   value: number
-  script?: string | Uint8Array
+  script?: string
 }
 
 type Output = {
   address?: string
   value?: number
-  script?: string | Uint8Array
+  script?: string
 }
 
 type CoinSelectResult<T> = {
