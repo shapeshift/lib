@@ -19,9 +19,8 @@ type AvalancheToken = {
 
 type AvalancheTokenList = Record<string, AvalancheToken>
 
-type AvalancheContractAddress = {
-  [symbolDotE: string]: string // value is avalanche contract address
-}
+// key is dot-e symbol, value is avalanche contract address
+type AvalancheContractAddress = Record<string, string>
 
 type GetAvalancheAssets = () => Promise<Asset[]>
 
@@ -49,21 +48,16 @@ export const getAvalancheAssets: GetAvalancheAssets = async () => {
   const explorerTxLink = `${explorer}tx`
 
   const assets = Object.entries(tokenList).reduce<Asset[]>((acc, [symbol, v]) => {
-    const name = `${symbol}.e`
-    const precision = v.denomination
-    const icon = v.logo
-    const color = '#FFFFFF' // this will get picked up by the color generation script
     const assetReference = contractAddresses[`${symbol}.e`].toLowerCase()
     const assetNamespace = 'erc20'
-    const assetId = toAssetId({ chainNamespace, chainReference, assetNamespace, assetReference })
     acc.push({
       chainId,
-      assetId,
-      name,
-      symbol,
-      precision,
-      icon,
-      color,
+      assetId: toAssetId({ chainNamespace, chainReference, assetNamespace, assetReference }),
+      name: `${symbol} on Avalanche`,
+      symbol: `${symbol}.e`,
+      precision: v.denomination,
+      icon: v.logo,
+      color: '#FFFFFF', // this will get picked up by the color generation script,
       explorer,
       explorerAddressLink,
       explorerTxLink
@@ -71,21 +65,14 @@ export const getAvalancheAssets: GetAvalancheAssets = async () => {
     return acc
   }, [])
 
-  const assetId = avalancheAssetId
-  const name = 'Avalanche'
-  const symbol = 'AVAX'
-  const precision = 18
-  const color = '#FFFFFF' // this will get picked up by the color generation script
-  const icon =
-    'https://rawcdn.githack.com/trustwallet/assets/32e51d582a890b3dd3135fe3ee7c20c2fd699a6d/blockchains/avalanchec/info/logo.png'
   const avaxAsset: Asset = {
     chainId,
-    assetId,
-    name,
-    symbol,
-    precision,
-    color,
-    icon,
+    assetId: avalancheAssetId,
+    name: 'Avalanche',
+    symbol: 'AVAX',
+    precision: 18,
+    color: '#FFFFFF', // this will get picked up by the color generation script,
+    icon: 'https://rawcdn.githack.com/trustwallet/assets/32e51d582a890b3dd3135fe3ee7c20c2fd699a6d/blockchains/avalanchec/info/logo.png',
     explorer,
     explorerAddressLink,
     explorerTxLink
