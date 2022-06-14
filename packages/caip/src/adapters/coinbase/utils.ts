@@ -1,33 +1,15 @@
 import axios from 'axios'
+import fs from 'fs'
 import toLower from 'lodash/toLower'
 
 import { AssetId } from '../../index'
 
-/** Helper module to generate the coinbase supported assets map in the sibling index file */
 type CoinbaseCurrency = {
   id: string
-  name: string
-  min_size: string
-  status: string
-  message: string
-  max_precision: string
-  convertible_to: string[]
   details: {
-    type: 'fiat' | 'crypto'
-    symbol: string | null
-    network_confirmations: number | null
-    sort_order: number
     crypto_address_link: string | null
-    crypto_transaction_link: string | null
-    push_payment_methods: string[]
-    group_types: string[]
-    display_name: string | null
-    processing_time_seconds: string | null
-    min_withdrawal_amount: number | null
-    max_withdrawal_amount: number | null
   }
   default_network: string
-  supported_networks: string[]
 }
 
 function coinbaseCurrencyToAssetId(currency: CoinbaseCurrency): AssetId | null {
@@ -44,7 +26,7 @@ function coinbaseCurrencyToAssetId(currency: CoinbaseCurrency): AssetId | null {
   return null
 }
 
-function getCoinbaseMap(data: CoinbaseCurrency[]): Record<AssetId, string> {
+export function parseData(data: CoinbaseCurrency[]): Record<AssetId, string> {
   return data.reduce<Record<AssetId, string>>(
     (acc: Record<AssetId, string>, current: CoinbaseCurrency) => {
       const assetId = coinbaseCurrencyToAssetId(current)
@@ -56,12 +38,23 @@ function getCoinbaseMap(data: CoinbaseCurrency[]): Record<AssetId, string> {
   )
 }
 
-export async function getCoinbasePayAssets(): Promise<Record<AssetId, string>> {
+export async function getData(): Promise<CoinbaseCurrency[]> {
   try {
     const { data } = await axios.get<CoinbaseCurrency[]>('https://api.pro.coinbase.com/currencies')
-    return getCoinbaseMap(data)
+    return data
   } catch (err) {
     console.error('Get supported coins (coinbase-pay) failed')
-    return {}
+    return []
   }
+}
+
+const writeFile = async (data: Record<AssetId, string>) => {
+  const path = './src/adapters/coinbase/generated/'
+  const file = 'adapter.json'
+  await fs.promises.writeFile(`${path}${file}`, JSON.stringify(data, null, 2))
+}
+
+export const writeFiles = async (data: Record<AssetId, string>) => {
+  await writeFile(data)
+  console.info('Generated Coinbase AssetId adapter data.')
 }
