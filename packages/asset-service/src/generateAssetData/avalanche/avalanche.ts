@@ -49,7 +49,7 @@ export const getAvalancheAssets: GetAvalancheAssets = async () => {
   const explorerTxLink = `${explorer}tx`
 
   const assets = Object.entries(tokenList).reduce<Asset[]>((acc, [symbol, v]) => {
-    const name = `${symbol} on Avalanche`
+    const name = `${symbol}.e`
     const precision = v.denomination
     const icon = v.logo
     const color = '#FFFFFF' // this will get picked up by the color generation script
