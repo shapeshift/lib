@@ -461,6 +461,58 @@ export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet
     }
   }
 
+  async getGasFeeData(): Promise<{
+    [k: string]: { gasPrice: string; maxFeePerGas: string; maxPriorityFeePerGas: string }
+  }> {
+    const { data: responseData } = await axios.get<ZrxGasApiResponse>('https://gas.api.0x.org/')
+    const fees = responseData.result.find((result) => result.source === 'MEDIAN')
+
+    if (!fees) throw new TypeError('ETH Gas Fees should always exist')
+
+    const feeData = (await this.providers.http.getGasFees()).data
+    const normalizationConstants = {
+      fast: bnOrZero(bn(fees.fast).dividedBy(fees.standard)),
+      average: bn(1),
+      slow: bnOrZero(bn(fees.low).dividedBy(fees.standard))
+    }
+
+    return {
+      fast: {
+        gasPrice: bnOrZero(fees.fast).toString(),
+        maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
+          .times(normalizationConstants.fast)
+          .toFixed(0, BigNumber.ROUND_CEIL)
+          .toString(),
+        maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
+          .times(normalizationConstants.fast)
+          .toFixed(0, BigNumber.ROUND_CEIL)
+          .toString()
+      },
+      average: {
+        gasPrice: bnOrZero(fees.standard).toString(),
+        maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
+          .times(normalizationConstants.average)
+          .toFixed(0, BigNumber.ROUND_CEIL)
+          .toString(),
+        maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
+          .times(normalizationConstants.average)
+          .toFixed(0, BigNumber.ROUND_CEIL)
+          .toString()
+      },
+      slow: {
+        gasPrice: bnOrZero(fees.low).toString(),
+        maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
+          .times(normalizationConstants.slow)
+          .toFixed(0, BigNumber.ROUND_CEIL)
+          .toString(),
+        maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
+          .times(normalizationConstants.slow)
+          .toFixed(0, BigNumber.ROUND_CEIL)
+          .toString()
+      }
+    }
+  }
+
   async getAddress(input: GetAddressInput): Promise<string> {
     const { wallet, bip44Params = ChainAdapter.defaultBIP44Params } = input
     const path = toPath(bip44Params)
