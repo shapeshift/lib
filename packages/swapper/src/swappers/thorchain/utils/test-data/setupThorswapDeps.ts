@@ -1,7 +1,9 @@
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 
 import { ThorchainSwapperDeps } from '../../types'
+import Web3 from 'web3'
 
+jest.mock('web3')
 export const setupThorswapDeps = (): ThorchainSwapperDeps => {
   const feeData = {
     fast: {
@@ -23,6 +25,8 @@ export const setupThorswapDeps = (): ThorchainSwapperDeps => {
   ])
 
   const midgardUrl = 'localhost:3000'
+  const ethNodeUrl = 'http://localhost:1000'
+  const web3Provider = new Web3.providers.HttpProvider(ethNodeUrl)
 
-  return { adapterManager, midgardUrl }
+  return { adapterManager, midgardUrl, web3: new Web3(web3Provider) }
 }

@@ -8,8 +8,23 @@ import { ethMidgardPool, foxMidgardPool } from '../utils/test-data/midgardRespon
 import { setupThorswapDeps } from '../utils/test-data/setupThorswapDeps'
 import { thorService } from '../utils/thorService'
 import { getThorTradeQuote } from './getTradeQuote'
+import Web3 from 'web3'
 
 jest.mock('../utils/thorService')
+jest.mock('web3')
+
+// @ts-ignore
+Web3.mockImplementation(() => ({
+  eth: {
+    Contract: jest.fn(() => ({
+      methods: {
+        deposit: jest.fn(() => ({
+          encodeABI: jest.fn(() => 'data')
+        }))
+      }
+    }))
+  }
+}))
 
 const mockedAxios = jest.mocked(thorService, true)
 

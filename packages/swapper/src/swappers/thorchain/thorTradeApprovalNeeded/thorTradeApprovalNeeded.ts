@@ -1,6 +1,4 @@
 import { fromAssetId, fromChainId, getFeeAssetIdFromAssetId } from '@shapeshiftoss/caip'
-import Web3 from 'web3'
-
 import { ApprovalNeededInput, ApprovalNeededOutput } from '../../../api'
 import { SwapError, SwapErrorTypes } from '../../../api'
 import { erc20AllowanceAbi } from '../../utils/abi/erc20Allowance-abi'
@@ -15,15 +13,14 @@ export const thorTradeApprovalNeeded = async ({
   deps: ThorchainSwapperDeps
   input: ApprovalNeededInput<'eip155:1'>
 }): Promise<ApprovalNeededOutput> => {
-  const { quote, wallet } = input
-  const { sellAsset } = quote
-  const { adapterManager } = deps
-  const web3 = new Web3()
-
-  const { assetReference: sellAssetErc20Address } = fromAssetId(sellAsset.assetId)
-  const { chainNamespace } = fromChainId(sellAsset.chainId)
-
   try {
+    const { quote, wallet } = input
+    const { sellAsset } = quote
+    const { adapterManager, web3 } = deps
+
+    const { assetReference: sellAssetErc20Address } = fromAssetId(sellAsset.assetId)
+    const { chainNamespace } = fromChainId(sellAsset.chainId)
+
     if (chainNamespace !== 'eip155') {
       throw new SwapError(
         '[thorTradeApprovalNeeded] - sellAsset chain namespace is not supported',
