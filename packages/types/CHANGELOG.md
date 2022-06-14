@@ -1,3 +1,24 @@
+# [@shapeshiftoss/types-v6.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v6.0.0...@shapeshiftoss/types-v6.1.0) (2022-06-13)
+
+
+### Features
+
+* **types:** add CoingeckoAssetPlatform enum ([#800](https://github.com/shapeshift/lib/issues/800)) ([cab8035](https://github.com/shapeshift/lib/commit/cab80353d0c7c15b0c44a7907a400fa3b8a82a14))
+
+# [@shapeshiftoss/types-v6.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v5.0.0...@shapeshiftoss/types-v6.0.0) (2022-06-13)
+
+
+### Features
+
+* **types:** remove ChainTypes, NetworkTypes, and AssetDataSource ([#792](https://github.com/shapeshift/lib/issues/792)) ([54347d7](https://github.com/shapeshift/lib/commit/54347d73d7a8682d333de753832fa9574ba2f4ad))
+
+
+### BREAKING CHANGES
+
+* **types:** removes ChainTypes, NetworkTypes, and AssetDataSource
+
+* chore: manually bump package version
+
 # [@shapeshiftoss/types-v5.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v4.4.1...@shapeshiftoss/types-v5.0.0) (2022-06-09)
 
 

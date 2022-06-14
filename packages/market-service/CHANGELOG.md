@@ -1,3 +1,17 @@
+# [@shapeshiftoss/market-service-v6.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v6.0.1...@shapeshiftoss/market-service-v6.1.0) (2022-06-13)
+
+
+### Features
+
+* **market-service:** remove ChainTypes ([#794](https://github.com/shapeshift/lib/issues/794)) ([016a16c](https://github.com/shapeshift/lib/commit/016a16c8ad93d6061a8a35c007f47b1d823c8f15))
+
+# [@shapeshiftoss/market-service-v6.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v6.0.0...@shapeshiftoss/market-service-v6.0.1) (2022-06-13)
+
+
+### Bug Fixes
+
+* **market-service:** remove hard-coded chain adapter URLs ([#798](https://github.com/shapeshift/lib/issues/798)) ([3e8bb90](https://github.com/shapeshift/lib/commit/3e8bb9007c27b67f0f6781e13a47fd108f6d3d55))
+
 # [@shapeshiftoss/market-service-v6.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v5.0.1...@shapeshiftoss/market-service-v6.0.0) (2022-06-09)
 
 
