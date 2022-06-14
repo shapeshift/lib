@@ -1,4 +1,10 @@
-import { CHAIN_NAMESPACE, CHAIN_REFERENCE, toAssetId } from '@shapeshiftoss/caip'
+import {
+  avalancheAssetId,
+  CHAIN_NAMESPACE,
+  CHAIN_REFERENCE,
+  toAssetId,
+  toChainId
+} from '@shapeshiftoss/caip'
 import { Asset } from '@shapeshiftoss/types'
 import axios from 'axios'
 
@@ -10,7 +16,8 @@ type AvalancheToken = {
   logo: string
   coingeckoId: string
 }
-type AvalancheTokenList = { [k: string]: AvalancheToken }
+
+type AvalancheTokenList = Record<string, AvalancheToken>
 
 type AvalancheContractAddress = {
   [symbolDotE: string]: string // value is avalanche contract address
@@ -36,9 +43,7 @@ export const getAvalancheAssets: GetAvalancheAssets = async () => {
   const chainNamespace = CHAIN_NAMESPACE.Ethereum
   const chainReference = CHAIN_REFERENCE.AvalancheCChain
 
-  // TODO(0xdef1cafe): toAssetId needs to support avalanche chain reference
-  // const avaxAssetId = toAssetId({ chainNamespace, chainReference, slip44 })
-  const chainId = `${chainNamespace}:${chainReference}`
+  const chainId = toChainId({ chainNamespace, chainReference })
   const explorer = 'https://snowtrace.io/'
   const explorerAddressLink = `${explorer}address`
   const explorerTxLink = `${explorer}tx`
@@ -47,8 +52,7 @@ export const getAvalancheAssets: GetAvalancheAssets = async () => {
     const name = `${symbol} on Avalanche`
     const precision = v.denomination
     const icon = v.logo
-    // TODO(0xdef1cafe): this will get picked up by the color generation script
-    const color = '#FFFFFF'
+    const color = '#FFFFFF' // this will get picked up by the color generation script
     const assetReference = contractAddresses[`${symbol}.e`].toLowerCase()
     const assetNamespace = 'erc20'
     const assetId = toAssetId({ chainNamespace, chainReference, assetNamespace, assetReference })
@@ -67,9 +71,7 @@ export const getAvalancheAssets: GetAvalancheAssets = async () => {
     return acc
   }, [])
 
-  const assetNamespace = 'slip44'
-  const assetReference = '9000'
-  const assetId = toAssetId({ chainNamespace, chainReference, assetNamespace, assetReference })
+  const assetId = avalancheAssetId
   const name = 'Avalanche'
   const symbol = 'AVAX'
   const precision = 18
