@@ -22,9 +22,9 @@ import {
   Account,
   BuildSendTxInput,
   FeeDataEstimate,
-  FeeDataKey,
   GetAddressInput,
   GetFeeDataInput,
+  GasFeeDataEstimate,
   SignTxInput,
   SubscribeError,
   SubscribeTxsInput,
@@ -369,26 +369,7 @@ export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet
     return data
   }
 
-  async getGasFeeData(): Promise<{
-    [FeeDataKey.Fast]: {
-      gasPrice: string
-      maxFeePerGas: string
-      maxPriorityFeePerGas: string
-      medianFee: number
-    }
-    [FeeDataKey.Average]: {
-      gasPrice: string
-      maxFeePerGas: string
-      maxPriorityFeePerGas: string
-      medianFee: number
-    }
-    [FeeDataKey.Slow]: {
-      gasPrice: string
-      maxFeePerGas: string
-      maxPriorityFeePerGas: string
-      medianFee: number
-    }
-  }> {
+  async getGasFeeData(): Promise<GasFeeDataEstimate> {
     const { data: responseData } = await axios.get<ZrxGasApiResponse>('https://gas.api.0x.org/')
     const medianFees = responseData.result.find((result) => result.source === 'MEDIAN')
 
@@ -403,7 +384,6 @@ export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet
 
     return {
       fast: {
-        medianFee: medianFees.fast,
         gasPrice: bnOrZero(medianFees.fast).toString(),
         maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
           .times(normalizationConstants.fast)
@@ -415,7 +395,6 @@ export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet
           .toString()
       },
       average: {
-        medianFee: medianFees.standard,
         gasPrice: bnOrZero(medianFees.standard).toString(),
         maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
           .times(normalizationConstants.average)
@@ -427,7 +406,6 @@ export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet
           .toString()
       },
       slow: {
-        medianFee: medianFees.low,
         gasPrice: bnOrZero(medianFees.low).toString(),
         maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
           .times(normalizationConstants.slow)
@@ -477,21 +455,21 @@ export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet
 
     return {
       fast: {
-        txFee: bnOrZero(bn(gasResults.fast.medianFee).times(gasLimit)).toPrecision(),
+        txFee: bnOrZero(bn(gasResults.fast.gasPrice).times(gasLimit)).toPrecision(),
         chainSpecific: {
           gasLimit,
           ...gasResults.fast
         }
       },
       average: {
-        txFee: bnOrZero(bn(gasResults.average.medianFee).times(gasLimit)).toPrecision(),
+        txFee: bnOrZero(bn(gasResults.average.gasPrice).times(gasLimit)).toPrecision(),
         chainSpecific: {
           gasLimit,
           ...gasResults.average
         }
       },
       slow: {
-        txFee: bnOrZero(bn(gasResults.slow.medianFee).times(gasLimit)).toPrecision(),
+        txFee: bnOrZero(bn(gasResults.slow.gasPrice).times(gasLimit)).toPrecision(),
         chainSpecific: {
           gasLimit,
           ...gasResults.slow
