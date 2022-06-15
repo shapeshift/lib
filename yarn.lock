@@ -2460,7 +2460,12 @@
     varuint-bitcoin "^1.0.4"
     wif "^2.0.1"
 
-"@shapeshiftoss/chain-adapters@^6.0.0", "@shapeshiftoss/chain-adapters@^6.0.1":
+"@shapeshiftoss/caip@^5.2.2", "@shapeshiftoss/caip@^5.3.0":
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/caip/-/caip-5.4.0.tgz#0df406fe56ea8391907cd9afbc4bc9b6362c4b16"
+  integrity sha512-+bVUN6zoXnZWYZnj3Qfn6eu0EuFCwCoCpkr6kXMSfi8/l7RuvLltflyPRBwXA3vSMEJV2oE1YTksTnpGh9cS5A==
+
+"@shapeshiftoss/chain-adapters@^6.0.0":
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/chain-adapters/-/chain-adapters-6.0.1.tgz#07c4d658055e17ac262ab2f1eab06b2c099168d8"
   integrity sha512-0qafOakDY8kwxYtcBJau5hfE/LaLhetLmFNpckNof40iUxS2sCmsXkVX+HF+HU3OjASBjBznvOCtlxTCFnOy7w==
