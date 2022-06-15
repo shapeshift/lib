@@ -8,7 +8,8 @@
   "types": "./dist/index.d.ts",
   "files": [
     "dist/index.*",
-    "dist/service"
+    "dist/service",
+    "dist/utils.ts"
   ],
   "publishConfig": {
     "access": "public"
