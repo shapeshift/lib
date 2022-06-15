@@ -2,6 +2,7 @@ import { fromAssetId } from '@shapeshiftoss/caip'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { Asset, BIP44Params } from '@shapeshiftoss/types'
+import { numberToHex } from 'web3-utils'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { ThorchainSwapperDeps } from '../../types'
@@ -17,6 +18,7 @@ export const makeTradeTx = async ({
   adapter,
   maxFeePerGas,
   maxPriorityFeePerGas,
+  gasPrice,
   slippageTolerance,
   deps,
   gasLimit
@@ -28,18 +30,27 @@ export const makeTradeTx = async ({
   sellAsset: Asset
   destinationAddress: string
   adapter: ethereum.ChainAdapter
-  maxFeePerGas: string
-  maxPriorityFeePerGas: string
   slippageTolerance: string
   deps: ThorchainSwapperDeps
   gasLimit: string
-}): Promise<{
+} & (
+  | {
+      gasPrice: string
+      maxFeePerGas?: never
+      maxPriorityFeePerGas?: never
+    }
+  | {
+      gasPrice?: never
+      maxFeePerGas: string
+      maxPriorityFeePerGas: string
+    }
+)): Promise<{
   txToSign: ETHSignTx
 }> => {
   try {
-    const { assetReference } = fromAssetId(sellAsset.assetId)
+    const { assetNamespace } = fromAssetId(sellAsset.assetId)
 
-    const isErc20Trade = assetReference.startsWith('0x')
+    const isErc20Trade = assetNamespace === 'erc20'
 
     const { data, router } = await getThorTxInfo({
       deps,
@@ -56,8 +67,17 @@ export const makeTradeTx = async ({
       bip44Params,
       to: router,
       gasLimit,
-      maxFeePerGas,
-      maxPriorityFeePerGas,
+      ...(gasPrice !== undefined
+        ? {
+            gasPrice: numberToHex(gasPrice)
+          }
+        : {
+            // (The type system guarantees that on this branch both of these will be set)
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            maxFeePerGas: numberToHex(maxFeePerGas!),
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            maxPriorityFeePerGas: numberToHex(maxPriorityFeePerGas!)
+          }),
       value: isErc20Trade ? '0' : sellAmount,
       data
     })
