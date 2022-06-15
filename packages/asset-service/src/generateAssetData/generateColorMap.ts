@@ -12,8 +12,8 @@ import { getOsmosisAssets } from './cosmos/getOsmosisAssets'
 import { addTokensToEth } from './ethTokens'
 import { setColors } from './setColors'
 
-// Getting the colors for ~6000 can take around 20 min from scratch. So we use this file to generate
-// a color map so the generate asset script itself won't take so long.
+// Getting the colors for ~6000 assets can take around 20 min from scratch. So we use this file to
+// generate a color map so the generate asset script itself won't take so long.
 const generateColorMap = async () => {
   const ethAssets = await addTokensToEth()
   const osmosisAssets = await getOsmosisAssets()
