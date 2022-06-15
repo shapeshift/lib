@@ -17,6 +17,7 @@ type AvalancheToken = {
   coingeckoId: string
 }
 
+// key is regular symbol, e.g. USDC
 type AvalancheTokenList = Record<string, AvalancheToken>
 
 // key is dot-e symbol, value is avalanche contract address
