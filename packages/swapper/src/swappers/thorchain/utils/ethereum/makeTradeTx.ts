@@ -2,7 +2,6 @@ import { fromAssetId } from '@shapeshiftoss/caip'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { Asset, BIP44Params } from '@shapeshiftoss/types'
-import { numberToHex } from 'web3-utils'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { ThorchainSwapperDeps } from '../../types'
@@ -69,14 +68,11 @@ export const makeTradeTx = async ({
       gasLimit,
       ...(gasPrice !== undefined
         ? {
-            gasPrice: numberToHex(gasPrice)
+            gasPrice
           }
         : {
-            // (The type system guarantees that on this branch both of these will be set)
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            maxFeePerGas: numberToHex(maxFeePerGas!),
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            maxPriorityFeePerGas: numberToHex(maxPriorityFeePerGas!)
+            maxFeePerGas,
+            maxPriorityFeePerGas
           }),
       value: isErc20Trade ? '0' : sellAmount,
       data
