@@ -370,25 +370,41 @@ export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet
   }
 
   async getGasFeeData(): Promise<{
-    [FeeDataKey.Fast]: { gasPrice: string; maxFeePerGas: string; maxPriorityFeePerGas: string }
-    [FeeDataKey.Average]: { gasPrice: string; maxFeePerGas: string; maxPriorityFeePerGas: string }
-    [FeeDataKey.Slow]: { gasPrice: string; maxFeePerGas: string; maxPriorityFeePerGas: string }
+    [FeeDataKey.Fast]: {
+      gasPrice: string
+      maxFeePerGas: string
+      maxPriorityFeePerGas: string
+      medianFee: number
+    }
+    [FeeDataKey.Average]: {
+      gasPrice: string
+      maxFeePerGas: string
+      maxPriorityFeePerGas: string
+      medianFee: number
+    }
+    [FeeDataKey.Slow]: {
+      gasPrice: string
+      maxFeePerGas: string
+      maxPriorityFeePerGas: string
+      medianFee: number
+    }
   }> {
     const { data: responseData } = await axios.get<ZrxGasApiResponse>('https://gas.api.0x.org/')
-    const fees = responseData.result.find((result) => result.source === 'MEDIAN')
+    const medianFees = responseData.result.find((result) => result.source === 'MEDIAN')
 
-    if (!fees) throw new TypeError('ETH Gas Fees should always exist')
+    if (!medianFees) throw new TypeError('ETH Gas Fees should always exist')
 
     const feeData = (await this.providers.http.getGasFees()).data
     const normalizationConstants = {
-      fast: bnOrZero(bn(fees.fast).dividedBy(fees.standard)),
+      fast: bnOrZero(bn(medianFees.fast).dividedBy(medianFees.standard)),
       average: bn(1),
-      slow: bnOrZero(bn(fees.low).dividedBy(fees.standard))
+      slow: bnOrZero(bn(medianFees.low).dividedBy(medianFees.standard))
     }
 
     return {
       fast: {
-        gasPrice: bnOrZero(fees.fast).toString(),
+        medianFee: medianFees.fast,
+        gasPrice: bnOrZero(medianFees.fast).toString(),
         maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
           .times(normalizationConstants.fast)
           .toFixed(0, BigNumber.ROUND_CEIL)
@@ -399,7 +415,8 @@ export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet
           .toString()
       },
       average: {
-        gasPrice: bnOrZero(fees.standard).toString(),
+        medianFee: medianFees.standard,
+        gasPrice: bnOrZero(medianFees.standard).toString(),
         maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
           .times(normalizationConstants.average)
           .toFixed(0, BigNumber.ROUND_CEIL)
@@ -410,7 +427,8 @@ export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet
           .toString()
       },
       slow: {
-        gasPrice: bnOrZero(fees.low).toString(),
+        medianFee: medianFees.low,
+        gasPrice: bnOrZero(medianFees.low).toString(),
         maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
           .times(normalizationConstants.slow)
           .toFixed(0, BigNumber.ROUND_CEIL)
@@ -431,11 +449,6 @@ export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet
   }: GetFeeDataInput<KnownChainIds.EthereumMainnet>): Promise<
     FeeDataEstimate<KnownChainIds.EthereumMainnet>
   > {
-    const { data: responseData } = await axios.get<ZrxGasApiResponse>('https://gas.api.0x.org/')
-    const fees = responseData.result.find((result) => result.source === 'MEDIAN')
-
-    if (!fees) throw new TypeError('ETH Gas Fees should always exist')
-
     const isErc20Send = !!contractAddress
 
     // Only care about sendMax for erc20
@@ -464,21 +477,21 @@ export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet
 
     return {
       fast: {
-        txFee: bnOrZero(bn(fees.fast).times(gasLimit)).toPrecision(),
+        txFee: bnOrZero(bn(gasResults.fast.medianFee).times(gasLimit)).toPrecision(),
         chainSpecific: {
           gasLimit,
           ...gasResults.fast
         }
       },
       average: {
-        txFee: bnOrZero(bn(fees.standard).times(gasLimit)).toPrecision(),
+        txFee: bnOrZero(bn(gasResults.average.medianFee).times(gasLimit)).toPrecision(),
         chainSpecific: {
           gasLimit,
           ...gasResults.average
         }
       },
       slow: {
-        txFee: bnOrZero(bn(fees.low).times(gasLimit)).toPrecision(),
+        txFee: bnOrZero(bn(gasResults.slow.medianFee).times(gasLimit)).toPrecision(),
         chainSpecific: {
           gasLimit,
           ...gasResults.slow
