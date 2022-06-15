@@ -22,6 +22,7 @@ import {
   Account,
   BuildSendTxInput,
   FeeDataEstimate,
+  FeeDataKey,
   GetAddressInput,
   GetFeeDataInput,
   SignTxInput,
@@ -368,101 +369,10 @@ export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet
     return data
   }
 
-  async getFeeData({
-    to,
-    value,
-    chainSpecific: { contractAddress, from, contractData },
-    sendMax = false
-  }: GetFeeDataInput<KnownChainIds.EthereumMainnet>): Promise<
-    FeeDataEstimate<KnownChainIds.EthereumMainnet>
-  > {
-    const { data: responseData } = await axios.get<ZrxGasApiResponse>('https://gas.api.0x.org/')
-    const fees = responseData.result.find((result) => result.source === 'MEDIAN')
-
-    if (!fees) throw new TypeError('ETH Gas Fees should always exist')
-
-    const isErc20Send = !!contractAddress
-
-    // Only care about sendMax for erc20
-    // its hard to estimate eth fees for sendmax to contracts
-    // in MOST cases any eth amount will cost the same 21000 gas
-    if (sendMax && isErc20Send && contractAddress) {
-      const account = await this.getAccount(from)
-      const erc20Balance = account?.chainSpecific?.tokens?.find((token) => {
-        const { assetReference } = fromAssetId(token.assetId)
-        return assetReference === contractAddress.toLowerCase()
-      })?.balance
-      if (!erc20Balance) throw new Error('no balance')
-      value = erc20Balance
-    }
-
-    const data = contractData ?? (await getErc20Data(to, value, contractAddress))
-
-    const { data: gasLimit } = await this.providers.http.estimateGas({
-      from,
-      to: isErc20Send ? contractAddress : to,
-      value: isErc20Send ? '0' : value,
-      data
-    })
-
-    const feeData = (await this.providers.http.getGasFees()).data
-    const normalizationConstants = {
-      fast: bnOrZero(bn(fees.fast).dividedBy(fees.standard)),
-      average: bn(1),
-      slow: bnOrZero(bn(fees.low).dividedBy(fees.standard))
-    }
-
-    return {
-      fast: {
-        txFee: bnOrZero(bn(fees.fast).times(gasLimit)).toPrecision(),
-        chainSpecific: {
-          gasLimit,
-          gasPrice: bnOrZero(fees.fast).toString(),
-          maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
-            .times(normalizationConstants.fast)
-            .toFixed(0, BigNumber.ROUND_CEIL)
-            .toString(),
-          maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
-            .times(normalizationConstants.fast)
-            .toFixed(0, BigNumber.ROUND_CEIL)
-            .toString()
-        }
-      },
-      average: {
-        txFee: bnOrZero(bn(fees.standard).times(gasLimit)).toPrecision(),
-        chainSpecific: {
-          gasLimit,
-          gasPrice: bnOrZero(fees.standard).toString(),
-          maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
-            .times(normalizationConstants.average)
-            .toFixed(0, BigNumber.ROUND_CEIL)
-            .toString(),
-          maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
-            .times(normalizationConstants.average)
-            .toFixed(0, BigNumber.ROUND_CEIL)
-            .toString()
-        }
-      },
-      slow: {
-        txFee: bnOrZero(bn(fees.low).times(gasLimit)).toPrecision(),
-        chainSpecific: {
-          gasLimit,
-          gasPrice: bnOrZero(fees.low).toString(),
-          maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
-            .times(normalizationConstants.slow)
-            .toFixed(0, BigNumber.ROUND_CEIL)
-            .toString(),
-          maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
-            .times(normalizationConstants.slow)
-            .toFixed(0, BigNumber.ROUND_CEIL)
-            .toString()
-        }
-      }
-    }
-  }
-
   async getGasFeeData(): Promise<{
-    [k: string]: { gasPrice: string; maxFeePerGas: string; maxPriorityFeePerGas: string }
+    [FeeDataKey.Fast]: { gasPrice: string; maxFeePerGas: string; maxPriorityFeePerGas: string }
+    [FeeDataKey.Average]: { gasPrice: string; maxFeePerGas: string; maxPriorityFeePerGas: string }
+    [FeeDataKey.Slow]: { gasPrice: string; maxFeePerGas: string; maxPriorityFeePerGas: string }
   }> {
     const { data: responseData } = await axios.get<ZrxGasApiResponse>('https://gas.api.0x.org/')
     const fees = responseData.result.find((result) => result.source === 'MEDIAN')
@@ -509,6 +419,70 @@ export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet
           .times(normalizationConstants.slow)
           .toFixed(0, BigNumber.ROUND_CEIL)
           .toString()
+      }
+    }
+  }
+
+  async getFeeData({
+    to,
+    value,
+    chainSpecific: { contractAddress, from, contractData },
+    sendMax = false
+  }: GetFeeDataInput<KnownChainIds.EthereumMainnet>): Promise<
+    FeeDataEstimate<KnownChainIds.EthereumMainnet>
+  > {
+    const { data: responseData } = await axios.get<ZrxGasApiResponse>('https://gas.api.0x.org/')
+    const fees = responseData.result.find((result) => result.source === 'MEDIAN')
+
+    if (!fees) throw new TypeError('ETH Gas Fees should always exist')
+
+    const isErc20Send = !!contractAddress
+
+    // Only care about sendMax for erc20
+    // its hard to estimate eth fees for sendmax to contracts
+    // in MOST cases any eth amount will cost the same 21000 gas
+    if (sendMax && isErc20Send && contractAddress) {
+      const account = await this.getAccount(from)
+      const erc20Balance = account?.chainSpecific?.tokens?.find((token) => {
+        const { assetReference } = fromAssetId(token.assetId)
+        return assetReference === contractAddress.toLowerCase()
+      })?.balance
+      if (!erc20Balance) throw new Error('no balance')
+      value = erc20Balance
+    }
+
+    const data = contractData ?? (await getErc20Data(to, value, contractAddress))
+
+    const { data: gasLimit } = await this.providers.http.estimateGas({
+      from,
+      to: isErc20Send ? contractAddress : to,
+      value: isErc20Send ? '0' : value,
+      data
+    })
+
+    const gasResults = await this.getGasFeeData()
+
+    return {
+      fast: {
+        txFee: bnOrZero(bn(fees.fast).times(gasLimit)).toPrecision(),
+        chainSpecific: {
+          gasLimit,
+          ...gasResults.fast
+        }
+      },
+      average: {
+        txFee: bnOrZero(bn(fees.standard).times(gasLimit)).toPrecision(),
+        chainSpecific: {
+          gasLimit,
+          ...gasResults.average
+        }
+      },
+      slow: {
+        txFee: bnOrZero(bn(fees.low).times(gasLimit)).toPrecision(),
+        chainSpecific: {
+          gasLimit,
+          ...gasResults.slow
+        }
       }
     }
   }
