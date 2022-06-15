@@ -81,5 +81,5 @@ export type BuildTxInput = {
 
 export type GetFeeDataInput = {
   pubkey: string
-  opReturnData: string
+  opReturnData?: string
 }
