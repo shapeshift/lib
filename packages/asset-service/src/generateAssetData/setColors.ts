@@ -9,15 +9,18 @@ function toHex(num: number): string {
 export const setColors = async (assets: Asset[]): Promise<Asset[]> => {
   for (let i = 0; i < assets.length - 1; i++) {
     try {
-      if (assets[i].color === '#FFFFFF') {
-        console.info(`${i + 1}/${assets.length} Checking color for ${assets[i].symbol}`)
+      if (assets[i].color === '#FFFFFF' && assets[i].icon) {
         // colorThief.getColor returns the most dominant color in the icon.
         const color = await colorThief.getColor(assets[i].icon)
         const hexColor = `#${toHex(color[0])}${toHex(color[1])}${toHex(color[2])}`
         assets[i].color = hexColor
       }
     } catch (err) {
-      console.info(`Could not get color for ${assets[i].assetId} iconUrl: ${assets[i].icon}`)
+      console.info(
+        `${i + 1}/${assets.length} Could not get color for ${assets[i].assetId} iconUrl: ${
+          assets[i].icon
+        }`
+      )
     }
   }
   return assets

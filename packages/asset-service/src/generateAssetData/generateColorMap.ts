@@ -32,8 +32,10 @@ const generateColorMap = async () => {
   const orderedAssetList = orderBy(filteredWithColors, 'assetId')
   const initial: Record<AssetId, string> = {}
   const colorMap = orderedAssetList.reduce((acc, asset) => {
-    const { assetId } = asset
-    acc[assetId] = asset.color
+    const { assetId, color } = asset
+    // Leave white out of the color map.
+    if (color === '#FFFFFF') return acc
+    acc[assetId] = color
     return acc
   }, initial)
 
