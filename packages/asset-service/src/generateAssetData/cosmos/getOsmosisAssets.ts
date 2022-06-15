@@ -2,6 +2,7 @@ import { Asset } from '@shapeshiftoss/types'
 import axios from 'axios'
 
 import { getRenderedIdenticonBase64, IdenticonOptions } from '../../service/GenerateAssetIcon'
+import { colorMap } from '../colorMap'
 
 type OsmoAsset = {
   description: string
@@ -56,13 +57,15 @@ export const getOsmosisAssets = async (): Promise<Asset[]> => {
     // if an asset has an ibc object, it's bridged, so label it as e.g. ATOM on Osmosis
     const getName = (a: OsmoAsset): string => (a.ibc ? `${a.name} on Osmosis` : a.name)
 
+    const assetId = `cosmos:osmosis-1/${assetNamespace}:${assetReference}`
+
     const assetDatum: Asset = {
-      assetId: `cosmos:osmosis-1/${assetNamespace}:${assetReference}`,
+      assetId,
       chainId: 'cosmos:osmosis-1',
       symbol: current.symbol,
       name: getName(current),
       precision,
-      color: '#FFFFFF',
+      color: colorMap[assetId] ?? '#FFFFFF',
       icon: current.logo_URIs.png,
       explorer: 'https://mintscan.io',
       explorerAddressLink: 'https://mintscan.io/osmosis/account/',

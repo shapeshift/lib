@@ -3,6 +3,7 @@ import { Asset } from '@shapeshiftoss/types'
 import axios from 'axios'
 import lodash from 'lodash'
 
+import { colorMap } from '../colorMap'
 import { overrideTokens } from './overrides'
 
 type UniswapToken = {
@@ -44,12 +45,13 @@ export async function getUniswapTokens(): Promise<Asset[]> {
     if (!assetReference) return acc
 
     const assetNamespace = 'erc20'
+    const assetId = toAssetId({ chainId, assetNamespace, assetReference })
     const result: Asset = {
-      assetId: toAssetId({ chainId, assetNamespace, assetReference }),
+      assetId,
       chainId,
       name: token.name,
       precision: token.decimals,
-      color: '#FFFFFF', // TODO
+      color: colorMap[assetId] ?? '#FFFFFF',
       icon: token.logoURI,
       symbol: token.symbol,
       explorer: 'https://etherscan.io',
