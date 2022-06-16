@@ -1,14 +1,13 @@
-import { AssetId } from '@shapeshiftoss/caip'
+import { AssetId, ChainId, osmosisChainId, cosmosChainId } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, CosmosWallet, HDWallet, OsmosisWallet } from '@shapeshiftoss/hdwallet-core'
 import {
   Asset,
-  ChainTypes,
   SwapperType
 } from '@shapeshiftoss/types'
 import {
   ChainAdapterManager,
-  // @ts-ignore
-  OsmosisChainAdapter
+  osmosis,
+  cosmos
 } from '@shapeshiftoss/chain-adapters'
 
 import {
@@ -18,11 +17,13 @@ import {
   TradeResult,
   TradeTxs,
   BuildTradeInput,
+  SwapErrorTypes,
+  SwapError,
 } from '../../api'
 import { atomUrl, getAtomChannelBalance, getRateInfo, IsymbolDenomMapping, osmoUrl, pollForAtomChannelBalance, pollForComplete, symbolDenomMapping } from './utils/helpers'
 import { DEFAULT_SOURCE, MAX_SWAPPER_SELL } from './utils/constants'
-import { bn, bnOrZero } from '../zrx/utils/bignumber'
 import axios from 'axios'
+import { bn, bnOrZero } from '../utils/bignumber'
 
 export type OsmoSwapperDeps = {
   wallet: HDWallet
@@ -30,7 +31,7 @@ export type OsmoSwapperDeps = {
 }
 
 const fee = '10000'
-export class OsmosisSwapper implements Swapper {
+export class OsmosisSwapper implements Swapper<ChainId> {
   supportAssets: string[]
   deps: OsmoSwapperDeps
 
@@ -262,8 +263,11 @@ export class OsmosisSwapper implements Swapper {
 
     const gas = '1350000'
 
-    const osmosisAdapter = this.deps.adapterManager.byChain(ChainTypes.Osmosis) as OsmosisChainAdapter
-    const cosmosAdapter = this.deps.adapterManager.byChain(ChainTypes.Cosmos) as OsmosisChainAdapter
+    const osmosisAdapter = this.deps.adapterManager.get(osmosisChainId) as | osmosis.ChainAdapter
+      | undefined
+    const cosmosAdapter = this.deps.adapterManager.get(cosmosChainId) as | cosmos.ChainAdapter
+      | undefined
+
     const osmoAddress = await (wallet as OsmosisWallet).osmosisGetAddress({
       addressNList: bip32ToAddressNList("m/44'/118'/0'/0/0")
     })
@@ -366,31 +370,39 @@ export class OsmosisSwapper implements Swapper {
       wallet
     }
 
-    console.info('signTxInput: ', JSON.stringify(signTxInput))
-    const signed = await osmosisAdapter.signTransaction(signTxInput)
-    console.info('signed: ', signed)
-    const txid1 = await osmosisAdapter.broadcastTransaction(signed)
-    console.info('txid1: ', txid1)
+    if (osmosisAdapter) {
+      console.info('signTxInput: ', JSON.stringify(signTxInput))
+      const signed = await osmosisAdapter.signTransaction(signTxInput)
+      console.info('signed: ', signed)
+      const txid1 = await osmosisAdapter.broadcastTransaction(signed)
+      console.info('txid1: ', txid1)
 
-    if (pair === 'OSMO_ATOM') {
-      const pollResult = await pollForComplete(txid1, osmoUrl)
-      console.log('pollResult', pollResult)
-      if (pollResult !== 'success')
-        throw new Error('osmo swap failed')
+      if (pair === 'OSMO_ATOM') {
+        const pollResult = await pollForComplete(txid1, osmoUrl)
+        console.log('pollResult', pollResult)
+        if (pollResult !== 'success')
+          throw new Error('osmo swap failed')
 
-      const amount = await pollForAtomChannelBalance(sender)
-      //perform IBC deposit
-      const transfer = {
-        sender: sellAddress,
-        receiver: buyAddress,
-        amount: String(amount)
+        const amount = await pollForAtomChannelBalance(sender)
+        //perform IBC deposit
+        const transfer = {
+          sender: sellAddress,
+          receiver: buyAddress,
+          amount: String(amount)
+        }
+
+        const txid = await this.performIbcTransfer(transfer, osmosisAdapter, wallet, osmoUrl, buyAssetDenom, 'channel-0')
+        console.info('txid: ', txid)
       }
 
-      const txid = await this.performIbcTransfer(transfer, osmosisAdapter, wallet, osmoUrl, buyAssetDenom, 'channel-0')
-      console.info('txid: ', txid)
+      // @ts-ignore
+      return { txid: txid1 || 'error' }
     }
-
-    // @ts-ignore
-    return { txid: txid1 || 'error' }
+    else {
+      throw new SwapError('[executeTrade]: unsupported trade', {
+        code: SwapErrorTypes.SIGN_AND_BROADCAST_FAILED,
+        fn: 'executeTrade'
+      })
+    }
   }
 }

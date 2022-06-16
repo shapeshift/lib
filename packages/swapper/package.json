@@ -43,7 +43,7 @@
     "@shapeshiftoss/chain-adapters": "^7.0.3",
     "@shapeshiftoss/errors": "^1.1.1",
     "@shapeshiftoss/hdwallet-core": "^1.23.0",
-    "@shapeshiftoss/types": "^5.0.0",
+    "@shapeshiftoss/types": "^6.1.0",
     "@types/readline-sync": "^1.4.4",
     "readline-sync": "^1.4.10",
     "web3-utils": "^1.7.3",

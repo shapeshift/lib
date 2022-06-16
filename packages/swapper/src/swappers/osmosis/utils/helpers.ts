@@ -1,7 +1,7 @@
 import axios from "axios"
 import { SwapError } from "../../../index"
-import { bn, bnOrZero } from "../../zrx/utils/bignumber"
 import { find } from "lodash"
+import { bn, bnOrZero } from "../../utils/bignumber"
 
 export interface IsymbolDenomMapping {
     OSMO: string
