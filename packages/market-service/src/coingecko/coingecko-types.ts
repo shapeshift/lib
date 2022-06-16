@@ -1,4 +1,12 @@
 export type CoinGeckoMarketCapNoId = Omit<CoinGeckoMarketCap, 'id'>
+
+export type CoinGeckoMarketData = {
+  circulating_supply: number
+  max_supply: number | null
+  market_cap: { [currency: string]: number }
+  current_price: { [currency: string]: number }
+  price_change_percentage_24h: number
+}
 export type CoinGeckoMarketCap = {
   id: string
   symbol: string
@@ -30,4 +38,5 @@ export type CoinGeckoMarketCap = {
     percentage: number
   }
   last_updated: string
+  market_data?: CoinGeckoMarketData
 }

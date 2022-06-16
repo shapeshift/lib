@@ -1,21 +1,18 @@
-export const fox = {
-  market_data: {
-    id: 'fox-token',
-    rank: '327',
-    symbol: 'FOX',
-    name: 'FOX Token',
-    circulating_supply: '272087306.9154830000000000',
-    max_supply: '1000001337.0000000000000000',
-    market_cap: { usd: '76043211.3383411704757409' },
-    current_price: { usd: '0.2794809217688426' },
-    price_change_percentage_24h: 2.810767605208474
-  }
+import { CoinGeckoMarketData } from '../coingecko/coingecko-types'
+
+export const fox: CoinGeckoMarketData = {
+  circulating_supply: 272087306.915483,
+  max_supply: 1000001337.0,
+  // eslint-disable-next-line @typescript-eslint/no-loss-of-precision
+  market_cap: { usd: 76043211.3383411704757409 },
+  current_price: { usd: 0.2794809217688426 },
+  price_change_percentage_24h: 2.810767605208474
 }
 
 export const mockFoxyMarketData = {
   changePercent24Hr: 2.810767605208474,
   marketCap: '0',
-  price: '0.2794809217688426',
+  price: 0.2794809217688426,
   volume: '0',
   supply: '52018758.965754575223841191',
   maxSupply: '52018758.965754575223841191'

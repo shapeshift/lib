@@ -31,7 +31,7 @@ const mockedAxios = axios as jest.Mocked<typeof axios>
 describe('foxy market service', () => {
   describe('getMarketCap', () => {
     it('can return fox market data', async () => {
-      mockedAxios.get.mockResolvedValue({ data: { data: [fox] } })
+      mockedAxios.get.mockResolvedValue({ data: { data: [{ market_data: fox }] } })
       const result = await foxyMarketService.findAll()
       expect(Object.keys(result).length).toEqual(1)
     })
@@ -55,7 +55,7 @@ describe('foxy market service', () => {
     }
 
     it('should return market data for FOXy', async () => {
-      mockedAxios.get.mockResolvedValue({ data: fox })
+      mockedAxios.get.mockResolvedValue({ data: { market_data: fox } })
       expect(await foxyMarketService.findByAssetId(args)).toEqual(mockFoxyMarketData)
     })
 
