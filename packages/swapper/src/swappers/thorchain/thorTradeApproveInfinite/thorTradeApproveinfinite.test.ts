@@ -1,7 +1,8 @@
-import { thorTradeApproveInfinite } from './thorTradeApproveInfinite'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { setupThorswapDeps } from '../utils/test-data/setupThorswapDeps'
+
 import { setupQuote } from '../../utils/test-data/setupSwapQuote'
+import { setupThorswapDeps } from '../utils/test-data/setupThorswapDeps'
+import { thorTradeApproveInfinite } from './thorTradeApproveInfinite'
 
 jest.mock('../../utils/helpers/helpers', () => ({
   grantAllowance: jest.fn(() => 'grantAllowanceTxId')
