@@ -9,7 +9,8 @@ export const fox: CoinCapMarketCap = {
   maxSupply: '1000001337.0000000000000000',
   marketCapUsd: '76043211.3383411704757409',
   volumeUsd24Hr: '809217.5632748945831009',
-  priceUsd: '0.2794809217688426',
+  // @ts-ignore
+  price: '0.2794809217688426',
   changePercent24Hr: '2.8107676052084740',
   vwap24Hr: '0.2717415151864480',
   explorer: 'https://etherscan.io/token/0xc770eefad204b5180df6a14ee197d99d808ee52d'

@@ -55,7 +55,7 @@ describe('foxy market service', () => {
     }
 
     it('should return market data for FOXy', async () => {
-      mockedAxios.get.mockResolvedValue({ data: { data: fox } })
+      mockedAxios.get.mockResolvedValue({ data: fox })
       expect(await foxyMarketService.findByAssetId(args)).toEqual(mockFoxyMarketData)
     })
 
@@ -75,12 +75,14 @@ describe('foxy market service', () => {
     }
 
     it('should return market data for FOXy', async () => {
-      const mockHistoryData = [
-        { time: 1631664000000, priceUsd: '0.480621954029937' },
-        { time: 1631577600000, priceUsd: '0.48541321175453755' },
-        { time: 1631491200000, priceUsd: '0.4860349080635926' },
-        { time: 1631404800000, priceUsd: '0.46897407484696146' }
-      ]
+      const mockHistoryData = {
+        prices: [
+          [1631664000000, 0.480621954029937],
+          [1631577600000, 0.48541321175453755],
+          [1631491200000, 0.4860349080635926],
+          [1631404800000, 0.46897407484696146]
+        ]
+      }
 
       const expected = [
         { date: new Date('2021-09-15T00:00:00.000Z').valueOf(), price: 0.480621954029937 },
@@ -88,7 +90,7 @@ describe('foxy market service', () => {
         { date: new Date('2021-09-13T00:00:00.000Z').valueOf(), price: 0.4860349080635926 },
         { date: new Date('2021-09-12T00:00:00.000Z').valueOf(), price: 0.46897407484696146 }
       ]
-      mockedAxios.get.mockResolvedValue({ data: { data: mockHistoryData } })
+      mockedAxios.get.mockResolvedValue({ data: mockHistoryData })
       expect(await foxyMarketService.findPriceHistoryByAssetId(args)).toEqual(expected)
     })
 
