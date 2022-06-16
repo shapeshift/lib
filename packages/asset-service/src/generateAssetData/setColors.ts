@@ -11,8 +11,8 @@ export const setColors = async (assets: Asset[]): Promise<Asset[]> => {
     try {
       if (assets[i].color === '#FFFFFF' && assets[i].icon) {
         // colorThief.getColor returns the most dominant color in the icon.
-        const color = await colorThief.getColor(assets[i].icon)
-        const hexColor = `#${toHex(color[0])}${toHex(color[1])}${toHex(color[2])}`
+        const [r, g, b] = await colorThief.getColor(assets[i].icon)
+        const hexColor = `#${toHex(r)}${toHex(g)}${toHex(b)}`
         assets[i].color = hexColor
       }
     } catch (err) {
