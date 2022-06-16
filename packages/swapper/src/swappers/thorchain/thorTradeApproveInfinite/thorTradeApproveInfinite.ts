@@ -1,10 +1,11 @@
+import { ethereum } from '@shapeshiftoss/chain-adapters'
+import { KnownChainIds } from '@shapeshiftoss/types'
+
 import { ApproveInfiniteInput, SwapError, SwapErrorTypes } from '../../../api'
 import { erc20Abi } from '../../utils/abi/erc20-abi'
 import { grantAllowance } from '../../utils/helpers/helpers'
 import { ThorchainSwapperDeps } from '../types'
 import { MAX_ALLOWANCE } from '../utils/constants'
-import { ethereum } from '@shapeshiftoss/chain-adapters'
-import { KnownChainIds } from '@shapeshiftoss/types'
 
 export const thorTradeApproveInfinite = async (
   { adapterManager, web3 }: ThorchainSwapperDeps,
