@@ -133,6 +133,7 @@ const main = async (): Promise<void> => {
   )
   if (answer === 'y') {
     const trade = await swapper.buildTrade({
+      chainId: 'eip155:1',
       wallet,
       buyAsset,
       sendMax: false,

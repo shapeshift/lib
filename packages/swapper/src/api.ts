@@ -68,7 +68,7 @@ export type GetBtcTradeQuoteInput = CommonTradeInput & {
 
 export type GetTradeQuoteInput = GetEthTradeQuoteInput | GetBtcTradeQuoteInput
 
-export type BuildTradeInput = CommonTradeInput & {
+export type BuildTradeInput = GetTradeQuoteInput & {
   buyAssetAccountNumber: number
   slippage?: string
   wallet: HDWallet
