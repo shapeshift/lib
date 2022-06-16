@@ -43,7 +43,7 @@ describe('foxy market service', () => {
     })
 
     it('can handle rate limiting', async () => {
-      mockedAxios.get.mockResolvedValue({ status: 429 })
+      mockedAxios.get.mockRejectedValue({ status: 429 })
       const result = await foxyMarketService.findAll()
       expect(Object.keys(result).length).toEqual(0)
     })
