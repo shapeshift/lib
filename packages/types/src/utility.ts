@@ -1,3 +1,5 @@
+import { Union } from 'ts-toolbelt'
+
 /**
  * Further reading on ideas behind these utility types
  *
@@ -26,6 +28,22 @@ type UnionMerge<T> = Pick<UnionMapping<T>, keyof T> & Partial<UnionMapping<T>>
 export type ChainSpecific<T, M> = UnionMerge<
   T extends unknown ? (T extends keyof M ? { chainSpecific: M[T] } : undefined) : never
 >
+
+/** intersect */
+type Intersect<T, T2> = Pick<T, keyof T> & Partial<T2>
+
+/** merge */
+type Merge<T extends object> = Intersect<T, Union.Merge<T>>
+
+/** chainspecific */
+export type ChainSpecific2<T, M> = T extends unknown
+  ? T extends keyof M
+    ? M[T]
+    : undefined
+  : never
+
+/** make */
+export type Make<T extends object> = { chainSpecific: Merge<T> }
 
 /** Adds all possible values of union(T1) as a nested object under a `chainSpecific` && union(T2) as a nested object under a `swapperSpecific` key */
 export type ChainAndSwapperSpecific<T1, M1, T2, M2> = UnionMerge<

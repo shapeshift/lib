@@ -6,7 +6,14 @@ import {
   HDWallet,
   OsmosisSignTx
 } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, ChainSpecific, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
+import {
+  BIP44Params,
+  ChainSpecific,
+  ChainSpecific2,
+  KnownChainIds,
+  Make,
+  UtxoAccountType
+} from '@shapeshiftoss/types'
 
 import * as bitcoin from './bitcoin'
 import * as cosmos from './cosmossdk/cosmos'
@@ -42,19 +49,24 @@ export enum FeeDataKey {
   Fast = 'fast'
 }
 
-type ChainSpecificFeeData<T> = ChainSpecific<
-  T,
-  {
-    [KnownChainIds.EthereumMainnet]: ethereum.FeeData
-    [KnownChainIds.BitcoinMainnet]: bitcoin.FeeData
-    [KnownChainIds.CosmosMainnet]: cosmos.FeeData
-    [KnownChainIds.OsmosisMainnet]: osmosis.FeeData
-  }
+type ChainSpecificFeeData<T extends KnownChainIds> = Make<
+  ChainSpecific2<
+    T,
+    {
+      [KnownChainIds.EthereumMainnet]: ethereum.FeeData
+      [KnownChainIds.BitcoinMainnet]: bitcoin.FeeData
+      [KnownChainIds.CosmosMainnet]: cosmos.FeeData
+      [KnownChainIds.OsmosisMainnet]: osmosis.FeeData
+    }
+  >
 >
 
-export type FeeData<T extends ChainId> = {
+export type FeeData<T extends KnownChainIds> = {
   txFee: string
 } & ChainSpecificFeeData<T>
+
+declare const f: FeeData<KnownChainIds.EthereumMainnet>
+f.chainSpecific.
 
 export type GasFeeData = Omit<ethereum.FeeData, 'gasLimit'>
 
@@ -64,11 +76,17 @@ export type GasFeeDataEstimate = {
   [FeeDataKey.Slow]: GasFeeData
 }
 
-export type FeeDataEstimate<T extends ChainId> = {
+export type FeeDataEstimate<T extends KnownChainIds> = {
   [FeeDataKey.Slow]: FeeData<T>
   [FeeDataKey.Average]: FeeData<T>
   [FeeDataKey.Fast]: FeeData<T>
 }
+
+declare const a: FeeDataEstimate<KnownChainIds>
+a.fast.chainSpecific.
+
+declare const b: FeeDataEstimate<KnownChainIds.EthereumMainnet>
+b.
 
 export type SubscribeTxsInput = {
   wallet: HDWallet

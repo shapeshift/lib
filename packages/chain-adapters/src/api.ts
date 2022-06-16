@@ -1,5 +1,5 @@
 import { AssetId, ChainId } from '@shapeshiftoss/caip'
-import { BIP44Params, UtxoAccountType } from '@shapeshiftoss/types'
+import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 
 import {
   Account,
@@ -23,6 +23,8 @@ import {
 export type ChainAdapterManager = Map<ChainId, ChainAdapter<ChainId>>
 
 export type ChainAdapter<T extends ChainId> = {
+  getType(): KnownChainIds
+
   getChainId(): ChainId
 
   /**
@@ -55,7 +57,7 @@ export type ChainAdapter<T extends ChainId> = {
 
   signAndBroadcastTransaction?(signTxInput: SignTxInput<ChainTxType<T>>): Promise<string>
 
-  getFeeData(input: Partial<GetFeeDataInput<T>>): Promise<FeeDataEstimate<T>>
+  getFeeData(input: Partial<GetFeeDataInput<T>>): Promise<FeeDataEstimate<KnownChainIds>>
 
   broadcastTransaction(hex: string): Promise<string>
 
