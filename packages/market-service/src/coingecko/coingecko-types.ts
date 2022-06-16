@@ -42,5 +42,5 @@ export type CoinGeckoMarketCap = {
     percentage: number
   }
   last_updated: string
-  market_data?: CoinGeckoAssetData
+  market_data?: CoinGeckoMarketData
 }
