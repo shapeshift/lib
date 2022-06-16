@@ -19,7 +19,8 @@ export enum KnownChainIds {
 export enum CoingeckoAssetPlatform {
   Ethereum = 'ethereum',
   Cosmos = 'cosmos',
-  Osmosis = 'osmosis'
+  Osmosis = 'osmosis',
+  Avalanche = 'avalanche'
 }
 
 export enum WithdrawType {
