@@ -17,24 +17,14 @@ import { RATE_LIMIT_THRESHOLDS_PER_MINUTE } from '../config'
 import { bn, bnOrZero } from '../utils/bignumber'
 import { isValidDate } from '../utils/isValidDate'
 import { rateLimitedAxios } from '../utils/rateLimiters'
-import { CoinGeckoMarketCap } from './coingecko-types'
+import { CoinGeckoMarketCap, CoinGeckoMarketData } from './coingecko-types'
 
 const axios = rateLimitedAxios(RATE_LIMIT_THRESHOLDS_PER_MINUTE.COINGECKO)
 
 // tons more params here: https://www.coingecko.com/en/api/documentation
 type CoinGeckoAssetData = {
   chain: CoingeckoAssetPlatform
-  market_data: {
-    current_price: { [key: string]: string }
-    market_cap: { [key: string]: string }
-    total_volume: { [key: string]: string }
-    high_24h: { [key: string]: string }
-    low_24h: { [key: string]: string }
-    circulating_supply: string
-    total_supply: string
-    max_supply: string
-    price_change_percentage_24h: number
-  }
+  market_data: CoinGeckoMarketData
 }
 
 export class CoinGeckoMarketService implements MarketService {
@@ -124,13 +114,13 @@ export class CoinGeckoMarketService implements MarketService {
       Also a lot of time when max_supply is null, total_supply is the maximum supply on coingecko
       We can reassess in the future the degree of precision we want on that field */
       return {
-        price: marketData?.current_price?.[currency],
-        marketCap: marketData?.market_cap?.[currency],
+        price: bnOrZero(marketData?.current_price?.[currency]).toString(),
+        marketCap: bnOrZero(marketData?.market_cap?.[currency]).toString(),
         changePercent24Hr: marketData?.price_change_percentage_24h,
-        volume: marketData?.total_volume?.[currency],
-        supply: marketData?.circulating_supply,
+        volume: bnOrZero(marketData?.total_volume?.[currency]).toString(),
+        supply: bnOrZero(marketData?.circulating_supply).toString(),
         maxSupply: marketData?.max_supply
-          ? marketData?.max_supply
+          ? marketData?.max_supply.toString()
           : marketData?.total_supply?.toString()
       }
     } catch (e) {

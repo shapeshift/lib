@@ -12,7 +12,7 @@ export const fox: CoinGeckoMarketData = {
 export const mockFoxyMarketData = {
   changePercent24Hr: 2.810767605208474,
   marketCap: '0',
-  price: 0.2794809217688426,
+  price: '0.2794809217688426',
   volume: '0',
   supply: '52018758.965754575223841191',
   maxSupply: '52018758.965754575223841191'

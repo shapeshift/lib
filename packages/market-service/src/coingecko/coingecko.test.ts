@@ -238,10 +238,10 @@ describe('coingecko market service', () => {
 
     it('should return market data for ETH', async () => {
       const result = {
-        price: 3611.19,
-        marketCap: 424970837706,
+        price: '3611.19',
+        marketCap: '424970837706',
         changePercent24Hr: 2.19682,
-        volume: 21999495657,
+        volume: '21999495657',
         supply: '120839129.44'
       }
       const market_data = {
@@ -265,10 +265,10 @@ describe('coingecko market service', () => {
 
     it('should return market data for BTC', async () => {
       const result = {
-        price: 54810,
-        marketCap: 1032270421549,
+        price: '54810',
+        marketCap: '1032270421549',
         changePercent24Hr: -0.33384,
-        volume: 38267223547,
+        volume: '38267223547',
         supply: '18840237',
         maxSupply: '21000000'
       }
@@ -293,10 +293,10 @@ describe('coingecko market service', () => {
 
     it('should return market data for FOX', async () => {
       const result = {
-        price: 0.25007,
-        marketCap: 59502764,
+        price: '0.25007',
+        marketCap: '59502764',
         changePercent24Hr: 5.45678,
-        volume: 1571401,
+        volume: '1571401',
         supply: '368444695.88',
         maxSupply: '1000001337.0'
       }
