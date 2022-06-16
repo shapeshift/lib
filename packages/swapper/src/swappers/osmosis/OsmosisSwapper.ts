@@ -5,7 +5,6 @@ import {
   SwapperType
 } from '@shapeshiftoss/types'
 import {
-  ChainAdapterManager,
   osmosis,
   cosmos
 } from '@shapeshiftoss/chain-adapters'
@@ -27,7 +26,7 @@ import { bn, bnOrZero } from '../utils/bignumber'
 
 export type OsmoSwapperDeps = {
   wallet: HDWallet
-  adapterManager: ChainAdapterManager
+  adapterManager: any // TODO: Fix
 }
 
 const fee = '10000'
