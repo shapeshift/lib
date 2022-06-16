@@ -24,6 +24,7 @@ export const setupBuildTrade = () => {
   const sellAsset: Asset = { ...FOX }
   const buyAsset: Asset = { ...WETH }
   const buildTradeInput = {
+    chainId: 'eip155:1',
     sellAmount: '1000000000000000000',
     allowanceTarget: 'allowanceTargetAddress',
     price: '1',
