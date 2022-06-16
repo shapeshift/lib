@@ -1,9 +1,9 @@
 import { AssetReference } from '@shapeshiftoss/caip'
-import { ChainAdapterManager, ethereum } from '@shapeshiftoss/chain-adapters'
+import { ChainAdapterManager, ethereum, FeeDataKey } from '@shapeshiftoss/chain-adapters'
 import { Asset, KnownChainIds } from '@shapeshiftoss/types'
 
 import { QuoteFeeData, SwapError, SwapErrorTypes } from '../../../../../api'
-import { bnOrZero } from '../../../../utils/bignumber'
+import { bn, bnOrZero } from '../../../../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../../../../utils/constants'
 import { ThorchainSwapperDeps } from '../../../types'
 import { estimateTradeFee } from '../../estimateTradeFee/estimateTradeFee'
@@ -28,9 +28,9 @@ export const getEthTxFees = async ({
   receiveAddress: string
 }): Promise<QuoteFeeData<'eip155:1'>> => {
   try {
-    const adapter = adapterManager.get(KnownChainIds.EthereumMainnet) as
-      | ethereum.ChainAdapter
-      | undefined
+    const adapter = adapterManager.get(
+      KnownChainIds.EthereumMainnet
+    ) as unknown as ethereum.ChainAdapter
     if (!adapter)
       throw new SwapError(
         `[getThorTxInfo] - No chain adapter found for ${KnownChainIds.EthereumMainnet}.`,
@@ -40,12 +40,28 @@ export const getEthTxFees = async ({
         }
       )
 
-    // TODO(ryankk): add falling back on hard coded gas Limit * new chain adapter method if it fails
-    const feeDataOptions = await adapter.getFeeData({
-      to: router,
-      value: sellAmount,
-      chainSpecific: { from: receiveAddress, contractData: data }
-    })
+    let feeDataOptions
+    try {
+      feeDataOptions = await adapter.getFeeData({
+        to: router,
+        value: sellAmount,
+        chainSpecific: { from: receiveAddress, contractData: data }
+      })
+    } catch (e) {
+      console.info('precise gas estimate failed, falling back on hard coded limit')
+      const gasFeeData = await adapter.getGasFeeData()
+      const gasLimit = '100000' // good value to cover all thortrades out of eth/erc20
+
+      feeDataOptions = {
+        fast: {
+          txFee: bn(gasLimit).times(gasFeeData[FeeDataKey.Fast].gasPrice).toString(),
+          chainSpecific: {
+            gasPrice: gasFeeData[FeeDataKey.Fast].gasPrice,
+            gasLimit
+          }
+        }
+      }
+    }
 
     const feeData = feeDataOptions['fast']
     const tradeFee = await estimateTradeFee(deps, buyAsset.assetId)
