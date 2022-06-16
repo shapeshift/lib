@@ -1,7 +1,4 @@
-// @ts-nocheck FIXME
-import { CoinCapMarketCap } from '../coincap/coincap-types'
-
-export const fox: CoinCapMarketCap = {
+export const fox = {
   market_data: {
     id: 'fox-token',
     rank: '327',
