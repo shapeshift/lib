@@ -28,10 +28,10 @@ export const getEthTxFees = async ({
   receiveAddress: string
 }): Promise<QuoteFeeData<'eip155:1'>> => {
   try {
-    const adapter = adapterManager.get(
-      KnownChainIds.EthereumMainnet
-    ) as unknown as ethereum.ChainAdapter
-    if (!adapter)
+    const adapter = adapterManager.get(KnownChainIds.EthereumMainnet) as
+      | ethereum.ChainAdapter
+      | undefined
+    if (!adapter) {
       throw new SwapError(
         `[getThorTxInfo] - No chain adapter found for ${KnownChainIds.EthereumMainnet}.`,
         {
@@ -39,6 +39,7 @@ export const getEthTxFees = async ({
           details: { chainId: KnownChainIds.EthereumMainnet }
         }
       )
+    }
 
     let feeDataOptions
     try {
