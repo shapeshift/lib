@@ -49,7 +49,11 @@ export const getEthTxFees = async ({
         chainSpecific: { from: receiveAddress, contractData: data }
       })
     } catch (e) {
-      console.info('precise gas estimate failed, falling back on hard coded limit')
+      // Fallback to fixed fee amount in case of failure so that quote will not fail
+      // eslint-disable-next-line no-console
+      console.debug(
+        '[ThorSwapper:getEthTxFees] precise gas estimate failed, falling back on hard coded limit'
+      )
       const gasFeeData = await adapter.getGasFeeData()
       const gasLimit = '100000' // good value to cover all thortrades out of eth/erc20
 
