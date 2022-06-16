@@ -1,34 +1,30 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
-import { SupportedChainIds } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 
 import { BuildTradeInput, SwapError, SwapErrorTypes, ZrxTrade } from '../../..'
+import { erc20AllowanceAbi } from '../../utils/abi/erc20Allowance-abi'
+import { bnOrZero } from '../../utils/bignumber'
+import { APPROVAL_GAS_LIMIT, DEFAULT_SLIPPAGE } from '../../utils/constants'
+import { getAllowanceRequired } from '../../utils/helpers/helpers'
+import { normalizeAmount } from '../../utils/helpers/helpers'
 import { ZrxQuoteResponse } from '../types'
-import { erc20AllowanceAbi } from '../utils/abi/erc20Allowance-abi'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
-import { bnOrZero } from '../utils/bignumber'
-import {
-  AFFILIATE_ADDRESS,
-  APPROVAL_GAS_LIMIT,
-  DEFAULT_SLIPPAGE,
-  DEFAULT_SOURCE
-} from '../utils/constants'
-import { getAllowanceRequired, normalizeAmount } from '../utils/helpers/helpers'
+import { AFFILIATE_ADDRESS, DEFAULT_SOURCE } from '../utils/constants'
 import { zrxService } from '../utils/zrxService'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function zrxBuildTrade(
-  { adapterManager, web3 }: ZrxSwapperDeps,
+  { adapter, web3 }: ZrxSwapperDeps,
   input: BuildTradeInput
-): Promise<ZrxTrade<SupportedChainIds>> {
+): Promise<ZrxTrade> {
   const {
     sellAsset,
     buyAsset,
     sellAmount,
     slippage,
-    sellAssetAccountId,
-    buyAssetAccountId,
+    sellAssetAccountNumber,
+    buyAssetAccountNumber,
     wallet
   } = input
   try {
@@ -47,8 +43,7 @@ export async function zrxBuildTrade(
       })
     }
 
-    const adapter = await adapterManager.byChainId(buyAsset.chainId)
-    const bip44Params = adapter.buildBIP44Params({ accountNumber: Number(buyAssetAccountId) })
+    const bip44Params = adapter.buildBIP44Params({ accountNumber: Number(buyAssetAccountNumber) })
     const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 
     const slippagePercentage = slippage ? bnOrZero(slippage).div(100).toString() : DEFAULT_SLIPPAGE
@@ -96,12 +91,10 @@ export async function zrxBuildTrade(
 
     const estimatedGas = bnOrZero(data.gas || 0)
 
-    const trade: ZrxTrade<'eip155:1'> = {
+    const trade: ZrxTrade = {
       sellAsset,
       buyAsset,
-      success: true,
-      statusReason: '',
-      sellAssetAccountId,
+      sellAssetAccountNumber,
       receiveAddress,
       rate: data.price,
       depositAddress: data.to,
@@ -110,12 +103,12 @@ export async function zrxBuildTrade(
         chainSpecific: {
           estimatedGas: estimatedGas.toString(),
           gasPrice: data.gasPrice
-        }
+        },
+        tradeFee: '0'
       },
       txData: data.data,
       sellAmount: data.sellAmount,
       buyAmount: data.buyAmount,
-      allowanceContract: data.allowanceTarget,
       sources: data.sources?.filter((s) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE
     }
 
@@ -134,7 +127,8 @@ export async function zrxBuildTrade(
         chainSpecific: {
           ...trade.feeData?.chainSpecific,
           approvalFee: bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(bnOrZero(data.gasPrice)).toString()
-        }
+        },
+        tradeFee: '0'
       }
     }
     return trade

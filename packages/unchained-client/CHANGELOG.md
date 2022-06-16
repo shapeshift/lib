@@ -1,3 +1,41 @@
+# [@shapeshiftoss/unchained-client-v9.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v9.0.0...@shapeshiftoss/unchained-client-v9.0.1) (2022-06-15)
+
+# [@shapeshiftoss/unchained-client-v9.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v8.6.1...@shapeshiftoss/unchained-client-v9.0.0) (2022-06-08)
+
+
+### Features
+
+* update btc/eth to use historical tx history and new ws payloads ([#674](https://github.com/shapeshift/lib/issues/674)) ([0189e3b](https://github.com/shapeshift/lib/commit/0189e3b4dd5a3b998ddf285e761ae11dea72f94b))
+
+
+### BREAKING CHANGES
+
+* unchained-client and chain-adapters
+
+* revert pre release package versions
+
+* revert changes to no breaking packages
+
+* dependencies
+
+* pin package versions
+
+# [@shapeshiftoss/unchained-client-v8.6.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v8.6.0...@shapeshiftoss/unchained-client-v8.6.1) (2022-06-08)
+
+# [@shapeshiftoss/unchained-client-v8.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v8.5.0...@shapeshiftoss/unchained-client-v8.6.0) (2022-06-07)
+
+
+### Features
+
+* generic erc20 approve ([#731](https://github.com/shapeshift/lib/issues/731)) ([ec7f058](https://github.com/shapeshift/lib/commit/ec7f058f21a1c7b31345a2a901250ff589c625e9))
+
+# [@shapeshiftoss/unchained-client-v8.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v8.4.1...@shapeshiftoss/unchained-client-v8.5.0) (2022-06-01)
+
+
+### Features
+
+* thorchain memo support ([#716](https://github.com/shapeshift/lib/issues/716)) ([fe9762f](https://github.com/shapeshift/lib/commit/fe9762fd7656ef17d93885ff154a991978c3e93b))
+
 # [@shapeshiftoss/unchained-client-v8.4.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v8.4.0...@shapeshiftoss/unchained-client-v8.4.1) (2022-06-01)
 
 # [@shapeshiftoss/unchained-client-v8.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v8.3.4...@shapeshiftoss/unchained-client-v8.4.0) (2022-05-26)

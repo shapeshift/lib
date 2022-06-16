@@ -1,3 +1,70 @@
+# [@shapeshiftoss/investor-yearn-v4.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v4.0.1...@shapeshiftoss/investor-yearn-v4.0.2) (2022-06-15)
+
+# [@shapeshiftoss/investor-yearn-v4.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v4.0.0...@shapeshiftoss/investor-yearn-v4.0.1) (2022-06-13)
+
+
+### Bug Fixes
+
+* add unchained-client devDependencies ([#804](https://github.com/shapeshift/lib/issues/804)) ([809fbda](https://github.com/shapeshift/lib/commit/809fbdae899ab4d8aecc021baa8df8162aae7d86))
+
+# [@shapeshiftoss/investor-yearn-v4.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v3.0.3...@shapeshiftoss/investor-yearn-v4.0.0) (2022-06-09)
+
+
+### Features
+
+* **investor-yearn:** use "KnownChainIds" instead of "ChainTypes" ([#779](https://github.com/shapeshift/lib/issues/779)) ([f44bc8f](https://github.com/shapeshift/lib/commit/f44bc8fe4a50951207632fdad4106b645d91686d))
+
+
+### BREAKING CHANGES
+
+* **investor-yearn:** Requires updated peerDependencies
+
+# [@shapeshiftoss/investor-yearn-v3.0.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v3.0.2...@shapeshiftoss/investor-yearn-v3.0.3) (2022-06-08)
+
+# [@shapeshiftoss/investor-yearn-v3.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v3.0.1...@shapeshiftoss/investor-yearn-v3.0.2) (2022-06-08)
+
+# [@shapeshiftoss/investor-yearn-v3.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v3.0.0...@shapeshiftoss/investor-yearn-v3.0.1) (2022-06-06)
+
+
+### Bug Fixes
+
+* fixed bug where we were depositing to wrong contract ([#755](https://github.com/shapeshift/lib/issues/755)) ([2bf8964](https://github.com/shapeshift/lib/commit/2bf8964a8d3eaf2df2662b6e5788491e112aa160))
+
+# [@shapeshiftoss/investor-yearn-v3.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v2.2.0...@shapeshiftoss/investor-yearn-v3.0.0) (2022-06-06)
+
+
+### Features
+
+* **investor-yearn:** updated investor-yearn to latest investor-core package   ([#747](https://github.com/shapeshift/lib/issues/747)) ([7bf9631](https://github.com/shapeshift/lib/commit/7bf9631d6d9e903e5018f79824b88902248e3a6d))
+
+
+### BREAKING CHANGES
+
+* **investor-yearn:** removes the original api and moves over to investor class and opportunity classes
+
+* chore(investor-yearn): fixed linting
+
+* removed buildTxToSign function and did number to hex inside signAndBroadcast
+
+* removed unused code
+
+* chore: updated for earn opportunities.
+
+* chore: added expired tag and lower cased the id
+
+* chore: removed commented out method
+
+* chore: removed comment
+
+Co-authored-by: Chris Thompson <chris@thompson-web.org>
+
+# [@shapeshiftoss/investor-yearn-v2.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v2.1.0...@shapeshiftoss/investor-yearn-v2.2.0) (2022-06-03)
+
+
+### Features
+
+* **assetService:** consume normalization of Asset properties & use static data ([#746](https://github.com/shapeshift/lib/issues/746)) ([ca87bee](https://github.com/shapeshift/lib/commit/ca87bee46419a03d490a826b2b42c90b49cc3079))
+
 # [@shapeshiftoss/investor-yearn-v2.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v2.0.2...@shapeshiftoss/investor-yearn-v2.1.0) (2022-05-26)
 
 

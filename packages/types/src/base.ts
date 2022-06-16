@@ -8,31 +8,18 @@ export type BIP44Params = {
   index?: number
 }
 
-export enum ChainTypes {
-  Ethereum = 'ethereum',
-  Bitcoin = 'bitcoin',
-  Cosmos = 'cosmos',
-  Osmosis = 'osmosis'
+export enum KnownChainIds {
+  EthereumMainnet = 'eip155:1',
+  BitcoinMainnet = 'bip122:000000000019d6689c085ae165831e93',
+  CosmosMainnet = 'cosmos:cosmoshub-4',
+  OsmosisMainnet = 'cosmos:osmosis-1'
 }
 
-const supportedChainIds = [
-  'eip155:1',
-  'bip122:000000000019d6689c085ae165831e93',
-  'cosmos:cosmoshub-4',
-  'cosmos:osmosis-1'
-] as const
-
-export type SupportedChainIds = typeof supportedChainIds[number]
-
-export enum NetworkTypes {
-  MAINNET = 'MAINNET',
-  TESTNET = 'TESTNET', // BTC, LTC, etc...
-  ETH_ROPSTEN = 'ETH_ROPSTEN',
-  ETH_RINKEBY = 'ETH_RINKEBY',
-  COSMOSHUB_MAINNET = 'COSMOSHUB_MAINNET',
-  COSMOSHUB_VEGA = 'COSMOSHUB_VEGA',
-  OSMOSIS_MAINNET = 'OSMOSIS_MAINNET',
-  OSMOSIS_TESTNET = 'OSMOSIS_TESTNET'
+// https://api.coingecko.com/api/v3/asset_platforms
+export enum CoingeckoAssetPlatform {
+  Ethereum = 'ethereum',
+  Cosmos = 'cosmos',
+  Osmosis = 'osmosis'
 }
 
 export enum WithdrawType {
@@ -46,51 +33,21 @@ export enum UtxoAccountType {
   P2pkh = 'P2pkh'
 }
 
-// TODO(0xdef1cafe): remove this, client should not be aware of where data is from
-// Describes the data source for where to get the asset details or asset description.
-export enum AssetDataSource {
-  CoinGecko = 'coingecko',
-  YearnFinance = 'yearnfinance'
-}
-
 // asset-service
-
-type AbstractAsset = {
+export type Asset = {
   assetId: string
   chainId: string
-  chain: ChainTypes
   description?: string
   isTrustedDescription?: boolean
-  dataSource: AssetDataSource
-  network: NetworkTypes
   symbol: string
   name: string
   precision: number
-  slip44: number
   color: string
-  secondaryColor: string
   icon: string
   explorer: string
   explorerTxLink: string
   explorerAddressLink: string
-  sendSupport: boolean
-  receiveSupport: boolean
 }
-
-type OmittedTokenAssetFields =
-  | 'chain'
-  | 'network'
-  | 'slip44'
-  | 'explorer'
-  | 'explorerTxLink'
-  | 'explorerAddressLink'
-type TokenAssetFields = {
-  tokenId: string
-  contractType: 'erc20' | 'erc721' // Don't want to import caip here to prevent circular dependencies
-}
-export type TokenAsset = Omit<AbstractAsset, OmittedTokenAssetFields> & TokenAssetFields
-export type BaseAsset = AbstractAsset & { tokens?: TokenAsset[] }
-export type Asset = AbstractAsset & Partial<TokenAssetFields>
 
 // swapper
 // TODO remove this once web is using the type from swapper

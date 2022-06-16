@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/investor-yearn",
-  "version": "2.1.0",
+  "version": "4.0.2",
   "description": "An api layer for interaction with the ShapeShift Yearn Router Contract and the Yearn Vault contracts",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -23,25 +23,31 @@
     "compile": "tsc -p tsconfig.build.json",
     "dev": "tsc --watch",
     "prepare": "yarn build",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "cli": "yarn build && node ./dist/yearncli.js"
   },
   "dependencies": {
     "@ethersproject/providers": "^5.5.3",
     "@yfi/sdk": "^1.0.30",
     "bignumber.js": "^9.0.2",
     "lodash": "^4.17.21",
-    "web3": "^1.7.1",
-    "web3-core": "^1.7.0",
-    "web3-utils": "^1.7.0"
+    "web3": "^1.7.3",
+    "web3-core": "^1.7.3",
+    "web3-utils": "^1.7.3"
   },
   "peerDependencies": {
-    "@shapeshiftoss/chain-adapters": "^4.3.3",
-    "@shapeshiftoss/hdwallet-core": "^1.20.0",
-    "@shapeshiftoss/types": "^4.3.1"
+    "@shapeshiftoss/caip": "^6.0.1",
+    "@shapeshiftoss/chain-adapters": "^6.0.0",
+    "@shapeshiftoss/hdwallet-core": "^1.23.0",
+    "@shapeshiftoss/investor": "^1.0.1",
+    "@shapeshiftoss/types": "^5.0.0"
   },
   "devDependencies": {
-    "@shapeshiftoss/chain-adapters": "^4.3.3",
-    "@shapeshiftoss/hdwallet-core": "^1.20.0",
-    "@shapeshiftoss/types": "^4.3.1"
+    "@shapeshiftoss/caip": "^6.0.1",
+    "@shapeshiftoss/chain-adapters": "^6.0.0",
+    "@shapeshiftoss/hdwallet-core": "^1.23.0",
+    "@shapeshiftoss/investor": "^1.0.1",
+    "@shapeshiftoss/types": "^5.0.0",
+    "@shapeshiftoss/unchained-client": "^9.0.0"
   }
 }

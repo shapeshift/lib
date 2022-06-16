@@ -1,3 +1,214 @@
+# [@shapeshiftoss/swapper-v7.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.6.0...@shapeshiftoss/swapper-v7.7.0) (2022-06-16)
+
+
+### Features
+
+* thorswap approve infinite ([#822](https://github.com/shapeshift/lib/issues/822)) ([3a69efe](https://github.com/shapeshift/lib/commit/3a69efe26453855c525d4554b216d3e7091146a8))
+
+# [@shapeshiftoss/swapper-v7.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.5.1...@shapeshiftoss/swapper-v7.6.0) (2022-06-16)
+
+
+### Features
+
+* quote trade input string union discrimination ([#829](https://github.com/shapeshift/lib/issues/829)) ([409a06e](https://github.com/shapeshift/lib/commit/409a06e534a412ff3fddd93cc08799967790d812))
+
+# [@shapeshiftoss/swapper-v7.5.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.5.0...@shapeshiftoss/swapper-v7.5.1) (2022-06-15)
+
+
+### Bug Fixes
+
+* type ([#825](https://github.com/shapeshift/lib/issues/825)) ([34ec284](https://github.com/shapeshift/lib/commit/34ec284c8d55baf7c73d7ef33669e1a996b8fedb))
+
+# [@shapeshiftoss/swapper-v7.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.4.0...@shapeshiftoss/swapper-v7.5.0) (2022-06-15)
+
+
+### Features
+
+* maketrade work with either gasprice or eip1559 ([#824](https://github.com/shapeshift/lib/issues/824)) ([619a940](https://github.com/shapeshift/lib/commit/619a940c0ceec4021e3840b8787580df853d13a2))
+
+# [@shapeshiftoss/swapper-v7.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.3.1...@shapeshiftoss/swapper-v7.4.0) (2022-06-15)
+
+
+### Features
+
+* btc thor trade fees ([#823](https://github.com/shapeshift/lib/issues/823)) ([e9f93cd](https://github.com/shapeshift/lib/commit/e9f93cd675492aef5c903f3e254cf51a147d8971))
+
+# [@shapeshiftoss/swapper-v7.3.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.3.0...@shapeshiftoss/swapper-v7.3.1) (2022-06-15)
+
+# [@shapeshiftoss/swapper-v7.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.2.1...@shapeshiftoss/swapper-v7.3.0) (2022-06-14)
+
+
+### Features
+
+* add thorswap approvalNeeded ([#801](https://github.com/shapeshift/lib/issues/801)) ([4902ac4](https://github.com/shapeshift/lib/commit/4902ac453121d7700195662b2ca8ed9a1645d362))
+
+# [@shapeshiftoss/swapper-v7.2.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.2.0...@shapeshiftoss/swapper-v7.2.1) (2022-06-13)
+
+
+### Bug Fixes
+
+* add unchained-client devDependencies ([#804](https://github.com/shapeshift/lib/issues/804)) ([809fbda](https://github.com/shapeshift/lib/commit/809fbdae899ab4d8aecc021baa8df8162aae7d86))
+
+# [@shapeshiftoss/swapper-v7.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.1.0...@shapeshiftoss/swapper-v7.2.0) (2022-06-13)
+
+
+### Features
+
+* cowswap approval needed approve infinite ([#771](https://github.com/shapeshift/lib/issues/771)) ([9cf3700](https://github.com/shapeshift/lib/commit/9cf3700e8fa4abe139df0d94c106c1266fd076f1))
+
+# [@shapeshiftoss/swapper-v7.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.0.0...@shapeshiftoss/swapper-v7.1.0) (2022-06-10)
+
+
+### Features
+
+* cowswap getcowswapminmax and filtering methods implementation ([#757](https://github.com/shapeshift/lib/issues/757)) ([d58e1c1](https://github.com/shapeshift/lib/commit/d58e1c1fd9503811e2f365d1d5d70cd541e8366b))
+
+# [@shapeshiftoss/swapper-v7.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v6.3.0...@shapeshiftoss/swapper-v7.0.0) (2022-06-10)
+
+
+### Features
+
+* **swapper:** remove usage of "ChainTypes" ([#782](https://github.com/shapeshift/lib/issues/782)) ([9a548c9](https://github.com/shapeshift/lib/commit/9a548c981139fc551838763c2e1c59dfde853698))
+
+
+### BREAKING CHANGES
+
+* **swapper:** replace usage of ChainTypes with ChainId
+
+# [@shapeshiftoss/swapper-v6.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v6.2.1...@shapeshiftoss/swapper-v6.3.0) (2022-06-09)
+
+
+### Features
+
+* thorswap get trade quote ([#765](https://github.com/shapeshift/lib/issues/765)) ([a643be3](https://github.com/shapeshift/lib/commit/a643be3c74183d0c67100e6f288fc957db0cba45))
+
+# [@shapeshiftoss/swapper-v6.2.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v6.2.0...@shapeshiftoss/swapper-v6.2.1) (2022-06-09)
+
+
+### Bug Fixes
+
+* change asset account number name and type ([#775](https://github.com/shapeshift/lib/issues/775)) ([5b62783](https://github.com/shapeshift/lib/commit/5b62783661e7ade1a5d00de28ca75db82e9e10a8))
+
+# [@shapeshiftoss/swapper-v6.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v6.1.0...@shapeshiftoss/swapper-v6.2.0) (2022-06-08)
+
+
+### Features
+
+* thorchain price calculation ([#763](https://github.com/shapeshift/lib/issues/763)) ([8f42b6d](https://github.com/shapeshift/lib/commit/8f42b6db48dfc92b3ad44687387434c09bbc95f2))
+
+# [@shapeshiftoss/swapper-v6.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v6.0.1...@shapeshiftoss/swapper-v6.1.0) (2022-06-08)
+
+
+### Features
+
+* thorchain eth execute trade support ([#766](https://github.com/shapeshift/lib/issues/766)) ([4455e4d](https://github.com/shapeshift/lib/commit/4455e4d149c3ca56b19cfad1b6b1f5430243bd8e))
+
+# [@shapeshiftoss/swapper-v6.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v6.0.0...@shapeshiftoss/swapper-v6.0.1) (2022-06-08)
+
+# [@shapeshiftoss/swapper-v6.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.12.1...@shapeshiftoss/swapper-v6.0.0) (2022-06-08)
+
+
+### Features
+
+* update btc/eth to use historical tx history and new ws payloads ([#674](https://github.com/shapeshift/lib/issues/674)) ([0189e3b](https://github.com/shapeshift/lib/commit/0189e3b4dd5a3b998ddf285e761ae11dea72f94b))
+
+
+### BREAKING CHANGES
+
+* unchained-client and chain-adapters
+
+* revert pre release package versions
+
+* revert changes to no breaking packages
+
+* dependencies
+
+* pin package versions
+
+# [@shapeshiftoss/swapper-v5.12.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.12.0...@shapeshiftoss/swapper-v5.12.1) (2022-06-08)
+
+# [@shapeshiftoss/swapper-v5.12.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.11.0...@shapeshiftoss/swapper-v5.12.0) (2022-06-07)
+
+
+### Features
+
+* implements getUsdRate method ([#733](https://github.com/shapeshift/lib/issues/733)) ([36b27f1](https://github.com/shapeshift/lib/commit/36b27f1cbef5bcf929005d93885adf5f058ac21c))
+
+# [@shapeshiftoss/swapper-v5.11.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.10.2...@shapeshiftoss/swapper-v5.11.0) (2022-06-07)
+
+
+### Features
+
+* function to estimate thor trade fees ([#756](https://github.com/shapeshift/lib/issues/756)) ([3d052c6](https://github.com/shapeshift/lib/commit/3d052c6d5c798c441371b5f05ac7901ea2d9c432))
+
+# [@shapeshiftoss/swapper-v5.10.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.10.1...@shapeshiftoss/swapper-v5.10.2) (2022-06-06)
+
+
+### Bug Fixes
+
+* filter out thorchain assets for chains that the swapper does not yet support ([#754](https://github.com/shapeshift/lib/issues/754)) ([972a9f7](https://github.com/shapeshift/lib/commit/972a9f714a27eab262b09e2ee2b6daa56494aa28))
+
+# [@shapeshiftoss/swapper-v5.10.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.10.0...@shapeshiftoss/swapper-v5.10.1) (2022-06-06)
+
+# [@shapeshiftoss/swapper-v5.10.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.9.0...@shapeshiftoss/swapper-v5.10.0) (2022-06-03)
+
+
+### Features
+
+* **swapper:** consume normalization of Asset properties ([#744](https://github.com/shapeshift/lib/issues/744)) ([cdf8ae8](https://github.com/shapeshift/lib/commit/cdf8ae8d3c0a276d172410d0e0860cc8e400034b))
+
+# [@shapeshiftoss/swapper-v5.9.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.8.1...@shapeshiftoss/swapper-v5.9.0) (2022-06-03)
+
+
+### Features
+
+* **assetService:** consume normalization of Asset properties & use static data ([#746](https://github.com/shapeshift/lib/issues/746)) ([ca87bee](https://github.com/shapeshift/lib/commit/ca87bee46419a03d490a826b2b42c90b49cc3079))
+
+# [@shapeshiftoss/swapper-v5.8.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.8.0...@shapeshiftoss/swapper-v5.8.1) (2022-06-03)
+
+# [@shapeshiftoss/swapper-v5.8.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.7.0...@shapeshiftoss/swapper-v5.8.0) (2022-06-03)
+
+
+### Features
+
+* eth make trade tx utility ([#742](https://github.com/shapeshift/lib/issues/742)) ([180ed39](https://github.com/shapeshift/lib/commit/180ed398e8cf8700825071893116a8b5f9f38ef9))
+
+# [@shapeshiftoss/swapper-v5.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.6.0...@shapeshiftoss/swapper-v5.7.0) (2022-06-02)
+
+
+### Features
+
+* add getUsdRate for thorchainSwapper ([#737](https://github.com/shapeshift/lib/issues/737)) ([f629780](https://github.com/shapeshift/lib/commit/f62978047f95670672cc8d948b3e2981cc3362c7))
+
+# [@shapeshiftoss/swapper-v5.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.5.0...@shapeshiftoss/swapper-v5.6.0) (2022-06-02)
+
+
+### Features
+
+* get call data for router deposit call ([#739](https://github.com/shapeshift/lib/issues/739)) ([807e547](https://github.com/shapeshift/lib/commit/807e547a02928f6d4aac03599ba386ab6efc9ced))
+
+# [@shapeshiftoss/swapper-v5.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.4.0...@shapeshiftoss/swapper-v5.5.0) (2022-06-02)
+
+
+### Features
+
+* implements cowswapper skeleton ([#732](https://github.com/shapeshift/lib/issues/732)) ([dd6e935](https://github.com/shapeshift/lib/commit/dd6e9357a0f97e23a50c0b51a9dd2d9ec07b2d1b))
+
+# [@shapeshiftoss/swapper-v5.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.3.0...@shapeshiftoss/swapper-v5.4.0) (2022-06-01)
+
+
+### Features
+
+* implement initialize, filterBuyAssetsBySellAssetId, and filterAssetIdsBySellable method for ThorchainSwapper ([#708](https://github.com/shapeshift/lib/issues/708)) ([19eae25](https://github.com/shapeshift/lib/commit/19eae258ce6363abb79337b699a84951dc548ba6))
+* thor trade types for eth or btc tx data ([#730](https://github.com/shapeshift/lib/issues/730)) ([2591230](https://github.com/shapeshift/lib/commit/259123080c9acbea93e9fbc673bf3aac5763a9c7))
+
+# [@shapeshiftoss/swapper-v5.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.2.3...@shapeshiftoss/swapper-v5.3.0) (2022-06-01)
+
+
+### Features
+
+* thorchain memo support ([#716](https://github.com/shapeshift/lib/issues/716)) ([fe9762f](https://github.com/shapeshift/lib/commit/fe9762fd7656ef17d93885ff154a991978c3e93b))
+
 # [@shapeshiftoss/swapper-v5.2.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v5.2.2...@shapeshiftoss/swapper-v5.2.3) (2022-05-31)
 
 

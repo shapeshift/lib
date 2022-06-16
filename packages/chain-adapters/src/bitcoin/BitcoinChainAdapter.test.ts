@@ -8,8 +8,9 @@
 
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { BIP44Params, chainAdapters, ChainTypes, UtxoAccountType } from '@shapeshiftoss/types'
+import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 
+import { Account, BuildSendTxInput } from '../types'
 import { ChainAdapterArgs } from '../utxo/UTXOBaseAdapter'
 import * as bitcoin from './BitcoinChainAdapter'
 
@@ -183,10 +184,10 @@ describe('BitcoinChainAdapter', () => {
   })
 
   describe('getType', () => {
-    it('should return ChainTypes.Bitcoin', async () => {
+    it('should return KnownChainIds.BitcoinMainnet', async () => {
       const adapter = new bitcoin.ChainAdapter(args)
       const type = adapter.getType()
-      expect(type).toEqual(ChainTypes.Bitcoin)
+      expect(type).toEqual(KnownChainIds.BitcoinMainnet)
     })
   })
 
@@ -206,9 +207,9 @@ describe('BitcoinChainAdapter', () => {
       } as any
 
       const adapter = new bitcoin.ChainAdapter(args)
-      const expected: chainAdapters.Account<ChainTypes.Bitcoin> = {
+      const expected: Account<KnownChainIds.BitcoinMainnet> = {
         pubkey: '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx',
-        chain: ChainTypes.Bitcoin,
+        chain: KnownChainIds.BitcoinMainnet,
         balance: '150',
         chainId: 'bip122:000000000019d6689c085ae165831e93',
         assetId: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
@@ -238,48 +239,6 @@ describe('BitcoinChainAdapter', () => {
     })
   })
 
-  describe('getTxHistory', () => {
-    it('should return tx history for a specified address', async () => {
-      args.providers.http = {
-        getTxHistory: jest.fn().mockResolvedValue({
-          data: {
-            page: 1,
-            totalPages: 1,
-            txs: 1,
-            transactions: [
-              {
-                network: 'MAINNET',
-                chain: 'bitcoin',
-                symbol: 'BTC',
-                txid: '123',
-                status: 'confirmed',
-                from: 'abc',
-                value: '1337',
-                fee: '1'
-              }
-            ]
-          }
-        })
-      } as any
-
-      const adapter = new bitcoin.ChainAdapter(args)
-      const pubkey = '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx'
-      await expect(adapter.getTxHistory({ pubkey })).rejects.toThrow('Method not implemented.')
-    })
-
-    it('should fail for an unspecified address', async () => {
-      args.providers.http = {
-        getTxHistory: jest.fn().mockResolvedValue({
-          data: {}
-        })
-      } as any
-
-      const adapter = new bitcoin.ChainAdapter(args)
-      const pubkey = ''
-      await expect(adapter.getTxHistory({ pubkey })).rejects.toThrow('Method not implemented.')
-    })
-  })
-
   describe('buildSendTransaction', () => {
     it('should return a formatted BTCSignTx object for a valid BuildSendTxInput parameter', async () => {
       const wallet: any = await getWallet()
@@ -300,13 +259,12 @@ describe('BitcoinChainAdapter', () => {
         isChange: false
       }
 
-      const txInput: chainAdapters.BuildSendTxInput<ChainTypes.Bitcoin> = {
+      const txInput: BuildSendTxInput<KnownChainIds.BitcoinMainnet> = {
         bip44Params,
         to: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4',
         value: '400',
         wallet,
         chainSpecific: {
-          opReturnData: 'nm, u',
           accountType: UtxoAccountType.SegwitNative,
           satoshiPerByte: '1'
         }
@@ -325,6 +283,7 @@ describe('BitcoinChainAdapter', () => {
               hex: '010000000180457afc57604fed35cc8cee29e602432c87125b9cabbcc8fc407749fe0fabfe010000006b483045022100cd627a0577d35454ced7f0a6ef8a3d3cf11c0f8696bda18062025478e0fc866002206c8ac559dc6bd851bdf00e33c1602fcaeee9d16b35d21b548529825f12dfe5ad0121027751a74f251ba2657ec2a2f374ce7d5ba1548359749823a59314c54a0670c126ffffffff02d97c0000000000001600140c0585f37ff3f9f127c9788941d6082cf7aa012173df0000000000001976a914b22138dfe140e4611b98bdb728eed04beed754c488ac00000000'
             }
           ],
+          opReturnData: undefined,
           outputs: [
             {
               addressType: 'spend',
@@ -367,13 +326,12 @@ describe('BitcoinChainAdapter', () => {
         isChange: false
       }
 
-      const txInput: chainAdapters.BuildSendTxInput<ChainTypes.Bitcoin> = {
+      const txInput: BuildSendTxInput<KnownChainIds.BitcoinMainnet> = {
         bip44Params,
         to: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4',
         value: '400',
         wallet,
         chainSpecific: {
-          opReturnData: 'sup fool',
           accountType: UtxoAccountType.SegwitNative,
           satoshiPerByte: '1'
         }

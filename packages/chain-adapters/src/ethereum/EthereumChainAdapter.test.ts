@@ -6,11 +6,12 @@
  */
 import { ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { chainAdapters, ChainTypes } from '@shapeshiftoss/types'
+import { KnownChainIds } from '@shapeshiftoss/types'
 import unchained from '@shapeshiftoss/unchained-client'
 import { merge } from 'lodash'
 import { numberToHex } from 'web3-utils'
 
+import { BuildSendTxInput, SignTxInput, ValidAddressResultType } from '../types'
 import { bn } from '../utils/bignumber'
 import * as ethereum from './EthereumChainAdapter'
 
@@ -110,8 +111,9 @@ describe('EthereumChainAdapter', () => {
       {
         providers: {
           http: {} as unknown as unchained.ethereum.V1Api,
-          ws: {} as unchained.ws.Client<unchained.ethereum.ParsedTx>
-        }
+          ws: {} as unchained.ws.Client<unchained.ethereum.EthereumTx>
+        },
+        rpcUrl: ''
       },
       overrideArgs
     )
@@ -194,14 +196,47 @@ describe('EthereumChainAdapter', () => {
     })
   })
 
+  describe('getGasFeeData', () => {
+    it('should return current ETH network gas fees', async () => {
+      const httpProvider = {
+        getGasFees: jest.fn().mockResolvedValue(makeGetGasFeesMockedResponse())
+      } as unknown as unchained.ethereum.V1Api
+      const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
+
+      const adapter = new ethereum.ChainAdapter(args)
+
+      const data = await adapter.getGasFeeData()
+
+      expect(data).toEqual(
+        expect.objectContaining({
+          average: {
+            gasPrice: '45000000000',
+            maxFeePerGas: '300',
+            maxPriorityFeePerGas: '10'
+          },
+          fast: {
+            gasPrice: '50180000000',
+            maxFeePerGas: '335',
+            maxPriorityFeePerGas: '12'
+          },
+          slow: {
+            gasPrice: '41000000000',
+            maxFeePerGas: '274',
+            maxPriorityFeePerGas: '10'
+          }
+        })
+      )
+    })
+  })
+
   const validAddressTuple = {
     valid: true,
-    result: chainAdapters.ValidAddressResultType.Valid
+    result: ValidAddressResultType.Valid
   }
 
   const invalidAddressTuple = {
     valid: false,
-    result: chainAdapters.ValidAddressResultType.Invalid
+    result: ValidAddressResultType.Invalid
   }
 
   describe('getAddress', () => {
@@ -315,7 +350,7 @@ describe('EthereumChainAdapter', () => {
           gasPrice: '0x29d41057e0',
           gasLimit: '0xc9df'
         }
-      } as unknown as chainAdapters.SignTxInput<ETHSignTx>
+      } as unknown as SignTxInput<ETHSignTx>
 
       await expect(adapter.signTransaction(tx)).resolves.toEqual(
         '0xf86c808529d41057e082c9df94d8da6bf26964af9d7eed9e03e53415d37aa960458088000000000000000025a04db6f6d27b6e7de2a627d7a7a213915db14d0d811e97357f1b4e3b3b25584dfaa07e4e329f23f33e1b21b3f443a80fad3255b2c968820d02b57752b4c91a9345c5'
@@ -343,7 +378,7 @@ describe('EthereumChainAdapter', () => {
           gasPrice: '0x29d41057e0',
           gasLimit: '0xc9df'
         }
-      } as unknown as chainAdapters.SignTxInput<ETHSignTx>
+      } as unknown as SignTxInput<ETHSignTx>
 
       await expect(adapter.signTransaction(tx)).rejects.toThrow(/invalid hexlify value/)
     })
@@ -359,7 +394,7 @@ describe('EthereumChainAdapter', () => {
       const tx = {
         wallet,
         txToSign: {}
-      } as unknown as chainAdapters.SignTxInput<ETHSignTx>
+      } as unknown as SignTxInput<ETHSignTx>
 
       await expect(adapter.signAndBroadcastTransaction(tx)).rejects.toThrow(
         /Error signing & broadcasting tx/
@@ -377,7 +412,7 @@ describe('EthereumChainAdapter', () => {
       const tx = {
         wallet,
         txToSign: {}
-      } as unknown as chainAdapters.SignTxInput<ETHSignTx>
+      } as unknown as SignTxInput<ETHSignTx>
 
       await expect(adapter.signAndBroadcastTransaction(tx)).resolves.toEqual(
         '0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331'
@@ -413,7 +448,7 @@ describe('EthereumChainAdapter', () => {
         wallet: await getWallet(),
         value,
         chainSpecific: makeChainSpecific({ erc20ContractAddress })
-      } as unknown as chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>
+      } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow(
         'EthereumChainAdapter: to is required'
       )
@@ -436,7 +471,7 @@ describe('EthereumChainAdapter', () => {
         to: ENS_NAME,
         value,
         chainSpecific: makeChainSpecific({ erc20ContractAddress })
-      } as unknown as chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>
+      } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
 
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow(
         /a provider or signer is needed to resolve ENS names/
@@ -451,7 +486,7 @@ describe('EthereumChainAdapter', () => {
         wallet: await getWallet(),
         to: EOA_ADDRESS,
         chainSpecific: makeChainSpecific()
-      } as unknown as chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>
+      } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow(
         'EthereumChainAdapter: value is required'
       )
@@ -472,7 +507,7 @@ describe('EthereumChainAdapter', () => {
         to: EOA_ADDRESS,
         value,
         chainSpecific: makeChainSpecific()
-      } as unknown as chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>
+      } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
           addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
@@ -503,7 +538,7 @@ describe('EthereumChainAdapter', () => {
         value,
         chainSpecific: makeChainSpecific(),
         sendMax: true
-      } as unknown as chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>
+      } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
 
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow('no balance')
       expect(args.providers.http.getAccount).toHaveBeenCalledTimes(2)
@@ -528,7 +563,7 @@ describe('EthereumChainAdapter', () => {
         value,
         chainSpecific: makeChainSpecific(),
         sendMax: true
-      } as unknown as chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>
+      } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
           addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
@@ -560,7 +595,7 @@ describe('EthereumChainAdapter', () => {
         to: ZERO_ADDRESS,
         value,
         chainSpecific: makeChainSpecific({ erc20ContractAddress })
-      } as unknown as chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>
+      } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
           addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
@@ -593,7 +628,7 @@ describe('EthereumChainAdapter', () => {
         value,
         chainSpecific: makeChainSpecific({ erc20ContractAddress }),
         sendMax: true
-      } as unknown as chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>
+      } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
 
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
@@ -628,11 +663,95 @@ describe('EthereumChainAdapter', () => {
         value,
         chainSpecific: makeChainSpecific({ erc20ContractAddress }),
         sendMax: true
-      } as unknown as chainAdapters.BuildSendTxInput<ChainTypes.Ethereum>
+      } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
 
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow('no balance')
 
       expect(args.providers.http.getAccount).toHaveBeenCalledTimes(2)
+    })
+  })
+
+  describe('buildCustomTx', () => {
+    it('should build an unsigned custom tx using gasPrice', async () => {
+      const httpProvider = {
+        getAccount: jest
+          .fn<any, any>()
+          .mockResolvedValue(
+            makeGetAccountMockResponse({ balance: '2500000', erc20Balance: undefined })
+          )
+      } as unknown as unchained.ethereum.V1Api
+
+      const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
+      const adapter = new ethereum.ChainAdapter(args)
+
+      const txArgs = {
+        wallet: await getWallet(),
+        bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
+        to: `0x47CB53752e5dc0A972440dA127DCA9FBA6C2Ab6F`,
+        data: '0x420',
+        value: '123',
+        gasPrice: '123',
+        gasLimit: '456'
+      }
+
+      const output = await adapter.buildCustomTx(txArgs)
+
+      const expectedOutput = {
+        txToSign: {
+          addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
+          value: '123',
+          to: '0x47CB53752e5dc0A972440dA127DCA9FBA6C2Ab6F',
+          chainId: 1,
+          data: '0x420',
+          nonce: '0x2',
+          gasLimit: '0x1c8',
+          gasPrice: '0x7b'
+        }
+      }
+
+      await expect(expectedOutput).toEqual(output)
+    })
+
+    it('should build an unsigned custom tx using maxFeePerGas & maxPriorityFeePerGas (eip1559)', async () => {
+      const httpProvider = {
+        getAccount: jest
+          .fn<any, any>()
+          .mockResolvedValue(
+            makeGetAccountMockResponse({ balance: '2500000', erc20Balance: undefined })
+          )
+      } as unknown as unchained.ethereum.V1Api
+
+      const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
+      const adapter = new ethereum.ChainAdapter(args)
+
+      const txArgs = {
+        wallet: await getWallet(),
+        bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
+        to: `0x47CB53752e5dc0A972440dA127DCA9FBA6C2Ab6F`,
+        data: '0x420',
+        value: '123',
+        gasLimit: '456',
+        maxFeePerGas: '421',
+        maxPriorityFeePerGas: '422'
+      }
+
+      const output = await adapter.buildCustomTx(txArgs)
+
+      const expectedOutput = {
+        txToSign: {
+          addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
+          value: '123',
+          to: '0x47CB53752e5dc0A972440dA127DCA9FBA6C2Ab6F',
+          chainId: 1,
+          data: '0x420',
+          nonce: '0x2',
+          gasLimit: '0x1c8',
+          maxFeePerGas: '0x1a5',
+          maxPriorityFeePerGas: '0x1a6'
+        }
+      }
+
+      await expect(expectedOutput).toEqual(output)
     })
   })
 })

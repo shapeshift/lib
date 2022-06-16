@@ -1,3 +1,42 @@
+# [@shapeshiftoss/investor-foxy-v4.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v4.0.1...@shapeshiftoss/investor-foxy-v4.0.2) (2022-06-15)
+
+# [@shapeshiftoss/investor-foxy-v4.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v4.0.0...@shapeshiftoss/investor-foxy-v4.0.1) (2022-06-13)
+
+
+### Bug Fixes
+
+* add unchained-client devDependencies ([#804](https://github.com/shapeshift/lib/issues/804)) ([809fbda](https://github.com/shapeshift/lib/commit/809fbdae899ab4d8aecc021baa8df8162aae7d86))
+
+# [@shapeshiftoss/investor-foxy-v4.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v3.4.2...@shapeshiftoss/investor-foxy-v4.0.0) (2022-06-09)
+
+
+### Features
+
+* **investor-yearn:** use "KnownChainIds" instead of "ChainTypes" ([#779](https://github.com/shapeshift/lib/issues/779)) ([f44bc8f](https://github.com/shapeshift/lib/commit/f44bc8fe4a50951207632fdad4106b645d91686d))
+
+
+### BREAKING CHANGES
+
+* **investor-yearn:** Requires updated peerDependencies
+
+# [@shapeshiftoss/investor-foxy-v3.4.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v3.4.1...@shapeshiftoss/investor-foxy-v3.4.2) (2022-06-08)
+
+# [@shapeshiftoss/investor-foxy-v3.4.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v3.4.0...@shapeshiftoss/investor-foxy-v3.4.1) (2022-06-08)
+
+# [@shapeshiftoss/investor-foxy-v3.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v3.3.0...@shapeshiftoss/investor-foxy-v3.4.0) (2022-06-03)
+
+
+### Features
+
+* **assetService:** consume normalization of Asset properties & use static data ([#746](https://github.com/shapeshift/lib/issues/746)) ([ca87bee](https://github.com/shapeshift/lib/commit/ca87bee46419a03d490a826b2b42c90b49cc3079))
+
+# [@shapeshiftoss/investor-foxy-v3.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v3.2.0...@shapeshiftoss/investor-foxy-v3.3.0) (2022-06-01)
+
+
+### Features
+
+* thorchain memo support ([#716](https://github.com/shapeshift/lib/issues/716)) ([fe9762f](https://github.com/shapeshift/lib/commit/fe9762fd7656ef17d93885ff154a991978c3e93b))
+
 # [@shapeshiftoss/investor-foxy-v3.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v3.1.1...@shapeshiftoss/investor-foxy-v3.2.0) (2022-05-26)
 
 

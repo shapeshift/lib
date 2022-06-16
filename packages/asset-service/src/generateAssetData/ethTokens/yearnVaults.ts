@@ -1,24 +1,19 @@
 import { ethChainId as chainId, toAssetId } from '@shapeshiftoss/caip'
-import { AssetDataSource, TokenAsset } from '@shapeshiftoss/types'
+import { Asset } from '@shapeshiftoss/types'
 import { Token, Vault } from '@yfi/sdk'
 import toLower from 'lodash/toLower'
 
 import { yearnSdk } from './yearnSdk'
 
-export const getYearnVaults = async (): Promise<TokenAsset[]> => {
+export const getYearnVaults = async (): Promise<Asset[]> => {
   const vaults: Vault[] = await yearnSdk.vaults.get()
 
   return vaults.map((vault: Vault) => {
     return {
       color: '#276BDB', // yearn.finance blue
-      contractType: 'erc20',
-      dataSource: AssetDataSource.YearnFinance,
       icon: vault.metadata.displayIcon,
       name: vault.name,
       precision: Number(vault.decimals),
-      receiveSupport: true,
-      secondaryColor: '#276BDB',
-      sendSupport: true,
       symbol: vault.symbol,
       tokenId: toLower(vault.address),
       chainId,
@@ -26,26 +21,26 @@ export const getYearnVaults = async (): Promise<TokenAsset[]> => {
         chainId,
         assetNamespace: 'erc20',
         assetReference: vault.address
-      })
+      }),
+      explorer: 'https://etherscan.io',
+      explorerAddressLink: 'https://etherscan.io/address/',
+      explorerTxLink: 'https://etherscan.io/tx/'
     }
   })
 }
 
-export const getIronBankTokens = async (): Promise<TokenAsset[]> => {
+export const getIronBankTokens = async (): Promise<Asset[]> => {
   const ironBankTokens: Token[] = await yearnSdk.ironBank.tokens()
   return ironBankTokens.map((token: Token) => {
     return {
+      explorer: 'https://etherscan.io',
+      explorerAddressLink: 'https://etherscan.io/address/',
+      explorerTxLink: 'https://etherscan.io/tx/',
       color: '#276BDB', // yearn.finance blue
-      contractType: 'erc20',
-      dataSource: AssetDataSource.YearnFinance,
       icon: token.icon ?? '',
       name: token.name,
       precision: Number(token.decimals),
-      receiveSupport: true,
-      secondaryColor: '#276BDB',
-      sendSupport: true,
       symbol: token.symbol,
-      tokenId: toLower(token.address),
       chainId,
       assetId: toAssetId({
         chainId,
@@ -56,21 +51,18 @@ export const getIronBankTokens = async (): Promise<TokenAsset[]> => {
   })
 }
 
-export const getZapperTokens = async (): Promise<TokenAsset[]> => {
+export const getZapperTokens = async (): Promise<Asset[]> => {
   const zapperTokens: Token[] = await yearnSdk.tokens.supported()
   return zapperTokens.map((token: Token) => {
     return {
+      explorer: 'https://etherscan.io',
+      explorerAddressLink: 'https://etherscan.io/address/',
+      explorerTxLink: 'https://etherscan.io/tx/',
       color: '#7057F5', // zapper protocol purple
-      contractType: 'erc20',
-      dataSource: AssetDataSource.YearnFinance,
       icon: token.icon ?? '',
       name: token.name,
       precision: Number(token.decimals),
-      receiveSupport: true,
-      secondaryColor: '#7057F5',
-      sendSupport: true,
       symbol: token.symbol,
-      tokenId: toLower(token.address),
       chainId,
       assetId: toAssetId({
         chainId,
@@ -81,21 +73,18 @@ export const getZapperTokens = async (): Promise<TokenAsset[]> => {
   })
 }
 
-export const getUnderlyingVaultTokens = async (): Promise<TokenAsset[]> => {
+export const getUnderlyingVaultTokens = async (): Promise<Asset[]> => {
   const underlyingTokens: Token[] = await yearnSdk.vaults.tokens()
   return underlyingTokens.map((token: Token) => {
     return {
+      explorer: 'https://etherscan.io',
+      explorerAddressLink: 'https://etherscan.io/address/',
+      explorerTxLink: 'https://etherscan.io/tx/',
       color: '#FFFFFF',
-      contractType: 'erc20',
-      dataSource: AssetDataSource.YearnFinance,
       icon: token.icon ?? '',
       name: token.name,
       precision: Number(token.decimals),
-      receiveSupport: true,
-      secondaryColor: '#FFFFFF',
-      sendSupport: true,
       symbol: token.symbol,
-      tokenId: toLower(token.address),
       chainId,
       assetId: toAssetId({
         chainId,

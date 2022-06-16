@@ -1,13 +1,14 @@
 {
   "name": "@shapeshiftoss/asset-service",
-  "version": "4.4.0",
+  "version": "6.0.4",
   "description": "Service to return supported asset details",
   "homepage": "",
   "license": "MIT",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist/index.*",
+    "dist/*.js",
+    "dist/*.d.ts",
     "dist/service"
   ],
   "publishConfig": {
@@ -28,22 +29,21 @@
     "type-check": "tsc --project ./tsconfig.build.json --noEmit"
   },
   "dependencies": {
-    "axios": "^0.26.0",
+    "axios": "^0.26.1",
     "identicon.js": "^2.3.3",
     "js-pixel-fonts": "^1.5.0",
     "lodash": "^4.17.21"
   },
   "peerDependencies": {
-    "@shapeshiftoss/caip": "^5.0.0",
-    "@shapeshiftoss/types": "^4.3.1"
+    "@shapeshiftoss/caip": "^6.0.1",
+    "@shapeshiftoss/types": "^6.1.0"
   },
   "devDependencies": {
-    "@ethersproject/providers": "^5.5.2",
-    "@shapeshiftoss/caip": "^5.0.0",
-    "@shapeshiftoss/types": "^4.3.1",
-    "@types/lodash": "^4.14.172",
+    "@ethersproject/providers": "^5.5.3",
+    "@shapeshiftoss/caip": "^6.0.1",
+    "@shapeshiftoss/types": "^6.1.0",
     "@yfi/sdk": "^1.0.30",
     "dotenv": "^14.3.0",
-    "web3": "^1.7.1"
+    "web3": "^1.7.3"
   }
 }

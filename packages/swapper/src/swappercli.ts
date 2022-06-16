@@ -1,7 +1,7 @@
 import { AssetService } from '@shapeshiftoss/asset-service'
-import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { Asset, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
+import * as unchained from '@shapeshiftoss/unchained-client'
 import BigNumber from 'bignumber.js'
 import dotenv from 'dotenv'
 import readline from 'readline-sync'
@@ -10,6 +10,7 @@ import Web3 from 'web3'
 import { SwapperType } from './api'
 import { SwapperManager } from './manager/SwapperManager'
 import { ZrxSwapper } from './swappers/zrx/ZrxSwapper'
+
 dotenv.config()
 
 const {
@@ -58,24 +59,11 @@ const main = async (): Promise<void> => {
     return
   }
 
-  const assetService = new AssetService('')
-  await assetService.initialize()
-  const assets = assetService.byNetwork(NetworkTypes.MAINNET)
+  const assetService = new AssetService()
+  const assetMap = assetService.getAll()
 
-  if (!assets) {
-    console.error('No assets found in asset service')
-    return
-  }
-
-  const assetMap = assets.reduce((acc, val) => {
-    if (val) {
-      acc[val.symbol] = val
-    }
-    return acc
-  }, {} as Record<string, Asset>)
-
-  const sellAsset = assetMap[sellSymbol] as Asset
-  const buyAsset = assetMap[buySymbol] as Asset
+  const sellAsset = assetMap[sellSymbol]
+  const buyAsset = assetMap[buySymbol]
 
   if (!sellAsset) {
     console.error(`No asset ${sellSymbol} found in asset service`)
@@ -88,17 +76,22 @@ const main = async (): Promise<void> => {
 
   // Swapper Deps
   const wallet = await getWallet()
-  const unchainedUrls = {
-    [ChainTypes.Ethereum]: {
-      httpUrl: UNCHAINED_HTTP_API,
-      wsUrl: UNCHAINED_WS_API
-    }
-  }
-  const adapterManager = new ChainAdapterManager(unchainedUrls)
+
+  const ethChainAdapter = new ethereum.ChainAdapter({
+    providers: {
+      ws: new unchained.ws.Client<unchained.ethereum.EthereumTx>(UNCHAINED_WS_API),
+      http: new unchained.ethereum.V1Api(
+        new unchained.ethereum.Configuration({
+          basePath: UNCHAINED_HTTP_API
+        })
+      )
+    },
+    rpcUrl: 'https://mainnet.infura.io/v3/d734c7eebcdf400185d7eb67322a7e57'
+  })
+
   const web3Provider = new Web3.providers.HttpProvider(ETH_NODE_URL)
   const web3 = new Web3(web3Provider)
-
-  const zrxSwapperDeps = { wallet, adapterManager, web3 }
+  const zrxSwapperDeps = { wallet, adapter: ethChainAdapter, web3 }
 
   const manager = new SwapperManager()
   const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
@@ -114,10 +107,11 @@ const main = async (): Promise<void> => {
   let quote
   try {
     quote = await swapper.getTradeQuote({
+      chainId: 'eip155:1',
       sellAsset,
       buyAsset,
       sellAmount: sellAmountBase,
-      sellAssetAccountId: '0',
+      sellAssetAccountNumber: 0,
       sendMax: false
     })
   } catch (e) {
@@ -130,11 +124,6 @@ const main = async (): Promise<void> => {
 
   console.info('quote = ', JSON.stringify(quote))
 
-  if (!quote.success) {
-    console.error('Obtaining the quote failed: ', quote.statusReason)
-    return
-  }
-
   const buyAmount = fromBaseUnit(quote.buyAmount || '0', buyAsset.precision)
 
   const answer = readline.question(
@@ -144,13 +133,14 @@ const main = async (): Promise<void> => {
   )
   if (answer === 'y') {
     const trade = await swapper.buildTrade({
+      chainId: 'eip155:1',
       wallet,
       buyAsset,
       sendMax: false,
       sellAmount: sellAmountBase,
       sellAsset,
-      sellAssetAccountId: '0',
-      buyAssetAccountId: '0'
+      sellAssetAccountNumber: 0,
+      buyAssetAccountNumber: 0
     })
     const txid = await swapper.executeTrade({ trade, wallet })
     console.info('broadcast tx with id: ', txid)

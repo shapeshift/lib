@@ -1,30 +1,23 @@
-import { Tx as BlockbookTx } from '@shapeshiftoss/blockbook'
+import { EthereumTx } from '../generated/ethereum'
+import { BaseTxMetadata, StandardTx, StandardTxMetadata } from '../types'
 
-import { StandardTx, StandardTxMetadata } from '../types'
-
-export interface InternalTx {
-  blockNumber: string
-  timeStamp: string
-  hash: string
-  from: string
-  to: string
-  value: string
-  contractAddress: string
-  input: string
-  type: string
-  gas: string
-  gasUsed: string
-  traceId: string
-  isError: string
-  errCode: string
+export enum TxParser {
+  ERC20 = 'erc20'
 }
 
+export interface ERC20TxMetadata extends BaseTxMetadata {
+  parser: TxParser.ERC20
+  assetId?: string
+}
+
+export type TxMetadata = StandardTxMetadata | ERC20TxMetadata
+
 export interface ParsedTx extends StandardTx {
-  data?: StandardTxMetadata
+  data?: TxMetadata
 }
 
 export type TxSpecific = Partial<Pick<ParsedTx, 'trade' | 'transfers' | 'data'>>
 
 export interface SubParser {
-  parse(tx: BlockbookTx): Promise<TxSpecific | undefined>
+  parse(tx: EthereumTx): Promise<TxSpecific | undefined>
 }

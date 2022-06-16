@@ -1,3 +1,45 @@
+# [@shapeshiftoss/types-v6.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v6.0.0...@shapeshiftoss/types-v6.1.0) (2022-06-13)
+
+
+### Features
+
+* **types:** add CoingeckoAssetPlatform enum ([#800](https://github.com/shapeshift/lib/issues/800)) ([cab8035](https://github.com/shapeshift/lib/commit/cab80353d0c7c15b0c44a7907a400fa3b8a82a14))
+
+# [@shapeshiftoss/types-v6.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v5.0.0...@shapeshiftoss/types-v6.0.0) (2022-06-13)
+
+
+### Features
+
+* **types:** remove ChainTypes, NetworkTypes, and AssetDataSource ([#792](https://github.com/shapeshift/lib/issues/792)) ([54347d7](https://github.com/shapeshift/lib/commit/54347d73d7a8682d333de753832fa9574ba2f4ad))
+
+
+### BREAKING CHANGES
+
+* **types:** removes ChainTypes, NetworkTypes, and AssetDataSource
+
+* chore: manually bump package version
+
+# [@shapeshiftoss/types-v5.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v4.4.1...@shapeshiftoss/types-v5.0.0) (2022-06-09)
+
+
+### Features
+
+* **types:** remove chainAdapters types ([#773](https://github.com/shapeshift/lib/issues/773)) ([40a32cb](https://github.com/shapeshift/lib/commit/40a32cb8077e1b6336f0f8fec00e871b989146c8))
+
+
+### BREAKING CHANGES
+
+* **types:** Removed `chainAdapters` types. Those will now be in the `chain-adapters` package.
+
+# [@shapeshiftoss/types-v4.4.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v4.4.0...@shapeshiftoss/types-v4.4.1) (2022-06-08)
+
+# [@shapeshiftoss/types-v4.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v4.3.2...@shapeshiftoss/types-v4.4.0) (2022-06-03)
+
+
+### Features
+
+* **types:** remove Asset properties for normalization ([#743](https://github.com/shapeshift/lib/issues/743)) ([76088d5](https://github.com/shapeshift/lib/commit/76088d5f2cdce1fb7eb1b454be181648cc208351))
+
 # [@shapeshiftoss/types-v4.3.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v4.3.1...@shapeshiftoss/types-v4.3.2) (2022-05-26)
 
 # [@shapeshiftoss/types-v4.3.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v4.3.0...@shapeshiftoss/types-v4.3.1) (2022-05-24)

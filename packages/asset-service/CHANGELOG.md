@@ -1,3 +1,84 @@
+# [@shapeshiftoss/asset-service-v6.0.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.0.3...@shapeshiftoss/asset-service-v6.0.4) (2022-06-15)
+
+
+### Bug Fixes
+
+* **asset-service:** fix missing declaration file in published package ([f1eb5cf](https://github.com/shapeshift/lib/commit/f1eb5cf613c98cb60f4e039ee8fa4cac4b3d7d84))
+
+# [@shapeshiftoss/asset-service-v6.0.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.0.2...@shapeshiftoss/asset-service-v6.0.3) (2022-06-15)
+
+
+### Bug Fixes
+
+* **asset-service:** fix missing file in published package ([1aee0f5](https://github.com/shapeshift/lib/commit/1aee0f5566ad8975ce59dd1886bf5bed5d1ff0ab))
+
+# [@shapeshiftoss/asset-service-v6.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.0.1...@shapeshiftoss/asset-service-v6.0.2) (2022-06-15)
+
+# [@shapeshiftoss/asset-service-v6.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.0.0...@shapeshiftoss/asset-service-v6.0.1) (2022-06-14)
+
+
+### Bug Fixes
+
+* fixes broken trust wallet icons and info ([#818](https://github.com/shapeshift/lib/issues/818)) ([2081180](https://github.com/shapeshift/lib/commit/2081180b7cc859c8ad0d67eb71956250ce8fa3a5))
+
+# [@shapeshiftoss/asset-service-v6.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v5.0.2...@shapeshiftoss/asset-service-v6.0.0) (2022-06-13)
+
+
+### Features
+
+* **asset-service:** handle removal of ChainTypes, NetworkTypes, & AssetDataSource ([#793](https://github.com/shapeshift/lib/issues/793)) ([94f7449](https://github.com/shapeshift/lib/commit/94f74495b8d3b082517c10c60288f8fa1e411daf))
+
+
+### BREAKING CHANGES
+
+* **asset-service:** removes useages of ChainTypes, NetworkTypes, and AssetDataSource
+
+* chore: simplify chainIdToCoingeckoAssetPlatform and fix logic
+
+* chore: use CoingeckoAssetPlatform from types package
+
+# [@shapeshiftoss/asset-service-v5.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v5.0.1...@shapeshiftoss/asset-service-v5.0.2) (2022-06-13)
+
+
+### Bug Fixes
+
+* **assetService:** build fix ([#789](https://github.com/shapeshift/lib/issues/789)) ([8a90d56](https://github.com/shapeshift/lib/commit/8a90d56f5273f6e78fac09f3f54cf4e69e06afa2))
+
+# [@shapeshiftoss/asset-service-v5.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v5.0.0...@shapeshiftoss/asset-service-v5.0.1) (2022-06-10)
+
+
+### Bug Fixes
+
+* native asset description ([#777](https://github.com/shapeshift/lib/issues/777)) ([3baca79](https://github.com/shapeshift/lib/commit/3baca79252326e3bb97b047bd53a6444dc03aea8))
+
+# [@shapeshiftoss/asset-service-v5.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v4.6.1...@shapeshiftoss/asset-service-v5.0.0) (2022-06-09)
+
+
+### Features
+
+* **asset-service:** remove "chain" and "network" from assets ([#778](https://github.com/shapeshift/lib/issues/778)) ([34350e8](https://github.com/shapeshift/lib/commit/34350e88611e24710f71590316a90937925dc08d))
+
+
+### BREAKING CHANGES
+
+* **asset-service:** Asset shape has changed
+
+# [@shapeshiftoss/asset-service-v4.6.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v4.6.0...@shapeshiftoss/asset-service-v4.6.1) (2022-06-08)
+
+# [@shapeshiftoss/asset-service-v4.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v4.5.0...@shapeshiftoss/asset-service-v4.6.0) (2022-06-03)
+
+
+### Features
+
+* **assetService:** consume normalization of Asset properties & use static data ([#746](https://github.com/shapeshift/lib/issues/746)) ([ca87bee](https://github.com/shapeshift/lib/commit/ca87bee46419a03d490a826b2b42c90b49cc3079))
+
+# [@shapeshiftoss/asset-service-v4.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v4.4.0...@shapeshiftoss/asset-service-v4.5.0) (2022-06-01)
+
+
+### Features
+
+* thorchain memo support ([#716](https://github.com/shapeshift/lib/issues/716)) ([fe9762f](https://github.com/shapeshift/lib/commit/fe9762fd7656ef17d93885ff154a991978c3e93b))
+
 # [@shapeshiftoss/asset-service-v4.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v4.3.0...@shapeshiftoss/asset-service-v4.4.0) (2022-05-31)
 
 

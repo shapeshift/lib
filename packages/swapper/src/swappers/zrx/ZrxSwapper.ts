@@ -1,6 +1,7 @@
 import { AssetId } from '@shapeshiftoss/caip'
-import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import { Asset, SupportedChainIds } from '@shapeshiftoss/types'
+import { ethereum } from '@shapeshiftoss/chain-adapters'
+import { Asset } from '@shapeshiftoss/types'
+import Web3 from 'web3'
 
 import {
   ApprovalNeededInput,
@@ -9,9 +10,7 @@ import {
   BuildTradeInput,
   BuyAssetBySellIdInput,
   ExecuteTradeInput,
-  GetMinMaxInput,
   GetTradeQuoteInput,
-  MinMaxOutput,
   Swapper,
   SwapperType,
   TradeQuote,
@@ -19,7 +18,6 @@ import {
   TradeTxs,
   ZrxTrade
 } from '../../api'
-import { getZrxMinMax } from './getZrxMinMax/getZrxMinMax'
 import { getZrxTradeQuote } from './getZrxTradeQuote/getZrxTradeQuote'
 import { UNSUPPORTED_ASSETS } from './utils/blacklist'
 import { getUsdRate } from './utils/helpers/helpers'
@@ -29,11 +27,11 @@ import { zrxBuildTrade } from './zrxBuildTrade/zrxBuildTrade'
 import { zrxExecuteTrade } from './zrxExecuteTrade/zrxExecuteTrade'
 
 export type ZrxSwapperDeps = {
-  adapterManager: ChainAdapterManager
-  web3: any
+  adapter: ethereum.ChainAdapter
+  web3: Web3
 }
 
-export class ZrxSwapper implements Swapper {
+export class ZrxSwapper implements Swapper<'eip155:1'> {
   public static swapperName = 'ZrxSwapper'
   deps: ZrxSwapperDeps
 
@@ -49,33 +47,27 @@ export class ZrxSwapper implements Swapper {
     return SwapperType.Zrx
   }
 
-  async buildTrade(args: BuildTradeInput): Promise<ZrxTrade<SupportedChainIds>> {
+  async buildTrade(args: BuildTradeInput): Promise<ZrxTrade> {
     return zrxBuildTrade(this.deps, args)
   }
 
-  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<SupportedChainIds>> {
+  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<'eip155:1'>> {
     return getZrxTradeQuote(input)
   }
 
-  async getUsdRate(input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> {
+  async getUsdRate(input: Asset): Promise<string> {
     return getUsdRate(input)
   }
 
-  async getMinMax(input: GetMinMaxInput): Promise<MinMaxOutput> {
-    return getZrxMinMax(input.sellAsset, input.buyAsset)
-  }
-
-  async executeTrade(args: ExecuteTradeInput<SupportedChainIds>): Promise<TradeResult> {
+  async executeTrade(args: ExecuteTradeInput<'eip155:1'>): Promise<TradeResult> {
     return zrxExecuteTrade(this.deps, args)
   }
 
-  async approvalNeeded(
-    args: ApprovalNeededInput<SupportedChainIds>
-  ): Promise<ApprovalNeededOutput> {
+  async approvalNeeded(args: ApprovalNeededInput<'eip155:1'>): Promise<ApprovalNeededOutput> {
     return ZrxApprovalNeeded(this.deps, args)
   }
 
-  async approveInfinite(args: ApproveInfiniteInput<SupportedChainIds>): Promise<string> {
+  async approveInfinite(args: ApproveInfiniteInput<'eip155:1'>): Promise<string> {
     return ZrxApproveInfinite(this.deps, args)
   }
 

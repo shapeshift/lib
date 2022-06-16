@@ -1,3 +1,90 @@
+# [@shapeshiftoss/market-service-v6.2.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v6.2.0...@shapeshiftoss/market-service-v6.2.1) (2022-06-15)
+
+# [@shapeshiftoss/market-service-v6.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v6.1.0...@shapeshiftoss/market-service-v6.2.0) (2022-06-14)
+
+
+### Features
+
+* add thorswap approvalNeeded ([#801](https://github.com/shapeshift/lib/issues/801)) ([4902ac4](https://github.com/shapeshift/lib/commit/4902ac453121d7700195662b2ca8ed9a1645d362))
+
+# [@shapeshiftoss/market-service-v6.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v6.0.1...@shapeshiftoss/market-service-v6.1.0) (2022-06-13)
+
+
+### Features
+
+* **market-service:** remove ChainTypes ([#794](https://github.com/shapeshift/lib/issues/794)) ([016a16c](https://github.com/shapeshift/lib/commit/016a16c8ad93d6061a8a35c007f47b1d823c8f15))
+
+# [@shapeshiftoss/market-service-v6.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v6.0.0...@shapeshiftoss/market-service-v6.0.1) (2022-06-13)
+
+
+### Bug Fixes
+
+* **market-service:** remove hard-coded chain adapter URLs ([#798](https://github.com/shapeshift/lib/issues/798)) ([3e8bb90](https://github.com/shapeshift/lib/commit/3e8bb9007c27b67f0f6781e13a47fd108f6d3d55))
+
+# [@shapeshiftoss/market-service-v6.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v5.0.1...@shapeshiftoss/market-service-v6.0.0) (2022-06-09)
+
+
+### Features
+
+* **market-service:** removed usage of ChainAdapterManager ([#780](https://github.com/shapeshift/lib/issues/780)) ([ee30485](https://github.com/shapeshift/lib/commit/ee30485e312f112f98e65e0b0f4d86d45478186e))
+
+
+### BREAKING CHANGES
+
+* **market-service:** Requires updated peerDependencies
+
+# [@shapeshiftoss/market-service-v5.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v5.0.0...@shapeshiftoss/market-service-v5.0.1) (2022-06-08)
+
+# [@shapeshiftoss/market-service-v5.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.6.1...@shapeshiftoss/market-service-v5.0.0) (2022-06-08)
+
+
+### Features
+
+* update btc/eth to use historical tx history and new ws payloads ([#674](https://github.com/shapeshift/lib/issues/674)) ([0189e3b](https://github.com/shapeshift/lib/commit/0189e3b4dd5a3b998ddf285e761ae11dea72f94b))
+
+
+### BREAKING CHANGES
+
+* unchained-client and chain-adapters
+
+* revert pre release package versions
+
+* revert changes to no breaking packages
+
+* dependencies
+
+* pin package versions
+
+# [@shapeshiftoss/market-service-v4.6.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.6.0...@shapeshiftoss/market-service-v4.6.1) (2022-06-08)
+
+# [@shapeshiftoss/market-service-v4.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.5.1...@shapeshiftoss/market-service-v4.6.0) (2022-06-03)
+
+
+### Features
+
+* **market-service:** foxy supply and maxSupply fields ([#729](https://github.com/shapeshift/lib/issues/729)) ([84b3872](https://github.com/shapeshift/lib/commit/84b387294636304a022e7a2e80b91aed9b68a931))
+
+# [@shapeshiftoss/market-service-v4.5.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.5.0...@shapeshiftoss/market-service-v4.5.1) (2022-06-03)
+
+
+### Bug Fixes
+
+* dependency inject market service manager ([#741](https://github.com/shapeshift/lib/issues/741)) ([a6ab9d4](https://github.com/shapeshift/lib/commit/a6ab9d477335504e50e8d6c309e6a9ffacf5a650))
+
+# [@shapeshiftoss/market-service-v4.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.4.0...@shapeshiftoss/market-service-v4.5.0) (2022-06-02)
+
+
+### Features
+
+* support coingecko pro with api key ([#738](https://github.com/shapeshift/lib/issues/738)) ([b411cab](https://github.com/shapeshift/lib/commit/b411cab0a8e51d3930a688315a514d83df7d51eb))
+
+# [@shapeshiftoss/market-service-v4.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.3.0...@shapeshiftoss/market-service-v4.4.0) (2022-06-01)
+
+
+### Features
+
+* thorchain memo support ([#716](https://github.com/shapeshift/lib/issues/716)) ([fe9762f](https://github.com/shapeshift/lib/commit/fe9762fd7656ef17d93885ff154a991978c3e93b))
+
 # [@shapeshiftoss/market-service-v4.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v4.2.2...@shapeshiftoss/market-service-v4.3.0) (2022-05-26)
 
 

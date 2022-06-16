@@ -1,4 +1,4 @@
-import { Asset, AssetDataSource, ChainTypes, NetworkTypes } from '@shapeshiftoss/types'
+import { Asset } from '@shapeshiftoss/types'
 import axios from 'axios'
 
 import { getRenderedIdenticonBase64, IdenticonOptions } from '../../service/GenerateAssetIcon'
@@ -56,24 +56,17 @@ export const getOsmosisAssets = async (): Promise<Asset[]> => {
     // if an asset has an ibc object, it's bridged, so label it as e.g. ATOM on Osmosis
     const getName = (a: OsmoAsset): string => (a.ibc ? `${a.name} on Osmosis` : a.name)
 
-    const assetDatum = {
+    const assetDatum: Asset = {
       assetId: `cosmos:osmosis-1/${assetNamespace}:${assetReference}`,
       chainId: 'cosmos:osmosis-1',
-      chain: ChainTypes.Osmosis,
-      dataSource: AssetDataSource.CoinGecko,
-      network: NetworkTypes.OSMOSIS_MAINNET,
       symbol: current.symbol,
       name: getName(current),
       precision,
-      slip44: 60,
       color: '#FFFFFF',
-      secondaryColor: '#FFFFFF',
       icon: current.logo_URIs.png,
       explorer: 'https://mintscan.io',
       explorerAddressLink: 'https://mintscan.io/osmosis/account/',
-      explorerTxLink: 'https://mintscan.io/osmosis/txs/',
-      sendSupport: true,
-      receiveSupport: true
+      explorerTxLink: 'https://mintscan.io/osmosis/txs/'
     }
 
     if (!assetDatum.icon) {

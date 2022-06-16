@@ -1,21 +1,19 @@
 import { numberToHex } from 'web3-utils'
 
 import { ExecuteTradeInput, SwapError, SwapErrorTypes, TradeResult, ZrxTrade } from '../../../api'
-import { bnOrZero } from '../utils/bignumber'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function zrxExecuteTrade(
-  { adapterManager }: ZrxSwapperDeps,
+  { adapter }: ZrxSwapperDeps,
   { trade, wallet }: ExecuteTradeInput<'eip155:1'>
 ): Promise<TradeResult> {
-  const zrxTrade = trade as ZrxTrade<'eip155:1'>
+  const zrxTrade = trade as ZrxTrade
   const { sellAsset } = zrxTrade
   try {
     // value is 0 for erc20s
     const value = sellAsset.assetId === 'eip155:1/slip44:60' ? trade.sellAmount : '0'
-    const adapter = await adapterManager.byChainId(sellAsset.chainId)
     const bip44Params = adapter.buildBIP44Params({
-      accountNumber: bnOrZero(trade.sellAssetAccountId).toNumber()
+      accountNumber: trade.sellAssetAccountNumber
     })
 
     const buildTxResponse = await adapter.buildSendTransaction({

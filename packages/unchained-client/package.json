@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/unchained-client",
-  "version": "8.4.1",
+  "version": "9.0.1",
   "license": "MIT",
   "main": "dist/index.js",
   "source": "src/index.ts",
@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn build:prod",
+    "build": "yarn build:dev",
     "build:dev": "yarn clean && yarn generate:dev && tsc -p tsconfig.build.json",
     "build:prod": "yarn clean && yarn generate:prod && tsc -p tsconfig.build.json",
     "build:local": "yarn clean && yarn generate:local && tsc -p tsconfig.build.json",
@@ -22,24 +22,23 @@
     "type-check": "tsc --project ./tsconfig.build.json --noEmit"
   },
   "dependencies": {
-    "@shapeshiftoss/blockbook": "^6.11.0",
     "@yfi/sdk": "^1.0.30",
-    "bignumber.js": "^9.0.1",
+    "bignumber.js": "^9.0.2",
     "ethers": "^5.5.3",
     "isomorphic-ws": "^4.0.1",
     "ws": "^8.3.0"
   },
   "peerDependencies": {
-    "@shapeshiftoss/caip": "^5.0.0",
+    "@shapeshiftoss/caip": "^6.0.1",
     "@shapeshiftoss/logger": "^1.1.2",
-    "@shapeshiftoss/types": "^4.3.1"
+    "@shapeshiftoss/types": "^4.4.0"
   },
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.5.1",
-    "@shapeshiftoss/caip": "^5.0.0",
-    "@shapeshiftoss/common-api": "^6.11.0",
+    "@shapeshiftoss/caip": "^6.0.1",
+    "@shapeshiftoss/common-api": "^7.0.0",
     "@shapeshiftoss/logger": "^1.1.2",
-    "@shapeshiftoss/types": "^4.3.1",
+    "@shapeshiftoss/types": "^4.4.0",
     "@types/ws": "^8.2.1"
   }
 }
