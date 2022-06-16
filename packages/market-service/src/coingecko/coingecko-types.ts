@@ -6,9 +6,9 @@ export type CoinGeckoMarketData = {
   market_cap: { [currency: string]: number }
   current_price: { [currency: string]: number }
   price_change_percentage_24h: number
-  total_volume?: { [key: string]: number }
-  high_24h?: { [key: string]: number }
-  low_24h?: { [key: string]: number }
+  total_volume?: { [currency: string]: number }
+  high_24h?: { [currency: string]: number }
+  low_24h?: { [currency: string]: number }
   total_supply?: number
 }
 export type CoinGeckoMarketCap = {
