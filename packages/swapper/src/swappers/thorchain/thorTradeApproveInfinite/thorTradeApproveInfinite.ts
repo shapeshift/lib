@@ -7,11 +7,17 @@ import { grantAllowance } from '../../utils/helpers/helpers'
 import { ThorchainSwapperDeps } from '../types'
 import { MAX_ALLOWANCE } from '../utils/constants'
 
-export const thorTradeApproveInfinite = async (
-  { adapterManager, web3 }: ThorchainSwapperDeps,
-  { quote, wallet }: ApproveInfiniteInput<'eip155:1'>
-) => {
+export const thorTradeApproveInfinite = async ({
+  deps,
+  input
+}: {
+  deps: ThorchainSwapperDeps
+  input: ApproveInfiniteInput<'eip155:1'>
+}): Promise<string> => {
   try {
+    const { adapterManager, web3 } = deps
+    const { quote, wallet } = input
+
     const sellAssetChainId = quote.sellAsset.chainId
     const adapter = adapterManager.get(KnownChainIds.EthereumMainnet) as unknown as
       | ethereum.ChainAdapter
