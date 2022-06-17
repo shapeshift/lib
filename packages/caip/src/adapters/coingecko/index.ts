@@ -1,7 +1,7 @@
 import toLower from 'lodash/toLower'
 
 import { fromAssetId } from '../../assetId/assetId'
-import { ChainId, fromChainId } from '../../chainId/chainId'
+import { ChainId, fromChainId, toChainId } from '../../chainId/chainId'
 import { CHAIN_NAMESPACE, CHAIN_REFERENCE } from '../../constants'
 import * as adapters from './generated'
 
@@ -35,35 +35,6 @@ export const coingeckoToAssetId = (id: string): string | undefined =>
 export const assetIdToCoingecko = (assetId: string): string | undefined =>
   generatedAssetIdToCoingeckoMap[toLower(assetId)]
 
-export const makeCoingeckoAssetUrl = (assetId: string, apiKey?: string): string => {
-  const id = assetIdToCoingecko(assetId)
-  if (!id) throw new Error(`no coingecko asset for assetId: ${assetId}`)
-
-  const baseUrl = apiKey ? coingeckoProBaseUrl : coingeckoBaseUrl
-  const maybeApiKey = apiKey ? `&x_cg_pro_api_key=${apiKey}` : ''
-
-  const { chainReference, assetNamespace, assetReference } = fromAssetId(assetId)
-
-  if (assetNamespace === 'erc20') {
-    const assetPlatform = (() => {
-      switch (chainReference) {
-        case CHAIN_REFERENCE.EthereumMainnet:
-          return CoingeckoAssetPlatform.Ethereum
-        case CHAIN_REFERENCE.AvalancheCChain:
-          return CoingeckoAssetPlatform.Avalanche
-        default:
-          throw new Error(
-            `no supported coingecko asset platform for chain reference: ${chainReference}`
-          )
-      }
-    })()
-
-    return `${baseUrl}/coins/${assetPlatform}/contract/${assetReference}${maybeApiKey}`
-  }
-
-  return `${baseUrl}/coins/${id}${maybeApiKey}`
-}
-
 // https://www.coingecko.com/en/api/documentation - See asset_platforms
 export const chainIdToCoingeckoAssetPlatform = (chainId: ChainId): string => {
   const { chainNamespace, chainReference } = fromChainId(chainId)
@@ -71,9 +42,9 @@ export const chainIdToCoingeckoAssetPlatform = (chainId: ChainId): string => {
     case CHAIN_NAMESPACE.Ethereum:
       switch (chainReference) {
         case CHAIN_REFERENCE.EthereumMainnet:
-          return 'ethereum'
+          return CoingeckoAssetPlatform.Ethereum
         case CHAIN_REFERENCE.AvalancheCChain:
-          return 'avalanche'
+          return CoingeckoAssetPlatform.Avalanche
         default:
           throw new Error(
             `chainNamespace ${chainNamespace}, chainReference ${chainReference} not supported.`
@@ -82,9 +53,9 @@ export const chainIdToCoingeckoAssetPlatform = (chainId: ChainId): string => {
     case CHAIN_NAMESPACE.Cosmos:
       switch (chainReference) {
         case CHAIN_REFERENCE.CosmosHubMainnet:
-          return 'cosmos'
+          return CoingeckoAssetPlatform.Cosmos
         case CHAIN_REFERENCE.OsmosisMainnet:
-          return 'osmosis'
+          return CoingeckoAssetPlatform.Osmosis
         default:
           throw new Error(
             `chainNamespace ${chainNamespace}, chainReference ${chainReference} not supported.`
@@ -97,4 +68,24 @@ export const chainIdToCoingeckoAssetPlatform = (chainId: ChainId): string => {
         `chainNamespace ${chainNamespace}, chainReference ${chainReference} not supported.`
       )
   }
+}
+
+export const makeCoingeckoAssetUrl = (assetId: string, apiKey?: string): string => {
+  const id = assetIdToCoingecko(assetId)
+  if (!id) throw new Error(`no coingecko asset for assetId: ${assetId}`)
+
+  const baseUrl = apiKey ? coingeckoProBaseUrl : coingeckoBaseUrl
+  const maybeApiKey = apiKey ? `&x_cg_pro_api_key=${apiKey}` : ''
+
+  const { chainNamespace, chainReference, assetNamespace, assetReference } = fromAssetId(assetId)
+
+  if (assetNamespace === 'erc20') {
+    const assetPlatform = chainIdToCoingeckoAssetPlatform(
+      toChainId({ chainNamespace, chainReference })
+    )
+
+    return `${baseUrl}/coins/${assetPlatform}/contract/${assetReference}${maybeApiKey}`
+  }
+
+  return `${baseUrl}/coins/${id}${maybeApiKey}`
 }
