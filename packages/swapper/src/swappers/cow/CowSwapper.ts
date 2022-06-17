@@ -1,3 +1,4 @@
+import { AssetService } from '@shapeshiftoss/asset-service'
 import { AssetId } from '@shapeshiftoss/caip'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { Asset } from '@shapeshiftoss/types'
@@ -28,6 +29,7 @@ export type CowSwapperDeps = {
   apiUrl: string
   adapter: ethereum.ChainAdapter
   web3: Web3
+  assetService: AssetService
 }
 
 export class CowSwapper implements Swapper<'eip155:1'> {
