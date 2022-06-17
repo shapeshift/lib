@@ -29,7 +29,7 @@ type AssetMap = Record<ChainId, Record<AssetId, string>>
 export const writeFiles = async (data: AssetMap) => {
   await Promise.all(
     Object.entries(data).map(async ([chainId, assets]) => {
-      const path = `/src/adapters/coingecko/generated/${chainId}/adapter.json`.replace(':', '_')
+      const path = `./src/adapters/coingecko/generated/${chainId}/adapter.json`.replace(':', '_')
       await fs.promises.writeFile(path, JSON.stringify(assets))
     })
   )
