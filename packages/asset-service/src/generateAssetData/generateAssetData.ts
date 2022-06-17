@@ -1,5 +1,6 @@
 import 'dotenv/config'
 
+import { CHAIN_REFERENCE, fromAssetId } from '@shapeshiftoss/caip'
 import { Asset } from '@shapeshiftoss/types'
 import fs from 'fs'
 import filter from 'lodash/filter'
@@ -35,7 +36,15 @@ const generateAssetData = async () => {
   // deterministic order so diffs are readable
   const orderedAssetList = orderBy(filteredAssetData, 'assetId')
 
+  const ethTokenNames = ethAssets.map((asset) => asset.name)
   const generatedAssetData = orderedAssetList.reduce<AssetsById>((acc, asset) => {
+    const { chainReference } = fromAssetId(asset.assetId)
+
+    // mark any avalanche assets that also exist on ethereum
+    if (chainReference === CHAIN_REFERENCE.AvalancheCChain && ethTokenNames.includes(asset.name)) {
+      asset.name = `${asset.name} on Avalanche`
+    }
+
     acc[asset.assetId] = asset
     return acc
   }, {})

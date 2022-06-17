@@ -43,9 +43,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/secretnetwork/images/scrt.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:0CD3A0285E1341859B5E86B6AB7682F023D03E97607CCC1DC95706411D866DF7": {
     "assetId": "cosmos:osmosis-1/ibc:0CD3A0285E1341859B5E86B6AB7682F023D03E97607CCC1DC95706411D866DF7",
@@ -55,9 +55,9 @@
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/axelar/images/axldai.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:1480B8FD20AD5FCAE81EA87584D269547DD4D436843C1D20F15E00EB64743EF4": {
     "assetId": "cosmos:osmosis-1/ibc:1480B8FD20AD5FCAE81EA87584D269547DD4D436843C1D20F15E00EB64743EF4",
@@ -67,9 +67,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/akash/images/akt.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:1DC495FCEFDA068A3820F903EDBD78B942FBD204D7E93D3BA2B432E9669D1A59": {
     "assetId": "cosmos:osmosis-1/ibc:1DC495FCEFDA068A3820F903EDBD78B942FBD204D7E93D3BA2B432E9669D1A59",
@@ -79,9 +79,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/emoney/images/ngm.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:1DCC8A6CB5689018431323953344A9F6CC4D0BFB261E88C9F7777372C10CD076": {
     "assetId": "cosmos:osmosis-1/ibc:1DCC8A6CB5689018431323953344A9F6CC4D0BFB261E88C9F7777372C10CD076",
@@ -91,9 +91,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/regen/images/regen.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2": {
     "assetId": "cosmos:osmosis-1/ibc:27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
@@ -103,9 +103,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/cosmoshub/images/atom.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A": {
     "assetId": "cosmos:osmosis-1/ibc:297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A",
@@ -115,9 +115,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/juno/images/neta.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:307E5C96C8F60D1CBEE269A9A86C0834E1DB06F2B3788AE4F716EDB97A48B97D": {
     "assetId": "cosmos:osmosis-1/ibc:307E5C96C8F60D1CBEE269A9A86C0834E1DB06F2B3788AE4F716EDB97A48B97D",
@@ -127,9 +127,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/dig/images/dig.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:346786EA82F41FE55FAD14BF69AD8BA9B36985406E43F3CB23E6C45A285A9593": {
     "assetId": "cosmos:osmosis-1/ibc:346786EA82F41FE55FAD14BF69AD8BA9B36985406E43F3CB23E6C45A285A9593",
@@ -139,9 +139,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/konstellation/images/darc.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:3BCCC93AD5DF58D11A6F8A05FA8BC801CBA0BA61A981F57E91B8B598BF8061CB": {
     "assetId": "cosmos:osmosis-1/ibc:3BCCC93AD5DF58D11A6F8A05FA8BC801CBA0BA61A981F57E91B8B598BF8061CB",
@@ -151,9 +151,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/panacea/images/med.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:41999DF04D9441DAC0DF5D8291DF4333FBCBA810FFD63FDCE34FDF41EF37B6F7": {
     "assetId": "cosmos:osmosis-1/ibc:41999DF04D9441DAC0DF5D8291DF4333FBCBA810FFD63FDCE34FDF41EF37B6F7",
@@ -163,9 +163,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/cerberus/images/crbrus.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED": {
     "assetId": "cosmos:osmosis-1/ibc:46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED",
@@ -175,9 +175,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/juno/images/juno.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:4E5444C35610CC76FC94E7F7886B93121175C28262DDFDDE6F84E82BF2425452": {
     "assetId": "cosmos:osmosis-1/ibc:4E5444C35610CC76FC94E7F7886B93121175C28262DDFDDE6F84E82BF2425452",
@@ -187,9 +187,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/bitsong/images/btsg.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:52B1AA623B34EB78FD767CEA69E8D7FA6C9CFE1FBF49C5406268FD325E2CC2AC": {
     "assetId": "cosmos:osmosis-1/ibc:52B1AA623B34EB78FD767CEA69E8D7FA6C9CFE1FBF49C5406268FD325E2CC2AC",
@@ -199,9 +199,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/starname/images/iov.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:57AA1A70A4BC9769C525EBF6386F7A21536E04A79D62E1981EFCEF9428EBB205": {
     "assetId": "cosmos:osmosis-1/ibc:57AA1A70A4BC9769C525EBF6386F7A21536E04A79D62E1981EFCEF9428EBB205",
@@ -211,9 +211,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/kava/images/kava.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:5973C068568365FFF40DEDCF1A1CB7582B6116B731CD31A12231AE25E20B871F": {
     "assetId": "cosmos:osmosis-1/ibc:5973C068568365FFF40DEDCF1A1CB7582B6116B731CD31A12231AE25E20B871F",
@@ -223,9 +223,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/emoney/images/eeur.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:5D1F516200EE8C6B2354102143B78A2DEDA25EDE771AC0F8DC3C1837C8FD4447": {
     "assetId": "cosmos:osmosis-1/ibc:5D1F516200EE8C6B2354102143B78A2DEDA25EDE771AC0F8DC3C1837C8FD4447",
@@ -235,9 +235,9 @@
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/fetchhub/images/fet.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:67795E528DF67C5606FC20F824EA39A6EF55BA133F4DC79C90A8C47A0901E17C": {
     "assetId": "cosmos:osmosis-1/ibc:67795E528DF67C5606FC20F824EA39A6EF55BA133F4DC79C90A8C47A0901E17C",
@@ -247,9 +247,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/umee/images/umee.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:6AE98883D4D5D5FF9E50D7130F1305DA2FFA0C652D1DD9C123657C6B4EB2DF8A": {
     "assetId": "cosmos:osmosis-1/ibc:6AE98883D4D5D5FF9E50D7130F1305DA2FFA0C652D1DD9C123657C6B4EB2DF8A",
@@ -259,9 +259,9 @@
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/evmos/images/evmos.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:7A08C6F11EF0F59EB841B9F788A87EC9F2361C7D9703157EC13D940DC53031FA": {
     "assetId": "cosmos:osmosis-1/ibc:7A08C6F11EF0F59EB841B9F788A87EC9F2361C7D9703157EC13D940DC53031FA",
@@ -271,9 +271,9 @@
     "precision": 9,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/cheqd/images/cheq.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:7C4D60AA95E5A7558B0A364860979CA34B7FF8AAF255B87AF9E879374470CEC0": {
     "assetId": "cosmos:osmosis-1/ibc:7C4D60AA95E5A7558B0A364860979CA34B7FF8AAF255B87AF9E879374470CEC0",
@@ -283,9 +283,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/irisnet/images/iris.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:8061A06D3BD4D52C4A28FFECF7150D370393AF0BA661C3776C54FF32836C3961": {
     "assetId": "cosmos:osmosis-1/ibc:8061A06D3BD4D52C4A28FFECF7150D370393AF0BA661C3776C54FF32836C3961",
@@ -295,9 +295,9 @@
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/persistence/images/pstake.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:8318FD63C42203D16DDCAF49FE10E8590669B3219A3E87676AC9DA50722687FB": {
     "assetId": "cosmos:osmosis-1/ibc:8318FD63C42203D16DDCAF49FE10E8590669B3219A3E87676AC9DA50722687FB",
@@ -307,9 +307,9 @@
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/sifchain/images/rowan.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:8A34AF0C1943FD0DFCDE9ADBF0B2C9959C45E87E6088EA2FC6ADACD59261B8A2": {
     "assetId": "cosmos:osmosis-1/ibc:8A34AF0C1943FD0DFCDE9ADBF0B2C9959C45E87E6088EA2FC6ADACD59261B8A2",
@@ -319,9 +319,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/lumnetwork/images/lum.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:8FEFAE6AECF6E2A255585617F781F35A8D5709A545A804482A261C0C9548A9D3": {
     "assetId": "cosmos:osmosis-1/ibc:8FEFAE6AECF6E2A255585617F781F35A8D5709A545A804482A261C0C9548A9D3",
@@ -331,9 +331,9 @@
     "precision": 8,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/carbon/images/swth.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:9712DBB13B9631EDFA9BF61B55F1B2D290B2ADB67E3A4EB3A875F3B6081B3B84": {
     "assetId": "cosmos:osmosis-1/ibc:9712DBB13B9631EDFA9BF61B55F1B2D290B2ADB67E3A4EB3A875F3B6081B3B84",
@@ -343,9 +343,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/sentinel/images/dvpn.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:987C17B11ABC2B20019178ACE62929FE9840202CE79498E29FE8E5CB02B7C0A4": {
     "assetId": "cosmos:osmosis-1/ibc:987C17B11ABC2B20019178ACE62929FE9840202CE79498E29FE8E5CB02B7C0A4",
@@ -355,9 +355,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/stargaze/images/stars.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:9989AD6CCA39D1131523DB0617B50F6442081162294B4795E26746292467B525": {
     "assetId": "cosmos:osmosis-1/ibc:9989AD6CCA39D1131523DB0617B50F6442081162294B4795E26746292467B525",
@@ -367,9 +367,9 @@
     "precision": 9,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/likecoin/images/like.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:9BBA9A1C257E971E38C1422780CE6F0B0686F0A3085E2D61118D904BFE0F5F5E": {
     "assetId": "cosmos:osmosis-1/ibc:9BBA9A1C257E971E38C1422780CE6F0B0686F0A3085E2D61118D904BFE0F5F5E",
@@ -379,9 +379,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/sommelier/images/somm.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:9BCB27203424535B6230D594553F1659C77EC173E36D9CF4759E7186EE747E84": {
     "assetId": "cosmos:osmosis-1/ibc:9BCB27203424535B6230D594553F1659C77EC173E36D9CF4759E7186EE747E84",
@@ -391,9 +391,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/decentr/images/dec.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:A0CC0CF735BFB30E730C70019D4218A1244FF383503FF7579C9201AB93CA9293": {
     "assetId": "cosmos:osmosis-1/ibc:A0CC0CF735BFB30E730C70019D4218A1244FF383503FF7579C9201AB93CA9293",
@@ -403,9 +403,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/persistence/images/xprt.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:B547DC9B897E7C3AA5B824696110B8E3D2C31E3ED3F02FF363DCBAD82457E07E": {
     "assetId": "cosmos:osmosis-1/ibc:B547DC9B897E7C3AA5B824696110B8E3D2C31E3ED3F02FF363DCBAD82457E07E",
@@ -415,9 +415,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/kichain/images/xki.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:B9E0A1A524E98BB407D3CED8720EFEFD186002F90C1B1B7964811DD0CCC12228": {
     "assetId": "cosmos:osmosis-1/ibc:B9E0A1A524E98BB407D3CED8720EFEFD186002F90C1B1B7964811DD0CCC12228",
@@ -427,9 +427,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/chihuahua/images/huahua.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:CBA34207E969623D95D057D9B11B0C8B32B89A71F170577D982FDDE623813FFC": {
     "assetId": "cosmos:osmosis-1/ibc:CBA34207E969623D95D057D9B11B0C8B32B89A71F170577D982FDDE623813FFC",
@@ -439,9 +439,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/assetmantle/images/mntl.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:D1542AA8762DB13087D8364F3EA6509FD6F009A34F00426AF9E4F9FA85CBBF1F": {
     "assetId": "cosmos:osmosis-1/ibc:D1542AA8762DB13087D8364F3EA6509FD6F009A34F00426AF9E4F9FA85CBBF1F",
@@ -451,9 +451,9 @@
     "precision": 8,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/axelar/images/axlwbtc.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858": {
     "assetId": "cosmos:osmosis-1/ibc:D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
@@ -463,9 +463,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/axelar/images/axlusdc.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:D805F1DA50D31B96E4282C1D4181EDDFB1A44A598BFF5666F4B43E4B8BEA95A5": {
     "assetId": "cosmos:osmosis-1/ibc:D805F1DA50D31B96E4282C1D4181EDDFB1A44A598BFF5666F4B43E4B8BEA95A5",
@@ -475,9 +475,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/bitcanna/images/bcna.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:E6931F78057F7CC5DA0FD6CEF82FF39373A6E0452BF1FD76910B93292CF356C1": {
     "assetId": "cosmos:osmosis-1/ibc:E6931F78057F7CC5DA0FD6CEF82FF39373A6E0452BF1FD76910B93292CF356C1",
@@ -487,9 +487,9 @@
     "precision": 8,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/cryptoorgchain/images/cro.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:E7B35499CFBEB0FF5778127ABA4FB2C4B79A6B8D3D831D4379C4048C238796BD": {
     "assetId": "cosmos:osmosis-1/ibc:E7B35499CFBEB0FF5778127ABA4FB2C4B79A6B8D3D831D4379C4048C238796BD",
@@ -499,9 +499,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/vidulum/images/vdl.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:E97634A40119F1898989C2A23224ED83FDD0A57EA46B3A094E287288D1672B44": {
     "assetId": "cosmos:osmosis-1/ibc:E97634A40119F1898989C2A23224ED83FDD0A57EA46B3A094E287288D1672B44",
@@ -511,9 +511,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/gravitybridge/images/grav.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:EA1D43981D5C9A1C4AAEA9C23BB1D4FA126BA9BC7020A25E0AE4AA841EA25DC5": {
     "assetId": "cosmos:osmosis-1/ibc:EA1D43981D5C9A1C4AAEA9C23BB1D4FA126BA9BC7020A25E0AE4AA841EA25DC5",
@@ -523,9 +523,9 @@
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/axelar/images/axlweth.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:EA3E1640F9B1532AB129A571203A0B9F789A7F14BB66E350DCBFA18E1A1931F0": {
     "assetId": "cosmos:osmosis-1/ibc:EA3E1640F9B1532AB129A571203A0B9F789A7F14BB66E350DCBFA18E1A1931F0",
@@ -535,9 +535,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/comdex/images/cmdx.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:EA4C0A9F72E2CEDF10D0E7A9A6A22954DB3444910DB5BE980DF59B05A46DAD1C": {
     "assetId": "cosmos:osmosis-1/ibc:EA4C0A9F72E2CEDF10D0E7A9A6A22954DB3444910DB5BE980DF59B05A46DAD1C",
@@ -547,9 +547,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/desmos/images/dsm.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:F3FF7A84A73B62921538642F9797C423D2B4C4ACB3C7FCFFCE7F12AA69909C4B": {
     "assetId": "cosmos:osmosis-1/ibc:F3FF7A84A73B62921538642F9797C423D2B4C4ACB3C7FCFFCE7F12AA69909C4B",
@@ -559,9 +559,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/impacthub/images/ixo.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:F6B691D5F7126579DDC87357B09D653B47FDCE0A3383FF33C8D8B544FE29A8A6": {
     "assetId": "cosmos:osmosis-1/ibc:F6B691D5F7126579DDC87357B09D653B47FDCE0A3383FF33C8D8B544FE29A8A6",
@@ -571,9 +571,9 @@
     "precision": 3,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/juno/images/marble.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:F867AE2112EFE646EC71A25CD2DFABB8927126AC1E19F1BBF0FF693A4ECA05DE": {
     "assetId": "cosmos:osmosis-1/ibc:F867AE2112EFE646EC71A25CD2DFABB8927126AC1E19F1BBF0FF693A4ECA05DE",
@@ -583,9 +583,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/bandchain/images/band.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/ibc:FE2CD1E6828EC0FAB8AF39BAC45BC25B965BA67CCBC50C13A14BD610B0D1E2C4": {
     "assetId": "cosmos:osmosis-1/ibc:FE2CD1E6828EC0FAB8AF39BAC45BC25B965BA67CCBC50C13A14BD610B0D1E2C4",
@@ -595,9 +595,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/bostrom/images/boot.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/native:uion": {
     "assetId": "cosmos:osmosis-1/native:uion",
@@ -607,9 +607,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/ion.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "cosmos:osmosis-1/slip44:118": {
     "assetId": "cosmos:osmosis-1/slip44:118",
@@ -619,9 +619,9 @@
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
-    "explorer": "https://mintscan.io",
-    "explorerAddressLink": "https://mintscan.io/osmosis/account/",
-    "explorerTxLink": "https://mintscan.io/osmosis/txs/"
+    "explorer": "https://www.mintscan.io/osmosis",
+    "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
+    "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
   },
   "eip155:1/erc20:0x00000000000045166c45af0fc6e4cf31d9e14b9a": {
     "assetId": "eip155:1/erc20:0x00000000000045166c45af0fc6e4cf31d9e14b9a",
@@ -71713,7 +71713,7 @@
   "eip155:43114/erc20:0x008e26068b3eb40b443d3ea88c1ff99b789c10f7": {
     "assetId": "eip155:43114/erc20:0x008e26068b3eb40b443d3ea88c1ff99b789c10f7",
     "chainId": "eip155:43114",
-    "name": "0 exchange",
+    "name": "0 exchange on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/13706/thumb/0.exchange_%28logo%29.jpg?1617070530",
@@ -71773,7 +71773,7 @@
   "eip155:43114/erc20:0x027dbca046ca156de9622cd1e2d907d375e53aa7": {
     "assetId": "eip155:43114/erc20:0x027dbca046ca156de9622cd1e2d907d375e53aa7",
     "chainId": "eip155:43114",
-    "name": "Ampleforth",
+    "name": "Ampleforth on Avalanche",
     "precision": 9,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/4708/thumb/Ampleforth.png?1561684250",
@@ -71785,7 +71785,7 @@
   "eip155:43114/erc20:0x02bfd11499847003de5f0f5aa081c43854d48815": {
     "assetId": "eip155:43114/erc20:0x02bfd11499847003de5f0f5aa081c43854d48815",
     "chainId": "eip155:43114",
-    "name": "RadioShack",
+    "name": "RadioShack on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/25307/thumb/ZVoPiysPJq6dPIZm_Se-6vjmsBepwhHlTQfdYZRILbHyVVTRUYCO-wmJJ4zT10HXCGv1j-ZyWr2u2sBaVlap5Y-ILqeXZuIquWdBDxxG0E0qDpgH7omLqYdgWWLSM_TUK9d1PiiYdu6bERdCDaucgFjlqwmhVQK4uV4jyUiXzchVUnu8Qt6SnxlNxz88G0mQ_tfiwkFv_vKqtgb1CcPycVZVz9.jpg?1651211260",
@@ -71809,7 +71809,7 @@
   "eip155:43114/erc20:0x03e8d118a1864c7dc53bf91e007ab7d91f5a06fa": {
     "assetId": "eip155:43114/erc20:0x03e8d118a1864c7dc53bf91e007ab7d91f5a06fa",
     "chainId": "eip155:43114",
-    "name": "Domani Protocol",
+    "name": "Domani Protocol on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/12634/thumb/0qgT0aMu_400x400.jpg?1639175406",
@@ -71869,7 +71869,7 @@
   "eip155:43114/erc20:0x06ebc9c542357e2129d16717cd02c02fbc835d33": {
     "assetId": "eip155:43114/erc20:0x06ebc9c542357e2129d16717cd02c02fbc835d33",
     "chainId": "eip155:43114",
-    "name": "Coinage Finance",
+    "name": "Coinage Finance on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/22300/thumb/Coinage_v2_200x200_white.png?1653464214",
@@ -71881,7 +71881,7 @@
   "eip155:43114/erc20:0x078f358208685046a11c85e8ad32895ded33a249": {
     "assetId": "eip155:43114/erc20:0x078f358208685046a11c85e8ad32895ded33a249",
     "chainId": "eip155:43114",
-    "name": "Aave WBTC",
+    "name": "Aave WBTC on Avalanche",
     "precision": 8,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/14244/thumb/aWBTC.41453c2a.png?1615528721",
@@ -71929,7 +71929,7 @@
   "eip155:43114/erc20:0x0950fc1ad509358daead5eb8020a3c7d8b43b9da": {
     "assetId": "eip155:43114/erc20:0x0950fc1ad509358daead5eb8020a3c7d8b43b9da",
     "chainId": "eip155:43114",
-    "name": "USD Coin  Wormhole ",
+    "name": "USD Coin  Wormhole  on Avalanche",
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/22880/thumb/USDCso_wh_small.png?1644223362",
@@ -71977,7 +71977,7 @@
   "eip155:43114/erc20:0x0ebd9537a25f56713e34c45b38f421a1e7191469": {
     "assetId": "eip155:43114/erc20:0x0ebd9537a25f56713e34c45b38f421a1e7191469",
     "chainId": "eip155:43114",
-    "name": "OpenOcean",
+    "name": "OpenOcean on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/17014/thumb/ooe_log.png?1626074195",
@@ -72049,7 +72049,7 @@
   "eip155:43114/erc20:0x1263fea931b86f3e8ce8afbf29f66631b7be9347": {
     "assetId": "eip155:43114/erc20:0x1263fea931b86f3e8ce8afbf29f66631b7be9347",
     "chainId": "eip155:43114",
-    "name": "BNPL Pay",
+    "name": "BNPL Pay on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/18543/thumb/BNPL_Logo_200.png?1632361895",
@@ -72061,7 +72061,7 @@
   "eip155:43114/erc20:0x12af5c1a232675f62f405b5812a80e7a6f75d746": {
     "assetId": "eip155:43114/erc20:0x12af5c1a232675f62f405b5812a80e7a6f75d746",
     "chainId": "eip155:43114",
-    "name": "ROSE  Wormhole ",
+    "name": "ROSE  Wormhole  on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/22939/thumb/ROSE_wh_small.png?1644227043",
@@ -72085,7 +72085,7 @@
   "eip155:43114/erc20:0x130966628846bfd36ff31a822705796e8cb8c18d": {
     "assetId": "eip155:43114/erc20:0x130966628846bfd36ff31a822705796e8cb8c18d",
     "chainId": "eip155:43114",
-    "name": "Magic Internet Money",
+    "name": "Magic Internet Money on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/16786/thumb/mimlogopng.png?1624979612",
@@ -72157,7 +72157,7 @@
   "eip155:43114/erc20:0x191c10aa4af7c30e871e70c95db0e4eb77237530": {
     "assetId": "eip155:43114/erc20:0x191c10aa4af7c30e871e70c95db0e4eb77237530",
     "chainId": "eip155:43114",
-    "name": "Aave LINK",
+    "name": "Aave LINK on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/14315/thumb/aLINK.412c6589.png?1615527827",
@@ -72181,7 +72181,7 @@
   "eip155:43114/erc20:0x19860ccb0a68fd4213ab9d8266f7bbf05a8dde98": {
     "assetId": "eip155:43114/erc20:0x19860ccb0a68fd4213ab9d8266f7bbf05a8dde98",
     "chainId": "eip155:43114",
-    "name": "Binance USD",
+    "name": "Binance USD on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/9576/thumb/BUSD.png?1568947766",
@@ -72241,7 +72241,7 @@
   "eip155:43114/erc20:0x1c20e891bab6b1727d14da358fae2984ed9b59eb": {
     "assetId": "eip155:43114/erc20:0x1c20e891bab6b1727d14da358fae2984ed9b59eb",
     "chainId": "eip155:43114",
-    "name": "TrueUSD",
+    "name": "TrueUSD on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/3449/thumb/tusd.png?1618395665",
@@ -72253,7 +72253,7 @@
   "eip155:43114/erc20:0x1ccca1ce62c62f7be95d4a67722a8fdbed6eecb4": {
     "assetId": "eip155:43114/erc20:0x1ccca1ce62c62f7be95d4a67722a8fdbed6eecb4",
     "chainId": "eip155:43114",
-    "name": "Laika Protocol",
+    "name": "Laika Protocol on Avalanche",
     "precision": 9,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/15833/thumb/laika.PNG?1622067228",
@@ -72325,7 +72325,7 @@
   "eip155:43114/erc20:0x1f1e7c893855525b303f99bdf5c3c05be09ca251": {
     "assetId": "eip155:43114/erc20:0x1f1e7c893855525b303f99bdf5c3c05be09ca251",
     "chainId": "eip155:43114",
-    "name": "Synapse",
+    "name": "Synapse on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/18024/thumb/syn.png?1635002049",
@@ -72349,7 +72349,7 @@
   "eip155:43114/erc20:0x2147efff675e4a4ee1c2f918d181cdbd7a8e208f": {
     "assetId": "eip155:43114/erc20:0x2147efff675e4a4ee1c2f918d181cdbd7a8e208f",
     "chainId": "eip155:43114",
-    "name": "Alpha Venture DAO",
+    "name": "Alpha Venture DAO on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/12738/thumb/AlphaToken_256x256.png?1617160876",
@@ -72361,7 +72361,7 @@
   "eip155:43114/erc20:0x214db107654ff987ad859f34125307783fc8e387": {
     "assetId": "eip155:43114/erc20:0x214db107654ff987ad859f34125307783fc8e387",
     "chainId": "eip155:43114",
-    "name": "Frax Share",
+    "name": "Frax Share on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/13423/thumb/frax_share.png?1608478989",
@@ -72541,7 +72541,7 @@
   "eip155:43114/erc20:0x2cf51e73c3516f3d86e9c0b4de0971dbf0766fd4": {
     "assetId": "eip155:43114/erc20:0x2cf51e73c3516f3d86e9c0b4de0971dbf0766fd4",
     "chainId": "eip155:43114",
-    "name": "Blockzero Labs",
+    "name": "Blockzero Labs on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/10029/thumb/blockzero.jpg?1611110205",
@@ -72649,7 +72649,7 @@
   "eip155:43114/erc20:0x2f6f07cdcf3588944bf4c42ac74ff24bf56e7590": {
     "assetId": "eip155:43114/erc20:0x2f6f07cdcf3588944bf4c42ac74ff24bf56e7590",
     "chainId": "eip155:43114",
-    "name": "Stargate Finance",
+    "name": "Stargate Finance on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/24413/thumb/STG_LOGO.png?1647654518",
@@ -72661,7 +72661,7 @@
   "eip155:43114/erc20:0x2f86508f41310d8d974b76deb3d246c0caa71cf5": {
     "assetId": "eip155:43114/erc20:0x2f86508f41310d8d974b76deb3d246c0caa71cf5",
     "chainId": "eip155:43114",
-    "name": "Hot Cross",
+    "name": "Hot Cross on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/15706/thumb/Hotcross.png?1632197570",
@@ -72673,7 +72673,7 @@
   "eip155:43114/erc20:0x2fd4d793c1905d82018d75e3b09d3035856890a1": {
     "assetId": "eip155:43114/erc20:0x2fd4d793c1905d82018d75e3b09d3035856890a1",
     "chainId": "eip155:43114",
-    "name": "Spherium",
+    "name": "Spherium on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/17787/thumb/Group_15.png?1629252159",
@@ -72745,7 +72745,7 @@
   "eip155:43114/erc20:0x321e7092a180bb43555132ec53aaa65a5bf84251": {
     "assetId": "eip155:43114/erc20:0x321e7092a180bb43555132ec53aaa65a5bf84251",
     "chainId": "eip155:43114",
-    "name": "Governance OHM",
+    "name": "Governance OHM on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/21129/thumb/token_wsOHM_logo.png?1638764900",
@@ -72877,7 +72877,7 @@
   "eip155:43114/erc20:0x37b608519f91f70f2eeb0e5ed9af4061722e4f76": {
     "assetId": "eip155:43114/erc20:0x37b608519f91f70f2eeb0e5ed9af4061722e4f76",
     "chainId": "eip155:43114",
-    "name": "Sushi",
+    "name": "Sushi on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/12271/thumb/512x512_Logo_no_chop.png?1606986688",
@@ -72913,7 +72913,7 @@
   "eip155:43114/erc20:0x38dcf0532699b880e6a125f7d918380524cd60a6": {
     "assetId": "eip155:43114/erc20:0x38dcf0532699b880e6a125f7d918380524cd60a6",
     "chainId": "eip155:43114",
-    "name": "Hummingbot",
+    "name": "Hummingbot on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/21717/thumb/PDPuf0tJ_400x400.jpg?1639863782",
@@ -72961,7 +72961,7 @@
   "eip155:43114/erc20:0x39fc9e94caeacb435842fadedecb783589f50f5f": {
     "assetId": "eip155:43114/erc20:0x39fc9e94caeacb435842fadedecb783589f50f5f",
     "chainId": "eip155:43114",
-    "name": "Kyber Network Crystal",
+    "name": "Kyber Network Crystal on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/14899/thumb/RwdVsGcw_400x400.jpg?1618923851",
@@ -72985,7 +72985,7 @@
   "eip155:43114/erc20:0x3af0eb8bcbd4c4c6e26e309c4e47af59bad5fc2f": {
     "assetId": "eip155:43114/erc20:0x3af0eb8bcbd4c4c6e26e309c4e47af59bad5fc2f",
     "chainId": "eip155:43114",
-    "name": "Pub Finance",
+    "name": "Pub Finance on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/14016/thumb/PINT.png?1614064578",
@@ -73021,7 +73021,7 @@
   "eip155:43114/erc20:0x3bd2b1c7ed8d396dbb98ded3aebb41350a5b2339": {
     "assetId": "eip155:43114/erc20:0x3bd2b1c7ed8d396dbb98ded3aebb41350a5b2339",
     "chainId": "eip155:43114",
-    "name": "UMA",
+    "name": "UMA on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/10951/thumb/UMA.png?1586307916",
@@ -73045,7 +73045,7 @@
   "eip155:43114/erc20:0x3d8f74620857dd8ed6d0da02ceb13fd0ed8ba678": {
     "assetId": "eip155:43114/erc20:0x3d8f74620857dd8ed6d0da02ceb13fd0ed8ba678",
     "chainId": "eip155:43114",
-    "name": "OnX Finance",
+    "name": "OnX Finance on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/13445/thumb/onxlogo-1.png?1608629659",
@@ -73093,7 +73093,7 @@
   "eip155:43114/erc20:0x4036f3d9c45a20f44f0b8b85dd6ca33005ff9654": {
     "assetId": "eip155:43114/erc20:0x4036f3d9c45a20f44f0b8b85dd6ca33005ff9654",
     "chainId": "eip155:43114",
-    "name": "Roobee",
+    "name": "Roobee on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/8791/thumb/Group_11.png?1580344629",
@@ -73153,7 +73153,7 @@
   "eip155:43114/erc20:0x442f7f22b1ee2c842beaff52880d4573e9201158": {
     "assetId": "eip155:43114/erc20:0x442f7f22b1ee2c842beaff52880d4573e9201158",
     "chainId": "eip155:43114",
-    "name": "Binance Coin  Wormhole ",
+    "name": "Binance Coin  Wormhole  on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/22884/thumb/BNB_wh_small.png?1644224553",
@@ -73261,7 +73261,7 @@
   "eip155:43114/erc20:0x47aa3650cff9930f277d4670db138da818e1a3ca": {
     "assetId": "eip155:43114/erc20:0x47aa3650cff9930f277d4670db138da818e1a3ca",
     "chainId": "eip155:43114",
-    "name": "Plethori",
+    "name": "Plethori on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/15236/thumb/Medium_icon.png?1637740539",
@@ -73297,7 +73297,7 @@
   "eip155:43114/erc20:0x488f73cddda1de3664775ffd91623637383d6404": {
     "assetId": "eip155:43114/erc20:0x488f73cddda1de3664775ffd91623637383d6404",
     "chainId": "eip155:43114",
-    "name": "Yearn Ecosystem Index",
+    "name": "Yearn Ecosystem Index on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/13332/thumb/yeti.png?1607563342",
@@ -73345,7 +73345,7 @@
   "eip155:43114/erc20:0x49d5c2bdffac6ce2bfdb6640f4f80f226bc10bab": {
     "assetId": "eip155:43114/erc20:0x49d5c2bdffac6ce2bfdb6640f4f80f226bc10bab",
     "chainId": "eip155:43114",
-    "name": "WETH",
+    "name": "WETH on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/2518/thumb/weth.png?1628852295",
@@ -73357,7 +73357,7 @@
   "eip155:43114/erc20:0x4a4f77d74cf5fd4ea4ab71ba79988c055a5c27b2": {
     "assetId": "eip155:43114/erc20:0x4a4f77d74cf5fd4ea4ab71ba79988c055a5c27b2",
     "chainId": "eip155:43114",
-    "name": "Less Network",
+    "name": "Less Network on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/15936/thumb/Less.png?1622448675",
@@ -73381,7 +73381,7 @@
   "eip155:43114/erc20:0x4bf5cd1ac6fff12e88aedd3c70eb4148f90f8894": {
     "assetId": "eip155:43114/erc20:0x4bf5cd1ac6fff12e88aedd3c70eb4148f90f8894",
     "chainId": "eip155:43114",
-    "name": "Orbit",
+    "name": "Orbit on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/25807/thumb/apple-touch-icon.png?1653978963",
@@ -73393,7 +73393,7 @@
   "eip155:43114/erc20:0x4bfc90322dd638f81f034517359bd447f8e0235a": {
     "assetId": "eip155:43114/erc20:0x4bfc90322dd638f81f034517359bd447f8e0235a",
     "chainId": "eip155:43114",
-    "name": "New Order",
+    "name": "New Order on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/21440/thumb/new-order-icon-256px.png?1639125759",
@@ -73465,7 +73465,7 @@
   "eip155:43114/erc20:0x4e3642603a75528489c2d94f86e9507260d3c5a1": {
     "assetId": "eip155:43114/erc20:0x4e3642603a75528489c2d94f86e9507260d3c5a1",
     "chainId": "eip155:43114",
-    "name": "Juggernaut",
+    "name": "Juggernaut on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/12761/thumb/juggernaut_logo.png?1602428976",
@@ -73477,7 +73477,7 @@
   "eip155:43114/erc20:0x4e720dd3ac5cfe1e1fbde4935f386bb1c66f4642": {
     "assetId": "eip155:43114/erc20:0x4e720dd3ac5cfe1e1fbde4935f386bb1c66f4642",
     "chainId": "eip155:43114",
-    "name": "GTON CAPITAL",
+    "name": "GTON CAPITAL on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/15728/thumb/GC_logo_200x200.png?1642669327",
@@ -73513,7 +73513,7 @@
   "eip155:43114/erc20:0x50b7545627a5162f82a992c33b87adc75187b218": {
     "assetId": "eip155:43114/erc20:0x50b7545627a5162f82a992c33b87adc75187b218",
     "chainId": "eip155:43114",
-    "name": "Wrapped Bitcoin",
+    "name": "Wrapped Bitcoin on Avalanche",
     "precision": 8,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/7598/thumb/wrapped_bitcoin_wbtc.png?1548822744",
@@ -73537,7 +73537,7 @@
   "eip155:43114/erc20:0x511d35c52a3c244e7b8bd92c0c297755fbd89212": {
     "assetId": "eip155:43114/erc20:0x511d35c52a3c244e7b8bd92c0c297755fbd89212",
     "chainId": "eip155:43114",
-    "name": "Beta Finance",
+    "name": "Beta Finance on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/18715/thumb/beta_finance.jpg?1633087053",
@@ -73561,7 +73561,7 @@
   "eip155:43114/erc20:0x544c42fbb96b39b21df61cf322b5edc285ee7429": {
     "assetId": "eip155:43114/erc20:0x544c42fbb96b39b21df61cf322b5edc285ee7429",
     "chainId": "eip155:43114",
-    "name": "InsurAce",
+    "name": "InsurAce on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/14226/thumb/insur.png?1615124622",
@@ -73585,7 +73585,7 @@
   "eip155:43114/erc20:0x564a341df6c126f90cf3ecb92120fd7190acb401": {
     "assetId": "eip155:43114/erc20:0x564a341df6c126f90cf3ecb92120fd7190acb401",
     "chainId": "eip155:43114",
-    "name": "BiLira",
+    "name": "BiLira on Avalanche",
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/10119/thumb/JBs9jiXO_400x400.jpg?1642668342",
@@ -73633,7 +73633,7 @@
   "eip155:43114/erc20:0x5947bb275c521040051d82396192181b413227a3": {
     "assetId": "eip155:43114/erc20:0x5947bb275c521040051d82396192181b413227a3",
     "chainId": "eip155:43114",
-    "name": "Chainlink",
+    "name": "Chainlink on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/877/thumb/chainlink-new-logo.png?1547034700",
@@ -73645,7 +73645,7 @@
   "eip155:43114/erc20:0x595c8481c48894771ce8fade54ac6bf59093f9e8": {
     "assetId": "eip155:43114/erc20:0x595c8481c48894771ce8fade54ac6bf59093f9e8",
     "chainId": "eip155:43114",
-    "name": "Gaj Finance",
+    "name": "Gaj Finance on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/15257/thumb/logo200x200.png?1629887093",
@@ -73657,7 +73657,7 @@
   "eip155:43114/erc20:0x596fa47043f99a4e0f122243b841e55375cde0d2": {
     "assetId": "eip155:43114/erc20:0x596fa47043f99a4e0f122243b841e55375cde0d2",
     "chainId": "eip155:43114",
-    "name": "0x",
+    "name": "0x on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/863/thumb/0x.png?1547034672",
@@ -73717,7 +73717,7 @@
   "eip155:43114/erc20:0x5fc17416925789e0852fbfcd81c490ca4abc51f9": {
     "assetId": "eip155:43114/erc20:0x5fc17416925789e0852fbfcd81c490ca4abc51f9",
     "chainId": "eip155:43114",
-    "name": "inSure DeFi",
+    "name": "inSure DeFi on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/10354/thumb/logo-grey-circle.png?1614910406",
@@ -73801,7 +73801,7 @@
   "eip155:43114/erc20:0x625e7708f30ca75bfd92586e17077590c60eb4cd": {
     "assetId": "eip155:43114/erc20:0x625e7708f30ca75bfd92586e17077590c60eb4cd",
     "chainId": "eip155:43114",
-    "name": "Aave USDC",
+    "name": "Aave USDC on Avalanche",
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/14318/thumb/aUSDC.e260d492.png?1615527797",
@@ -73849,7 +73849,7 @@
   "eip155:43114/erc20:0x63682bdc5f875e9bf69e201550658492c9763f89": {
     "assetId": "eip155:43114/erc20:0x63682bdc5f875e9bf69e201550658492c9763f89",
     "chainId": "eip155:43114",
-    "name": "Betswap gg",
+    "name": "Betswap gg on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/22496/thumb/betswap.jpg?1641924550",
@@ -73861,7 +73861,7 @@
   "eip155:43114/erc20:0x637afeff75ca669ff92e4570b14d6399a658902f": {
     "assetId": "eip155:43114/erc20:0x637afeff75ca669ff92e4570b14d6399a658902f",
     "chainId": "eip155:43114",
-    "name": "Cook",
+    "name": "Cook on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/14603/thumb/logo-200x200.jpg?1622448330",
@@ -73873,7 +73873,7 @@
   "eip155:43114/erc20:0x63a72806098bd3d9520cc43356dd78afe5d386d9": {
     "assetId": "eip155:43114/erc20:0x63a72806098bd3d9520cc43356dd78afe5d386d9",
     "chainId": "eip155:43114",
-    "name": "Aave",
+    "name": "Aave on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/12645/thumb/AAVE.png?1601374110",
@@ -73933,7 +73933,7 @@
   "eip155:43114/erc20:0x6ab707aca953edaefbc4fd23ba73294241490620": {
     "assetId": "eip155:43114/erc20:0x6ab707aca953edaefbc4fd23ba73294241490620",
     "chainId": "eip155:43114",
-    "name": "Aave USDT",
+    "name": "Aave USDT on Avalanche",
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/14243/thumb/aUSDT.78f5faae.png?1615528400",
@@ -73969,7 +73969,7 @@
   "eip155:43114/erc20:0x6b289cceaa8639e3831095d75a3e43520fabf552": {
     "assetId": "eip155:43114/erc20:0x6b289cceaa8639e3831095d75a3e43520fabf552",
     "chainId": "eip155:43114",
-    "name": "Cartesi",
+    "name": "Cartesi on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/11038/thumb/cartesi.png?1592288021",
@@ -74125,7 +74125,7 @@
   "eip155:43114/erc20:0x721c299e6bf7d6a430d9bea3364ea197314bce09": {
     "assetId": "eip155:43114/erc20:0x721c299e6bf7d6a430d9bea3364ea197314bce09",
     "chainId": "eip155:43114",
-    "name": "Spaceswap MILK2",
+    "name": "Spaceswap MILK2 on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/12771/thumb/milk.png?1633423719",
@@ -74149,7 +74149,7 @@
   "eip155:43114/erc20:0x72bc9d71dd9ad563f52270c6ce5fb30f617c7a1d": {
     "assetId": "eip155:43114/erc20:0x72bc9d71dd9ad563f52270c6ce5fb30f617c7a1d",
     "chainId": "eip155:43114",
-    "name": "Onston",
+    "name": "Onston on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/20669/thumb/onston.PNG?1637547859",
@@ -74221,7 +74221,7 @@
   "eip155:43114/erc20:0x771c01e1917b5ab5b791f7b96f0cd69e22f6dbcf": {
     "assetId": "eip155:43114/erc20:0x771c01e1917b5ab5b791f7b96f0cd69e22f6dbcf",
     "chainId": "eip155:43114",
-    "name": "Nunu Spirits",
+    "name": "Nunu Spirits on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/24378/thumb/NNT_99cc33.png?1649120059",
@@ -74257,7 +74257,7 @@
   "eip155:43114/erc20:0x781c9ca04c0938b981b3383653ab186961ea9084": {
     "assetId": "eip155:43114/erc20:0x781c9ca04c0938b981b3383653ab186961ea9084",
     "chainId": "eip155:43114",
-    "name": "Kiki",
+    "name": "Kiki on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/22289/thumb/A8oLUJW8_400x400.jpg?1641367572",
@@ -74305,7 +74305,7 @@
   "eip155:43114/erc20:0x78c42324016cd91d1827924711563fb66e33a83a": {
     "assetId": "eip155:43114/erc20:0x78c42324016cd91d1827924711563fb66e33a83a",
     "chainId": "eip155:43114",
-    "name": "Relay Chain",
+    "name": "Relay Chain on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/17816/thumb/relay-logo-200.png?1629339288",
@@ -74413,7 +74413,7 @@
   "eip155:43114/erc20:0x803e78269f7f013b7d13ba13243be10c66418a70": {
     "assetId": "eip155:43114/erc20:0x803e78269f7f013b7d13ba13243be10c66418a70",
     "chainId": "eip155:43114",
-    "name": "Node Aggregator Capital",
+    "name": "Node Aggregator Capital on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/23368/thumb/NODAC_Logo_256_x_256.png?1643954083",
@@ -74461,7 +74461,7 @@
   "eip155:43114/erc20:0x82e64f49ed5ec1bc6e43dad4fc8af9bb3a2312ee": {
     "assetId": "eip155:43114/erc20:0x82e64f49ed5ec1bc6e43dad4fc8af9bb3a2312ee",
     "chainId": "eip155:43114",
-    "name": "Aave DAI",
+    "name": "Aave DAI on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/14242/thumb/aDAI.84b6c41f.png?1615528749",
@@ -74557,7 +74557,7 @@
   "eip155:43114/erc20:0x88128fd4b259552a9a1d457f435a6527aab72d42": {
     "assetId": "eip155:43114/erc20:0x88128fd4b259552a9a1d457f435a6527aab72d42",
     "chainId": "eip155:43114",
-    "name": "Maker",
+    "name": "Maker on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/1364/thumb/Mark_Maker.png?1585191826",
@@ -74581,7 +74581,7 @@
   "eip155:43114/erc20:0x8861f5c40a0961579689fdf6cdea2be494f9b25a": {
     "assetId": "eip155:43114/erc20:0x8861f5c40a0961579689fdf6cdea2be494f9b25a",
     "chainId": "eip155:43114",
-    "name": "Inflation Adjusted USDS",
+    "name": "Inflation Adjusted USDS on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/25698/thumb/iUSDS2.png?1653441251",
@@ -74617,7 +74617,7 @@
   "eip155:43114/erc20:0x8a0cac13c7da965a312f08ea4229c37869e85cb9": {
     "assetId": "eip155:43114/erc20:0x8a0cac13c7da965a312f08ea4229c37869e85cb9",
     "chainId": "eip155:43114",
-    "name": "The Graph",
+    "name": "The Graph on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/13397/thumb/Graph_Token.png?1608145566",
@@ -74677,7 +74677,7 @@
   "eip155:43114/erc20:0x8b6663725d7e7368b01eefddc16be085e492498e": {
     "assetId": "eip155:43114/erc20:0x8b6663725d7e7368b01eefddc16be085e492498e",
     "chainId": "eip155:43114",
-    "name": "Kishimoto Inu",
+    "name": "Kishimoto Inu on Avalanche",
     "precision": 9,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/19188/thumb/kishimoto.png?1640328482",
@@ -74749,7 +74749,7 @@
   "eip155:43114/erc20:0x8ebaf22b6f053dffeaf46f4dd9efa95d89ba8580": {
     "assetId": "eip155:43114/erc20:0x8ebaf22b6f053dffeaf46f4dd9efa95d89ba8580",
     "chainId": "eip155:43114",
-    "name": "Uniswap",
+    "name": "Uniswap on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/12504/thumb/uniswap-uni.png?1600306604",
@@ -74785,7 +74785,7 @@
   "eip155:43114/erc20:0x921f99719eb6c01b4b8f0ba7973a7c24891e740a": {
     "assetId": "eip155:43114/erc20:0x921f99719eb6c01b4b8f0ba7973a7c24891e740a",
     "chainId": "eip155:43114",
-    "name": "MetaBrands",
+    "name": "MetaBrands on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/21244/thumb/MAGE-CG.png?1638766340",
@@ -74821,7 +74821,7 @@
   "eip155:43114/erc20:0x937e077abaea52d3abf879c9b9d3f2ebd15baa21": {
     "assetId": "eip155:43114/erc20:0x937e077abaea52d3abf879c9b9d3f2ebd15baa21",
     "chainId": "eip155:43114",
-    "name": "Oh  Finance",
+    "name": "Oh  Finance on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/19493/thumb/oh-token-logo-200.png?1635303795",
@@ -74833,7 +74833,7 @@
   "eip155:43114/erc20:0x938fe3788222a74924e062120e7bfac829c719fb": {
     "assetId": "eip155:43114/erc20:0x938fe3788222a74924e062120e7bfac829c719fb",
     "chainId": "eip155:43114",
-    "name": "Ape In",
+    "name": "Ape In on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/18262/thumb/apein.PNG?1631158082",
@@ -74857,7 +74857,7 @@
   "eip155:43114/erc20:0x94960952876e3ed6a7760b198354fcc5319a406a": {
     "assetId": "eip155:43114/erc20:0x94960952876e3ed6a7760b198354fcc5319a406a",
     "chainId": "eip155:43114",
-    "name": "RBX",
+    "name": "RBX on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/19253/thumb/output-onlinepngtools-9.png?1634801960",
@@ -74929,7 +74929,7 @@
   "eip155:43114/erc20:0x961c8c0b1aad0c0b10a51fef6a867e3091bcef17": {
     "assetId": "eip155:43114/erc20:0x961c8c0b1aad0c0b10a51fef6a867e3091bcef17",
     "chainId": "eip155:43114",
-    "name": "DeFi Yield Protocol",
+    "name": "DeFi Yield Protocol on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/13480/thumb/dyp_logo.png?1608971751",
@@ -74941,7 +74941,7 @@
   "eip155:43114/erc20:0x9767203e89dcd34851240b3919d4900d3e5069f1": {
     "assetId": "eip155:43114/erc20:0x9767203e89dcd34851240b3919d4900d3e5069f1",
     "chainId": "eip155:43114",
-    "name": "A4 Finance",
+    "name": "A4 Finance on Avalanche",
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/21992/thumb/ba384ad07217a4be75cb85314f5760f7.jpg?1640582786",
@@ -74953,7 +74953,7 @@
   "eip155:43114/erc20:0x97cd1cfe2ed5712660bb6c14053c0ecb031bff7d": {
     "assetId": "eip155:43114/erc20:0x97cd1cfe2ed5712660bb6c14053c0ecb031bff7d",
     "chainId": "eip155:43114",
-    "name": "Rai Reflex Index",
+    "name": "Rai Reflex Index on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/14004/thumb/RAI-logo-coin.png?1613592334",
@@ -74989,7 +74989,7 @@
   "eip155:43114/erc20:0x98443b96ea4b0858fdf3219cd13e98c7a4690588": {
     "assetId": "eip155:43114/erc20:0x98443b96ea4b0858fdf3219cd13e98c7a4690588",
     "chainId": "eip155:43114",
-    "name": "Basic Attention",
+    "name": "Basic Attention on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/677/thumb/basic-attention-token.png?1547034427",
@@ -75049,7 +75049,7 @@
   "eip155:43114/erc20:0x9e037de681cafa6e661e6108ed9c2bd1aa567ecd": {
     "assetId": "eip155:43114/erc20:0x9e037de681cafa6e661e6108ed9c2bd1aa567ecd",
     "chainId": "eip155:43114",
-    "name": "AllianceBlock",
+    "name": "AllianceBlock on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/12392/thumb/alliance_block_logo.jpg?1599546617",
@@ -75073,7 +75073,7 @@
   "eip155:43114/erc20:0x9e3ca00f2d4a9e5d4f0add0900de5f15050812cf": {
     "assetId": "eip155:43114/erc20:0x9e3ca00f2d4a9e5d4f0add0900de5f15050812cf",
     "chainId": "eip155:43114",
-    "name": "NFTrade",
+    "name": "NFTrade on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/18578/thumb/nftrade.png?1632486088",
@@ -75085,7 +75085,7 @@
   "eip155:43114/erc20:0x9eaac1b23d935365bd7b542fe22ceee2922f52dc": {
     "assetId": "eip155:43114/erc20:0x9eaac1b23d935365bd7b542fe22ceee2922f52dc",
     "chainId": "eip155:43114",
-    "name": "yearn finance",
+    "name": "yearn finance on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/11849/thumb/yfi-192x192.png?1598325330",
@@ -75133,7 +75133,7 @@
   "eip155:43114/erc20:0x9fb9a33956351cf4fa040f65a13b835a3c8764e3": {
     "assetId": "eip155:43114/erc20:0x9fb9a33956351cf4fa040f65a13b835a3c8764e3",
     "chainId": "eip155:43114",
-    "name": "Multichain",
+    "name": "Multichain on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/22087/thumb/1_Wyot-SDGZuxbjdkaOeT2-A.png?1640764238",
@@ -75145,7 +75145,7 @@
   "eip155:43114/erc20:0x9fda7ceec4c18008096c2fe2b85f05dc300f94d0": {
     "assetId": "eip155:43114/erc20:0x9fda7ceec4c18008096c2fe2b85f05dc300f94d0",
     "chainId": "eip155:43114",
-    "name": "Marginswap",
+    "name": "Marginswap on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/13899/thumb/marginswap_logo.png?1612756590",
@@ -75205,7 +75205,7 @@
   "eip155:43114/erc20:0xa384bc7cdc0a93e686da9e7b8c0807cd040f4e0b": {
     "assetId": "eip155:43114/erc20:0xa384bc7cdc0a93e686da9e7b8c0807cd040f4e0b",
     "chainId": "eip155:43114",
-    "name": "WOWswap",
+    "name": "WOWswap on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/14101/thumb/Group-423.png?1614317472",
@@ -75229,7 +75229,7 @@
   "eip155:43114/erc20:0xa5acfeca5270bc9768633fbc86caa959b85ec8b7": {
     "assetId": "eip155:43114/erc20:0xa5acfeca5270bc9768633fbc86caa959b85ec8b7",
     "chainId": "eip155:43114",
-    "name": "KROWN",
+    "name": "KROWN on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/16530/thumb/KRW_token_logo_200x200.png?1624343058",
@@ -75325,7 +75325,7 @@
   "eip155:43114/erc20:0xab05b04743e0aeaf9d2ca81e5d3b8385e4bf961e": {
     "assetId": "eip155:43114/erc20:0xab05b04743e0aeaf9d2ca81e5d3b8385e4bf961e",
     "chainId": "eip155:43114",
-    "name": "SpiceUSD",
+    "name": "SpiceUSD on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/25697/thumb/USDS.png?1653440948",
@@ -75349,7 +75349,7 @@
   "eip155:43114/erc20:0xabc9547b534519ff73921b1fba6e672b5f58d083": {
     "assetId": "eip155:43114/erc20:0xabc9547b534519ff73921b1fba6e672b5f58d083",
     "chainId": "eip155:43114",
-    "name": "WOO Network",
+    "name": "WOO Network on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/12921/thumb/w2UiemF__400x400.jpg?1603670367",
@@ -75421,7 +75421,7 @@
   "eip155:43114/erc20:0xae9d2385ff2e2951dd4fa061e74c4d3dedd24347": {
     "assetId": "eip155:43114/erc20:0xae9d2385ff2e2951dd4fa061e74c4d3dedd24347",
     "chainId": "eip155:43114",
-    "name": "Tokenplace",
+    "name": "Tokenplace on Avalanche",
     "precision": 8,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/15779/thumb/output-onlinepngtools_%283%29.png?1621837855",
@@ -75433,7 +75433,7 @@
   "eip155:43114/erc20:0xafc43610c7840b20b90caaf93759be5b54b291c9": {
     "assetId": "eip155:43114/erc20:0xafc43610c7840b20b90caaf93759be5b54b291c9",
     "chainId": "eip155:43114",
-    "name": "Allbridge",
+    "name": "Allbridge on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/18690/thumb/abr.png?1640742053",
@@ -75457,7 +75457,7 @@
   "eip155:43114/erc20:0xafe3d2a31231230875dee1fa1eef14a412443d22": {
     "assetId": "eip155:43114/erc20:0xafe3d2a31231230875dee1fa1eef14a412443d22",
     "chainId": "eip155:43114",
-    "name": "DeFiato",
+    "name": "DeFiato on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/13386/thumb/Defiato.png?1608085873",
@@ -75505,7 +75505,7 @@
   "eip155:43114/erc20:0xb0a6e056b587d0a85640b39b1cb44086f7a26a1e": {
     "assetId": "eip155:43114/erc20:0xb0a6e056b587d0a85640b39b1cb44086f7a26a1e",
     "chainId": "eip155:43114",
-    "name": "Oddz",
+    "name": "Oddz on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/14421/thumb/NewLogo.png?1645171454",
@@ -75517,7 +75517,7 @@
   "eip155:43114/erc20:0xb0a8e082e5f8d2a04e74372c1be47737d85a0e73": {
     "assetId": "eip155:43114/erc20:0xb0a8e082e5f8d2a04e74372c1be47737d85a0e73",
     "chainId": "eip155:43114",
-    "name": "Atlas USV",
+    "name": "Atlas USV on Avalanche",
     "precision": 9,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/22066/thumb/7iUyjg5t.png?1640744823",
@@ -75613,7 +75613,7 @@
   "eip155:43114/erc20:0xb355f4f4cc84a9429a59d5c2b98d77016f7ec482": {
     "assetId": "eip155:43114/erc20:0xb355f4f4cc84a9429a59d5c2b98d77016f7ec482",
     "chainId": "eip155:43114",
-    "name": "Bitcoin BR",
+    "name": "Bitcoin BR on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/21205/thumb/200x200.png?1638551617",
@@ -75637,7 +75637,7 @@
   "eip155:43114/erc20:0xb44a9b6905af7c801311e8f4e76932ee959c663c": {
     "assetId": "eip155:43114/erc20:0xb44a9b6905af7c801311e8f4e76932ee959c663c",
     "chainId": "eip155:43114",
-    "name": "Anyswap",
+    "name": "Anyswap on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/12242/thumb/anyswap.jpg?1598443880",
@@ -75673,7 +75673,7 @@
   "eip155:43114/erc20:0xb599c3590f42f8f995ecfa0f85d2980b76862fc1": {
     "assetId": "eip155:43114/erc20:0xb599c3590f42f8f995ecfa0f85d2980b76862fc1",
     "chainId": "eip155:43114",
-    "name": "TerraUSD  Wormhole ",
+    "name": "TerraUSD  Wormhole  on Avalanche",
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/21150/thumb/UST_wh_small.png?1644223065",
@@ -75697,7 +75697,7 @@
   "eip155:43114/erc20:0xb67a9374da03d4114a6fb8f0e7f2b82b5cb34ee3": {
     "assetId": "eip155:43114/erc20:0xb67a9374da03d4114a6fb8f0e7f2b82b5cb34ee3",
     "chainId": "eip155:43114",
-    "name": "Augmented Finance",
+    "name": "Augmented Finance on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/20077/thumb/200x200-agf.png?1636452467",
@@ -75769,7 +75769,7 @@
   "eip155:43114/erc20:0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e": {
     "assetId": "eip155:43114/erc20:0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
     "chainId": "eip155:43114",
-    "name": "USD Coin",
+    "name": "USD Coin on Avalanche",
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/6319/thumb/USD_Coin_icon.png?1547042389",
@@ -75793,7 +75793,7 @@
   "eip155:43114/erc20:0xbd100d061e120b2c67a24453cf6368e63f1be056": {
     "assetId": "eip155:43114/erc20:0xbd100d061e120b2c67a24453cf6368e63f1be056",
     "chainId": "eip155:43114",
-    "name": "iDeFiYieldProtocol",
+    "name": "iDeFiYieldProtocol on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/21976/thumb/i-DYP-Logo-1.png?1640570294",
@@ -75805,7 +75805,7 @@
   "eip155:43114/erc20:0xbd3936ec8d83a5d4e73eca625ecfa006da8c8f52": {
     "assetId": "eip155:43114/erc20:0xbd3936ec8d83a5d4e73eca625ecfa006da8c8f52",
     "chainId": "eip155:43114",
-    "name": "UREEQA",
+    "name": "UREEQA on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/14605/thumb/R_O2enOX_400x400.png?1617243310",
@@ -75817,7 +75817,7 @@
   "eip155:43114/erc20:0xbd83010eb60f12112908774998f65761cf9f6f9a": {
     "assetId": "eip155:43114/erc20:0xbd83010eb60f12112908774998f65761cf9f6f9a",
     "chainId": "eip155:43114",
-    "name": "Spookyswap",
+    "name": "Spookyswap on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/15223/thumb/logo_200x200.png?1621992076",
@@ -75829,7 +75829,7 @@
   "eip155:43114/erc20:0xbec243c995409e6520d7c41e404da5deba4b209b": {
     "assetId": "eip155:43114/erc20:0xbec243c995409e6520d7c41e404da5deba4b209b",
     "chainId": "eip155:43114",
-    "name": "Synthetix Network",
+    "name": "Synthetix Network on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/3406/thumb/SNX.png?1598631139",
@@ -75865,7 +75865,7 @@
   "eip155:43114/erc20:0xc0367f9b1f84ca8de127226ac2a994ea4bf1e41b": {
     "assetId": "eip155:43114/erc20:0xc0367f9b1f84ca8de127226ac2a994ea4bf1e41b",
     "chainId": "eip155:43114",
-    "name": "Cross Chain Bridge",
+    "name": "Cross Chain Bridge on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/20223/thumb/0x92868A5255C628dA08F550a858A802f5351C5223.png?1636684446",
@@ -75913,7 +75913,7 @@
   "eip155:43114/erc20:0xc17c30e98541188614df99239cabd40280810ca3": {
     "assetId": "eip155:43114/erc20:0xc17c30e98541188614df99239cabd40280810ca3",
     "chainId": "eip155:43114",
-    "name": "EverRise",
+    "name": "EverRise on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/16367/thumb/Logo_EverRise_Icon_logo.png?1642576670",
@@ -75925,7 +75925,7 @@
   "eip155:43114/erc20:0xc1d02e488a9ce2481bfdcd797d5373dd2e70a9c2": {
     "assetId": "eip155:43114/erc20:0xc1d02e488a9ce2481bfdcd797d5373dd2e70a9c2",
     "chainId": "eip155:43114",
-    "name": "Spaceswap SHAKE",
+    "name": "Spaceswap SHAKE on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/12765/thumb/shake.png?1633423725",
@@ -75937,7 +75937,7 @@
   "eip155:43114/erc20:0xc3048e19e76cb9a3aa9d77d8c03c29fc906e2437": {
     "assetId": "eip155:43114/erc20:0xc3048e19e76cb9a3aa9d77d8c03c29fc906e2437",
     "chainId": "eip155:43114",
-    "name": "Compound",
+    "name": "Compound on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/10775/thumb/COMP.png?1592625425",
@@ -75985,7 +75985,7 @@
   "eip155:43114/erc20:0xc69eba65e87889f0805db717af06797055a0ba07": {
     "assetId": "eip155:43114/erc20:0xc69eba65e87889f0805db717af06797055a0ba07",
     "chainId": "eip155:43114",
-    "name": "Nucleus Vision",
+    "name": "Nucleus Vision on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/3135/thumb/nv.jpg?1547037544",
@@ -75997,7 +75997,7 @@
   "eip155:43114/erc20:0xc7198437980c041c805a1edcba50c1ce5db95118": {
     "assetId": "eip155:43114/erc20:0xc7198437980c041c805a1edcba50c1ce5db95118",
     "chainId": "eip155:43114",
-    "name": "Tether",
+    "name": "Tether on Avalanche",
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/325/thumb/Tether-logo.png?1598003707",
@@ -76033,7 +76033,7 @@
   "eip155:43114/erc20:0xc931f61b1534eb21d8c11b24f3f5ab2471d4ab50": {
     "assetId": "eip155:43114/erc20:0xc931f61b1534eb21d8c11b24f3f5ab2471d4ab50",
     "chainId": "eip155:43114",
-    "name": "ANY Blocknet",
+    "name": "ANY Blocknet on Avalanche",
     "precision": 8,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/14869/thumb/blocknet.jpg?1618816800",
@@ -76057,7 +76057,7 @@
   "eip155:43114/erc20:0xcaf5191fc480f43e4df80106c7695eca56e48b18": {
     "assetId": "eip155:43114/erc20:0xcaf5191fc480f43e4df80106c7695eca56e48b18",
     "chainId": "eip155:43114",
-    "name": "Akita Inu",
+    "name": "Akita Inu on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/14115/thumb/logo_%282%29.png?1644913173",
@@ -76081,7 +76081,7 @@
   "eip155:43114/erc20:0xcca3e26be51b8905f1a01872524f17eb55bd02fb": {
     "assetId": "eip155:43114/erc20:0xcca3e26be51b8905f1a01872524f17eb55bd02fb",
     "chainId": "eip155:43114",
-    "name": "Parabolic",
+    "name": "Parabolic on Avalanche",
     "precision": 9,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/25187/thumb/LHh3hHnQ_400x400.jpg?1650600695",
@@ -76105,7 +76105,7 @@
   "eip155:43114/erc20:0xce1bffbd5374dac86a2893119683f4911a2f7814": {
     "assetId": "eip155:43114/erc20:0xce1bffbd5374dac86a2893119683f4911a2f7814",
     "chainId": "eip155:43114",
-    "name": "Spell",
+    "name": "Spell on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/15861/thumb/abracadabra-3.png?1622544862",
@@ -76189,7 +76189,7 @@
   "eip155:43114/erc20:0xd17584633bc8d190e5a14502976dad9640456d6d": {
     "assetId": "eip155:43114/erc20:0xd17584633bc8d190e5a14502976dad9640456d6d",
     "chainId": "eip155:43114",
-    "name": "Tangle",
+    "name": "Tangle on Avalanche",
     "precision": 9,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/18312/thumb/tangle.PNG?1631510159",
@@ -76213,7 +76213,7 @@
   "eip155:43114/erc20:0xd24c2ad096400b6fbcd2ad8b24e7acbc21a1da64": {
     "assetId": "eip155:43114/erc20:0xd24c2ad096400b6fbcd2ad8b24e7acbc21a1da64",
     "chainId": "eip155:43114",
-    "name": "Frax",
+    "name": "Frax on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/13422/thumb/frax_logo.png?1608476506",
@@ -76261,7 +76261,7 @@
   "eip155:43114/erc20:0xd4d026322c88c2d49942a75dff920fcfbc5614c1": {
     "assetId": "eip155:43114/erc20:0xd4d026322c88c2d49942a75dff920fcfbc5614c1",
     "chainId": "eip155:43114",
-    "name": "DEAPCOIN",
+    "name": "DEAPCOIN on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/10970/thumb/DEAPcoin_01.png?1586741677",
@@ -76273,7 +76273,7 @@
   "eip155:43114/erc20:0xd501281565bf7789224523144fe5d98e8b28f267": {
     "assetId": "eip155:43114/erc20:0xd501281565bf7789224523144fe5d98e8b28f267",
     "chainId": "eip155:43114",
-    "name": "1inch",
+    "name": "1inch on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/13469/thumb/1inch-token.png?1608803028",
@@ -76285,7 +76285,7 @@
   "eip155:43114/erc20:0xd586e7f844cea2f87f50152665bcbc2c279d8d70": {
     "assetId": "eip155:43114/erc20:0xd586e7f844cea2f87f50152665bcbc2c279d8d70",
     "chainId": "eip155:43114",
-    "name": "Dai",
+    "name": "Dai on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/9956/thumb/4943.png?1636636734",
@@ -76321,7 +76321,7 @@
   "eip155:43114/erc20:0xd60effed653f3f1b69047f2d2dc4e808a548767b": {
     "assetId": "eip155:43114/erc20:0xd60effed653f3f1b69047f2d2dc4e808a548767b",
     "chainId": "eip155:43114",
-    "name": "UniFarm",
+    "name": "UniFarm on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/15247/thumb/ufarm.jpeg?1620218765",
@@ -76345,7 +76345,7 @@
   "eip155:43114/erc20:0xd7783a275e53fc6746dedfbad4a06059937502a4": {
     "assetId": "eip155:43114/erc20:0xd7783a275e53fc6746dedfbad4a06059937502a4",
     "chainId": "eip155:43114",
-    "name": "0x nodes",
+    "name": "0x nodes on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/15600/thumb/BIOS_01.png?1621737736",
@@ -76357,7 +76357,7 @@
   "eip155:43114/erc20:0xd7c295e399ca928a3a14b01d760e794f1adf8990": {
     "assetId": "eip155:43114/erc20:0xd7c295e399ca928a3a14b01d760e794f1adf8990",
     "chainId": "eip155:43114",
-    "name": "DSLA Protocol",
+    "name": "DSLA Protocol on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/6694/thumb/dsla_logo-squared_200x200.png?1569571063",
@@ -76369,7 +76369,7 @@
   "eip155:43114/erc20:0xd806a4a473e44578796898a4c546f575d7247b2b": {
     "assetId": "eip155:43114/erc20:0xd806a4a473e44578796898a4c546f575d7247b2b",
     "chainId": "eip155:43114",
-    "name": "OmniWhirl",
+    "name": "OmniWhirl on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/17165/thumb/logo-200x.png?1626683241",
@@ -76441,7 +76441,7 @@
   "eip155:43114/erc20:0xdebb1d6a2196f2335ad51fbde7ca587205889360": {
     "assetId": "eip155:43114/erc20:0xdebb1d6a2196f2335ad51fbde7ca587205889360",
     "chainId": "eip155:43114",
-    "name": "NFTmall",
+    "name": "NFTmall on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/16217/thumb/Icon-1000x1000.png?1623316471",
@@ -76453,7 +76453,7 @@
   "eip155:43114/erc20:0xdef1fac7bf08f173d286bbbdcbeeade695129840": {
     "assetId": "eip155:43114/erc20:0xdef1fac7bf08f173d286bbbdcbeeade695129840",
     "chainId": "eip155:43114",
-    "name": "Cerby",
+    "name": "Cerby on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/15792/thumb/cerby.png?1638785791",
@@ -76501,7 +76501,7 @@
   "eip155:43114/erc20:0xe0cca86b254005889ac3a81e737f56a14f4a38f5": {
     "assetId": "eip155:43114/erc20:0xe0cca86b254005889ac3a81e737f56a14f4a38f5",
     "chainId": "eip155:43114",
-    "name": "Alta Finance",
+    "name": "Alta Finance on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/18713/thumb/AFN-token-Altafin-200.png?1633079552",
@@ -76561,7 +76561,7 @@
   "eip155:43114/erc20:0xe50fa9b3c56ffb159cb0fca61f5c9d750e8128c8": {
     "assetId": "eip155:43114/erc20:0xe50fa9b3c56ffb159cb0fca61f5c9d750e8128c8",
     "chainId": "eip155:43114",
-    "name": "Aave WETH",
+    "name": "Aave WETH on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/17238/thumb/aWETH_2x.png?1626940782",
@@ -76573,7 +76573,7 @@
   "eip155:43114/erc20:0xe5caef4af8780e59df925470b050fb23c43ca68c": {
     "assetId": "eip155:43114/erc20:0xe5caef4af8780e59df925470b050fb23c43ca68c",
     "chainId": "eip155:43114",
-    "name": "Ferrum Network",
+    "name": "Ferrum Network on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/8251/thumb/frm.png?1563777564",
@@ -76669,7 +76669,7 @@
   "eip155:43114/erc20:0xea6887e4a9cda1b77e70129e5fba830cdb5cddef": {
     "assetId": "eip155:43114/erc20:0xea6887e4a9cda1b77e70129e5fba830cdb5cddef",
     "chainId": "eip155:43114",
-    "name": "Impermax",
+    "name": "Impermax on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/15126/thumb/Copy_of_200px.png?1619761475",
@@ -76789,7 +76789,7 @@
   "eip155:43114/erc20:0xee9801669c6138e84bd50deb500827b776777d28": {
     "assetId": "eip155:43114/erc20:0xee9801669c6138e84bd50deb500827b776777d28",
     "chainId": "eip155:43114",
-    "name": "O3 Swap",
+    "name": "O3 Swap on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/15460/thumb/o3.png?1620904316",
@@ -76801,7 +76801,7 @@
   "eip155:43114/erc20:0xeeeeeb57642040be42185f49c52f7e9b38f8eeee": {
     "assetId": "eip155:43114/erc20:0xeeeeeb57642040be42185f49c52f7e9b38f8eeee",
     "chainId": "eip155:43114",
-    "name": "Elk Finance",
+    "name": "Elk Finance on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/17813/thumb/elk.png?1629336971",
@@ -76813,7 +76813,7 @@
   "eip155:43114/erc20:0xf03dccaec9a28200a6708c686cf0b8bf26ddc356": {
     "assetId": "eip155:43114/erc20:0xf03dccaec9a28200a6708c686cf0b8bf26ddc356",
     "chainId": "eip155:43114",
-    "name": "YDragon",
+    "name": "YDragon on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/17807/thumb/icon.png?1629302175",
@@ -76825,7 +76825,7 @@
   "eip155:43114/erc20:0xf0ff231e3f1a50f83136717f287adab862f89431": {
     "assetId": "eip155:43114/erc20:0xf0ff231e3f1a50f83136717f287adab862f89431",
     "chainId": "eip155:43114",
-    "name": "Tether USD  Wormhole ",
+    "name": "Tether USD  Wormhole  on Avalanche",
     "precision": 6,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/22881/thumb/USDTso_wh_small.png?1644223113",
@@ -76909,7 +76909,7 @@
   "eip155:43114/erc20:0xf44fb887334fa17d2c5c0f970b5d320ab53ed557": {
     "assetId": "eip155:43114/erc20:0xf44fb887334fa17d2c5c0f970b5d320ab53ed557",
     "chainId": "eip155:43114",
-    "name": "Starter xyz",
+    "name": "Starter xyz on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/14301/thumb/logo_poly_sym.png?1624893386",
@@ -77053,7 +77053,7 @@
   "eip155:43114/erc20:0xfb98b335551a418cd0737375a2ea0ded62ea213b": {
     "assetId": "eip155:43114/erc20:0xfb98b335551a418cd0737375a2ea0ded62ea213b",
     "chainId": "eip155:43114",
-    "name": "Pendle",
+    "name": "Pendle on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/15069/thumb/Pendle_Logo_Normal-03.png?1634196276",
@@ -77065,7 +77065,7 @@
   "eip155:43114/erc20:0xfc6da929c031162841370af240dec19099861d3b": {
     "assetId": "eip155:43114/erc20:0xfc6da929c031162841370af240dec19099861d3b",
     "chainId": "eip155:43114",
-    "name": "Domi",
+    "name": "Domi on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/21633/thumb/Transparent_Circle_Logo_2.png?1639627183",
@@ -77101,7 +77101,7 @@
   "eip155:43114/erc20:0xfcde4a87b8b6fa58326bb462882f1778158b02f1": {
     "assetId": "eip155:43114/erc20:0xfcde4a87b8b6fa58326bb462882f1778158b02f1",
     "chainId": "eip155:43114",
-    "name": "Wirex",
+    "name": "Wirex on Avalanche",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/8835/thumb/Wirex.jpg?1561970529",
@@ -77149,7 +77149,7 @@
   "eip155:43114/erc20:0xfe6b19286885a4f7f55adad09c3cd1f906d2478f": {
     "assetId": "eip155:43114/erc20:0xfe6b19286885a4f7f55adad09c3cd1f906d2478f",
     "chainId": "eip155:43114",
-    "name": "SOL  Wormhole ",
+    "name": "SOL  Wormhole  on Avalanche",
     "precision": 9,
     "color": "#FFFFFF",
     "icon": "https://assets.coingecko.com/coins/images/22876/thumb/SOL_wh_small.png?1644224316",
@@ -77159,15 +77159,15 @@
     "explorerTxLink": "https://snowtrace.io/tx/"
   },
   "eip155:43114/slip44:9000": {
-    "chainId": "eip155:43114",
     "assetId": "eip155:43114/slip44:9000",
+    "chainId": "eip155:43114",
     "name": "Avalanche",
     "symbol": "AVAX",
     "precision": 18,
     "color": "#FFFFFF",
     "icon": "https://rawcdn.githack.com/trustwallet/assets/32e51d582a890b3dd3135fe3ee7c20c2fd699a6d/blockchains/avalanchec/info/logo.png",
     "explorer": "https://snowtrace.io",
-    "explorerTxLink": "https://snowtrace.io/tx/",
-    "explorerAddressLink": "https://snowtrace.io/address/"
+    "explorerAddressLink": "https://snowtrace.io/address/",
+    "explorerTxLink": "https://snowtrace.io/tx/"
   }
 }
