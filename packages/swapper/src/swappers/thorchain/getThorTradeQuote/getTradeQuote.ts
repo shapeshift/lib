@@ -72,7 +72,7 @@ export const getThorTradeQuote = async ({
 
     switch (chainId) {
       case 'eip155:1':
-        return (async () => {
+        return (async (): Promise<TradeQuote<'eip155:1'>> => {
           const bip44Params = adapter.buildBIP44Params({
             accountNumber: Number(sellAssetAccountNumber)
           })
@@ -105,7 +105,7 @@ export const getThorTradeQuote = async ({
         })()
 
       case 'bip122:000000000019d6689c085ae165831e93':
-        return (async () => {
+        return (async (): Promise<TradeQuote<'bip122:000000000019d6689c085ae165831e93'>> => {
           const receiveAddress = await adapter.getAddress({
             wallet,
             bip44Params: input.bip44Params
