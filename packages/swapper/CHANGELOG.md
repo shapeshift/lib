@@ -1,3 +1,49 @@
+# [@shapeshiftoss/swapper-v7.7.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.7.0...@shapeshiftoss/swapper-v7.7.1) (2022-06-16)
+
+# [@shapeshiftoss/swapper-v7.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.6.0...@shapeshiftoss/swapper-v7.7.0) (2022-06-16)
+
+
+### Features
+
+* thorswap approve infinite ([#822](https://github.com/shapeshift/lib/issues/822)) ([3a69efe](https://github.com/shapeshift/lib/commit/3a69efe26453855c525d4554b216d3e7091146a8))
+
+# [@shapeshiftoss/swapper-v7.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.5.1...@shapeshiftoss/swapper-v7.6.0) (2022-06-16)
+
+
+### Features
+
+* quote trade input string union discrimination ([#829](https://github.com/shapeshift/lib/issues/829)) ([409a06e](https://github.com/shapeshift/lib/commit/409a06e534a412ff3fddd93cc08799967790d812))
+
+# [@shapeshiftoss/swapper-v7.5.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.5.0...@shapeshiftoss/swapper-v7.5.1) (2022-06-15)
+
+
+### Bug Fixes
+
+* type ([#825](https://github.com/shapeshift/lib/issues/825)) ([34ec284](https://github.com/shapeshift/lib/commit/34ec284c8d55baf7c73d7ef33669e1a996b8fedb))
+
+# [@shapeshiftoss/swapper-v7.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.4.0...@shapeshiftoss/swapper-v7.5.0) (2022-06-15)
+
+
+### Features
+
+* maketrade work with either gasprice or eip1559 ([#824](https://github.com/shapeshift/lib/issues/824)) ([619a940](https://github.com/shapeshift/lib/commit/619a940c0ceec4021e3840b8787580df853d13a2))
+
+# [@shapeshiftoss/swapper-v7.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.3.1...@shapeshiftoss/swapper-v7.4.0) (2022-06-15)
+
+
+### Features
+
+* btc thor trade fees ([#823](https://github.com/shapeshift/lib/issues/823)) ([e9f93cd](https://github.com/shapeshift/lib/commit/e9f93cd675492aef5c903f3e254cf51a147d8971))
+
+# [@shapeshiftoss/swapper-v7.3.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.3.0...@shapeshiftoss/swapper-v7.3.1) (2022-06-15)
+
+# [@shapeshiftoss/swapper-v7.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.2.1...@shapeshiftoss/swapper-v7.3.0) (2022-06-14)
+
+
+### Features
+
+* add thorswap approvalNeeded ([#801](https://github.com/shapeshift/lib/issues/801)) ([4902ac4](https://github.com/shapeshift/lib/commit/4902ac453121d7700195662b2ca8ed9a1645d362))
+
 # [@shapeshiftoss/swapper-v7.2.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.2.0...@shapeshiftoss/swapper-v7.2.1) (2022-06-13)
 
 

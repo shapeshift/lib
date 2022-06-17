@@ -1,3 +1,28 @@
+# [@shapeshiftoss/caip-v6.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.0.0...@shapeshiftoss/caip-v6.0.1) (2022-06-14)
+
+# [@shapeshiftoss/caip-v6.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v5.4.0...@shapeshiftoss/caip-v6.0.0) (2022-06-14)
+
+
+### Features
+
+* **caip:** added coinbase ticker/asset mapping ([#799](https://github.com/shapeshift/lib/issues/799)) ([fb2cc5a](https://github.com/shapeshift/lib/commit/fb2cc5aafe74ac33d896f130952b4dcbfbf98e4a))
+
+
+### BREAKING CHANGES
+
+* **caip:** updates function names for consistency
+
+* added generate script and move map to generated json file
+
+* added newlines to eofs
+
+# [@shapeshiftoss/caip-v5.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v5.3.0...@shapeshiftoss/caip-v5.4.0) (2022-06-14)
+
+
+### Features
+
+* avalanche c chain support ([#805](https://github.com/shapeshift/lib/issues/805)) ([17b70a0](https://github.com/shapeshift/lib/commit/17b70a0c8620ad9303eda818b300f2411942c98b))
+
 # [@shapeshiftoss/caip-v5.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v5.2.3...@shapeshiftoss/caip-v5.3.0) (2022-06-09)
 
 

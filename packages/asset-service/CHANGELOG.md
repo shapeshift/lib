@@ -1,3 +1,26 @@
+# [@shapeshiftoss/asset-service-v6.0.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.0.3...@shapeshiftoss/asset-service-v6.0.4) (2022-06-15)
+
+
+### Bug Fixes
+
+* **asset-service:** fix missing declaration file in published package ([f1eb5cf](https://github.com/shapeshift/lib/commit/f1eb5cf613c98cb60f4e039ee8fa4cac4b3d7d84))
+
+# [@shapeshiftoss/asset-service-v6.0.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.0.2...@shapeshiftoss/asset-service-v6.0.3) (2022-06-15)
+
+
+### Bug Fixes
+
+* **asset-service:** fix missing file in published package ([1aee0f5](https://github.com/shapeshift/lib/commit/1aee0f5566ad8975ce59dd1886bf5bed5d1ff0ab))
+
+# [@shapeshiftoss/asset-service-v6.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.0.1...@shapeshiftoss/asset-service-v6.0.2) (2022-06-15)
+
+# [@shapeshiftoss/asset-service-v6.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.0.0...@shapeshiftoss/asset-service-v6.0.1) (2022-06-14)
+
+
+### Bug Fixes
+
+* fixes broken trust wallet icons and info ([#818](https://github.com/shapeshift/lib/issues/818)) ([2081180](https://github.com/shapeshift/lib/commit/2081180b7cc859c8ad0d67eb71956250ce8fa3a5))
+
 # [@shapeshiftoss/asset-service-v6.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v5.0.2...@shapeshiftoss/asset-service-v6.0.0) (2022-06-13)
 
 
