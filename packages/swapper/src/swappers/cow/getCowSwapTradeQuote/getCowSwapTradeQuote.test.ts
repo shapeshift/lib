@@ -4,7 +4,7 @@ import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { Asset } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
-import { GetTradeQuoteInput, TradeQuote } from '../../../api'
+import { GetEthTradeQuoteInput, TradeQuote } from '../../../api'
 import { ETH, FOX, WBTC, WETH } from '../../utils/test-data/assets'
 import { CowSwapperDeps } from '../CowSwapper'
 import { cowService } from '../utils/cowService'
@@ -113,7 +113,8 @@ const defaultDeps = {
 
 describe('getCowTradeQuote', () => {
   it('should throw an exception if both assets are not erc20s', async () => {
-    const input: GetTradeQuoteInput = {
+    const input: GetEthTradeQuoteInput = {
+      chainId: 'eip155:1',
       sellAsset: ETH,
       buyAsset: FOX,
       sellAmount: '11111',
@@ -142,7 +143,8 @@ describe('getCowTradeQuote', () => {
       } as unknown as AssetService
     }
 
-    const input: GetTradeQuoteInput = {
+    const input: GetEthTradeQuoteInput = {
+      chainId: 'eip155:1',
       sellAsset: WETH,
       buyAsset: FOX,
       sellAmount: '1000000000000000000',
@@ -193,7 +195,8 @@ describe('getCowTradeQuote', () => {
       } as unknown as AssetService
     }
 
-    const input: GetTradeQuoteInput = {
+    const input: GetEthTradeQuoteInput = {
+      chainId: 'eip155:1',
       sellAsset: WBTC,
       buyAsset: WETH,
       sellAmount: '100000000',
