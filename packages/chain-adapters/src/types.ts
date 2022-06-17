@@ -56,6 +56,14 @@ export type FeeData<T extends ChainId> = {
   txFee: string
 } & ChainSpecificFeeData<T>
 
+export type GasFeeData = Omit<ethereum.FeeData, 'gasLimit'>
+
+export type GasFeeDataEstimate = {
+  [FeeDataKey.Fast]: GasFeeData
+  [FeeDataKey.Average]: GasFeeData
+  [FeeDataKey.Slow]: GasFeeData
+}
+
 export type FeeDataEstimate<T extends ChainId> = {
   [FeeDataKey.Slow]: FeeData<T>
   [FeeDataKey.Average]: FeeData<T>
@@ -230,7 +238,6 @@ export type GetFeeDataInput<T extends ChainId> = {
   to: string
   value: string
   sendMax?: boolean
-  opReturnData?: string
 } & ChainSpecificGetFeeDataInput<T>
 
 export enum ValidAddressResultType {
