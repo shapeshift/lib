@@ -9,12 +9,12 @@ import { AssetsById } from '../service/AssetService'
 import * as avalanche from './avalanche'
 import { atom, bitcoin, tBitcoin } from './baseAssets'
 import blacklist from './blacklist.json'
-import { getOsmosisAssets } from './cosmos/getOsmosisAssets'
 import * as ethereum from './ethereum'
+import * as osmosis from './osmosis'
 
 const generateAssetData = async () => {
   const ethAssets = await ethereum.getAssets()
-  const osmosisAssets = await getOsmosisAssets()
+  const osmosisAssets = await osmosis.getAssets()
   const avalancheAssets = await avalanche.getAssets()
 
   // all assets, included assets to be blacklisted

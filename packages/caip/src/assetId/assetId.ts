@@ -23,7 +23,7 @@ type ToAssetIdWithChainId = {
   chainNamespace?: never
   chainReference?: never
   chainId: ChainId
-  assetNamespace: AssetNamespace
+  assetNamespace: AssetNamespace | string
   assetReference: AssetReference | string
 }
 
@@ -31,7 +31,7 @@ type ToAssetIdWithChainIdParts = {
   chainNamespace: ChainNamespace
   chainReference: ChainReference
   chainId?: never
-  assetNamespace: AssetNamespace
+  assetNamespace: AssetNamespace | string
   assetReference: AssetReference | string
 }
 
