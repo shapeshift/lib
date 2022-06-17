@@ -148,7 +148,7 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainIds> implements IChainA
   }
 
   /* protected / private methods */
-  protected async getPublicKey(
+  public async getPublicKey(
     wallet: HDWallet,
     bip44Params: BIP44Params,
     accountType: UtxoAccountType
