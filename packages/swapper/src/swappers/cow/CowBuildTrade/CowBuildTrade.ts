@@ -13,7 +13,8 @@ import {
   DEFAULT_APP_DATA,
   DEFAULT_SOURCE,
   DEFAULT_VALIDTO_TIMESTAMP,
-  ORDER_KIND_SELL
+  ORDER_KIND_SELL,
+  WETH_ASSET_ID
 } from '../utils/constants'
 import { cowService } from '../utils/cowService'
 import { getUsdRate } from '../utils/helpers/helpers'
@@ -24,7 +25,7 @@ export async function CowBuildTrade(
 ): Promise<Trade<'eip155:1'>> {
   try {
     const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, wallet } = input
-    const { adapter } = deps
+    const { adapter, assetService } = deps
 
     const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
       fromAssetId(sellAsset.assetId)
@@ -40,6 +41,7 @@ export async function CowBuildTrade(
     }
 
     const receiveAddress = await adapter.getAddress({ wallet })
+    const normalizedSellAmount = normalizeAmount(sellAmount)
 
     /**
      * /v1/quote
@@ -65,7 +67,7 @@ export async function CowBuildTrade(
         partiallyFillable: false,
         from: receiveAddress,
         kind: ORDER_KIND_SELL,
-        sellAmountBeforeFee: normalizeAmount(sellAmount)
+        sellAmountBeforeFee: normalizedSellAmount
       })
 
     const { data } = quoteResponse
@@ -76,31 +78,36 @@ export async function CowBuildTrade(
       .times(bn(10).exponentiatedBy(sellAsset.precision - buyAsset.precision))
       .toString()
 
-    const feeDataOptions = await adapter.getFeeData({
-      to: COW_SWAP_VAULT_RELAYER_ADDRESS,
-      value: sellAmount,
-      chainSpecific: { from: receiveAddress, contractAddress: sellAssetErc20Address },
-      sendMax: true
-    })
+    const wethAsset = assetService.getAll()[WETH_ASSET_ID]
+
+    const [feeDataOptions, wethUsdRate, usdRateSellAsset] = await Promise.all([
+      adapter.getFeeData({
+        to: COW_SWAP_VAULT_RELAYER_ADDRESS,
+        value: '0',
+        chainSpecific: { from: receiveAddress, contractAddress: sellAssetErc20Address }
+      }),
+      getUsdRate(deps, wethAsset),
+      getUsdRate(deps, sellAsset)
+    ])
     const feeData = feeDataOptions['fast']
 
-    const usdRateSellAsset = await getUsdRate(deps, sellAsset)
-    const feeUsd = bnOrZero(quote.feeAmount)
-      .div(bn(10).exponentiatedBy(sellAsset.precision))
+    const fee = bnOrZero(quote.feeAmount)
       .multipliedBy(bnOrZero(usdRateSellAsset))
+      .div(bnOrZero(wethUsdRate))
+      .div(bn(10).exponentiatedBy(sellAsset.precision - wethAsset.precision))
       .toString()
 
     const trade: Trade<'eip155:1'> = {
       rate,
       feeData: {
-        fee: feeUsd,
+        fee,
         chainSpecific: {
           estimatedGas: feeData.chainSpecific.gasLimit,
           gasPrice: feeData.chainSpecific.gasPrice
         },
         tradeFee: '0'
       },
-      sellAmount: quote.sellAmount,
+      sellAmount: normalizedSellAmount,
       buyAmount: quote.buyAmount,
       sources: DEFAULT_SOURCE,
       buyAsset,
@@ -118,7 +125,7 @@ export async function CowBuildTrade(
       erc20AllowanceAbi
     })
 
-    if (allowanceRequired) {
+    if (!allowanceRequired.isZero()) {
       trade.feeData.chainSpecific.approvalFee = bnOrZero(APPROVAL_GAS_LIMIT)
         .multipliedBy(bnOrZero(feeData.chainSpecific.gasPrice))
         .toString()

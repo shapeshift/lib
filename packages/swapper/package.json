@@ -30,7 +30,7 @@
     "web3": "^1.7.3"
   },
   "peerDependencies": {
-    "@shapeshiftoss/asset-service": "^5.0.0",
+    "@shapeshiftoss/asset-service": "^6.0.4",
     "@shapeshiftoss/caip": "^6.0.1",
     "@shapeshiftoss/chain-adapters": "^7.0.3",
     "@shapeshiftoss/errors": "^1.1.1",
@@ -38,7 +38,7 @@
     "@shapeshiftoss/types": "^5.0.0"
   },
   "devDependencies": {
-    "@shapeshiftoss/asset-service": "^5.0.0",
+    "@shapeshiftoss/asset-service": "^6.0.4",
     "@shapeshiftoss/caip": "^6.0.1",
     "@shapeshiftoss/chain-adapters": "^7.0.3",
     "@shapeshiftoss/errors": "^1.1.1",

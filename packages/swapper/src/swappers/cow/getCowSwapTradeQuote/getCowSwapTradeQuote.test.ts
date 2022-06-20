@@ -73,7 +73,7 @@ const expectedTradeQuoteWethToFox: TradeQuote<'eip155:1'> = {
     },
     tradeFee: '0'
   },
-  sellAmount: '985442057341242012', // selling 1 WETH = 1000000000000000000 less the fees
+  sellAmount: '1000000000000000000',
   buyAmount: '14501811818247595090576', // 14501 FOX
   sources: [{ name: 'CowSwap', proportion: '1' }],
   allowanceContract: '',
@@ -95,7 +95,7 @@ const expectedTradeQuoteWbtcToWeth: TradeQuote<'eip155:1'> = {
     },
     tradeFee: '0'
   },
-  sellAmount: '99982762',
+  sellAmount: '100000000',
   buyAmount: '19136098853078932263', // 19.13 WETH
   sources: [{ name: 'CowSwap', proportion: '1' }],
   allowanceContract: '',

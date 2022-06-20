@@ -121,7 +121,7 @@ export async function getCowSwapTradeQuote(
         },
         tradeFee: '0'
       },
-      sellAmount: quote.sellAmount,
+      sellAmount: normalizedSellAmount,
       buyAmount: quote.buyAmount,
       sources: DEFAULT_SOURCE,
       allowanceContract: '',
