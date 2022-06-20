@@ -1,7 +1,9 @@
+import { AssetService } from '@shapeshiftoss/asset-service'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import Web3 from 'web3'
 
+import { BuildTradeInput } from '../../../api'
 import { ETH, FOX } from '../../utils/test-data/assets'
 import { CowBuildTrade } from './CowBuildTrade'
 
@@ -62,12 +64,14 @@ const expectedTradeQuote: TradeQuote<'eip155:1'> = {
 const defaultDeps = {
   apiUrl: '',
   adapter: <ethereum.ChainAdapter>{},
-  web3: <Web3>{}
+  web3: <Web3>{},
+  assetService: <AssetService>{}
 }
 
 describe('CowBuildTrade', () => {
   it('should throw an exception if both assets are not erc20s', async () => {
-    const tradeInput = {
+    const tradeInput: BuildTradeInput = {
+      chainId: 'eip155:1',
       sellAsset: ETH,
       buyAsset: FOX,
       sellAmount: '11111',

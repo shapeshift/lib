@@ -14,7 +14,8 @@ import {
   DEFAULT_APP_DATA,
   DEFAULT_SOURCE,
   DEFAULT_VALIDTO_TIMESTAMP,
-  ORDER_KIND_SELL
+  ORDER_KIND_SELL,
+  WETH_ASSET_ID
 } from '../utils/constants'
 import { cowService } from '../utils/cowService'
 import { getUsdRate } from '../utils/helpers/helpers'
@@ -25,18 +26,13 @@ export async function getCowSwapTradeQuote(
 ): Promise<TradeQuote<'eip155:1'>> {
   try {
     const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, wallet } = input
-    const { adapter } = deps
+    const { adapter, assetService } = deps
 
     const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
       fromAssetId(sellAsset.assetId)
     const { assetReference: buyAssetErc20Address, assetNamespace: buyAssetNamespace } = fromAssetId(
       buyAsset.assetId
     )
-
-    if (!wallet)
-      throw new SwapError('[getCowSwapTradeQuote] - wallet is required', {
-        code: SwapErrorTypes.VALIDATION_FAILED
-      })
 
     if (buyAssetNamespace !== 'erc20' || sellAssetNamespace !== 'erc20') {
       throw new SwapError('[getCowSwapTradeQuote] - Both assets need to be ERC-20 to use CowSwap', {
@@ -51,7 +47,7 @@ export async function getCowSwapTradeQuote(
 
     // making sure we do not have decimals for cowswap api (can happen at least from minQuoteSellAmount)
     const normalizedSellAmount = normalizeIntegerAmount(
-      bnOrZero(sellAmount).eq(0) ? minQuoteSellAmount : sellAmount
+      bnOrZero(sellAmount).lt(minQuoteSellAmount) ? minQuoteSellAmount : sellAmount
     )
 
     /**
@@ -89,19 +85,25 @@ export async function getCowSwapTradeQuote(
       .times(bn(10).exponentiatedBy(sellAsset.precision - buyAsset.precision))
       .toString()
 
-    const receiveAddress = await adapter.getAddress({ wallet })
-    const feeDataOptions = await adapter.getFeeData({
-      to: COW_SWAP_VAULT_RELAYER_ADDRESS,
-      value: normalizedSellAmount,
-      chainSpecific: { from: receiveAddress, contractAddress: sellAssetErc20Address },
-      sendMax: true
-    })
+    const receiveAddress = wallet ? await adapter.getAddress({ wallet }) : DEFAULT_ADDRESS
+    const wethAsset = assetService.getAll()[WETH_ASSET_ID]
+
+    const [feeDataOptions, wethUsdRate, usdRateSellAsset] = await Promise.all([
+      adapter.getFeeData({
+        to: COW_SWAP_VAULT_RELAYER_ADDRESS,
+        value: '0',
+        chainSpecific: { from: receiveAddress, contractAddress: sellAssetErc20Address }
+      }),
+      getUsdRate(deps, wethAsset),
+      getUsdRate(deps, sellAsset)
+    ])
+
     const feeData = feeDataOptions['fast']
 
-    const usdRateSellAsset = await getUsdRate(deps, sellAsset)
-    const feeUsd = bnOrZero(quote.feeAmount)
-      .div(bn(10).exponentiatedBy(sellAsset.precision))
+    const fee = bnOrZero(quote.feeAmount)
       .multipliedBy(bnOrZero(usdRateSellAsset))
+      .div(bnOrZero(wethUsdRate))
+      .div(bn(10).exponentiatedBy(sellAsset.precision - wethAsset.precision))
       .toString()
 
     return {
@@ -109,7 +111,7 @@ export async function getCowSwapTradeQuote(
       minimum,
       maximum,
       feeData: {
-        fee: feeUsd,
+        fee,
         chainSpecific: {
           estimatedGas: feeData.chainSpecific.gasLimit,
           gasPrice: feeData.chainSpecific.gasPrice,

@@ -1,3 +1,4 @@
+import { AssetService } from '@shapeshiftoss/asset-service'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import Web3 from 'web3'
 
@@ -12,7 +13,8 @@ jest.mock('../utils/helpers/helpers', () => ({
 const DEPS = {
   apiUrl: '',
   web3: <Web3>{},
-  adapter: <ethereum.ChainAdapter>{}
+  adapter: <ethereum.ChainAdapter>{},
+  assetService: <AssetService>{}
 }
 
 describe('getCowSwapMinMax', () => {

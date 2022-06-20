@@ -22,8 +22,8 @@ Web3.mockImplementation(() => ({
 }))
 
 describe('CowApprovalNeeded', () => {
-  const { web3, adapter } = setupDeps()
-  const args = { web3, adapter, apiUrl: '' }
+  const { web3, adapter, assetService } = setupDeps()
+  const args = { web3, adapter, apiUrl: '', assetService }
   ;(adapter.getAddress as jest.Mock).mockResolvedValue('0xc770eefad204b5180df6a14ee197d99d808ee52d')
   const { tradeQuote } = setupQuote()
 
