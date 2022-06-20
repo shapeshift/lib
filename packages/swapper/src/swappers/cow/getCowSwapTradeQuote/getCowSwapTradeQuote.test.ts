@@ -28,7 +28,7 @@ const feeData = {
   fast: {
     txFee: '4080654495000000',
     chainSpecific: {
-      gasLimit: '51630',
+      gasLimit: '100000',
       gasPrice: '79036500000',
       maxFeePerGas: '216214758112',
       maxPriorityFeePerGas: '2982734547'
@@ -67,7 +67,7 @@ const expectedTradeQuoteWethToFox: TradeQuote<'eip155:1'> = {
   feeData: {
     fee: '14557942658757988', // fee in WETH
     chainSpecific: {
-      estimatedGas: '51630',
+      estimatedGas: '100000',
       gasPrice: '79036500000',
       approvalFee: '7903650000000000'
     },
@@ -76,7 +76,7 @@ const expectedTradeQuoteWethToFox: TradeQuote<'eip155:1'> = {
   sellAmount: '1000000000000000000',
   buyAmount: '14501811818247595090576', // 14501 FOX
   sources: [{ name: 'CowSwap', proportion: '1' }],
-  allowanceContract: '',
+  allowanceContract: '0xc92e8bdf79f0507f65a392b0ab4667716bfe0110',
   buyAsset: FOX,
   sellAsset: WETH,
   sellAssetAccountNumber: 0
@@ -89,7 +89,7 @@ const expectedTradeQuoteWbtcToWeth: TradeQuote<'eip155:1'> = {
   feeData: {
     fee: '2931322143956216.3557777214', // fee in WETH
     chainSpecific: {
-      estimatedGas: '51630',
+      estimatedGas: '100000',
       gasPrice: '79036500000',
       approvalFee: '7903650000000000'
     },
@@ -98,7 +98,7 @@ const expectedTradeQuoteWbtcToWeth: TradeQuote<'eip155:1'> = {
   sellAmount: '100000000',
   buyAmount: '19136098853078932263', // 19.13 WETH
   sources: [{ name: 'CowSwap', proportion: '1' }],
-  allowanceContract: '',
+  allowanceContract: '0xc92e8bdf79f0507f65a392b0ab4667716bfe0110',
   buyAsset: WETH,
   sellAsset: WBTC,
   sellAssetAccountNumber: 0

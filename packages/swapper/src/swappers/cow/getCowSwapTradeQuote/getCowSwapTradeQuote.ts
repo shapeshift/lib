@@ -113,7 +113,7 @@ export async function getCowSwapTradeQuote(
       feeData: {
         fee,
         chainSpecific: {
-          estimatedGas: feeData.chainSpecific.gasLimit,
+          estimatedGas: APPROVAL_GAS_LIMIT,
           gasPrice: feeData.chainSpecific.gasPrice,
           approvalFee: bnOrZero(APPROVAL_GAS_LIMIT)
             .multipliedBy(bnOrZero(feeData.chainSpecific.gasPrice))
@@ -124,7 +124,7 @@ export async function getCowSwapTradeQuote(
       sellAmount: normalizedSellAmount,
       buyAmount: quote.buyAmount,
       sources: DEFAULT_SOURCE,
-      allowanceContract: '',
+      allowanceContract: COW_SWAP_VAULT_RELAYER_ADDRESS,
       buyAsset,
       sellAsset,
       sellAssetAccountNumber
