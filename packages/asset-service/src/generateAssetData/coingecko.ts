@@ -1,11 +1,4 @@
-import {
-  adapters,
-  avalancheChainId,
-  ChainId,
-  ethChainId,
-  fromAssetId,
-  toAssetId
-} from '@shapeshiftoss/caip'
+import { adapters, avalancheChainId, ChainId, ethChainId, toAssetId } from '@shapeshiftoss/caip'
 import { Asset } from '@shapeshiftoss/types'
 import axios from 'axios'
 import lodash from 'lodash'
