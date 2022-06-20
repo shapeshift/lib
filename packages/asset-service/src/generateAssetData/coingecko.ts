@@ -56,19 +56,18 @@ export async function getAssets(
   const { data } = await axios.get<TokenList>(`https://tokens.coingecko.com/${category}/all.json`)
 
   return data.tokens.reduce<Array<Asset>>((prev, token) => {
-    const overrideAsset = lodash.find(
-      overrideAssets,
-      (override) => fromAssetId(override.assetId).assetReference === token.address
-    )
-
-    if (overrideAsset) {
-      prev.push(overrideAsset)
-      return prev
-    }
-
     try {
+      const assetId = toAssetId({ chainId, assetNamespace: 'erc20', assetReference: token.address })
+
+      const overrideAsset = lodash.find(overrideAssets, (override) => override.assetId == assetId)
+
+      if (overrideAsset) {
+        prev.push(overrideAsset)
+        return prev
+      }
+
       const asset: Asset = {
-        assetId: toAssetId({ chainId, assetNamespace: 'erc20', assetReference: token.address }),
+        assetId,
         chainId,
         name: token.name,
         precision: token.decimals,
