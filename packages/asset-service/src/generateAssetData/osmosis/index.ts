@@ -46,14 +46,14 @@ export const getAssets = async (): Promise<Asset[]> => {
 
     const { assetNamespace, assetReference } = (() => {
       if (current.base.startsWith('u') && current.base !== 'uosmo') {
-        return { assetNamespace: 'native', assetReference: current.base }
+        return { assetNamespace: 'native' as const, assetReference: current.base }
       }
 
       if (current.base.startsWith('ibc')) {
-        return { assetNamespace: 'ibc', assetReference: current.base.split('/')[1] }
+        return { assetNamespace: 'ibc' as const, assetReference: current.base.split('/')[1] }
       }
 
-      return { assetNamespace: 'slip44', assetReference: ASSET_REFERENCE.Osmosis }
+      return { assetNamespace: 'slip44' as const, assetReference: ASSET_REFERENCE.Osmosis }
     })()
 
     // if an asset has an ibc object, it's bridged, so label it as e.g. ATOM on Osmosis
