@@ -5,6 +5,7 @@ import { Asset } from '@shapeshiftoss/types'
 import fs from 'fs'
 import orderBy from 'lodash/orderBy'
 
+import * as avalanche from './avalanche'
 import { atom, bitcoin, tBitcoin } from './baseAssets'
 import * as ethereum from './ethereum'
 import * as osmosis from './osmosis'
@@ -16,9 +17,17 @@ import { filterOutBlacklistedAssets } from './utils'
 const generateColorMap = async () => {
   const ethAssets = await ethereum.getAssets()
   const osmosisAssets = await osmosis.getAssets()
+  const avalancheAssets = await avalanche.getAssets()
 
   // all assets, included assets to be blacklisted
-  const unfilteredAssetData: Asset[] = [bitcoin, tBitcoin, ...ethAssets, atom, ...osmosisAssets]
+  const unfilteredAssetData: Asset[] = [
+    bitcoin,
+    tBitcoin,
+    atom,
+    ...ethAssets,
+    ...osmosisAssets,
+    ...avalancheAssets
+  ]
   // remove blacklisted assets
   const filteredAssetData = filterOutBlacklistedAssets(unfilteredAssetData)
 
