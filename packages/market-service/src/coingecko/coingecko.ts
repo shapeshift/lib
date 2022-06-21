@@ -29,14 +29,14 @@ const axios = rateLimitedAxios(RATE_LIMIT_THRESHOLDS_PER_MINUTE.COINGECKO)
 type CoinGeckoAssetData = {
   chain: adapters.CoingeckoAssetPlatform
   market_data: {
-    current_price: { [key: string]: string }
-    market_cap: { [key: string]: string }
-    total_volume: { [key: string]: string }
-    high_24h: { [key: string]: string }
-    low_24h: { [key: string]: string }
-    circulating_supply: string
-    total_supply: string
-    max_supply: string
+    current_price: Record<string, number>
+    market_cap: Record<string, number>
+    total_volume: Record<string, number>
+    high_24h: Record<string, number>
+    low_24h: Record<string, number>
+    circulating_supply: number
+    total_supply: number
+    max_supply: number
     price_change_percentage_24h: number
   }
 }
@@ -93,7 +93,7 @@ export class CoinGeckoMarketService implements MarketService {
           volume: asset.total_volume.toString(),
           changePercent24Hr: asset.price_change_percentage_24h,
           supply: asset.circulating_supply.toString(),
-          maxSupply: asset.max_supply ? asset.max_supply.toString() : asset.total_supply?.toString()
+          maxSupply: asset.max_supply?.toString() ?? asset.total_supply?.toString()
         }
 
         return prev
@@ -110,7 +110,7 @@ export class CoinGeckoMarketService implements MarketService {
     if (!url) return null
 
     try {
-      const { data }: { data: CoinGeckoAssetData } = await axios.get(url)
+      const { data } = await axios.get<CoinGeckoAssetData>(url)
 
       const currency = 'usd'
       const marketData = data?.market_data
@@ -122,12 +122,13 @@ export class CoinGeckoMarketService implements MarketService {
       Also a lot of time when max_supply is null, total_supply is the maximum supply on coingecko
       We can reassess in the future the degree of precision we want on that field */
       return {
-        price: marketData.current_price?.[currency],
-        marketCap: marketData.market_cap?.[currency],
+        price: marketData.current_price?.[currency].toString(),
+        marketCap: marketData.market_cap?.[currency].toString(),
         changePercent24Hr: marketData.price_change_percentage_24h,
-        volume: marketData.total_volume?.[currency],
-        supply: marketData.circulating_supply,
-        maxSupply: marketData.max_supply ?? marketData.total_supply ?? undefined
+        volume: marketData.total_volume?.[currency].toString(),
+        supply: marketData.circulating_supply.toString(),
+        maxSupply:
+          marketData.max_supply.toString() ?? marketData.total_supply.toString() ?? undefined
       }
     } catch (e) {
       console.warn(e)
