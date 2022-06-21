@@ -1,10 +1,7 @@
 import { Asset } from '@shapeshiftoss/types'
 import colorThief from 'colorthief'
 
-function toHex(num: number): string {
-  const hex = num.toString(16).toUpperCase()
-  return hex.length === 1 ? `0${hex}` : hex
-}
+const toHex = (num: number): string => num.toString(16).toUpperCase().padStart(2, '0')
 
 export const setColors = async (assets: Asset[]): Promise<Asset[]> => {
   for (let i = 0; i < assets.length - 1; i++) {
