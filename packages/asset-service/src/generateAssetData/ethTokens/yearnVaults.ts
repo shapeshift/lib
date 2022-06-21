@@ -12,7 +12,7 @@ export const getYearnVaults = async (): Promise<Asset[]> => {
   return vaults.map((vault: Vault) => {
     const assetId = toAssetId({ chainId, assetNamespace: 'erc20', assetReference: vault.address })
     return {
-      color: colorMap[assetId] ?? '#276BDB', // yearn.finance blue
+      color: colorMap[assetId] ?? '#FFFFFF',
       icon: vault.metadata.displayIcon,
       name: vault.name,
       precision: Number(vault.decimals),
@@ -36,7 +36,7 @@ export const getIronBankTokens = async (): Promise<Asset[]> => {
       explorer: 'https://etherscan.io',
       explorerAddressLink: 'https://etherscan.io/address/',
       explorerTxLink: 'https://etherscan.io/tx/',
-      color: colorMap[assetId] ?? '#276BDB', // yearn.finance blue
+      color: colorMap[assetId] ?? '#FFFFFF',
       icon: token.icon ?? '',
       name: token.name,
       precision: Number(token.decimals),
@@ -56,7 +56,7 @@ export const getZapperTokens = async (): Promise<Asset[]> => {
       explorer: 'https://etherscan.io',
       explorerAddressLink: 'https://etherscan.io/address/',
       explorerTxLink: 'https://etherscan.io/tx/',
-      color: colorMap[assetId] ?? '#7057F5', // zapper protocol purple
+      color: colorMap[assetId] ?? '#FFFFFF',
       icon: token.icon ?? '',
       name: token.name,
       precision: Number(token.decimals),
