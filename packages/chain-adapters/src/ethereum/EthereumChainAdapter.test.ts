@@ -426,13 +426,13 @@ describe('EthereumChainAdapter', () => {
       const adapter = new ethereum.ChainAdapter(args)
       const wallet = await getWallet()
 
-      const message = {
+      const message: SignMessageInput<ETHSignMessage> = {
         wallet,
         messageToSign: {
           message: 'Hello world 111',
           addressNList: [2147483692, 2147483708, 2147483648, 0, 0]
         }
-      } as SignMessageInput<ETHSignMessage>
+      }
 
       await expect(adapter.signMessage(message)).resolves.toEqual(
         '0x05a0edb4b98fe6b6ed270bf55aef84ddcb641512e19e340bf9eed3427854a7a4734fe45551dc24f1843cf2c823a73aa2454e3785eb15120573c522cc114e472d1c'
@@ -444,13 +444,13 @@ describe('EthereumChainAdapter', () => {
       const adapter = new ethereum.ChainAdapter(args)
       const wallet = await getWallet()
       wallet.ethSignMessage = async () => null
-      const message = {
+      const message: SignMessageInput<ETHSignMessage> = {
         wallet,
         messageToSign: {
           message: 'Hello world 111',
           addressNList: [2147483692, 2147483708, 2147483648, 0, 0]
         }
-      } as SignMessageInput<ETHSignMessage>
+      }
 
       await expect(adapter.signMessage(message)).rejects.toThrow(
         /EthereumChainAdapter: error signing message/
