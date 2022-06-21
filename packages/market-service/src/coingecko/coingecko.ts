@@ -128,7 +128,7 @@ export class CoinGeckoMarketService implements MarketService {
         volume: marketData.total_volume?.[currency].toString(),
         supply: marketData.circulating_supply.toString(),
         maxSupply:
-          marketData.max_supply.toString() ?? marketData.total_supply.toString() ?? undefined
+          marketData.max_supply?.toString() ?? marketData.total_supply?.toString() ?? undefined
       }
     } catch (e) {
       console.warn(e)
