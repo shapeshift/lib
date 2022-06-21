@@ -4,7 +4,7 @@ import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { Asset } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
-import { BuildTradeInput, Trade } from '../../../api'
+import { BuildTradeInput, CowTrade } from '../../../api'
 import { bn } from '../../utils/bignumber'
 import { GetAllowanceRequiredArgs } from '../../utils/helpers/helpers'
 import { ETH, FOX, WBTC, WETH } from '../../utils/test-data/assets'
@@ -74,7 +74,7 @@ const expectedApiInputWbtcToWeth = {
   validTo: 4294967295
 }
 
-const expectedTradeWethToFox: Trade<'eip155:1'> = {
+const expectedTradeWethToFox: CowTrade<'eip155:1'> = {
   rate: '14716.04718939437505555958', // 14716 FOX per WETH
   feeData: {
     fee: '14557942658757988', // fee in WETH
@@ -90,10 +90,11 @@ const expectedTradeWethToFox: Trade<'eip155:1'> = {
   buyAsset: FOX,
   sellAsset: WETH,
   sellAssetAccountNumber: 0,
-  receiveAddress: 'address11'
+  receiveAddress: 'address11',
+  feeAmountInSellToken: '14557942658757988'
 }
 
-const expectedTradeQuoteWbtcToWethWithApprovalFee: Trade<'eip155:1'> = {
+const expectedTradeQuoteWbtcToWethWithApprovalFee: CowTrade<'eip155:1'> = {
   rate: '19.139398102523845323456857493095', // 19.14 WETH per WBTC
   feeData: {
     fee: '2931322143956216.3557777214', // fee in WETH
@@ -110,7 +111,8 @@ const expectedTradeQuoteWbtcToWethWithApprovalFee: Trade<'eip155:1'> = {
   buyAsset: WETH,
   sellAsset: WBTC,
   sellAssetAccountNumber: 0,
-  receiveAddress: 'address11'
+  receiveAddress: 'address11',
+  feeAmountInSellToken: '17238'
 }
 
 const defaultDeps = {

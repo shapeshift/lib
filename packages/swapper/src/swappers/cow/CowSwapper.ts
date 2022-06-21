@@ -10,11 +10,11 @@ import {
   ApproveInfiniteInput,
   BuildTradeInput,
   BuyAssetBySellIdInput,
+  CowTrade,
   ExecuteTradeInput,
   GetTradeQuoteInput,
   Swapper,
   SwapperType,
-  Trade,
   TradeQuote,
   TradeResult,
   TradeTxs
@@ -48,7 +48,7 @@ export class CowSwapper implements Swapper<'eip155:1'> {
     return SwapperType.CowSwap
   }
 
-  async buildTrade(args: BuildTradeInput): Promise<Trade<'eip155:1'>> {
+  async buildTrade(args: BuildTradeInput): Promise<CowTrade<'eip155:1'>> {
     return CowBuildTrade(this.deps, args)
   }
 

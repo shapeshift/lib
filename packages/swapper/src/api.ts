@@ -112,6 +112,10 @@ export interface EthThorTrade<C extends ChainId> extends Trade<C> {
 
 export type ThorTrade<C extends ChainId> = BtcThorTrade<C> | EthThorTrade<C>
 
+export interface CowTrade<C extends ChainId> extends Trade<C> {
+  feeAmountInSellToken: string
+}
+
 export type ExecuteTradeInput<C extends ChainId> = {
   trade: Trade<C>
   wallet: HDWallet

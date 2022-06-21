@@ -19,3 +19,7 @@ export type CowSwapQuoteResponse = {
   from: string
   expiration: string
 }
+
+export type CowSwapOrdersResponse = {
+  uid: string
+}

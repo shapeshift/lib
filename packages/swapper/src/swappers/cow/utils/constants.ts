@@ -12,3 +12,4 @@ export const DEFAULT_VALIDTO_TIMESTAMP = 4294967295
 export const ORDER_KIND_SELL = 'sell'
 export const WETH_ASSET_ID = 'eip155:1/erc20:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
 export const ETH_ASSET_ID = 'eip155:1/slip44:60'
+export const SIGNING_SCHEME = 'eip712'

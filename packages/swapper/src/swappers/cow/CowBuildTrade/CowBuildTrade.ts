@@ -1,7 +1,7 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
 import { AxiosResponse } from 'axios'
 
-import { BuildTradeInput, SwapError, SwapErrorTypes, Trade } from '../../../api'
+import { BuildTradeInput, CowTrade, SwapError, SwapErrorTypes } from '../../../api'
 import { erc20AllowanceAbi } from '../../utils/abi/erc20Allowance-abi'
 import { bn, bnOrZero } from '../../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../../utils/constants'
@@ -22,7 +22,7 @@ import { getUsdRate } from '../utils/helpers/helpers'
 export async function CowBuildTrade(
   deps: CowSwapperDeps,
   input: BuildTradeInput
-): Promise<Trade<'eip155:1'>> {
+): Promise<CowTrade<'eip155:1'>> {
   try {
     const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, wallet } = input
     const { adapter, assetService } = deps
@@ -97,7 +97,7 @@ export async function CowBuildTrade(
       .div(bn(10).exponentiatedBy(sellAsset.precision - wethAsset.precision))
       .toString()
 
-    const trade: Trade<'eip155:1'> = {
+    const trade: CowTrade<'eip155:1'> = {
       rate,
       feeData: {
         fee,
@@ -113,7 +113,8 @@ export async function CowBuildTrade(
       buyAsset,
       sellAsset,
       sellAssetAccountNumber,
-      receiveAddress
+      receiveAddress,
+      feeAmountInSellToken: quote.feeAmount
     }
 
     const allowanceRequired = await getAllowanceRequired({
