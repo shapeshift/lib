@@ -4,14 +4,14 @@
  * Test EthereumChainAdapter
  * @group unit
  */
-import { ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
+import { ETHSignMessage, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { KnownChainIds } from '@shapeshiftoss/types'
 import unchained from '@shapeshiftoss/unchained-client'
 import { merge } from 'lodash'
 import { numberToHex } from 'web3-utils'
 
-import { BuildSendTxInput, SignTxInput, ValidAddressResultType } from '../types'
+import { BuildSendTxInput, SignMessageInput, SignTxInput, ValidAddressResultType } from '../types'
 import { bn } from '../utils/bignumber'
 import * as ethereum from './EthereumChainAdapter'
 
@@ -417,6 +417,47 @@ describe('EthereumChainAdapter', () => {
       await expect(adapter.signAndBroadcastTransaction(tx)).resolves.toEqual(
         '0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331'
       )
+    })
+  })
+
+  describe('signMessage', () => {
+    it('should sign a properly formatted signMessageInput object', async () => {
+      const args = makeChainAdapterArgs()
+      const adapter = new ethereum.ChainAdapter(args)
+      const wallet = await getWallet()
+      wallet.ethSignMessage = async () => ({
+        address: '0x41e5560054824ea6b0732e656e3ad64e20e94e45',
+        signature:
+          '0xf77391e26e80101e0126c5da3225693b3c84c25f6669460603a8eec1c876748572bf180fbdae3f0f93bca331c4c5d0ad6abe8da025249de976b162d0d1b1c0181c'
+      })
+
+      const message = {
+        wallet,
+        messageToSign: {
+          message: 'Hello world 111',
+          addressNList: [2147483692, 2147483708, 2147483648, 0, 0]
+        }
+      } as unknown as SignMessageInput<ETHSignMessage>
+
+      await expect(adapter.signMessage(message)).resolves.toEqual(
+        '0xf77391e26e80101e0126c5da3225693b3c84c25f6669460603a8eec1c876748572bf180fbdae3f0f93bca331c4c5d0ad6abe8da025249de976b162d0d1b1c0181c'
+      )
+    })
+
+    it('should throw if wallet.ethSignMessage returns null', async () => {
+      const args = makeChainAdapterArgs()
+      const adapter = new ethereum.ChainAdapter(args)
+      const wallet = await getWallet()
+      wallet.ethSignMessage = async () => null
+      const message = {
+        wallet,
+        messageToSign: {
+          message: 'Hello world 111',
+          addressNList: [2147483692, 2147483708, 2147483648, 0, 0]
+        }
+      } as unknown as SignMessageInput<ETHSignMessage>
+
+      await expect(adapter.signMessage(message)).rejects.toThrow(/Error signing message/)
     })
   })
 
