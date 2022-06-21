@@ -1,3 +1,19 @@
+# [@shapeshiftoss/swapper-v7.7.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.7.0...@shapeshiftoss/swapper-v7.7.1) (2022-06-16)
+
+# [@shapeshiftoss/swapper-v7.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.6.0...@shapeshiftoss/swapper-v7.7.0) (2022-06-16)
+
+
+### Features
+
+* thorswap approve infinite ([#822](https://github.com/shapeshift/lib/issues/822)) ([3a69efe](https://github.com/shapeshift/lib/commit/3a69efe26453855c525d4554b216d3e7091146a8))
+
+# [@shapeshiftoss/swapper-v7.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.5.1...@shapeshiftoss/swapper-v7.6.0) (2022-06-16)
+
+
+### Features
+
+* quote trade input string union discrimination ([#829](https://github.com/shapeshift/lib/issues/829)) ([409a06e](https://github.com/shapeshift/lib/commit/409a06e534a412ff3fddd93cc08799967790d812))
+
 # [@shapeshiftoss/swapper-v7.5.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.5.0...@shapeshiftoss/swapper-v7.5.1) (2022-06-15)
 
 
