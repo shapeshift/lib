@@ -3,14 +3,13 @@ import 'dotenv/config'
 import { AssetId } from '@shapeshiftoss/caip'
 import { Asset } from '@shapeshiftoss/types'
 import fs from 'fs'
-import filter from 'lodash/filter'
 import orderBy from 'lodash/orderBy'
 
 import { atom, bitcoin, tBitcoin } from './baseAssets'
-import blacklist from './blacklist.json'
 import { getOsmosisAssets } from './cosmos/getOsmosisAssets'
 import { addTokensToEth } from './ethTokens'
 import { setColors } from './setColors'
+import { filterOutBlacklistedAssets } from './utils'
 
 // Getting the colors for ~6000 assets can take around 20 min from scratch. So we use this file to
 // generate a color map so the generate asset script itself won't take so long.
@@ -21,10 +20,7 @@ const generateColorMap = async () => {
   // all assets, included assets to be blacklisted
   const unfilteredAssetData: Asset[] = [bitcoin, tBitcoin, ...ethAssets, atom, ...osmosisAssets]
   // remove blacklisted assets
-  const filteredAssetData = filter(
-    unfilteredAssetData,
-    ({ assetId }) => !blacklist.includes(assetId)
-  )
+  const filteredAssetData = filterOutBlacklistedAssets(unfilteredAssetData)
 
   const filteredWithColors = await setColors(filteredAssetData)
 
