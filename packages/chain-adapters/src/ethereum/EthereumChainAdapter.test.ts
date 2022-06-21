@@ -425,11 +425,6 @@ describe('EthereumChainAdapter', () => {
       const args = makeChainAdapterArgs()
       const adapter = new ethereum.ChainAdapter(args)
       const wallet = await getWallet()
-      wallet.ethSignMessage = async () => ({
-        address: '0x41e5560054824ea6b0732e656e3ad64e20e94e45',
-        signature:
-          '0xf77391e26e80101e0126c5da3225693b3c84c25f6669460603a8eec1c876748572bf180fbdae3f0f93bca331c4c5d0ad6abe8da025249de976b162d0d1b1c0181c'
-      })
 
       const message = {
         wallet,
@@ -437,10 +432,10 @@ describe('EthereumChainAdapter', () => {
           message: 'Hello world 111',
           addressNList: [2147483692, 2147483708, 2147483648, 0, 0]
         }
-      } as unknown as SignMessageInput<ETHSignMessage>
+      } as SignMessageInput<ETHSignMessage>
 
       await expect(adapter.signMessage(message)).resolves.toEqual(
-        '0xf77391e26e80101e0126c5da3225693b3c84c25f6669460603a8eec1c876748572bf180fbdae3f0f93bca331c4c5d0ad6abe8da025249de976b162d0d1b1c0181c'
+        '0x05a0edb4b98fe6b6ed270bf55aef84ddcb641512e19e340bf9eed3427854a7a4734fe45551dc24f1843cf2c823a73aa2454e3785eb15120573c522cc114e472d1c'
       )
     })
 
@@ -455,9 +450,11 @@ describe('EthereumChainAdapter', () => {
           message: 'Hello world 111',
           addressNList: [2147483692, 2147483708, 2147483648, 0, 0]
         }
-      } as unknown as SignMessageInput<ETHSignMessage>
+      } as SignMessageInput<ETHSignMessage>
 
-      await expect(adapter.signMessage(message)).rejects.toThrow(/Error signing message/)
+      await expect(adapter.signMessage(message)).rejects.toThrow(
+        /EthereumChainAdapter: error signing message/
+      )
     })
   })
 

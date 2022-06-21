@@ -210,7 +210,7 @@ const testEthereum = async (wallet: NativeHDWallet, broadcast = false) => {
         addressNList: [2147483692, 2147483708, 2147483648, 0, 0]
       }
     })
-    console.log('ethereum: signMessage', signedMessage)
+    console.log('ethereum: signedMessage', signedMessage)
   } catch (err) {
     console.log('ethereum: signMessage error:', err.message)
   }

@@ -376,7 +376,7 @@ export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet
       const { messageToSign, wallet } = signMessageInput
       const signedMessage = await (wallet as ETHWallet).ethSignMessage(messageToSign)
 
-      if (!signedMessage) throw new Error('Error signing message')
+      if (!signedMessage) throw new Error('EthereumChainAdapter: error signing message')
 
       return signedMessage.signature
     } catch (err) {
