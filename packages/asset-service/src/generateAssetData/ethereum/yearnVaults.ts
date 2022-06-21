@@ -5,8 +5,8 @@ import { Token, Vault } from '@yfi/sdk'
 import { Yearn } from '@yfi/sdk'
 import toLower from 'lodash/toLower'
 
-import { colorMap } from '../colorMap'
 import { ethereum } from '../baseAssets'
+import { colorMap } from '../colorMap'
 
 const network = 1 // 1 for mainnet
 const provider = new JsonRpcProvider(process.env.REACT_APP_ETHEREUM_NODE_URL)
