@@ -24,7 +24,7 @@
     "compile": "tsc -p tsconfig.build.json",
     "dev": "tsc --watch",
     "generate": "yarn build && node ./dist/generateAssetData/generateAssetData.js",
-    "generateColorMap": "yarn build && node ./dist/generateAssetData/generateColorMap.js",
+    "generate-color-map": "yarn build && node ./dist/generateAssetData/generateColorMap.js",
     "prepare": "yarn build",
     "test": "jest test",
     "type-check": "tsc --project ./tsconfig.build.json --noEmit"
