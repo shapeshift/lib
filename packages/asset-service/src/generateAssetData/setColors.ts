@@ -4,19 +4,17 @@ import colorThief from 'colorthief'
 const toHex = (num: number): string => num.toString(16).toUpperCase().padStart(2, '0')
 
 export const setColors = async (assets: Asset[]): Promise<Asset[]> => {
-  for (let i = 0; i < assets.length - 1; i++) {
+  for await (const [index, asset] of assets.entries()) {
     try {
-      if (assets[i].color === '#FFFFFF' && assets[i].icon) {
+      if (asset.color === '#FFFFFF' && asset.icon) {
         // colorThief.getColor returns the most dominant color in the icon.
-        const [r, g, b] = await colorThief.getColor(assets[i].icon)
+        const [r, g, b] = await colorThief.getColor(asset.icon)
         const hexColor = `#${toHex(r)}${toHex(g)}${toHex(b)}`
-        assets[i].color = hexColor
+        asset.color = hexColor
       }
     } catch (err) {
       console.info(
-        `${i + 1}/${assets.length} Could not get color for ${assets[i].assetId} iconUrl: ${
-          assets[i].icon
-        }`
+        `${index + 1}/${assets.length} Could not get color for ${asset.assetId} iconUrl: ${asset.icon}`
       )
     }
   }
