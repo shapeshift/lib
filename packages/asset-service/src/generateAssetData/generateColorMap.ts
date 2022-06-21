@@ -6,16 +6,16 @@ import fs from 'fs'
 import orderBy from 'lodash/orderBy'
 
 import { atom, bitcoin, tBitcoin } from './baseAssets'
-import { getOsmosisAssets } from './cosmos/getOsmosisAssets'
-import { addTokensToEth } from './ethTokens'
+import * as ethereum from './ethereum'
+import * as osmosis from './osmosis'
 import { setColors } from './setColors'
 import { filterOutBlacklistedAssets } from './utils'
 
 // Getting the colors for ~6000 assets can take around 20 min from scratch. So we use this file to
 // generate a color map so the generate asset script itself won't take so long.
 const generateColorMap = async () => {
-  const ethAssets = await addTokensToEth()
-  const osmosisAssets = await getOsmosisAssets()
+  const ethAssets = await ethereum.getAssets()
+  const osmosisAssets = await osmosis.getAssets()
 
   // all assets, included assets to be blacklisted
   const unfilteredAssetData: Asset[] = [bitcoin, tBitcoin, ...ethAssets, atom, ...osmosisAssets]

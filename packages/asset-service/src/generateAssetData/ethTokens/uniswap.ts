@@ -4,7 +4,7 @@ import axios from 'axios'
 import lodash from 'lodash'
 
 import { colorMap } from '../colorMap'
-import { overrideTokens } from './overrides'
+import { overrideTokens } from '../ethereum/overrides'
 
 type UniswapToken = {
   chainId: number
