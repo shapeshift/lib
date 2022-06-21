@@ -1,4 +1,3 @@
-/* eslint-disable no-empty */
 import axios from 'axios'
 import fs from 'fs'
 
@@ -50,7 +49,9 @@ export const parseData = (coins: CoingeckoCoin[]): AssetMap => {
             assetReference: platforms.ethereum
           })
           prev[ethChainId][assetId] = id
-        } catch {}
+        } catch {
+          // unable to create assetId, skip token
+        }
       }
 
       if (Object.keys(platforms).includes('avalanche')) {
@@ -62,7 +63,9 @@ export const parseData = (coins: CoingeckoCoin[]): AssetMap => {
             assetReference: platforms.avalanche
           })
           prev[avalancheChainId][assetId] = id
-        } catch {}
+        } catch {
+          // unable to create assetId, skip token
+        }
       }
 
       return prev

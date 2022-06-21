@@ -1,6 +1,6 @@
-import { adapters, CHAIN_REFERENCE, fromAssetId } from '@shapeshiftoss/caip'
+import { adapters } from '@shapeshiftoss/caip'
+import { Logger } from '@shapeshiftoss/logger'
 import {
-  CoingeckoAssetPlatform,
   FindAllMarketArgs,
   HistoryData,
   HistoryTimeframe,
@@ -18,11 +18,16 @@ import { isValidDate } from '../utils/isValidDate'
 import { rateLimitedAxios } from '../utils/rateLimiters'
 import { CoinGeckoMarketCap } from './coingecko-types'
 
+const logger = new Logger({
+  namespace: ['market-service', 'coingecko'],
+  level: process.env.LOG_LEVEL
+})
+
 const axios = rateLimitedAxios(RATE_LIMIT_THRESHOLDS_PER_MINUTE.COINGECKO)
 
 // tons more params here: https://www.coingecko.com/en/api/documentation
 type CoinGeckoAssetData = {
-  chain: CoingeckoAssetPlatform
+  chain: adapters.CoingeckoAssetPlatform
   market_data: {
     current_price: { [key: string]: string }
     market_cap: { [key: string]: string }
@@ -45,31 +50,21 @@ type CoinGeckoMarketServiceArgs = {
 }
 
 export class CoinGeckoMarketService implements MarketService {
-  private readonly maxCount = 2500
   private readonly maxPerPage = 250
+  private readonly defaultCount = 2500
 
   baseUrl: string
   APIKey: string
 
   constructor(args: CoinGeckoMarketServiceArgs) {
     this.APIKey = args.coinGeckoAPIKey
-    // if we have a key - use the pro- api
-    this.baseUrl = `https://${this.APIKey ? 'pro-' : ''}api.coingecko.com/api/v3`
-  }
-
-  private maybeAddAPIKey = (): string => {
-    return this.APIKey ? `&x_cg_pro_api_key=${this.APIKey}` : ''
+    this.baseUrl = adapters.makeCoingeckoBaseUrl(this.APIKey).baseUrl
   }
 
   async findAll(args?: FindAllMarketArgs) {
-    const count = args?.count ?? this.maxCount
+    const count = args?.count ?? this.defaultCount
     const perPage = count < this.maxPerPage ? count : this.maxPerPage
     const pages = Math.ceil(bnOrZero(count).div(perPage).toNumber())
-
-    const urlAtPage = (page: number) =>
-      `${
-        this.baseUrl
-      }/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=${page}&sparkline=false${this.maybeAddAPIKey()}`
 
     const pageCount = Array(pages)
       .fill(0)
@@ -78,7 +73,9 @@ export class CoinGeckoMarketService implements MarketService {
     try {
       const marketData = await Promise.all(
         pageCount.map(async (page) => {
-          const { data } = await axios.get<CoinGeckoMarketCap>(urlAtPage(page))
+          const { data } = await axios.get<CoinGeckoMarketCap>(
+            adapters.makeCoingeckoMarketsUrl(page, perPage, this.APIKey)
+          )
           return data ?? []
         })
       )
@@ -104,15 +101,13 @@ export class CoinGeckoMarketService implements MarketService {
   }
 
   async findByAssetId({ assetId }: MarketDataArgs): Promise<MarketData | null> {
+    if (!adapters.assetIdToCoingecko(assetId)) return null
+
+    const url = adapters.makeCoingeckoAssetUrl(assetId, this.APIKey)
+    if (!url) return null
+
     try {
-      if (!adapters.assetIdToCoingecko(assetId)) return null
-
-      const url = this.makeCoinsUrl(assetId)
-      if (!url) return null
-
-      const { data }: { data: CoinGeckoAssetData } = await axios.get(
-        `${url}?${this.maybeAddAPIKey}`
-      )
+      const { data }: { data: CoinGeckoAssetData } = await axios.get(url)
 
       const currency = 'usd'
       const marketData = data?.market_data
@@ -124,10 +119,10 @@ export class CoinGeckoMarketService implements MarketService {
       Also a lot of time when max_supply is null, total_supply is the maximum supply on coingecko
       We can reassess in the future the degree of precision we want on that field */
       return {
-        price: marketData.current_price[currency],
-        marketCap: marketData.market_cap[currency],
+        price: marketData.current_price?.[currency],
+        marketCap: marketData.market_cap?.[currency],
         changePercent24Hr: marketData.price_change_percentage_24h,
-        volume: marketData.total_volume[currency],
+        volume: marketData.total_volume?.[currency],
         supply: marketData.circulating_supply,
         maxSupply: marketData.max_supply ?? marketData.total_supply ?? undefined
       }
@@ -141,9 +136,11 @@ export class CoinGeckoMarketService implements MarketService {
     assetId,
     timeframe
   }: PriceHistoryArgs): Promise<HistoryData[]> {
+    const fnLogger = logger.child({ fn: 'findPriceHistoryByAssetId', assetId, timeframe })
+
     if (!adapters.assetIdToCoingecko(assetId)) return []
 
-    const url = this.makeCoinsUrl(assetId)
+    const url = adapters.makeCoingeckoAssetUrl(assetId, this.APIKey)
     if (!url) return []
 
     try {
@@ -171,57 +168,33 @@ export class CoinGeckoMarketService implements MarketService {
       const from = start.valueOf() / 1000
       const to = end.valueOf() / 1000
 
+      const [baseUrl, apiKeyQueryParam = ''] = url.split('?')
+
       const { data: historyData } = await axios.get<CoinGeckoHistoryData>(
-        `${url}/market_chart/range?vs_currency=${currency}&from=${from}&to=${to}${this.maybeAddAPIKey()}`
+        `${baseUrl}/market_chart/range?vs_currency=${currency}&from=${from}&to=${to}&${apiKeyQueryParam}`
       )
 
       return historyData.prices.reduce<HistoryData[]>((prev, data) => {
         const [date, price] = data
 
         if (!isValidDate(date)) {
-          console.error('Coingecko asset has invalid date')
+          fnLogger.error('invalid date')
           return prev
         }
 
         if (bn(price).isNaN()) {
-          console.error('Coingecko asset has invalid price')
+          fnLogger.error('invalid price')
           return prev
         }
 
         prev.push({ date, price })
         return prev
       }, [])
-    } catch (e) {
-      console.warn(e)
+    } catch (err) {
+      fnLogger.error(err, 'failed to fetch price history')
       throw new Error(
         'CoinGeckoMarketService(findPriceHistoryByAssetId): error fetching price history'
       )
     }
-  }
-
-  private makeCoinsUrl(assetId: string): string | undefined {
-    const id = adapters.assetIdToCoingecko(assetId)
-    if (!id) return
-
-    const { chainReference, assetNamespace, assetReference } = fromAssetId(assetId)
-
-    if (assetNamespace === 'erc20') {
-      const assetPlatform = (() => {
-        switch (chainReference) {
-          case CHAIN_REFERENCE.EthereumMainnet:
-            return CoingeckoAssetPlatform.Ethereum
-          case CHAIN_REFERENCE.AvalancheCChain:
-            return CoingeckoAssetPlatform.Avalanche
-          default:
-            throw new Error(
-              `no supported coingecko asset platform for chain reference: ${chainReference}`
-            )
-        }
-      })()
-
-      return `${this.baseUrl}/coins/${assetPlatform}/contract/${assetReference}`
-    }
-
-    return `${this.baseUrl}/coins/${id}`
   }
 }

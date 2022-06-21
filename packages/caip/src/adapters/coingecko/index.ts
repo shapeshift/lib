@@ -13,8 +13,8 @@ export enum CoingeckoAssetPlatform {
   Avalanche = 'avalanche'
 }
 
-export const coingeckoBaseUrl = 'http://api.coingecko.com/api/v3'
-export const coingeckoProBaseUrl = 'http://pro-api.coingecko.com/api/v3'
+export const coingeckoBaseUrl = 'https://api.coingecko.com/api/v3'
+export const coingeckoProBaseUrl = 'https://pro-api.coingecko.com/api/v3'
 export const coingeckoUrl = 'https://api.coingecko.com/api/v3/coins/list?include_platform=true'
 
 const generatedAssetIdToCoingeckoMap = Object.values(adapters).reduce((acc, cur) => ({
@@ -70,12 +70,23 @@ export const chainIdToCoingeckoAssetPlatform = (chainId: ChainId): string => {
   }
 }
 
-export const makeCoingeckoAssetUrl = (assetId: string, apiKey?: string): string => {
-  const id = assetIdToCoingecko(assetId)
-  if (!id) throw new Error(`no coingecko asset for assetId: ${assetId}`)
-
+export const makeCoingeckoBaseUrl = (apiKey?: string): { baseUrl: string; maybeApiKey: string } => {
   const baseUrl = apiKey ? coingeckoProBaseUrl : coingeckoBaseUrl
-  const maybeApiKey = apiKey ? `&x_cg_pro_api_key=${apiKey}` : ''
+  const maybeApiKey = apiKey ? `?x_cg_pro_api_key=${apiKey}` : '?'
+
+  return { baseUrl, maybeApiKey }
+}
+
+export const makeCoingeckoMarketsUrl = (page: number, perPage: number, apiKey?: string) => {
+  const { baseUrl, maybeApiKey } = makeCoingeckoBaseUrl(apiKey)
+  return `${baseUrl}/coins/markets${maybeApiKey}vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=${page}&sparkline=false`
+}
+
+export const makeCoingeckoAssetUrl = (assetId: string, apiKey?: string): string | undefined => {
+  const id = assetIdToCoingecko(assetId)
+  if (!id) return
+
+  const { baseUrl, maybeApiKey } = makeCoingeckoBaseUrl(apiKey)
 
   const { chainNamespace, chainReference, assetNamespace, assetReference } = fromAssetId(assetId)
 
