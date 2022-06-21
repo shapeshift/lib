@@ -55,10 +55,13 @@ export class CoinGeckoMarketService implements MarketService {
 
   baseUrl: string
   APIKey: string
+  maybeApiKeyQueryParam: string
 
   constructor(args: CoinGeckoMarketServiceArgs) {
     this.APIKey = args.coinGeckoAPIKey
-    this.baseUrl = adapters.makeCoingeckoBaseUrl(this.APIKey).baseUrl
+    const { baseUrl, maybeApiKeyQueryParam } = adapters.makeCoingeckoUrlParts(this.APIKey)
+    this.baseUrl = baseUrl
+    this.maybeApiKeyQueryParam = maybeApiKeyQueryParam
   }
 
   async findAll(args?: FindAllMarketArgs) {
@@ -74,7 +77,7 @@ export class CoinGeckoMarketService implements MarketService {
       const marketData = await Promise.all(
         pageCount.map(async (page) => {
           const { data } = await axios.get<CoinGeckoMarketCap>(
-            adapters.makeCoingeckoMarketsUrl(page, perPage, this.APIKey)
+            `${this.baseUrl}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=${page}&sparkline=false${this.maybeApiKeyQueryParam}`
           )
           return data ?? []
         })
@@ -171,7 +174,7 @@ export class CoinGeckoMarketService implements MarketService {
       const [baseUrl, apiKeyQueryParam = ''] = url.split('?')
 
       const { data: historyData } = await axios.get<CoinGeckoHistoryData>(
-        `${baseUrl}/market_chart/range?vs_currency=${currency}&from=${from}&to=${to}&${apiKeyQueryParam}`
+        `${baseUrl}/market_chart/range?vs_currency=${currency}&from=${from}&to=${to}${apiKeyQueryParam}`
       )
 
       return historyData.prices.reduce<HistoryData[]>((prev, data) => {

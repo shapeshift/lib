@@ -70,23 +70,20 @@ export const chainIdToCoingeckoAssetPlatform = (chainId: ChainId): string => {
   }
 }
 
-export const makeCoingeckoBaseUrl = (apiKey?: string): { baseUrl: string; maybeApiKey: string } => {
+export const makeCoingeckoUrlParts = (
+  apiKey?: string
+): { baseUrl: string; maybeApiKeyQueryParam: string } => {
   const baseUrl = apiKey ? coingeckoProBaseUrl : coingeckoBaseUrl
-  const maybeApiKey = apiKey ? `?x_cg_pro_api_key=${apiKey}` : '?'
+  const maybeApiKeyQueryParam = apiKey ? `&x_cg_pro_api_key=${apiKey}` : ''
 
-  return { baseUrl, maybeApiKey }
-}
-
-export const makeCoingeckoMarketsUrl = (page: number, perPage: number, apiKey?: string) => {
-  const { baseUrl, maybeApiKey } = makeCoingeckoBaseUrl(apiKey)
-  return `${baseUrl}/coins/markets${maybeApiKey}vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=${page}&sparkline=false`
+  return { baseUrl, maybeApiKeyQueryParam }
 }
 
 export const makeCoingeckoAssetUrl = (assetId: string, apiKey?: string): string | undefined => {
   const id = assetIdToCoingecko(assetId)
   if (!id) return
 
-  const { baseUrl, maybeApiKey } = makeCoingeckoBaseUrl(apiKey)
+  const { baseUrl, maybeApiKeyQueryParam } = makeCoingeckoUrlParts(apiKey)
 
   const { chainNamespace, chainReference, assetNamespace, assetReference } = fromAssetId(assetId)
 
@@ -95,8 +92,8 @@ export const makeCoingeckoAssetUrl = (assetId: string, apiKey?: string): string 
       toChainId({ chainNamespace, chainReference })
     )
 
-    return `${baseUrl}/coins/${assetPlatform}/contract/${assetReference}${maybeApiKey}`
+    return `${baseUrl}/coins/${assetPlatform}/contract/${assetReference}?${maybeApiKeyQueryParam}`
   }
 
-  return `${baseUrl}/coins/${id}${maybeApiKey}`
+  return `${baseUrl}/coins/${id}?${maybeApiKeyQueryParam}`
 }
