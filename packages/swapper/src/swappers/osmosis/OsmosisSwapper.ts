@@ -49,6 +49,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
   }
 
   async getTradeTxs(tradeResult: TradeResult): Promise<TradeTxs> {
+    console.log("tradeResult", tradeResult)
     return {
       sellTxid: tradeResult.tradeId,
       buyTxid: tradeResult.tradeId
@@ -101,20 +102,20 @@ export class OsmosisSwapper implements Swapper<ChainId> {
   }
 
   // TODO: clean up
-  async performIbcTransfer(input: any, adapter: any, wallet: any, baseUrl: any, denom: string, sourceChannel: string): Promise<any> {
+  async performIbcTransfer(input: any, adapter: any, wallet: any, accountBaseUrl: string, blockBaseUrl: string, denom: string, sourceChannel: string, fee: string): Promise<any> {
     let { sender, receiver, amount } = input
     console.info('performIbcTransfer input: ', input)
 
     const gas = '1350000'
 
     //get block height
-    const responseLatestBlock = await axios.get(`${atomUrl}/blocks/latest`)
+    const responseLatestBlock = await axios.get(`${blockBaseUrl}/blocks/latest`)
     const latestBlock = responseLatestBlock.data.block.header.height
     console.info('atomLatestBlock: ', latestBlock)
 
     const addressNList = bip32ToAddressNList("m/44'/118'/0'/0/0")
 
-    const accountUrl = `${baseUrl}/auth/accounts/${sender}`
+    const accountUrl = `${accountBaseUrl}/auth/accounts/${sender}`
     const responseAccount = await axios.get(accountUrl)
     console.info('responseAccount: ', responseAccount)
     const accountNumber = responseAccount.data.result.value.account_number
@@ -298,10 +299,10 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         amount: String(sellAmount)
       }
 
-      const txid = await this.performIbcTransfer(transfer, cosmosAdapter, wallet, atomUrl, 'uosmo', 'channel-141')
+      const {txid} = await this.performIbcTransfer(transfer, cosmosAdapter, wallet, atomUrl, osmoUrl, 'uatom', 'channel-141', '0')
       //wait till confirmed
       console.info('txid: ', txid)
-      const pollResult = await pollForComplete(txid, osmoUrl)
+      const pollResult = await pollForComplete(txid, atomUrl)
       if (pollResult !== 'success')
         throw new Error('ibc transfer failed')
 
@@ -392,7 +393,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
           amount: String(amount)
         }
 
-        const txid = await this.performIbcTransfer(transfer, osmosisAdapter, wallet, osmoUrl, buyAssetDenom, 'channel-0')
+        const txid = await this.performIbcTransfer(transfer, osmosisAdapter, wallet, osmoUrl, atomUrl, buyAssetDenom, 'channel-0', fee)
         console.info('txid: ', txid)
       }
 
