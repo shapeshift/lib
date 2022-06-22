@@ -1,4 +1,3 @@
-import { AssetService } from '@shapeshiftoss/asset-service'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import Web3 from 'web3'
@@ -26,7 +25,7 @@ const COW_SWAPPER_DEPS: CowSwapperDeps = {
   apiUrl: 'https://api.cow.fi/mainnet/api/',
   adapter: <ethereum.ChainAdapter>{},
   web3: <Web3>{},
-  assetService: <AssetService>{}
+  feeAsset: WETH
 }
 
 jest.mock('./getCowSwapTradeQuote/getCowSwapTradeQuote', () => ({

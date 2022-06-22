@@ -1,4 +1,3 @@
-import { AssetService } from '@shapeshiftoss/asset-service'
 import { AssetId } from '@shapeshiftoss/caip'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { Asset } from '@shapeshiftoss/types'
@@ -25,11 +24,15 @@ import { getCowSwapTradeQuote } from './getCowSwapTradeQuote/getCowSwapTradeQuot
 import { COWSWAP_UNSUPPORTED_ASSETS } from './utils/blacklist'
 import { getUsdRate } from './utils/helpers/helpers'
 
+/**
+ * CowSwap only supports ERC-20 swaps, hence ETH is not supported
+ * In order to get rates correctly, we need WETH asset to be passed as feeAsset
+ */
 export type CowSwapperDeps = {
   apiUrl: string
   adapter: ethereum.ChainAdapter
   web3: Web3
-  assetService: AssetService
+  feeAsset: Asset // should be WETH asset
 }
 
 export class CowSwapper implements Swapper<'eip155:1'> {

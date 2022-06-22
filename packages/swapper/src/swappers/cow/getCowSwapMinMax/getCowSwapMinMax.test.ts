@@ -1,4 +1,3 @@
-import { AssetService } from '@shapeshiftoss/asset-service'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import Web3 from 'web3'
 
@@ -14,7 +13,7 @@ const DEPS = {
   apiUrl: '',
   web3: <Web3>{},
   adapter: <ethereum.ChainAdapter>{},
-  assetService: <AssetService>{}
+  feeAsset: WETH
 }
 
 describe('getCowSwapMinMax', () => {

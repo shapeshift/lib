@@ -14,8 +14,7 @@ import {
   DEFAULT_APP_DATA,
   DEFAULT_SOURCE,
   DEFAULT_VALIDTO_TIMESTAMP,
-  ORDER_KIND_SELL,
-  WETH_ASSET_ID
+  ORDER_KIND_SELL
 } from '../utils/constants'
 import { cowService } from '../utils/cowService'
 import { getUsdRate } from '../utils/helpers/helpers'
@@ -26,7 +25,7 @@ export async function getCowSwapTradeQuote(
 ): Promise<TradeQuote<'eip155:1'>> {
   try {
     const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, wallet } = input
-    const { adapter, assetService } = deps
+    const { adapter, feeAsset } = deps
 
     const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
       fromAssetId(sellAsset.assetId)
@@ -86,7 +85,6 @@ export async function getCowSwapTradeQuote(
       .toString()
 
     const receiveAddress = wallet ? await adapter.getAddress({ wallet }) : DEFAULT_ADDRESS
-    const wethAsset = assetService.getAll()[WETH_ASSET_ID]
 
     const [feeDataOptions, wethUsdRate, usdRateSellAsset] = await Promise.all([
       adapter.getFeeData({
@@ -94,7 +92,7 @@ export async function getCowSwapTradeQuote(
         value: '0',
         chainSpecific: { from: receiveAddress, contractAddress: sellAssetErc20Address }
       }),
-      getUsdRate(deps, wethAsset),
+      getUsdRate(deps, feeAsset),
       getUsdRate(deps, sellAsset)
     ])
 
@@ -103,7 +101,7 @@ export async function getCowSwapTradeQuote(
     const fee = bnOrZero(quote.feeAmount)
       .multipliedBy(bnOrZero(usdRateSellAsset))
       .div(bnOrZero(wethUsdRate))
-      .div(bn(10).exponentiatedBy(sellAsset.precision - wethAsset.precision))
+      .div(bn(10).exponentiatedBy(sellAsset.precision - feeAsset.precision))
       .toString()
 
     return {

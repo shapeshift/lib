@@ -1,4 +1,3 @@
-import { AssetService } from '@shapeshiftoss/asset-service'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { Asset } from '@shapeshiftoss/types'
@@ -108,7 +107,7 @@ const defaultDeps = {
   apiUrl: '',
   adapter: <ethereum.ChainAdapter>{},
   web3: <Web3>{},
-  assetService: <AssetService>{}
+  feeAsset: WETH
 }
 
 describe('getCowTradeQuote', () => {
@@ -136,11 +135,7 @@ describe('getCowTradeQuote', () => {
         getFeeData: jest.fn(() => Promise.resolve(feeData))
       } as unknown as ethereum.ChainAdapter,
       web3: <Web3>{},
-      assetService: {
-        getAll: jest.fn(() => {
-          return { 'eip155:1/erc20:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2': WETH }
-        })
-      } as unknown as AssetService
+      feeAsset: WETH
     }
 
     const input: GetEthTradeQuoteInput = {
@@ -188,11 +183,7 @@ describe('getCowTradeQuote', () => {
         getFeeData: jest.fn(() => Promise.resolve(feeData))
       } as unknown as ethereum.ChainAdapter,
       web3: <Web3>{},
-      assetService: {
-        getAll: jest.fn(() => {
-          return { 'eip155:1/erc20:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2': WETH }
-        })
-      } as unknown as AssetService
+      feeAsset: WETH
     }
 
     const input: GetEthTradeQuoteInput = {
