@@ -59,6 +59,14 @@ export type GetEthTradeQuoteInput = CommonTradeInput & {
   chainId: 'eip155:1'
 }
 
+export type GetOsmosisTradeQuoteInput = CommonTradeInput & {
+  chainId: 'cosmos:osmosis-1'
+}
+
+export type GetCosmosTradeQuoteInput = CommonTradeInput & {
+  chainId: 'cosmos:cosmoshub-4'
+}
+
 export type GetBtcTradeQuoteInput = CommonTradeInput & {
   chainId: 'bip122:000000000019d6689c085ae165831e93'
   accountType: UtxoAccountType
@@ -66,7 +74,7 @@ export type GetBtcTradeQuoteInput = CommonTradeInput & {
   wallet: HDWallet
 }
 
-export type GetTradeQuoteInput = GetEthTradeQuoteInput | GetBtcTradeQuoteInput
+export type GetTradeQuoteInput = GetEthTradeQuoteInput | GetBtcTradeQuoteInput | GetCosmosTradeQuoteInput | GetOsmosisTradeQuoteInput
 
 export type BuildTradeInput = GetTradeQuoteInput & {
   buyAssetAccountNumber: number

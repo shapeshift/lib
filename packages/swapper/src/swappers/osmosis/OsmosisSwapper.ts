@@ -64,7 +64,9 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       sellAssetSymbol,
       buyAssetSymbol,
       sellAmount)
-
+    console.log('buyAssetSymbol', buyAssetSymbol)
+    console.log('sellAssetSymbol', sellAssetSymbol)
+    console.log('rate', rate)
     return rate
   }
 
@@ -197,7 +199,6 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     let amountBaseSell: number = parseFloat(sellAmount)
     amountBaseSell = parseInt(String(amountBaseSell))
     const amountBaseSellString = amountBaseSell.toString()
-
     // @ts-ignore
     return {
       buyAmount,
@@ -219,7 +220,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     if (!sellAmount) {
       throw new Error('sellAmount is required')
     }
-
+    console.log('sellAmount', sellAmount)
     const { rate, buyAmount } = await getRateInfo(
       sellAsset.symbol,
       buyAsset.symbol,
@@ -227,7 +228,8 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     )
 
     const { minimum, maximum } = await this.getMinMax(input)
-
+    console.log('getTraceQuote rate', buyAmount.toString())
+    console.log('getTraceQuote buyAmount', buyAmount.toString())
     return {
       buyAsset,
       feeData: { fee },

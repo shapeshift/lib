@@ -153,7 +153,7 @@ const getInfoFromPool = (sellAmount: string, pool: any, sellAssetIndex: number, 
     const finalMarketPrice = sellAssetFinalPoolSize.dividedBy(buyAssetFinalPoolSize)
 
     const buyAmount = buyAssetInitialPoolSize.minus(buyAssetFinalPoolSize)
-
+    console.log('buyAmount', buyAmount.toString())
     const rate = bnOrZero(buyAmount).dividedBy(sellAmount)
 
     const priceImpact = bn(1).minus(initialMarketPrice.dividedBy(finalMarketPrice)).abs()
