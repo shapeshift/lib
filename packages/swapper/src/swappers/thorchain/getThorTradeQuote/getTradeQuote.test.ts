@@ -88,8 +88,7 @@ describe('getTradeQuote', () => {
     }
 
     // Mock midgard api calls in 'getThorTxInfo' and 'getPriceRatio'
-    mockedAxios.get
-    .mockImplementation((url) => {
+    mockedAxios.get.mockImplementation((url) => {
       const isPoolResponse = url.includes('pools')
       const data = isPoolResponse ? [ethMidgardPool, foxMidgardPool] : addressData
       return Promise.resolve({ data })
