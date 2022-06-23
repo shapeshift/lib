@@ -1,7 +1,10 @@
+import { ASSET_REFERENCE, osmosisChainId } from '@shapeshiftoss/caip'
 import { Asset } from '@shapeshiftoss/types'
 import axios from 'axios'
 
 import { getRenderedIdenticonBase64, IdenticonOptions } from '../../service/GenerateAssetIcon'
+import { osmosis } from '../baseAssets'
+import { colorMap } from '../colorMap'
 
 type OsmoAsset = {
   description: string
@@ -31,7 +34,7 @@ type OsmosisAssetList = {
   assets: OsmoAsset[]
 }
 
-export const getOsmosisAssets = async (): Promise<Asset[]> => {
+export const getAssets = async (): Promise<Asset[]> => {
   const { data } = await axios.get<OsmosisAssetList>(
     'https://raw.githubusercontent.com/osmosis-labs/assetlists/main/osmosis-1/osmosis-1.assetlist.json'
   )
@@ -42,31 +45,34 @@ export const getOsmosisAssets = async (): Promise<Asset[]> => {
     const denom = current.denom_units.find((item) => item.denom === current.display)
     const precision = denom?.exponent ?? 6
 
-    let assetNamespace = 'slip44'
-    let assetReference = '118'
+    const { assetNamespace, assetReference } = (() => {
+      if (current.base.startsWith('u') && current.base !== 'uosmo') {
+        return { assetNamespace: 'native' as const, assetReference: current.base }
+      }
 
-    if (current.base.startsWith('u') && current.base !== 'uosmo') {
-      assetNamespace = 'native'
-      assetReference = current.base
-    } else if (current.base.startsWith('ibc')) {
-      assetNamespace = 'ibc'
-      assetReference = current.base.split('/')[1]
-    }
+      if (current.base.startsWith('ibc')) {
+        return { assetNamespace: 'ibc' as const, assetReference: current.base.split('/')[1] }
+      }
+
+      return { assetNamespace: 'slip44' as const, assetReference: ASSET_REFERENCE.Osmosis }
+    })()
 
     // if an asset has an ibc object, it's bridged, so label it as e.g. ATOM on Osmosis
     const getName = (a: OsmoAsset): string => (a.ibc ? `${a.name} on Osmosis` : a.name)
 
+    const assetId = `cosmos:osmosis-1/${assetNamespace}:${assetReference}`
+
     const assetDatum: Asset = {
-      assetId: `cosmos:osmosis-1/${assetNamespace}:${assetReference}`,
-      chainId: 'cosmos:osmosis-1',
+      assetId,
+      chainId: osmosisChainId,
       symbol: current.symbol,
       name: getName(current),
       precision,
-      color: '#FFFFFF',
+      color: colorMap[assetId] ?? '#FFFFFF',
       icon: current.logo_URIs.png,
-      explorer: 'https://mintscan.io',
-      explorerAddressLink: 'https://mintscan.io/osmosis/account/',
-      explorerTxLink: 'https://mintscan.io/osmosis/txs/'
+      explorer: osmosis.explorer,
+      explorerAddressLink: osmosis.explorerAddressLink,
+      explorerTxLink: osmosis.explorerTxLink
     }
 
     if (!assetDatum.icon) {
