@@ -66,7 +66,6 @@ export const getThorTradeQuote = async ({
       buyAsset,
       sellAsset,
       sellAssetAccountNumber,
-      tradeFee,
       minimum
     }
 
