@@ -74,7 +74,11 @@ export type GetBtcTradeQuoteInput = CommonTradeInput & {
   wallet: HDWallet
 }
 
-export type GetTradeQuoteInput = GetEthTradeQuoteInput | GetBtcTradeQuoteInput | GetCosmosTradeQuoteInput | GetOsmosisTradeQuoteInput
+export type GetTradeQuoteInput =
+  | GetEthTradeQuoteInput
+  | GetBtcTradeQuoteInput
+  | GetCosmosTradeQuoteInput
+  | GetOsmosisTradeQuoteInput
 
 export type BuildTradeInput = GetTradeQuoteInput & {
   buyAssetAccountNumber: number
