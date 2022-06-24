@@ -16,10 +16,6 @@ export const symbolDenomMapping = {
   USDC: 'ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858'
 }
 
-// TODO: pass in env variables
-export const osmoUrl = 'https://lcd-osmosis.blockapsis.com'
-export const atomUrl = 'https://cosmos-mainnet-rpc.allthatnode.com:1317'
-
 const txStatus = async (txid: string, baseUrl: string): Promise<string> => {
   try {
     const txResponse = await axios.get(`${baseUrl}/txs/${txid}`)
@@ -50,7 +46,7 @@ export const pollForComplete = async (txid: string, baseUrl: string): Promise<st
   })
 }
 
-export const getAtomChannelBalance = async (address: string) => {
+export const getAtomChannelBalance = async (address: string, osmoUrl: string) => {
   const osmoResponseBalance = await axios.get(`${osmoUrl}/bank/balances/${address}`)
   let toAtomChannelBalance = 0
   try {
@@ -65,14 +61,17 @@ export const getAtomChannelBalance = async (address: string) => {
   return toAtomChannelBalance
 }
 
-export const pollForAtomChannelBalance = async (address: string): Promise<string> => {
+export const pollForAtomChannelBalance = async (
+  address: string,
+  osmoUrl: string
+): Promise<string> => {
   return new Promise((resolve, reject) => {
     const timeout = 120000 // 2 mins
     const startTime = Date.now()
     const interval = 5000 // 5 seconds
 
     const poll = async function () {
-      const balance = await getAtomChannelBalance(address)
+      const balance = await getAtomChannelBalance(address, osmoUrl)
       if (balance > 0) {
         resolve(balance.toString())
       } else if (Date.now() - startTime > timeout) {
@@ -85,7 +84,7 @@ export const pollForAtomChannelBalance = async (address: string): Promise<string
   })
 }
 
-const findPool = async (sellAssetSymbol: string, buyAssetSymbol: string) => {
+const findPool = async (sellAssetSymbol: string, buyAssetSymbol: string, osmoUrl: string) => {
   const sellAssetDenom = symbolDenomMapping[sellAssetSymbol as keyof IsymbolDenomMapping]
   const buyAssetDenom = symbolDenomMapping[buyAssetSymbol as keyof IsymbolDenomMapping]
 
@@ -143,7 +142,12 @@ const getInfoFromPool = (
   }
 }
 
-export const getRateInfo = async (sellAsset: string, buyAsset: string, sellAmount: string) => {
-  const { pool, sellAssetIndex, buyAssetIndex } = await findPool(sellAsset, buyAsset)
+export const getRateInfo = async (
+  sellAsset: string,
+  buyAsset: string,
+  sellAmount: string,
+  osmoUrl: string
+) => {
+  const { pool, sellAssetIndex, buyAssetIndex } = await findPool(sellAsset, buyAsset, osmoUrl)
   return getInfoFromPool(sellAmount, pool, sellAssetIndex, buyAssetIndex)
 }
