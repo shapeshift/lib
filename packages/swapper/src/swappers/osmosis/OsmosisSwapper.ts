@@ -69,10 +69,17 @@ export class OsmosisSwapper implements Swapper<ChainId> {
   async getUsdRate(input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> {
     const { symbol } = input
     const sellAssetSymbol = symbol
+
     const buyAssetSymbol = 'USDC'
     const sellAmount = '1'
-    const { rate } = await getRateInfo(sellAssetSymbol, buyAssetSymbol, sellAmount)
-    return rate
+    const { rate: osmoRate } = await getRateInfo('OSMO', buyAssetSymbol, sellAmount)
+
+    if (sellAssetSymbol != 'OSMO') {
+      const { rate } = await getRateInfo(sellAssetSymbol, 'OSMO', sellAmount)
+      return bnOrZero(rate).times(osmoRate).toString()
+    }
+
+    return osmoRate
   }
 
   async getMinMax(input: GetMinMaxInput): Promise<MinMaxOutput> {
@@ -116,9 +123,8 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     feeAmount: string
   ): Promise<any> {
     const { sender, receiver, amount } = input
-    const gas = '1350000'
 
-    //get block height
+    const gas = '1350000'
     const responseLatestBlock = await axios.get(`${blockBaseUrl}/blocks/latest`)
     const latestBlock = responseLatestBlock.data.block.header.height
 
