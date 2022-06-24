@@ -1,7 +1,7 @@
 import { bitcoin, ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { Asset } from '@shapeshiftoss/types'
 
-import { QuoteFeeData, SwapError, SwapErrorTypes } from '../../../../../api'
+import { QuoteFeeData, SwapError, SwapErrorTypes, SwapperType } from '../../../../../api'
 import { bn } from '../../../../utils/bignumber'
 import { ThorchainSwapperDeps } from '../../../types'
 import { estimateTradeFee } from '../../estimateTradeFee/estimateTradeFee'
@@ -47,6 +47,7 @@ export const getBtcTxFees = async ({
     return {
       fee: feeData.txFee,
       tradeFee,
+      tradeFeeSource: SwapperType.Thorchain,
       chainSpecific: {
         satsPerByte: feeData.chainSpecific.satoshiPerByte,
         byteCount: bn(feeData.txFee)

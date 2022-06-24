@@ -1,6 +1,6 @@
 import { Asset } from '@shapeshiftoss/types'
 
-import { GetTradeQuoteInput, TradeQuote } from '../../../api'
+import { GetTradeQuoteInput, SwapperType, TradeQuote } from '../../../api'
 import { FOX, WETH } from './assets'
 
 export const setupQuote = () => {
@@ -15,7 +15,7 @@ export const setupQuote = () => {
     sellAssetAccountNumber: 0,
     minimum: '0',
     maximum: '999999999999',
-    feeData: { fee: '0', tradeFee: '0', chainSpecific: {} },
+    feeData: { fee: '0', tradeFee: '0', tradeFeeSource: SwapperType.Zrx, chainSpecific: {} },
     rate: '1',
     sources: []
   }

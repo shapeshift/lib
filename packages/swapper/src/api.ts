@@ -30,7 +30,7 @@ type ChainSpecificQuoteFeeData<T extends ChainId> = ChainSpecific<
 export type QuoteFeeData<T extends ChainId> = {
   fee: string
   tradeFee: string // fee taken out of the trade from the buyAsset
-  tradeFeeSource: string // swapper type for tradeFee
+  tradeFeeSource: SwapperType
 } & ChainSpecificQuoteFeeData<T>
 
 export type ByPairInput = {

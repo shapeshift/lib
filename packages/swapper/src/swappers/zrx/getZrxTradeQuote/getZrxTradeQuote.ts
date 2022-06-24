@@ -1,7 +1,14 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
 import { AxiosResponse } from 'axios'
 
-import { GetTradeQuoteInput, SwapError, SwapErrorTypes, SwapSource, TradeQuote } from '../../../api'
+import {
+  GetTradeQuoteInput,
+  SwapError,
+  SwapErrorTypes,
+  SwapperType,
+  SwapSource,
+  TradeQuote
+} from '../../../api'
 import { bn, bnOrZero } from '../../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../../utils/constants'
 import { normalizeAmount } from '../../utils/helpers/helpers'
@@ -79,7 +86,8 @@ export async function getZrxTradeQuote(input: GetTradeQuoteInput): Promise<Trade
             sellAssetErc20Address &&
             bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(bnOrZero(data.gasPrice)).toString()
         },
-        tradeFee: '0'
+        tradeFee: '0',
+        tradeFeeSource: SwapperType.Zrx
       },
       sellAmount: data.sellAmount,
       buyAmount: data.buyAmount,

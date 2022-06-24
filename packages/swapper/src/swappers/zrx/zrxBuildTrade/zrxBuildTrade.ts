@@ -2,7 +2,7 @@ import { fromAssetId } from '@shapeshiftoss/caip'
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 
-import { BuildTradeInput, SwapError, SwapErrorTypes, ZrxTrade } from '../../..'
+import { BuildTradeInput, SwapError, SwapErrorTypes, SwapperType, ZrxTrade } from '../../..'
 import { erc20AllowanceAbi } from '../../utils/abi/erc20Allowance-abi'
 import { bnOrZero } from '../../utils/bignumber'
 import { APPROVAL_GAS_LIMIT, DEFAULT_SLIPPAGE } from '../../utils/constants'
@@ -104,7 +104,8 @@ export async function zrxBuildTrade(
           estimatedGas: estimatedGas.toString(),
           gasPrice: data.gasPrice
         },
-        tradeFee: '0'
+        tradeFee: '0',
+        tradeFeeSource: SwapperType.Zrx
       },
       txData: data.data,
       sellAmount: data.sellAmount,
@@ -128,7 +129,8 @@ export async function zrxBuildTrade(
           ...trade.feeData?.chainSpecific,
           approvalFee: bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(bnOrZero(data.gasPrice)).toString()
         },
-        tradeFee: '0'
+        tradeFee: '0',
+        tradeFeeSource: SwapperType.Zrx
       }
     }
     return trade

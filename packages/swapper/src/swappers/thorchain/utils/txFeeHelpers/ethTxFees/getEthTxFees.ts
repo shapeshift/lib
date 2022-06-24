@@ -2,7 +2,7 @@ import { AssetReference } from '@shapeshiftoss/caip'
 import { ChainAdapterManager, ethereum, FeeDataKey } from '@shapeshiftoss/chain-adapters'
 import { Asset, KnownChainIds } from '@shapeshiftoss/types'
 
-import { QuoteFeeData, SwapError, SwapErrorTypes } from '../../../../../api'
+import { QuoteFeeData, SwapError, SwapErrorTypes, SwapperType } from '../../../../../api'
 import { bn, bnOrZero } from '../../../../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../../../../utils/constants'
 import { ThorchainSwapperDeps } from '../../../types'
@@ -82,7 +82,8 @@ export const getEthTxFees = async ({
             .multipliedBy(bnOrZero(feeData.chainSpecific.gasPrice))
             .toString()
       },
-      tradeFee
+      tradeFee,
+      tradeFeeSource: SwapperType.Thorchain
     }
   } catch (e) {
     if (e instanceof SwapError) throw e
