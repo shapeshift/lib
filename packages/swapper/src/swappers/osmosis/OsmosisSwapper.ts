@@ -27,7 +27,6 @@ import { bn, bnOrZero } from '../utils/bignumber'
 import { DEFAULT_SOURCE, MAX_SWAPPER_SELL } from './utils/constants'
 import {
   atomUrl,
-  getAtomChannelBalance,
   getRateInfo,
   IsymbolDenomMapping,
   osmoUrl,
@@ -39,6 +38,8 @@ import {
 export type OsmoSwapperDeps = {
   wallet: HDWallet
   adapterManager: ChainAdapterManager
+  osmoUrl: string
+  cosmosUrl: string
 }
 
 const fee = '10000'
@@ -281,7 +282,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     let buyAddress
 
     if (pair === 'ATOM_OSMO') {
-      const atomChannelBalance = await getAtomChannelBalance(osmoAddress)
+      // const atomChannelBalance = await getAtomChannelBalance(osmoAddress)
 
       sellAddress = atomAddress
       buyAddress = osmoAddress

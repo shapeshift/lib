@@ -50,21 +50,6 @@ export const pollForComplete = async (txid: string, baseUrl: string): Promise<st
   })
 }
 
-const atomChannelBalance = async (address: string) => {
-  const osmoResponseBalance = await axios.get(`${osmoUrl}/bank/balances/${address}`)
-  let toAtomChannelBalance = 0
-  try {
-    const { amount } = find(
-      osmoResponseBalance.data.result,
-      (b) => b.denom === symbolDenomMapping.ATOM
-    )
-    toAtomChannelBalance = Number(amount)
-  } catch (e) {
-    console.error('no channel balance')
-  }
-  return toAtomChannelBalance
-}
-
 export const pollForAtomChannelBalance = async (address: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     const timeout = 120000 // 2 mins
@@ -72,7 +57,7 @@ export const pollForAtomChannelBalance = async (address: string): Promise<string
     const interval = 5000 // 5 seconds
 
     const poll = async function () {
-      const balance = await atomChannelBalance(address)
+      const balance = await getAtomChannelBalance(address)
       if (balance > 0) {
         resolve(balance.toString())
       } else if (Date.now() - startTime > timeout) {
