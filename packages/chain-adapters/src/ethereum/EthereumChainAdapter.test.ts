@@ -4,14 +4,14 @@
  * Test EthereumChainAdapter
  * @group unit
  */
-import { ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
+import { ETHSignMessage, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { KnownChainIds } from '@shapeshiftoss/types'
 import unchained from '@shapeshiftoss/unchained-client'
 import { merge } from 'lodash'
 import { numberToHex } from 'web3-utils'
 
-import { BuildSendTxInput, SignTxInput, ValidAddressResultType } from '../types'
+import { BuildSendTxInput, SignMessageInput, SignTxInput, ValidAddressResultType } from '../types'
 import { bn } from '../utils/bignumber'
 import * as ethereum from './EthereumChainAdapter'
 
@@ -190,6 +190,39 @@ describe('EthereumChainAdapter', () => {
               maxPriorityFeePerGas: '10'
             },
             txFee: '861000000000000'
+          }
+        })
+      )
+    })
+  })
+
+  describe('getGasFeeData', () => {
+    it('should return current ETH network gas fees', async () => {
+      const httpProvider = {
+        getGasFees: jest.fn().mockResolvedValue(makeGetGasFeesMockedResponse())
+      } as unknown as unchained.ethereum.V1Api
+      const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
+
+      const adapter = new ethereum.ChainAdapter(args)
+
+      const data = await adapter.getGasFeeData()
+
+      expect(data).toEqual(
+        expect.objectContaining({
+          average: {
+            gasPrice: '45000000000',
+            maxFeePerGas: '300',
+            maxPriorityFeePerGas: '10'
+          },
+          fast: {
+            gasPrice: '50180000000',
+            maxFeePerGas: '335',
+            maxPriorityFeePerGas: '12'
+          },
+          slow: {
+            gasPrice: '41000000000',
+            maxFeePerGas: '274',
+            maxPriorityFeePerGas: '10'
           }
         })
       )
@@ -383,6 +416,44 @@ describe('EthereumChainAdapter', () => {
 
       await expect(adapter.signAndBroadcastTransaction(tx)).resolves.toEqual(
         '0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331'
+      )
+    })
+  })
+
+  describe('signMessage', () => {
+    it('should sign a properly formatted signMessageInput object', async () => {
+      const args = makeChainAdapterArgs()
+      const adapter = new ethereum.ChainAdapter(args)
+      const wallet = await getWallet()
+
+      const message: SignMessageInput<ETHSignMessage> = {
+        wallet,
+        messageToSign: {
+          message: 'Hello world 111',
+          addressNList: [2147483692, 2147483708, 2147483648, 0, 0]
+        }
+      }
+
+      await expect(adapter.signMessage(message)).resolves.toEqual(
+        '0x05a0edb4b98fe6b6ed270bf55aef84ddcb641512e19e340bf9eed3427854a7a4734fe45551dc24f1843cf2c823a73aa2454e3785eb15120573c522cc114e472d1c'
+      )
+    })
+
+    it('should throw if wallet.ethSignMessage returns null', async () => {
+      const args = makeChainAdapterArgs()
+      const adapter = new ethereum.ChainAdapter(args)
+      const wallet = await getWallet()
+      wallet.ethSignMessage = async () => null
+      const message: SignMessageInput<ETHSignMessage> = {
+        wallet,
+        messageToSign: {
+          message: 'Hello world 111',
+          addressNList: [2147483692, 2147483708, 2147483648, 0, 0]
+        }
+      }
+
+      await expect(adapter.signMessage(message)).rejects.toThrow(
+        /EthereumChainAdapter: error signing message/
       )
     })
   })

@@ -1,7 +1,13 @@
 import { AssetId, ChainId } from '@shapeshiftoss/caip'
 import { createErrorClass } from '@shapeshiftoss/errors'
 import { BTCSignTx, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { Asset, ChainSpecific, KnownChainIds } from '@shapeshiftoss/types'
+import {
+  Asset,
+  BIP44Params,
+  ChainSpecific,
+  KnownChainIds,
+  UtxoAccountType
+} from '@shapeshiftoss/types'
 
 export const SwapError = createErrorClass('SwapError')
 
@@ -46,11 +52,23 @@ export type CommonTradeInput = {
   sellAmount: string
   sendMax: boolean
   sellAssetAccountNumber: number
-  wallet?: HDWallet
+  wallet?: HDWallet // TODO remove this in a followup PR
 }
-export type GetTradeQuoteInput = CommonTradeInput
 
-export type BuildTradeInput = CommonTradeInput & {
+export type GetEthTradeQuoteInput = CommonTradeInput & {
+  chainId: 'eip155:1'
+}
+
+export type GetBtcTradeQuoteInput = CommonTradeInput & {
+  chainId: 'bip122:000000000019d6689c085ae165831e93'
+  accountType: UtxoAccountType
+  bip44Params: BIP44Params
+  wallet: HDWallet
+}
+
+export type GetTradeQuoteInput = GetEthTradeQuoteInput | GetBtcTradeQuoteInput
+
+export type BuildTradeInput = GetTradeQuoteInput & {
   buyAssetAccountNumber: number
   slippage?: string
   wallet: HDWallet
@@ -168,7 +186,7 @@ export enum SwapErrorTypes {
   POOL_NOT_FOUND = 'POOL_NOT_FOUND'
 }
 
-export interface Swapper<T extends ChainId, TxType = unknown> {
+export interface Swapper<T extends ChainId> {
   /** perform any necessary async initialization */
   initialize(): Promise<void>
 
@@ -215,5 +233,5 @@ export interface Swapper<T extends ChainId, TxType = unknown> {
    */
   filterAssetIdsBySellable(assetIds: AssetId[]): AssetId[]
 
-  getTradeTxs(tradeResult: TradeResult): Promise<TxType>
+  getTradeTxs(tradeResult: TradeResult): Promise<TradeTxs>
 }

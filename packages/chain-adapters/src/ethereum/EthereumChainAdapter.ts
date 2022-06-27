@@ -8,6 +8,7 @@ import {
   fromChainId,
   toAssetId
 } from '@shapeshiftoss/caip'
+import { ETHSignMessage } from '@shapeshiftoss/hdwallet-core'
 import { bip32ToAddressNList, ETHSignTx, ETHWallet, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
@@ -22,8 +23,10 @@ import {
   Account,
   BuildSendTxInput,
   FeeDataEstimate,
+  GasFeeDataEstimate,
   GetAddressInput,
   GetFeeDataInput,
+  SignMessageInput,
   SignTxInput,
   SubscribeError,
   SubscribeTxsInput,
@@ -368,6 +371,69 @@ export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet
     return data
   }
 
+  async signMessage(signMessageInput: SignMessageInput<ETHSignMessage>): Promise<string> {
+    try {
+      const { messageToSign, wallet } = signMessageInput
+      const signedMessage = await (wallet as ETHWallet).ethSignMessage(messageToSign)
+
+      if (!signedMessage) throw new Error('EthereumChainAdapter: error signing message')
+
+      return signedMessage.signature
+    } catch (err) {
+      return ErrorHandler(err)
+    }
+  }
+
+  async getGasFeeData(): Promise<GasFeeDataEstimate> {
+    const { data: responseData } = await axios.get<ZrxGasApiResponse>('https://gas.api.0x.org/')
+    const medianFees = responseData.result.find((result) => result.source === 'MEDIAN')
+
+    if (!medianFees) throw new TypeError('ETH Gas Fees should always exist')
+
+    const feeData = (await this.providers.http.getGasFees()).data
+    const normalizationConstants = {
+      fast: bnOrZero(bn(medianFees.fast).dividedBy(medianFees.standard)),
+      average: bn(1),
+      slow: bnOrZero(bn(medianFees.low).dividedBy(medianFees.standard))
+    }
+
+    return {
+      fast: {
+        gasPrice: bnOrZero(medianFees.fast).toString(),
+        maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
+          .times(normalizationConstants.fast)
+          .toFixed(0, BigNumber.ROUND_CEIL)
+          .toString(),
+        maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
+          .times(normalizationConstants.fast)
+          .toFixed(0, BigNumber.ROUND_CEIL)
+          .toString()
+      },
+      average: {
+        gasPrice: bnOrZero(medianFees.standard).toString(),
+        maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
+          .times(normalizationConstants.average)
+          .toFixed(0, BigNumber.ROUND_CEIL)
+          .toString(),
+        maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
+          .times(normalizationConstants.average)
+          .toFixed(0, BigNumber.ROUND_CEIL)
+          .toString()
+      },
+      slow: {
+        gasPrice: bnOrZero(medianFees.low).toString(),
+        maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
+          .times(normalizationConstants.slow)
+          .toFixed(0, BigNumber.ROUND_CEIL)
+          .toString(),
+        maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
+          .times(normalizationConstants.slow)
+          .toFixed(0, BigNumber.ROUND_CEIL)
+          .toString()
+      }
+    }
+  }
+
   async getFeeData({
     to,
     value,
@@ -376,11 +442,6 @@ export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet
   }: GetFeeDataInput<KnownChainIds.EthereumMainnet>): Promise<
     FeeDataEstimate<KnownChainIds.EthereumMainnet>
   > {
-    const { data: responseData } = await axios.get<ZrxGasApiResponse>('https://gas.api.0x.org/')
-    const fees = responseData.result.find((result) => result.source === 'MEDIAN')
-
-    if (!fees) throw new TypeError('ETH Gas Fees should always exist')
-
     const isErc20Send = !!contractAddress
 
     // Only care about sendMax for erc20
@@ -405,57 +466,28 @@ export class ChainAdapter implements IChainAdapter<KnownChainIds.EthereumMainnet
       data
     })
 
-    const feeData = (await this.providers.http.getGasFees()).data
-    const normalizationConstants = {
-      fast: bnOrZero(bn(fees.fast).dividedBy(fees.standard)),
-      average: bn(1),
-      slow: bnOrZero(bn(fees.low).dividedBy(fees.standard))
-    }
+    const gasResults = await this.getGasFeeData()
 
     return {
       fast: {
-        txFee: bnOrZero(bn(fees.fast).times(gasLimit)).toPrecision(),
+        txFee: bnOrZero(bn(gasResults.fast.gasPrice).times(gasLimit)).toPrecision(),
         chainSpecific: {
           gasLimit,
-          gasPrice: bnOrZero(fees.fast).toString(),
-          maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
-            .times(normalizationConstants.fast)
-            .toFixed(0, BigNumber.ROUND_CEIL)
-            .toString(),
-          maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
-            .times(normalizationConstants.fast)
-            .toFixed(0, BigNumber.ROUND_CEIL)
-            .toString()
+          ...gasResults.fast
         }
       },
       average: {
-        txFee: bnOrZero(bn(fees.standard).times(gasLimit)).toPrecision(),
+        txFee: bnOrZero(bn(gasResults.average.gasPrice).times(gasLimit)).toPrecision(),
         chainSpecific: {
           gasLimit,
-          gasPrice: bnOrZero(fees.standard).toString(),
-          maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
-            .times(normalizationConstants.average)
-            .toFixed(0, BigNumber.ROUND_CEIL)
-            .toString(),
-          maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
-            .times(normalizationConstants.average)
-            .toFixed(0, BigNumber.ROUND_CEIL)
-            .toString()
+          ...gasResults.average
         }
       },
       slow: {
-        txFee: bnOrZero(bn(fees.low).times(gasLimit)).toPrecision(),
+        txFee: bnOrZero(bn(gasResults.slow.gasPrice).times(gasLimit)).toPrecision(),
         chainSpecific: {
           gasLimit,
-          gasPrice: bnOrZero(fees.low).toString(),
-          maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
-            .times(normalizationConstants.slow)
-            .toFixed(0, BigNumber.ROUND_CEIL)
-            .toString(),
-          maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
-            .times(normalizationConstants.slow)
-            .toFixed(0, BigNumber.ROUND_CEIL)
-            .toString()
+          ...gasResults.slow
         }
       }
     }
