@@ -1,7 +1,7 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { Asset } from '@shapeshiftoss/types'
 
-import { BuildTradeInput } from '../../../../api'
+import { BuildTradeInput, SwapperType } from '../../../../api'
 import { FOX, WETH } from '../../../utils/test-data/assets'
 import { ZrxQuoteResponse } from '../../types'
 
@@ -56,7 +56,7 @@ export const setupExecuteTrade = () => {
     txData: '0x0',
     depositAddress: '0x0',
     receiveAddress: '0x0',
-    feeData: { fee: '0', chainSpecific: {}, tradeFee: '0' },
+    feeData: { fee: '0', chainSpecific: {}, tradeFee: '0', tradeFeeSource: SwapperType.Zrx },
     rate: '0',
     sources: []
   }

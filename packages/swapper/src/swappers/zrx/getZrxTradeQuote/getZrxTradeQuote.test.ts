@@ -1,6 +1,7 @@
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import Web3 from 'web3'
 
+import { SwapperType } from '../../../api'
 import { ZrxSwapper } from '../..'
 import { bn, bnOrZero } from '../../utils/bignumber'
 import { normalizeAmount } from '../../utils/helpers/helpers'
@@ -37,7 +38,8 @@ describe('getZrxTradeQuote', () => {
         gasPrice: '1000',
         approvalFee: '100000000'
       },
-      tradeFee: '0'
+      tradeFee: '0',
+      tradeFeeSource: SwapperType.Zrx
     })
     expect(quote.rate).toBe('100')
   })
@@ -80,7 +82,8 @@ describe('getZrxTradeQuote', () => {
         approvalFee: '0',
         gasPrice: undefined
       },
-      tradeFee: '0'
+      tradeFee: '0',
+      tradeFeeSource: SwapperType.Zrx
     })
   })
   it('fails on non ethereum chain for buyAsset', async () => {

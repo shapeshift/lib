@@ -1,7 +1,7 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import Web3 from 'web3'
 
-import { TradeQuote } from '../../../api'
+import { SwapperType, TradeQuote } from '../../../api'
 import { ETH, FOX } from '../../utils/test-data/assets'
 import { setupQuote } from '../../utils/test-data/setupSwapQuote'
 import { ThorchainSwapperDeps } from '../types'
@@ -37,7 +37,8 @@ const quoteResponse: TradeQuote<'eip155:1'> = {
   feeData: {
     fee: '1',
     chainSpecific: { estimatedGas: '1', approvalFee: '100000', gasPrice: '1' },
-    tradeFee: '115149000000000'
+    tradeFee: '115149000000000',
+    tradeFeeSource: SwapperType.Thorchain
   },
   rate: '0.00007843266864639218',
   sources: [{ name: 'thorchain', proportion: '1' }],

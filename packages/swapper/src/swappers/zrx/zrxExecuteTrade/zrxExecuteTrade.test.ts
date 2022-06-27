@@ -1,7 +1,7 @@
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 
-import { ExecuteTradeInput, ZrxTrade } from '../../../api'
+import { ExecuteTradeInput, SwapperType, ZrxTrade } from '../../../api'
 import { setupQuote } from '../../utils/test-data/setupSwapQuote'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 import { zrxExecuteTrade } from './zrxExecuteTrade'
@@ -36,7 +36,8 @@ describe('ZrxExecuteTrade', () => {
     feeData: {
       fee: '0',
       chainSpecific: { approvalFee: '123600000', estimatedGas: '1235', gasPrice: '1236' },
-      tradeFee: '0'
+      tradeFee: '0',
+      tradeFeeSource: SwapperType.Zrx
     },
     sources: []
   }

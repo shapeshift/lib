@@ -3,7 +3,7 @@ import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import Web3 from 'web3'
 
-import { BuildTradeInput } from '../../../api'
+import { BuildTradeInput, SwapperType } from '../../../api'
 import { bnOrZero } from '../../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../../utils/constants'
 import { setupZrxTradeQuoteResponse } from '../utils/test-data/setupZrxSwapQuote'
@@ -93,7 +93,8 @@ describe('zrxBuildTrade', () => {
     feeData: {
       fee: (Number(quoteResponse.gas) * Number(quoteResponse.gasPrice)).toString(),
       chainSpecific: { approvalFee: '123600000', estimatedGas: '1235', gasPrice: '1236' },
-      tradeFee: '0'
+      tradeFee: '0',
+      tradeFeeSource: SwapperType.Zrx
     },
     sources: []
   }
@@ -161,7 +162,8 @@ describe('zrxBuildTrade', () => {
           estimatedGas
         },
         fee: bnOrZero(gasPrice).multipliedBy(estimatedGas).toString(),
-        tradeFee: '0'
+        tradeFee: '0',
+        tradeFeeSource: SwapperType.Zrx
       },
       buyAsset
     })

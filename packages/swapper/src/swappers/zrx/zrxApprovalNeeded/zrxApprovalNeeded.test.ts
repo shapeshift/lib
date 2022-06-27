@@ -1,6 +1,7 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import Web3 from 'web3'
 
+import { SwapperType } from '../../../api'
 import { setupDeps } from '../../utils/test-data/setupDeps'
 import { setupQuote } from '../../utils/test-data/setupSwapQuote'
 import { zrxService } from '../utils/zrxService'
@@ -60,7 +61,12 @@ describe('zrxApprovalNeeded', () => {
       quote: {
         ...tradeQuote,
         sellAmount: '10',
-        feeData: { fee: '0', chainSpecific: { gasPrice: '1000' }, tradeFee: '0' }
+        feeData: {
+          fee: '0',
+          chainSpecific: { gasPrice: '1000' },
+          tradeFee: '0',
+          tradeFeeSource: SwapperType.Zrx
+        }
       },
       wallet
     }
@@ -85,7 +91,12 @@ describe('zrxApprovalNeeded', () => {
       quote: {
         ...tradeQuote,
         sellAmount: '10',
-        feeData: { fee: '0', chainSpecific: { gasPrice: '1000' }, tradeFee: '0' }
+        feeData: {
+          fee: '0',
+          chainSpecific: { gasPrice: '1000' },
+          tradeFee: '0',
+          tradeFeeSource: SwapperType.Zrx
+        }
       },
       wallet
     }

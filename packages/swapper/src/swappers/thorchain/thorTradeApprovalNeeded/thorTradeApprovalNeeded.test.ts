@@ -1,5 +1,6 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 
+import { SwapperType } from '../../../api'
 import { getERC20Allowance } from '../../utils/helpers/helpers'
 import { setupQuote } from '../../utils/test-data/setupSwapQuote'
 import { setupThorswapDeps } from '../utils/test-data/setupThorswapDeps'
@@ -45,7 +46,12 @@ describe('thorTradeApprovalNeeded', () => {
       quote: {
         ...tradeQuote,
         sellAmount: '10',
-        feeData: { fee: '0', chainSpecific: { gasPrice: '1000' }, tradeFee: '0' }
+        feeData: {
+          fee: '0',
+          chainSpecific: { gasPrice: '1000' },
+          tradeFee: '0',
+          tradeFeeSource: SwapperType.Thorchain
+        }
       },
       wallet
     }
@@ -62,7 +68,12 @@ describe('thorTradeApprovalNeeded', () => {
       quote: {
         ...tradeQuote,
         sellAmount: '10',
-        feeData: { fee: '0', chainSpecific: { gasPrice: '1000' }, tradeFee: '0' }
+        feeData: {
+          fee: '0',
+          chainSpecific: { gasPrice: '1000' },
+          tradeFee: '0',
+          tradeFeeSource: SwapperType.Thorchain
+        }
       },
       wallet
     }
