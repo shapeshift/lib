@@ -30,14 +30,13 @@
     "type-check": "tsc --project ./tsconfig.build.json --noEmit"
   },
   "dependencies": {
-    "@shapeshiftoss/caip": "^6.2.0",
     "axios": "^0.26.1",
     "identicon.js": "^2.3.3",
     "js-pixel-fonts": "^1.5.0",
     "lodash": "^4.17.21"
   },
   "peerDependencies": {
-    "@shapeshiftoss/caip": "^6.0.1",
+    "@shapeshiftoss/caip": "^6.2.0",
     "@shapeshiftoss/types": "^6.1.0"
   },
   "devDependencies": {
