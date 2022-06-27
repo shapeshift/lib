@@ -112,11 +112,11 @@ export class CoinGeckoMarketService implements MarketService {
       Also a lot of time when max_supply is null, total_supply is the maximum supply on coingecko
       We can reassess in the future the degree of precision we want on that field */
       return {
-        price: bnOrZero(marketData?.current_price?.[currency]).toString(),
-        marketCap: bnOrZero(marketData?.market_cap?.[currency]).toString(),
-        changePercent24Hr: marketData?.price_change_percentage_24h,
-        volume: bnOrZero(marketData?.total_volume?.[currency]).toString(),
-        supply: bnOrZero(marketData?.circulating_supply).toString(),
+        price: bnOrZero(marketData.current_price?.[currency]).toString(),
+        marketCap: bnOrZero(marketData.market_cap?.[currency]).toString(),
+        changePercent24Hr: marketData.price_change_percentage_24h,
+        volume: bnOrZero(marketData.total_volume?.[currency]).toString(),
+        supply: bnOrZero(marketData.circulating_supply).toString(),
         maxSupply:
           marketData.max_supply?.toString() ?? marketData.total_supply?.toString() ?? undefined
       }
