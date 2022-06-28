@@ -164,6 +164,7 @@ describe('normalizeIntegerAmount', () => {
     const result2 = normalizeIntegerAmount(bn('586084736227728.3'))
     expect(result2).toEqual('586084736227728')
 
+    // eslint-disable-next-line @typescript-eslint/no-loss-of-precision
     const result3 = normalizeIntegerAmount(58608473622772841)
     expect(result3).toEqual('58608473622772840')
 
