@@ -3,6 +3,8 @@ import { CoinGeckoMarketData } from '../coingecko/coingecko-types'
 export const fox: CoinGeckoMarketData = {
   circulating_supply: 272087306.915483,
   max_supply: 1000001337.0,
+  // This test data should be matching the data coming as Coingecko response.
+  // The fact that there is loss of precision at runtime doesn't matter.
   // eslint-disable-next-line @typescript-eslint/no-loss-of-precision
   market_cap: { usd: 76043211.3383411704757409 },
   current_price: { usd: 0.2794809217688426 },
