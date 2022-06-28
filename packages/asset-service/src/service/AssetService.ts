@@ -39,14 +39,14 @@ export class AssetService {
     if (description) return { description, isTrusted: true }
 
     try {
-      type CoinData = { description: { en: string } }
+      type CoinData = { description: { [key in LocaleType]: string } }
 
       const url = adapters.makeCoingeckoAssetUrl(assetId)
       if (!url) throw new Error()
 
       const { data } = await axios.get<CoinData>(url)
 
-      return { description: data?.description?.en ?? '' }
+      return { description: data?.description?.[locale] || data?.description?.en || '' }
     } catch (e) {
       const errorMessage = `AssetService:description: no description available for ${assetId}`
       throw new Error(errorMessage)
