@@ -9,6 +9,16 @@ import localAssetData from './generatedAssetData.json'
 type DescriptionData = Readonly<{ description: string; isTrusted?: boolean }>
 
 export type AssetsById = Record<AssetId, Asset>
+  
+type LocaleType =
+| 'en'
+| 'fr'
+| 'ru'
+| 'es'
+| 'id'
+| 'ko'
+| 'pt'
+| 'zh'
 
 export class AssetService {
   private readonly assets: AssetsById
