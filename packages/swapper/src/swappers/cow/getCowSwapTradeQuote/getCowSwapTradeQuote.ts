@@ -19,6 +19,18 @@ import {
 import { cowService } from '../utils/cowService'
 import { getUsdRate } from '../utils/helpers/helpers'
 
+export type CowSwapQuoteApiInput = {
+  appData: string
+  buyToken: string
+  from: string
+  kind: string
+  partiallyFillable: boolean
+  receiver: string
+  sellAmountBeforeFee: string
+  sellToken: string
+  validTo: number
+}
+
 export async function getCowSwapTradeQuote(
   deps: CowSwapperDeps,
   input: GetTradeQuoteInput
@@ -49,6 +61,18 @@ export async function getCowSwapTradeQuote(
       bnOrZero(sellAmount).lt(minQuoteSellAmount) ? minQuoteSellAmount : sellAmount
     )
 
+    const apiInput: CowSwapQuoteApiInput = {
+      sellToken: sellAssetErc20Address,
+      buyToken: buyAssetErc20Address,
+      receiver: DEFAULT_ADDRESS,
+      validTo: DEFAULT_VALIDTO_TIMESTAMP,
+      appData: DEFAULT_APP_DATA,
+      partiallyFillable: false,
+      from: DEFAULT_ADDRESS,
+      kind: ORDER_KIND_SELL,
+      sellAmountBeforeFee: normalizedSellAmount
+    }
+
     /**
      * /v1/quote
      * params: {
@@ -64,20 +88,11 @@ export async function getCowSwapTradeQuote(
      * }
      */
     const quoteResponse: AxiosResponse<CowSwapQuoteResponse> =
-      await cowService.post<CowSwapQuoteResponse>(`${deps.apiUrl}/v1/quote/`, {
-        sellToken: sellAssetErc20Address,
-        buyToken: buyAssetErc20Address,
-        receiver: DEFAULT_ADDRESS,
-        validTo: DEFAULT_VALIDTO_TIMESTAMP,
-        appData: DEFAULT_APP_DATA,
-        partiallyFillable: false,
-        from: DEFAULT_ADDRESS,
-        kind: ORDER_KIND_SELL,
-        sellAmountBeforeFee: normalizedSellAmount
-      })
+      await cowService.post<CowSwapQuoteResponse>(`${deps.apiUrl}/v1/quote/`, apiInput)
 
-    const { data } = quoteResponse
-    const quote = data.quote
+    const {
+      data: { quote }
+    } = quoteResponse
 
     const rate = bn(quote.buyAmount)
       .div(quote.sellAmount)

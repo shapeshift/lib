@@ -1,13 +1,13 @@
-import { ethereum } from '@shapeshiftoss/chain-adapters'
+import { ethereum, FeeDataEstimate } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { Asset } from '@shapeshiftoss/types'
+import { Asset, KnownChainIds } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import { GetEthTradeQuoteInput, TradeQuote } from '../../../api'
 import { ETH, FOX, WBTC, WETH } from '../../utils/test-data/assets'
 import { CowSwapperDeps } from '../CowSwapper'
 import { cowService } from '../utils/cowService'
-import { getCowSwapTradeQuote } from './getCowSwapTradeQuote'
+import { CowSwapQuoteApiInput, getCowSwapTradeQuote } from './getCowSwapTradeQuote'
 
 jest.mock('@shapeshiftoss/chain-adapters')
 jest.mock('../utils/cowService')
@@ -23,8 +23,26 @@ jest.mock('../utils/helpers/helpers', () => {
   }
 })
 
-const feeData = {
+const feeData: FeeDataEstimate<KnownChainIds.EthereumMainnet> = {
   fast: {
+    txFee: '4080654495000000',
+    chainSpecific: {
+      gasLimit: '51630',
+      gasPrice: '79036500000',
+      maxFeePerGas: '216214758112',
+      maxPriorityFeePerGas: '2982734547'
+    }
+  },
+  slow: {
+    txFee: '4080654495000000',
+    chainSpecific: {
+      gasLimit: '51630',
+      gasPrice: '79036500000',
+      maxFeePerGas: '216214758112',
+      maxPriorityFeePerGas: '2982734547'
+    }
+  },
+  average: {
     txFee: '4080654495000000',
     chainSpecific: {
       gasLimit: '51630',
@@ -35,7 +53,7 @@ const feeData = {
   }
 }
 
-const expectedApiInputWethToFox = {
+const expectedApiInputWethToFox: CowSwapQuoteApiInput = {
   appData: '0x0000000000000000000000000000000000000000000000000000000000000000',
   buyToken: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
   from: '0x0000000000000000000000000000000000000000',
@@ -47,7 +65,7 @@ const expectedApiInputWethToFox = {
   validTo: 4294967295
 }
 
-const expectedApiInputWbtcToWeth = {
+const expectedApiInputWbtcToWeth: CowSwapQuoteApiInput = {
   appData: '0x0000000000000000000000000000000000000000000000000000000000000000',
   buyToken: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
   from: '0x0000000000000000000000000000000000000000',
@@ -103,7 +121,7 @@ const expectedTradeQuoteWbtcToWeth: TradeQuote<'eip155:1'> = {
   sellAssetAccountNumber: 0
 }
 
-const defaultDeps = {
+const defaultDeps: CowSwapperDeps = {
   apiUrl: '',
   adapter: <ethereum.ChainAdapter>{},
   web3: <Web3>{},
@@ -128,7 +146,7 @@ describe('getCowTradeQuote', () => {
   })
 
   it('should call cowService with correct parameters, handle the fees and return the correct trade quote when selling WETH', async () => {
-    const deps = {
+    const deps: CowSwapperDeps = {
       apiUrl: 'https://api.cow.fi/mainnet/api',
       adapter: {
         getAddress: jest.fn(() => Promise.resolve('address11')),
@@ -174,7 +192,7 @@ describe('getCowTradeQuote', () => {
   })
 
   it('should call cowService with correct parameters, handle the fees and return the correct trade quote when selling WBTC with undefined wallet', async () => {
-    const deps = {
+    const deps: CowSwapperDeps = {
       apiUrl: 'https://api.cow.fi/mainnet/api',
       adapter: {
         getAddress: jest.fn(() => {

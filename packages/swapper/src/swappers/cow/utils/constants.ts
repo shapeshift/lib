@@ -10,4 +10,3 @@ export const COW_SWAP_VAULT_RELAYER_ADDRESS = '0xc92e8bdf79f0507f65a392b0ab46677
 // This is the default value being used by CowSwap exchange, corresponding to a date in year 2106
 export const DEFAULT_VALIDTO_TIMESTAMP = 4294967295
 export const ORDER_KIND_SELL = 'sell'
-export const ETH_ASSET_ID = 'eip155:1/slip44:60'
