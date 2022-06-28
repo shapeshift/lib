@@ -10,7 +10,7 @@ type DescriptionData = Readonly<{ description: string; isTrusted?: boolean }>
 
 export type AssetsById = Record<AssetId, Asset>
   
-type LocaleType =
+type Locale = 
 | 'en'
 | 'fr'
 | 'ru'
@@ -31,15 +31,15 @@ export class AssetService {
     return this.assets
   }
 
-  async description(assetId: AssetId): Promise<DescriptionData> {
-    const descriptions: Record<string, string> = assetsDescriptions
-    const description = descriptions[assetId]
+  async description(assetId: AssetId, locale: Locale): Promise<DescriptionData> {
+    const descriptions: Record<string, Record<string, string>> = assetsDescriptions
+    const description = descriptions?.[assetId]?.[locale] || descriptions?.[assetId]?.en || ''
 
     // Return overridden asset description if it exists and add isTrusted for description links
     if (description) return { description, isTrusted: true }
 
     try {
-      type CoinData = { description: { [key in LocaleType]: string } }
+      type CoinData = { description: { [key in Locale]: string } }
 
       const url = adapters.makeCoingeckoAssetUrl(assetId)
       if (!url) throw new Error()
