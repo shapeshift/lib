@@ -51,11 +51,11 @@ export class FoxyMarketService extends CoinGeckoMarketService implements MarketS
         return null
       }
 
-      const cgData = await super.findByAssetId({
+      const coinGeckoData = await super.findByAssetId({
         assetId: FOX_ASSET_ID
       })
 
-      if (!cgData) return null
+      if (!coinGeckoData) return null
 
       const ethChainAdapter = new ethereum.ChainAdapter({
         providers: {
@@ -83,9 +83,9 @@ export class FoxyMarketService extends CoinGeckoMarketService implements MarketS
       const supply = foxyTotalSupply
 
       return {
-        price: cgData.price,
+        price: coinGeckoData.price,
         marketCap: '0', // TODO: add marketCap once able to get foxy marketCap data
-        changePercent24Hr: cgData.changePercent24Hr,
+        changePercent24Hr: coinGeckoData.changePercent24Hr,
         volume: '0', // TODO: add volume once able to get foxy volume data
         supply: supply?.div(`1e+${FOXY_ASSET_PRECISION}`).toString(),
         maxSupply: foxyTotalSupply?.div(`1e+${FOXY_ASSET_PRECISION}`).toString()
