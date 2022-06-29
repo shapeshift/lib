@@ -11,13 +11,13 @@ import { SwapperManager } from './SwapperManager'
 
 describe('SwapperManager', () => {
   const zrxSwapperDeps: ZrxSwapperDeps = {
-    web3: <Web3>{},
-    adapter: <ethereum.ChainAdapter>{}
+    web3: {} as Web3,
+    adapter: {} as ethereum.ChainAdapter
   }
   const cowSwapperDeps: CowSwapperDeps = {
     apiUrl: 'https://api.cow.fi/mainnet/api/',
-    adapter: <ethereum.ChainAdapter>{},
-    web3: <Web3>{},
+    adapter: {} as ethereum.ChainAdapter,
+    web3: {} as Web3,
     feeAsset: WETH
   }
 

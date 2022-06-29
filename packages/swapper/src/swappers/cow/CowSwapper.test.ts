@@ -24,8 +24,8 @@ jest.mock('./CowApproveInfinite/CowApproveInfinite', () => ({
 
 const COW_SWAPPER_DEPS: CowSwapperDeps = {
   apiUrl: 'https://api.cow.fi/mainnet/api/',
-  adapter: <ethereum.ChainAdapter>{},
-  web3: <Web3>{},
+  adapter: {} as ethereum.ChainAdapter,
+  web3: {} as Web3,
   feeAsset: WETH
 }
 

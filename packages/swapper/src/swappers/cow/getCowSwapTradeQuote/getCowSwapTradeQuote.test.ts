@@ -7,7 +7,8 @@ import { GetEthTradeQuoteInput, TradeQuote } from '../../../api'
 import { ETH, FOX, WBTC, WETH } from '../../utils/test-data/assets'
 import { CowSwapperDeps } from '../CowSwapper'
 import { cowService } from '../utils/cowService'
-import { CowSwapQuoteApiInput, getCowSwapTradeQuote } from './getCowSwapTradeQuote'
+import { CowSwapQuoteApiInput } from '../utils/helpers/helpers'
+import { getCowSwapTradeQuote } from './getCowSwapTradeQuote'
 
 jest.mock('@shapeshiftoss/chain-adapters')
 jest.mock('../utils/cowService')
@@ -123,8 +124,8 @@ const expectedTradeQuoteWbtcToWeth: TradeQuote<'eip155:1'> = {
 
 const defaultDeps: CowSwapperDeps = {
   apiUrl: '',
-  adapter: <ethereum.ChainAdapter>{},
-  web3: <Web3>{},
+  adapter: {} as ethereum.ChainAdapter,
+  web3: {} as Web3,
   feeAsset: WETH
 }
 
@@ -150,9 +151,11 @@ describe('getCowTradeQuote', () => {
       apiUrl: 'https://api.cow.fi/mainnet/api',
       adapter: {
         getAddress: jest.fn(() => Promise.resolve('address11')),
-        getFeeData: jest.fn(() => Promise.resolve(feeData))
+        getFeeData: jest.fn<Promise<FeeDataEstimate<KnownChainIds.EthereumMainnet>>, []>(() =>
+          Promise.resolve(feeData)
+        )
       } as unknown as ethereum.ChainAdapter,
-      web3: <Web3>{},
+      web3: {} as Web3,
       feeAsset: WETH
     }
 
@@ -200,7 +203,7 @@ describe('getCowTradeQuote', () => {
         }), // using this should throw an error
         getFeeData: jest.fn(() => Promise.resolve(feeData))
       } as unknown as ethereum.ChainAdapter,
-      web3: <Web3>{},
+      web3: {} as Web3,
       feeAsset: WETH
     }
 

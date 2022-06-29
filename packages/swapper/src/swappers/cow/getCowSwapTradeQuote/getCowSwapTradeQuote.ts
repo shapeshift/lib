@@ -17,19 +17,7 @@ import {
   ORDER_KIND_SELL
 } from '../utils/constants'
 import { cowService } from '../utils/cowService'
-import { getUsdRate } from '../utils/helpers/helpers'
-
-export type CowSwapQuoteApiInput = {
-  appData: string
-  buyToken: string
-  from: string
-  kind: string
-  partiallyFillable: boolean
-  receiver: string
-  sellAmountBeforeFee: string
-  sellToken: string
-  validTo: number
-}
+import { CowSwapQuoteApiInput, getUsdRate } from '../utils/helpers/helpers'
 
 export async function getCowSwapTradeQuote(
   deps: CowSwapperDeps,
