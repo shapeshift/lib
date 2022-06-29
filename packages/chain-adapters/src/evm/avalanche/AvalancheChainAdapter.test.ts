@@ -1,7 +1,7 @@
 // Allow explicit any since this is a test file
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
- * Test EthereumChainAdapter
+ * Test AvalancheChainAdapter
  * @group unit
  */
 import { ETHSignMessage, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
@@ -11,14 +11,20 @@ import unchained from '@shapeshiftoss/unchained-client'
 import { merge } from 'lodash'
 import { numberToHex } from 'web3-utils'
 
-import { BuildSendTxInput, SignMessageInput, SignTxInput, ValidAddressResultType } from '../types'
-import { bn } from '../utils/bignumber'
-import * as ethereum from './EthereumChainAdapter'
+import {
+  BuildSendTxInput,
+  SignMessageInput,
+  SignTxInput,
+  ValidAddressResultType
+} from '../../types'
+import { bn } from '../../utils/bignumber'
+import { ChainAdapterArgs } from '../EVMBaseAdapter'
+import * as avalanche from './AvalancheChainAdapter'
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 const EOA_ADDRESS = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
 const ENS_NAME = 'vitalik.eth'
-const VALID_CHAIN_ID = 'eip155:1'
+const VALID_CHAIN_ID = 'eip155:43114'
 
 const testMnemonic = 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle'
 
@@ -52,7 +58,8 @@ jest.mock('axios', () => ({
   )
 }))
 
-describe('EthereumChainAdapter', () => {
+// eslint-disable-next-line jest/no-disabled-tests
+describe.skip('AvalancheChainAdapter', () => {
   const gasPrice = '42'
   const gasLimit = '42000'
   const erc20ContractAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
@@ -94,7 +101,7 @@ describe('EthereumChainAdapter', () => {
       nonce: 2,
       tokens: [
         {
-          assetId: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
+          assetId: 'eip155:43114/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
           balance: balance.erc20Balance,
           type: 'ERC20',
           contract: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
@@ -106,7 +113,7 @@ describe('EthereumChainAdapter', () => {
   const makeChainAdapterArgs = (overrideArgs?: {
     providers?: { http: unchained.ethereum.V1Api }
     chainId?: string
-  }): ethereum.ChainAdapterArgs =>
+  }): ChainAdapterArgs =>
     merge(
       {
         providers: {
@@ -119,39 +126,27 @@ describe('EthereumChainAdapter', () => {
     )
 
   describe('constructor', () => {
-    it('should return chainAdapter with Ethereum mainnet chainId if called with no chainId', () => {
+    it('should return chainAdapter with Avalanche mainnet chainId if called with no chainId', () => {
       const args = makeChainAdapterArgs()
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
       const chainId = adapter.getChainId()
       expect(chainId).toEqual(VALID_CHAIN_ID)
     })
     it('should return chainAdapter with valid chainId if called with valid chainId', () => {
-      const args = makeChainAdapterArgs({ chainId: 'eip155:3' })
-      const adapter = new ethereum.ChainAdapter(args)
-      const chainId = adapter.getChainId()
-      expect(chainId).toEqual('eip155:3')
-    })
-    it('should throw if called with invalid chainId', () => {
-      const args = makeChainAdapterArgs({ chainId: 'INVALID_CHAINID' })
-      expect(() => new ethereum.ChainAdapter(args)).toThrow(/The ChainID (.+) is not supported/)
-    })
-  })
-
-  describe('getBalance', () => {
-    it('is unimplemented', () => {
-      expect(true).toBeTruthy()
+      const args = makeChainAdapterArgs({ chainId: 'eip155:43113' })
+      expect(() => new avalanche.ChainAdapter(args)).toThrow()
     })
   })
 
   describe('getFeeData', () => {
-    it('should return current ETH network fees', async () => {
+    it('should return current AVAX network fees', async () => {
       const httpProvider = {
         estimateGas: jest.fn().mockResolvedValue(makeEstimateGasMockedResponse()),
         getGasFees: jest.fn().mockResolvedValue(makeGetGasFeesMockedResponse())
       } as unknown as unchained.ethereum.V1Api
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
 
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
 
       const data = await adapter.getFeeData({
         to: '0x642F4Bda144C63f6DC47EE0fDfbac0a193e2eDb7',
@@ -197,13 +192,13 @@ describe('EthereumChainAdapter', () => {
   })
 
   describe('getGasFeeData', () => {
-    it('should return current ETH network gas fees', async () => {
+    it('should return current AVAX network gas fees', async () => {
       const httpProvider = {
         getGasFees: jest.fn().mockResolvedValue(makeGetGasFeesMockedResponse())
       } as unknown as unchained.ethereum.V1Api
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
 
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
 
       const data = await adapter.getGasFeeData()
 
@@ -240,9 +235,9 @@ describe('EthereumChainAdapter', () => {
   }
 
   describe('getAddress', () => {
-    it('returns ETH address', async () => {
+    it('returns AVAX address', async () => {
       const args = makeChainAdapterArgs()
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
       const bip44Params = { purpose: 44, coinType: 60, accountNumber: 0 }
       const wallet = await getWallet()
       const res = await adapter.getAddress({ bip44Params, wallet })
@@ -254,7 +249,7 @@ describe('EthereumChainAdapter', () => {
   describe('validateAddress', () => {
     it('should return true for a valid address', async () => {
       const args = makeChainAdapterArgs()
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
       const referenceAddress = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
       const expectedReturnValue = validAddressTuple
       const res = await adapter.validateAddress(referenceAddress)
@@ -263,7 +258,7 @@ describe('EthereumChainAdapter', () => {
 
     it('should return false for an empty address', async () => {
       const args = makeChainAdapterArgs()
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
       const referenceAddress = ''
       const expectedReturnValue = invalidAddressTuple
       const res = await adapter.validateAddress(referenceAddress)
@@ -272,7 +267,7 @@ describe('EthereumChainAdapter', () => {
 
     it('should return false for an invalid address', async () => {
       const args = makeChainAdapterArgs()
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
       const referenceAddress = 'foobar'
       const expectedReturnValue = invalidAddressTuple
       const res = await adapter.validateAddress(referenceAddress)
@@ -283,7 +278,7 @@ describe('EthereumChainAdapter', () => {
   describe('validateEnsAddress', () => {
     it('should return true for a valid .eth address', async () => {
       const args = makeChainAdapterArgs()
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
       const referenceAddress = 'vitalik.eth'
       const expectedReturnValue = validAddressTuple
       const res = await adapter.validateEnsAddress(referenceAddress)
@@ -292,7 +287,7 @@ describe('EthereumChainAdapter', () => {
 
     it('should return false for an empty address', async () => {
       const args = makeChainAdapterArgs()
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
       const referenceAddress = ''
       const expectedReturnValue = invalidAddressTuple
       const res = await adapter.validateEnsAddress(referenceAddress)
@@ -301,7 +296,7 @@ describe('EthereumChainAdapter', () => {
 
     it('should return false for an invalid address', async () => {
       const args = makeChainAdapterArgs()
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
       const referenceAddress = 'foobar'
       const expectedReturnValue = invalidAddressTuple
       const res = await adapter.validateEnsAddress(referenceAddress)
@@ -310,7 +305,7 @@ describe('EthereumChainAdapter', () => {
 
     it('should return false for a valid address directly followed by more chars', async () => {
       const args = makeChainAdapterArgs()
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
       const referenceAddress = 'vitalik.ethfoobar'
       const expectedReturnValue = invalidAddressTuple
       const res = await adapter.validateEnsAddress(referenceAddress)
@@ -319,7 +314,7 @@ describe('EthereumChainAdapter', () => {
 
     it('should return false for a valid address in the middle of a string', async () => {
       const args = makeChainAdapterArgs()
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
       const referenceAddress = 'asdadfvitalik.ethasdadf'
       const expectedReturnValue = invalidAddressTuple
       const res = await adapter.validateEnsAddress(referenceAddress)
@@ -336,7 +331,7 @@ describe('EthereumChainAdapter', () => {
           .mockResolvedValue(makeGetAccountMockResponse({ balance, erc20Balance: '424242' }))
       } as unknown as unchained.ethereum.V1Api
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
 
       const tx = {
         wallet: await getWallet(),
@@ -364,7 +359,7 @@ describe('EthereumChainAdapter', () => {
           .mockResolvedValue(makeGetAccountMockResponse({ balance, erc20Balance: '424242' }))
       } as unknown as unchained.ethereum.V1Api
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
 
       const tx = {
         wallet: await getWallet(),
@@ -387,7 +382,7 @@ describe('EthereumChainAdapter', () => {
   describe('signAndBroadcastTransaction', () => {
     it('should throw if no hash is returned by wallet.ethSendTx', async () => {
       const args = makeChainAdapterArgs()
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
       const wallet = await getWallet()
       wallet.ethSendTx = async () => null
 
@@ -403,7 +398,7 @@ describe('EthereumChainAdapter', () => {
 
     it('should return the hash returned by wallet.ethSendTx', async () => {
       const args = makeChainAdapterArgs()
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
       const wallet = await getWallet()
       wallet.ethSendTx = async () => ({
         hash: '0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331'
@@ -423,7 +418,7 @@ describe('EthereumChainAdapter', () => {
   describe('signMessage', () => {
     it('should sign a properly formatted signMessageInput object', async () => {
       const args = makeChainAdapterArgs()
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
       const wallet = await getWallet()
 
       const message: SignMessageInput<ETHSignMessage> = {
@@ -441,7 +436,7 @@ describe('EthereumChainAdapter', () => {
 
     it('should throw if wallet.ethSignMessage returns null', async () => {
       const args = makeChainAdapterArgs()
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
       const wallet = await getWallet()
       wallet.ethSignMessage = async () => null
       const message: SignMessageInput<ETHSignMessage> = {
@@ -453,7 +448,7 @@ describe('EthereumChainAdapter', () => {
       }
 
       await expect(adapter.signMessage(message)).rejects.toThrow(
-        /EthereumChainAdapter: error signing message/
+        /AvalancheChainAdapter: error signing message/
       )
     })
   })
@@ -467,7 +462,7 @@ describe('EthereumChainAdapter', () => {
       } as unknown as unchained.ethereum.V1Api
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
 
       const mockTx = '0x123'
       const result = await adapter.broadcastTransaction(mockTx)
@@ -480,15 +475,15 @@ describe('EthereumChainAdapter', () => {
   describe('buildSendTransaction', () => {
     it('should throw if passed tx has no "to" property', async () => {
       const args = makeChainAdapterArgs()
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
 
       const tx = {
         wallet: await getWallet(),
         value,
         chainSpecific: makeChainSpecific({ erc20ContractAddress })
-      } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
+      } as unknown as BuildSendTxInput<KnownChainIds.AvalancheMainnet>
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow(
-        'EthereumChainAdapter: to is required'
+        'AvalancheChainAdapter: to is required'
       )
     })
 
@@ -502,14 +497,14 @@ describe('EthereumChainAdapter', () => {
       } as unknown as unchained.ethereum.V1Api
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
 
       const tx = {
         wallet: await getWallet(),
         to: ENS_NAME,
         value,
         chainSpecific: makeChainSpecific({ erc20ContractAddress })
-      } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
+      } as unknown as BuildSendTxInput<KnownChainIds.AvalancheMainnet>
 
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow(
         /a provider or signer is needed to resolve ENS names/
@@ -518,15 +513,15 @@ describe('EthereumChainAdapter', () => {
 
     it('should throw if passed tx has no "value" property', async () => {
       const args = makeChainAdapterArgs()
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
 
       const tx = {
         wallet: await getWallet(),
         to: EOA_ADDRESS,
         chainSpecific: makeChainSpecific()
-      } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
+      } as unknown as BuildSendTxInput<KnownChainIds.AvalancheMainnet>
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow(
-        'EthereumChainAdapter: value is required'
+        'AvalancheChainAdapter: value is required'
       )
     })
 
@@ -538,14 +533,14 @@ describe('EthereumChainAdapter', () => {
       } as unknown as unchained.ethereum.V1Api
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
 
       const tx = {
         wallet: await getWallet(),
         to: EOA_ADDRESS,
         value,
         chainSpecific: makeChainSpecific()
-      } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
+      } as unknown as BuildSendTxInput<KnownChainIds.AvalancheMainnet>
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
           addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
@@ -560,7 +555,7 @@ describe('EthereumChainAdapter', () => {
       })
       expect(args.providers.http.getAccount).toHaveBeenCalledTimes(1)
     })
-    it('sendmax: true without chainSpecific.erc20ContractAddress should throw if ETH balance is 0', async () => {
+    it('sendmax: true without chainSpecific.erc20ContractAddress should throw if AVAX balance is 0', async () => {
       const httpProvider = {
         getAccount: jest
           .fn<any, any>()
@@ -568,7 +563,7 @@ describe('EthereumChainAdapter', () => {
       } as unknown as unchained.ethereum.V1Api
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
 
       const tx = {
         wallet: await getWallet(),
@@ -576,7 +571,7 @@ describe('EthereumChainAdapter', () => {
         value,
         chainSpecific: makeChainSpecific(),
         sendMax: true
-      } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
+      } as unknown as BuildSendTxInput<KnownChainIds.AvalancheMainnet>
 
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow('no balance')
       expect(args.providers.http.getAccount).toHaveBeenCalledTimes(2)
@@ -593,7 +588,7 @@ describe('EthereumChainAdapter', () => {
       } as unknown as unchained.ethereum.V1Api
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
 
       const tx = {
         wallet: await getWallet(),
@@ -601,7 +596,7 @@ describe('EthereumChainAdapter', () => {
         value,
         chainSpecific: makeChainSpecific(),
         sendMax: true
-      } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
+      } as unknown as BuildSendTxInput<KnownChainIds.AvalancheMainnet>
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
           addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
@@ -626,14 +621,14 @@ describe('EthereumChainAdapter', () => {
       } as unknown as unchained.ethereum.V1Api
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
 
       const tx = {
         wallet: await getWallet(),
         to: ZERO_ADDRESS,
         value,
         chainSpecific: makeChainSpecific({ erc20ContractAddress })
-      } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
+      } as unknown as BuildSendTxInput<KnownChainIds.AvalancheMainnet>
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
           addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
@@ -658,7 +653,7 @@ describe('EthereumChainAdapter', () => {
       } as unknown as unchained.ethereum.V1Api
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
 
       const tx = {
         wallet: await getWallet(),
@@ -666,7 +661,7 @@ describe('EthereumChainAdapter', () => {
         value,
         chainSpecific: makeChainSpecific({ erc20ContractAddress }),
         sendMax: true
-      } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
+      } as unknown as BuildSendTxInput<KnownChainIds.AvalancheMainnet>
 
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
@@ -693,7 +688,7 @@ describe('EthereumChainAdapter', () => {
       } as unknown as unchained.ethereum.V1Api
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new avalanche.ChainAdapter(args)
 
       const tx = {
         wallet: await getWallet(),
@@ -701,95 +696,11 @@ describe('EthereumChainAdapter', () => {
         value,
         chainSpecific: makeChainSpecific({ erc20ContractAddress }),
         sendMax: true
-      } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
+      } as unknown as BuildSendTxInput<KnownChainIds.AvalancheMainnet>
 
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow('no balance')
 
       expect(args.providers.http.getAccount).toHaveBeenCalledTimes(2)
-    })
-  })
-
-  describe('buildCustomTx', () => {
-    it('should build an unsigned custom tx using gasPrice', async () => {
-      const httpProvider = {
-        getAccount: jest
-          .fn<any, any>()
-          .mockResolvedValue(
-            makeGetAccountMockResponse({ balance: '2500000', erc20Balance: undefined })
-          )
-      } as unknown as unchained.ethereum.V1Api
-
-      const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new ethereum.ChainAdapter(args)
-
-      const txArgs = {
-        wallet: await getWallet(),
-        bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
-        to: `0x47CB53752e5dc0A972440dA127DCA9FBA6C2Ab6F`,
-        data: '0x420',
-        value: '123',
-        gasPrice: '123',
-        gasLimit: '456'
-      }
-
-      const output = await adapter.buildCustomTx(txArgs)
-
-      const expectedOutput = {
-        txToSign: {
-          addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
-          value: '123',
-          to: '0x47CB53752e5dc0A972440dA127DCA9FBA6C2Ab6F',
-          chainId: 1,
-          data: '0x420',
-          nonce: '0x2',
-          gasLimit: '0x1c8',
-          gasPrice: '0x7b'
-        }
-      }
-
-      await expect(expectedOutput).toEqual(output)
-    })
-
-    it('should build an unsigned custom tx using maxFeePerGas & maxPriorityFeePerGas (eip1559)', async () => {
-      const httpProvider = {
-        getAccount: jest
-          .fn<any, any>()
-          .mockResolvedValue(
-            makeGetAccountMockResponse({ balance: '2500000', erc20Balance: undefined })
-          )
-      } as unknown as unchained.ethereum.V1Api
-
-      const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new ethereum.ChainAdapter(args)
-
-      const txArgs = {
-        wallet: await getWallet(),
-        bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
-        to: `0x47CB53752e5dc0A972440dA127DCA9FBA6C2Ab6F`,
-        data: '0x420',
-        value: '123',
-        gasLimit: '456',
-        maxFeePerGas: '421',
-        maxPriorityFeePerGas: '422'
-      }
-
-      const output = await adapter.buildCustomTx(txArgs)
-
-      const expectedOutput = {
-        txToSign: {
-          addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
-          value: '123',
-          to: '0x47CB53752e5dc0A972440dA127DCA9FBA6C2Ab6F',
-          chainId: 1,
-          data: '0x420',
-          nonce: '0x2',
-          gasLimit: '0x1c8',
-          maxFeePerGas: '0x1a5',
-          maxPriorityFeePerGas: '0x1a6'
-        }
-      }
-
-      await expect(expectedOutput).toEqual(output)
     })
   })
 })
