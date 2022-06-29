@@ -1,6 +1,6 @@
 import { ethereum, FeeDataEstimate } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { Asset, KnownChainIds } from '@shapeshiftoss/types'
+import { Asset } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import { GetEthTradeQuoteInput, TradeQuote } from '../../../api'
@@ -23,7 +23,7 @@ jest.mock('../utils/helpers/helpers', () => {
   }
 })
 
-const feeData: FeeDataEstimate<KnownChainIds.EthereumMainnet> = {
+const feeData = {
   fast: {
     txFee: '4080654495000000',
     chainSpecific: {
@@ -51,7 +51,7 @@ const feeData: FeeDataEstimate<KnownChainIds.EthereumMainnet> = {
       maxPriorityFeePerGas: '2982734547'
     }
   }
-}
+} as FeeDataEstimate<'eip155:1'>
 
 const expectedApiInputWethToFox: CowSwapQuoteApiInput = {
   appData: '0x0000000000000000000000000000000000000000000000000000000000000000',
