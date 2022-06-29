@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { AssetService } from '@shapeshiftoss/asset-service'
 import { ChainAdapterManager, ethereum } from '@shapeshiftoss/chain-adapters'
 import Web3 from 'web3'
 
