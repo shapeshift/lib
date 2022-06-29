@@ -14,11 +14,7 @@ describe('utils', () => {
     apiUrl: 'https://api.cow.fi/mainnet/api/',
     adapter: <ethereum.ChainAdapter>{},
     web3: <Web3>{},
-    assetService: {
-      getAll: jest.fn(() => {
-        return { 'eip155:1/erc20:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2': WETH }
-      })
-    } as unknown as AssetService
+    feeAsset: WETH
   }
 
   describe('getUsdRate', () => {

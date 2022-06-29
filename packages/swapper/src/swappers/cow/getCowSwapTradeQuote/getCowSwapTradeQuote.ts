@@ -14,11 +14,22 @@ import {
   DEFAULT_APP_DATA,
   DEFAULT_SOURCE,
   DEFAULT_VALIDTO_TIMESTAMP,
-  ORDER_KIND_SELL,
-  WETH_ASSET_ID
+  ORDER_KIND_SELL
 } from '../utils/constants'
 import { cowService } from '../utils/cowService'
 import { getUsdRate } from '../utils/helpers/helpers'
+
+export type CowSwapQuoteApiInput = {
+  appData: string
+  buyToken: string
+  from: string
+  kind: string
+  partiallyFillable: boolean
+  receiver: string
+  sellAmountBeforeFee: string
+  sellToken: string
+  validTo: number
+}
 
 export async function getCowSwapTradeQuote(
   deps: CowSwapperDeps,
@@ -26,7 +37,7 @@ export async function getCowSwapTradeQuote(
 ): Promise<TradeQuote<'eip155:1'>> {
   try {
     const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, wallet } = input
-    const { adapter, assetService } = deps
+    const { adapter, feeAsset } = deps
 
     const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
       fromAssetId(sellAsset.assetId)
@@ -50,6 +61,18 @@ export async function getCowSwapTradeQuote(
       bnOrZero(sellAmount).lt(minQuoteSellAmount) ? minQuoteSellAmount : sellAmount
     )
 
+    const apiInput: CowSwapQuoteApiInput = {
+      sellToken: sellAssetErc20Address,
+      buyToken: buyAssetErc20Address,
+      receiver: DEFAULT_ADDRESS,
+      validTo: DEFAULT_VALIDTO_TIMESTAMP,
+      appData: DEFAULT_APP_DATA,
+      partiallyFillable: false,
+      from: DEFAULT_ADDRESS,
+      kind: ORDER_KIND_SELL,
+      sellAmountBeforeFee: normalizedSellAmount
+    }
+
     /**
      * /v1/quote
      * params: {
@@ -65,20 +88,11 @@ export async function getCowSwapTradeQuote(
      * }
      */
     const quoteResponse: AxiosResponse<CowSwapQuoteResponse> =
-      await cowService.post<CowSwapQuoteResponse>(`${deps.apiUrl}/v1/quote/`, {
-        sellToken: sellAssetErc20Address,
-        buyToken: buyAssetErc20Address,
-        receiver: DEFAULT_ADDRESS,
-        validTo: DEFAULT_VALIDTO_TIMESTAMP,
-        appData: DEFAULT_APP_DATA,
-        partiallyFillable: false,
-        from: DEFAULT_ADDRESS,
-        kind: ORDER_KIND_SELL,
-        sellAmountBeforeFee: normalizedSellAmount
-      })
+      await cowService.post<CowSwapQuoteResponse>(`${deps.apiUrl}/v1/quote/`, apiInput)
 
-    const { data } = quoteResponse
-    const quote = data.quote
+    const {
+      data: { quote }
+    } = quoteResponse
 
     const rate = bn(quote.buyAmount)
       .div(quote.sellAmount)
@@ -86,7 +100,6 @@ export async function getCowSwapTradeQuote(
       .toString()
 
     const receiveAddress = wallet ? await adapter.getAddress({ wallet }) : DEFAULT_ADDRESS
-    const wethAsset = assetService.getAll()[WETH_ASSET_ID]
 
     const [feeDataOptions, wethUsdRate, usdRateSellAsset] = await Promise.all([
       adapter.getFeeData({
@@ -94,7 +107,7 @@ export async function getCowSwapTradeQuote(
         value: '0',
         chainSpecific: { from: receiveAddress, contractAddress: sellAssetErc20Address }
       }),
-      getUsdRate(deps, wethAsset),
+      getUsdRate(deps, feeAsset),
       getUsdRate(deps, sellAsset)
     ])
 
@@ -103,7 +116,7 @@ export async function getCowSwapTradeQuote(
     const fee = bnOrZero(quote.feeAmount)
       .multipliedBy(bnOrZero(usdRateSellAsset))
       .div(bnOrZero(wethUsdRate))
-      .div(bn(10).exponentiatedBy(sellAsset.precision - wethAsset.precision))
+      .div(bn(10).exponentiatedBy(sellAsset.precision - feeAsset.precision))
       .toString()
 
     return {

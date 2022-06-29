@@ -27,7 +27,7 @@ const COW_SWAPPER_DEPS: CowSwapperDeps = {
   apiUrl: 'https://api.cow.fi/mainnet/api/',
   adapter: <ethereum.ChainAdapter>{},
   web3: <Web3>{},
-  assetService: <AssetService>{}
+  feeAsset: WETH
 }
 
 jest.mock('./getCowSwapTradeQuote/getCowSwapTradeQuote', () => ({

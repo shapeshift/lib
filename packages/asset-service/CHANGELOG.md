@@ -1,3 +1,28 @@
+# [@shapeshiftoss/asset-service-v6.2.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.2.0...@shapeshiftoss/asset-service-v6.2.1) (2022-06-28)
+
+# [@shapeshiftoss/asset-service-v6.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.1.2...@shapeshiftoss/asset-service-v6.2.0) (2022-06-27)
+
+
+### Features
+
+* avalanche market data ([#833](https://github.com/shapeshift/lib/issues/833)) ([086dc57](https://github.com/shapeshift/lib/commit/086dc57206fa6c07dbce473dc2dac4e1f8461ac5))
+
+# [@shapeshiftoss/asset-service-v6.1.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.1.1...@shapeshiftoss/asset-service-v6.1.2) (2022-06-22)
+
+
+### Bug Fixes
+
+* correct FOXy icon URL ([#838](https://github.com/shapeshift/lib/issues/838)) ([8daa430](https://github.com/shapeshift/lib/commit/8daa43083386963685afbb799fbdea1d18441c0c))
+
+# [@shapeshiftoss/asset-service-v6.1.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.1.0...@shapeshiftoss/asset-service-v6.1.1) (2022-06-21)
+
+# [@shapeshiftoss/asset-service-v6.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.0.4...@shapeshiftoss/asset-service-v6.1.0) (2022-06-21)
+
+
+### Features
+
+* avalanche assets ([#790](https://github.com/shapeshift/lib/issues/790)) ([ee13ac8](https://github.com/shapeshift/lib/commit/ee13ac8ab46c2bfa07d30be1dceeac13b13cb3b0))
+
 # [@shapeshiftoss/asset-service-v6.0.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.0.3...@shapeshiftoss/asset-service-v6.0.4) (2022-06-15)
 
 
