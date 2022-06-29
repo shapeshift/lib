@@ -176,39 +176,31 @@ export class ChainAdapter extends EVMBaseAdapter<KnownChainIds.EthereumMainnet> 
       slow: bnOrZero(bn(medianFees.low).dividedBy(medianFees.standard))
     }
 
+    const calcFee = (
+      fee: string | number | BigNumber,
+      speed: 'slow' | 'average' | 'fast'
+    ): string => {
+      return bnOrZero(fee)
+        .times(normalizationConstants[speed])
+        .toFixed(0, BigNumber.ROUND_CEIL)
+        .toString()
+    }
+
     return {
       fast: {
         gasPrice: bnOrZero(medianFees.fast).toString(),
-        maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
-          .times(normalizationConstants.fast)
-          .toFixed(0, BigNumber.ROUND_CEIL)
-          .toString(),
-        maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
-          .times(normalizationConstants.fast)
-          .toFixed(0, BigNumber.ROUND_CEIL)
-          .toString()
+        maxFeePerGas: calcFee(feeData.maxFeePerGas, 'fast'),
+        maxPriorityFeePerGas: calcFee(feeData.maxPriorityFeePerGas, 'fast')
       },
       average: {
         gasPrice: bnOrZero(medianFees.standard).toString(),
-        maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
-          .times(normalizationConstants.average)
-          .toFixed(0, BigNumber.ROUND_CEIL)
-          .toString(),
-        maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
-          .times(normalizationConstants.average)
-          .toFixed(0, BigNumber.ROUND_CEIL)
-          .toString()
+        maxFeePerGas: calcFee(feeData.maxFeePerGas, 'average'),
+        maxPriorityFeePerGas: calcFee(feeData.maxPriorityFeePerGas, 'average')
       },
       slow: {
         gasPrice: bnOrZero(medianFees.low).toString(),
-        maxFeePerGas: bnOrZero(feeData.maxFeePerGas)
-          .times(normalizationConstants.slow)
-          .toFixed(0, BigNumber.ROUND_CEIL)
-          .toString(),
-        maxPriorityFeePerGas: bnOrZero(feeData.maxPriorityFeePerGas)
-          .times(normalizationConstants.slow)
-          .toFixed(0, BigNumber.ROUND_CEIL)
-          .toString()
+        maxFeePerGas: calcFee(feeData.maxFeePerGas, 'slow'),
+        maxPriorityFeePerGas: calcFee(feeData.maxPriorityFeePerGas, 'slow')
       }
     }
   }
