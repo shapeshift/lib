@@ -3,8 +3,7 @@ import {
   AssetId,
   avalancheAssetId,
   avalancheChainId,
-  fromAssetId,
-  toAssetId
+  fromAssetId
 } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, ETHSignTx } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
@@ -33,12 +32,7 @@ export class ChainAdapter extends EVMBaseAdapter<KnownChainIds.AvalancheMainnet>
   constructor(args: ChainAdapterArgs) {
     super({ chainId: DEFAULT_CHAIN_ID, supportedChainIds: SUPPORTED_CHAIN_IDS, ...args })
 
-    this.assetId = toAssetId({
-      chainId: this.chainId,
-      assetNamespace: 'slip44',
-      assetReference: ASSET_REFERENCE.AvalancheC
-    })
-
+    this.assetId = avalancheAssetId
     this.parser = new unchained.ethereum.TransactionParser({
       chainId: this.chainId,
       rpcUrl: args.rpcUrl
@@ -50,7 +44,7 @@ export class ChainAdapter extends EVMBaseAdapter<KnownChainIds.AvalancheMainnet>
   }
 
   getFeeAssetId(): AssetId {
-    return avalancheAssetId
+    return this.assetId
   }
 
   async buildSendTransaction(tx: BuildSendTxInput<KnownChainIds.AvalancheMainnet>): Promise<{

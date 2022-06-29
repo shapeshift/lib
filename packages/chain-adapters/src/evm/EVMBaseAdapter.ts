@@ -64,17 +64,15 @@ export abstract class EVMBaseAdapter<T extends EVMChainIds> implements IChainAda
   static defaultBIP44Params: BIP44Params
 
   constructor(args: EVMBaseAdapterArgs) {
-    this.supportedChainIds = args.supportedChainIds
-
-    if (!this.supportedChainIds.includes(args.chainId)) {
-      throw new Error(`${args.chainId} not supported. (supported: ${this.supportedChainIds})`)
-    }
-
-    this.chainId = args.chainId
-
     EVMBaseAdapter.defaultBIP44Params = (<typeof EVMBaseAdapter>this.constructor).defaultBIP44Params
 
+    this.supportedChainIds = args.supportedChainIds
+    this.chainId = args.chainId
     this.providers = args.providers
+
+    if (!this.supportedChainIds.includes(this.chainId)) {
+      throw new Error(`${this.chainId} not supported. (supported: ${this.supportedChainIds})`)
+    }
   }
 
   abstract getType(): T
@@ -219,12 +217,6 @@ export abstract class EVMBaseAdapter<T extends EVMChainIds> implements IChainAda
     const chainLabel = chainIdToChainLabel(this.chainId)
     const isValidAddress = WAValidator.validate(address, chainLabel)
     if (isValidAddress) return { valid: true, result: ValidAddressResultType.Valid }
-    return { valid: false, result: ValidAddressResultType.Invalid }
-  }
-
-  async validateEnsAddress(address: string): Promise<ValidAddressResult> {
-    const isValidEnsAddress = /^([0-9A-Z]([-0-9A-Z]*[0-9A-Z])?\.)+eth$/i.test(address)
-    if (isValidEnsAddress) return { valid: true, result: ValidAddressResultType.Valid }
     return { valid: false, result: ValidAddressResultType.Invalid }
   }
 

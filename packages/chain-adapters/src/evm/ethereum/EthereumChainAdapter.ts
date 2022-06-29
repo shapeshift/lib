@@ -1,11 +1,4 @@
-import {
-  ASSET_REFERENCE,
-  AssetId,
-  ethAssetId,
-  ethChainId,
-  fromAssetId,
-  toAssetId
-} from '@shapeshiftoss/caip'
+import { ASSET_REFERENCE, AssetId, ethAssetId, ethChainId, fromAssetId } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, ETHSignTx } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
@@ -43,12 +36,7 @@ export class ChainAdapter extends EVMBaseAdapter<KnownChainIds.EthereumMainnet> 
   constructor(args: ChainAdapterArgs) {
     super({ chainId: DEFAULT_CHAIN_ID, supportedChainIds: SUPPORTED_CHAIN_IDS, ...args })
 
-    this.assetId = toAssetId({
-      chainId: this.chainId,
-      assetNamespace: 'slip44',
-      assetReference: ASSET_REFERENCE.Ethereum
-    })
-
+    this.assetId = ethAssetId
     this.parser = new unchained.ethereum.TransactionParser({
       chainId: this.chainId,
       rpcUrl: args.rpcUrl
@@ -60,7 +48,7 @@ export class ChainAdapter extends EVMBaseAdapter<KnownChainIds.EthereumMainnet> 
   }
 
   getFeeAssetId(): AssetId {
-    return ethAssetId
+    return this.assetId
   }
 
   async buildSendTransaction(tx: BuildSendTxInput<KnownChainIds.EthereumMainnet>): Promise<{
