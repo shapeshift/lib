@@ -59,7 +59,7 @@ export const chainIdToChainLabel = (chainId: ChainId): string => {
           return 'cosmos'
         case CHAIN_REFERENCE.OsmosisMainnet:
         case CHAIN_REFERENCE.OsmosisTestnet:
-          return 'avalanche'
+          return 'osmosis'
         default:
           throw new Error(
             `chainReference: ${chainReference}, not supported for chainNamespace: ${chainNamespace}`
