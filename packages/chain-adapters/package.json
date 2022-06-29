@@ -34,7 +34,7 @@
     "coinselect": "^3.1.13",
     "ethers": "^5.4.7",
     "multicoin-address-validator": "^0.5.2",
-    "web3-utils": "^1.7.3"
+    "web3-utils": "1.7.4"
   },
   "peerDependencies": {
     "@shapeshiftoss/caip": "^6.2.0",

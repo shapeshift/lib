@@ -27,7 +27,7 @@
     "bignumber.js": "^9.0.2",
     "lodash": "^4.17.21",
     "retry-axios": "^2.6.0",
-    "web3": "^1.7.3"
+    "web3": "1.7.4"
   },
   "peerDependencies": {
     "@shapeshiftoss/asset-service": "^6.2.1",
@@ -46,7 +46,7 @@
     "@shapeshiftoss/types": "^6.2.0",
     "@types/readline-sync": "^1.4.4",
     "readline-sync": "^1.4.10",
-    "web3-utils": "^1.7.3",
+    "web3-utils": "1.7.4",
     "@shapeshiftoss/unchained-client": "^9.0.1"
   }
 }
