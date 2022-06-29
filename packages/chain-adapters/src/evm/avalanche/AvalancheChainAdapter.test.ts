@@ -275,53 +275,6 @@ describe.skip('AvalancheChainAdapter', () => {
     })
   })
 
-  describe('validateEnsAddress', () => {
-    it('should return true for a valid .eth address', async () => {
-      const args = makeChainAdapterArgs()
-      const adapter = new avalanche.ChainAdapter(args)
-      const referenceAddress = 'vitalik.eth'
-      const expectedReturnValue = validAddressTuple
-      const res = await adapter.validateEnsAddress(referenceAddress)
-      expect(res).toMatchObject(expectedReturnValue)
-    })
-
-    it('should return false for an empty address', async () => {
-      const args = makeChainAdapterArgs()
-      const adapter = new avalanche.ChainAdapter(args)
-      const referenceAddress = ''
-      const expectedReturnValue = invalidAddressTuple
-      const res = await adapter.validateEnsAddress(referenceAddress)
-      expect(res).toMatchObject(expectedReturnValue)
-    })
-
-    it('should return false for an invalid address', async () => {
-      const args = makeChainAdapterArgs()
-      const adapter = new avalanche.ChainAdapter(args)
-      const referenceAddress = 'foobar'
-      const expectedReturnValue = invalidAddressTuple
-      const res = await adapter.validateEnsAddress(referenceAddress)
-      expect(res).toMatchObject(expectedReturnValue)
-    })
-
-    it('should return false for a valid address directly followed by more chars', async () => {
-      const args = makeChainAdapterArgs()
-      const adapter = new avalanche.ChainAdapter(args)
-      const referenceAddress = 'vitalik.ethfoobar'
-      const expectedReturnValue = invalidAddressTuple
-      const res = await adapter.validateEnsAddress(referenceAddress)
-      expect(res).toMatchObject(expectedReturnValue)
-    })
-
-    it('should return false for a valid address in the middle of a string', async () => {
-      const args = makeChainAdapterArgs()
-      const adapter = new avalanche.ChainAdapter(args)
-      const referenceAddress = 'asdadfvitalik.ethasdadf'
-      const expectedReturnValue = invalidAddressTuple
-      const res = await adapter.validateEnsAddress(referenceAddress)
-      expect(res).toMatchObject(expectedReturnValue)
-    })
-  })
-
   describe('signTransaction', () => {
     it('should sign a properly formatted txToSign object', async () => {
       const balance = '2500000'
