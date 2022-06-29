@@ -1,11 +1,23 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
-import { Asset } from '@shapeshiftoss/types'
+import { Asset, KnownChainIds } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { bn, bnOrZero } from '../../../utils/bignumber'
 import { ZrxPriceResponse } from '../../types'
-import { zrxService } from '../zrxService'
+import { zrxServiceFactory } from '../zrxService'
+
+export const baseUrlFromChainId = (chainId: string): string | undefined => {
+  switch (chainId) {
+    case KnownChainIds.EthereumMainnet: {
+      return 'https://api.0x.org/'
+    }
+    case KnownChainIds.AvalancheMainnet:
+      return 'https://avalanche.api.0x.org/'
+    default:
+      return undefined
+  }
+}
 
 export const getUsdRate = async (asset: Asset): Promise<string> => {
   const { assetReference: erc20Address, assetNamespace } = fromAssetId(asset.assetId)
@@ -14,6 +26,12 @@ export const getUsdRate = async (asset: Asset): Promise<string> => {
   try {
     const USDC_CONTRACT_ADDRESS = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
     if (erc20Address?.toLowerCase() === USDC_CONTRACT_ADDRESS) return '1' // Will break if comparing against usdc
+    const baseUrl = baseUrlFromChainId(asset.chainId)
+    if (!baseUrl)
+      throw new SwapError('getUsdRate] - Unsupported chainId', {
+        code: SwapErrorTypes.UNSUPPORTED_CHAIN
+      })
+    const zrxService = await zrxServiceFactory(baseUrl)
     const rateResponse: AxiosResponse<ZrxPriceResponse> = await zrxService.get<ZrxPriceResponse>(
       '/swap/v1/price',
       {
@@ -26,7 +44,6 @@ export const getUsdRate = async (asset: Asset): Promise<string> => {
     )
 
     const price = bnOrZero(rateResponse.data.price)
-
     if (!price.gt(0))
       throw new SwapError('[getUsdRate] - Failed to get price data', {
         code: SwapErrorTypes.RESPONSE_ERROR

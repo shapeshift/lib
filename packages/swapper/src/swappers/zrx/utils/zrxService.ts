@@ -1,7 +1,6 @@
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 
-const axiosConfig = {
-  baseURL: 'https://api.0x.org/',
+const axiosConfig: AxiosRequestConfig = {
   timeout: 10000,
   headers: {
     Accept: 'application/json',
@@ -9,4 +8,5 @@ const axiosConfig = {
   }
 }
 
-export const zrxService = axios.create(axiosConfig)
+export const zrxServiceFactory = (baseUrl: string) =>
+  axios.create({ ...axiosConfig, baseURL: baseUrl })

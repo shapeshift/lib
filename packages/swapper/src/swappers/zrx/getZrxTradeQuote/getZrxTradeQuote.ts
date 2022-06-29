@@ -8,7 +8,8 @@ import { normalizeAmount } from '../../utils/helpers/helpers'
 import { getZrxMinMax } from '../getZrxMinMax/getZrxMinMax'
 import { ZrxPriceResponse } from '../types'
 import { DEFAULT_SOURCE } from '../utils/constants'
-import { zrxService } from '../utils/zrxService'
+import { baseUrlFromChainId } from '../utils/helpers/helpers'
+import { zrxServiceFactory } from '../utils/zrxService'
 
 export async function getZrxTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<'eip155:1'>> {
   try {
@@ -32,14 +33,18 @@ export async function getZrxTradeQuote(input: GetTradeQuoteInput): Promise<Trade
     const useSellAmount = !!sellAmount
     const buyToken = buyAssetNamespace === 'erc20' ? buyAssetErc20Address : buyAsset.symbol
     const sellToken = sellAssetNamespace === 'erc20' ? sellAssetErc20Address : sellAsset.symbol
-
     const { minimum, maximum } = await getZrxMinMax(sellAsset, buyAsset)
-
     const minQuoteSellAmount = bnOrZero(minimum).times(bn(10).exponentiatedBy(sellAsset.precision))
 
     const normalizedSellAmount = normalizeAmount(
       bnOrZero(sellAmount).eq(0) ? minQuoteSellAmount : sellAmount
     )
+    const baseUrl = baseUrlFromChainId(buyAsset.chainId)
+    if (!baseUrl)
+      throw new SwapError('getUsdRate] - Unsupported chainId', {
+        code: SwapErrorTypes.UNSUPPORTED_CHAIN
+      })
+    const zrxService = await zrxServiceFactory(baseUrl)
 
     /**
      * /swap/v1/price

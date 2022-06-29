@@ -6,12 +6,12 @@ import { BuildTradeInput, SwapError, SwapErrorTypes, ZrxTrade } from '../../..'
 import { erc20AllowanceAbi } from '../../utils/abi/erc20Allowance-abi'
 import { bnOrZero } from '../../utils/bignumber'
 import { APPROVAL_GAS_LIMIT, DEFAULT_SLIPPAGE } from '../../utils/constants'
-import { getAllowanceRequired } from '../../utils/helpers/helpers'
-import { normalizeAmount } from '../../utils/helpers/helpers'
+import { getAllowanceRequired, normalizeAmount } from '../../utils/helpers/helpers'
 import { ZrxQuoteResponse } from '../types'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
 import { AFFILIATE_ADDRESS, DEFAULT_SOURCE } from '../utils/constants'
-import { zrxService } from '../utils/zrxService'
+import { baseUrlFromChainId } from '../utils/helpers/helpers'
+import { zrxServiceFactory } from '../utils/zrxService'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function zrxBuildTrade(
@@ -47,6 +47,13 @@ export async function zrxBuildTrade(
     const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 
     const slippagePercentage = slippage ? bnOrZero(slippage).div(100).toString() : DEFAULT_SLIPPAGE
+
+    const baseUrl = baseUrlFromChainId(buyAsset.chainId)
+    if (!baseUrl)
+      throw new SwapError('getUsdRate] - Unsupported chainId', {
+        code: SwapErrorTypes.UNSUPPORTED_CHAIN
+      })
+    const zrxService = await zrxServiceFactory(baseUrl)
 
     /**
      * /swap/v1/quote
