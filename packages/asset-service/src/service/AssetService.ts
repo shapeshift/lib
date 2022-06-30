@@ -31,7 +31,7 @@ export class AssetService {
         allowMissing: true,
         onMissingKey: (key) => assetsDescriptions.en[key] // fallback to English overriden description, which should always be added as a base translation
       })
-      const overriddenDescription = polyglot.t(assetId) as string
+      const overriddenDescription = polyglot.t(assetId)
 
       return { description: overriddenDescription, isTrusted: true }
     }
