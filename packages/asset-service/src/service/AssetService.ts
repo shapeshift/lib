@@ -25,7 +25,7 @@ export class AssetService {
   async description(assetId: AssetId, locale = 'en'): Promise<DescriptionData> {
     const localeDescriptions = assetsDescriptions[locale]
     // Return overridden asset description if it exists and add isTrusted for description links
-    if (assetsDescriptions.en[assetId]) {
+    if (localeDescriptions[assetId] || assetsDescriptions.en[assetId]) {
       const polyglot = new Polyglot({
         phrases: localeDescriptions,
         allowMissing: true,
