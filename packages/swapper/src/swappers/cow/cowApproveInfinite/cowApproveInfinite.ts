@@ -4,7 +4,7 @@ import { grantAllowance } from '../../utils/helpers/helpers'
 import { CowSwapperDeps } from '../CowSwapper'
 import { MAX_ALLOWANCE } from '../utils/constants'
 
-export async function CowApproveInfinite(
+export async function cowApproveInfinite(
   { adapter, web3 }: CowSwapperDeps,
   { quote, wallet }: ApproveInfiniteInput<'eip155:1'>
 ) {
@@ -23,7 +23,7 @@ export async function CowApproveInfinite(
     return allowanceGrantRequired
   } catch (e) {
     if (e instanceof SwapError) throw e
-    throw new SwapError('[CowApproveInfinite]', {
+    throw new SwapError('[cowApproveInfinite]', {
       cause: e,
       code: SwapErrorTypes.APPROVE_INFINITE_FAILED
     })

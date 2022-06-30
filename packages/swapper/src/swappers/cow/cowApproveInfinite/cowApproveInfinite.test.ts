@@ -3,7 +3,7 @@ import Web3 from 'web3'
 
 import { setupDeps } from '../../utils/test-data/setupDeps'
 import { setupQuote } from '../../utils/test-data/setupSwapQuote'
-import { CowApproveInfinite } from '../CowApproveInfinite/CowApproveInfinite'
+import { cowApproveInfinite } from './/cowApproveInfinite'
 
 jest.mock('web3')
 jest.mock('../../utils/helpers/helpers', () => ({
@@ -23,7 +23,7 @@ Web3.mockImplementation(() => ({
   }
 }))
 
-describe('CowApproveInfinite', () => {
+describe('cowApproveInfinite', () => {
   const { web3, adapter, feeAsset } = setupDeps()
   const { tradeQuote } = setupQuote()
   const wallet = {
@@ -35,6 +35,6 @@ describe('CowApproveInfinite', () => {
     const deps = { web3, adapter, apiUrl: '', feeAsset }
     const quote = { ...tradeQuote }
 
-    expect(await CowApproveInfinite(deps, { quote, wallet })).toEqual('grantAllowanceTxId')
+    expect(await cowApproveInfinite(deps, { quote, wallet })).toEqual('grantAllowanceTxId')
   })
 })
