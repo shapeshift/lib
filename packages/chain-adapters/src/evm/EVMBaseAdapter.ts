@@ -175,10 +175,10 @@ export abstract class EVMBaseAdapter<T extends EVMChainIds> implements IChainAda
   async signAndBroadcastTransaction(signTxInput: SignTxInput<ETHSignTx>): Promise<string> {
     try {
       const { txToSign, wallet } = signTxInput
-      const ethHash = await (wallet as ETHWallet)?.ethSendTx?.(txToSign)
+      const txHash = await (wallet as ETHWallet)?.ethSendTx?.(txToSign)
 
-      if (!ethHash) throw new Error('Error signing & broadcasting tx')
-      return ethHash.hash
+      if (!txHash) throw new Error('Error signing & broadcasting tx')
+      return txHash.hash
     } catch (err) {
       return ErrorHandler(err)
     }
@@ -206,11 +206,11 @@ export abstract class EVMBaseAdapter<T extends EVMChainIds> implements IChainAda
     const { wallet, bip44Params = EVMBaseAdapter.defaultBIP44Params, showOnDevice } = input
     const path = toPath(bip44Params)
     const addressNList = bip32ToAddressNList(path)
-    const ethAddress = await (wallet as ETHWallet).ethGetAddress({
+    const address = await (wallet as ETHWallet).ethGetAddress({
       addressNList,
       showDisplay: showOnDevice
     })
-    return ethAddress as string
+    return address as string
   }
 
   async validateAddress(address: string): Promise<ValidAddressResult> {

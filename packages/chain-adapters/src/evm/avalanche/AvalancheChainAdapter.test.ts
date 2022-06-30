@@ -23,7 +23,6 @@ import * as avalanche from './AvalancheChainAdapter'
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 const EOA_ADDRESS = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
-const ENS_NAME = 'vitalik.eth'
 const VALID_CHAIN_ID = 'eip155:43114'
 
 const testMnemonic = 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle'
@@ -437,30 +436,6 @@ describe.skip('AvalancheChainAdapter', () => {
       } as unknown as BuildSendTxInput<KnownChainIds.AvalancheMainnet>
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow(
         'AvalancheChainAdapter: to is required'
-      )
-    })
-
-    it('should throw if passed tx has ENS as "to" property', async () => {
-      const httpProvider = {
-        getAccount: jest
-          .fn<any, any>()
-          .mockResolvedValue(
-            makeGetAccountMockResponse({ balance: '2500000', erc20Balance: '424242' })
-          )
-      } as unknown as unchained.ethereum.V1Api
-
-      const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new avalanche.ChainAdapter(args)
-
-      const tx = {
-        wallet: await getWallet(),
-        to: ENS_NAME,
-        value,
-        chainSpecific: makeChainSpecific({ erc20ContractAddress })
-      } as unknown as BuildSendTxInput<KnownChainIds.AvalancheMainnet>
-
-      await expect(adapter.buildSendTransaction(tx)).rejects.toThrow(
-        /a provider or signer is needed to resolve ENS names/
       )
     })
 
