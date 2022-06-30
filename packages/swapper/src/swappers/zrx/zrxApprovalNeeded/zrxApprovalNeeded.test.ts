@@ -3,8 +3,13 @@ import Web3 from 'web3'
 
 import { setupDeps } from '../../utils/test-data/setupDeps'
 import { setupQuote } from '../../utils/test-data/setupSwapQuote'
+<<<<<<< HEAD:packages/swapper/src/swappers/zrx/ZrxApprovalNeeded/ZrxApprovalNeeded.test.ts
 import { zrxService } from '../utils/zrxService'
 import { ZrxApprovalNeeded } from './ZrxApprovalNeeded'
+=======
+import { zrxServiceFactory } from '../utils/zrxService'
+import { zrxApprovalNeeded } from './zrxApprovalNeeded'
+>>>>>>> 8bd959b3 (fix: zrx swapper naming conventions):packages/swapper/src/swappers/zrx/zrxApprovalNeeded/zrxApprovalNeeded.test.ts
 
 jest.mock('web3')
 jest.mock('axios', () => ({
@@ -26,7 +31,7 @@ Web3.mockImplementation(() => ({
   }
 }))
 
-describe('ZrxApprovalNeeded', () => {
+describe('zrxApprovalNeeded', () => {
   const deps = setupDeps()
   const walletAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
   const wallet = {
@@ -41,7 +46,7 @@ describe('ZrxApprovalNeeded', () => {
       wallet
     }
 
-    expect(await ZrxApprovalNeeded(deps, input)).toEqual({ approvalNeeded: false })
+    expect(await zrxApprovalNeeded(deps, input)).toEqual({ approvalNeeded: false })
   })
 
   it('throws an error if sellAsset chain is not ETH', async () => {
@@ -50,7 +55,7 @@ describe('ZrxApprovalNeeded', () => {
       wallet
     }
 
-    await expect(ZrxApprovalNeeded(deps, input)).rejects.toThrow('[ZrxApprovalNeeded]')
+    await expect(zrxApprovalNeeded(deps, input)).rejects.toThrow('[zrxApprovalNeeded]')
   })
 
   it('returns false if allowanceOnChain is greater than quote.sellAmount', async () => {
@@ -73,7 +78,7 @@ describe('ZrxApprovalNeeded', () => {
     }))
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data }))
 
-    expect(await ZrxApprovalNeeded(deps, input)).toEqual({
+    expect(await zrxApprovalNeeded(deps, input)).toEqual({
       approvalNeeded: false
     })
   })
@@ -98,7 +103,7 @@ describe('ZrxApprovalNeeded', () => {
     }))
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data }))
 
-    expect(await ZrxApprovalNeeded(deps, input)).toEqual({
+    expect(await zrxApprovalNeeded(deps, input)).toEqual({
       approvalNeeded: true
     })
   })

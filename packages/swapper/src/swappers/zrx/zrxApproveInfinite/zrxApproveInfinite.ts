@@ -4,7 +4,7 @@ import { grantAllowance } from '../../utils/helpers/helpers'
 import { MAX_ALLOWANCE } from '../utils/constants'
 import { ZrxSwapperDeps } from '../ZrxSwapper'
 
-export async function ZrxApproveInfinite(
+export async function zrxApproveInfinite(
   { adapter, web3 }: ZrxSwapperDeps,
   { quote, wallet }: ApproveInfiniteInput<'eip155:1'>
 ) {
@@ -23,7 +23,7 @@ export async function ZrxApproveInfinite(
     return allowanceGrantRequired
   } catch (e) {
     if (e instanceof SwapError) throw e
-    throw new SwapError('[ZrxApproveInfinite]', {
+    throw new SwapError('[zrxApproveInfinite]', {
       cause: e,
       code: SwapErrorTypes.APPROVE_INFINITE_FAILED
     })
