@@ -42,7 +42,9 @@ jest.mock('./zrxApproveInfinite/zrxApproveInfinite', () => ({
 describe('ZrxSwapper', () => {
   const wallet = <HDWallet>{}
   const web3 = <Web3>{}
-  const adapter = <ethereum.ChainAdapter>{}
+  const adapter = <ethereum.ChainAdapter>{
+    getChainId: () => 'eip155:1'
+  }
   const zrxSwapperDeps = { web3, adapter }
 
   it('calls getZrxTradeQuote on getTradeQuote', async () => {

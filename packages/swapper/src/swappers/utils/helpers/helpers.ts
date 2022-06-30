@@ -1,4 +1,5 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
+import { ChainId } from '@shapeshiftoss/caip/src'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { Asset } from '@shapeshiftoss/types'
@@ -7,6 +8,7 @@ import Web3 from 'web3'
 import { AbiItem, numberToHex } from 'web3-utils'
 
 import { SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
+import { ZrxSupportedChainIds } from '../../zrx/ZrxSwapper'
 import { BN, bn, bnOrZero } from '../bignumber'
 
 export type GetAllowanceRequiredArgs = {
@@ -26,8 +28,8 @@ export type GetERC20AllowanceArgs = {
   spenderAddress: string
 }
 
-type GrantAllowanceArgs = {
-  quote: TradeQuote<'eip155:1'>
+type GrantAllowanceArgs<T extends ChainId> = {
+  quote: TradeQuote<T>
   wallet: HDWallet
   adapter: ethereum.ChainAdapter
   erc20Abi: AbiItem[]
@@ -94,7 +96,7 @@ export const grantAllowance = async ({
   adapter,
   erc20Abi,
   web3
-}: GrantAllowanceArgs): Promise<string> => {
+}: GrantAllowanceArgs<ZrxSupportedChainIds>): Promise<string> => {
   try {
     const { assetReference: sellAssetErc20Address } = fromAssetId(quote.sellAsset.assetId)
 

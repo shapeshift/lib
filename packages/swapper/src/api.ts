@@ -9,12 +9,21 @@ import {
   UtxoAccountType
 } from '@shapeshiftoss/types'
 
+import { ZrxSupportedChainIds } from './swappers/zrx/ZrxSwapper'
+
 export const SwapError = createErrorClass('SwapError')
 
+// FIXME: There is almost certainly a better way to do this
 type ChainSpecificQuoteFeeData<T extends ChainId> = ChainSpecific<
   T,
   {
     'eip155:1': {
+      estimatedGas?: string
+      gasPrice?: string
+      approvalFee?: string
+      totalFee?: string
+    }
+    'eip155:43114': {
       estimatedGas?: string
       gasPrice?: string
       approvalFee?: string
@@ -55,8 +64,12 @@ export type CommonTradeInput = {
   wallet?: HDWallet // TODO remove this in a followup PR
 }
 
-export type GetEthTradeQuoteInput = CommonTradeInput & {
+export type GetCowTradeQuoteInput = CommonTradeInput & {
   chainId: 'eip155:1'
+}
+
+export type GetZrxTradeQuoteInput = CommonTradeInput & {
+  chainId: ZrxSupportedChainIds
 }
 
 export type GetBtcTradeQuoteInput = CommonTradeInput & {
@@ -66,7 +79,10 @@ export type GetBtcTradeQuoteInput = CommonTradeInput & {
   wallet: HDWallet
 }
 
-export type GetTradeQuoteInput = GetEthTradeQuoteInput | GetBtcTradeQuoteInput
+export type GetTradeQuoteInput =
+  | GetCowTradeQuoteInput
+  | GetBtcTradeQuoteInput
+  | GetZrxTradeQuoteInput
 
 export type BuildTradeInput = GetTradeQuoteInput & {
   buyAssetAccountNumber: number

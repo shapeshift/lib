@@ -10,13 +10,16 @@ import { ZrxPriceResponse } from '../types'
 import { DEFAULT_SOURCE } from '../utils/constants'
 import { baseUrlFromChainId } from '../utils/helpers/helpers'
 import { zrxServiceFactory } from '../utils/zrxService'
+import { ZrxSupportedChainIds } from '../ZrxSwapper'
 
-export async function getZrxTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<'eip155:1'>> {
+export async function getZrxTradeQuote(
+  input: GetTradeQuoteInput
+): Promise<TradeQuote<ZrxSupportedChainIds>> {
   try {
     const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber } = input
-    if (buyAsset.chainId !== 'eip155:1' || sellAsset.chainId !== 'eip155:1') {
+    if (buyAsset.chainId !== input.chainId || sellAsset.chainId !== input.chainId) {
       throw new SwapError(
-        '[getZrxTradeQuote] - Both assets need to be on the Ethereum chain to use Zrx',
+        '[getZrxTradeQuote] - Both assets need to be on the same supported EVM chain to use Zrx',
         {
           code: SwapErrorTypes.UNSUPPORTED_PAIR,
           details: { buyAssetChainId: buyAsset.chainId, sellAssetChainId: sellAsset.chainId }

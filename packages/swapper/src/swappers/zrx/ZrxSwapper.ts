@@ -1,4 +1,4 @@
-import { AssetId } from '@shapeshiftoss/caip'
+import { AssetId, ChainId } from '@shapeshiftoss/caip'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { Asset } from '@shapeshiftoss/types'
 import Web3 from 'web3'
@@ -31,12 +31,16 @@ export type ZrxSwapperDeps = {
   web3: Web3
 }
 
-export class ZrxSwapper implements Swapper<'eip155:1'> {
+export type ZrxSupportedChainIds = 'eip155:1' | 'eip155:43114'
+
+export class ZrxSwapper<T extends ZrxSupportedChainIds> implements Swapper<ZrxSupportedChainIds> {
   public static swapperName = 'ZrxSwapper'
   deps: ZrxSwapperDeps
+  chainId: ChainId
 
   constructor(deps: ZrxSwapperDeps) {
     this.deps = deps
+    this.chainId = deps.adapter.getChainId()
   }
 
   // noop for zrx
@@ -51,7 +55,7 @@ export class ZrxSwapper implements Swapper<'eip155:1'> {
     return zrxBuildTrade(this.deps, args)
   }
 
-  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<'eip155:1'>> {
+  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ZrxSupportedChainIds>> {
     return getZrxTradeQuote(input)
   }
 
@@ -59,15 +63,15 @@ export class ZrxSwapper implements Swapper<'eip155:1'> {
     return getUsdRate(input)
   }
 
-  async executeTrade(args: ExecuteTradeInput<'eip155:1'>): Promise<TradeResult> {
+  async executeTrade(args: ExecuteTradeInput<T>): Promise<TradeResult> {
     return zrxExecuteTrade(this.deps, args)
   }
 
-  async approvalNeeded(args: ApprovalNeededInput<'eip155:1'>): Promise<ApprovalNeededOutput> {
+  async approvalNeeded(args: ApprovalNeededInput<T>): Promise<ApprovalNeededOutput> {
     return zrxApprovalNeeded(this.deps, args)
   }
 
-  async approveInfinite(args: ApproveInfiniteInput<'eip155:1'>): Promise<string> {
+  async approveInfinite(args: ApproveInfiniteInput<ZrxSupportedChainIds>): Promise<string> {
     return zrxApproveInfinite(this.deps, args)
   }
 
@@ -75,14 +79,14 @@ export class ZrxSwapper implements Swapper<'eip155:1'> {
     const { assetIds = [], sellAssetId } = args
     return assetIds.filter(
       (id) =>
-        id.startsWith('eip155:1') &&
-        sellAssetId?.startsWith('eip155:1') &&
+        id.startsWith(this.chainId) &&
+        sellAssetId?.startsWith(this.chainId) &&
         !UNSUPPORTED_ASSETS.includes(id)
     )
   }
 
   filterAssetIdsBySellable(assetIds: AssetId[] = []): AssetId[] {
-    return assetIds.filter((id) => id.startsWith('eip155:1') && !UNSUPPORTED_ASSETS.includes(id))
+    return assetIds.filter((id) => id.startsWith(this.chainId) && !UNSUPPORTED_ASSETS.includes(id))
   }
 
   async getTradeTxs(tradeResult: TradeResult): Promise<TradeTxs> {

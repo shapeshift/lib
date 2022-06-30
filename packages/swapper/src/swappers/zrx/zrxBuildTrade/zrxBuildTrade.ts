@@ -36,8 +36,10 @@ export async function zrxBuildTrade(
     const buyToken = buyAssetNamespace === 'erc20' ? buyAssetErc20Address : buyAsset.symbol
     const sellToken = sellAssetNamespace === 'erc20' ? sellAssetErc20Address : sellAsset.symbol
 
-    if (buyAsset.chainId !== 'eip155:1') {
-      throw new SwapError('[zrxBuildTrade] - buyAsset must be on chainId eip155:1', {
+    const adapterChainId = adapter.getChainId()
+
+    if (buyAsset.chainId !== adapterChainId) {
+      throw new SwapError(`[zrxBuildTrade] - buyAsset must be on chainId ${adapterChainId}`, {
         code: SwapErrorTypes.VALIDATION_FAILED,
         details: { chainId: sellAsset.chainId }
       })

@@ -12,11 +12,15 @@ import { SwapperManager } from './SwapperManager'
 describe('SwapperManager', () => {
   const zrxSwapperDeps: ZrxSwapperDeps = {
     web3: <Web3>{},
-    adapter: <ethereum.ChainAdapter>{}
+    adapter: <ethereum.ChainAdapter>{
+      getChainId: () => 'eip155:1'
+    }
   }
   const cowSwapperDeps: CowSwapperDeps = {
     apiUrl: 'https://api.cow.fi/mainnet/api/',
-    adapter: <ethereum.ChainAdapter>{},
+    adapter: <ethereum.ChainAdapter>{
+      getChainId: () => 'eip155:1'
+    },
     web3: <Web3>{},
     feeAsset: WETH
   }

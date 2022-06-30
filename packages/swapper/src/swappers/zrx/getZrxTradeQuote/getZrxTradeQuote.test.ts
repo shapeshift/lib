@@ -28,7 +28,9 @@ describe('getZrxTradeQuote', () => {
   ;(baseUrlFromChainId as jest.Mock<unknown>).mockReturnValue('eip155:1')
   const zrxSwapperDeps = {
     web3: <Web3>{},
-    adapter: <ethereum.ChainAdapter>{}
+    adapter: <ethereum.ChainAdapter>{
+      getChainId: () => 'eip155:1'
+    }
   }
 
   it('returns quote with fee data', async () => {
