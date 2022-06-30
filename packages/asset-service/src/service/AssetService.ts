@@ -44,9 +44,11 @@ export class AssetService {
 
       const { data } = await axios.get<CoinData>(url)
 
+      if (!data?.description) return { description: '' }
+
       const description = data?.description[locale]?.length
-        ? data?.description?.[locale]
-        : data?.description.en ?? ''
+        ? data.description[locale]
+        : data.description.en ?? ''
 
       return { description }
     } catch (e) {
