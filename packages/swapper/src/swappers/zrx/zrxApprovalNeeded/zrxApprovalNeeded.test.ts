@@ -3,13 +3,8 @@ import Web3 from 'web3'
 
 import { setupDeps } from '../../utils/test-data/setupDeps'
 import { setupQuote } from '../../utils/test-data/setupSwapQuote'
-<<<<<<< HEAD:packages/swapper/src/swappers/zrx/ZrxApprovalNeeded/ZrxApprovalNeeded.test.ts
 import { zrxService } from '../utils/zrxService'
-import { ZrxApprovalNeeded } from './ZrxApprovalNeeded'
-=======
-import { zrxServiceFactory } from '../utils/zrxService'
 import { zrxApprovalNeeded } from './zrxApprovalNeeded'
->>>>>>> 8bd959b3 (fix: zrx swapper naming conventions):packages/swapper/src/swappers/zrx/zrxApprovalNeeded/zrxApprovalNeeded.test.ts
 
 jest.mock('web3')
 jest.mock('axios', () => ({

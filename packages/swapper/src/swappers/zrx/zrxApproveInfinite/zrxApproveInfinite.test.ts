@@ -3,13 +3,8 @@ import Web3 from 'web3'
 
 import { setupDeps } from '../../utils/test-data/setupDeps'
 import { setupQuote } from '../../utils/test-data/setupSwapQuote'
-<<<<<<< HEAD:packages/swapper/src/swappers/zrx/ZrxApproveInfinite/ZrxApproveInfinite.test.ts
 import { zrxService } from '../utils/zrxService'
-import { ZrxApproveInfinite } from '../ZrxApproveInfinite/ZrxApproveInfinite'
-=======
-import { zrxServiceFactory } from '../utils/zrxService'
 import { zrxApproveInfinite } from './/zrxApproveInfinite'
->>>>>>> 8bd959b3 (fix: zrx swapper naming conventions):packages/swapper/src/swappers/zrx/zrxApproveInfinite/zrxApproveInfinite.test.ts
 
 jest.mock('web3')
 jest.mock('../../utils/helpers/helpers', () => ({
