@@ -46,7 +46,7 @@ export class AssetService {
 
       if (!data?.description) return { description: '' }
 
-      const description = data?.description[locale]?.length
+      const description = data.description[locale]?.length
         ? data.description[locale]
         : data.description.en ?? ''
 
