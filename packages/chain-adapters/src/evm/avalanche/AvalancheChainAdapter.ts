@@ -33,14 +33,19 @@ export class ChainAdapter extends EVMBaseAdapter<KnownChainIds.AvalancheMainnet>
     super({ chainId: DEFAULT_CHAIN_ID, supportedChainIds: SUPPORTED_CHAIN_IDS, ...args })
 
     this.assetId = avalancheAssetId
+    this.rpcUrl = args.rpcUrl
     this.parser = new unchained.ethereum.TransactionParser({
       chainId: this.chainId,
-      rpcUrl: args.rpcUrl
+      rpcUrl: this.rpcUrl
     })
   }
 
   getType(): KnownChainIds.AvalancheMainnet {
     return KnownChainIds.AvalancheMainnet
+  }
+
+  getRpcUrl(): string {
+    return this.rpcUrl
   }
 
   getFeeAssetId(): AssetId {

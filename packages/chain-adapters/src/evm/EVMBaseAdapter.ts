@@ -58,6 +58,7 @@ export abstract class EVMBaseAdapter<T extends EVMChainIds> implements IChainAda
     ws: unchained.ws.Client<unchained.ethereum.EthereumTx>
   }
 
+  protected rpcUrl: string
   protected assetId: AssetId
   protected parser: unchained.ethereum.TransactionParser
 
