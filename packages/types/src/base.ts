@@ -13,8 +13,7 @@ export enum KnownChainIds {
   AvalancheMainnet = 'eip155:43114',
   BitcoinMainnet = 'bip122:000000000019d6689c085ae165831e93',
   CosmosMainnet = 'cosmos:cosmoshub-4',
-  OsmosisMainnet = 'cosmos:osmosis-1',
-  AvalancheMainnet = 'eip155:43114'
+  OsmosisMainnet = 'cosmos:osmosis-1'
 }
 
 export enum WithdrawType {

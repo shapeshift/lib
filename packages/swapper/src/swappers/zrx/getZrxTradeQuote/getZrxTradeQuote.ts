@@ -55,7 +55,7 @@ export async function getZrxTradeQuote(
      *   sellToken: contract address (or symbol) of token to sell
      *   buyToken: contractAddress (or symbol) of token to buy
      *   sellAmount?: integer string value of the smallest increment of the sell token
-     *   buyAmount?: integer string value of the smallest incremtent of the buy token
+     *   buyAmount?: integer string value of the smallest increment of the buy token
      * }
      */
     const quoteResponse: AxiosResponse<ZrxPriceResponse> = await zrxService.get<ZrxPriceResponse>(

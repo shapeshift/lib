@@ -1,5 +1,5 @@
 import { AssetId, ChainId } from '@shapeshiftoss/caip'
-import { ethereum } from '@shapeshiftoss/chain-adapters'
+import { avalanche, ethereum } from '@shapeshiftoss/chain-adapters'
 import { Asset } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
@@ -27,7 +27,7 @@ import { zrxBuildTrade } from './zrxBuildTrade/zrxBuildTrade'
 import { zrxExecuteTrade } from './zrxExecuteTrade/zrxExecuteTrade'
 
 export type ZrxSwapperDeps = {
-  adapter: ethereum.ChainAdapter
+  adapter: ethereum.ChainAdapter | avalanche.ChainAdapter
   web3: Web3
 }
 
