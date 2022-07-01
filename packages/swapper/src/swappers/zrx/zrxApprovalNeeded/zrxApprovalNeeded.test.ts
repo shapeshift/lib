@@ -34,6 +34,7 @@ describe('zrxApprovalNeeded', () => {
   const wallet = {
     ethGetAddress: jest.fn(() => Promise.resolve(walletAddress))
   } as unknown as HDWallet
+  ;(deps.adapter.getChainId as jest.Mock).mockReturnValue('eip155:1')
 
   const { tradeQuote, sellAsset } = setupQuote()
 

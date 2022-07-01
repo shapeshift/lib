@@ -1,4 +1,4 @@
-import { fromAssetId } from '@shapeshiftoss/caip'
+import { AssetId, fromAssetId } from '@shapeshiftoss/caip'
 import { Asset, KnownChainIds } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 
@@ -19,15 +19,40 @@ export const baseUrlFromChainId = (chainId: string): string | undefined => {
   }
 }
 
+export const usdcContractFromChainId = (chainId: string): string | undefined => {
+  switch (chainId) {
+    case KnownChainIds.EthereumMainnet: {
+      return '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+    }
+    case KnownChainIds.AvalancheMainnet:
+      return '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e'
+    default:
+      return undefined
+  }
+}
+
+export const isNativeEvmAsset = (assetId: AssetId): boolean | undefined => {
+  const { chainId, assetNamespace, assetReference } = fromAssetId(assetId)
+  switch (chainId) {
+    case KnownChainIds.EthereumMainnet: {
+      return assetNamespace === 'slip44' && assetReference === '60'
+    }
+    case KnownChainIds.AvalancheMainnet:
+      return assetNamespace === 'slip44' && assetReference === '9000'
+    default:
+      return undefined
+  }
+}
+
 export const getUsdRate = async (asset: Asset): Promise<string> => {
   const { assetReference: erc20Address, assetNamespace } = fromAssetId(asset.assetId)
   const { symbol } = asset
 
   try {
-    const USDC_CONTRACT_ADDRESS = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+    const USDC_CONTRACT_ADDRESS = usdcContractFromChainId(asset.chainId)
     if (erc20Address?.toLowerCase() === USDC_CONTRACT_ADDRESS) return '1' // Will break if comparing against usdc
     const baseUrl = baseUrlFromChainId(asset.chainId)
-    if (!baseUrl)
+    if (!(baseUrl && USDC_CONTRACT_ADDRESS))
       throw new SwapError('getUsdRate] - Unsupported chainId', {
         code: SwapErrorTypes.UNSUPPORTED_CHAIN
       })

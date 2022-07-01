@@ -1,6 +1,7 @@
 import { numberToHex } from 'web3-utils'
 
 import { ExecuteTradeInput, SwapError, SwapErrorTypes, TradeResult, ZrxTrade } from '../../../api'
+import { isNativeEvmAsset } from '../utils/helpers/helpers'
 import { ZrxSupportedChainIds, ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function zrxExecuteTrade(
@@ -11,7 +12,7 @@ export async function zrxExecuteTrade(
   const { sellAsset } = zrxTrade
   try {
     // value is 0 for erc20s
-    const value = sellAsset.assetId === 'eip155:1/slip44:60' ? trade.sellAmount : '0'
+    const value = isNativeEvmAsset(sellAsset.assetId) ? trade.sellAmount : '0'
     const bip44Params = adapter.buildBIP44Params({
       accountNumber: trade.sellAssetAccountNumber
     })

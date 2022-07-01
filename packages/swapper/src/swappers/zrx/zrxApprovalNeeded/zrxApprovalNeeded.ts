@@ -15,7 +15,7 @@ export async function zrxApprovalNeeded(
   const { assetReference: sellAssetErc20Address } = fromAssetId(sellAsset.assetId)
 
   try {
-    if (sellAsset.chainId !== 'eip155:1') {
+    if (sellAsset.chainId !== adapter.getChainId()) {
       throw new SwapError('[zrxApprovalNeeded] - sellAsset chainId is not supported', {
         code: SwapErrorTypes.UNSUPPORTED_CHAIN,
         details: { chainId: sellAsset.chainId }
