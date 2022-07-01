@@ -42,22 +42,15 @@ export class ChainAdapter
   implements IChainAdapter<KnownChainIds.BitcoinMainnet>
 {
   public static readonly defaultBIP44Params: BIP44Params = {
-    purpose: 84, // segwit native
-    coinType: 0,
+    purpose: 44,
+    coinType: 3,
     accountNumber: 0
   }
-  public static readonly defaultUtxoAccountType: UtxoAccountType = UtxoAccountType.SegwitNative
+  public static readonly defaultUtxoAccountType: UtxoAccountType = UtxoAccountType.P2pkh
 
-  private static readonly supportedAccountTypes: UtxoAccountType[] = [
-    UtxoAccountType.SegwitNative,
-    UtxoAccountType.SegwitP2sh,
-    UtxoAccountType.P2pkh
-  ]
+  private static readonly supportedAccountTypes: UtxoAccountType[] = [UtxoAccountType.P2pkh]
 
-  protected readonly supportedChainIds: ChainId[] = [
-    'bip122:000000000019d6689c085ae165831e93',
-    'bip122:000000000933ea01ad0ee984209779ba'
-  ]
+  protected readonly supportedChainIds: ChainId[] = ['bip122:00000000001a91e3dace36e2be3bf030']
 
   protected chainId = this.supportedChainIds[0]
 
@@ -67,9 +60,9 @@ export class ChainAdapter
     super(args)
 
     if (args.chainId && !this.supportedChainIds.includes(args.chainId)) {
-      throw new Error(`Bitcoin chainId ${args.chainId} not supported`)
+      throw new Error(`Dogecoin chainId ${args.chainId} not supported`)
     }
-    console.info('hello')
+
     if (args.chainId) {
       this.chainId = args.chainId
     }
