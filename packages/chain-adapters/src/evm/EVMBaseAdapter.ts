@@ -63,7 +63,7 @@ export abstract class EVMBaseAdapter<T extends EVMChainIds> implements IChainAda
 
   static defaultBIP44Params: BIP44Params
 
-  constructor(args: EVMBaseAdapterArgs) {
+  protected constructor(args: EVMBaseAdapterArgs) {
     EVMBaseAdapter.defaultBIP44Params = (<typeof EVMBaseAdapter>this.constructor).defaultBIP44Params
 
     this.supportedChainIds = args.supportedChainIds
