@@ -1,15 +1,20 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
+import { SignMessageInput } from '@shapeshiftoss/chain-adapters'
+import { bip32ToAddressNList, ETHSignMessage } from '@shapeshiftoss/hdwallet-core'
 import { AxiosResponse } from 'axios'
+import { ethers } from 'ethers'
 
 import { CowTrade, ExecuteTradeInput, SwapError, SwapErrorTypes, TradeResult } from '../../../api'
 import { CowSwapperDeps } from '../CowSwapper'
 import { CowSwapOrdersResponse } from '../types'
-import { COW_SWAP_SETTLEMENT_ADDRESS, DEFAULT_APP_DATA, ORDER_KIND_SELL, SIGNING_SCHEME } from '../utils/constants'
+import {
+  COW_SWAP_SETTLEMENT_ADDRESS,
+  DEFAULT_APP_DATA,
+  ORDER_KIND_SELL,
+  SIGNING_SCHEME
+} from '../utils/constants'
 import { cowService } from '../utils/cowService'
-import { domain, getNowPlusThirtyMinutesTimestamp, hashOrder } from '../utils/helpers/helpers'
-import { ethers } from "ethers"
-import { SignMessageInput } from '@shapeshiftoss/chain-adapters'
-import { bip32ToAddressNList, ETHSignMessage } from '@shapeshiftoss/hdwallet-core'
+import { CowSwapOrder, domain, hashOrder } from '../utils/helpers/helpers'
 
 export async function CowExecuteTrade(
   { apiUrl, adapter }: CowSwapperDeps,
@@ -33,24 +38,25 @@ export async function CowExecuteTrade(
   }
 
   try {
-
-    const orderToSign = {
+    const orderToSign: CowSwapOrder = {
       sellToken: sellAssetErc20Address,
       buyToken: buyAssetErc20Address,
       sellAmount: trade.sellAmount,
       buyAmount: trade.buyAmount,
-      validTo: getNowPlusThirtyMinutesTimestamp(),
+      validTo: 1656667297, //getNowPlusThirtyMinutesTimestamp()
       appData: DEFAULT_APP_DATA,
       feeAmount: feeAmountInSellToken,
       kind: ORDER_KIND_SELL,
       partiallyFillable: false,
-      sellTokenBalance: 'erc20',
-      buyTokenBalance: 'erc20',
       receiver: trade.receiveAddress,
+      sellTokenBalance: 'erc20',
+      buyTokenBalance: 'erc20'
     }
 
+    console.log(orderToSign)
+
     const orderDigest = hashOrder(domain(1, COW_SWAP_SETTLEMENT_ADDRESS), orderToSign)
-    console.log("orderDigest", orderDigest)
+    console.log('orderDigest', orderDigest)
 
     // TODO addressNList
     const msg: SignMessageInput<ETHSignMessage> = {
@@ -62,7 +68,7 @@ export async function CowExecuteTrade(
     }
 
     const signatureOrderDigest = await adapter.signMessage(msg)
-    console.log("o_sign", signatureOrderDigest)
+    console.log('order digest signature', signatureOrderDigest)
 
     // Passing the signature through split/join to normalize the `v` byte.
     // Some wallets do not pad it with `27`, which causes a signature failure
@@ -87,18 +93,11 @@ export async function CowExecuteTrade(
      */
     const ordersResponse: AxiosResponse<CowSwapOrdersResponse> =
       await cowService.post<CowSwapOrdersResponse>(`${apiUrl}/v1/orders/`, {
-        sellToken: sellAssetErc20Address,
-        buyToken: buyAssetErc20Address,
-        receiver: trade.receiveAddress,
-        sellAmount: trade.sellAmount,
-        buyAmount: trade.buyAmount,
-        validTo: getNowPlusThirtyMinutesTimestamp(),
-        appData: DEFAULT_APP_DATA,
-        feeAmount: feeAmountInSellToken,
-        kind: ORDER_KIND_SELL,
-        partiallyFillable: false,
+        ...orderToSign,
         signingScheme: SIGNING_SCHEME,
-        signature: '',
+        sellTokenBalance: 'erc20',
+        buyTokenBalance: 'erc20',
+        signature: signatureOrderDigest,
         from: trade.receiveAddress
       })
 

@@ -12,12 +12,11 @@ import {
   COW_SWAP_VAULT_RELAYER_ADDRESS,
   DEFAULT_APP_DATA,
   DEFAULT_SOURCE,
-  DEFAULT_VALIDTO_TIMESTAMP,
   ORDER_KIND_SELL,
   WETH_ASSET_ID
 } from '../utils/constants'
 import { cowService } from '../utils/cowService'
-import { getUsdRate } from '../utils/helpers/helpers'
+import { getNowPlusThirtyMinutesTimestamp, getUsdRate } from '../utils/helpers/helpers'
 
 export async function CowBuildTrade(
   deps: CowSwapperDeps,
@@ -62,7 +61,7 @@ export async function CowBuildTrade(
         sellToken: sellAssetErc20Address,
         buyToken: buyAssetErc20Address,
         receiver: receiveAddress,
-        validTo: DEFAULT_VALIDTO_TIMESTAMP,
+        validTo: getNowPlusThirtyMinutesTimestamp(),
         appData: DEFAULT_APP_DATA,
         partiallyFillable: false,
         from: receiveAddress,

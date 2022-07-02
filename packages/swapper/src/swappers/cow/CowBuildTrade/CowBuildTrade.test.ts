@@ -16,6 +16,7 @@ jest.mock('@shapeshiftoss/chain-adapters')
 jest.mock('../utils/cowService')
 jest.mock('../utils/helpers/helpers', () => {
   return {
+    getNowPlusThirtyMinutesTimestamp: () => 1656797798,
     getUsdRate: (_args: CowSwapperDeps, input: Asset) => {
       if (input.assetId === WETH.assetId) {
         return Promise.resolve('1233.65940923824103061992')
@@ -59,7 +60,7 @@ const expectedApiInputWethToFox = {
   receiver: 'address11',
   sellAmountBeforeFee: '1000000000000000000',
   sellToken: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-  validTo: 4294967295
+  validTo: 1656797798
 }
 
 const expectedApiInputWbtcToWeth = {
@@ -71,7 +72,7 @@ const expectedApiInputWbtcToWeth = {
   receiver: 'address11',
   sellAmountBeforeFee: '100000000',
   sellToken: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
-  validTo: 4294967295
+  validTo: 1656797798
 }
 
 const expectedTradeWethToFox: CowTrade<'eip155:1'> = {
