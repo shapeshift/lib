@@ -60,7 +60,7 @@ describe('SwapperManager', () => {
     })
   })
 
-  describe('get', () => {
+  describe('can get swapper instance from swappers', () => {
     it('should return a swapper that has been added', () => {
       const swapper = new SwapperManager()
       swapper.addSwapper(SwapperType.Thorchain, new ThorchainSwapper(thorchainSwapperDeps))
