@@ -37,7 +37,7 @@ manager
   .addSwapper(SwapperType.Thorchain, new ThorchainSwapper())
 
 // Get a swapper from the manager
-const swapper = manager.getSwapper(SwapperType.Zrx)
+const swapper = manager.swappers.get(SwapperType.Zrx)
 
 // Remove a swapper from the manager
 manager.removeSwapper(SwapperType.Zrx)
@@ -50,7 +50,7 @@ manager.removeSwapper(SwapperType.Zrx)
 const { swapperType, quote } = await manager.getBestQuote(...args)
 
 // Get the swapper and do stuff
-const swapper = manager.getSwapper(swapperType)
+const swapper = manager.swappers.get(swapperType)
 ```
 
 ### Working with a specific swapper

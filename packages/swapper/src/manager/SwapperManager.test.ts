@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ChainAdapterManager, ethereum } from '@shapeshiftoss/chain-adapters'
+import { KnownChainIds } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import { SwapperType } from '../api'
@@ -13,13 +14,14 @@ describe('SwapperManager', () => {
   const zrxSwapperDeps: ZrxSwapperDeps = {
     web3: <Web3>{},
     adapter: <ethereum.ChainAdapter>{
-      getChainId: () => 'eip155:1'
+      getChainId: () => KnownChainIds.EthereumMainnet
     }
   }
+
   const cowSwapperDeps: CowSwapperDeps = {
     apiUrl: 'https://api.cow.fi/mainnet/api/',
     adapter: <ethereum.ChainAdapter>{
-      getChainId: () => 'eip155:1'
+      getChainId: () => KnownChainIds.EthereumMainnet
     },
     web3: <Web3>{},
     feeAsset: WETH
@@ -42,7 +44,7 @@ describe('SwapperManager', () => {
     it('should add swapper', () => {
       const manager = new SwapperManager()
       manager.addSwapper(SwapperType.Thorchain, new ThorchainSwapper(thorchainSwapperDeps))
-      expect(manager.getSwapper(SwapperType.Thorchain)).toBeInstanceOf(ThorchainSwapper)
+      expect(manager.swappers.get(SwapperType.Thorchain)).toBeInstanceOf(ThorchainSwapper)
     })
 
     it('should be chainable', async () => {
@@ -50,7 +52,7 @@ describe('SwapperManager', () => {
       manager
         .addSwapper(SwapperType.Thorchain, new ThorchainSwapper(thorchainSwapperDeps))
         .addSwapper(SwapperType.Zrx, new ZrxSwapper(zrxSwapperDeps))
-      expect(manager.getSwapper(SwapperType.Zrx)).toBeInstanceOf(ZrxSwapper)
+      expect(manager.swappers.get(SwapperType.Zrx)).toBeInstanceOf(ZrxSwapper)
     })
 
     it('should throw an error if adding an existing chain', () => {
@@ -63,11 +65,11 @@ describe('SwapperManager', () => {
     })
   })
 
-  describe('getSwapper', () => {
+  describe('get', () => {
     it('should return a swapper that has been added', () => {
       const swapper = new SwapperManager()
       swapper.addSwapper(SwapperType.Thorchain, new ThorchainSwapper(thorchainSwapperDeps))
-      expect(swapper.getSwapper(SwapperType.Thorchain)).toBeInstanceOf(ThorchainSwapper)
+      expect(swapper.swappers.get(SwapperType.Thorchain)).toBeInstanceOf(ThorchainSwapper)
     })
 
     it('should return the correct swapper', () => {
@@ -77,24 +79,10 @@ describe('SwapperManager', () => {
         .addSwapper(SwapperType.Zrx, new ZrxSwapper(zrxSwapperDeps))
         .addSwapper(SwapperType.CowSwap, new CowSwapper(cowSwapperDeps))
 
-      expect(swapper.getSwapper(SwapperType.Thorchain)).toBeInstanceOf(ThorchainSwapper)
-      expect(swapper.getSwapper(SwapperType.Zrx)).toBeInstanceOf(ZrxSwapper)
-      expect(swapper.getSwapper(SwapperType.CowSwap)).toBeInstanceOf(CowSwapper)
-    })
-
-    it('should throw an error if swapper is not set', () => {
-      const swapper = new SwapperManager()
-      expect(() => swapper.getSwapper(SwapperType.Thorchain)).toThrow(
-        '[getSwapper] - swapperType doesnt exist'
-      )
-    })
-
-    it('should throw an error if an invalid Swapper instance is passed', () => {
-      const manager = new SwapperManager()
-      // @ts-ignore
-      expect(() => manager.addSwapper(SwapperType.Thorchain, {})).toThrow(
-        '[validateSwapper] - invalid swapper instance'
-      )
+      expect(swapper.swappers.get(SwapperType.Thorchain)).toBeInstanceOf(ThorchainSwapper)
+      expect(swapper.swappers.get(SwapperType.Zrx)).toBeInstanceOf(ZrxSwapper)
+      expect(swapper.swappers.get(SwapperType.Zrx)).toBeInstanceOf(ZrxSwapper)
+      expect(swapper.swappers.get(SwapperType.CowSwap)).toBeInstanceOf(CowSwapper)
     })
   })
 
@@ -104,9 +92,7 @@ describe('SwapperManager', () => {
       swapper
         .addSwapper(SwapperType.Thorchain, new ThorchainSwapper(thorchainSwapperDeps))
         .removeSwapper(SwapperType.Thorchain)
-      expect(() => swapper.getSwapper(SwapperType.Thorchain)).toThrow(
-        `[getSwapper] - swapperType doesnt exist`
-      )
+      expect(swapper.swappers.get(SwapperType.Thorchain)).toBeUndefined()
     })
 
     it("should throw an error if swapper isn't set", () => {
