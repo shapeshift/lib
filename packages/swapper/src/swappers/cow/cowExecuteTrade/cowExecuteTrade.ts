@@ -14,9 +14,14 @@ import {
   SIGNING_SCHEME
 } from '../utils/constants'
 import { cowService } from '../utils/cowService'
-import { CowSwapOrder, domain, hashOrder } from '../utils/helpers/helpers'
+import {
+  CowSwapOrder,
+  domain,
+  getNowPlusThirtyMinutesTimestamp,
+  hashOrder
+} from '../utils/helpers/helpers'
 
-export async function CowExecuteTrade(
+export async function cowExecuteTrade(
   { apiUrl, adapter }: CowSwapperDeps,
   { trade, wallet }: ExecuteTradeInput<'eip155:1'>
 ): Promise<TradeResult> {
@@ -31,7 +36,7 @@ export async function CowExecuteTrade(
   )
 
   if (buyAssetNamespace !== 'erc20' || sellAssetNamespace !== 'erc20') {
-    throw new SwapError('[CowExecuteTrade] - Both assets need to be ERC-20 to use CowSwap', {
+    throw new SwapError('[cowExecuteTrade] - Both assets need to be ERC-20 to use CowSwap', {
       code: SwapErrorTypes.UNSUPPORTED_PAIR,
       details: { buyAssetNamespace, sellAssetNamespace }
     })
@@ -43,7 +48,7 @@ export async function CowExecuteTrade(
       buyToken: buyAssetErc20Address,
       sellAmount: trade.sellAmount,
       buyAmount: trade.buyAmount,
-      validTo: 1656667297, //getNowPlusThirtyMinutesTimestamp()
+      validTo: getNowPlusThirtyMinutesTimestamp(),
       appData: DEFAULT_APP_DATA,
       feeAmount: feeAmountInSellToken,
       kind: ORDER_KIND_SELL,
@@ -53,10 +58,7 @@ export async function CowExecuteTrade(
       buyTokenBalance: 'erc20'
     }
 
-    console.log(orderToSign)
-
     const orderDigest = hashOrder(domain(1, COW_SWAP_SETTLEMENT_ADDRESS), orderToSign)
-    console.log('orderDigest', orderDigest)
 
     // TODO addressNList
     const msg: SignMessageInput<ETHSignMessage> = {
@@ -68,7 +70,6 @@ export async function CowExecuteTrade(
     }
 
     const signatureOrderDigest = await adapter.signMessage(msg)
-    console.log('order digest signature', signatureOrderDigest)
 
     // Passing the signature through split/join to normalize the `v` byte.
     // Some wallets do not pad it with `27`, which causes a signature failure
@@ -104,7 +105,7 @@ export async function CowExecuteTrade(
     return { tradeId: ordersResponse.data.uid }
   } catch (e) {
     if (e instanceof SwapError) throw e
-    throw new SwapError('[CowExecuteTrade]', {
+    throw new SwapError('[cowExecuteTrade]', {
       cause: e,
       code: SwapErrorTypes.EXECUTE_TRADE_FAILED
     })
