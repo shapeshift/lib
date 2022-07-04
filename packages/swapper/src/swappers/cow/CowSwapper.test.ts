@@ -7,10 +7,10 @@ import { BTC, ETH, FOX, WBTC, WETH } from '../utils/test-data/assets'
 import { setupBuildTrade, setupQuote } from '../utils/test-data/setupSwapQuote'
 import { cowApprovalNeeded } from './cowApprovalNeeded/cowApprovalNeeded'
 import { cowApproveInfinite } from './cowApproveInfinite/cowApproveInfinite'
+import { cowBuildTrade } from './cowBuildTrade/cowBuildTrade'
 import { CowSwapper, CowSwapperDeps } from './CowSwapper'
 import { getCowSwapTradeQuote } from './getCowSwapTradeQuote/getCowSwapTradeQuote'
 import { getUsdRate } from './utils/helpers/helpers'
-import { CowBuildTrade } from './CowBuildTrade/CowBuildTrade'
 
 jest.mock('./utils/helpers/helpers')
 
@@ -33,8 +33,8 @@ jest.mock('./getCowSwapTradeQuote/getCowSwapTradeQuote', () => ({
   getCowSwapTradeQuote: jest.fn()
 }))
 
-jest.mock('./CowBuildTrade/CowBuildTrade', () => ({
-  CowBuildTrade: jest.fn()
+jest.mock('./cowBuildTrade/cowBuildTrade', () => ({
+  cowBuildTrade: jest.fn()
 }))
 
 const ASSET_IDS = [ETH.assetId, WBTC.assetId, WETH.assetId, BTC.assetId, FOX.assetId]
@@ -148,12 +148,12 @@ describe('CowSwapper', () => {
   })
 
   describe('buildTrade', () => {
-    it('calls CowBuildTrade on swapper.buildTrade', async () => {
+    it('calls cowBuildTrade on swapper.buildTrade', async () => {
       const { buildTradeInput } = setupBuildTrade()
       const args = { ...buildTradeInput, wallet }
       await swapper.buildTrade(args)
-      expect(CowBuildTrade).toHaveBeenCalledTimes(1)
-      expect(CowBuildTrade).toHaveBeenCalledWith(COW_SWAPPER_DEPS, args)
+      expect(cowBuildTrade).toHaveBeenCalledTimes(1)
+      expect(cowBuildTrade).toHaveBeenCalledWith(COW_SWAPPER_DEPS, args)
     })
   })
 

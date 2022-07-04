@@ -20,10 +20,10 @@ import {
 } from '../../api'
 import { cowApprovalNeeded } from './cowApprovalNeeded/cowApprovalNeeded'
 import { cowApproveInfinite } from './cowApproveInfinite/cowApproveInfinite'
+import { cowBuildTrade } from './cowBuildTrade/cowBuildTrade'
 import { getCowSwapTradeQuote } from './getCowSwapTradeQuote/getCowSwapTradeQuote'
 import { COWSWAP_UNSUPPORTED_ASSETS } from './utils/blacklist'
 import { getUsdRate } from './utils/helpers/helpers'
-import { CowBuildTrade } from './CowBuildTrade/CowBuildTrade'
 
 /**
  * CowSwap only supports ERC-20 swaps, hence ETH is not supported
@@ -52,7 +52,7 @@ export class CowSwapper implements Swapper<'eip155:1'> {
   }
 
   async buildTrade(args: BuildTradeInput): Promise<Trade<'eip155:1'>> {
-    return CowBuildTrade(this.deps, args)
+    return cowBuildTrade(this.deps, args)
   }
 
   async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<'eip155:1'>> {

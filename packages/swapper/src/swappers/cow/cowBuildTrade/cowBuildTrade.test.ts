@@ -10,7 +10,7 @@ import { ETH, FOX, WBTC, WETH } from '../../utils/test-data/assets'
 import { CowSwapperDeps } from '../CowSwapper'
 import { cowService } from '../utils/cowService'
 import { CowSwapQuoteApiInput } from '../utils/helpers/helpers'
-import { CowBuildTrade } from './CowBuildTrade'
+import { cowBuildTrade } from './cowBuildTrade'
 
 jest.mock('@shapeshiftoss/chain-adapters')
 jest.mock('../utils/cowService')
@@ -138,7 +138,7 @@ const defaultDeps: CowSwapperDeps = {
   feeAsset: WETH
 }
 
-describe('CowBuildTrade', () => {
+describe('cowBuildTrade', () => {
   it('should throw an exception if both assets are not erc20s', async () => {
     const tradeInput: BuildTradeInput = {
       chainId: 'eip155:1',
@@ -151,8 +151,8 @@ describe('CowBuildTrade', () => {
       wallet: <HDWallet>{}
     }
 
-    await expect(CowBuildTrade(defaultDeps, tradeInput)).rejects.toThrow(
-      '[CowBuildTrade] - Both assets need to be ERC-20 to use CowSwap'
+    await expect(cowBuildTrade(defaultDeps, tradeInput)).rejects.toThrow(
+      '[cowBuildTrade] - Both assets need to be ERC-20 to use CowSwap'
     )
   })
 
@@ -194,7 +194,7 @@ describe('CowBuildTrade', () => {
       })
     )
 
-    const trade = await CowBuildTrade(deps, tradeInput)
+    const trade = await cowBuildTrade(deps, tradeInput)
 
     expect(trade).toEqual(expectedTradeWethToFox)
     expect(cowService.post).toHaveBeenCalledWith(
@@ -241,7 +241,7 @@ describe('CowBuildTrade', () => {
       })
     )
 
-    const trade = await CowBuildTrade(deps, tradeInput)
+    const trade = await cowBuildTrade(deps, tradeInput)
 
     expect(trade).toEqual(expectedTradeQuoteWbtcToWethWithApprovalFee)
     expect(cowService.post).toHaveBeenCalledWith(

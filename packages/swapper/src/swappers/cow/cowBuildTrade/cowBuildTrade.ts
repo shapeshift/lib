@@ -18,7 +18,7 @@ import {
 import { cowService } from '../utils/cowService'
 import { getUsdRate } from '../utils/helpers/helpers'
 
-export async function CowBuildTrade(
+export async function cowBuildTrade(
   deps: CowSwapperDeps,
   input: BuildTradeInput
 ): Promise<Trade<'eip155:1'>> {
@@ -33,7 +33,7 @@ export async function CowBuildTrade(
     )
 
     if (buyAssetNamespace !== 'erc20' || sellAssetNamespace !== 'erc20') {
-      throw new SwapError('[CowBuildTrade] - Both assets need to be ERC-20 to use CowSwap', {
+      throw new SwapError('[cowBuildTrade] - Both assets need to be ERC-20 to use CowSwap', {
         code: SwapErrorTypes.UNSUPPORTED_PAIR,
         details: { buyAssetNamespace, sellAssetNamespace }
       })
@@ -132,7 +132,7 @@ export async function CowBuildTrade(
     return trade
   } catch (e) {
     if (e instanceof SwapError) throw e
-    throw new SwapError('[CowBuildTrade]', {
+    throw new SwapError('[cowBuildTrade]', {
       cause: e,
       code: SwapErrorTypes.TRADE_QUOTE_FAILED
     })
