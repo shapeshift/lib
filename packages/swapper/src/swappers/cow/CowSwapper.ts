@@ -23,6 +23,7 @@ import { cowApproveInfinite } from './cowApproveInfinite/cowApproveInfinite'
 import { getCowSwapTradeQuote } from './getCowSwapTradeQuote/getCowSwapTradeQuote'
 import { COWSWAP_UNSUPPORTED_ASSETS } from './utils/blacklist'
 import { getUsdRate } from './utils/helpers/helpers'
+import { CowBuildTrade } from './CowBuildTrade/CowBuildTrade'
 
 /**
  * CowSwap only supports ERC-20 swaps, hence ETH is not supported

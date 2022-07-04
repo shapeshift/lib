@@ -10,6 +10,7 @@ import { cowApproveInfinite } from './cowApproveInfinite/cowApproveInfinite'
 import { CowSwapper, CowSwapperDeps } from './CowSwapper'
 import { getCowSwapTradeQuote } from './getCowSwapTradeQuote/getCowSwapTradeQuote'
 import { getUsdRate } from './utils/helpers/helpers'
+import { CowBuildTrade } from './CowBuildTrade/CowBuildTrade'
 
 jest.mock('./utils/helpers/helpers')
 
