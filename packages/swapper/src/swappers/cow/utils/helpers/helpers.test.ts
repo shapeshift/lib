@@ -4,7 +4,7 @@ import Web3 from 'web3'
 import { BTC, ETH, FOX, WBTC, WETH } from '../../../utils/test-data/assets'
 import { CowSwapperDeps } from '../../CowSwapper'
 import { cowService } from '../cowService'
-import { getUsdRate } from '../helpers/helpers'
+import { getNowPlusThirtyMinutesTimestamp, getUsdRate } from '../helpers/helpers'
 
 jest.mock('../cowService')
 
@@ -92,6 +92,23 @@ describe('utils', () => {
         throw new Error('unexpected error')
       })
       await expect(getUsdRate(cowSwapperDeps, FOX)).rejects.toThrow('[getUsdRate]')
+    })
+  })
+
+  describe('getNowPlusThirtyMinutesTimestamp', () => {
+    const mockDay = '2020-12-31'
+    const mockTime = 'T23:59:59.000Z'
+    const mockDate = `${mockDay}${mockTime}`
+    beforeEach(() => jest.useFakeTimers().setSystemTime(new Date(mockDate)))
+    afterEach(() => {
+      jest.restoreAllMocks()
+      jest.useRealTimers()
+    })
+
+    it('should return the timestamp corresponding to current time + 30 minutes (UTC)', () => {
+      const timestamp = getNowPlusThirtyMinutesTimestamp()
+      expect(timestamp).toEqual(1609460999)
+      expect(new Date(timestamp * 1000).toUTCString()).toEqual('Fri, 01 Jan 2021 00:29:59 GMT')
     })
   })
 })

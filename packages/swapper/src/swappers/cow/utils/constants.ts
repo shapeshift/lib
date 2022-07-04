@@ -8,7 +8,4 @@ export const DEFAULT_ADDRESS = AddressZero
 export const DEFAULT_APP_DATA = HashZero
 export const COW_SWAP_VAULT_RELAYER_ADDRESS = '0xc92e8bdf79f0507f65a392b0ab4667716bfe0110'
 
-// CowSwap API requires validTo field which specifies a limit date for the order to be valid
-// This is the default value being used by CowSwap exchange, corresponding to a date in year 2106
-export const DEFAULT_VALIDTO_TIMESTAMP = 4294967295
 export const ORDER_KIND_SELL = 'sell'

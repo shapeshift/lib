@@ -13,11 +13,14 @@ import {
   DEFAULT_ADDRESS,
   DEFAULT_APP_DATA,
   DEFAULT_SOURCE,
-  DEFAULT_VALIDTO_TIMESTAMP,
   ORDER_KIND_SELL
 } from '../utils/constants'
 import { cowService } from '../utils/cowService'
-import { CowSwapQuoteApiInput, getUsdRate } from '../utils/helpers/helpers'
+import {
+  CowSwapQuoteApiInput,
+  getNowPlusThirtyMinutesTimestamp,
+  getUsdRate
+} from '../utils/helpers/helpers'
 
 export async function getCowSwapTradeQuote(
   deps: CowSwapperDeps,
@@ -53,7 +56,7 @@ export async function getCowSwapTradeQuote(
       sellToken: sellAssetErc20Address,
       buyToken: buyAssetErc20Address,
       receiver: DEFAULT_ADDRESS,
-      validTo: DEFAULT_VALIDTO_TIMESTAMP,
+      validTo: getNowPlusThirtyMinutesTimestamp(),
       appData: DEFAULT_APP_DATA,
       partiallyFillable: false,
       from: DEFAULT_ADDRESS,
