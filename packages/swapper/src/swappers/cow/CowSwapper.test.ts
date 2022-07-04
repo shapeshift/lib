@@ -1,4 +1,3 @@
-import { AssetService } from '@shapeshiftoss/asset-service'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import Web3 from 'web3'
@@ -6,36 +5,36 @@ import Web3 from 'web3'
 import { SwapperType } from '../../api'
 import { BTC, ETH, FOX, WBTC, WETH } from '../utils/test-data/assets'
 import { setupBuildTrade, setupQuote } from '../utils/test-data/setupSwapQuote'
-import { CowApprovalNeeded } from './CowApprovalNeeded/CowApprovalNeeded'
-import { CowApproveInfinite } from './CowApproveInfinite/CowApproveInfinite'
-import { CowBuildTrade } from './CowBuildTrade/CowBuildTrade'
+import { cowApprovalNeeded } from './cowApprovalNeeded/cowApprovalNeeded'
+import { cowApproveInfinite } from './cowApproveInfinite/cowApproveInfinite'
+import { cowBuildTrade } from './cowBuildTrade/cowBuildTrade'
 import { CowSwapper, CowSwapperDeps } from './CowSwapper'
 import { getCowSwapTradeQuote } from './getCowSwapTradeQuote/getCowSwapTradeQuote'
 import { getUsdRate } from './utils/helpers/helpers'
 
 jest.mock('./utils/helpers/helpers')
 
-jest.mock('./CowApprovalNeeded/CowApprovalNeeded', () => ({
-  CowApprovalNeeded: jest.fn()
+jest.mock('./cowApprovalNeeded/cowApprovalNeeded', () => ({
+  cowApprovalNeeded: jest.fn()
 }))
 
-jest.mock('./CowApproveInfinite/CowApproveInfinite', () => ({
-  CowApproveInfinite: jest.fn()
+jest.mock('./cowApproveInfinite/cowApproveInfinite', () => ({
+  cowApproveInfinite: jest.fn()
 }))
 
 const COW_SWAPPER_DEPS: CowSwapperDeps = {
   apiUrl: 'https://api.cow.fi/mainnet/api/',
-  adapter: <ethereum.ChainAdapter>{},
-  web3: <Web3>{},
-  assetService: <AssetService>{}
+  adapter: {} as ethereum.ChainAdapter,
+  web3: {} as Web3,
+  feeAsset: WETH
 }
 
 jest.mock('./getCowSwapTradeQuote/getCowSwapTradeQuote', () => ({
   getCowSwapTradeQuote: jest.fn()
 }))
 
-jest.mock('./CowBuildTrade/CowBuildTrade', () => ({
-  CowBuildTrade: jest.fn()
+jest.mock('./cowBuildTrade/cowBuildTrade', () => ({
+  cowBuildTrade: jest.fn()
 }))
 
 const ASSET_IDS = [ETH.assetId, WBTC.assetId, WETH.assetId, BTC.assetId, FOX.assetId]
@@ -149,32 +148,32 @@ describe('CowSwapper', () => {
   })
 
   describe('buildTrade', () => {
-    it('calls CowBuildTrade on swapper.buildTrade', async () => {
+    it('calls cowBuildTrade on swapper.buildTrade', async () => {
       const { buildTradeInput } = setupBuildTrade()
       const args = { ...buildTradeInput, wallet }
       await swapper.buildTrade(args)
-      expect(CowBuildTrade).toHaveBeenCalledTimes(1)
-      expect(CowBuildTrade).toHaveBeenCalledWith(COW_SWAPPER_DEPS, args)
+      expect(cowBuildTrade).toHaveBeenCalledTimes(1)
+      expect(cowBuildTrade).toHaveBeenCalledWith(COW_SWAPPER_DEPS, args)
     })
   })
 
-  describe('CowApprovalNeeded', () => {
-    it('calls CowApprovalNeeded on swapper.approvalNeeded', async () => {
+  describe('cowApprovalNeeded', () => {
+    it('calls cowApprovalNeeded on swapper.approvalNeeded', async () => {
       const { tradeQuote } = setupQuote()
       const args = { quote: tradeQuote, wallet }
       await swapper.approvalNeeded(args)
-      expect(CowApprovalNeeded).toHaveBeenCalledTimes(1)
-      expect(CowApprovalNeeded).toHaveBeenCalledWith(COW_SWAPPER_DEPS, args)
+      expect(cowApprovalNeeded).toHaveBeenCalledTimes(1)
+      expect(cowApprovalNeeded).toHaveBeenCalledWith(COW_SWAPPER_DEPS, args)
     })
   })
 
-  describe('CowApproveInfinite', () => {
-    it('calls CowApproveInfinite on swapper.approveInfinite', async () => {
+  describe('cowApproveInfinite', () => {
+    it('calls cowApproveInfinite on swapper.approveInfinite', async () => {
       const { tradeQuote } = setupQuote()
       const args = { quote: tradeQuote, wallet }
       await swapper.approveInfinite(args)
-      expect(CowApproveInfinite).toHaveBeenCalledTimes(1)
-      expect(CowApproveInfinite).toHaveBeenCalledWith(COW_SWAPPER_DEPS, args)
+      expect(cowApproveInfinite).toHaveBeenCalledTimes(1)
+      expect(cowApproveInfinite).toHaveBeenCalledWith(COW_SWAPPER_DEPS, args)
     })
   })
 })

@@ -12,19 +12,18 @@ import {
   COW_SWAP_VAULT_RELAYER_ADDRESS,
   DEFAULT_APP_DATA,
   DEFAULT_SOURCE,
-  ORDER_KIND_SELL,
-  WETH_ASSET_ID
+  ORDER_KIND_SELL
 } from '../utils/constants'
 import { cowService } from '../utils/cowService'
 import { getNowPlusThirtyMinutesTimestamp, getUsdRate } from '../utils/helpers/helpers'
 
-export async function CowBuildTrade(
+export async function cowBuildTrade(
   deps: CowSwapperDeps,
   input: BuildTradeInput
 ): Promise<CowTrade<'eip155:1'>> {
   try {
     const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, wallet } = input
-    const { adapter, assetService } = deps
+    const { adapter, feeAsset } = deps
 
     const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
       fromAssetId(sellAsset.assetId)
@@ -33,7 +32,7 @@ export async function CowBuildTrade(
     )
 
     if (buyAssetNamespace !== 'erc20' || sellAssetNamespace !== 'erc20') {
-      throw new SwapError('[CowBuildTrade] - Both assets need to be ERC-20 to use CowSwap', {
+      throw new SwapError('[cowBuildTrade] - Both assets need to be ERC-20 to use CowSwap', {
         code: SwapErrorTypes.UNSUPPORTED_PAIR,
         details: { buyAssetNamespace, sellAssetNamespace }
       })
@@ -69,15 +68,14 @@ export async function CowBuildTrade(
         sellAmountBeforeFee: normalizedSellAmount
       })
 
-    const { data } = quoteResponse
-    const quote = data.quote
+    const {
+      data: { quote }
+    } = quoteResponse
 
     const rate = bn(quote.buyAmount)
       .div(quote.sellAmount)
       .times(bn(10).exponentiatedBy(sellAsset.precision - buyAsset.precision))
       .toString()
-
-    const wethAsset = assetService.getAll()[WETH_ASSET_ID]
 
     const [feeDataOptions, wethUsdRate, usdRateSellAsset] = await Promise.all([
       adapter.getFeeData({
@@ -85,7 +83,7 @@ export async function CowBuildTrade(
         value: '0',
         chainSpecific: { from: receiveAddress, contractAddress: sellAssetErc20Address }
       }),
-      getUsdRate(deps, wethAsset),
+      getUsdRate(deps, feeAsset),
       getUsdRate(deps, sellAsset)
     ])
     const feeData = feeDataOptions['fast']
@@ -93,7 +91,7 @@ export async function CowBuildTrade(
     const fee = bnOrZero(quote.feeAmount)
       .multipliedBy(bnOrZero(usdRateSellAsset))
       .div(bnOrZero(wethUsdRate))
-      .div(bn(10).exponentiatedBy(sellAsset.precision - wethAsset.precision))
+      .div(bn(10).exponentiatedBy(sellAsset.precision - feeAsset.precision))
       .toString()
 
     const trade: CowTrade<'eip155:1'> = {
@@ -134,7 +132,7 @@ export async function CowBuildTrade(
     return trade
   } catch (e) {
     if (e instanceof SwapError) throw e
-    throw new SwapError('[CowBuildTrade]', {
+    throw new SwapError('[cowBuildTrade]', {
       cause: e,
       code: SwapErrorTypes.TRADE_QUOTE_FAILED
     })

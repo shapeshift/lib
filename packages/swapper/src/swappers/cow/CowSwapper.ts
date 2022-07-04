@@ -1,4 +1,3 @@
-import { AssetService } from '@shapeshiftoss/asset-service'
 import { AssetId } from '@shapeshiftoss/caip'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { Asset } from '@shapeshiftoss/types'
@@ -19,19 +18,23 @@ import {
   TradeResult,
   TradeTxs
 } from '../../api'
-import { CowApprovalNeeded } from './CowApprovalNeeded/CowApprovalNeeded'
-import { CowApproveInfinite } from './CowApproveInfinite/CowApproveInfinite'
-import { CowBuildTrade } from './CowBuildTrade/CowBuildTrade'
+import { cowApprovalNeeded } from './cowApprovalNeeded/cowApprovalNeeded'
+import { cowApproveInfinite } from './cowApproveInfinite/cowApproveInfinite'
+import { cowBuildTrade } from './cowBuildTrade/cowBuildTrade'
 import { cowExecuteTrade } from './cowExecuteTrade/cowExecuteTrade'
 import { getCowSwapTradeQuote } from './getCowSwapTradeQuote/getCowSwapTradeQuote'
 import { COWSWAP_UNSUPPORTED_ASSETS } from './utils/blacklist'
 import { getUsdRate } from './utils/helpers/helpers'
 
+/**
+ * CowSwap only supports ERC-20 swaps, hence ETH is not supported
+ * In order to get rates correctly, we need WETH asset to be passed as feeAsset
+ */
 export type CowSwapperDeps = {
   apiUrl: string
   adapter: ethereum.ChainAdapter
   web3: Web3
-  assetService: AssetService
+  feeAsset: Asset // should be WETH asset
 }
 
 export class CowSwapper implements Swapper<'eip155:1'> {
@@ -50,7 +53,7 @@ export class CowSwapper implements Swapper<'eip155:1'> {
   }
 
   async buildTrade(args: BuildTradeInput): Promise<CowTrade<'eip155:1'>> {
-    return CowBuildTrade(this.deps, args)
+    return cowBuildTrade(this.deps, args)
   }
 
   async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<'eip155:1'>> {
@@ -66,11 +69,11 @@ export class CowSwapper implements Swapper<'eip155:1'> {
   }
 
   async approvalNeeded(args: ApprovalNeededInput<'eip155:1'>): Promise<ApprovalNeededOutput> {
-    return CowApprovalNeeded(this.deps, args)
+    return cowApprovalNeeded(this.deps, args)
   }
 
   async approveInfinite(args: ApproveInfiniteInput<'eip155:1'>): Promise<string> {
-    return CowApproveInfinite(this.deps, args)
+    return cowApproveInfinite(this.deps, args)
   }
 
   filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): AssetId[] {

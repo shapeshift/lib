@@ -12,14 +12,8 @@ export enum KnownChainIds {
   EthereumMainnet = 'eip155:1',
   BitcoinMainnet = 'bip122:000000000019d6689c085ae165831e93',
   CosmosMainnet = 'cosmos:cosmoshub-4',
-  OsmosisMainnet = 'cosmos:osmosis-1'
-}
-
-// https://api.coingecko.com/api/v3/asset_platforms
-export enum CoingeckoAssetPlatform {
-  Ethereum = 'ethereum',
-  Cosmos = 'cosmos',
-  Osmosis = 'osmosis'
+  OsmosisMainnet = 'cosmos:osmosis-1',
+  AvalancheMainnet = 'eip155:43114'
 }
 
 export enum WithdrawType {

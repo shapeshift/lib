@@ -4,7 +4,7 @@ import Web3 from 'web3'
 import { setupDeps } from '../../utils/test-data/setupDeps'
 import { setupQuote } from '../../utils/test-data/setupSwapQuote'
 import { zrxService } from '../utils/zrxService'
-import { ZrxApproveInfinite } from '../ZrxApproveInfinite/ZrxApproveInfinite'
+import { zrxApproveInfinite } from './/zrxApproveInfinite'
 
 jest.mock('web3')
 jest.mock('../../utils/helpers/helpers', () => ({
@@ -31,7 +31,7 @@ Web3.mockImplementation(() => ({
   }
 }))
 
-describe('ZrxApproveInfinite', () => {
+describe('zrxApproveInfinite', () => {
   const deps = setupDeps()
   const { tradeQuote } = setupQuote()
   const wallet = {
@@ -44,6 +44,6 @@ describe('ZrxApproveInfinite', () => {
     const quote = { ...tradeQuote }
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data }))
 
-    expect(await ZrxApproveInfinite(deps, { quote, wallet })).toEqual('grantAllowanceTxId')
+    expect(await zrxApproveInfinite(deps, { quote, wallet })).toEqual('grantAllowanceTxId')
   })
 })

@@ -1,5 +1,5 @@
 import { TypedDataDomain } from '@ethersproject/abstract-signer'
-import { fromAssetId } from '@shapeshiftoss/caip'
+import { ethAssetId, fromAssetId } from '@shapeshiftoss/caip'
 import { Asset } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import { ethers } from 'ethers'
@@ -8,7 +8,6 @@ import { SwapError, SwapErrorTypes } from '../../../../api'
 import { bn, bnOrZero } from '../../../utils/bignumber'
 import { CowSwapperDeps } from '../../CowSwapper'
 import { CowSwapPriceResponse } from '../../types'
-import { ETH_ASSET_ID, WETH_ASSET_ID } from '../constants'
 import { cowService } from '../cowService'
 
 const USDC_CONTRACT_ADDRESS = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
@@ -49,12 +48,24 @@ export type CowSwapOrder = {
   buyTokenBalance: string
 }
 
+export type CowSwapQuoteApiInput = {
+  appData: string
+  buyToken: string
+  from: string
+  kind: string
+  partiallyFillable: boolean
+  receiver: string
+  sellAmountBeforeFee: string
+  sellToken: string
+  validTo: number
+}
+
 export const getUsdRate = async (
-  { apiUrl, assetService }: CowSwapperDeps,
+  { apiUrl, feeAsset }: CowSwapperDeps,
   input: Asset
 ): Promise<string> => {
   // Replacing ETH by WETH specifically for CowSwap in order to get an usd rate when called with ETH as feeAsset
-  const asset = input.assetId !== ETH_ASSET_ID ? input : assetService.getAll()[WETH_ASSET_ID]
+  const asset = input.assetId !== ethAssetId ? input : feeAsset
   const { assetReference: erc20Address, assetNamespace } = fromAssetId(asset.assetId)
 
   if (assetNamespace !== 'erc20') {

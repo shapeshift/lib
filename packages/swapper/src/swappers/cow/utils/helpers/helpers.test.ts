@@ -1,4 +1,3 @@
-import { AssetService } from '@shapeshiftoss/asset-service'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import Web3 from 'web3'
 
@@ -18,13 +17,9 @@ jest.mock('../cowService')
 describe('utils', () => {
   const cowSwapperDeps: CowSwapperDeps = {
     apiUrl: 'https://api.cow.fi/mainnet/api/',
-    adapter: <ethereum.ChainAdapter>{},
-    web3: <Web3>{},
-    assetService: {
-      getAll: jest.fn(() => {
-        return { 'eip155:1/erc20:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2': WETH }
-      })
-    } as unknown as AssetService
+    adapter: {} as ethereum.ChainAdapter,
+    web3: {} as Web3,
+    feeAsset: WETH
   }
 
   describe('getUsdRate', () => {

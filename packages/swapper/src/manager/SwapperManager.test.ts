@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { AssetService } from '@shapeshiftoss/asset-service'
 import { ChainAdapterManager, ethereum } from '@shapeshiftoss/chain-adapters'
 import Web3 from 'web3'
 
@@ -7,18 +6,19 @@ import { SwapperType } from '../api'
 import { ThorchainSwapper, ZrxSwapper, ZrxSwapperDeps } from '../swappers'
 import { CowSwapper, CowSwapperDeps } from '../swappers/cow/CowSwapper'
 import { ThorchainSwapperDeps } from '../swappers/thorchain/types'
+import { WETH } from '../swappers/utils/test-data/assets'
 import { SwapperManager } from './SwapperManager'
 
 describe('SwapperManager', () => {
   const zrxSwapperDeps: ZrxSwapperDeps = {
-    web3: <Web3>{},
-    adapter: <ethereum.ChainAdapter>{}
+    web3: {} as Web3,
+    adapter: {} as ethereum.ChainAdapter
   }
   const cowSwapperDeps: CowSwapperDeps = {
     apiUrl: 'https://api.cow.fi/mainnet/api/',
-    adapter: <ethereum.ChainAdapter>{},
-    web3: <Web3>{},
-    assetService: <AssetService>{}
+    adapter: {} as ethereum.ChainAdapter,
+    web3: {} as Web3,
+    feeAsset: WETH
   }
 
   const thorchainSwapperDeps: ThorchainSwapperDeps = {
