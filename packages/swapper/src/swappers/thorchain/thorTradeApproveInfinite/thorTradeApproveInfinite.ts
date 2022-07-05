@@ -12,7 +12,7 @@ export const thorTradeApproveInfinite = async ({
   input
 }: {
   deps: ThorchainSwapperDeps
-  input: ApproveInfiniteInput<'eip155:1'>
+  input: ApproveInfiniteInput<KnownChainIds.EthereumMainnet>
 }): Promise<string> => {
   try {
     const { adapterManager, web3 } = deps

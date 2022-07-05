@@ -16,19 +16,19 @@ export const SwapError = createErrorClass('SwapError')
 type ChainSpecificQuoteFeeData<T extends ChainId> = ChainSpecific<
   T,
   {
-    'eip155:1': {
+    [KnownChainIds.EthereumMainnet]: {
       estimatedGas?: string
       gasPrice?: string
       approvalFee?: string
       totalFee?: string
     }
-    'eip155:43114': {
+    [KnownChainIds.AvalancheMainnet]: {
       estimatedGas?: string
       gasPrice?: string
       approvalFee?: string
       totalFee?: string
     }
-    'bip122:000000000019d6689c085ae165831e93': {
+    [KnownChainIds.BitcoinMainnet]: {
       byteCount: string
       satsPerByte: string
     }
@@ -110,7 +110,7 @@ export interface Trade<C extends ChainId> extends TradeBase<C> {
   receiveAddress: string
 }
 
-export interface ZrxTrade extends Trade<'eip155:1'> {
+export interface ZrxTrade extends Trade<ZrxSupportedChainIds> {
   txData: string
   depositAddress: string
 }

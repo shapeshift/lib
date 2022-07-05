@@ -1,6 +1,6 @@
 import { AssetId, ChainId } from '@shapeshiftoss/caip'
 import { avalanche, ethereum } from '@shapeshiftoss/chain-adapters'
-import { Asset } from '@shapeshiftoss/types'
+import { Asset, KnownChainIds } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import {
@@ -31,7 +31,7 @@ export type ZrxSwapperDeps = {
   web3: Web3
 }
 
-export type ZrxSupportedChainIds = 'eip155:1' | 'eip155:43114'
+export type ZrxSupportedChainIds = KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
 
 export class ZrxSwapper<T extends ZrxSupportedChainIds> implements Swapper<ZrxSupportedChainIds> {
   public static swapperName = 'ZrxSwapper'

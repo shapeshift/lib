@@ -77,7 +77,7 @@ const expectedApiInputWbtcToWeth: CowSwapQuoteApiInput = {
   validTo: 4294967295
 }
 
-const expectedTradeQuoteWethToFox: TradeQuote<'eip155:1'> = {
+const expectedTradeQuoteWethToFox: TradeQuote<KnownChainIds.EthereumMainnet> = {
   rate: '14716.04718939437505555958', // 14716 FOX per WETH
   minimum: '0.00810596500550730736',
   maximum: '100000000000000000000000000',
@@ -99,7 +99,7 @@ const expectedTradeQuoteWethToFox: TradeQuote<'eip155:1'> = {
   sellAssetAccountNumber: 0
 }
 
-const expectedTradeQuoteWbtcToWeth: TradeQuote<'eip155:1'> = {
+const expectedTradeQuoteWbtcToWeth: TradeQuote<KnownChainIds.EthereumMainnet> = {
   rate: '19.139398102523845323456857493095', // 19.14 WETH per WBTC
   minimum: '0.0004766812308672071',
   maximum: '100000000000000000000000000',

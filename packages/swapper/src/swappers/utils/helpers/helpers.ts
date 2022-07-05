@@ -1,8 +1,7 @@
-import { fromAssetId } from '@shapeshiftoss/caip'
-import { ChainId } from '@shapeshiftoss/caip/src'
+import { ChainId, fromAssetId } from '@shapeshiftoss/caip'
 import { avalanche, ethereum } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { Asset } from '@shapeshiftoss/types'
+import { Asset, KnownChainIds } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { AbiItem, numberToHex } from 'web3-utils'
@@ -116,10 +115,11 @@ export const grantAllowance = async ({
       chainSpecific: {
         erc20ContractAddress: sellAssetErc20Address,
         gasPrice: numberToHex(
-          (quote as TradeQuote<'eip155:1'>).feeData?.chainSpecific?.gasPrice || 0
+          (quote as TradeQuote<KnownChainIds.EthereumMainnet>).feeData?.chainSpecific?.gasPrice || 0
         ),
         gasLimit: numberToHex(
-          (quote as TradeQuote<'eip155:1'>).feeData?.chainSpecific?.estimatedGas || 0
+          (quote as TradeQuote<KnownChainIds.EthereumMainnet>).feeData?.chainSpecific
+            ?.estimatedGas || 0
         )
       }
     })
