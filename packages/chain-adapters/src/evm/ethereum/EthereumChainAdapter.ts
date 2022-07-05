@@ -37,7 +37,6 @@ export class ChainAdapter extends EVMBaseAdapter<KnownChainIds.EthereumMainnet> 
     super({ chainId: DEFAULT_CHAIN_ID, supportedChainIds: SUPPORTED_CHAIN_IDS, ...args })
 
     this.assetId = ethAssetId
-    this.rpcUrl = args.rpcUrl
     this.parser = new unchained.ethereum.TransactionParser({
       chainId: this.chainId,
       rpcUrl: this.rpcUrl
@@ -46,10 +45,6 @@ export class ChainAdapter extends EVMBaseAdapter<KnownChainIds.EthereumMainnet> 
 
   getType(): KnownChainIds.EthereumMainnet {
     return KnownChainIds.EthereumMainnet
-  }
-
-  getRpcUrl(): string {
-    return this.rpcUrl
   }
 
   getFeeAssetId(): AssetId {
