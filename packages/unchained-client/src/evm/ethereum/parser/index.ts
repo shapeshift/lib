@@ -1,0 +1,31 @@
+import { ASSET_REFERENCE, toAssetId } from '@shapeshiftoss/caip'
+
+import { EthereumTx } from '../../../generated/ethereum'
+import { BaseTransactionParser, TransactionParserArgs } from '../../parser'
+import * as foxy from './foxy'
+import * as thor from './thor'
+import * as uniV2 from './uniV2'
+import * as weth from './weth'
+import * as yearn from './yearn'
+import * as zrx from './zrx'
+
+export class TransactionParser extends BaseTransactionParser<EthereumTx> {
+  constructor(args: TransactionParserArgs) {
+    super(args)
+
+    this.assetId = toAssetId({
+      chainId: this.chainId,
+      assetNamespace: 'slip44',
+      assetReference: ASSET_REFERENCE.Ethereum
+    })
+
+    // order here matters (register most generic first to most specific last)
+    // weth and yearn have the same sigHash for deposit(), but the weth parser is stricter resulting in faster processing times
+    this.registerParser(new yearn.Parser({ chainId: this.chainId, provider: this.provider }))
+    this.registerParser(new foxy.Parser())
+    this.registerParser(new weth.Parser({ chainId: this.chainId, provider: this.provider }))
+    this.registerParser(new uniV2.Parser({ chainId: this.chainId, provider: this.provider }))
+    this.registerParser(new thor.Parser({ chainId: this.chainId, rpcUrl: args.rpcUrl }))
+    this.registerParser(new zrx.Parser())
+  }
+}
