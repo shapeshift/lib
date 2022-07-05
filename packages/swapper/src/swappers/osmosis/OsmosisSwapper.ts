@@ -55,7 +55,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  async initialize() {}
+  async initialize() { }
 
   async getTradeTxs(tradeResult: TradeResult): Promise<TradeTxs> {
     return {
@@ -105,7 +105,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     throw new Error('OsmosisSwapper: approveInfinite unimplemented')
   }
 
-  filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): any[] {
+  filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): string[] {
     const { sellAssetId } = args
     if (!this.supportAssets.includes(sellAssetId)) return []
     return this.supportAssets
@@ -118,7 +118,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
   async performIbcTransfer(
     input: any,
     adapter: any,
-    wallet: any,
+    wallet: HDWallet,
     accountBaseUrl: string,
     blockBaseUrl: string,
     denom: string,
@@ -181,12 +181,12 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         account_number: accountNumber,
         sequence
       },
-      wallet: wallet as any
+      wallet
     })
-    const txid1 = await adapter.broadcastTransaction(signed)
+    const txid = await adapter.broadcastTransaction(signed)
 
     return {
-      txid: txid1
+      txid: txid
     }
   }
 
