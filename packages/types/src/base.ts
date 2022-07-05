@@ -46,8 +46,7 @@ export type Asset = {
 // swapper
 // TODO remove this once web is using the type from swapper
 export enum SwapperType {
-  ZrxEthereum = '0xEthereum',
-  ZrxAvalanche = '0xAvalanche',
+  Zrx = '0x',
   Thorchain = 'Thorchain',
   Test = 'Test'
 }
