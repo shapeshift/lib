@@ -31,7 +31,7 @@ export const usdcContractFromChainId = (chainId: string): string | undefined => 
   }
 }
 
-export const isNativeEvmAsset = (assetId: AssetId): boolean | undefined => {
+export const isNativeEvmAsset = (assetId: AssetId): boolean => {
   const { chainId, assetNamespace, assetReference } = fromAssetId(assetId)
   switch (chainId) {
     case KnownChainIds.EthereumMainnet: {
@@ -40,7 +40,7 @@ export const isNativeEvmAsset = (assetId: AssetId): boolean | undefined => {
     case KnownChainIds.AvalancheMainnet:
       return assetNamespace === 'slip44' && assetReference === '9000'
     default:
-      return undefined
+      return false
   }
 }
 

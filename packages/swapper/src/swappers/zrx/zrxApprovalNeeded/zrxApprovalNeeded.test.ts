@@ -1,4 +1,5 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { KnownChainIds } from '@shapeshiftoss/types/src'
 import Web3 from 'web3'
 
 import { setupDeps } from '../../utils/test-data/setupDeps'
@@ -34,7 +35,7 @@ describe('zrxApprovalNeeded', () => {
   const wallet = {
     ethGetAddress: jest.fn(() => Promise.resolve(walletAddress))
   } as unknown as HDWallet
-  ;(deps.adapter.getChainId as jest.Mock).mockReturnValue('eip155:1')
+  ;(deps.adapter.getChainId as jest.Mock).mockReturnValue(KnownChainIds.EthereumMainnet)
 
   const { tradeQuote, sellAsset } = setupQuote()
 

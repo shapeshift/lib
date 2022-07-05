@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 
 const axiosConfig: AxiosRequestConfig = {
   timeout: 10000,
@@ -8,5 +8,5 @@ const axiosConfig: AxiosRequestConfig = {
   }
 }
 
-export const zrxServiceFactory = (baseUrl: string) =>
+export const zrxServiceFactory = (baseUrl: string): AxiosInstance =>
   axios.create({ ...axiosConfig, baseURL: baseUrl })

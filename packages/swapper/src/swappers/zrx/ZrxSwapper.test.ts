@@ -1,6 +1,6 @@
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { SwapperType } from '@shapeshiftoss/types'
+import { KnownChainIds, SwapperType } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import { ZrxSwapper } from '..'
@@ -43,7 +43,7 @@ describe('ZrxSwapper', () => {
   const wallet = <HDWallet>{}
   const web3 = <Web3>{}
   const adapter = <ethereum.ChainAdapter>{
-    getChainId: () => 'eip155:1'
+    getChainId: () => KnownChainIds.EthereumMainnet
   }
   const zrxSwapperDeps = { web3, adapter }
 

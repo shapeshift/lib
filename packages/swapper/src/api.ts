@@ -13,7 +13,6 @@ import { ZrxSupportedChainIds } from './swappers/zrx/ZrxSwapper'
 
 export const SwapError = createErrorClass('SwapError')
 
-// FIXME: There is almost certainly a better way to do this
 type ChainSpecificQuoteFeeData<T extends ChainId> = ChainSpecific<
   T,
   {
