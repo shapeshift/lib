@@ -15,7 +15,6 @@ import {
   BuyAssetBySellIdInput,
   CommonTradeInput,
   ExecuteTradeInput,
-  GetMinMaxInput,
   MinMaxOutput,
   SwapError,
   SwapErrorTypes,
@@ -85,7 +84,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     return osmoRate
   }
 
-  async getMinMax(input: GetMinMaxInput): Promise<MinMaxOutput> {
+  async getMinMax(input: { sellAsset: Asset }): Promise<MinMaxOutput> {
     const { sellAsset } = input
     const usdRate = await this.getUsdRate({ ...sellAsset })
     const minimum = bn(1).dividedBy(bnOrZero(usdRate)).toString()
