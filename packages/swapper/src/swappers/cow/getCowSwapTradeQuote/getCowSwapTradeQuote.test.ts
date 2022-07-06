@@ -3,7 +3,7 @@ import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { Asset, KnownChainIds } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
-import { GetEthTradeQuoteInput, TradeQuote } from '../../../api'
+import { GetEthTradeQuoteInput, SwapperType, TradeQuote } from '../../../api'
 import { ETH, FOX, WBTC, WETH } from '../../utils/test-data/assets'
 import { CowSwapperDeps } from '../CowSwapper'
 import { cowService } from '../utils/cowService'
@@ -88,7 +88,8 @@ const expectedTradeQuoteWethToFox: TradeQuote<'eip155:1'> = {
       gasPrice: '79036500000',
       approvalFee: '7903650000000000'
     },
-    tradeFee: '0'
+    tradeFee: '0',
+    tradeFeeSource: SwapperType.CowSwap
   },
   sellAmount: '985442057341242012', // selling 1 WETH = 1000000000000000000 less the fees
   buyAmount: '14501811818247595090576', // 14501 FOX
@@ -110,7 +111,8 @@ const expectedTradeQuoteWbtcToWeth: TradeQuote<'eip155:1'> = {
       gasPrice: '79036500000',
       approvalFee: '7903650000000000'
     },
-    tradeFee: '0'
+    tradeFee: '0',
+    tradeFeeSource: SwapperType.CowSwap
   },
   sellAmount: '99982762',
   buyAmount: '19136098853078932263', // 19.13 WETH

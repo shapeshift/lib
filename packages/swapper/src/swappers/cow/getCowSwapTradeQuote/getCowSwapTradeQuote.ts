@@ -1,7 +1,7 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
 import { AxiosResponse } from 'axios'
 
-import { GetTradeQuoteInput, SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
+import { GetTradeQuoteInput, SwapError, SwapErrorTypes, SwapperType, TradeQuote } from '../../../api'
 import { bn, bnOrZero } from '../../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../../utils/constants'
 import { normalizeIntegerAmount } from '../../utils/helpers/helpers'
@@ -132,7 +132,8 @@ export async function getCowSwapTradeQuote(
             .multipliedBy(bnOrZero(feeData.chainSpecific.gasPrice))
             .toString()
         },
-        tradeFee: '0'
+        tradeFee: '0',
+        tradeFeeSource: SwapperType.CowSwap
       },
       sellAmount: quote.sellAmount,
       buyAmount: quote.buyAmount,
