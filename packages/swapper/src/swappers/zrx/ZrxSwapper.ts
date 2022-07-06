@@ -11,6 +11,8 @@ import {
   BuyAssetBySellIdInput,
   ExecuteTradeInput,
   GetTradeQuoteInput,
+  SwapError,
+  SwapErrorTypes,
   Swapper,
   SwapperType,
   TradeQuote,
@@ -48,7 +50,16 @@ export class ZrxSwapper<T extends ZrxSupportedChainIds> implements Swapper<ZrxSu
   async initialize() {}
 
   getType() {
-    return SwapperType.Zrx
+    switch (this.chainId) {
+      case KnownChainIds.EthereumMainnet:
+        return SwapperType.ZrxEthereum
+      case KnownChainIds.AvalancheMainnet:
+        return SwapperType.ZrxAvalanche
+      default:
+        throw new SwapError('[getType]', {
+          code: SwapErrorTypes.UNSUPPORTED_CHAIN
+        })
+    }
   }
 
   async buildTrade(args: BuildTradeInput): Promise<ZrxTrade> {

@@ -37,10 +37,10 @@ manager
   .addSwapper(new ThorchainSwapper())
 
 // Get a swapper from the manager
-const swapper = manager.swappers.get(SwapperType.Zrx)
+const swapper = manager.swappers.get(SwapperType.ZrxEthereum)
 
 // Remove a swapper from the manager
-manager.removeSwapper(SwapperType.Zrx)
+manager.removeSwapper(SwapperType.ZrxEthereum)
 ```
 
 ### Working with the manager

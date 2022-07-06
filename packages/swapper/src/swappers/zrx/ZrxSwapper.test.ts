@@ -46,40 +46,40 @@ describe('ZrxSwapper', () => {
   const adapter = <ethereum.ChainAdapter>{
     getChainId: () => KnownChainIds.EthereumMainnet
   }
-  const zrxSwapperDeps = { web3, adapter }
+  const zrxEthereumSwapperDeps = { web3, adapter }
 
   it('calls getZrxTradeQuote on getTradeQuote', async () => {
     const { quoteInput } = setupQuote()
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
+    const swapper = new ZrxSwapper(zrxEthereumSwapperDeps)
     await swapper.getTradeQuote(quoteInput)
     expect(getZrxTradeQuote).toHaveBeenCalled()
   })
   it('returns Zrx type', () => {
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
+    const swapper = new ZrxSwapper(zrxEthereumSwapperDeps)
     const type = swapper.getType()
-    expect(type).toBe(SwapperType.Zrx)
+    expect(type).toBe(SwapperType.ZrxEthereum)
   })
   it('calls zrxBuildTrade on swapper.buildQuoteTx', async () => {
     const { buildTradeInput } = setupBuildTrade()
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
+    const swapper = new ZrxSwapper(zrxEthereumSwapperDeps)
     await swapper.buildTrade(buildTradeInput)
     expect(zrxBuildTrade).toHaveBeenCalled()
   })
   it('calls ZrxExecuteTrade on swapper.executeTrade', async () => {
     const { executeTradeInput } = setupExecuteTrade()
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
+    const swapper = new ZrxSwapper(zrxEthereumSwapperDeps)
     const args = { trade: executeTradeInput, wallet }
     await swapper.executeTrade(args)
     expect(zrxExecuteTrade).toHaveBeenCalled()
   })
   it('calls getUsdRate on swapper.getUsdRate', async () => {
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
+    const swapper = new ZrxSwapper(zrxEthereumSwapperDeps)
     await swapper.getUsdRate(FOX)
     expect(getUsdRate).toHaveBeenCalled()
   })
 
   it('calls zrxApprovalNeeded on swapper.approvalNeeded', async () => {
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
+    const swapper = new ZrxSwapper(zrxEthereumSwapperDeps)
     const { tradeQuote } = setupQuote()
     const args = { quote: tradeQuote, wallet }
     await swapper.approvalNeeded(args)
@@ -87,7 +87,7 @@ describe('ZrxSwapper', () => {
   })
 
   it('calls zrxApproveInfinite on swapper.approveInfinite', async () => {
-    const swapper = new ZrxSwapper(zrxSwapperDeps)
+    const swapper = new ZrxSwapper(zrxEthereumSwapperDeps)
     const { tradeQuote } = setupQuote()
     const args = { quote: tradeQuote, wallet }
     await swapper.approveInfinite(args)
