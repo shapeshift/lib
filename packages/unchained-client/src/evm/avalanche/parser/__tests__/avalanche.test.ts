@@ -1,10 +1,11 @@
 import { avalancheAssetId, avalancheChainId } from '@shapeshiftoss/caip'
 
 import { Status, TransferType } from '../../../../types'
-import { ParsedTx } from '../../../parser'
+import { ParsedTx, TxParser as EVMTxParser } from '../../../parser'
 import { TransactionParser } from '../index'
 import avaxSelfSend from './mockData/avaxSelfSend'
 import avaxStandard from './mockData/avaxStandard'
+import erc20Approve from './mockData/erc20Approve'
 import { usdcToken } from './mockData/tokens'
 import tokenSelfSend from './mockData/tokenSelfSend'
 import tokenStandard from './mockData/tokenStandard'
@@ -381,6 +382,63 @@ describe('parseTx', () => {
             token: usdcToken
           }
         ]
+      }
+
+      const actual = await txParser.parse(tx, address)
+
+      expect(expected).toEqual(actual)
+    })
+  })
+
+  describe('erc20', () => {
+    it('should be able to parse approve mempool', async () => {
+      const { txMempool } = erc20Approve
+      const address = '0xA82a74B86fE11FB430Ce7A529C37efAd82ea222d'
+
+      const expected: ParsedTx = {
+        txid: txMempool.txid,
+        blockHeight: txMempool.blockHeight,
+        blockTime: txMempool.timestamp,
+        address,
+        chainId: avalancheChainId,
+        confirmations: txMempool.confirmations,
+        status: Status.Pending,
+        transfers: [],
+        data: {
+          assetId: 'eip155:43114/erc20:0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e',
+          method: 'approve',
+          parser: EVMTxParser.ERC20
+        }
+      }
+
+      const actual = await txParser.parse(txMempool, address)
+
+      expect(expected).toEqual(actual)
+    })
+
+    it('should be able to parse approve', async () => {
+      const { tx } = erc20Approve
+      const address = '0xA82a74B86fE11FB430Ce7A529C37efAd82ea222d'
+
+      const expected: ParsedTx = {
+        txid: tx.txid,
+        blockHash: tx.blockHash,
+        blockHeight: tx.blockHeight,
+        blockTime: tx.timestamp,
+        address,
+        chainId: avalancheChainId,
+        confirmations: tx.confirmations,
+        status: Status.Confirmed,
+        fee: {
+          assetId: avalancheAssetId,
+          value: '1645985000000000'
+        },
+        transfers: [],
+        data: {
+          assetId: 'eip155:43114/erc20:0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e',
+          method: 'approve',
+          parser: EVMTxParser.ERC20
+        }
       }
 
       const actual = await txParser.parse(tx, address)

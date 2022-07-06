@@ -28,8 +28,7 @@ export const tokenStandard: AvalancheTx = {
       to: '0x64e13a11b87A9025F6F4fcB0c61563984f3D58Df',
       value: '143199292'
     }
-  ],
-  internalTxs: []
+  ]
 }
 
 export default {
