@@ -42,11 +42,3 @@ export type Asset = {
   explorerTxLink: string
   explorerAddressLink: string
 }
-
-// swapper
-// TODO remove this once web is using the type from swapper
-export enum SwapperType {
-  Zrx = '0x',
-  Thorchain = 'Thorchain',
-  Test = 'Test'
-}
