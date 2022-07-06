@@ -35,10 +35,6 @@ export type CowSwapperDeps = {
   feeAsset: Asset // should be WETH asset
 }
 
-type GetCowSwapTradeQuoteInput = GetTradeQuoteInput & {
-  chainId: KnownChainIds.EthereumMainnet
-}
-
 export class CowSwapper implements Swapper<KnownChainIds.EthereumMainnet> {
   public static swapperName = 'CowSwapper'
   deps: CowSwapperDeps
@@ -60,7 +56,7 @@ export class CowSwapper implements Swapper<KnownChainIds.EthereumMainnet> {
   }
 
   async getTradeQuote(
-    input: GetCowSwapTradeQuoteInput
+    input: GetTradeQuoteInput
   ): Promise<TradeQuote<KnownChainIds.EthereumMainnet>> {
     return getCowSwapTradeQuote(this.deps, input)
   }

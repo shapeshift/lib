@@ -1,8 +1,8 @@
 import { adapters, AssetId, ChainId, fromAssetId } from '@shapeshiftoss/caip'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
-import type { ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
+import type { ETHSignTx } from '@shapeshiftoss/hdwallet-core'
 import type { Asset } from '@shapeshiftoss/types'
-import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
+import { KnownChainIds } from '@shapeshiftoss/types'
 
 import {
   ApprovalNeededInput,
@@ -27,19 +27,6 @@ import { thorTradeApproveInfinite } from './thorTradeApproveInfinite/thorTradeAp
 import { PoolResponse, ThorchainSwapperDeps } from './types'
 import { getUsdRate } from './utils/getUsdRate/getUsdRate'
 import { thorService } from './utils/thorService'
-
-type GetEthereumTradeQuoteInput = GetTradeQuoteInput & {
-  chainId: KnownChainIds.EthereumMainnet
-}
-
-type GetBtcTradeQuoteInput = GetTradeQuoteInput & {
-  chainId: KnownChainIds.BitcoinMainnet
-  accountType: UtxoAccountType
-  bip44Params: BIP44Params
-  wallet: HDWallet
-}
-
-type GetThorSwapTradeQuoteInput = GetEthereumTradeQuoteInput | GetBtcTradeQuoteInput
 
 export class ThorchainSwapper implements Swapper<ChainId> {
   private swapSupportedChainIds: Record<ChainId, boolean> = {
@@ -110,7 +97,7 @@ export class ThorchainSwapper implements Swapper<ChainId> {
     throw new Error('ThorchainSwapper: buildTrade unimplemented')
   }
 
-  async getTradeQuote(input: GetThorSwapTradeQuoteInput): Promise<TradeQuote<ChainId>> {
+  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ChainId>> {
     return getThorTradeQuote({ deps: this.deps, input })
   }
 
