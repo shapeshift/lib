@@ -1,5 +1,6 @@
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import { AxiosStatic } from 'axios'
 import Web3 from 'web3'
@@ -66,7 +67,7 @@ describe('zrxBuildTrade', () => {
   }
 
   const buildTradeInput: BuildTradeInput = {
-    chainId: 'eip155:1',
+    chainId: KnownChainIds.EthereumMainnet,
     sendMax: false,
     sellAsset,
     buyAsset,

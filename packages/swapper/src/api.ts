@@ -54,7 +54,7 @@ export type SupportedSellAssetsInput = {
   assetIds: AssetId[]
 }
 
-export type CommonTradeInput = {
+type CommonTradeInput = {
   sellAsset: Asset
   buyAsset: Asset
   sellAmount: string
@@ -63,25 +63,18 @@ export type CommonTradeInput = {
   wallet?: HDWallet // TODO remove this in a followup PR
 }
 
-export type GetCowTradeQuoteInput = CommonTradeInput & {
-  chainId: 'eip155:1'
+type GetEthereumTradeQuoteInput = CommonTradeInput & {
+  chainId: KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
 }
 
-export type GetZrxTradeQuoteInput = CommonTradeInput & {
-  chainId: ZrxSupportedChainIds
-}
-
-export type GetBtcTradeQuoteInput = CommonTradeInput & {
-  chainId: 'bip122:000000000019d6689c085ae165831e93'
+type GetBtcTradeQuoteInput = CommonTradeInput & {
+  chainId: KnownChainIds.BitcoinMainnet
   accountType: UtxoAccountType
   bip44Params: BIP44Params
   wallet: HDWallet
 }
 
-export type GetTradeQuoteInput =
-  | GetCowTradeQuoteInput
-  | GetBtcTradeQuoteInput
-  | GetZrxTradeQuoteInput
+export type GetTradeQuoteInput = GetBtcTradeQuoteInput | GetEthereumTradeQuoteInput
 
 export type BuildTradeInput = GetTradeQuoteInput & {
   buyAssetAccountNumber: number

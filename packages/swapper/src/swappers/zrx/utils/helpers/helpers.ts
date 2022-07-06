@@ -1,5 +1,4 @@
-import { AssetId, fromAssetId } from '@shapeshiftoss/caip'
-import { avalancheAssetId, ethAssetId } from '@shapeshiftoss/caip/src'
+import { AssetId, avalancheAssetId, ethAssetId, fromAssetId } from '@shapeshiftoss/caip'
 import { Asset, KnownChainIds } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 

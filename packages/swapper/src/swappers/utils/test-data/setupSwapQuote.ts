@@ -21,7 +21,7 @@ export const setupQuote = () => {
   }
 
   const quoteInput: GetTradeQuoteInput = {
-    chainId: 'eip155:1',
+    chainId: KnownChainIds.EthereumMainnet,
     sellAmount: '1000000000000000000',
     sellAsset,
     buyAsset,
