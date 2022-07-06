@@ -1,7 +1,13 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
 import { AxiosResponse } from 'axios'
 
-import { GetTradeQuoteInput, SwapError, SwapErrorTypes, SwapperType, TradeQuote } from '../../../api'
+import {
+  GetTradeQuoteInput,
+  SwapError,
+  SwapErrorTypes,
+  SwapperType,
+  TradeQuote
+} from '../../../api'
 import { bn, bnOrZero } from '../../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../../utils/constants'
 import { normalizeIntegerAmount } from '../../utils/helpers/helpers'
