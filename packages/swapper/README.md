@@ -31,10 +31,10 @@ import { SwapperManager, SwapperType, ZrxSwapper } from '@shapeshiftoss/swapper'
 // in code
 const manager = new SwapperManager<MyCustomSwapperTypes>()
 
-// Add a swapper to the manager, you can add your own if they follow the `Swapper` api spec
+// Add a swapper to the manager, you can add your own if it follows the `Swapper` API spec
 manager
-  .addSwapper(SwapperType.Zrx, new ZrxSwapper())
-  .addSwapper(SwapperType.Thorchain, new ThorchainSwapper())
+  .addSwapper(new ZrxSwapper())
+  .addSwapper(new ThorchainSwapper())
 
 // Get a swapper from the manager
 const swapper = manager.swappers.get(SwapperType.Zrx)
