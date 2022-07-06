@@ -22,6 +22,7 @@ import { cowApprovalNeeded } from './cowApprovalNeeded/cowApprovalNeeded'
 import { cowApproveInfinite } from './cowApproveInfinite/cowApproveInfinite'
 import { cowBuildTrade } from './cowBuildTrade/cowBuildTrade'
 import { cowExecuteTrade } from './cowExecuteTrade/cowExecuteTrade'
+import { cowGetTradeTxs } from './cowGetTradeTxs/cowGetTradeTxs'
 import { getCowSwapTradeQuote } from './getCowSwapTradeQuote/getCowSwapTradeQuote'
 import { COWSWAP_UNSUPPORTED_ASSETS } from './utils/blacklist'
 import { getUsdRate } from './utils/helpers/helpers'
@@ -98,7 +99,7 @@ export class CowSwapper implements Swapper<'eip155:1'> {
     )
   }
 
-  async getTradeTxs(): Promise<TradeTxs> {
-    throw new Error('CowSwapper: executeTrade unimplemented')
+  async getTradeTxs(args: TradeResult): Promise<TradeTxs> {
+    return cowGetTradeTxs(this.deps, args)
   }
 }

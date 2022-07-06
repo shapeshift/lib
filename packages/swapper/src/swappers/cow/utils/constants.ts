@@ -12,3 +12,4 @@ export const COW_SWAP_SETTLEMENT_ADDRESS = '0x9008D19f58AAbD9eD0D60971565AA85105
 export const ORDER_KIND_SELL = 'sell'
 export const SIGNING_SCHEME = 'ethsign'
 export const ERC20_TOKEN_BALANCE = 'erc20'
+export const ORDER_STATUS_FULFILLED = 'fulfilled'

@@ -20,6 +20,12 @@ export type CowSwapQuoteResponse = {
   expiration: string
 }
 
-export type CowSwapOrdersResponse = {
-  uid: string
+export type CowSwapGetOrdersResponse = {
+  status: string
 }
+
+export type CowSwapGetTradesElement = {
+  txHash: string
+}
+
+export type CowSwapGetTradesResponse = Array<CowSwapGetTradesElement>
