@@ -25,8 +25,8 @@ jest.mock('../utils/zrxService')
 
 describe('getZrxTradeQuote', () => {
   const sellAmount = '1000000000000000000'
-  ;(normalizeAmount as jest.Mock<unknown>).mockReturnValue(sellAmount)
-  ;(baseUrlFromChainId as jest.Mock<unknown>).mockReturnValue(KnownChainIds.EthereumMainnet)
+  ;(normalizeAmount as jest.Mock<string>).mockReturnValue(sellAmount)
+  ;(baseUrlFromChainId as jest.Mock<string>).mockReturnValue('https://api.0x.org/')
   const zrxSwapperDeps = {
     web3: <Web3>{},
     adapter: <ethereum.ChainAdapter>{
