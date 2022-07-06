@@ -43,15 +43,15 @@ describe('SwapperManager', () => {
   describe('addSwapper', () => {
     it('should add swapper', () => {
       const manager = new SwapperManager()
-      manager.addSwapper(SwapperType.Thorchain, new ThorchainSwapper(thorchainSwapperDeps))
+      manager.addSwapper(new ThorchainSwapper(thorchainSwapperDeps))
       expect(manager.swappers.get(SwapperType.Thorchain)).toBeInstanceOf(ThorchainSwapper)
     })
 
     it('should be chainable', async () => {
       const manager = new SwapperManager()
       manager
-        .addSwapper(SwapperType.Thorchain, new ThorchainSwapper(thorchainSwapperDeps))
-        .addSwapper(SwapperType.Zrx, new ZrxSwapper(zrxSwapperDeps))
+        .addSwapper(new ThorchainSwapper(thorchainSwapperDeps))
+        .addSwapper(new ZrxSwapper(zrxSwapperDeps))
       expect(manager.swappers.get(SwapperType.Zrx)).toBeInstanceOf(ZrxSwapper)
     })
 
@@ -59,8 +59,8 @@ describe('SwapperManager', () => {
       const swapper = new SwapperManager()
       expect(() => {
         swapper
-          .addSwapper(SwapperType.Thorchain, new ThorchainSwapper(thorchainSwapperDeps))
-          .addSwapper(SwapperType.Thorchain, new ZrxSwapper(zrxSwapperDeps))
+          .addSwapper(new ThorchainSwapper(thorchainSwapperDeps))
+          .addSwapper(new ThorchainSwapper(thorchainSwapperDeps))
       }).toThrow('already exists')
     })
   })
@@ -68,19 +68,18 @@ describe('SwapperManager', () => {
   describe('get', () => {
     it('should return a swapper that has been added', () => {
       const swapper = new SwapperManager()
-      swapper.addSwapper(SwapperType.Thorchain, new ThorchainSwapper(thorchainSwapperDeps))
+      swapper.addSwapper(new ThorchainSwapper(thorchainSwapperDeps))
       expect(swapper.swappers.get(SwapperType.Thorchain)).toBeInstanceOf(ThorchainSwapper)
     })
 
     it('should return the correct swapper', () => {
       const swapper = new SwapperManager()
       swapper
-        .addSwapper(SwapperType.Thorchain, new ThorchainSwapper(thorchainSwapperDeps))
-        .addSwapper(SwapperType.Zrx, new ZrxSwapper(zrxSwapperDeps))
-        .addSwapper(SwapperType.CowSwap, new CowSwapper(cowSwapperDeps))
+        .addSwapper(new ThorchainSwapper(thorchainSwapperDeps))
+        .addSwapper(new ZrxSwapper(zrxSwapperDeps))
+        .addSwapper(new CowSwapper(cowSwapperDeps))
 
       expect(swapper.swappers.get(SwapperType.Thorchain)).toBeInstanceOf(ThorchainSwapper)
-      expect(swapper.swappers.get(SwapperType.Zrx)).toBeInstanceOf(ZrxSwapper)
       expect(swapper.swappers.get(SwapperType.Zrx)).toBeInstanceOf(ZrxSwapper)
       expect(swapper.swappers.get(SwapperType.CowSwap)).toBeInstanceOf(CowSwapper)
     })
@@ -90,7 +89,7 @@ describe('SwapperManager', () => {
     it('should remove swapper and return this', () => {
       const swapper = new SwapperManager()
       swapper
-        .addSwapper(SwapperType.Thorchain, new ThorchainSwapper(thorchainSwapperDeps))
+        .addSwapper(new ThorchainSwapper(thorchainSwapperDeps))
         .removeSwapper(SwapperType.Thorchain)
       expect(swapper.swappers.get(SwapperType.Thorchain)).toBeUndefined()
     })
@@ -110,9 +109,7 @@ describe('SwapperManager', () => {
       const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
       const swapperManager = new SwapperManager()
 
-      swapperManager
-        .addSwapper(SwapperType.Zrx, zrxSwapper)
-        .addSwapper(SwapperType.Thorchain, new ThorchainSwapper(thorchainSwapperDeps))
+      swapperManager.addSwapper(zrxSwapper).addSwapper(new ThorchainSwapper(thorchainSwapperDeps))
 
       expect(swapperManager.getSwappersByPair({ sellAssetId, buyAssetId })).toEqual([zrxSwapper])
     })
@@ -123,9 +120,7 @@ describe('SwapperManager', () => {
       const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
       const swapperManager = new SwapperManager()
 
-      swapperManager
-        .addSwapper(SwapperType.Zrx, zrxSwapper)
-        .addSwapper(SwapperType.Thorchain, new ThorchainSwapper(thorchainSwapperDeps))
+      swapperManager.addSwapper(zrxSwapper).addSwapper(new ThorchainSwapper(thorchainSwapperDeps))
 
       expect(swapperManager.getSwappersByPair({ sellAssetId, buyAssetId })).toEqual([])
     })
@@ -141,7 +136,7 @@ describe('SwapperManager', () => {
 
       const sellAssetId = 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
       const swapper = new SwapperManager()
-      swapper.addSwapper(SwapperType.Zrx, new ZrxSwapper(zrxSwapperDeps))
+      swapper.addSwapper(new ZrxSwapper(zrxSwapperDeps))
 
       expect(swapper.getSupportedBuyAssetIdsFromSellId({ sellAssetId, assetIds })).toStrictEqual(
         assetIds.slice(-2)
@@ -158,7 +153,7 @@ describe('SwapperManager', () => {
 
       const sellAssetId = 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
       const swapper = new SwapperManager()
-      swapper.addSwapper(SwapperType.Zrx, new ZrxSwapper(zrxSwapperDeps))
+      swapper.addSwapper(new ZrxSwapper(zrxSwapperDeps))
 
       expect(swapper.getSupportedBuyAssetIdsFromSellId({ sellAssetId, assetIds })).toStrictEqual(
         assetIds.slice(1, 3)
@@ -175,7 +170,7 @@ describe('SwapperManager', () => {
       ]
 
       const swapper = new SwapperManager()
-      swapper.addSwapper(SwapperType.Zrx, new ZrxSwapper(zrxSwapperDeps))
+      swapper.addSwapper(new ZrxSwapper(zrxSwapperDeps))
 
       expect(swapper.getSupportedSellableAssetIds({ assetIds })).toStrictEqual(assetIds.slice(-2))
     })
@@ -189,7 +184,7 @@ describe('SwapperManager', () => {
       ]
 
       const swapper = new SwapperManager()
-      swapper.addSwapper(SwapperType.Zrx, new ZrxSwapper(zrxSwapperDeps))
+      swapper.addSwapper(new ZrxSwapper(zrxSwapperDeps))
 
       expect(swapper.getSupportedSellableAssetIds({ assetIds })).toStrictEqual(assetIds.slice(1, 3))
     })
