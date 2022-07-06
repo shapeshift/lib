@@ -1,4 +1,4 @@
-import { ASSET_REFERENCE, AssetId, ChainId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
+import { AssetId, ChainId, ethChainId, toAssetId } from '@shapeshiftoss/caip'
 import { BigNumber } from 'bignumber.js'
 import { ethers } from 'ethers'
 
@@ -114,8 +114,11 @@ export class BaseTransactionParser<T extends Tx> {
     }
 
     tx.tokenTransfers?.forEach((transfer) => {
-      // FTX Token (FTT) name and symbol was set backwards on the ERC20 contract
-      if (transfer.contract === '0x50D1c9771902476076eCFc8B2A83Ad6b9355a4c9') {
+      // FTX Token (FTT) name and symbol was set backwards on the ERC20 contract (Ethereum Mainnet)
+      if (
+        this.chainId === ethChainId &&
+        transfer.contract === '0x50D1c9771902476076eCFc8B2A83Ad6b9355a4c9'
+      ) {
         transfer.name = transfer.symbol
         transfer.symbol = transfer.name
       }
@@ -129,7 +132,7 @@ export class BaseTransactionParser<T extends Tx> {
 
       const transferArgs = [
         toAssetId({
-          ...fromChainId(this.chainId),
+          chainId: this.chainId,
           assetNamespace: 'erc20',
           assetReference: transfer.contract
         }),
@@ -159,16 +162,7 @@ export class BaseTransactionParser<T extends Tx> {
     })
 
     tx.internalTxs?.forEach((internalTx) => {
-      const transferArgs = [
-        toAssetId({
-          ...fromChainId(this.chainId),
-          assetNamespace: 'slip44',
-          assetReference: ASSET_REFERENCE.Ethereum
-        }),
-        internalTx.from,
-        internalTx.to,
-        internalTx.value
-      ] as const
+      const transferArgs = [this.assetId, internalTx.from, internalTx.to, internalTx.value] as const
 
       // internal eth send
       if (address === internalTx.from) {
