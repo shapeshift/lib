@@ -1,13 +1,7 @@
 import { AssetId, ChainId } from '@shapeshiftoss/caip'
 import { createErrorClass } from '@shapeshiftoss/errors'
 import { BTCSignTx, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
-import {
-  Asset,
-  BIP44Params,
-  ChainSpecific,
-  KnownChainIds,
-  UtxoAccountType
-} from '@shapeshiftoss/types'
+import { Asset, ChainSpecific, KnownChainIds } from '@shapeshiftoss/types'
 
 import { ZrxSupportedChainIds } from './swappers/zrx/ZrxSwapper'
 
@@ -54,7 +48,8 @@ export type SupportedSellAssetsInput = {
   assetIds: AssetId[]
 }
 
-type CommonTradeInput = {
+export type GetTradeQuoteInput = {
+  chainId: KnownChainIds
   sellAsset: Asset
   buyAsset: Asset
   sellAmount: string
@@ -62,19 +57,6 @@ type CommonTradeInput = {
   sellAssetAccountNumber: number
   wallet?: HDWallet // TODO remove this in a followup PR
 }
-
-type GetEthereumTradeQuoteInput = CommonTradeInput & {
-  chainId: KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
-}
-
-type GetBtcTradeQuoteInput = CommonTradeInput & {
-  chainId: KnownChainIds.BitcoinMainnet
-  accountType: UtxoAccountType
-  bip44Params: BIP44Params
-  wallet: HDWallet
-}
-
-export type GetTradeQuoteInput = GetBtcTradeQuoteInput | GetEthereumTradeQuoteInput
 
 export type BuildTradeInput = GetTradeQuoteInput & {
   buyAssetAccountNumber: number

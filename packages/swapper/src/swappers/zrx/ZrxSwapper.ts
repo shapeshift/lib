@@ -33,6 +33,10 @@ export type ZrxSwapperDeps = {
 
 export type ZrxSupportedChainIds = KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
 
+type GetZrxSwapTradeQuoteInput = GetTradeQuoteInput & {
+  chainId: ZrxSupportedChainIds
+}
+
 export class ZrxSwapper<T extends ZrxSupportedChainIds> implements Swapper<ZrxSupportedChainIds> {
   public static swapperName = 'ZrxSwapper'
   deps: ZrxSwapperDeps
@@ -55,7 +59,7 @@ export class ZrxSwapper<T extends ZrxSupportedChainIds> implements Swapper<ZrxSu
     return zrxBuildTrade(this.deps, args)
   }
 
-  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ZrxSupportedChainIds>> {
+  async getTradeQuote(input: GetZrxSwapTradeQuoteInput): Promise<TradeQuote<ZrxSupportedChainIds>> {
     return getZrxTradeQuote(input)
   }
 
