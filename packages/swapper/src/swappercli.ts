@@ -1,6 +1,7 @@
 import { AssetService } from '@shapeshiftoss/asset-service'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
+import { KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import BigNumber from 'bignumber.js'
 import dotenv from 'dotenv'
@@ -107,7 +108,7 @@ const main = async (): Promise<void> => {
   let quote
   try {
     quote = await swapper.getTradeQuote({
-      chainId: 'eip155:1',
+      chainId: KnownChainIds.EthereumMainnet,
       sellAsset,
       buyAsset,
       sellAmount: sellAmountBase,
@@ -133,7 +134,7 @@ const main = async (): Promise<void> => {
   )
   if (answer === 'y') {
     const trade = await swapper.buildTrade({
-      chainId: 'eip155:1',
+      chainId: KnownChainIds.EthereumMainnet,
       wallet,
       buyAsset,
       sendMax: false,
