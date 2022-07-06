@@ -75,11 +75,7 @@ export const getUsdRate = async (
 }
 
 export const getNowPlusThirtyMinutesTimestamp = (): number => {
-  const millisecondsPerMinute = 60000
-
-  // UTC date + 30 minutes
-  const nowPlusThirtyMinutesDate = new Date(new Date().getTime() + 30 * millisecondsPerMinute)
-
-  // returning the timestamp in seconds
-  return Math.round(nowPlusThirtyMinutesDate.getTime() / 1000)
+  const ts = new Date()
+  ts.setMinutes(ts.getMinutes() + 30)
+  return Math.round(ts.getTime() / 1000)
 }
