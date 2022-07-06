@@ -113,9 +113,9 @@ const expectedTradeWethToFox: Trade<'eip155:1'> = {
 }
 
 const expectedTradeQuoteWbtcToWethWithApprovalFee: Trade<'eip155:1'> = {
-  rate: '19.139398102523845323456857493095', // 19.14 WETH per WBTC
+  rate: '19.13939810252384532346', // 19.14 WETH per WBTC
   feeData: {
-    fee: '2931322143956216.3557777214', // fee in WETH
+    fee: '2931322143956216.36', // fee in WETH
     chainSpecific: {
       estimatedGas: '100000',
       gasPrice: '79036500000',

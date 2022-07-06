@@ -72,12 +72,11 @@ export async function cowBuildTrade(
       data: { quote }
     } = quoteResponse
 
-    const rate = bn(quote.buyAmount)
-      .div(quote.sellAmount)
-      .times(bn(10).exponentiatedBy(sellAsset.precision - buyAsset.precision))
-      .toString()
+    const buyCryptoAmount = bn(quote.buyAmount).div(bn(10).exponentiatedBy(buyAsset.precision))
+    const sellCryptoAmount = bn(quote.sellAmount).div(bn(10).exponentiatedBy(sellAsset.precision))
+    const rate = buyCryptoAmount.div(sellCryptoAmount).toString()
 
-    const [feeDataOptions, wethUsdRate, usdRateSellAsset] = await Promise.all([
+    const [feeDataOptions, feeAssetUsdRate, sellAssetUsdRate] = await Promise.all([
       adapter.getFeeData({
         to: COW_SWAP_VAULT_RELAYER_ADDRESS,
         value: '0',
@@ -88,11 +87,21 @@ export async function cowBuildTrade(
     ])
     const feeData = feeDataOptions['fast']
 
-    const fee = bnOrZero(quote.feeAmount)
-      .multipliedBy(bnOrZero(usdRateSellAsset))
-      .div(bnOrZero(wethUsdRate))
-      .div(bn(10).exponentiatedBy(sellAsset.precision - feeAsset.precision))
-      .toString()
+    // quote.feeAmount is expressed in sellAsset token
+    // We need fee to be expressed in feeAsset token
+    // feeInFeeAsset * feeAssetUsdRate = feeInSellAsset * sellAssetUsdRate
+    // hence feeInFeeAsset = feeInSellAsset * sellAssetUsdRate / feeAssetUsdRate
+    const feeInSellAsset = bnOrZero(quote.feeAmount).div(
+      bn(10).exponentiatedBy(sellAsset.precision)
+    )
+
+    // feeInFeeAsset = feeInSellAsset * sellAssetUsdRate / feeAssetUsdRate
+    const feeInFeeAsset = feeInSellAsset
+      .multipliedBy(bnOrZero(sellAssetUsdRate))
+      .div(bnOrZero(feeAssetUsdRate))
+
+    // taking precision into account
+    const fee = feeInFeeAsset.multipliedBy(bn(10).exponentiatedBy(feeAsset.precision)).toString()
 
     const trade: Trade<'eip155:1'> = {
       rate,

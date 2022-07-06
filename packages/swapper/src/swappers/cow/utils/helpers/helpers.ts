@@ -38,6 +38,10 @@ export const getUsdRate = async (
     })
   }
 
+  if (erc20Address === USDC_CONTRACT_ADDRESS) {
+    return '1'
+  }
+
   const buyAmountInDollars = 1000
   const buyAmount = bn(buyAmountInDollars).times(bn(10).exponentiatedBy(USDC_ASSET_PRECISION))
 
