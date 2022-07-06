@@ -51,10 +51,6 @@ export async function zrxBuildTrade(
     const slippagePercentage = slippage ? bnOrZero(slippage).div(100).toString() : DEFAULT_SLIPPAGE
 
     const baseUrl = baseUrlFromChainId(buyAsset.chainId)
-    if (!baseUrl)
-      throw new SwapError('getUsdRate] - Unsupported chainId', {
-        code: SwapErrorTypes.UNSUPPORTED_CHAIN
-      })
     const zrxService = await zrxServiceFactory(baseUrl)
 
     /**

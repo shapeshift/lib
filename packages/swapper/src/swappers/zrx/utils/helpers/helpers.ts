@@ -7,7 +7,7 @@ import { bn, bnOrZero } from '../../../utils/bignumber'
 import { ZrxPriceResponse } from '../../types'
 import { zrxServiceFactory } from '../zrxService'
 
-export const baseUrlFromChainId = (chainId: string): string | undefined => {
+export const baseUrlFromChainId = (chainId: string): string => {
   switch (chainId) {
     case KnownChainIds.EthereumMainnet: {
       return 'https://api.0x.org/'
@@ -15,11 +15,13 @@ export const baseUrlFromChainId = (chainId: string): string | undefined => {
     case KnownChainIds.AvalancheMainnet:
       return 'https://avalanche.api.0x.org/'
     default:
-      return undefined
+      throw new SwapError(`baseUrlFromChainId] - Unsupported chainId: ${chainId}`, {
+        code: SwapErrorTypes.UNSUPPORTED_CHAIN
+      })
   }
 }
 
-export const usdcContractFromChainId = (chainId: string): string | undefined => {
+export const usdcContractFromChainId = (chainId: string): string => {
   switch (chainId) {
     case KnownChainIds.EthereumMainnet: {
       return '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
@@ -27,7 +29,9 @@ export const usdcContractFromChainId = (chainId: string): string | undefined => 
     case KnownChainIds.AvalancheMainnet:
       return '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e'
     default:
-      return undefined
+      throw new SwapError(`usdcContractFromChainId] - Unsupported chainId: ${chainId}`, {
+        code: SwapErrorTypes.UNSUPPORTED_CHAIN
+      })
   }
 }
 
@@ -51,10 +55,6 @@ export const getUsdRate = async (asset: Asset): Promise<string> => {
     const USDC_CONTRACT_ADDRESS = usdcContractFromChainId(asset.chainId)
     if (erc20Address?.toLowerCase() === USDC_CONTRACT_ADDRESS) return '1' // Will break if comparing against usdc
     const baseUrl = baseUrlFromChainId(asset.chainId)
-    if (!(baseUrl && USDC_CONTRACT_ADDRESS))
-      throw new SwapError('getUsdRate] - Unsupported chainId', {
-        code: SwapErrorTypes.UNSUPPORTED_CHAIN
-      })
     const zrxService = await zrxServiceFactory(baseUrl)
     const rateResponse: AxiosResponse<ZrxPriceResponse> = await zrxService.get<ZrxPriceResponse>(
       '/swap/v1/price',

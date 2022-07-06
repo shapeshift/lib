@@ -43,10 +43,6 @@ export async function getZrxTradeQuote(
       bnOrZero(sellAmount).eq(0) ? minQuoteSellAmount : sellAmount
     )
     const baseUrl = baseUrlFromChainId(buyAsset.chainId)
-    if (!baseUrl)
-      throw new SwapError('getUsdRate] - Unsupported chainId', {
-        code: SwapErrorTypes.UNSUPPORTED_CHAIN
-      })
     const zrxService = await zrxServiceFactory(baseUrl)
 
     /**
