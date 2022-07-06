@@ -21,11 +21,11 @@ export class SwapperManager {
 
   /**
    *
-   * @param swapperType swapper type {SwapperType|string}
    * @param swapperInstance swapper instance {Swapper}
    * @returns {SwapperManager}
    */
-  addSwapper(swapperType: SwapperType, swapperInstance: Swapper<ChainId>): this {
+  addSwapper(swapperInstance: Swapper<ChainId>): this {
+    const swapperType = swapperInstance.getType()
     const swapper = this.swappers.get(swapperType)
     if (swapper)
       throw new SwapError('[addSwapper] - swapper already exists', {
