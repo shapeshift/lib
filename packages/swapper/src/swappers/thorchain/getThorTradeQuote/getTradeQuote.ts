@@ -1,7 +1,5 @@
-import { ethChainId } from '@shapeshift/caip'
 import { ChainId, fromAssetId, getFeeAssetIdFromAssetId } from '@shapeshiftoss/caip'
 import { Asset } from '@shapeshiftoss/types'
-import { btcChainId } from 'packages/caip/dist'
 
 import { GetTradeQuoteInput, SwapError, SwapErrorTypes, SwapSource, TradeQuote } from '../../../api'
 import { bnOrZero, fromBaseUnit } from '../../utils/bignumber'
@@ -83,7 +81,7 @@ export const getThorTradeQuote = async ({
     }
 
     switch (chainId) {
-      case ethChainId:
+      case 'eip155:1':
         return (async (): Promise<TradeQuote<'eip155:1'>> => {
           const bip44Params = adapter.buildBIP44Params({
             accountNumber: Number(sellAssetAccountNumber)
@@ -115,7 +113,7 @@ export const getThorTradeQuote = async ({
           }
         })()
 
-      case btcChainId:
+      case 'bip122:000000000019d6689c085ae165831e93':
         return (async (): Promise<TradeQuote<'bip122:000000000019d6689c085ae165831e93'>> => {
           const receiveAddress = await adapter.getAddress({
             wallet,
