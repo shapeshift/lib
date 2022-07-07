@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { ChainId } from '@shapeshiftoss/caip'
 import { ChainAdapterManager, ethereum } from '@shapeshiftoss/chain-adapters'
+import { KnownChainIds } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
-import { SwapperType } from '../api'
+import { Swapper, SwapperType } from '../api'
 import { CowSwapper, ThorchainSwapper, ZrxSwapper } from '../swappers'
 import { CowSwapperDeps } from '../swappers/cow/CowSwapper'
 import { ThorchainSwapperDeps } from '../swappers/thorchain/types'
@@ -14,13 +16,21 @@ describe('SwapperManager', () => {
   const zrxEthereumSwapperDeps: ZrxSwapperDeps = {
     web3: <Web3>{},
     adapter: <ethereum.ChainAdapter>{
-      getChainId: () => 'eip155:1'
+      getChainId: () => KnownChainIds.EthereumMainnet
     }
   }
+
+  const zrxAvalancheSwapperDeps: ZrxSwapperDeps = {
+    web3: <Web3>{},
+    adapter: <ethereum.ChainAdapter>{
+      getChainId: () => KnownChainIds.AvalancheMainnet
+    }
+  }
+
   const cowSwapperDeps: CowSwapperDeps = {
     apiUrl: 'https://api.cow.fi/mainnet/api/',
     adapter: <ethereum.ChainAdapter>{
-      getChainId: () => 'eip155:1'
+      getChainId: () => KnownChainIds.EthereumMainnet
     },
     web3: <Web3>{},
     feeAsset: WETH
@@ -76,10 +86,12 @@ describe('SwapperManager', () => {
       swapper
         .addSwapper(new ThorchainSwapper(thorchainSwapperDeps))
         .addSwapper(new ZrxSwapper(zrxEthereumSwapperDeps))
+        .addSwapper(new ZrxSwapper(zrxAvalancheSwapperDeps))
         .addSwapper(new CowSwapper(cowSwapperDeps))
 
       expect(swapper.getSwapper(SwapperType.Thorchain)).toBeInstanceOf(ThorchainSwapper)
-      expect(swapper.getSwapper(SwapperType.Zrx)).toBeInstanceOf(ZrxSwapper)
+      expect(swapper.getSwapper(SwapperType.ZrxEthereum)).toBeInstanceOf(ZrxSwapper)
+      expect(swapper.getSwapper(SwapperType.ZrxAvalanche)).toBeInstanceOf(ZrxSwapper)
       expect(swapper.getSwapper(SwapperType.CowSwap)).toBeInstanceOf(CowSwapper)
     })
 
@@ -92,8 +104,8 @@ describe('SwapperManager', () => {
 
     it('should throw an error if an invalid Swapper instance is passed', () => {
       const manager = new SwapperManager()
-      // @ts-ignore
-      expect(() => manager.addSwapper(SwapperType.Thorchain, {})).toThrow(
+      const invalidSwapper = {} as Swapper<ChainId>
+      expect(() => manager.addSwapper(invalidSwapper)).toThrow(
         '[validateSwapper] - invalid swapper instance'
       )
     })

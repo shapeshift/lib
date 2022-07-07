@@ -25,6 +25,7 @@ export class SwapperManager {
    * @returns {SwapperManager}
    */
   addSwapper(swapperInstance: Swapper<ChainId>): this {
+    validateSwapper(swapperInstance)
     const swapperType = swapperInstance.getType()
     const swapper = this.swappers.get(swapperType)
     if (swapper)
@@ -32,7 +33,6 @@ export class SwapperManager {
         code: SwapErrorTypes.MANAGER_ERROR,
         details: { swapperType }
       })
-    validateSwapper(swapperInstance)
     this.swappers.set(swapperType, swapperInstance)
     return this
   }
@@ -41,7 +41,6 @@ export class SwapperManager {
    *
    * @param swapperType swapper type {SwapperType|string}
    * @returns {Swapper}
-   * @deprecated this will be removed, currently used in swapper tests
    */
   getSwapper(swapperType: SwapperType): Swapper<ChainId> {
     const swapper = this.swappers.get(swapperType)
