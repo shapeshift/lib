@@ -3,6 +3,7 @@ import { find } from 'lodash'
 
 import { SwapError } from '../../../index'
 import { bn, bnOrZero } from '../../utils/bignumber'
+import { PoolInfo } from './types'
 
 export interface IsymbolDenomMapping {
   OSMO: string
@@ -116,7 +117,7 @@ const findPool = async (sellAssetSymbol: string, buyAssetSymbol: string, osmoUrl
 
 const getInfoFromPool = (
   sellAmount: string,
-  pool: any,
+  pool: PoolInfo,
   sellAssetIndex: number,
   buyAssetIndex: number
 ) => {
