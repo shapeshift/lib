@@ -55,7 +55,7 @@ export const getUsdRate = async (asset: Asset): Promise<string> => {
     const USDC_CONTRACT_ADDRESS = usdcContractFromChainId(asset.chainId)
     if (erc20Address?.toLowerCase() === USDC_CONTRACT_ADDRESS) return '1' // Will break if comparing against usdc
     const baseUrl = baseUrlFromChainId(asset.chainId)
-    const zrxService = await zrxServiceFactory(baseUrl)
+    const zrxService = zrxServiceFactory(baseUrl)
     const rateResponse: AxiosResponse<ZrxPriceResponse> = await zrxService.get<ZrxPriceResponse>(
       '/swap/v1/price',
       {

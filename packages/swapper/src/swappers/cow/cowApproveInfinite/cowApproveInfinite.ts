@@ -11,7 +11,7 @@ export async function cowApproveInfinite(
   { quote, wallet }: ApproveInfiniteInput<KnownChainIds.EthereumMainnet>
 ) {
   try {
-    const allowanceGrantRequired = await grantAllowance({
+    const allowanceGrantRequired = await grantAllowance<KnownChainIds.EthereumMainnet>({
       quote: {
         ...quote,
         sellAmount: MAX_ALLOWANCE

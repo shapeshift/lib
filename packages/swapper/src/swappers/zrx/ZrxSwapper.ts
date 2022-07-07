@@ -8,7 +8,6 @@ import {
   BuildTradeInput,
   BuyAssetBySellIdInput,
   EvmSupportedChainIds,
-  ExecuteTradeInput,
   GetEvmTradeQuoteInput,
   SwapError,
   SwapErrorTypes,
@@ -19,7 +18,7 @@ import {
   TradeTxs
 } from '../../api'
 import { getZrxTradeQuote } from './getZrxTradeQuote/getZrxTradeQuote'
-import { ZrxSwapperDeps, ZrxTrade } from './types'
+import { ZrxExecuteTradeInput, ZrxSwapperDeps, ZrxTrade } from './types'
 import { UNSUPPORTED_ASSETS } from './utils/blacklist'
 import { getUsdRate } from './utils/helpers/helpers'
 import { zrxApprovalNeeded } from './zrxApprovalNeeded/zrxApprovalNeeded'
@@ -27,7 +26,7 @@ import { zrxApproveInfinite } from './zrxApproveInfinite/zrxApproveInfinite'
 import { zrxBuildTrade } from './zrxBuildTrade/zrxBuildTrade'
 import { zrxExecuteTrade } from './zrxExecuteTrade/zrxExecuteTrade'
 
-export class ZrxSwapper<T extends EvmSupportedChainIds> implements Swapper<EvmSupportedChainIds> {
+export class ZrxSwapper<T extends EvmSupportedChainIds> implements Swapper<T> {
   public static swapperName = 'ZrxSwapper'
   deps: ZrxSwapperDeps
   chainId: ChainId
@@ -54,28 +53,28 @@ export class ZrxSwapper<T extends EvmSupportedChainIds> implements Swapper<EvmSu
     }
   }
 
-  async buildTrade(args: BuildTradeInput): Promise<ZrxTrade> {
-    return zrxBuildTrade(this.deps, args)
+  async buildTrade(args: BuildTradeInput): Promise<ZrxTrade<T>> {
+    return zrxBuildTrade<T>(this.deps, args)
   }
 
   async getTradeQuote(input: GetEvmTradeQuoteInput): Promise<TradeQuote<T>> {
-    return getZrxTradeQuote(input)
+    return getZrxTradeQuote<T>(input)
   }
 
   async getUsdRate(input: Asset): Promise<string> {
     return getUsdRate(input)
   }
 
-  async executeTrade(args: ExecuteTradeInput<T>): Promise<TradeResult> {
-    return zrxExecuteTrade(this.deps, args)
+  async executeTrade(args: ZrxExecuteTradeInput<T>): Promise<TradeResult> {
+    return zrxExecuteTrade<T>(this.deps, args)
   }
 
   async approvalNeeded(args: ApprovalNeededInput<T>): Promise<ApprovalNeededOutput> {
-    return zrxApprovalNeeded(this.deps, args)
+    return zrxApprovalNeeded<T>(this.deps, args)
   }
 
   async approveInfinite(args: ApproveInfiniteInput<T>): Promise<string> {
-    return zrxApproveInfinite(this.deps, args)
+    return zrxApproveInfinite<T>(this.deps, args)
   }
 
   filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): AssetId[] {

@@ -4,7 +4,6 @@ import { AxiosResponse } from 'axios'
 import {
   EvmSupportedChainIds,
   GetEvmTradeQuoteInput,
-  QuoteFeeData,
   SwapError,
   SwapErrorTypes,
   SwapSource,
@@ -50,7 +49,7 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
       bnOrZero(sellAmount).eq(0) ? minQuoteSellAmount : sellAmount
     )
     const baseUrl = baseUrlFromChainId(buyAsset.chainId)
-    const zrxService = await zrxServiceFactory(baseUrl)
+    const zrxService = zrxServiceFactory(baseUrl)
 
     /**
      * /swap/v1/price
@@ -91,7 +90,7 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
             bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(bnOrZero(data.gasPrice)).toString()
         },
         tradeFee: '0'
-      } as QuoteFeeData<T>,
+      },
       sellAmount: data.sellAmount,
       buyAmount: data.buyAmount,
       sources:
@@ -100,7 +99,7 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
       buyAsset,
       sellAsset,
       sellAssetAccountNumber
-    }
+    } as TradeQuote<T>
   } catch (e) {
     if (e instanceof SwapError) throw e
     throw new SwapError('[getZrxTradeQuote]', { cause: e, code: SwapErrorTypes.TRADE_QUOTE_FAILED })

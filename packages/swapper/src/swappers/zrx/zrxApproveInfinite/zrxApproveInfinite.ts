@@ -4,12 +4,12 @@ import { grantAllowance } from '../../utils/helpers/helpers'
 import { ZrxSwapperDeps } from '../types'
 import { MAX_ALLOWANCE } from '../utils/constants'
 
-export async function zrxApproveInfinite(
+export async function zrxApproveInfinite<T extends EvmSupportedChainIds>(
   { adapter, web3 }: ZrxSwapperDeps,
-  { quote, wallet }: ApproveInfiniteInput<EvmSupportedChainIds>
+  { quote, wallet }: ApproveInfiniteInput<T>
 ) {
   try {
-    const allowanceGrantRequired = await grantAllowance({
+    const allowanceGrantRequired = await grantAllowance<T>({
       quote: {
         ...quote,
         sellAmount: MAX_ALLOWANCE

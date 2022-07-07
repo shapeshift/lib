@@ -2,7 +2,13 @@ import { fromAssetId } from '@shapeshiftoss/caip'
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 
-import { BuildTradeInput, SwapError, SwapErrorTypes } from '../../..'
+import {
+  BuildTradeInput,
+  EvmSupportedChainIds,
+  QuoteFeeData,
+  SwapError,
+  SwapErrorTypes
+} from '../../../api'
 import { erc20AllowanceAbi } from '../../utils/abi/erc20Allowance-abi'
 import { bnOrZero } from '../../utils/bignumber'
 import { APPROVAL_GAS_LIMIT, DEFAULT_SLIPPAGE } from '../../utils/constants'
@@ -13,10 +19,10 @@ import { AFFILIATE_ADDRESS, DEFAULT_SOURCE } from '../utils/constants'
 import { baseUrlFromChainId } from '../utils/helpers/helpers'
 import { zrxServiceFactory } from '../utils/zrxService'
 
-export async function zrxBuildTrade(
+export async function zrxBuildTrade<T extends EvmSupportedChainIds>(
   { adapter, web3 }: ZrxSwapperDeps,
   input: BuildTradeInput
-): Promise<ZrxTrade> {
+): Promise<ZrxTrade<T>> {
   const {
     sellAsset,
     buyAsset,
@@ -50,7 +56,7 @@ export async function zrxBuildTrade(
     const slippagePercentage = slippage ? bnOrZero(slippage).div(100).toString() : DEFAULT_SLIPPAGE
 
     const baseUrl = baseUrlFromChainId(buyAsset.chainId)
-    const zrxService = await zrxServiceFactory(baseUrl)
+    const zrxService = zrxServiceFactory(baseUrl)
 
     /**
      * /swap/v1/quote
@@ -95,7 +101,7 @@ export async function zrxBuildTrade(
 
     const estimatedGas = bnOrZero(data.gas || 0)
 
-    const trade: ZrxTrade = {
+    const trade = {
       sellAsset,
       buyAsset,
       sellAssetAccountNumber,
@@ -114,9 +120,10 @@ export async function zrxBuildTrade(
       sellAmount: data.sellAmount,
       buyAmount: data.buyAmount,
       sources: data.sources?.filter((s) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE
-    }
+    } as ZrxTrade<T>
 
     const allowanceRequired = await getAllowanceRequired({
+      adapter,
       sellAsset,
       allowanceContract: data.allowanceTarget,
       receiveAddress,
@@ -133,7 +140,7 @@ export async function zrxBuildTrade(
           approvalFee: bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(bnOrZero(data.gasPrice)).toString()
         },
         tradeFee: '0'
-      }
+      } as QuoteFeeData<T>
     }
     return trade
   } catch (e) {

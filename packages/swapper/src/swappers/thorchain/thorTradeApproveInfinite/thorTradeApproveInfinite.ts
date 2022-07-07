@@ -32,7 +32,7 @@ export const thorTradeApproveInfinite = async ({
         }
       )
 
-    const allowanceGrantRequired = await grantAllowance({
+    const allowanceGrantRequired = await grantAllowance<KnownChainIds.EthereumMainnet>({
       quote: {
         ...quote,
         sellAmount: MAX_ALLOWANCE

@@ -1,4 +1,5 @@
 import { AssetId, ChainId } from '@shapeshiftoss/caip'
+import { avalanche, ethereum } from '@shapeshiftoss/chain-adapters'
 import { createErrorClass } from '@shapeshiftoss/errors'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import {
@@ -62,6 +63,8 @@ type CommonTradeInput = {
 }
 
 export type EvmSupportedChainIds = KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
+
+export type EvmSupportedChainAdapters = ethereum.ChainAdapter | avalanche.ChainAdapter
 
 export type GetEvmTradeQuoteInput = CommonTradeInput & {
   chainId: EvmSupportedChainIds

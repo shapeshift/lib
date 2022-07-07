@@ -1,10 +1,9 @@
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { KnownChainIds } from '@shapeshiftoss/types'
-import { ZrxSwapperDeps, ZrxTrade } from 'packages/swapper/src/swappers/zrx/types'
 
-import { ExecuteTradeInput } from '../../../api'
 import { setupQuote } from '../../utils/test-data/setupSwapQuote'
+import { ZrxExecuteTradeInput, ZrxSwapperDeps, ZrxTrade } from '../types'
 import { zrxExecuteTrade } from './zrxExecuteTrade'
 
 describe('ZrxExecuteTrade', () => {
@@ -24,7 +23,7 @@ describe('ZrxExecuteTrade', () => {
 
   const deps = { adapter } as unknown as ZrxSwapperDeps
 
-  const trade: ZrxTrade = {
+  const trade: ZrxTrade<KnownChainIds.EthereumMainnet> = {
     buyAsset,
     sellAsset,
     sellAmount: '1',
@@ -42,14 +41,14 @@ describe('ZrxExecuteTrade', () => {
     sources: []
   }
 
-  const execTradeInput: ExecuteTradeInput<KnownChainIds.EthereumMainnet> = {
+  const execTradeInput: ZrxExecuteTradeInput<KnownChainIds.EthereumMainnet> = {
     trade,
     wallet
   }
 
   it('returns txid if offline signing is supported', async () => {
     expect(
-      await zrxExecuteTrade(deps, {
+      await zrxExecuteTrade<KnownChainIds.EthereumMainnet>(deps, {
         ...execTradeInput
       })
     ).toEqual({ tradeId: txid })
@@ -62,7 +61,7 @@ describe('ZrxExecuteTrade', () => {
     } as unknown as HDWallet
 
     expect(
-      await zrxExecuteTrade(deps, {
+      await zrxExecuteTrade<KnownChainIds.EthereumMainnet>(deps, {
         ...execTradeInput
       })
     ).toEqual({ tradeId: txid })

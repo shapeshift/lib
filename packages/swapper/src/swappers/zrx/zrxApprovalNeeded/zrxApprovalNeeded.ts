@@ -12,9 +12,9 @@ import { bnOrZero } from '../../utils/bignumber'
 import { getERC20Allowance } from '../../utils/helpers/helpers'
 import { ZrxSwapperDeps } from '../types'
 
-export async function zrxApprovalNeeded(
+export async function zrxApprovalNeeded<T extends EvmSupportedChainIds>(
   { adapter, web3 }: ZrxSwapperDeps,
-  { quote, wallet }: ApprovalNeededInput<EvmSupportedChainIds>
+  { quote, wallet }: ApprovalNeededInput<T>
 ): Promise<ApprovalNeededOutput> {
   const { sellAsset } = quote
 
