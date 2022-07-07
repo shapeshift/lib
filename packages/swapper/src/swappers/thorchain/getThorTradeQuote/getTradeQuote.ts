@@ -31,9 +31,8 @@ export const getThorTradeQuote = async ({
     })
 
   try {
-    const { assetReference: sellAssetErc20Address, assetNamespace } = fromAssetId(sellAsset.assetId)
+    const { assetReference: sellAssetErc20Address } = fromAssetId(sellAsset.assetId)
 
-    const isErc20Trade = assetNamespace === 'erc20'
     const adapter = deps.adapterManager.get(chainId)
     if (!adapter)
       throw new SwapError(`[getThorTradeQuote] - No chain adapter found for ${chainId}.`, {
@@ -96,8 +95,7 @@ export const getThorTradeQuote = async ({
             buyAsset,
             sellAmount,
             slippageTolerance: DEFAULT_SLIPPAGE,
-            destinationAddress: receiveAddress,
-            isErc20Trade
+            destinationAddress: receiveAddress
           })
           const feeData = await getEthTxFees({
             deps,
