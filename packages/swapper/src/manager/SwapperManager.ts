@@ -40,6 +40,22 @@ export class SwapperManager {
   /**
    *
    * @param swapperType swapper type {SwapperType|string}
+   * @returns {Swapper}
+   * @deprecated this will be removed, currently used in swapper tests
+   */
+  getSwapper(swapperType: SwapperType): Swapper<ChainId> {
+    const swapper = this.swappers.get(swapperType)
+    if (!swapper)
+      throw new SwapError('[getSwapper] - swapperType doesnt exist', {
+        code: SwapErrorTypes.MANAGER_ERROR,
+        details: { swapperType }
+      })
+    return swapper
+  }
+
+  /**
+   *
+   * @param swapperType swapper type {SwapperType|string}
    * @returns {SwapperManager}
    */
   removeSwapper(swapperType: SwapperType): this {
