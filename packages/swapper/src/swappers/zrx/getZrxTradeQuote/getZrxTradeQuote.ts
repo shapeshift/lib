@@ -3,7 +3,8 @@ import { AxiosResponse } from 'axios'
 
 import {
   EvmSupportedChainIds,
-  GetTradeQuoteInput,
+  GetEvmTradeQuoteInput,
+  QuoteFeeData,
   SwapError,
   SwapErrorTypes,
   SwapSource,
@@ -18,9 +19,9 @@ import { DEFAULT_SOURCE } from '../utils/constants'
 import { baseUrlFromChainId } from '../utils/helpers/helpers'
 import { zrxServiceFactory } from '../utils/zrxService'
 
-export async function getZrxTradeQuote(
-  input: GetTradeQuoteInput
-): Promise<TradeQuote<EvmSupportedChainIds>> {
+export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
+  input: GetEvmTradeQuoteInput
+): Promise<TradeQuote<T>> {
   try {
     const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber } = input
     if (buyAsset.chainId !== input.chainId || sellAsset.chainId !== input.chainId) {
@@ -90,7 +91,7 @@ export async function getZrxTradeQuote(
             bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(bnOrZero(data.gasPrice)).toString()
         },
         tradeFee: '0'
-      },
+      } as QuoteFeeData<T>,
       sellAmount: data.sellAmount,
       buyAmount: data.buyAmount,
       sources:

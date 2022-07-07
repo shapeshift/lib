@@ -58,7 +58,7 @@ export class ZrxSwapper<T extends EvmSupportedChainIds> implements Swapper<EvmSu
     return zrxBuildTrade(this.deps, args)
   }
 
-  async getTradeQuote(input: GetEvmTradeQuoteInput): Promise<TradeQuote<EvmSupportedChainIds>> {
+  async getTradeQuote(input: GetEvmTradeQuoteInput): Promise<TradeQuote<T>> {
     return getZrxTradeQuote(input)
   }
 
