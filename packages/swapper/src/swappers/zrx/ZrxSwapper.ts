@@ -8,7 +8,7 @@ import {
   BuildTradeInput,
   BuyAssetBySellIdInput,
   ExecuteTradeInput,
-  GetTradeQuoteInput,
+  GetEvmTradeQuoteInput,
   SwapError,
   SwapErrorTypes,
   Swapper,
@@ -57,7 +57,7 @@ export class ZrxSwapper<T extends ZrxSupportedChainIds> implements Swapper<ZrxSu
     return zrxBuildTrade(this.deps, args)
   }
 
-  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ZrxSupportedChainIds>> {
+  async getTradeQuote(input: GetEvmTradeQuoteInput): Promise<TradeQuote<ZrxSupportedChainIds>> {
     return getZrxTradeQuote(input)
   }
 

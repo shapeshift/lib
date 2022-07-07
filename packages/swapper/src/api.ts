@@ -61,7 +61,7 @@ type CommonTradeInput = {
   wallet?: HDWallet // TODO remove this in a followup PR
 }
 
-type GetEthereumTradeQuoteInput = CommonTradeInput & {
+export type GetEvmTradeQuoteInput = CommonTradeInput & {
   chainId: KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
 }
 
@@ -72,7 +72,7 @@ type GetBtcTradeQuoteInput = CommonTradeInput & {
   wallet: HDWallet
 }
 
-export type GetTradeQuoteInput = GetBtcTradeQuoteInput | GetEthereumTradeQuoteInput
+export type GetTradeQuoteInput = GetBtcTradeQuoteInput | GetEvmTradeQuoteInput
 
 export type BuildTradeInput = GetTradeQuoteInput & {
   buyAssetAccountNumber: number
