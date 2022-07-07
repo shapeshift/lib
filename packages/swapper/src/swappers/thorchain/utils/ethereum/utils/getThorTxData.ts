@@ -15,8 +15,7 @@ export const getThorTxInfo = async ({
   buyAsset,
   sellAmount,
   slippageTolerance,
-  destinationAddress,
-  isErc20Trade
+  destinationAddress
 }: {
   deps: ThorchainSwapperDeps
   sellAsset: Asset
@@ -24,11 +23,11 @@ export const getThorTxInfo = async ({
   sellAmount: string
   slippageTolerance: string
   destinationAddress: string
-  isErc20Trade: boolean
 }) => {
   try {
-    const { assetReference } = fromAssetId(sellAsset.assetId)
+    const { assetReference, assetNamespace } = fromAssetId(sellAsset.assetId)
 
+    const isErc20Trade = assetNamespace === 'erc20'
     const { data: inboundAddresses } = await thorService.get<InboundResponse[]>(
       `${deps.midgardUrl}/thorchain/inbound_addresses`
     )
