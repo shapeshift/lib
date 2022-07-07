@@ -1,10 +1,10 @@
 import entries from 'lodash/entries'
 import toLower from 'lodash/toLower'
 
-import { fromAssetId } from '../../assetId/assetId'
+import { AssetId, fromAssetId } from '../../assetId/assetId'
 import { ChainId } from '../../chainId/chainId'
 
-const AssetIdToJunopayTickerMap = {
+const AssetIdToJunopayTickerMap: Record<string, string> = {
   'bip122:000000000019d6689c085ae165831e93/slip44:0': 'btc',
   'cosmos:cosmoshub-4/slip44:118': 'atom',
   'eip155:1/slip44:60': 'eth',
@@ -33,17 +33,18 @@ const AssetIdToJunopayTickerMap = {
   'eip155:1/erc20:0x8e870d67f660d95d5be530380d0ec0bd388289e1': 'usdp',
   'eip155:1/erc20:0xdac17f958d2ee523a2206206994597c13d831ec7': 'usdt',
   'eip155:1/erc20:0x2260fac5e5542a773aa44fbcfedf7c193bc2c599': 'wbtc'
-} as Record<string, string>
+}
 
-const invert = <T extends Record<string, string>>(data: T) =>
-  Object.entries(data).reduce((acc, [k, v]) => ((acc[v] = k), acc), {} as Record<string, string>)
+const invert = <T extends Record<string, string>>(data: T): Record<string, string> =>
+  Object.entries(data).reduce<Record<string, string>>((acc, [k, v]) => ((acc[v] = k), acc), {})
 
 const junopayTickerToAssetIdMap = invert(AssetIdToJunopayTickerMap)
 
-export const junopayTickerToAssetId = (id: string): string | undefined => junopayTickerToAssetIdMap[id]
+export const junopayTickerToAssetId = (id: string): AssetId | undefined =>
+  junopayTickerToAssetIdMap[id]
 
 export const assetIdToJunopayTicker = (assetId: string): string | undefined =>
-AssetIdToJunopayTickerMap[toLower(assetId)]
+  AssetIdToJunopayTickerMap[toLower(assetId)]
 
 export const getSupportedJunopayAssets = () =>
   entries(AssetIdToJunopayTickerMap).map(([assetId, ticker]) => ({
@@ -71,7 +72,9 @@ const chainIdToJunopayBlockchainCodeMap: Record<ChainId, string> = {
 export const getJunopayBlockchainFromJunopayAssetTicker = (junopayAssetId: string): string => {
   const assetId = junopayTickerToAssetId(junopayAssetId.toLowerCase())
   if (!assetId)
-    throw new Error(`getJunopayBlockchainFromJunopayAssetTicker: ${junopayAssetId} is not supported`)
+    throw new Error(
+      `getJunopayBlockchainFromJunopayAssetTicker: ${junopayAssetId} is not supported`
+    )
   const { chainId } = fromAssetId(assetId)
   return chainIdToJunopayBlockchainCodeMap[chainId]
 }
