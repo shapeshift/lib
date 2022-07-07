@@ -1,19 +1,26 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
 import { AxiosResponse } from 'axios'
 
-import { GetTradeQuoteInput, SwapError, SwapErrorTypes, SwapSource, TradeQuote } from '../../../api'
+import {
+  EvmSupportedChainIds,
+  GetTradeQuoteInput,
+  SwapError,
+  SwapErrorTypes,
+  SwapSource,
+  TradeQuote
+} from '../../../api'
 import { bn, bnOrZero } from '../../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../../utils/constants'
 import { normalizeAmount } from '../../utils/helpers/helpers'
 import { getZrxMinMax } from '../getZrxMinMax/getZrxMinMax'
-import { ZrxPriceResponse, ZrxSupportedChainIds } from '../types'
+import { ZrxPriceResponse } from '../types'
 import { DEFAULT_SOURCE } from '../utils/constants'
 import { baseUrlFromChainId } from '../utils/helpers/helpers'
 import { zrxServiceFactory } from '../utils/zrxService'
 
 export async function getZrxTradeQuote(
   input: GetTradeQuoteInput
-): Promise<TradeQuote<ZrxSupportedChainIds>> {
+): Promise<TradeQuote<EvmSupportedChainIds>> {
   try {
     const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber } = input
     if (buyAsset.chainId !== input.chainId || sellAsset.chainId !== input.chainId) {

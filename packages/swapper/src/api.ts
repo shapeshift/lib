@@ -61,8 +61,10 @@ type CommonTradeInput = {
   wallet?: HDWallet // TODO remove this in a followup PR
 }
 
+export type EvmSupportedChainIds = KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
+
 export type GetEvmTradeQuoteInput = CommonTradeInput & {
-  chainId: KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
+  chainId: EvmSupportedChainIds
 }
 
 type GetBtcTradeQuoteInput = CommonTradeInput & {

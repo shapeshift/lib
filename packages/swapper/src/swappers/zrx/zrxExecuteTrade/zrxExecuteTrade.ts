@@ -1,12 +1,18 @@
 import { numberToHex } from 'web3-utils'
 
-import { ExecuteTradeInput, SwapError, SwapErrorTypes, TradeResult } from '../../../api'
-import { ZrxSupportedChainIds, ZrxSwapperDeps, ZrxTrade } from '../types'
+import {
+  EvmSupportedChainIds,
+  ExecuteTradeInput,
+  SwapError,
+  SwapErrorTypes,
+  TradeResult
+} from '../../../api'
+import { ZrxSwapperDeps, ZrxTrade } from '../types'
 import { isNativeEvmAsset } from '../utils/helpers/helpers'
 
 export async function zrxExecuteTrade(
   { adapter }: ZrxSwapperDeps,
-  { trade, wallet }: ExecuteTradeInput<ZrxSupportedChainIds>
+  { trade, wallet }: ExecuteTradeInput<EvmSupportedChainIds>
 ): Promise<TradeResult> {
   const zrxTrade = trade as ZrxTrade
   const { sellAsset } = zrxTrade

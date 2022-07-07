@@ -1,8 +1,7 @@
 import { avalanche, ethereum } from '@shapeshiftoss/chain-adapters'
-import { KnownChainIds } from '@shapeshiftoss/types'
 import type Web3 from 'web3'
 
-import { SwapSource, Trade } from '../../api'
+import { EvmSupportedChainIds, SwapSource, Trade } from '../../api'
 
 export type ZrxCommonResponse = {
   price: string
@@ -23,7 +22,7 @@ export type ZrxQuoteResponse = ZrxCommonResponse & {
   gas: string
 }
 
-export interface ZrxTrade extends Trade<ZrxSupportedChainIds> {
+export interface ZrxTrade extends Trade<EvmSupportedChainIds> {
   txData: string
   depositAddress: string
 }
@@ -32,4 +31,3 @@ export type ZrxSwapperDeps = {
   adapter: ethereum.ChainAdapter | avalanche.ChainAdapter
   web3: Web3
 }
-export type ZrxSupportedChainIds = KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet

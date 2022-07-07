@@ -7,6 +7,7 @@ import {
   ApproveInfiniteInput,
   BuildTradeInput,
   BuyAssetBySellIdInput,
+  EvmSupportedChainIds,
   ExecuteTradeInput,
   GetEvmTradeQuoteInput,
   SwapError,
@@ -18,7 +19,7 @@ import {
   TradeTxs
 } from '../../api'
 import { getZrxTradeQuote } from './getZrxTradeQuote/getZrxTradeQuote'
-import { ZrxSupportedChainIds, ZrxSwapperDeps, ZrxTrade } from './types'
+import { ZrxSwapperDeps, ZrxTrade } from './types'
 import { UNSUPPORTED_ASSETS } from './utils/blacklist'
 import { getUsdRate } from './utils/helpers/helpers'
 import { zrxApprovalNeeded } from './zrxApprovalNeeded/zrxApprovalNeeded'
@@ -26,7 +27,7 @@ import { zrxApproveInfinite } from './zrxApproveInfinite/zrxApproveInfinite'
 import { zrxBuildTrade } from './zrxBuildTrade/zrxBuildTrade'
 import { zrxExecuteTrade } from './zrxExecuteTrade/zrxExecuteTrade'
 
-export class ZrxSwapper<T extends ZrxSupportedChainIds> implements Swapper<ZrxSupportedChainIds> {
+export class ZrxSwapper<T extends EvmSupportedChainIds> implements Swapper<EvmSupportedChainIds> {
   public static swapperName = 'ZrxSwapper'
   deps: ZrxSwapperDeps
   chainId: ChainId
@@ -57,7 +58,7 @@ export class ZrxSwapper<T extends ZrxSupportedChainIds> implements Swapper<ZrxSu
     return zrxBuildTrade(this.deps, args)
   }
 
-  async getTradeQuote(input: GetEvmTradeQuoteInput): Promise<TradeQuote<ZrxSupportedChainIds>> {
+  async getTradeQuote(input: GetEvmTradeQuoteInput): Promise<TradeQuote<EvmSupportedChainIds>> {
     return getZrxTradeQuote(input)
   }
 
