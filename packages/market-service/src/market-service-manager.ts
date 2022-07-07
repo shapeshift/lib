@@ -1,12 +1,12 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import {
+  FindAllMarketArgs,
   HistoryData,
   MarketCapResult,
   MarketData,
   MarketDataArgs,
   PriceHistoryArgs
 } from '@shapeshiftoss/types'
-import { FindAllMarketArgs } from '@shapeshiftoss/types'
 import { Yearn } from '@yfi/sdk'
 
 import { MarketService } from './api'
@@ -51,7 +51,7 @@ export class MarketServiceManager {
       new YearnVaultMarketCapService({ yearnSdk }),
       new YearnTokenMarketCapService({ yearnSdk }),
       new OsmosisMarketService(),
-      new FoxyMarketService(providerUrls)
+      new FoxyMarketService({ coinGeckoAPIKey, providerUrls })
     ]
   }
 
@@ -79,7 +79,6 @@ export class MarketServiceManager {
         result = await this.marketProviders[i].findByAssetId({ assetId })
       } catch (e) {
         // Swallow error, not every asset will be with every provider.
-        continue
       }
     }
     if (!result) return null
@@ -97,7 +96,6 @@ export class MarketServiceManager {
         result = await this.marketProviders[i].findPriceHistoryByAssetId({ assetId, timeframe })
       } catch (e) {
         // Swallow error, not every asset will be with every provider.
-        continue
       }
     }
     if (!result) return []

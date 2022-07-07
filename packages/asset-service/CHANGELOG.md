@@ -1,3 +1,28 @@
+# [@shapeshiftoss/asset-service-v6.3.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.3.0...@shapeshiftoss/asset-service-v6.3.1) (2022-07-06)
+
+
+### Bug Fixes
+
+* removed test bitcoin from asset list and asset list generation ([#857](https://github.com/shapeshift/lib/issues/857)) ([20a6c38](https://github.com/shapeshift/lib/commit/20a6c384a3554243965cda5ac5f06a3579b6c727))
+
+# [@shapeshiftoss/asset-service-v6.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.2.2...@shapeshiftoss/asset-service-v6.3.0) (2022-06-30)
+
+
+### Features
+
+* **asset-service:** localized asset descriptions ([#849](https://github.com/shapeshift/lib/issues/849)) ([fff0adf](https://github.com/shapeshift/lib/commit/fff0adf7184c1d98fcc61f890b3b8d657938b4c7))
+
+# [@shapeshiftoss/asset-service-v6.2.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.2.1...@shapeshiftoss/asset-service-v6.2.2) (2022-06-29)
+
+# [@shapeshiftoss/asset-service-v6.2.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.2.0...@shapeshiftoss/asset-service-v6.2.1) (2022-06-28)
+
+# [@shapeshiftoss/asset-service-v6.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.1.2...@shapeshiftoss/asset-service-v6.2.0) (2022-06-27)
+
+
+### Features
+
+* avalanche market data ([#833](https://github.com/shapeshift/lib/issues/833)) ([086dc57](https://github.com/shapeshift/lib/commit/086dc57206fa6c07dbce473dc2dac4e1f8461ac5))
+
 # [@shapeshiftoss/asset-service-v6.1.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.1.1...@shapeshiftoss/asset-service-v6.1.2) (2022-06-22)
 
 

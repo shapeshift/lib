@@ -21,8 +21,8 @@ import {
 import { getZrxTradeQuote } from './getZrxTradeQuote/getZrxTradeQuote'
 import { UNSUPPORTED_ASSETS } from './utils/blacklist'
 import { getUsdRate } from './utils/helpers/helpers'
-import { ZrxApprovalNeeded } from './ZrxApprovalNeeded/ZrxApprovalNeeded'
-import { ZrxApproveInfinite } from './ZrxApproveInfinite/ZrxApproveInfinite'
+import { zrxApprovalNeeded } from './zrxApprovalNeeded/zrxApprovalNeeded'
+import { zrxApproveInfinite } from './zrxApproveInfinite/zrxApproveInfinite'
 import { zrxBuildTrade } from './zrxBuildTrade/zrxBuildTrade'
 import { zrxExecuteTrade } from './zrxExecuteTrade/zrxExecuteTrade'
 
@@ -38,10 +38,6 @@ export class ZrxSwapper implements Swapper<'eip155:1'> {
   constructor(deps: ZrxSwapperDeps) {
     this.deps = deps
   }
-
-  // noop for zrx
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  async initialize() {}
 
   getType() {
     return SwapperType.Zrx
@@ -64,11 +60,11 @@ export class ZrxSwapper implements Swapper<'eip155:1'> {
   }
 
   async approvalNeeded(args: ApprovalNeededInput<'eip155:1'>): Promise<ApprovalNeededOutput> {
-    return ZrxApprovalNeeded(this.deps, args)
+    return zrxApprovalNeeded(this.deps, args)
   }
 
   async approveInfinite(args: ApproveInfiniteInput<'eip155:1'>): Promise<string> {
-    return ZrxApproveInfinite(this.deps, args)
+    return zrxApproveInfinite(this.deps, args)
   }
 
   filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): AssetId[] {

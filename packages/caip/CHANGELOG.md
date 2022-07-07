@@ -1,3 +1,12 @@
+# [@shapeshiftoss/caip-v6.2.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.2.0...@shapeshiftoss/caip-v6.2.1) (2022-06-29)
+
+# [@shapeshiftoss/caip-v6.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.1.0...@shapeshiftoss/caip-v6.2.0) (2022-06-27)
+
+
+### Features
+
+* avalanche market data ([#833](https://github.com/shapeshift/lib/issues/833)) ([086dc57](https://github.com/shapeshift/lib/commit/086dc57206fa6c07dbce473dc2dac4e1f8461ac5))
+
 # [@shapeshiftoss/caip-v6.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.0.1...@shapeshiftoss/caip-v6.1.0) (2022-06-21)
 
 

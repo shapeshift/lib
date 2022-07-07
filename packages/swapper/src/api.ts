@@ -141,11 +141,6 @@ export interface MinMaxOutput {
   maximum: string
 }
 
-export type GetMinMaxInput = {
-  sellAsset: Asset
-  buyAsset: Asset
-}
-
 export type ApprovalNeededOutput = {
   approvalNeeded: boolean
 }
@@ -188,7 +183,7 @@ export enum SwapErrorTypes {
 
 export interface Swapper<T extends ChainId> {
   /** perform any necessary async initialization */
-  initialize(): Promise<void>
+  initialize?(): Promise<void>
 
   /** Returns the swapper type */
   getType(): SwapperType
