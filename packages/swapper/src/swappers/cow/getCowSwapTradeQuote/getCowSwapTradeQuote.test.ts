@@ -25,6 +25,13 @@ jest.mock('../utils/helpers/helpers', () => {
   }
 })
 
+jest.mock('../../utils/helpers/helpers', () => {
+  return {
+    ...jest.requireActual('../../utils/helpers/helpers'),
+    getApproveContractData: () => '0xABCDEFGH'
+  }
+})
+
 const feeData: FeeDataEstimate<KnownChainIds.EthereumMainnet> = {
   fast: {
     txFee: '4080654495000000',
@@ -102,11 +109,11 @@ const expectedTradeQuoteWethToFox: TradeQuote<'eip155:1'> = {
 }
 
 const expectedTradeQuoteWbtcToWeth: TradeQuote<'eip155:1'> = {
-  rate: '19.139398102523845323456857493095', // 19.14 WETH per WBTC
+  rate: '19.13939810252384532346', // 19.14 WETH per WBTC
   minimum: '0.0004766812308672071',
   maximum: '100000000000000000000000000',
   feeData: {
-    fee: '2931322143956216.3557777214', // fee in WETH
+    fee: '2931322143956216.36', // fee in WETH
     chainSpecific: {
       estimatedGas: '100000',
       gasPrice: '79036500000',

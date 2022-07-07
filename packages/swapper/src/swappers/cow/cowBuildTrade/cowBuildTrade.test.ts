@@ -16,6 +16,7 @@ jest.mock('@shapeshiftoss/chain-adapters')
 jest.mock('../utils/cowService')
 jest.mock('../utils/helpers/helpers', () => {
   return {
+    ...jest.requireActual('../utils/helpers/helpers'),
     getNowPlusThirtyMinutesTimestamp: () => 1656797787,
     getUsdRate: (_args: CowSwapperDeps, input: Asset) => {
       if (input.assetId === WETH.assetId) {
@@ -35,7 +36,8 @@ jest.mock('../../utils/helpers/helpers', () => {
         return bn('1000000000000000000')
       }
       return bn(0)
-    }
+    },
+    getApproveContractData: () => '0xABCDEFGHIJ'
   }
 })
 

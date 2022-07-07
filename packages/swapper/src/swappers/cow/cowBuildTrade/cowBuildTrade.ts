@@ -4,8 +4,11 @@ import { AxiosResponse } from 'axios'
 import { BuildTradeInput, SwapError, SwapErrorTypes, Trade } from '../../../api'
 import { erc20AllowanceAbi } from '../../utils/abi/erc20Allowance-abi'
 import { bn, bnOrZero } from '../../utils/bignumber'
-import { APPROVAL_GAS_LIMIT } from '../../utils/constants'
-import { getAllowanceRequired, normalizeAmount } from '../../utils/helpers/helpers'
+import {
+  getAllowanceRequired,
+  getApproveContractData,
+  normalizeAmount
+} from '../../utils/helpers/helpers'
 import { CowSwapperDeps } from '../CowSwapper'
 import { CowSwapQuoteResponse } from '../types'
 import {
@@ -23,7 +26,7 @@ export async function cowBuildTrade(
 ): Promise<Trade<'eip155:1'>> {
   try {
     const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, wallet } = input
-    const { adapter, feeAsset } = deps
+    const { adapter, feeAsset, web3 } = deps
 
     const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
       fromAssetId(sellAsset.assetId)
@@ -76,11 +79,13 @@ export async function cowBuildTrade(
     const sellCryptoAmount = bn(quote.sellAmount).div(bn(10).exponentiatedBy(sellAsset.precision))
     const rate = buyCryptoAmount.div(sellCryptoAmount).toString()
 
+    const data = await getApproveContractData({ web3, sellAssetErc20Address, receiveAddress })
+
     const [feeDataOptions, feeAssetUsdRate, sellAssetUsdRate] = await Promise.all([
       adapter.getFeeData({
-        to: COW_SWAP_VAULT_RELAYER_ADDRESS,
+        to: sellAssetErc20Address,
         value: '0',
-        chainSpecific: { from: receiveAddress, contractAddress: sellAssetErc20Address }
+        chainSpecific: { from: receiveAddress, contractData: data }
       }),
       getUsdRate(deps, feeAsset),
       getUsdRate(deps, sellAsset)
@@ -132,7 +137,7 @@ export async function cowBuildTrade(
     })
 
     if (!allowanceRequired.isZero()) {
-      trade.feeData.chainSpecific.approvalFee = bnOrZero(APPROVAL_GAS_LIMIT)
+      trade.feeData.chainSpecific.approvalFee = bnOrZero(feeData.chainSpecific.gasLimit)
         .multipliedBy(bnOrZero(feeData.chainSpecific.gasPrice))
         .toString()
     }
