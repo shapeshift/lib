@@ -76,7 +76,7 @@ export const getThorTxInfo = async ({
       limit
     })
 
-    const adapter = await deps.adapterManager.get(btcChainId)
+    const adapter = deps.adapterManager.get(btcChainId)
 
     const pubkey = await (adapter as unknown as bitcoin.ChainAdapter).getPublicKey(
       wallet,

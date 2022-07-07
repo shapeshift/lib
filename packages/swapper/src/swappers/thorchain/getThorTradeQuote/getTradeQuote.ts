@@ -1,7 +1,7 @@
 import { ChainId, fromAssetId, getFeeAssetIdFromAssetId } from '@shapeshiftoss/caip'
-import { Asset } from '@shapeshiftoss/types'
+import { KnownChainIds } from '@shapeshiftoss/types'
 
-import { GetTradeQuoteInput, SwapError, SwapErrorTypes, SwapSource, TradeQuote } from '../../../api'
+import { GetTradeQuoteInput, SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
 import { bnOrZero, fromBaseUnit } from '../../utils/bignumber'
 import { DEFAULT_SLIPPAGE } from '../../utils/constants'
 import { normalizeAmount } from '../../utils/helpers/helpers'
@@ -13,18 +13,6 @@ import { getThorTxInfo as getEthThorTxInfo } from '../utils/ethereum/utils/getTh
 import { getPriceRatio } from '../utils/getPriceRatio/getPriceRatio'
 import { getBtcTxFees } from '../utils/txFeeHelpers/btcTxFees/getBtcTxFees'
 import { getEthTxFees } from '../utils/txFeeHelpers/ethTxFees/getEthTxFees'
-
-type CommonQuoteFields = {
-  rate: string
-  maximum: string
-  sellAmount: string
-  buyAmount: string
-  sources: [SwapSource]
-  buyAsset: Asset
-  sellAsset: Asset
-  sellAssetAccountNumber: number
-  minimum: string
-}
 
 export const getThorTradeQuote = async ({
   deps,
@@ -69,7 +57,7 @@ export const getThorTradeQuote = async ({
     // padding minimum by 1.5 the trade fee to avoid thorchain "not enough to cover fee" errors.
     const minimum = fromBaseUnit(sellAssetTradeFee.times(1.5).toString(), sellAsset.precision)
 
-    const commonQuoteFields: CommonQuoteFields = {
+    const commonQuoteFields: Omit<TradeQuote<ChainId>, 'allowanceContract' | 'feeData'> = {
       rate,
       maximum: MAX_THORCHAIN_TRADE,
       sellAmount,
@@ -82,8 +70,8 @@ export const getThorTradeQuote = async ({
     }
 
     switch (chainId) {
-      case 'eip155:1':
-        return (async (): Promise<TradeQuote<'eip155:1'>> => {
+      case KnownChainIds.EthereumMainnet:
+        return (async (): Promise<TradeQuote<KnownChainIds.EthereumMainnet>> => {
           const bip44Params = adapter.buildBIP44Params({
             accountNumber: Number(sellAssetAccountNumber)
           })
@@ -114,8 +102,8 @@ export const getThorTradeQuote = async ({
           }
         })()
 
-      case 'bip122:000000000019d6689c085ae165831e93':
-        return (async (): Promise<TradeQuote<'bip122:000000000019d6689c085ae165831e93'>> => {
+      case KnownChainIds.BitcoinMainnet:
+        return (async (): Promise<TradeQuote<KnownChainIds.BitcoinMainnet>> => {
           const receiveAddress = await adapter.getAddress({
             wallet,
             bip44Params: input.bip44Params
