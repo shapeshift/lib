@@ -4,13 +4,7 @@ import { bip32ToAddressNList, ETHSignMessage } from '@shapeshiftoss/hdwallet-cor
 import { AxiosResponse } from 'axios'
 import { ethers } from 'ethers'
 
-import {
-  CowTrade,
-  ExecuteTradeInput,
-  SwapError,
-  SwapErrorTypes,
-  TradeResult
-} from '../../../api'
+import { CowTrade, ExecuteTradeInput, SwapError, SwapErrorTypes, TradeResult } from '../../../api'
 import { CowSwapperDeps } from '../CowSwapper'
 import {
   COW_SWAP_SETTLEMENT_ADDRESS,
@@ -101,13 +95,15 @@ export async function cowExecuteTrade(
      * from: same as receiver address in our case
      * }
      */
-    const ordersResponse: AxiosResponse<string> =
-      await cowService.post<string>(`${apiUrl}/v1/orders/`, {
+    const ordersResponse: AxiosResponse<string> = await cowService.post<string>(
+      `${apiUrl}/v1/orders/`,
+      {
         ...orderToSign,
         signingScheme: SIGNING_SCHEME,
         signature,
         from: trade.receiveAddress
-      })
+      }
+    )
 
     return { tradeId: ordersResponse.data }
   } catch (e) {

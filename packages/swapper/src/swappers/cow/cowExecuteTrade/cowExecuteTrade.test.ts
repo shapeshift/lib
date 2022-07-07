@@ -135,9 +135,7 @@ describe('cowExecuteTrade', () => {
 
     ;(cowService.post as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({
-        data: {
-          uid: '0xe476dadc86e768e4602bc872d4a7d50b03a4c2a609b37bf741f26baa578146bd0ea983f21f58f0e1a29ed653bcfc8afac4fec2a462c2e25e'
-        }
+        data: '0xe476dadc86e768e4602bc872d4a7d50b03a4c2a609b37bf741f26baa578146bd0ea983f21f58f0e1a29ed653bcfc8afac4fec2a462c2e25e'
       })
     )
 

@@ -9,9 +9,7 @@ import { cowService } from '../utils/cowService'
 export async function cowGetTradeTxs(deps: CowSwapperDeps, input: TradeResult): Promise<TradeTxs> {
   try {
     const getOrdersResponse: AxiosResponse<CowSwapGetOrdersResponse> =
-      await cowService.get<CowSwapGetOrdersResponse>(
-        `${deps.apiUrl}/v1/orders/${input.tradeId}`
-      )
+      await cowService.get<CowSwapGetOrdersResponse>(`${deps.apiUrl}/v1/orders/${input.tradeId}`)
 
     const {
       data: { status }
@@ -36,7 +34,7 @@ export async function cowGetTradeTxs(deps: CowSwapperDeps, input: TradeResult): 
     if (e instanceof SwapError) throw e
     throw new SwapError('[cowGetTradeTxs]', {
       cause: e,
-      code: SwapErrorTypes.EXECUTE_TRADE_FAILED
+      code: SwapErrorTypes.GET_TRADE_TXS_FAILED
     })
   }
 }
