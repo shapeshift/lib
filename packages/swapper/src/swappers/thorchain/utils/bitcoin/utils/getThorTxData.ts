@@ -1,3 +1,4 @@
+import { btcChainId } from '@shapeshiftoss/caip'
 import { bitcoin } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { Asset, BIP44Params, UtxoAccountType } from '@shapeshiftoss/types'
@@ -74,7 +75,7 @@ export const getThorTxInfo = async ({
       limit
     })
 
-    const adapter = await deps.adapterManager.get('bip122:000000000019d6689c085ae165831e93')
+    const adapter = await deps.adapterManager.get(btcChainId)
 
     const pubkey = await (adapter as unknown as bitcoin.ChainAdapter).getPublicKey(
       wallet,
