@@ -1,13 +1,16 @@
 import entries from 'lodash/entries'
+import invert from 'lodash/invert'
 import toLower from 'lodash/toLower'
 
 import { AssetId, fromAssetId } from '../../assetId/assetId'
 import { ChainId } from '../../chainId/chainId'
+import { avalancheAssetId, btcAssetId, cosmosAssetId, ethAssetId } from './../../constants'
 
-const assetIdToJunopayTickerMap: Record<string, string> = {
-  'bip122:000000000019d6689c085ae165831e93/slip44:0': 'btc',
-  'cosmos:cosmoshub-4/slip44:118': 'atom',
-  'eip155:1/slip44:60': 'eth',
+const assetIdToJunopayTickerMap: Record<AssetId, string> = {
+  [avalancheAssetId]: 'avax',
+  [btcAssetId]: 'btc',
+  [cosmosAssetId]: 'atom',
+  [ethAssetId]: 'eth',
   'eip155:1/erc20:0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9': 'aave',
   'eip155:1/erc20:0xbb0e17ef65f82ab018d8edd776e8dd940327b28b': 'axs',
   'eip155:1/erc20:0x4d224452801aced8b2f0aebe155379bb5d594381': 'ape',
@@ -34,9 +37,6 @@ const assetIdToJunopayTickerMap: Record<string, string> = {
   'eip155:1/erc20:0xdac17f958d2ee523a2206206994597c13d831ec7': 'usdt',
   'eip155:1/erc20:0x2260fac5e5542a773aa44fbcfedf7c193bc2c599': 'wbtc'
 }
-
-const invert = <T extends Record<string, string>>(data: T): Record<string, string> =>
-  Object.entries(data).reduce<Record<string, string>>((acc, [k, v]) => ((acc[v] = k), acc), {})
 
 const junopayTickerToAssetIdMap = invert(assetIdToJunopayTickerMap)
 
