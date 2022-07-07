@@ -4,7 +4,7 @@ import toLower from 'lodash/toLower'
 import { AssetId, fromAssetId } from '../../assetId/assetId'
 import { ChainId } from '../../chainId/chainId'
 
-const AssetIdToJunopayTickerMap: Record<string, string> = {
+const assetIdToJunopayTickerMap: Record<string, string> = {
   'bip122:000000000019d6689c085ae165831e93/slip44:0': 'btc',
   'cosmos:cosmoshub-4/slip44:118': 'atom',
   'eip155:1/slip44:60': 'eth',
@@ -38,16 +38,16 @@ const AssetIdToJunopayTickerMap: Record<string, string> = {
 const invert = <T extends Record<string, string>>(data: T): Record<string, string> =>
   Object.entries(data).reduce<Record<string, string>>((acc, [k, v]) => ((acc[v] = k), acc), {})
 
-const junopayTickerToAssetIdMap = invert(AssetIdToJunopayTickerMap)
+const junopayTickerToAssetIdMap = invert(assetIdToJunopayTickerMap)
 
 export const junopayTickerToAssetId = (id: string): AssetId | undefined =>
   junopayTickerToAssetIdMap[id]
 
 export const assetIdToJunopayTicker = (assetId: string): string | undefined =>
-  AssetIdToJunopayTickerMap[toLower(assetId)]
+  assetIdToJunopayTickerMap[toLower(assetId)]
 
 export const getSupportedJunopayAssets = () =>
-  entries(AssetIdToJunopayTickerMap).map(([assetId, ticker]) => ({
+  entries(assetIdToJunopayTickerMap).map(([assetId, ticker]) => ({
     assetId,
     ticker
   }))
