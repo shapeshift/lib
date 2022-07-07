@@ -39,8 +39,8 @@ export type EVMChainIds = KnownChainIds.EthereumMainnet | KnownChainIds.Avalanch
 export interface ChainAdapterArgs {
   chainId?: ChainId
   providers: {
-    http: unchained.ethereum.V1Api
-    ws: unchained.ws.Client<unchained.ethereum.EthereumTx>
+    http: unchained.ethereum.V1Api | unchained.avalanche.V1Api
+    ws: unchained.ws.Client<unchained.ethereum.EthereumTx | unchained.avalanche.AvalancheTx>
   }
   rpcUrl: string
 }
@@ -54,8 +54,8 @@ export abstract class EVMBaseAdapter<T extends EVMChainIds> implements IChainAda
   protected readonly chainId: ChainId
   protected readonly supportedChainIds: Array<ChainId>
   protected readonly providers: {
-    http: unchained.ethereum.V1Api
-    ws: unchained.ws.Client<unchained.ethereum.EthereumTx>
+    http: unchained.ethereum.V1Api | unchained.avalanche.V1Api
+    ws: unchained.ws.Client<unchained.ethereum.EthereumTx | unchained.avalanche.AvalancheTx>
   }
 
   protected assetId: AssetId
@@ -194,7 +194,7 @@ export abstract class EVMBaseAdapter<T extends EVMChainIds> implements IChainAda
       const { messageToSign, wallet } = signMessageInput
       const signedMessage = await (wallet as ETHWallet).ethSignMessage(messageToSign)
 
-      if (!signedMessage) throw new Error('EthereumChainAdapter: error signing message')
+      if (!signedMessage) throw new Error('EVMChainAdapter: error signing message')
 
       return signedMessage.signature
     } catch (err) {
