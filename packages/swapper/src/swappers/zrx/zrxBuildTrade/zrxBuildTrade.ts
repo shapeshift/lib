@@ -2,17 +2,16 @@ import { fromAssetId } from '@shapeshiftoss/caip'
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 
-import { BuildTradeInput, SwapError, SwapErrorTypes, ZrxTrade } from '../../..'
+import { BuildTradeInput, SwapError, SwapErrorTypes } from '../../..'
 import { erc20AllowanceAbi } from '../../utils/abi/erc20Allowance-abi'
 import { bnOrZero } from '../../utils/bignumber'
 import { APPROVAL_GAS_LIMIT, DEFAULT_SLIPPAGE } from '../../utils/constants'
 import { getAllowanceRequired, normalizeAmount } from '../../utils/helpers/helpers'
-import { ZrxQuoteResponse } from '../types'
+import { ZrxQuoteResponse, ZrxSwapperDeps, ZrxTrade } from '../types'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
 import { AFFILIATE_ADDRESS, DEFAULT_SOURCE } from '../utils/constants'
 import { baseUrlFromChainId } from '../utils/helpers/helpers'
 import { zrxServiceFactory } from '../utils/zrxService'
-import { ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function zrxBuildTrade(
   { adapter, web3 }: ZrxSwapperDeps,

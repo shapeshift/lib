@@ -1,6 +1,6 @@
 import { AssetId, ChainId } from '@shapeshiftoss/caip'
 import { createErrorClass } from '@shapeshiftoss/errors'
-import { BTCSignTx, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import {
   Asset,
   BIP44Params,
@@ -8,8 +8,6 @@ import {
   KnownChainIds,
   UtxoAccountType
 } from '@shapeshiftoss/types'
-
-import { ZrxSupportedChainIds } from './swappers/zrx/ZrxSwapper'
 
 export const SwapError = createErrorClass('SwapError')
 
@@ -102,23 +100,6 @@ export interface TradeQuote<C extends ChainId> extends TradeBase<C> {
 export interface Trade<C extends ChainId> extends TradeBase<C> {
   receiveAddress: string
 }
-
-export interface ZrxTrade extends Trade<ZrxSupportedChainIds> {
-  txData: string
-  depositAddress: string
-}
-
-export interface BtcThorTrade<C extends ChainId> extends Trade<C> {
-  chainId: KnownChainIds.BitcoinMainnet
-  txData: BTCSignTx
-}
-
-export interface EthThorTrade<C extends ChainId> extends Trade<C> {
-  chainId: KnownChainIds.EthereumMainnet
-  txData: ETHSignTx
-}
-
-export type ThorTrade<C extends ChainId> = BtcThorTrade<C> | EthThorTrade<C>
 
 export type ExecuteTradeInput<C extends ChainId> = {
   trade: Trade<C>

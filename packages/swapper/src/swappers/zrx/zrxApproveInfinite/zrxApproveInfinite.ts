@@ -1,8 +1,8 @@
 import { ApproveInfiniteInput, SwapError, SwapErrorTypes } from '../../../api'
 import { erc20Abi } from '../../utils/abi/erc20-abi'
 import { grantAllowance } from '../../utils/helpers/helpers'
+import { ZrxSupportedChainIds, ZrxSwapperDeps } from '../types'
 import { MAX_ALLOWANCE } from '../utils/constants'
-import { ZrxSupportedChainIds, ZrxSwapperDeps } from '../ZrxSwapper'
 
 export async function zrxApproveInfinite(
   { adapter, web3 }: ZrxSwapperDeps,

@@ -1,10 +1,10 @@
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { KnownChainIds } from '@shapeshiftoss/types'
+import { ZrxSwapperDeps, ZrxTrade } from 'packages/swapper/src/swappers/zrx/types'
 
-import { ExecuteTradeInput, ZrxTrade } from '../../../api'
+import { ExecuteTradeInput } from '../../../api'
 import { setupQuote } from '../../utils/test-data/setupSwapQuote'
-import { ZrxSwapperDeps } from '../ZrxSwapper'
 import { zrxExecuteTrade } from './zrxExecuteTrade'
 
 describe('ZrxExecuteTrade', () => {

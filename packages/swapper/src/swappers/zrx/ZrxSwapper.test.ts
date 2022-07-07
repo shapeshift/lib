@@ -7,12 +7,12 @@ import Web3 from 'web3'
 import { ZrxSwapper } from '..'
 import { FOX } from '../utils/test-data/assets'
 import { setupQuote } from '../utils/test-data/setupSwapQuote'
-import { zrxBuildTrade } from '../zrx/zrxBuildTrade/zrxBuildTrade'
 import { getZrxTradeQuote } from './getZrxTradeQuote/getZrxTradeQuote'
 import { getUsdRate } from './utils/helpers/helpers'
 import { setupBuildTrade, setupExecuteTrade } from './utils/test-data/setupZrxSwapQuote'
 import { zrxApprovalNeeded } from './zrxApprovalNeeded/zrxApprovalNeeded'
 import { zrxApproveInfinite } from './zrxApproveInfinite/zrxApproveInfinite'
+import { zrxBuildTrade } from './zrxBuildTrade/zrxBuildTrade'
 import { zrxExecuteTrade } from './zrxExecuteTrade/zrxExecuteTrade'
 
 jest.mock('./utils/helpers/helpers')

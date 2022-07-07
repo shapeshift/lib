@@ -7,7 +7,7 @@ import Web3 from 'web3'
 import { AbiItem, numberToHex } from 'web3-utils'
 
 import { SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
-import { ZrxSupportedChainIds } from '../../zrx/ZrxSwapper'
+import { ZrxSupportedChainIds } from '../../zrx/types'
 import { BN, bn, bnOrZero } from '../bignumber'
 
 export type GetAllowanceRequiredArgs = {

@@ -15,7 +15,6 @@ import {
   SwapErrorTypes,
   Swapper,
   SwapperType,
-  ThorTrade,
   Trade,
   TradeQuote,
   TradeResult,
@@ -24,7 +23,7 @@ import {
 import { getThorTradeQuote } from './getThorTradeQuote/getTradeQuote'
 import { thorTradeApprovalNeeded } from './thorTradeApprovalNeeded/thorTradeApprovalNeeded'
 import { thorTradeApproveInfinite } from './thorTradeApproveInfinite/thorTradeApproveInfinite'
-import { PoolResponse, ThorchainSwapperDeps } from './types'
+import { PoolResponse, ThorchainSwapperDeps, ThorTrade } from './types'
 import { getUsdRate } from './utils/getUsdRate/getUsdRate'
 import { thorService } from './utils/thorService'
 
