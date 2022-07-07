@@ -59,7 +59,8 @@ export const getThorTxInfo = async ({
       !(bnOrZero(slippageTolerance).gte(0) && bnOrZero(slippageTolerance).lte(1))
     )
       throw new SwapError('[makeTradeTx]: bad expected buy amount or bad slippage tolerance', {
-        code: SwapErrorTypes.BUILD_TRADE_FAILED
+        code: SwapErrorTypes.BUILD_TRADE_FAILED,
+        details: { expectedBuyAmount, slippageTolerance }
       })
 
     const limit = bnOrZero(expectedBuyAmount)
