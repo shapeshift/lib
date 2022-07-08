@@ -79,7 +79,12 @@ export async function cowBuildTrade(
     const sellCryptoAmount = bn(quote.sellAmount).div(bn(10).exponentiatedBy(sellAsset.precision))
     const rate = buyCryptoAmount.div(sellCryptoAmount).toString()
 
-    const data = await getApproveContractData({ web3, sellAssetErc20Address, receiveAddress })
+    const data = await getApproveContractData({
+      web3,
+      spenderAddress: COW_SWAP_VAULT_RELAYER_ADDRESS,
+      sellAssetErc20Address,
+      receiveAddress
+    })
 
     const [feeDataOptions, feeAssetUsdRate, sellAssetUsdRate] = await Promise.all([
       adapter.getFeeData({

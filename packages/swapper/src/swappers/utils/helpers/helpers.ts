@@ -7,7 +7,7 @@ import Web3 from 'web3'
 import { AbiItem, numberToHex } from 'web3-utils'
 
 import { SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
-import { COW_SWAP_VAULT_RELAYER_ADDRESS, MAX_ALLOWANCE } from '../../cow/utils/constants'
+import { MAX_ALLOWANCE } from '../../cow/utils/constants'
 import { erc20Abi as erc20AbiImported } from '../abi/erc20-abi'
 import { BN, bn, bnOrZero } from '../bignumber'
 
@@ -30,6 +30,7 @@ export type GetERC20AllowanceArgs = {
 
 export type GetApproveContractDataArgs = {
   web3: Web3
+  spenderAddress: string
   sellAssetErc20Address: string
   receiveAddress: string
 }
@@ -179,15 +180,13 @@ export const normalizeIntegerAmount = (amount: string | number | BN): string => 
 
 export const getApproveContractData = async ({
   web3,
+  spenderAddress,
   sellAssetErc20Address,
   receiveAddress
 }: GetApproveContractDataArgs): Promise<string> => {
   const approveContract = new web3.eth.Contract(erc20AbiImported, sellAssetErc20Address)
 
-  const preApprove = await approveContract.methods.approve(
-    COW_SWAP_VAULT_RELAYER_ADDRESS,
-    MAX_ALLOWANCE
-  )
+  const preApprove = await approveContract.methods.approve(spenderAddress, MAX_ALLOWANCE)
 
   return preApprove.encodeABI({ from: receiveAddress })
 }
