@@ -2,8 +2,7 @@ import entries from 'lodash/entries'
 import invert from 'lodash/invert'
 import toLower from 'lodash/toLower'
 
-import { AssetId, fromAssetId } from '../../assetId/assetId'
-import { ChainId } from '../../chainId/chainId'
+import { AssetId } from '../../assetId/assetId'
 import { avalancheAssetId, btcAssetId, cosmosAssetId, ethAssetId } from '../../constants'
 
 // source data https://docs.juno.finance/developers/reference/onjuno-pay/onjuno-pay-integration-guide
@@ -52,30 +51,3 @@ export const getSupportedJunoPayAssets = () =>
     assetId,
     ticker
   }))
-
-/**
- * map ChainIds to JunoPay blockchain codes (ETH, BTC, COSMOS),
- * since some JunoPay assets could be on multiple chains and their default
- * chain won't be exactly the same as ours.
- */
-const chainIdToJunoPayBlockchainCodeMap: Record<ChainId, string> = {
-  'eip155:1': 'ETH',
-  'bip122:000000000019d6689c085ae165831e93': 'BTC',
-  'cosmos:cosmoshub-4': 'COSMOS'
-} as const
-
-/**
- * Convert a JunoPay asset identifier to a JunoPay chain identifier for use in JunoPay HTTP URLs
- *
- * @param {string} junoPayAssetId - a JunoPay asset string referencing a specific asset; e.g., 'atom'
- * @returns {string} - a JunoPay chain identifier; e.g., 'cosmos'
- */
-export const getJunoPayBlockchainFromJunoPayAssetTicker = (junoPayAssetId: string): string => {
-  const assetId = junoPayTickerToAssetId(junoPayAssetId.toLowerCase())
-  if (!assetId)
-    throw new Error(
-      `getJunoPayBlockchainFromJunoPayAssetTicker: ${junoPayAssetId} is not supported`
-    )
-  const { chainId } = fromAssetId(assetId)
-  return chainIdToJunoPayBlockchainCodeMap[chainId]
-}
