@@ -1,4 +1,5 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
+import { KnownChainIds } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 
 import { BuildTradeInput, SwapError, SwapErrorTypes, Trade } from '../../../api'
@@ -23,7 +24,7 @@ import { getNowPlusThirtyMinutesTimestamp, getUsdRate } from '../utils/helpers/h
 export async function cowBuildTrade(
   deps: CowSwapperDeps,
   input: BuildTradeInput
-): Promise<Trade<'eip155:1'>> {
+): Promise<Trade<KnownChainIds.EthereumMainnet>> {
   try {
     const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, wallet } = input
     const { adapter, feeAsset, web3 } = deps
@@ -113,7 +114,7 @@ export async function cowBuildTrade(
     // taking precision into account
     const fee = feeInFeeAsset.multipliedBy(bn(10).exponentiatedBy(feeAsset.precision)).toString()
 
-    const trade: Trade<'eip155:1'> = {
+    const trade: Trade<KnownChainIds.EthereumMainnet> = {
       rate,
       feeData: {
         fee,
@@ -133,6 +134,7 @@ export async function cowBuildTrade(
     }
 
     const allowanceRequired = await getAllowanceRequired({
+      adapter,
       sellAsset,
       allowanceContract: COW_SWAP_VAULT_RELAYER_ADDRESS,
       receiveAddress,

@@ -95,7 +95,7 @@ const expectedApiInputWbtcToWeth: CowSwapQuoteApiInput = {
   validTo: 1656797787
 }
 
-const expectedTradeWethToFox: Trade<'eip155:1'> = {
+const expectedTradeWethToFox: Trade<KnownChainIds.EthereumMainnet> = {
   rate: '14716.04718939437505555958', // 14716 FOX per WETH
   feeData: {
     fee: '14557942658757988', // fee in WETH
@@ -114,7 +114,7 @@ const expectedTradeWethToFox: Trade<'eip155:1'> = {
   receiveAddress: 'address11'
 }
 
-const expectedTradeQuoteWbtcToWethWithApprovalFee: Trade<'eip155:1'> = {
+const expectedTradeQuoteWbtcToWethWithApprovalFee: Trade<KnownChainIds.EthereumMainnet> = {
   rate: '19.13939810252384532346', // 19.14 WETH per WBTC
   feeData: {
     fee: '2931322143956216.36', // fee in WETH
@@ -144,7 +144,7 @@ const defaultDeps: CowSwapperDeps = {
 describe('cowBuildTrade', () => {
   it('should throw an exception if both assets are not erc20s', async () => {
     const tradeInput: BuildTradeInput = {
-      chainId: 'eip155:1',
+      chainId: KnownChainIds.EthereumMainnet,
       sellAsset: ETH,
       buyAsset: FOX,
       sellAmount: '11111',
@@ -171,7 +171,7 @@ describe('cowBuildTrade', () => {
     }
 
     const tradeInput: BuildTradeInput = {
-      chainId: 'eip155:1',
+      chainId: KnownChainIds.EthereumMainnet,
       sellAsset: WETH,
       buyAsset: FOX,
       sellAmount: '1000000000000000000',
@@ -218,7 +218,7 @@ describe('cowBuildTrade', () => {
     }
 
     const tradeInput: BuildTradeInput = {
-      chainId: 'eip155:1',
+      chainId: KnownChainIds.EthereumMainnet,
       sellAsset: WBTC,
       buyAsset: WETH,
       sellAmount: '100000000',
