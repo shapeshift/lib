@@ -19,7 +19,7 @@ import {
   ValidAddressResultType
 } from '../../types'
 import { bn } from '../../utils/bignumber'
-import { ChainAdapterArgs } from '../EVMBaseAdapter'
+import { ChainAdapterArgs } from '../EvmBaseAdapter'
 import * as avalanche from './AvalancheChainAdapter'
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
@@ -291,7 +291,7 @@ describe('AvalancheChainAdapter', () => {
       }
 
       await expect(adapter.signMessage(message)).rejects.toThrow(
-        /EVMChainAdapter: error signing message/
+        /EvmChainAdapter: error signing message/
       )
     })
   })
