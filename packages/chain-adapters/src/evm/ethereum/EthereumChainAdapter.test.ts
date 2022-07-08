@@ -447,7 +447,7 @@ describe('EthereumChainAdapter', () => {
       }
 
       await expect(adapter.signMessage(message)).rejects.toThrow(
-        /EthereumChainAdapter: error signing message/
+        /EVMChainAdapter: error signing message/
       )
     })
   })
