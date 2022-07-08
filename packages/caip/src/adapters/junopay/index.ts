@@ -7,7 +7,7 @@ import { ChainId } from '../../chainId/chainId'
 import { avalancheAssetId, btcAssetId, cosmosAssetId, ethAssetId } from '../../constants'
 
 // source data https://docs.juno.finance/developers/reference/onjuno-pay/onjuno-pay-integration-guide
-const assetIdToOnJunoTickerMap: Record<AssetId, string> = {
+const assetIdToJunoPayTickerMap: Record<AssetId, string> = {
   [avalancheAssetId]: 'avax',
   [btcAssetId]: 'btc',
   [cosmosAssetId]: 'atom',
@@ -39,41 +39,43 @@ const assetIdToOnJunoTickerMap: Record<AssetId, string> = {
   'eip155:1/erc20:0x2260fac5e5542a773aa44fbcfedf7c193bc2c599': 'wbtc'
 }
 
-const onJunoTickerToAssetIdMap = invert(assetIdToOnJunoTickerMap)
+const junoPayTickerToAssetIdMap = invert(assetIdToJunoPayTickerMap)
 
-export const onJunoTickerToAssetId = (id: string): AssetId | undefined =>
-  onJunoTickerToAssetIdMap[id]
+export const junoPayTickerToAssetId = (id: string): AssetId | undefined =>
+  junoPayTickerToAssetIdMap[id]
 
-export const assetIdToOnJunoTicker = (assetId: string): string | undefined =>
-  assetIdToOnJunoTickerMap[toLower(assetId)]
+export const assetIdToJunoPayTicker = (assetId: string): string | undefined =>
+  assetIdToJunoPayTickerMap[toLower(assetId)]
 
-export const getSupportedOnjunoAssets = () =>
-  entries(assetIdToOnJunoTickerMap).map(([assetId, ticker]) => ({
+export const getSupportedJunoPayAssets = () =>
+  entries(assetIdToJunoPayTickerMap).map(([assetId, ticker]) => ({
     assetId,
     ticker
   }))
 
 /**
- * map ChainIds to OnJuno blockchain codes (ETH, BTC, COSMOS),
- * since some OnJuno assets could be on multiple chains and their default
+ * map ChainIds to JunoPay blockchain codes (ETH, BTC, COSMOS),
+ * since some JunoPay assets could be on multiple chains and their default
  * chain won't be exactly the same as ours.
  */
-const chainIdToOnJunoBlockchainCodeMap: Record<ChainId, string> = {
+const chainIdToJunoPayBlockchainCodeMap: Record<ChainId, string> = {
   'eip155:1': 'ETH',
   'bip122:000000000019d6689c085ae165831e93': 'BTC',
   'cosmos:cosmoshub-4': 'COSMOS'
 } as const
 
 /**
- * Convert an OnJuno asset identifier to an OnJuno chain identifier for use in OnJuno HTTP URLs
+ * Convert a JunoPay asset identifier to a JunoPay chain identifier for use in JunoPay HTTP URLs
  *
- * @param {string} onJunoAssetId - an OnJuno asset string referencing a specific asset; e.g., 'atom'
- * @returns {string} - an OnJuno chain identifier; e.g., 'cosmos'
+ * @param {string} junoPayAssetId - a JunoPay asset string referencing a specific asset; e.g., 'atom'
+ * @returns {string} - a JunoPay chain identifier; e.g., 'cosmos'
  */
-export const getOnJunoBlockchainFromOnJunoAssetTicker = (onJunoAssetId: string): string => {
-  const assetId = onJunoTickerToAssetId(onJunoAssetId.toLowerCase())
+export const getJunoPayBlockchainFromJunoPayAssetTicker = (junoPayAssetId: string): string => {
+  const assetId = junoPayTickerToAssetId(junoPayAssetId.toLowerCase())
   if (!assetId)
-    throw new Error(`getOnJunoBlockchainFromOnJunoAssetTicker: ${onJunoAssetId} is not supported`)
+    throw new Error(
+      `getJunoPayBlockchainFromJunoPayAssetTicker: ${junoPayAssetId} is not supported`
+    )
   const { chainId } = fromAssetId(assetId)
-  return chainIdToOnJunoBlockchainCodeMap[chainId]
+  return chainIdToJunoPayBlockchainCodeMap[chainId]
 }
