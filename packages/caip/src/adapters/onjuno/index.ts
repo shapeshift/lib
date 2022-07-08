@@ -4,8 +4,9 @@ import toLower from 'lodash/toLower'
 
 import { AssetId, fromAssetId } from '../../assetId/assetId'
 import { ChainId } from '../../chainId/chainId'
-import { avalancheAssetId, btcAssetId, cosmosAssetId, ethAssetId } from './../../constants'
+import { avalancheAssetId, btcAssetId, cosmosAssetId, ethAssetId } from '../../constants'
 
+// source data https://docs.juno.finance/developers/reference/onjuno-pay/onjuno-pay-integration-guide
 const assetIdToJunopayTickerMap: Record<AssetId, string> = {
   [avalancheAssetId]: 'avax',
   [btcAssetId]: 'btc',
