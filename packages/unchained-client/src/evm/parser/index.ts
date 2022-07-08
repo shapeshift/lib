@@ -34,7 +34,7 @@ export class BaseTransactionParser<T extends Tx> {
   /**
    * Register custom transaction sub parser to extract contract specific data
    *
-   * _register parsers from most generic first to most specific last_
+   * _parsers should be registered from most generic first to most specific last_
    */
   registerParser(parser: SubParser<T>): void {
     this.parsers.unshift(parser)
