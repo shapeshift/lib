@@ -2909,11 +2909,14 @@
     google-protobuf "^3.17.0"
     long "^4.0.0"
 
+<<<<<<< HEAD
 "@shapeshiftoss/types@^6.2.0":
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/types/-/types-6.3.0.tgz#4328ae23af12ad34e2dba7ea2f2f7b91426a218c"
   integrity sha512-1P38a4MWA3r5ueR3szTN8Z3b/VjhZfPl8ha/kzeaU03yWR5PCn4nj/xThFB/v53ruQYLyQZcqokz6VHLCOmnDw==
 
+=======
+>>>>>>> main
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
