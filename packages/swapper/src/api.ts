@@ -64,6 +64,8 @@ type CommonTradeInput = {
 
 export type EvmSupportedChainIds = KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
 
+export type OsmosisupportedChainIds = KnownChainIds.CosmosMainnet | KnownChainIds.OsmosisMainnet
+
 export type EvmSupportedChainAdapters = ethereum.ChainAdapter | avalanche.ChainAdapter
 
 export type GetEvmTradeQuoteInput = CommonTradeInput & {
@@ -71,11 +73,7 @@ export type GetEvmTradeQuoteInput = CommonTradeInput & {
 }
 
 export type GetOsmosisTradeQuoteInput = CommonTradeInput & {
-  chainId: KnownChainIds.CosmosMainnet
-}
-
-export type GetCosmosTradeQuoteInput = CommonTradeInput & {
-  chainId: KnownChainIds.OsmosisMainnet
+  chainId: OsmosisupportedChainIds
 }
 
 type GetBtcTradeQuoteInput = CommonTradeInput & {
@@ -85,8 +83,7 @@ type GetBtcTradeQuoteInput = CommonTradeInput & {
   wallet: HDWallet
 }
 
-export type GetTradeQuoteInput = GetBtcTradeQuoteInput | GetEvmTradeQuoteInput | GetCosmosTradeQuoteInput
-| GetOsmosisTradeQuoteInput
+export type GetTradeQuoteInput = GetBtcTradeQuoteInput | GetEvmTradeQuoteInput | GetOsmosisTradeQuoteInput
 
 export type BuildTradeInput = GetTradeQuoteInput & {
   buyAssetAccountNumber: number
