@@ -40,6 +40,10 @@ export class BaseTransactionParser<T extends Tx> {
     this.parsers.unshift(parser)
   }
 
+  protected registerParsers(parsers: Array<SubParser<T>>): void {
+    parsers.forEach((parser) => this.registerParser(parser))
+  }
+
   async parse(tx: T, address: string): Promise<ParsedTx> {
     address = ethers.utils.getAddress(address)
 
