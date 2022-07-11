@@ -61,6 +61,18 @@ export const makeBtcData = () => {
   return { [assetId]: 'bitcoin' }
 }
 
+export const makeDogecoinData = () => {
+  const chainNamespace = CHAIN_NAMESPACE.Bitcoin
+  const chainReference = CHAIN_REFERENCE.DogecoinMainnet
+  const assetId = toAssetId({
+    chainNamespace,
+    chainReference,
+    assetNamespace: 'slip44',
+    assetReference: ASSET_REFERENCE.Dogecoin
+  })
+  return { [assetId]: 'dogecoin' }
+}
+
 export const makeCosmosHubData = () => {
   const chainNamespace = CHAIN_NAMESPACE.Cosmos
   const chainReference = CHAIN_REFERENCE.CosmosHubMainnet

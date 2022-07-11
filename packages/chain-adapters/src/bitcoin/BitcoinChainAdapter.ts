@@ -69,7 +69,7 @@ export class ChainAdapter
     if (args.chainId && !this.supportedChainIds.includes(args.chainId)) {
       throw new Error(`Bitcoin chainId ${args.chainId} not supported`)
     }
-    console.info('hello')
+
     if (args.chainId) {
       this.chainId = args.chainId
     }

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /**
- * Test BitcoinChainAdapter
+ * Test DogecoinChainAdapter
  * @group unit
  */
 
@@ -15,8 +15,8 @@ import { ChainAdapterArgs } from '../utxo/UTXOBaseAdapter'
 import * as dogecoin from './DogecoinChainAdapter'
 
 const testMnemonic = 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle'
-const VALID_CHAIN_ID = 'bip122:000000000019d6689c085ae165831e93'
-const VALID_ASSET_ID = 'bip122:000000000019d6689c085ae165831e93/slip44:0'
+const VALID_CHAIN_ID = 'bip122:00000000001a91e3dace36e2be3bf030'
+const VALID_ASSET_ID = 'bip122:00000000001a91e3dace36e2be3bf030/slip44:3'
 
 const getWallet = async (): Promise<HDWallet> => {
   const nativeAdapterArgs: NativeAdapterArgs = {
@@ -32,36 +32,27 @@ const getWallet = async (): Promise<HDWallet> => {
 const getUtxosMockResponse = {
   data: [
     {
-      txid: 'ef935d850e7d596f98c6e24d5f25faa770f6e6d8e5eab94dea3e2154c3643986',
+      txid: '4475d2a75729cd3963abb5c873b5411caa854bbe0923131496889c17e9f2c98c',
       vout: 0,
-      value: '1598',
-      height: 705718,
-      confirmations: 2,
-      address: 'bc1qpszctuml70ulzf7f0zy5r4sg9nm65qfpgcw0uy',
-      path: "m/84'/0'/0'/0/1"
-    },
-    {
-      txid: 'adb979b44c86393236e307c45f9578d9bd064134a2779b4286c158c51ad4ab05',
-      vout: 0,
-      value: '31961',
-      height: 705718,
-      confirmations: 2,
-      address: 'bc1qpszctuml70ulzf7f0zy5r4sg9nm65qfpgcw0uy',
-      path: "m/84'/0'/0'/0/1"
+      value: '7332775620',
+      height: 3966731,
+      confirmations: 322539,
+      address: 'DDFrdu2AyWCkgpdypkABTnL6FWBGKSAL8V',
+      path: "m/44'/3'/0'/0/1"
     }
   ]
 }
 
 const getAccountMockResponse = {
   data: {
-    balance: '33559',
-    chain: 'bitcoin',
+    balance: '7332775620',
+    chain: 'dogecoin',
     nextChangeAddressIndex: 0,
     nextReceiveAddressIndex: 2,
     network: 'MAINNET',
     pubkey:
-      'zpub6qSSRL9wLd6LNee7qjDEuULWccP5Vbm5nuX4geBu8zMCQBWsF5Jo5UswLVxFzcbCMr2yQPG27ZhDs1cUGKVH1RmqkG1PFHkEXyHG7EV3ogY',
-    symbol: 'BTC'
+      'xpub6LIERL9wLd6LNee7qjDEuULWccP5Vbm5nuX4geBu8zMCQBWsF5Jo5UswLVxFzcbCMr2yQPG27ZhDs1cUGKVH1RmqkG1PFHkEXyHG7EV3ogY',
+    symbol: 'DOGE'
   }
 }
 
@@ -134,7 +125,7 @@ const getNetworkFeesMockedResponse = {
   }
 }
 
-describe('BitcoinChainAdapter', () => {
+describe('DogecoinChainAdapter', () => {
   let args: ChainAdapterArgs = {} as any
 
   beforeEach(() => {
@@ -143,24 +134,24 @@ describe('BitcoinChainAdapter', () => {
         http: {} as any,
         ws: {} as any
       },
-      coinName: 'Bitcoin',
-      chainId: 'bip122:000000000019d6689c085ae165831e93'
+      coinName: 'Dogecoin',
+      chainId: 'bip122:00000000001a91e3dace36e2be3bf030'
     }
   })
 
   describe('constructor', () => {
-    it('should return chainAdapter with Bitcoin chainId', () => {
+    it('should return chainAdapter with Dogecoin chainId', () => {
       const adapter = new dogecoin.ChainAdapter(args)
       const chainId = adapter.getChainId()
       expect(chainId).toEqual(VALID_CHAIN_ID)
     })
     it('should return chainAdapter with valid chainId if called with valid testnet chainId', () => {
-      args.chainId = 'bip122:000000000933ea01ad0ee984209779ba'
+      args.chainId = 'bip122:00000000001a91e3dace36e2be3bf030'
       const adapter = new dogecoin.ChainAdapter(args)
       const chainId = adapter.getChainId()
-      expect(chainId).toEqual('bip122:000000000933ea01ad0ee984209779ba')
+      expect(chainId).toEqual('bip122:00000000001a91e3dace36e2be3bf030')
     })
-    it('should return chainAdapter with Bitcoin assetId', () => {
+    it('should return chainAdapter with Dogecoin assetId', () => {
       const adapter = new dogecoin.ChainAdapter(args)
       const assetId = adapter.getAssetId()
       expect(assetId).toEqual(VALID_ASSET_ID)
@@ -168,28 +159,28 @@ describe('BitcoinChainAdapter', () => {
     it('should throw if called with invalid chainId', () => {
       args.chainId = 'INVALID_CHAINID'
       expect(() => new dogecoin.ChainAdapter(args)).toThrow(
-        'Bitcoin chainId INVALID_CHAINID not supported'
+        'Dogecoin chainId INVALID_CHAINID not supported'
       )
     })
     it('should throw if called with non bitcoin chainId', () => {
       args.chainId = 'eip155:1'
       expect(() => new dogecoin.ChainAdapter(args)).toThrow(
-        'Bitcoin chainId eip155:1 not supported'
+        'Dogecoin chainId eip155:1 not supported'
       )
     })
     it('should use default chainId if no arg chainId provided.', () => {
       args.chainId = undefined
       const adapter = new dogecoin.ChainAdapter(args)
       const chainId = adapter.getChainId()
-      expect(chainId).toEqual('bip122:000000000019d6689c085ae165831e93')
+      expect(chainId).toEqual('bip122:00000000001a91e3dace36e2be3bf030')
     })
   })
 
   describe('getType', () => {
-    it('should return KnownChainIds.BitcoinMainnet', async () => {
+    it('should return KnownChainIds.DogecoinMainnet', async () => {
       const adapter = new dogecoin.ChainAdapter(args)
       const type = adapter.getType()
-      expect(type).toEqual(KnownChainIds.BitcoinMainnet)
+      expect(type).toEqual(KnownChainIds.DogecoinMainnet)
     })
   })
 
@@ -198,7 +189,7 @@ describe('BitcoinChainAdapter', () => {
       args.providers.http = {
         getAccount: jest.fn().mockResolvedValue({
           data: {
-            pubkey: '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx',
+            pubkey: 'DDFrdu2AyWCkgpdypkABTnL6FWBGKSAL8V',
             balance: '100',
             unconfirmedBalance: '50',
             addresses: [],
@@ -209,12 +200,12 @@ describe('BitcoinChainAdapter', () => {
       } as any
 
       const adapter = new dogecoin.ChainAdapter(args)
-      const expected: Account<KnownChainIds.BitcoinMainnet> = {
-        pubkey: '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx',
-        chain: KnownChainIds.BitcoinMainnet,
+      const expected: Account<KnownChainIds.DogecoinMainnet> = {
+        pubkey: 'DDFrdu2AyWCkgpdypkABTnL6FWBGKSAL8V',
+        chain: KnownChainIds.DogecoinMainnet,
         balance: '150',
-        chainId: 'bip122:000000000019d6689c085ae165831e93',
-        assetId: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
+        chainId: 'bip122:00000000001a91e3dace36e2be3bf030',
+        assetId: 'bip122:00000000001a91e3dace36e2be3bf030/slip44:3',
         chainSpecific: {
           addresses: [],
           nextChangeAddressIndex: 0,
@@ -229,7 +220,7 @@ describe('BitcoinChainAdapter', () => {
     it('should throw for an unspecified address', async () => {
       args.providers.http = {
         getAccount: jest.fn<any, any>().mockResolvedValue({
-          pubkey: '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx',
+          pubkey: 'DDFrdu2AyWCkgpdypkABTnL6FWBGKSAL8V',
           balance: '0'
         })
       } as any
@@ -255,33 +246,33 @@ describe('BitcoinChainAdapter', () => {
       const adapter = new dogecoin.ChainAdapter(args)
 
       const bip44Params: BIP44Params = {
-        purpose: 84,
-        coinType: 0,
+        purpose: 44,
+        coinType: 3,
         accountNumber: 0,
         isChange: false
       }
 
       const txInput: BuildSendTxInput<KnownChainIds.BitcoinMainnet> = {
         bip44Params,
-        to: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4',
+        to: 'DDFrdu2AyWCkgpdypkABTnL6FWBGKSAL8V',
         value: '400',
         wallet,
         chainSpecific: {
-          accountType: UtxoAccountType.SegwitNative,
+          accountType: UtxoAccountType.P2pkh,
           satoshiPerByte: '1'
         }
       }
 
       await expect(adapter.buildSendTransaction(txInput)).resolves.toStrictEqual({
         txToSign: {
-          coin: 'Bitcoin',
+          coin: 'Dogecoin',
           inputs: [
             {
-              addressNList: [2147483732, 2147483648, 2147483648, 0, 1],
-              scriptType: 'p2wpkh',
-              amount: '31961',
+              addressNList: [2147483692, 2147483651, 2147483648, 0, 1],
+              scriptType: 'p2pkh',
+              amount: '7332775620',
               vout: 0,
-              txid: 'adb979b44c86393236e307c45f9578d9bd064134a2779b4286c158c51ad4ab05',
+              txid: '4475d2a75729cd3963abb5c873b5411caa854bbe0923131496889c17e9f2c98c',
               hex: '010000000180457afc57604fed35cc8cee29e602432c87125b9cabbcc8fc407749fe0fabfe010000006b483045022100cd627a0577d35454ced7f0a6ef8a3d3cf11c0f8696bda18062025478e0fc866002206c8ac559dc6bd851bdf00e33c1602fcaeee9d16b35d21b548529825f12dfe5ad0121027751a74f251ba2657ec2a2f374ce7d5ba1548359749823a59314c54a0670c126ffffffff02d97c0000000000001600140c0585f37ff3f9f127c9788941d6082cf7aa012173df0000000000001976a914b22138dfe140e4611b98bdb728eed04beed754c488ac00000000'
             }
           ],
@@ -290,13 +281,13 @@ describe('BitcoinChainAdapter', () => {
             {
               addressType: 'spend',
               amount: '400',
-              address: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4'
+              address: 'DDFrdu2AyWCkgpdypkABTnL6FWBGKSAL8V'
             },
             {
               addressType: 'change',
-              amount: '31335',
-              addressNList: [2147483732, 2147483648, 2147483648, 1, 0],
-              scriptType: 'p2wpkh',
+              amount: '7332774994',
+              addressNList: [2147483692, 2147483651, 2147483648, 1, 0],
+              scriptType: 'p2pkh',
               isChange: true
             }
           ]
@@ -322,19 +313,19 @@ describe('BitcoinChainAdapter', () => {
       const adapter = new dogecoin.ChainAdapter(args)
 
       const bip44Params: BIP44Params = {
-        purpose: 84,
-        coinType: 0,
+        purpose: 44,
+        coinType: 3,
         accountNumber: 0,
         isChange: false
       }
 
       const txInput: BuildSendTxInput<KnownChainIds.BitcoinMainnet> = {
         bip44Params,
-        to: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4',
-        value: '400',
+        to: 'DDFrdu2AyWCkgpdypkABTnL6FWBGKSAL8V',
+        value: '400000000',
         wallet,
         chainSpecific: {
-          accountType: UtxoAccountType.SegwitNative,
+          accountType: UtxoAccountType.P2pkh,
           satoshiPerByte: '1'
         }
       }
@@ -391,11 +382,11 @@ describe('BitcoinChainAdapter', () => {
   })
 
   describe('getAddress', () => {
-    it("should return a p2pkh address for valid derivation root path parameters (m/44'/0'/0'/0/0)", async () => {
+    it("should return a p2pkh address for valid derivation root path parameters (m/44'/3'/0'/0/0)", async () => {
       const wallet: HDWallet = await getWallet()
       const adapter = new dogecoin.ChainAdapter(args)
       const bip44Params: BIP44Params = {
-        coinType: 0,
+        coinType: 3,
         purpose: 44,
         accountNumber: 0,
         isChange: false,
@@ -407,14 +398,14 @@ describe('BitcoinChainAdapter', () => {
         wallet,
         accountType: UtxoAccountType.P2pkh
       })
-      expect(addr).toStrictEqual('1FH6ehAd5ZFXCM1cLGzHxK1s4dGdq1JusM')
+      expect(addr).toStrictEqual('DDFrdu2AyWCkgpdypkABTnL6FWBGKSAL8V')
     })
 
-    it("should return a valid p2pkh address for the first receive index path (m/44'/0'/0'/0/1)", async () => {
+    it("should return a valid p2pkh address for the first receive index path (m/44'/3'/0'/0/1)", async () => {
       const wallet: HDWallet = await getWallet()
       const adapter = new dogecoin.ChainAdapter(args)
       const bip44Params: BIP44Params = {
-        coinType: 0,
+        coinType: 3,
         purpose: 44,
         accountNumber: 0,
         index: 1,
@@ -425,14 +416,14 @@ describe('BitcoinChainAdapter', () => {
         wallet,
         accountType: UtxoAccountType.P2pkh
       })
-      expect(addr).toStrictEqual('1Jxtem176sCXHnK7QCShoafF5VtWvMa7eq')
+      expect(addr).toStrictEqual('DDFrdu2AyWCkgpdypkABTnL6FWBGKSAL8V')
     })
 
-    it("should return a valid p2pkh change address for the first receive index path (m/44'/0'/0'/1/0)", async () => {
+    it("should return a valid p2pkh change address for the first receive index path (m/44'/3'/0'/1/0)", async () => {
       const wallet: HDWallet = await getWallet()
       const adapter = new dogecoin.ChainAdapter(args)
       const bip44Params: BIP44Params = {
-        coinType: 0,
+        coinType: 3,
         purpose: 44,
         accountNumber: 0,
         index: 0,
@@ -443,14 +434,14 @@ describe('BitcoinChainAdapter', () => {
         wallet,
         accountType: UtxoAccountType.P2pkh
       })
-      expect(addr).toStrictEqual('13ZD8S4qR6h4GvkAZ2ht7rpr15TFXYxGCx')
+      expect(addr).toStrictEqual('DDFrdu2AyWCkgpdypkABTnL6FWBGKSAL8V')
     })
 
-    it("should return a valid p2pkh address at the 2nd account root path (m/44'/0'/1'/0/0)", async () => {
+    it("should return a valid p2pkh address at the 2nd account root path (m/44'/3'/1'/0/0)", async () => {
       const wallet: HDWallet = await getWallet()
       const adapter = new dogecoin.ChainAdapter(args)
       const bip44Params: BIP44Params = {
-        coinType: 0,
+        coinType: 3,
         purpose: 44,
         accountNumber: 1,
         index: 0,
@@ -461,10 +452,10 @@ describe('BitcoinChainAdapter', () => {
         wallet,
         accountType: UtxoAccountType.P2pkh
       })
-      expect(addr).toStrictEqual('1K2oFer6nGoXSPspeB5Qvt4htJvw3y31XW')
+      expect(addr).toStrictEqual('DDFrdu2AyWCkgpdypkABTnL6FWBGKSAL8V')
     })
 
-    it("should return a p2wpkh address for valid derivation root path parameters (m/84'/0'/0'/0/0)", async () => {
+    it("should return a p2pkh address for valid derivation root path parameters (m/84'/0'/0'/0/0)", async () => {
       const wallet: HDWallet = await getWallet()
       const adapter = new dogecoin.ChainAdapter(args)
       const bip44Params: BIP44Params = {
@@ -479,10 +470,10 @@ describe('BitcoinChainAdapter', () => {
         wallet,
         accountType: UtxoAccountType.SegwitNative
       })
-      expect(addr).toStrictEqual('bc1qkkr2uvry034tsj4p52za2pg42ug4pxg5qfxyfa')
+      expect(addr).toStrictEqual('DDFrdu2AyWCkgpdypkABTnL6FWBGKSAL8V')
     })
 
-    it("should return a valid p2wpkh address for the first receive index path (m/84'/0'/0'/0/1)", async () => {
+    it("should return a valid p2pkh address for the first receive index path (m/84'/0'/0'/0/1)", async () => {
       const wallet: HDWallet = await getWallet()
       const adapter = new dogecoin.ChainAdapter(args)
       const bip44Params: BIP44Params = {
@@ -497,28 +488,10 @@ describe('BitcoinChainAdapter', () => {
         wallet,
         accountType: UtxoAccountType.SegwitNative
       })
-      expect(addr).toStrictEqual('bc1qpszctuml70ulzf7f0zy5r4sg9nm65qfpgcw0uy')
+      expect(addr).toStrictEqual('DDFrdu2AyWCkgpdypkABTnL6FWBGKSAL8V')
     })
 
-    it("should return a valid p2wpkh change address for the first receive index path (m/44'/0'/0'/1/0)", async () => {
-      const wallet: HDWallet = await getWallet()
-      const adapter = new dogecoin.ChainAdapter(args)
-      const bip44Params: BIP44Params = {
-        coinType: 0,
-        purpose: 84,
-        accountNumber: 0,
-        index: 0,
-        isChange: true
-      }
-      const addr: string | undefined = await adapter.getAddress({
-        bip44Params,
-        wallet,
-        accountType: UtxoAccountType.SegwitNative
-      })
-      expect(addr).toStrictEqual('bc1qhazdhyg6ukkvnnlucxamjc3dmkj2zyfte0lqa9')
-    })
-
-    it("should return a valid p2wpkh address at the 2nd account root path (m/84'/0'/1'/0/0)", async () => {
+    it("should return a valid p2pkh address at the 2nd account root path (m/84'/0'/1'/0/0)", async () => {
       const wallet: HDWallet = await getWallet()
       const adapter = new dogecoin.ChainAdapter(args)
       const bip44Params: BIP44Params = {
@@ -533,7 +506,7 @@ describe('BitcoinChainAdapter', () => {
         wallet,
         accountType: UtxoAccountType.SegwitNative
       })
-      expect(addr).toStrictEqual('bc1qgawuludfvrdxfq0x55k26ydtg2hrx64jp3u6am')
+      expect(addr).toStrictEqual('DDFrdu2AyWCkgpdypkABTnL6FWBGKSAL8V')
     })
   })
 

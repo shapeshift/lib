@@ -38,8 +38,8 @@ import { ChainAdapterArgs, UTXOBaseAdapter } from '../utxo/UTXOBaseAdapter'
 import { utxoSelect } from '../utxo/utxoSelect'
 
 export class ChainAdapter
-  extends UTXOBaseAdapter<KnownChainIds.BitcoinMainnet>
-  implements IChainAdapter<KnownChainIds.BitcoinMainnet>
+  extends UTXOBaseAdapter<KnownChainIds.DogecoinMainnet>
+  implements IChainAdapter<KnownChainIds.DogecoinMainnet>
 {
   public static readonly defaultBIP44Params: BIP44Params = {
     purpose: 44,
@@ -71,13 +71,13 @@ export class ChainAdapter
     this.assetId = toAssetId({
       chainId: this.chainId,
       assetNamespace: 'slip44',
-      assetReference: ASSET_REFERENCE.Bitcoin
+      assetReference: ASSET_REFERENCE.Dogecoin
     })
     this.parser = new unchained.bitcoin.TransactionParser({ chainId: this.chainId })
   }
 
-  getType(): KnownChainIds.BitcoinMainnet {
-    return KnownChainIds.BitcoinMainnet
+  getType(): KnownChainIds.DogecoinMainnet {
+    return KnownChainIds.DogecoinMainnet
   }
 
   getFeeAssetId(): AssetId {
@@ -90,7 +90,7 @@ export class ChainAdapter
 
   async getTxHistory(
     input: TxHistoryInput
-  ): Promise<TxHistoryResponse<KnownChainIds.BitcoinMainnet>> {
+  ): Promise<TxHistoryResponse<KnownChainIds.DogecoinMainnet>> {
     if (!this.accountAddresses[input.pubkey]) {
       await this.getAccount(input.pubkey)
     }
@@ -159,8 +159,8 @@ export class ChainAdapter
     }
   }
 
-  async buildSendTransaction(tx: BuildSendTxInput<KnownChainIds.BitcoinMainnet>): Promise<{
-    txToSign: ChainTxType<KnownChainIds.BitcoinMainnet>
+  async buildSendTransaction(tx: BuildSendTxInput<KnownChainIds.DogecoinMainnet>): Promise<{
+    txToSign: ChainTxType<KnownChainIds.DogecoinMainnet>
   }> {
     try {
       const {
@@ -173,18 +173,19 @@ export class ChainAdapter
       } = tx
 
       if (!value || !to) {
-        throw new Error('BitcoinChainAdapter: (to and value) are required')
+        throw new Error('DogecoinChainAdapter: (to and value) are required')
       }
 
       const path = toRootDerivationPath(bip44Params)
       const pubkey = await this.getPublicKey(wallet, bip44Params, accountType)
+      console.info(`pubkey: ${pubkey.xpub}`)
       const { data: utxos } = await this.providers.http.getUtxos({
         pubkey: pubkey.xpub
       })
 
       if (!supportsBTC(wallet))
         throw new Error(
-          'BitcoinChainAdapter: signTransaction wallet does not support signing btc txs'
+          'DogecoinChainAdapter: signTransaction wallet does not support signing btc txs'
         )
 
       const account = await this.getAccount(pubkey.xpub)
@@ -199,7 +200,7 @@ export class ChainAdapter
       })
 
       if (!coinSelectResult || !coinSelectResult.inputs || !coinSelectResult.outputs) {
-        throw new Error(`BitcoinChainAdapter: coinSelect didn't select coins`)
+        throw new Error(`DogecoinChainAdapter: coinSelect didn't select coins`)
       }
 
       const { inputs, outputs } = coinSelectResult
@@ -262,16 +263,16 @@ export class ChainAdapter
   }
 
   async signTransaction(
-    signTxInput: SignTxInput<ChainTxType<KnownChainIds.BitcoinMainnet>>
+    signTxInput: SignTxInput<ChainTxType<KnownChainIds.DogecoinMainnet>>
   ): Promise<string> {
     try {
       const { txToSign, wallet } = signTxInput
       if (!supportsBTC(wallet))
         throw new Error(
-          'BitcoinChainAdapter: signTransaction wallet does not support signing btc txs'
+          'DogecoinChainAdapter: signTransaction wallet does not support signing btc txs'
         )
       const signedTx = await wallet.btcSignTx(txToSign)
-      if (!signedTx) throw ErrorHandler('BitcoinChainAdapter: error signing tx')
+      if (!signedTx) throw ErrorHandler('DogecoinChainAdapter: error signing tx')
       return signedTx.serializedTx
     } catch (err) {
       return ErrorHandler(err)
@@ -283,8 +284,8 @@ export class ChainAdapter
     value,
     chainSpecific: { pubkey, opReturnData },
     sendMax = false
-  }: GetFeeDataInput<KnownChainIds.BitcoinMainnet>): Promise<
-    FeeDataEstimate<KnownChainIds.BitcoinMainnet>
+  }: GetFeeDataInput<KnownChainIds.DogecoinMainnet>): Promise<
+    FeeDataEstimate<KnownChainIds.DogecoinMainnet>
   > {
     const feeData = await this.providers.http.getNetworkFees()
 
@@ -355,7 +356,7 @@ export class ChainAdapter
     showOnDevice = false
   }: bitcoin.GetAddressInput): Promise<string> {
     if (!supportsBTC(wallet)) {
-      throw new Error('BitcoinChainAdapter: wallet does not support btc')
+      throw new Error('DogecoinChainAdapter: wallet does not support btc')
     }
 
     const { isChange } = bip44Params
@@ -378,13 +379,13 @@ export class ChainAdapter
       scriptType: accountTypeToScriptType[accountType],
       showDisplay: Boolean(showOnDevice)
     })
-    if (!btcAddress) throw new Error('BitcoinChainAdapter: no btcAddress available from wallet')
+    if (!btcAddress) throw new Error('DogecoinChainAdapter: no btcAddress available from wallet')
     return btcAddress
   }
 
   async subscribeTxs(
     input: SubscribeTxsInput,
-    onMessage: (msg: Transaction<KnownChainIds.BitcoinMainnet>) => void,
+    onMessage: (msg: Transaction<KnownChainIds.DogecoinMainnet>) => void,
     onError: (err: SubscribeError) => void
   ): Promise<void> {
     const {
@@ -410,7 +411,7 @@ export class ChainAdapter
           blockHeight: tx.blockHeight,
           blockTime: tx.blockTime,
           chainId: tx.chainId,
-          chain: KnownChainIds.BitcoinMainnet,
+          chain: KnownChainIds.DogecoinMainnet,
           confirmations: tx.confirmations,
           fee: tx.fee,
           status: getStatus(tx.status),

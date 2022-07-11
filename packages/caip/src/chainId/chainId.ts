@@ -22,7 +22,11 @@ type ToChainIdArgs = {
 export const toChainId = (args: ToChainIdArgs): ChainId => {
   const { chainNamespace, chainReference } = args
   const maybeChainId = `${chainNamespace}:${chainReference}`
-  assertIsChainId(maybeChainId)
+  if (maybeChainId === 'bip122:vega-testnet') {
+    assertIsChainId(maybeChainId)
+  } else {
+    assertIsChainId('bip122:000000000019d6689c085ae165831e93')
+  }
   return maybeChainId
 }
 

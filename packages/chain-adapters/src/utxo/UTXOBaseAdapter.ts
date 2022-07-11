@@ -30,7 +30,7 @@ import {
 } from '../utils'
 import { bnOrZero } from '../utils/bignumber'
 
-export type UTXOChainIds = KnownChainIds.BitcoinMainnet // to be extended in the future to include other UTXOs
+export type UTXOChainIds = KnownChainIds.BitcoinMainnet | KnownChainIds.DogecoinMainnet // to be extended in the future to include other UTXOs
 
 /**
  * Currently, we don't have a generic interact for UTXO providers, but will in the future.
