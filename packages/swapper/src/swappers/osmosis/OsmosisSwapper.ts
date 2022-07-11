@@ -6,19 +6,20 @@ import {
   HDWallet,
   OsmosisWallet
 } from '@shapeshiftoss/hdwallet-core'
-import { Asset, SwapperType } from '@shapeshiftoss/types'
+import { Asset } from '@shapeshiftoss/types'
 import axios from 'axios'
 
 import {
   ApprovalNeededOutput,
   BuildTradeInput,
   BuyAssetBySellIdInput,
-  CommonTradeInput,
   ExecuteTradeInput,
+  GetTradeQuoteInput,
   MinMaxOutput,
   SwapError,
   SwapErrorTypes,
   Swapper,
+  SwapperType,
   Trade,
   TradeQuote,
   TradeResult,
@@ -217,7 +218,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     }
   }
 
-  async getTradeQuote(input: CommonTradeInput): Promise<TradeQuote<ChainId>> {
+  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ChainId>> {
     const { sellAsset, buyAsset, sellAmount } = input
     if (!sellAmount) {
       throw new Error('sellAmount is required')

@@ -71,11 +71,11 @@ export type GetEvmTradeQuoteInput = CommonTradeInput & {
 }
 
 export type GetOsmosisTradeQuoteInput = CommonTradeInput & {
-  chainId: 'cosmos:osmosis-1'
+  chainId: KnownChainIds.CosmosMainnet
 }
 
 export type GetCosmosTradeQuoteInput = CommonTradeInput & {
-  chainId: 'cosmos:cosmoshub-4'
+  chainId: KnownChainIds.OsmosisMainnet
 }
 
 type GetBtcTradeQuoteInput = CommonTradeInput & {
