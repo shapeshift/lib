@@ -28,7 +28,7 @@ import { getUsdRate } from './utils/getUsdRate/getUsdRate'
 import { thorService } from './utils/thorService'
 
 export class ThorchainSwapper implements Swapper<ChainId> {
-  public readonly name = 'Thorchain'
+  readonly name = 'Thorchain'
   private swapSupportedChainIds: Record<ChainId, boolean> = {
     'eip155:1': true,
     'bip122:000000000019d6689c085ae165831e93': true
