@@ -1,4 +1,4 @@
-import { ChainAdapterManager } from 'packages/chain-adapters'
+import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 
 export type OsmoSwapperDeps = {
   adapterManager: ChainAdapterManager
