@@ -37,7 +37,7 @@ export const atom: Asset = {
   icon: 'https://assets.coincap.io/assets/icons/256/atom.png',
   explorer: 'https://www.mintscan.io/cosmos',
   explorerAddressLink: 'https://www.mintscan.io/cosmos/account/',
-  explorerTxLink: 'https://www.mintscan.io/osmosis/txs/'
+  explorerTxLink: 'https://www.mintscan.io/cosmos/txs/'
 }
 
 export const osmosis: Asset = {
