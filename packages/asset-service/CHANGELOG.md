@@ -1,3 +1,12 @@
+# [@shapeshiftoss/asset-service-v6.3.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.3.1...@shapeshiftoss/asset-service-v6.3.2) (2022-07-07)
+
+# [@shapeshiftoss/asset-service-v6.3.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.3.0...@shapeshiftoss/asset-service-v6.3.1) (2022-07-06)
+
+
+### Bug Fixes
+
+* removed test bitcoin from asset list and asset list generation ([#857](https://github.com/shapeshift/lib/issues/857)) ([20a6c38](https://github.com/shapeshift/lib/commit/20a6c384a3554243965cda5ac5f06a3579b6c727))
+
 # [@shapeshiftoss/asset-service-v6.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.2.2...@shapeshiftoss/asset-service-v6.3.0) (2022-06-30)
 
 

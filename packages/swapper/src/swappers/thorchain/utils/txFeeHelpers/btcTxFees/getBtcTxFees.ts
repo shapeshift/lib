@@ -1,10 +1,11 @@
 import { bitcoin, ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
-import { Asset } from '@shapeshiftoss/types'
+import { Asset, KnownChainIds } from '@shapeshiftoss/types'
 
 import { QuoteFeeData, SwapError, SwapErrorTypes } from '../../../../../api'
 import { bn } from '../../../../utils/bignumber'
 import { ThorchainSwapperDeps } from '../../../types'
 import { estimateTradeFee } from '../../estimateTradeFee/estimateTradeFee'
+
 export const getBtcTxFees = async ({
   deps,
   opReturnData,
@@ -21,14 +22,14 @@ export const getBtcTxFees = async ({
   sellAmount: string
   adapterManager: ChainAdapterManager
   pubkey: string
-}): Promise<QuoteFeeData<'bip122:000000000019d6689c085ae165831e93'>> => {
+}): Promise<QuoteFeeData<KnownChainIds.BitcoinMainnet>> => {
   try {
     const adapter = adapterManager.get('bip122:000000000019d6689c085ae165831e93') as
       | bitcoin.ChainAdapter
       | undefined
     if (!adapter)
       throw new SwapError(
-        `[getBtcTxFees] - No chain adapter found for ${'bip122:000000000019d6689c085ae165831e93'}.`,
+        `[getBtcTxFees] - No chain adapter found for bip122:000000000019d6689c085ae165831e93.`,
         {
           code: SwapErrorTypes.UNSUPPORTED_CHAIN,
           details: { chainId: 'bip122:000000000019d6689c085ae165831e93' }

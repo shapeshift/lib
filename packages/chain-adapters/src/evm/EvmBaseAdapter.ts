@@ -1,6 +1,10 @@
 import { AssetId, ChainId, toAssetId } from '@shapeshiftoss/caip'
-import { ETHSignMessage } from '@shapeshiftoss/hdwallet-core'
-import { bip32ToAddressNList, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
+import {
+  bip32ToAddressNList,
+  ETHSignMessage,
+  ETHSignTx,
+  ETHWallet
+} from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import WAValidator from 'multicoin-address-validator'
@@ -34,40 +38,42 @@ import {
 } from '../utils'
 import { bnOrZero } from '../utils/bignumber'
 
-export type EVMChainIds = KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
+export type EvmChainIds = KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
 
 export interface ChainAdapterArgs {
   chainId?: ChainId
   providers: {
-    http: unchained.ethereum.V1Api
-    ws: unchained.ws.Client<unchained.ethereum.EthereumTx>
+    http: unchained.ethereum.V1Api | unchained.avalanche.V1Api
+    ws: unchained.ws.Client<unchained.ethereum.EthereumTx | unchained.avalanche.AvalancheTx>
   }
   rpcUrl: string
 }
 
-export interface EVMBaseAdapterArgs extends ChainAdapterArgs {
+export interface EvmBaseAdapterArgs extends ChainAdapterArgs {
   supportedChainIds: Array<ChainId>
   chainId: ChainId
 }
 
-export abstract class EVMBaseAdapter<T extends EVMChainIds> implements IChainAdapter<T> {
+export abstract class EvmBaseAdapter<T extends EvmChainIds> implements IChainAdapter<T> {
   protected readonly chainId: ChainId
   protected readonly supportedChainIds: Array<ChainId>
   protected readonly providers: {
-    http: unchained.ethereum.V1Api
-    ws: unchained.ws.Client<unchained.ethereum.EthereumTx>
+    http: unchained.ethereum.V1Api | unchained.avalanche.V1Api
+    ws: unchained.ws.Client<unchained.ethereum.EthereumTx | unchained.avalanche.AvalancheTx>
   }
 
+  protected rpcUrl: string
   protected assetId: AssetId
   protected parser: unchained.ethereum.TransactionParser
 
   static defaultBIP44Params: BIP44Params
 
-  constructor(args: EVMBaseAdapterArgs) {
-    EVMBaseAdapter.defaultBIP44Params = (<typeof EVMBaseAdapter>this.constructor).defaultBIP44Params
+  protected constructor(args: EvmBaseAdapterArgs) {
+    EvmBaseAdapter.defaultBIP44Params = (<typeof EvmBaseAdapter>this.constructor).defaultBIP44Params
 
     this.supportedChainIds = args.supportedChainIds
     this.chainId = args.chainId
+    this.rpcUrl = args.rpcUrl
     this.providers = args.providers
 
     if (!this.supportedChainIds.includes(this.chainId)) {
@@ -84,8 +90,12 @@ export abstract class EVMBaseAdapter<T extends EVMChainIds> implements IChainAda
     return this.chainId
   }
 
+  getRpcUrl(): string {
+    return this.rpcUrl
+  }
+
   buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
-    return { ...EVMBaseAdapter.defaultBIP44Params, ...params }
+    return { ...EvmBaseAdapter.defaultBIP44Params, ...params }
   }
 
   async getAccount(pubkey: string): Promise<Account<T>> {
@@ -194,7 +204,7 @@ export abstract class EVMBaseAdapter<T extends EVMChainIds> implements IChainAda
       const { messageToSign, wallet } = signMessageInput
       const signedMessage = await (wallet as ETHWallet).ethSignMessage(messageToSign)
 
-      if (!signedMessage) throw new Error('EthereumChainAdapter: error signing message')
+      if (!signedMessage) throw new Error('EvmChainAdapter: error signing message')
 
       return signedMessage.signature
     } catch (err) {
@@ -203,7 +213,7 @@ export abstract class EVMBaseAdapter<T extends EVMChainIds> implements IChainAda
   }
 
   async getAddress(input: GetAddressInput): Promise<string> {
-    const { wallet, bip44Params = EVMBaseAdapter.defaultBIP44Params, showOnDevice } = input
+    const { wallet, bip44Params = EvmBaseAdapter.defaultBIP44Params, showOnDevice } = input
     const path = toPath(bip44Params)
     const addressNList = bip32ToAddressNList(path)
     const address = await (wallet as ETHWallet).ethGetAddress({
@@ -225,7 +235,7 @@ export abstract class EVMBaseAdapter<T extends EVMChainIds> implements IChainAda
     onMessage: (msg: Transaction<T>) => void,
     onError: (err: SubscribeError) => void
   ): Promise<void> {
-    const { wallet, bip44Params = EVMBaseAdapter.defaultBIP44Params } = input
+    const { wallet, bip44Params = EvmBaseAdapter.defaultBIP44Params } = input
 
     const address = await this.getAddress({ wallet, bip44Params })
     const subscriptionId = toRootDerivationPath(bip44Params)
@@ -265,7 +275,7 @@ export abstract class EVMBaseAdapter<T extends EVMChainIds> implements IChainAda
   unsubscribeTxs(input?: SubscribeTxsInput): void {
     if (!input) return this.providers.ws.unsubscribeTxs()
 
-    const { bip44Params = EVMBaseAdapter.defaultBIP44Params } = input
+    const { bip44Params = EvmBaseAdapter.defaultBIP44Params } = input
     const subscriptionId = toRootDerivationPath(bip44Params)
 
     this.providers.ws.unsubscribeTxs(subscriptionId, { topic: 'txs', addresses: [] })
