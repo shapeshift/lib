@@ -1,8 +1,6 @@
-import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { ChainAdapterManager } from 'packages/chain-adapters'
 
 export type OsmoSwapperDeps = {
-  wallet: HDWallet
   adapterManager: ChainAdapterManager
   osmoUrl: string
   cosmosUrl: string
