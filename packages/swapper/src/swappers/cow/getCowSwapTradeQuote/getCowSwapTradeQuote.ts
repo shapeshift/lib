@@ -91,11 +91,10 @@ export async function getCowSwapTradeQuote(
 
     const receiveAddress = wallet ? await adapter.getAddress({ wallet }) : DEFAULT_ADDRESS
 
-    const data = await getApproveContractData({
+    const data = getApproveContractData({
       web3,
       spenderAddress: COW_SWAP_VAULT_RELAYER_ADDRESS,
-      sellAssetErc20Address,
-      receiveAddress
+      contractAddress: sellAssetErc20Address
     })
 
     const [feeDataOptions, feeAssetUsdRate, sellAssetUsdRate] = await Promise.all([

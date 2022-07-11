@@ -37,8 +37,7 @@ export type GetERC20AllowanceArgs = {
 export type GetApproveContractDataArgs = {
   web3: Web3
   spenderAddress: string
-  sellAssetErc20Address: string
-  receiveAddress: string
+  contractAddress: string
 }
 
 type GrantAllowanceArgs<T extends EvmSupportedChainIds> = {
@@ -181,15 +180,11 @@ export const normalizeIntegerAmount = (amount: string | number | BN): string => 
     .toLocaleString('fullwide', { useGrouping: false })
 }
 
-export const getApproveContractData = async ({
+export const getApproveContractData = ({
   web3,
   spenderAddress,
-  sellAssetErc20Address,
-  receiveAddress
-}: GetApproveContractDataArgs): Promise<string> => {
-  const approveContract = new web3.eth.Contract(erc20AbiImported, sellAssetErc20Address)
-
-  const preApprove = await approveContract.methods.approve(spenderAddress, MAX_ALLOWANCE)
-
-  return preApprove.encodeABI({ from: receiveAddress })
+  contractAddress
+}: GetApproveContractDataArgs): string => {
+  const contract = new web3.eth.Contract(erc20AbiImported, contractAddress)
+  return contract.methods.approve(spenderAddress, MAX_ALLOWANCE).encodeABI()
 }
