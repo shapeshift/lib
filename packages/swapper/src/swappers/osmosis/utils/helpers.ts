@@ -1,9 +1,12 @@
+import { cosmos, osmosis } from '@shapeshiftoss/chain-adapters'
+import { bip32ToAddressNList, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import axios from 'axios'
 import { find } from 'lodash'
 
-import { SwapError } from '../../../index'
+import { SwapError, TradeResult } from '../../../index'
 import { bn, bnOrZero } from '../../utils/bignumber'
-import { PoolInfo } from './types'
+import { GAS } from './constants'
+import { IbcTransferInput, PoolInfo } from './types'
 
 export interface IsymbolDenomMapping {
   OSMO: string
@@ -151,4 +154,78 @@ export const getRateInfo = async (
 ) => {
   const { pool, sellAssetIndex, buyAssetIndex } = await findPool(sellAsset, buyAsset, osmoUrl)
   return getInfoFromPool(sellAmount, pool, sellAssetIndex, buyAssetIndex)
+}
+
+export const performIbcTransfer = async (
+  input: IbcTransferInput,
+  adapter: cosmos.ChainAdapter | osmosis.ChainAdapter,
+  wallet: HDWallet,
+  accountBaseUrl: string,
+  blockBaseUrl: string,
+  denom: string,
+  sourceChannel: string,
+  feeAmount: string
+): Promise<TradeResult> => {
+  const { sender, receiver, amount } = input
+
+  const responseLatestBlock = await axios.get(`${blockBaseUrl}/blocks/latest`)
+  const latestBlock = responseLatestBlock.data.block.header.height
+
+  const addressNList = bip32ToAddressNList("m/44'/118'/0'/0/0")
+
+  const accountUrl = `${accountBaseUrl}/auth/accounts/${sender}`
+  const responseAccount = await axios.get(accountUrl)
+  const accountNumber = responseAccount.data.result.value.account_number
+  const sequence = responseAccount.data.result.value.sequence
+
+  if (!accountNumber) throw new Error('no atom account number')
+
+  const tx1 = {
+    memo: '',
+    fee: {
+      amount: [
+        {
+          amount: feeAmount.toString(), // having a fee here causes error
+          denom: 'uosmo'
+        }
+      ],
+      gas: GAS
+    },
+    signatures: null,
+    msg: [
+      {
+        type: 'cosmos-sdk/MsgTransfer',
+        value: {
+          source_port: 'transfer',
+          source_channel: sourceChannel,
+          token: {
+            denom,
+            amount
+          },
+          sender,
+          receiver,
+          timeout_height: {
+            revision_number: '4',
+            revision_height: String(Number(latestBlock) + 100)
+          }
+        }
+      }
+    ]
+  }
+
+  const signed = await adapter.signTransaction({
+    txToSign: {
+      tx: tx1,
+      addressNList,
+      chain_id: 'osmosis-1',
+      account_number: accountNumber,
+      sequence
+    },
+    wallet
+  })
+  const tradeId = await adapter.broadcastTransaction(signed)
+
+  return {
+    tradeId
+  }
 }

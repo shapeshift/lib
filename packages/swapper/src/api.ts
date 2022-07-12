@@ -59,12 +59,13 @@ type CommonTradeInput = {
   sellAmount: string
   sendMax: boolean
   sellAssetAccountNumber: number
+  buyAssetAccountNumber: number
   wallet?: HDWallet // TODO remove this in a followup PR
 }
 
 export type EvmSupportedChainIds = KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
 
-export type OsmosisupportedChainIds = KnownChainIds.CosmosMainnet | KnownChainIds.OsmosisMainnet
+export type OsmosisSupportedChainIds = KnownChainIds.CosmosMainnet | KnownChainIds.OsmosisMainnet
 
 export type EvmSupportedChainAdapters = ethereum.ChainAdapter | avalanche.ChainAdapter
 
@@ -73,7 +74,7 @@ export type GetEvmTradeQuoteInput = CommonTradeInput & {
 }
 
 export type GetOsmosisTradeQuoteInput = CommonTradeInput & {
-  chainId: OsmosisupportedChainIds
+  chainId: OsmosisSupportedChainIds
 }
 
 type GetBtcTradeQuoteInput = CommonTradeInput & {
@@ -83,7 +84,10 @@ type GetBtcTradeQuoteInput = CommonTradeInput & {
   wallet: HDWallet
 }
 
-export type GetTradeQuoteInput = GetBtcTradeQuoteInput | GetEvmTradeQuoteInput | GetOsmosisTradeQuoteInput
+export type GetTradeQuoteInput =
+  | GetBtcTradeQuoteInput
+  | GetEvmTradeQuoteInput
+  | GetOsmosisTradeQuoteInput
 
 export type BuildTradeInput = GetTradeQuoteInput & {
   buyAssetAccountNumber: number
@@ -100,6 +104,7 @@ interface TradeBase<C extends ChainId> {
   buyAsset: Asset
   sellAsset: Asset
   sellAssetAccountNumber: number
+  buyAssetAccountNumber: number
 }
 
 export interface TradeQuote<C extends ChainId> extends TradeBase<C> {

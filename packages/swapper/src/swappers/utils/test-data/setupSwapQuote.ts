@@ -13,6 +13,7 @@ export const setupQuote = () => {
     buyAsset,
     allowanceContract: 'allowanceContractAddress',
     sellAssetAccountNumber: 0,
+    buyAssetAccountNumber: 0,
     minimum: '0',
     maximum: '999999999999',
     feeData: { fee: '0', tradeFee: '0', chainSpecific: {} },
@@ -26,6 +27,7 @@ export const setupQuote = () => {
     sellAsset,
     buyAsset,
     sellAssetAccountNumber: 0,
+    buyAssetAccountNumber: 0,
     sendMax: false
   }
   return { quoteInput, tradeQuote, buyAsset, sellAsset }

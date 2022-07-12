@@ -17,7 +17,8 @@ export const getThorTradeQuote = async ({
   deps: ThorchainSwapperDeps
   input: GetTradeQuoteInput
 }): Promise<TradeQuote<ChainId>> => {
-  const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, wallet } = input
+  const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, buyAssetAccountNumber, wallet } =
+    input
 
   if (!wallet)
     throw new SwapError('[getTradeQuote] - wallet is required', {
@@ -103,7 +104,8 @@ export const getThorTradeQuote = async ({
       allowanceContract: router,
       buyAsset,
       sellAsset,
-      sellAssetAccountNumber
+      sellAssetAccountNumber,
+      buyAssetAccountNumber
     }
   } catch (e) {
     if (e instanceof SwapError) throw e

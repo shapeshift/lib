@@ -112,6 +112,7 @@ const main = async (): Promise<void> => {
       buyAsset,
       sellAmount: sellAmountBase,
       sellAssetAccountNumber: 0,
+      buyAssetAccountNumber: 0,
       sendMax: false
     })
   } catch (e) {
