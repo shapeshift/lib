@@ -21,7 +21,7 @@ import {
   TradeTxs
 } from '../../api'
 import { bn, bnOrZero } from '../utils/bignumber'
-import { DEFAULT_SOURCE, GAS, MAX_SWAPPER_SELL } from './utils/constants'
+import { DEFAULT_SOURCE, FEE, GAS, MAX_SWAPPER_SELL } from './utils/constants'
 import {
   getRateInfo,
   IsymbolDenomMapping,
@@ -31,8 +31,6 @@ import {
   symbolDenomMapping
 } from './utils/helpers'
 import { OsmoSwapperDeps } from './utils/types'
-
-const fee = '10000'
 export class OsmosisSwapper implements Swapper<ChainId> {
   supportAssets: string[]
   deps: OsmoSwapperDeps
@@ -114,7 +112,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       throw new Error('sellAmount is required')
     }
 
-    const { rate, buyAmount } = await getRateInfo(
+    const { tradeFee, rate, buyAmount } = await getRateInfo(
       sellAsset.symbol,
       buyAsset.symbol,
       sellAmount !== '0' ? sellAmount : '1',
@@ -129,7 +127,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     return {
       buyAmount,
       buyAsset,
-      feeData: { fee, tradeFee: fee }, // TODO: and real tradeFee
+      feeData: { fee: FEE, tradeFee },
       rate,
       receiveAddress: '',
       sellAmount: amountBaseSellString,
@@ -145,7 +143,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     if (!sellAmount) {
       throw new Error('sellAmount is required')
     }
-    const { rate, buyAmount } = await getRateInfo(
+    const { tradeFee, rate, buyAmount } = await getRateInfo(
       sellAsset.symbol,
       buyAsset.symbol,
       sellAmount !== '0' ? sellAmount : '1',
@@ -156,7 +154,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
 
     return {
       buyAsset,
-      feeData: { fee, tradeFee: fee }, // TODO: give real trade fee
+      feeData: { fee: FEE, tradeFee },
       maximum,
       minimum,
       sellAssetAccountNumber: 0,
@@ -255,7 +253,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         fee: {
           amount: [
             {
-              amount: fee.toString(),
+              amount: FEE.toString(),
               denom: 'uosmo'
             }
           ],
@@ -316,7 +314,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
           this.deps.cosmosUrl,
           buyAssetDenom,
           'channel-0',
-          fee
+          FEE
         )
       }
 

@@ -114,7 +114,7 @@ const findPool = async (sellAssetSymbol: string, buyAssetSymbol: string, osmoUrl
   } else {
     ;(sellAssetIndex = 1), (buyAssetIndex = 0)
   }
-
+  console.log('foundPool', foundPool)
   return { pool: foundPool, sellAssetIndex, buyAssetIndex }
 }
 
