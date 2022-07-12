@@ -60,6 +60,9 @@ export async function cowExecuteTrade(
       buyTokenBalance: ERC20_TOKEN_BALANCE
     }
 
+    // We need to construct orderDigest, sign it and send it to cowSwap API, in order to submit a trade
+    // Some context about this : https://docs.cow.fi/tutorials/how-to-submit-orders-via-the-api/4.-signing-the-order
+    // For more info, check hashOrder method implementation
     const orderDigest = hashOrder(domain(1, COW_SWAP_SETTLEMENT_ADDRESS), orderToSign)
 
     const bip44Params = ethereum.ChainAdapter.defaultBIP44Params

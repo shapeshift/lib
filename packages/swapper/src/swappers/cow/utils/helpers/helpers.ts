@@ -127,6 +127,10 @@ export const hashTypedData = (
 
 /**
  * Compute the 32-byte signing hash for the specified order.
+ * Implementation is following https://github.com/cowprotocol/contracts/blob/main/src/ts/order.ts
+ * Some more ressources that can be useful :
+ * https://docs.cow.fi/tutorials/how-to-submit-orders-via-the-api/4.-signing-the-order
+ * https://docs.cow.fi/smart-contracts/settlement-contract/signature-schemes
  *
  * @param domain The EIP-712 domain separator to compute the hash for.
  * @param order The order to compute the digest for.
