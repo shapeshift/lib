@@ -6,10 +6,10 @@ import Web3 from 'web3'
 
 import { ZrxSwapper } from '..'
 import { FOX } from '../utils/test-data/assets'
-import { setupQuote } from '../utils/test-data/setupSwapQuote'
+import { setupBuildTrade, setupQuote } from '../utils/test-data/setupSwapQuote'
 import { getZrxTradeQuote } from './getZrxTradeQuote/getZrxTradeQuote'
 import { getUsdRate } from './utils/helpers/helpers'
-import { setupBuildTrade, setupExecuteTrade } from './utils/test-data/setupZrxSwapQuote'
+import { setupExecuteTrade } from './utils/test-data/setupZrxSwapQuote'
 import { zrxApprovalNeeded } from './zrxApprovalNeeded/zrxApprovalNeeded'
 import { zrxApproveInfinite } from './zrxApproveInfinite/zrxApproveInfinite'
 import { zrxBuildTrade } from './zrxBuildTrade/zrxBuildTrade'
@@ -53,6 +53,10 @@ describe('ZrxSwapper', () => {
     const swapper = new ZrxSwapper(zrxEthereumSwapperDeps)
     await swapper.getTradeQuote(quoteInput)
     expect(getZrxTradeQuote).toHaveBeenCalled()
+  })
+  it('returns 0x name', () => {
+    const swapper = new ZrxSwapper(zrxEthereumSwapperDeps)
+    expect(swapper.name).toBe('0x')
   })
   it('returns Zrx type', () => {
     const swapper = new ZrxSwapper(zrxEthereumSwapperDeps)

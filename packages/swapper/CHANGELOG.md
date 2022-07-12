@@ -1,3 +1,17 @@
+# [@shapeshiftoss/swapper-v8.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v8.1.0...@shapeshiftoss/swapper-v8.2.0) (2022-07-11)
+
+
+### Features
+
+* cowswap buildTrade ([#846](https://github.com/shapeshift/lib/issues/846)) ([a57520c](https://github.com/shapeshift/lib/commit/a57520cb415358240c71164197651e67e1a05ab6))
+
+# [@shapeshiftoss/swapper-v8.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v8.0.1...@shapeshiftoss/swapper-v8.1.0) (2022-07-11)
+
+
+### Features
+
+* **swapper:** repurpose 'swapperName' to be human readable name for each swapper ([#867](https://github.com/shapeshift/lib/issues/867)) ([ff23df8](https://github.com/shapeshift/lib/commit/ff23df894d9d70c4786b1ebf576b9987b9c89405))
+
 # [@shapeshiftoss/swapper-v8.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v8.0.0...@shapeshiftoss/swapper-v8.0.1) (2022-07-07)
 
 # [@shapeshiftoss/swapper-v8.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v7.9.1...@shapeshiftoss/swapper-v8.0.0) (2022-07-07)
