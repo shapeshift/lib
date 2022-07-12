@@ -5,7 +5,7 @@ import { find } from 'lodash'
 
 import { SwapError, TradeResult } from '../../../index'
 import { bn, bnOrZero } from '../../utils/bignumber'
-import { GAS } from './constants'
+import { GAS, OSMOSIS_PRECISION } from './constants'
 import { IbcTransferInput, PoolInfo } from './types'
 
 export interface IsymbolDenomMapping {
@@ -134,15 +134,17 @@ const getInfoFromPool = (
   const sellAssetFinalPoolSize = sellAssetInitialPoolSize.plus(sellAmount)
   const buyAssetFinalPoolSize = constantProduct.dividedBy(sellAssetFinalPoolSize)
   const finalMarketPrice = sellAssetFinalPoolSize.dividedBy(buyAssetFinalPoolSize)
-  const buyAmount = buyAssetInitialPoolSize.minus(buyAssetFinalPoolSize)
-  const rate = bnOrZero(buyAmount).dividedBy(sellAmount)
+  const buyAmount = buyAssetInitialPoolSize.minus(buyAssetFinalPoolSize).toString()
+  const rate = bnOrZero(buyAmount).dividedBy(sellAmount).toString()
+  const priceImpact = bn(1).minus(initialMarketPrice.dividedBy(finalMarketPrice)).abs().toString()
+  const tradeFeeBase = bnOrZero(buyAmount).times(bnOrZero(pool.poolParams.swapFee))
+  const tradeFee = tradeFeeBase.dividedBy(bn(10).exponentiatedBy(OSMOSIS_PRECISION)).toString()
 
-  const priceImpact = bn(1).minus(initialMarketPrice.dividedBy(finalMarketPrice)).abs()
   return {
-    rate: rate.toString(),
-    priceImpact: priceImpact.toString(),
-    tradeFee: pool.poolParams.swapFee,
-    buyAmount: buyAmount.toString()
+    rate,
+    priceImpact,
+    tradeFee,
+    buyAmount
   }
 }
 

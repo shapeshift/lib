@@ -9,3 +9,4 @@ export const MAX_SWAPPER_SELL = '100000000000000000000000000'
 export const DEFAULT_SLIPPAGE_TOLERANCE = '3.0' // 3%
 export const GAS = '1350000'
 export const FEE = '10000'
+export const OSMOSIS_PRECISION = 6

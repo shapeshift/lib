@@ -32,6 +32,7 @@ import {
 } from './utils/helpers'
 import { OsmoSwapperDeps } from './utils/types'
 export class OsmosisSwapper implements Swapper<ChainId> {
+  readonly name = 'Osmosis'
   supportAssets: string[]
   deps: OsmoSwapperDeps
 
