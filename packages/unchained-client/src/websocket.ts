@@ -7,6 +7,8 @@ const logger = new Logger({
   level: process.env.LOG_LEVEL
 })
 
+const NORMAL_CLOSURE_CODE = 1000
+
 export interface Connection {
   ws?: WebSocket
   pingTimeout?: NodeJS.Timeout
@@ -33,7 +35,7 @@ export class Client<T> {
   private readonly pingInterval = 10000
   private readonly retryAttempts = 5
 
-  private retries = 0
+  private retryCount = 0
   private txs: Record<SubscriptionId, TxsParams<T>> = {}
 
   constructor(url: string) {
@@ -65,7 +67,7 @@ export class Client<T> {
     resolve: (value: boolean) => void,
     reject: (reason?: unknown) => void
   ): void {
-    this.retries = 0
+    this.retryCount = 0
 
     const interval = setInterval(() => {
       // browsers do not support ping/pong frame, send ping payload instead
@@ -83,12 +85,8 @@ export class Client<T> {
 
     try {
       // subscribe to all subscriptions
-      Object.entries(this.txs).forEach(([_subscriptionId, { data }]) => {
-        const payload: RequestPayload = {
-          subscriptionId: _subscriptionId,
-          method: 'subscribe',
-          data
-        }
+      Object.entries(this.txs).forEach(([id, { data }]) => {
+        const payload: RequestPayload = { subscriptionId: id, method: 'subscribe', data }
         ws.send(JSON.stringify(payload))
       })
 
@@ -112,14 +110,13 @@ export class Client<T> {
     this.connections.txs?.interval && clearInterval(this.connections.txs.interval)
 
     // attempt reconnect logic on non standard exit codes
-    if (event.code !== 1000) {
-      if (++this.retries >= this.retryAttempts) {
-        //logger.error('failed to reconnect, connection closed')
+    if (event.code !== NORMAL_CLOSURE_CODE) {
+      if (++this.retryCount >= this.retryAttempts) {
         reject(new Error('failed to reconnect, connection closed'))
         return
       }
 
-      setTimeout(() => this.initialize(), 500 * this.retries ** 2)
+      setTimeout(() => this.initialize(), 500 * this.retryCount ** 2)
     }
 
     resolve(false)
@@ -135,7 +132,7 @@ export class Client<T> {
 
     // send connection errors to all subscription onError handlers
     Object.entries(this.txs).forEach(([id, sub]) => {
-      sub.onError && sub.onError({ subscriptionId: id, type: 'error', message: event.message })
+      sub.onError?.({ subscriptionId: id, type: 'error', message: event.message })
     })
   }
 
@@ -154,14 +151,11 @@ export class Client<T> {
 
       // narrow type to ErrorResponse if key `type` exists and forward to correct onError handler
       if ('type' in message) {
-        const onErrorHandler = this.txs[message.subscriptionId || subscriptionId]?.onError
-        onErrorHandler && onErrorHandler(message)
-        return
+        return this.txs[message.subscriptionId || subscriptionId]?.onError?.(message)
       }
 
       // forward the transaction message to the correct onMessage handler
-      const onMessageHandler = this.txs[message.subscriptionId || subscriptionId]?.onMessage
-      onMessageHandler && onMessageHandler(message)
+      this.txs[message.subscriptionId || subscriptionId]?.onMessage?.(message)
     } catch (err) {
       logger.warn(`failed to handle onmessage event: ${JSON.stringify(event)}: ${err}`)
     }
@@ -214,7 +208,7 @@ export class Client<T> {
     }
 
     // subscribe if connection exists and is ready
-    if (this.connections.txs.ws.readyState === 1) {
+    if (this.connections.txs.ws.readyState === WebSocket.OPEN) {
       this.connections.txs.ws.send(
         JSON.stringify({ subscriptionId, method: 'subscribe', data } as RequestPayload)
       )
@@ -238,6 +232,7 @@ export class Client<T> {
     if (this.connections.txs?.ws?.readyState !== WebSocket.OPEN) return
 
     if (!subscriptionId) this.txs = {}
+
     if (subscriptionId && this.txs[subscriptionId]) {
       // unsubscribe addresses from the current subscribed address set if addresses provided
       if (data?.addresses?.length) {
@@ -269,7 +264,7 @@ export class Client<T> {
   close(topic?: Topics): void {
     const closeTxs = () => {
       this.unsubscribeTxs()
-      this.connections.txs?.ws?.close(1000)
+      this.connections.txs?.ws?.close(NORMAL_CLOSURE_CODE)
     }
 
     // close all connections if no topic is provided
