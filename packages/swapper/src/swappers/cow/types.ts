@@ -36,4 +36,5 @@ export type CowSwapGetTradesResponse = Array<CowSwapGetTradesElement>
 
 export interface CowTrade<C extends ChainId> extends Trade<C> {
   feeAmountInSellToken: string
+  sellAmountWithoutFee: string
 }

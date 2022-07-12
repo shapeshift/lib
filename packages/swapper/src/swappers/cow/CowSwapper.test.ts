@@ -208,7 +208,8 @@ describe('CowSwapper', () => {
             gasPrice: '79036500000'
           },
           tradeFee: '0'
-        }
+        },
+        sellAmountWithoutFee: '985442057341242012'
       }
       const args = { trade: cowSwapTrade, wallet }
       await swapper.executeTrade(args)

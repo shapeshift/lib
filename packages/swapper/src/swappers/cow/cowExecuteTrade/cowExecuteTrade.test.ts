@@ -65,7 +65,8 @@ const cowTradeEthToFox: CowTrade<KnownChainIds.EthereumMainnet> = {
   sellAsset: ETH,
   sellAssetAccountNumber: 0,
   receiveAddress: 'address11',
-  feeAmountInSellToken: '14557942658757988'
+  feeAmountInSellToken: '14557942658757988',
+  sellAmountWithoutFee: '111111'
 }
 
 const cowTradeWethToFox: CowTrade<KnownChainIds.EthereumMainnet> = {
@@ -85,13 +86,14 @@ const cowTradeWethToFox: CowTrade<KnownChainIds.EthereumMainnet> = {
   sellAsset: WETH,
   sellAssetAccountNumber: 0,
   receiveAddress: 'address11',
-  feeAmountInSellToken: '3514395197690019'
+  feeAmountInSellToken: '3514395197690019',
+  sellAmountWithoutFee: '16685605000000000'
 }
 
 const expectedOrderToSign: CowSwapOrder = {
   sellToken: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
   buyToken: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
-  sellAmount: '20200000000000000',
+  sellAmount: '16685605000000000',
   buyAmount: '272522025311597443544',
   validTo: 1656797787,
   appData: DEFAULT_APP_DATA,
