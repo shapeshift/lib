@@ -60,6 +60,7 @@ type CommonTradeInput = {
   sendMax: boolean
   sellAssetAccountNumber: number
   wallet?: HDWallet // TODO remove this in a followup PR
+  receiveAddress: string
 }
 
 export type EvmSupportedChainIds = KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet

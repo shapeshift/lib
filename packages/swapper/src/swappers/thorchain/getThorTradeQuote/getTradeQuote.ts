@@ -21,7 +21,15 @@ export const getThorTradeQuote = async ({
   deps: ThorchainSwapperDeps
   input: GetTradeQuoteInput
 }): Promise<TradeQuote<ChainId>> => {
-  const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, wallet, chainId } = input
+  const {
+    sellAsset,
+    buyAsset,
+    sellAmount,
+    sellAssetAccountNumber,
+    wallet,
+    chainId,
+    receiveAddress
+  } = input
 
   if (!wallet)
     throw new SwapError('[getTradeQuote] - wallet is required', {
@@ -72,10 +80,6 @@ export const getThorTradeQuote = async ({
     switch (chainId) {
       case KnownChainIds.EthereumMainnet:
         return (async (): Promise<TradeQuote<KnownChainIds.EthereumMainnet>> => {
-          const bip44Params = adapter.buildBIP44Params({
-            accountNumber: Number(sellAssetAccountNumber)
-          })
-          const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
           const { data, router } = await getEthThorTxInfo({
             deps,
             sellAsset,
@@ -104,11 +108,6 @@ export const getThorTradeQuote = async ({
 
       case KnownChainIds.BitcoinMainnet:
         return (async (): Promise<TradeQuote<KnownChainIds.BitcoinMainnet>> => {
-          const receiveAddress = await adapter.getAddress({
-            wallet,
-            bip44Params: input.bip44Params
-          })
-
           const { vault, opReturnData, pubkey } = await getBtcThorTxInfo({
             deps,
             sellAsset,

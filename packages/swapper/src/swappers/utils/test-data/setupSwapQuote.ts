@@ -26,7 +26,8 @@ export const setupQuote = () => {
     sellAsset,
     buyAsset,
     sellAssetAccountNumber: 0,
-    sendMax: false
+    sendMax: false,
+    receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
   }
   return { quoteInput, tradeQuote, buyAsset, sellAsset }
 }
