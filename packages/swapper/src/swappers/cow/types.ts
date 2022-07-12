@@ -1,3 +1,7 @@
+import { ChainId } from '@shapeshiftoss/caip'
+
+import { Trade } from '../../api'
+
 export type CowSwapPriceResponse = {
   amount: string
   token: string
@@ -29,3 +33,7 @@ export type CowSwapGetTradesElement = {
 }
 
 export type CowSwapGetTradesResponse = Array<CowSwapGetTradesElement>
+
+export interface CowTrade<C extends ChainId> extends Trade<C> {
+  feeAmountInSellToken: string
+}

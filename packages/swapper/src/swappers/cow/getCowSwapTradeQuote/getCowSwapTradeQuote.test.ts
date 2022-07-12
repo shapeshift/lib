@@ -3,7 +3,7 @@ import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { Asset, KnownChainIds } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
-import { GetEthTradeQuoteInput, TradeQuote } from '../../../api'
+import { GetTradeQuoteInput, TradeQuote } from '../../../api'
 import { ETH, FOX, WBTC, WETH } from '../../utils/test-data/assets'
 import { CowSwapperDeps } from '../CowSwapper'
 import { cowService } from '../utils/cowService'
@@ -22,6 +22,13 @@ jest.mock('../utils/helpers/helpers', () => {
 
       return Promise.resolve('20978.38')
     }
+  }
+})
+
+jest.mock('../../utils/helpers/helpers', () => {
+  return {
+    ...jest.requireActual('../../utils/helpers/helpers'),
+    getApproveContractData: () => '0xABCDEFGH'
   }
 })
 
@@ -79,7 +86,7 @@ const expectedApiInputWbtcToWeth: CowSwapQuoteApiInput = {
   validTo: 1656797787
 }
 
-const expectedTradeQuoteWethToFox: TradeQuote<'eip155:1'> = {
+const expectedTradeQuoteWethToFox: TradeQuote<KnownChainIds.EthereumMainnet> = {
   rate: '14716.04718939437505555958', // 14716 FOX per WETH
   minimum: '0.00810596500550730736',
   maximum: '100000000000000000000000000',
@@ -101,12 +108,12 @@ const expectedTradeQuoteWethToFox: TradeQuote<'eip155:1'> = {
   sellAssetAccountNumber: 0
 }
 
-const expectedTradeQuoteWbtcToWeth: TradeQuote<'eip155:1'> = {
-  rate: '19.139398102523845323456857493095', // 19.14 WETH per WBTC
+const expectedTradeQuoteWbtcToWeth: TradeQuote<KnownChainIds.EthereumMainnet> = {
+  rate: '19.13939810252384532346', // 19.14 WETH per WBTC
   minimum: '0.0004766812308672071',
   maximum: '100000000000000000000000000',
   feeData: {
-    fee: '2931322143956216.3557777214', // fee in WETH
+    fee: '2931322143956216.36', // fee in WETH
     chainSpecific: {
       estimatedGas: '100000',
       gasPrice: '79036500000',
@@ -132,8 +139,8 @@ const defaultDeps: CowSwapperDeps = {
 
 describe('getCowTradeQuote', () => {
   it('should throw an exception if both assets are not erc20s', async () => {
-    const input: GetEthTradeQuoteInput = {
-      chainId: 'eip155:1',
+    const input: GetTradeQuoteInput = {
+      chainId: KnownChainIds.EthereumMainnet,
       sellAsset: ETH,
       buyAsset: FOX,
       sellAmount: '11111',
@@ -160,8 +167,8 @@ describe('getCowTradeQuote', () => {
       feeAsset: WETH
     }
 
-    const input: GetEthTradeQuoteInput = {
-      chainId: 'eip155:1',
+    const input: GetTradeQuoteInput = {
+      chainId: KnownChainIds.EthereumMainnet,
       sellAsset: WETH,
       buyAsset: FOX,
       sellAmount: '1000000000000000000',
@@ -208,8 +215,8 @@ describe('getCowTradeQuote', () => {
       feeAsset: WETH
     }
 
-    const input: GetEthTradeQuoteInput = {
-      chainId: 'eip155:1',
+    const input: GetTradeQuoteInput = {
+      chainId: KnownChainIds.EthereumMainnet,
       sellAsset: WBTC,
       buyAsset: WETH,
       sellAmount: '100000000',

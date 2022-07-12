@@ -1,11 +1,13 @@
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { KnownChainIds } from '@shapeshiftoss/types'
 import { ethers } from 'ethers'
 import Web3 from 'web3'
 
-import { CowTrade, ExecuteTradeInput } from '../../../api'
+import { ExecuteTradeInput } from '../../../api'
 import { ETH, FOX, WETH } from '../../utils/test-data/assets'
 import { CowSwapperDeps } from '../CowSwapper'
+import { CowTrade } from '../types'
 import {
   DEFAULT_APP_DATA,
   ERC20_TOKEN_BALANCE,
@@ -46,7 +48,7 @@ jest.mock('../utils/helpers/helpers', () => {
 const ethereumMock = jest.mocked(ethereum, true)
 const hashOrderMock = jest.mocked(hashOrder, true)
 
-const cowTradeEthToFox: CowTrade<'eip155:1'> = {
+const cowTradeEthToFox: CowTrade<KnownChainIds.EthereumMainnet> = {
   rate: '14716.04718939437505555958',
   feeData: {
     fee: '14557942658757988',
@@ -66,7 +68,7 @@ const cowTradeEthToFox: CowTrade<'eip155:1'> = {
   feeAmountInSellToken: '14557942658757988'
 }
 
-const cowTradeWethToFox: CowTrade<'eip155:1'> = {
+const cowTradeWethToFox: CowTrade<KnownChainIds.EthereumMainnet> = {
   rate: '14716.04718939437505555958',
   feeData: {
     fee: '14557942658757988',
@@ -110,7 +112,7 @@ const defaultDeps: CowSwapperDeps = {
 
 describe('cowExecuteTrade', () => {
   it('should throw an exception if both assets are not erc20s', async () => {
-    const tradeInput: ExecuteTradeInput<'eip155:1'> = {
+    const tradeInput: ExecuteTradeInput<KnownChainIds.EthereumMainnet> = {
       trade: cowTradeEthToFox,
       wallet: {} as HDWallet
     }
@@ -128,7 +130,7 @@ describe('cowExecuteTrade', () => {
       feeAsset: WETH
     }
 
-    const tradeInput: ExecuteTradeInput<'eip155:1'> = {
+    const tradeInput: ExecuteTradeInput<KnownChainIds.EthereumMainnet> = {
       trade: cowTradeWethToFox,
       wallet: {} as HDWallet
     }

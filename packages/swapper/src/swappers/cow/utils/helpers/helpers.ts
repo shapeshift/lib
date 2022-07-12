@@ -75,6 +75,10 @@ export const getUsdRate = async (
     })
   }
 
+  if (erc20Address === USDC_CONTRACT_ADDRESS) {
+    return '1'
+  }
+
   const buyAmountInDollars = 1000
   const buyAmount = bn(buyAmountInDollars).times(bn(10).exponentiatedBy(USDC_ASSET_PRECISION))
 
@@ -108,13 +112,9 @@ export const getUsdRate = async (
 }
 
 export const getNowPlusThirtyMinutesTimestamp = (): number => {
-  const millisecondsPerMinute = 60000
-
-  // UTC date + 30 minutes
-  const nowPlusThirtyMinutesDate = new Date(new Date().getTime() + 30 * millisecondsPerMinute)
-
-  // returning the timestamp in seconds
-  return Math.round(nowPlusThirtyMinutesDate.getTime() / 1000)
+  const ts = new Date()
+  ts.setMinutes(ts.getMinutes() + 30)
+  return Math.round(ts.getTime() / 1000)
 }
 
 export const hashTypedData = (

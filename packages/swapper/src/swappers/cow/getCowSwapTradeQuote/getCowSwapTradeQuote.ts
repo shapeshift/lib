@@ -1,10 +1,10 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
+import { KnownChainIds } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 
 import { GetTradeQuoteInput, SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
 import { bn, bnOrZero } from '../../utils/bignumber'
-import { APPROVAL_GAS_LIMIT } from '../../utils/constants'
-import { normalizeIntegerAmount } from '../../utils/helpers/helpers'
+import { getApproveContractData, normalizeIntegerAmount } from '../../utils/helpers/helpers'
 import { CowSwapperDeps } from '../CowSwapper'
 import { getCowSwapMinMax } from '../getCowSwapMinMax/getCowSwapMinMax'
 import { CowSwapQuoteResponse } from '../types'
@@ -25,10 +25,10 @@ import {
 export async function getCowSwapTradeQuote(
   deps: CowSwapperDeps,
   input: GetTradeQuoteInput
-): Promise<TradeQuote<'eip155:1'>> {
+): Promise<TradeQuote<KnownChainIds.EthereumMainnet>> {
   try {
     const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, wallet } = input
-    const { adapter, feeAsset } = deps
+    const { adapter, feeAsset, web3 } = deps
 
     const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
       fromAssetId(sellAsset.assetId)
@@ -85,18 +85,23 @@ export async function getCowSwapTradeQuote(
       data: { quote }
     } = quoteResponse
 
-    const rate = bn(quote.buyAmount)
-      .div(quote.sellAmount)
-      .times(bn(10).exponentiatedBy(sellAsset.precision - buyAsset.precision))
-      .toString()
+    const buyCryptoAmount = bn(quote.buyAmount).div(bn(10).exponentiatedBy(buyAsset.precision))
+    const sellCryptoAmount = bn(quote.sellAmount).div(bn(10).exponentiatedBy(sellAsset.precision))
+    const rate = buyCryptoAmount.div(sellCryptoAmount).toString()
 
     const receiveAddress = wallet ? await adapter.getAddress({ wallet }) : DEFAULT_ADDRESS
 
-    const [feeDataOptions, wethUsdRate, usdRateSellAsset] = await Promise.all([
+    const data = getApproveContractData({
+      web3,
+      spenderAddress: COW_SWAP_VAULT_RELAYER_ADDRESS,
+      contractAddress: sellAssetErc20Address
+    })
+
+    const [feeDataOptions, feeAssetUsdRate, sellAssetUsdRate] = await Promise.all([
       adapter.getFeeData({
-        to: COW_SWAP_VAULT_RELAYER_ADDRESS,
+        to: sellAssetErc20Address,
         value: '0',
-        chainSpecific: { from: receiveAddress, contractAddress: sellAssetErc20Address }
+        chainSpecific: { from: receiveAddress, contractData: data }
       }),
       getUsdRate(deps, feeAsset),
       getUsdRate(deps, sellAsset)
@@ -104,11 +109,21 @@ export async function getCowSwapTradeQuote(
 
     const feeData = feeDataOptions['fast']
 
-    const fee = bnOrZero(quote.feeAmount)
-      .multipliedBy(bnOrZero(usdRateSellAsset))
-      .div(bnOrZero(wethUsdRate))
-      .div(bn(10).exponentiatedBy(sellAsset.precision - feeAsset.precision))
-      .toString()
+    // quote.feeAmount is expressed in sellAsset token
+    // We need fee to be expressed in feeAsset token
+    // feeInFeeAsset * feeAssetUsdRate = feeInSellAsset * sellAssetUsdRate
+    // hence feeInFeeAsset = feeInSellAsset * sellAssetUsdRate / feeAssetUsdRate
+    const feeInSellAsset = bnOrZero(quote.feeAmount).div(
+      bn(10).exponentiatedBy(sellAsset.precision)
+    )
+
+    // feeInFeeAsset = feeInSellAsset * sellAssetUsdRate / feeAssetUsdRate
+    const feeInFeeAsset = feeInSellAsset
+      .multipliedBy(bnOrZero(sellAssetUsdRate))
+      .div(bnOrZero(feeAssetUsdRate))
+
+    // taking precision into account
+    const fee = feeInFeeAsset.multipliedBy(bn(10).exponentiatedBy(feeAsset.precision)).toString()
 
     return {
       rate,
@@ -117,9 +132,9 @@ export async function getCowSwapTradeQuote(
       feeData: {
         fee,
         chainSpecific: {
-          estimatedGas: APPROVAL_GAS_LIMIT,
+          estimatedGas: feeData.chainSpecific.gasLimit,
           gasPrice: feeData.chainSpecific.gasPrice,
-          approvalFee: bnOrZero(APPROVAL_GAS_LIMIT)
+          approvalFee: bnOrZero(feeData.chainSpecific.gasLimit)
             .multipliedBy(bnOrZero(feeData.chainSpecific.gasPrice))
             .toString()
         },

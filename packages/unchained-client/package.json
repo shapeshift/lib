@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/unchained-client",
-  "version": "9.0.2",
+  "version": "9.1.1",
   "license": "MIT",
   "main": "dist/index.js",
   "source": "src/index.ts",
@@ -31,14 +31,14 @@
   "peerDependencies": {
     "@shapeshiftoss/caip": "^6.2.0",
     "@shapeshiftoss/logger": "^1.1.2",
-    "@shapeshiftoss/types": "^6.2.0"
+    "@shapeshiftoss/types": "^7.0.0"
   },
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.5.1",
     "@shapeshiftoss/caip": "^6.2.0",
     "@shapeshiftoss/common-api": "^7.0.0",
     "@shapeshiftoss/logger": "^1.1.2",
-    "@shapeshiftoss/types": "^6.2.0",
+    "@shapeshiftoss/types": "^7.0.0",
     "@types/ws": "^8.2.1"
   }
 }

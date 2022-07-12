@@ -1,11 +1,13 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
 import { ethereum, SignMessageInput, toRootDerivationPath } from '@shapeshiftoss/chain-adapters'
 import { bip32ToAddressNList, ETHSignMessage } from '@shapeshiftoss/hdwallet-core'
+import { KnownChainIds } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import { ethers } from 'ethers'
 
-import { CowTrade, ExecuteTradeInput, SwapError, SwapErrorTypes, TradeResult } from '../../../api'
+import { ExecuteTradeInput, SwapError, SwapErrorTypes, TradeResult } from '../../../api'
 import { CowSwapperDeps } from '../CowSwapper'
+import { CowTrade } from '../types'
 import {
   COW_SWAP_SETTLEMENT_ADDRESS,
   DEFAULT_APP_DATA,
@@ -23,9 +25,9 @@ import {
 
 export async function cowExecuteTrade(
   { apiUrl, adapter }: CowSwapperDeps,
-  { trade, wallet }: ExecuteTradeInput<'eip155:1'>
+  { trade, wallet }: ExecuteTradeInput<KnownChainIds.EthereumMainnet>
 ): Promise<TradeResult> {
-  const cowTrade = trade as CowTrade<'eip155:1'>
+  const cowTrade = trade as CowTrade<KnownChainIds.EthereumMainnet>
   const { sellAsset, buyAsset, feeAmountInSellToken } = cowTrade
 
   const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } = fromAssetId(

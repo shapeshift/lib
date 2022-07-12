@@ -1,8 +1,9 @@
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { KnownChainIds } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
-import { CowTrade, SwapperType, TradeResult } from '../../api'
+import { SwapperType, TradeResult } from '../../api'
 import { BTC, ETH, FOX, WBTC, WETH } from '../utils/test-data/assets'
 import { setupBuildTrade, setupQuote } from '../utils/test-data/setupSwapQuote'
 import { cowApprovalNeeded } from './cowApprovalNeeded/cowApprovalNeeded'
@@ -12,6 +13,7 @@ import { cowExecuteTrade } from './cowExecuteTrade/cowExecuteTrade'
 import { cowGetTradeTxs } from './cowGetTradeTxs/cowGetTradeTxs'
 import { CowSwapper, CowSwapperDeps } from './CowSwapper'
 import { getCowSwapTradeQuote } from './getCowSwapTradeQuote/getCowSwapTradeQuote'
+import { CowTrade } from './types'
 import { getUsdRate } from './utils/helpers/helpers'
 
 jest.mock('./utils/helpers/helpers')
@@ -53,9 +55,9 @@ describe('CowSwapper', () => {
   const wallet = <HDWallet>{}
   const swapper = new CowSwapper(COW_SWAPPER_DEPS)
 
-  describe('static properties', () => {
-    it('returns the correct swapper name', async () => {
-      expect(CowSwapper.swapperName).toEqual('CowSwapper')
+  describe('name', () => {
+    it('returns the correct human readable swapper name', () => {
+      expect(swapper.name).toEqual('CowSwap')
     })
   })
 
@@ -73,78 +75,78 @@ describe('CowSwapper', () => {
   })
 
   describe('filterAssetIdsBySellable', () => {
-    it('returns empty array when called with an empty array', async () => {
-      expect(await swapper.filterAssetIdsBySellable([])).toEqual([])
+    it('returns empty array when called with an empty array', () => {
+      expect(swapper.filterAssetIdsBySellable([])).toEqual([])
     })
 
-    it('returns array filtered out of non erc20 tokens', async () => {
-      expect(await swapper.filterAssetIdsBySellable(ASSET_IDS)).toEqual([
+    it('returns array filtered out of non erc20 tokens', () => {
+      expect(swapper.filterAssetIdsBySellable(ASSET_IDS)).toEqual([
         WBTC.assetId,
         WETH.assetId,
         FOX.assetId
       ])
     })
 
-    it('returns array filtered out of unsupported tokens', async () => {
+    it('returns array filtered out of unsupported tokens', () => {
       const assetIds = [FOX.assetId, 'eip155:1/erc20:0xdc49108ce5c57bc3408c3a5e95f3d864ec386ed3']
-      expect(await swapper.filterAssetIdsBySellable(assetIds)).toEqual([FOX.assetId])
+      expect(swapper.filterAssetIdsBySellable(assetIds)).toEqual([FOX.assetId])
     })
   })
 
   describe('filterBuyAssetsBySellAssetId', () => {
-    it('returns empty array when called with an empty assetIds array', async () => {
+    it('returns empty array when called with an empty assetIds array', () => {
       expect(
-        await swapper.filterBuyAssetsBySellAssetId({ assetIds: [], sellAssetId: WETH.assetId })
+        swapper.filterBuyAssetsBySellAssetId({ assetIds: [], sellAssetId: WETH.assetId })
       ).toEqual([])
     })
 
-    it('returns empty array when called with sellAssetId that is not sellable', async () => {
+    it('returns empty array when called with sellAssetId that is not sellable', () => {
       expect(
-        await swapper.filterBuyAssetsBySellAssetId({
+        swapper.filterBuyAssetsBySellAssetId({
           assetIds: ASSET_IDS,
           sellAssetId: ETH.assetId
         })
       ).toEqual([])
       expect(
-        await swapper.filterBuyAssetsBySellAssetId({
+        swapper.filterBuyAssetsBySellAssetId({
           assetIds: ASSET_IDS,
           sellAssetId: 'eip155:1/erc20:0xdc49108ce5c57bc3408c3a5e95f3d864ec386ed3'
         })
       ).toEqual([])
     })
 
-    it('returns array filtered out of non erc20 tokens when called with a sellable sellAssetId', async () => {
+    it('returns array filtered out of non erc20 tokens when called with a sellable sellAssetId', () => {
       expect(
-        await swapper.filterBuyAssetsBySellAssetId({
+        swapper.filterBuyAssetsBySellAssetId({
           assetIds: ASSET_IDS,
           sellAssetId: WETH.assetId
         })
       ).toEqual([WBTC.assetId, FOX.assetId])
       expect(
-        await swapper.filterBuyAssetsBySellAssetId({
+        swapper.filterBuyAssetsBySellAssetId({
           assetIds: ASSET_IDS,
           sellAssetId: WBTC.assetId
         })
       ).toEqual([WETH.assetId, FOX.assetId])
       expect(
-        await swapper.filterBuyAssetsBySellAssetId({
+        swapper.filterBuyAssetsBySellAssetId({
           assetIds: ASSET_IDS,
           sellAssetId: FOX.assetId
         })
       ).toEqual([WBTC.assetId, WETH.assetId])
     })
 
-    it('returns array filtered out of unsupported tokens when called with a sellable sellAssetId', async () => {
+    it('returns array filtered out of unsupported tokens when called with a sellable sellAssetId', () => {
       const assetIds = [FOX.assetId, 'eip155:1/erc20:0xdc49108ce5c57bc3408c3a5e95f3d864ec386ed3']
       expect(
-        await swapper.filterBuyAssetsBySellAssetId({
+        swapper.filterBuyAssetsBySellAssetId({
           assetIds,
           sellAssetId: WETH.assetId
         })
       ).toEqual([FOX.assetId])
-      expect(
-        await swapper.filterBuyAssetsBySellAssetId({ assetIds, sellAssetId: FOX.assetId })
-      ).toEqual([])
+      expect(swapper.filterBuyAssetsBySellAssetId({ assetIds, sellAssetId: FOX.assetId })).toEqual(
+        []
+      )
     })
   })
 
@@ -189,7 +191,7 @@ describe('CowSwapper', () => {
 
   describe('executeTrade', () => {
     it('calls executeTrade on swapper.buildTrade', async () => {
-      const cowSwapTrade: CowTrade<'eip155:1'> = {
+      const cowSwapTrade: CowTrade<KnownChainIds.EthereumMainnet> = {
         sellAmount: '1000000000000000000',
         buyAmount: '14501811818247595090576',
         sources: [{ name: 'CowSwap', proportion: '1' }],

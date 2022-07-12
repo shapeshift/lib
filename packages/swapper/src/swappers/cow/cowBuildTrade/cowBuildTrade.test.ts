@@ -3,11 +3,12 @@ import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { Asset, KnownChainIds } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
-import { BuildTradeInput, CowTrade } from '../../../api'
+import { BuildTradeInput } from '../../../api'
 import { bn } from '../../utils/bignumber'
 import { GetAllowanceRequiredArgs } from '../../utils/helpers/helpers'
 import { ETH, FOX, WBTC, WETH } from '../../utils/test-data/assets'
 import { CowSwapperDeps } from '../CowSwapper'
+import { CowTrade } from '../types'
 import { cowService } from '../utils/cowService'
 import { CowSwapQuoteApiInput } from '../utils/helpers/helpers'
 import { cowBuildTrade } from './cowBuildTrade'
@@ -16,6 +17,7 @@ jest.mock('@shapeshiftoss/chain-adapters')
 jest.mock('../utils/cowService')
 jest.mock('../utils/helpers/helpers', () => {
   return {
+    ...jest.requireActual('../utils/helpers/helpers'),
     getNowPlusThirtyMinutesTimestamp: () => 1656797787,
     getUsdRate: (_args: CowSwapperDeps, input: Asset) => {
       if (input.assetId === WETH.assetId) {
@@ -35,7 +37,8 @@ jest.mock('../../utils/helpers/helpers', () => {
         return bn('1000000000000000000')
       }
       return bn(0)
-    }
+    },
+    getApproveContractData: () => '0xABCDEFGHIJ'
   }
 })
 
@@ -93,7 +96,7 @@ const expectedApiInputWbtcToWeth: CowSwapQuoteApiInput = {
   validTo: 1656797787
 }
 
-const expectedTradeWethToFox: CowTrade<'eip155:1'> = {
+const expectedTradeWethToFox: CowTrade<KnownChainIds.EthereumMainnet> = {
   rate: '14716.04718939437505555958', // 14716 FOX per WETH
   feeData: {
     fee: '14557942658757988', // fee in WETH
@@ -113,10 +116,10 @@ const expectedTradeWethToFox: CowTrade<'eip155:1'> = {
   feeAmountInSellToken: '14557942658757988'
 }
 
-const expectedTradeQuoteWbtcToWethWithApprovalFee: CowTrade<'eip155:1'> = {
-  rate: '19.139398102523845323456857493095', // 19.14 WETH per WBTC
+const expectedTradeQuoteWbtcToWethWithApprovalFee: CowTrade<KnownChainIds.EthereumMainnet> = {
+  rate: '19.13939810252384532346', // 19.14 WETH per WBTC
   feeData: {
-    fee: '2931322143956216.3557777214', // fee in WETH
+    fee: '2931322143956216.36', // fee in WETH
     chainSpecific: {
       estimatedGas: '100000',
       gasPrice: '79036500000',
@@ -144,7 +147,7 @@ const defaultDeps: CowSwapperDeps = {
 describe('cowBuildTrade', () => {
   it('should throw an exception if both assets are not erc20s', async () => {
     const tradeInput: BuildTradeInput = {
-      chainId: 'eip155:1',
+      chainId: KnownChainIds.EthereumMainnet,
       sellAsset: ETH,
       buyAsset: FOX,
       sellAmount: '11111',
@@ -171,7 +174,7 @@ describe('cowBuildTrade', () => {
     }
 
     const tradeInput: BuildTradeInput = {
-      chainId: 'eip155:1',
+      chainId: KnownChainIds.EthereumMainnet,
       sellAsset: WETH,
       buyAsset: FOX,
       sellAmount: '1000000000000000000',
@@ -218,7 +221,7 @@ describe('cowBuildTrade', () => {
     }
 
     const tradeInput: BuildTradeInput = {
-      chainId: 'eip155:1',
+      chainId: KnownChainIds.EthereumMainnet,
       sellAsset: WBTC,
       buyAsset: WETH,
       sellAmount: '100000000',

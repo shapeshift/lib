@@ -1,3 +1,26 @@
+# [@shapeshiftoss/chain-adapters-v7.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v7.4.2...@shapeshiftoss/chain-adapters-v7.5.0) (2022-07-11)
+
+
+### Features
+
+* base evm tx parser + avalanche support ([#855](https://github.com/shapeshift/lib/issues/855)) ([153f251](https://github.com/shapeshift/lib/commit/153f251109e56089e80379df485d19a7b33c105d)), closes [#862](https://github.com/shapeshift/lib/issues/862)
+
+# [@shapeshiftoss/chain-adapters-v7.4.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v7.4.1...@shapeshiftoss/chain-adapters-v7.4.2) (2022-07-07)
+
+# [@shapeshiftoss/chain-adapters-v7.4.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v7.4.0...@shapeshiftoss/chain-adapters-v7.4.1) (2022-07-06)
+
+
+### Bug Fixes
+
+* bump osmosis gas limit ([#854](https://github.com/shapeshift/lib/issues/854)) ([92947ba](https://github.com/shapeshift/lib/commit/92947ba9ade44eb74c84f64873e1ecaed8f28f06))
+
+# [@shapeshiftoss/chain-adapters-v7.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v7.3.0...@shapeshiftoss/chain-adapters-v7.4.0) (2022-07-05)
+
+
+### Features
+
+* **chain-adapters:** add getRpcUrl to EVMBaseAdapter ([#851](https://github.com/shapeshift/lib/issues/851)) ([fa2f73e](https://github.com/shapeshift/lib/commit/fa2f73ebd88005c507cbf3ba41a54436f4c2293b))
+
 # [@shapeshiftoss/chain-adapters-v7.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v7.2.1...@shapeshiftoss/chain-adapters-v7.3.0) (2022-06-30)
 
 

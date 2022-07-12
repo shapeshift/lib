@@ -2,6 +2,7 @@ import { adapters, AssetId, ChainId, fromAssetId } from '@shapeshiftoss/caip'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import type { ETHSignTx } from '@shapeshiftoss/hdwallet-core'
 import type { Asset } from '@shapeshiftoss/types'
+import { KnownChainIds } from '@shapeshiftoss/types'
 
 import {
   ApprovalNeededInput,
@@ -14,7 +15,6 @@ import {
   SwapErrorTypes,
   Swapper,
   SwapperType,
-  ThorTrade,
   Trade,
   TradeQuote,
   TradeResult,
@@ -23,11 +23,12 @@ import {
 import { getThorTradeQuote } from './getThorTradeQuote/getTradeQuote'
 import { thorTradeApprovalNeeded } from './thorTradeApprovalNeeded/thorTradeApprovalNeeded'
 import { thorTradeApproveInfinite } from './thorTradeApproveInfinite/thorTradeApproveInfinite'
-import { PoolResponse, ThorchainSwapperDeps } from './types'
+import { PoolResponse, ThorchainSwapperDeps, ThorTrade } from './types'
 import { getUsdRate } from './utils/getUsdRate/getUsdRate'
 import { thorService } from './utils/thorService'
 
 export class ThorchainSwapper implements Swapper<ChainId> {
+  readonly name = 'Thorchain'
   private swapSupportedChainIds: Record<ChainId, boolean> = {
     'eip155:1': true,
     'bip122:000000000019d6689c085ae165831e93': true
@@ -69,11 +70,15 @@ export class ThorchainSwapper implements Swapper<ChainId> {
     return getUsdRate({ deps: this.deps, input })
   }
 
-  async approvalNeeded(input: ApprovalNeededInput<'eip155:1'>): Promise<ApprovalNeededOutput> {
+  async approvalNeeded(
+    input: ApprovalNeededInput<KnownChainIds.EthereumMainnet>
+  ): Promise<ApprovalNeededOutput> {
     return thorTradeApprovalNeeded({ deps: this.deps, input })
   }
 
-  async approveInfinite(input: ApproveInfiniteInput<'eip155:1'>): Promise<string> {
+  async approveInfinite(
+    input: ApproveInfiniteInput<KnownChainIds.EthereumMainnet>
+  ): Promise<string> {
     return thorTradeApproveInfinite({ deps: this.deps, input })
   }
 
@@ -102,7 +107,7 @@ export class ThorchainSwapper implements Swapper<ChainId> {
       | ethereum.ChainAdapter
       | undefined
 
-    if (adapter && trade.sellAsset.chainId === 'eip155:1') {
+    if (adapter && trade.sellAsset.chainId === KnownChainIds.EthereumMainnet) {
       const thorTradeEth = trade as ThorTrade<'eip155:1'>
       const signedTx = await adapter.signTransaction({
         txToSign: thorTradeEth.txData as ETHSignTx,

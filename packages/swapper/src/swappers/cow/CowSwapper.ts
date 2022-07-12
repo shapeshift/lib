@@ -1,6 +1,6 @@
 import { AssetId } from '@shapeshiftoss/caip'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
-import { Asset } from '@shapeshiftoss/types'
+import { Asset, KnownChainIds } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import {
@@ -9,7 +9,6 @@ import {
   ApproveInfiniteInput,
   BuildTradeInput,
   BuyAssetBySellIdInput,
-  CowTrade,
   ExecuteTradeInput,
   GetTradeQuoteInput,
   Swapper,
@@ -24,6 +23,7 @@ import { cowBuildTrade } from './cowBuildTrade/cowBuildTrade'
 import { cowExecuteTrade } from './cowExecuteTrade/cowExecuteTrade'
 import { cowGetTradeTxs } from './cowGetTradeTxs/cowGetTradeTxs'
 import { getCowSwapTradeQuote } from './getCowSwapTradeQuote/getCowSwapTradeQuote'
+import { CowTrade } from './types'
 import { COWSWAP_UNSUPPORTED_ASSETS } from './utils/blacklist'
 import { getUsdRate } from './utils/helpers/helpers'
 
@@ -38,26 +38,25 @@ export type CowSwapperDeps = {
   feeAsset: Asset // should be WETH asset
 }
 
-export class CowSwapper implements Swapper<'eip155:1'> {
-  public static swapperName = 'CowSwapper'
+export class CowSwapper implements Swapper<KnownChainIds.EthereumMainnet> {
+  readonly name = 'CowSwap'
   deps: CowSwapperDeps
 
   constructor(deps: CowSwapperDeps) {
     this.deps = deps
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  async initialize() {}
-
   getType() {
     return SwapperType.CowSwap
   }
 
-  async buildTrade(args: BuildTradeInput): Promise<CowTrade<'eip155:1'>> {
+  async buildTrade(args: BuildTradeInput): Promise<CowTrade<KnownChainIds.EthereumMainnet>> {
     return cowBuildTrade(this.deps, args)
   }
 
-  async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<'eip155:1'>> {
+  async getTradeQuote(
+    input: GetTradeQuoteInput
+  ): Promise<TradeQuote<KnownChainIds.EthereumMainnet>> {
     return getCowSwapTradeQuote(this.deps, input)
   }
 
@@ -65,15 +64,19 @@ export class CowSwapper implements Swapper<'eip155:1'> {
     return getUsdRate(this.deps, input)
   }
 
-  async executeTrade(args: ExecuteTradeInput<'eip155:1'>): Promise<TradeResult> {
+  async executeTrade(args: ExecuteTradeInput<KnownChainIds.EthereumMainnet>): Promise<TradeResult> {
     return cowExecuteTrade(this.deps, args)
   }
 
-  async approvalNeeded(args: ApprovalNeededInput<'eip155:1'>): Promise<ApprovalNeededOutput> {
+  async approvalNeeded(
+    args: ApprovalNeededInput<KnownChainIds.EthereumMainnet>
+  ): Promise<ApprovalNeededOutput> {
     return cowApprovalNeeded(this.deps, args)
   }
 
-  async approveInfinite(args: ApproveInfiniteInput<'eip155:1'>): Promise<string> {
+  async approveInfinite(
+    args: ApproveInfiniteInput<KnownChainIds.EthereumMainnet>
+  ): Promise<string> {
     return cowApproveInfinite(this.deps, args)
   }
 
