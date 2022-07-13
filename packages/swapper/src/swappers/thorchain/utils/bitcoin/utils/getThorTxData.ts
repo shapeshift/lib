@@ -41,7 +41,7 @@ export const getThorTxInfo = async ({
     const vault = btcInboundAddresses?.address
 
     if (!vault)
-      throw new SwapError(`[getPriceRatio]: vault not found for BTC`, {
+      throw new SwapError(`[getThorTxInfo]: vault not found for BTC`, {
         code: SwapErrorTypes.RESPONSE_ERROR,
         details: { inboundAddresses }
       })
