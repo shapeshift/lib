@@ -4,7 +4,6 @@ import { AxiosResponse } from 'axios'
 
 import { GetTradeQuoteInput, SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
 import { bn, bnOrZero } from '../../utils/bignumber'
-import { APPROVAL_GAS_LIMIT } from '../../utils/constants'
 import { getApproveContractData, normalizeIntegerAmount } from '../../utils/helpers/helpers'
 import { CowSwapperDeps } from '../CowSwapper'
 import { getCowSwapMinMax } from '../getCowSwapMinMax/getCowSwapMinMax'
@@ -126,12 +125,6 @@ export async function getCowSwapTradeQuote(
     // taking precision into account
     const fee = feeInFeeAsset.multipliedBy(bn(10).exponentiatedBy(feeAsset.precision)).toString()
 
-    // Approvals are cheaper than trades, so we can't use the trade fee from the quote response.
-    // Instead, we use a hardcoded gasLimit estimate in place of the estimatedGas in the 0x quote response.
-    const approvalFee =
-      sellAssetErc20Address &&
-      bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(bnOrZero(feeData.chainSpecific.gasPrice)).toString()
-
     return {
       rate,
       minimum,
@@ -141,7 +134,9 @@ export async function getCowSwapTradeQuote(
         chainSpecific: {
           estimatedGas: feeData.chainSpecific.gasLimit,
           gasPrice: feeData.chainSpecific.gasPrice,
-          approvalFee
+          approvalFee: bnOrZero(feeData.chainSpecific.gasLimit)
+            .multipliedBy(bnOrZero(feeData.chainSpecific.gasPrice))
+            .toString()
         },
         tradeFee: '0'
       },
