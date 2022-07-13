@@ -4,7 +4,7 @@ import { Asset, KnownChainIds } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import { GetTradeQuoteInput, TradeQuote } from '../../../api'
-import { ETH, FOX, WBTC, WETH } from '../../utils/test-data/assets'
+import { ETH, FOX, WETH } from '../../utils/test-data/assets'
 import { CowSwapperDeps } from '../CowSwapper'
 import { cowService } from '../utils/cowService'
 import { CowSwapQuoteApiInput } from '../utils/helpers/helpers'
