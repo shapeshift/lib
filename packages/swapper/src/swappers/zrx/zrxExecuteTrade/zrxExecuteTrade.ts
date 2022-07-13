@@ -1,6 +1,7 @@
 import { numberToHex } from 'web3-utils'
 
 import { EvmSupportedChainIds, SwapError, SwapErrorTypes, TradeResult } from '../../../api'
+import { isSwapError } from '../../utils/helpers/helpers'
 import { ZrxExecuteTradeInput, ZrxSwapperDeps } from '../types'
 import { isNativeEvmAsset } from '../utils/helpers/helpers'
 
@@ -51,7 +52,7 @@ export async function zrxExecuteTrade<T extends EvmSupportedChainIds>(
       })
     }
   } catch (e) {
-    if (e instanceof SwapError) throw e
+    if (isSwapError(e)) throw e
     throw new SwapError('[zrxExecuteTrade]', {
       cause: e,
       code: SwapErrorTypes.EXECUTE_TRADE_FAILED

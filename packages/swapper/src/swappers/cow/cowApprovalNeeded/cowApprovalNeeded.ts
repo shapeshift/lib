@@ -4,7 +4,7 @@ import { KnownChainIds } from '@shapeshiftoss/types'
 import { ApprovalNeededInput, ApprovalNeededOutput, SwapError, SwapErrorTypes } from '../../../api'
 import { erc20AllowanceAbi } from '../../utils/abi/erc20Allowance-abi'
 import { bnOrZero } from '../../utils/bignumber'
-import { getERC20Allowance } from '../../utils/helpers/helpers'
+import { getERC20Allowance, isSwapError } from '../../utils/helpers/helpers'
 import { CowSwapperDeps } from '../CowSwapper'
 import { COW_SWAP_VAULT_RELAYER_ADDRESS } from '../utils/constants'
 
@@ -40,7 +40,7 @@ export async function cowApprovalNeeded(
       approvalNeeded: allowanceOnChain.lte(bnOrZero(quote.sellAmount))
     }
   } catch (e) {
-    if (e instanceof SwapError) throw e
+    if (isSwapError(e)) throw e
     throw new SwapError('[cowApprovalNeeded]', {
       cause: e,
       code: SwapErrorTypes.CHECK_APPROVAL_FAILED

@@ -11,7 +11,7 @@ import {
 } from '../../../api'
 import { bn, bnOrZero } from '../../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../../utils/constants'
-import { normalizeAmount } from '../../utils/helpers/helpers'
+import { isSwapError, normalizeAmount } from '../../utils/helpers/helpers'
 import { getZrxMinMax } from '../getZrxMinMax/getZrxMinMax'
 import { ZrxPriceResponse } from '../types'
 import { DEFAULT_SOURCE } from '../utils/constants'
@@ -101,7 +101,7 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
       sellAssetAccountNumber
     } as TradeQuote<T>
   } catch (e) {
-    if (e instanceof SwapError) throw e
+    if (isSwapError(e)) throw e
     throw new SwapError('[getZrxTradeQuote]', { cause: e, code: SwapErrorTypes.TRADE_QUOTE_FAILED })
   }
 }

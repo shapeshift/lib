@@ -2,6 +2,7 @@ import { Asset } from '@shapeshiftoss/types'
 
 import { MinMaxOutput, SwapError, SwapErrorTypes } from '../../../api'
 import { bn, bnOrZero } from '../../utils/bignumber'
+import { isSwapError } from '../../utils/helpers/helpers'
 import { CowSwapperDeps } from '../CowSwapper'
 import { MAX_COWSWAP_TRADE, MIN_COWSWAP_VALUE_USD } from '../utils/constants'
 import { getUsdRate } from '../utils/helpers/helpers'
@@ -28,7 +29,7 @@ export const getCowSwapMinMax = async (
       maximum
     }
   } catch (e) {
-    if (e instanceof SwapError) throw e
+    if (isSwapError(e)) throw e
     throw new SwapError('[getCowSwapMinMax]', { cause: e, code: SwapErrorTypes.MIN_MAX_FAILED })
   }
 }

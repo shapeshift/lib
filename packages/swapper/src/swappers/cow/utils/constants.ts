@@ -1,4 +1,5 @@
 import { AddressZero, HashZero } from '@ethersproject/constants'
+import { Asset } from '@shapeshiftoss/types'
 
 export const MAX_ALLOWANCE = '100000000000000000000000000'
 export const MAX_COWSWAP_TRADE = '100000000000000000000000000'
@@ -13,3 +14,16 @@ export const ORDER_KIND_SELL = 'sell'
 export const SIGNING_SCHEME = 'ethsign'
 export const ERC20_TOKEN_BALANCE = 'erc20'
 export const ORDER_STATUS_FULFILLED = 'fulfilled'
+
+export const WETH: Asset = {
+  assetId: 'eip155:1/erc20:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+  chainId: 'eip155:1',
+  name: 'WETH',
+  precision: 18,
+  color: '#2A2E2E',
+  icon: 'https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
+  explorer: 'https://etherscan.io',
+  explorerTxLink: 'https://etherscan.io/tx/',
+  explorerAddressLink: 'https://etherscan.io/address/',
+  symbol: 'WETH'
+}

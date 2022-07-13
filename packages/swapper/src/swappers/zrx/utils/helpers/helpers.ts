@@ -4,6 +4,7 @@ import { AxiosResponse } from 'axios'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { bn, bnOrZero } from '../../../utils/bignumber'
+import { isSwapError } from '../../../utils/helpers/helpers'
 import { ZrxPriceResponse } from '../../types'
 import { zrxServiceFactory } from '../zrxService'
 
@@ -75,7 +76,7 @@ export const getUsdRate = async (asset: Asset): Promise<string> => {
 
     return bn(1).dividedBy(price).toString()
   } catch (e) {
-    if (e instanceof SwapError) throw e
+    if (isSwapError(e)) throw e
     throw new SwapError('[getUsdRate]', {
       cause: e,
       code: SwapErrorTypes.USD_RATE_FAILED

@@ -6,8 +6,10 @@ import { ethers } from 'ethers'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { bn, bnOrZero } from '../../../utils/bignumber'
+import { isSwapError } from '../../../utils/helpers/helpers'
 import { CowSwapperDeps } from '../../CowSwapper'
 import { CowSwapPriceResponse } from '../../types'
+import { WETH } from '../constants'
 import { cowService } from '../cowService'
 
 const USDC_CONTRACT_ADDRESS = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
@@ -60,12 +62,9 @@ export type CowSwapQuoteApiInput = {
   validTo: number
 }
 
-export const getUsdRate = async (
-  { apiUrl, feeAsset }: CowSwapperDeps,
-  input: Asset
-): Promise<string> => {
+export const getUsdRate = async ({ apiUrl }: CowSwapperDeps, input: Asset): Promise<string> => {
   // Replacing ETH by WETH specifically for CowSwap in order to get an usd rate when called with ETH as feeAsset
-  const asset = input.assetId !== ethAssetId ? input : feeAsset
+  const asset = input.assetId !== ethAssetId ? input : WETH
   const { assetReference: erc20Address, assetNamespace } = fromAssetId(asset.assetId)
 
   if (assetNamespace !== 'erc20') {
@@ -103,7 +102,7 @@ export const getUsdRate = async (
     // dividing $1000 by amount of token received
     return bn(buyAmountInDollars).dividedBy(tokenAmount).toString()
   } catch (e) {
-    if (e instanceof SwapError) throw e
+    if (isSwapError(e)) throw e
     throw new SwapError('[getUsdRate]', {
       cause: e,
       code: SwapErrorTypes.USD_RATE_FAILED

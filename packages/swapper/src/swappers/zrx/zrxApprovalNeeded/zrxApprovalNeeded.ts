@@ -9,7 +9,7 @@ import {
 } from '../../../api'
 import { erc20AllowanceAbi } from '../../utils/abi/erc20Allowance-abi'
 import { bnOrZero } from '../../utils/bignumber'
-import { getERC20Allowance } from '../../utils/helpers/helpers'
+import { getERC20Allowance, isSwapError } from '../../utils/helpers/helpers'
 import { ZrxSwapperDeps } from '../types'
 
 export async function zrxApprovalNeeded<T extends EvmSupportedChainIds>(
@@ -63,7 +63,7 @@ export async function zrxApprovalNeeded<T extends EvmSupportedChainIds>(
       approvalNeeded: allowanceOnChain.lte(bnOrZero(quote.sellAmount))
     }
   } catch (e) {
-    if (e instanceof SwapError) throw e
+    if (isSwapError(e)) throw e
     throw new SwapError('[zrxApprovalNeeded]', {
       cause: e,
       code: SwapErrorTypes.CHECK_APPROVAL_FAILED

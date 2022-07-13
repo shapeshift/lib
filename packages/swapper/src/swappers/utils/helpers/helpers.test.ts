@@ -1,6 +1,8 @@
+import { createErrorClass } from '@shapeshiftoss/errors'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import Web3 from 'web3'
 
+import { SwapError, SwapErrorTypes } from '../../../api'
 import { erc20Abi } from '../abi/erc20-abi'
 import { erc20AllowanceAbi } from '../abi/erc20Allowance-abi'
 import { bn, bnOrZero } from '../bignumber'
@@ -10,6 +12,7 @@ import {
   getAllowanceRequired,
   GetAllowanceRequiredArgs,
   grantAllowance,
+  isSwapError,
   normalizeAmount,
   normalizeIntegerAmount
 } from './helpers'
@@ -146,6 +149,9 @@ describe('utils', () => {
     it('should return a string number rounded to the 16th decimal place', () => {
       const result = normalizeAmount('586084736227728377283728272309128120398')
       expect(result).toEqual('586084736227728400000000000000000000000')
+
+      const result2 = normalizeAmount('58608473622772.3123456')
+      expect(result2).toEqual('58608473622772.31')
     })
   })
 })
@@ -172,5 +178,21 @@ describe('normalizeIntegerAmount', () => {
 
     const result4 = normalizeIntegerAmount(586084736227728.3)
     expect(result4).toEqual('586084736227728')
+  })
+})
+
+describe('isSwapError', () => {
+  it('should return false if input is not of SwapError type', () => {
+    expect(isSwapError({})).toBeFalsy()
+
+    const NotASwapError = createErrorClass('NotASwapError')
+    expect(isSwapError(new NotASwapError('AAAA'))).toBeFalsy()
+  })
+
+  it('should return true if input is of SwapError type', () => {
+    const swapError = new SwapError('[validateSwapper] - invalid swapper instance', {
+      code: SwapErrorTypes.MANAGER_ERROR
+    })
+    expect(isSwapError(swapError)).toBeTruthy()
   })
 })

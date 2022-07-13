@@ -6,6 +6,7 @@ import { AxiosResponse } from 'axios'
 import { ethers } from 'ethers'
 
 import { ExecuteTradeInput, SwapError, SwapErrorTypes, TradeResult } from '../../../api'
+import { isSwapError } from '../../utils/helpers/helpers'
 import { CowSwapperDeps } from '../CowSwapper'
 import { CowTrade } from '../types'
 import {
@@ -112,7 +113,7 @@ export async function cowExecuteTrade(
 
     return { tradeId: ordersResponse.data }
   } catch (e) {
-    if (e instanceof SwapError) throw e
+    if (isSwapError(e)) throw e
     throw new SwapError('[cowExecuteTrade]', {
       cause: e,
       code: SwapErrorTypes.EXECUTE_TRADE_FAILED

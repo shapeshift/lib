@@ -2,6 +2,7 @@ import { Asset } from '@shapeshiftoss/types'
 
 import { MinMaxOutput, SwapError, SwapErrorTypes } from '../../../api'
 import { bn, bnOrZero } from '../../utils/bignumber'
+import { isSwapError } from '../../utils/helpers/helpers'
 import { MAX_ZRX_TRADE } from '../utils/constants'
 import { getUsdRate } from '../utils/helpers/helpers'
 
@@ -20,7 +21,7 @@ export const getZrxMinMax = async (sellAsset: Asset, buyAsset: Asset): Promise<M
       maximum
     }
   } catch (e) {
-    if (e instanceof SwapError) throw e
+    if (isSwapError(e)) throw e
     throw new SwapError('[getZrxMinMax]', { cause: e, code: SwapErrorTypes.MIN_MAX_FAILED })
   }
 }

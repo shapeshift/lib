@@ -2,6 +2,7 @@ import { adapters, AssetId } from '@shapeshiftoss/caip'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { bnOrZero } from '../../../utils/bignumber'
+import { isSwapError } from '../../../utils/helpers/helpers'
 import { PoolResponse, ThorchainSwapperDeps } from '../../types'
 import { thorService } from '../thorService'
 
@@ -32,7 +33,7 @@ export const getPriceRatio = async (
       })
     return bnOrZero(buyUsdPrice).dividedBy(sellUsdPrice).toString()
   } catch (e) {
-    if (e instanceof SwapError) throw e
+    if (isSwapError(e)) throw e
     throw new SwapError('[getUsdRate]: Thorchain getUsdRate failed', {
       code: SwapErrorTypes.PRICE_RATIO_FAILED,
       cause: e

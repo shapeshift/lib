@@ -142,8 +142,7 @@ const expectedTradeQuoteWbtcToWethWithApprovalFee: CowTrade<KnownChainIds.Ethere
 const defaultDeps: CowSwapperDeps = {
   apiUrl: '',
   adapter: {} as ethereum.ChainAdapter,
-  web3: {} as Web3,
-  feeAsset: WETH
+  web3: {} as Web3
 }
 
 describe('cowBuildTrade', () => {
@@ -171,8 +170,7 @@ describe('cowBuildTrade', () => {
         getAddress: jest.fn(() => Promise.resolve('address11')),
         getFeeData: jest.fn(() => Promise.resolve(feeData))
       } as unknown as ethereum.ChainAdapter,
-      web3: {} as Web3,
-      feeAsset: WETH
+      web3: {} as Web3
     }
 
     const tradeInput: BuildTradeInput = {
@@ -218,8 +216,7 @@ describe('cowBuildTrade', () => {
         getAddress: jest.fn(() => Promise.resolve('address11')),
         getFeeData: jest.fn(() => Promise.resolve(feeData))
       } as unknown as ethereum.ChainAdapter,
-      web3: {} as Web3,
-      feeAsset: WETH
+      web3: {} as Web3
     }
 
     const tradeInput: BuildTradeInput = {

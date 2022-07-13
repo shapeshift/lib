@@ -3,7 +3,7 @@ import { KnownChainIds } from '@shapeshiftoss/types'
 
 import { ApproveInfiniteInput, SwapError, SwapErrorTypes } from '../../../api'
 import { erc20Abi } from '../../utils/abi/erc20-abi'
-import { grantAllowance } from '../../utils/helpers/helpers'
+import { grantAllowance, isSwapError } from '../../utils/helpers/helpers'
 import { ThorchainSwapperDeps } from '../types'
 import { MAX_ALLOWANCE } from '../utils/constants'
 
@@ -45,7 +45,7 @@ export const thorTradeApproveInfinite = async ({
 
     return allowanceGrantRequired
   } catch (e) {
-    if (e instanceof SwapError) throw e
+    if (isSwapError(e)) throw e
     throw new SwapError('[zrxApproveInfinite]', {
       cause: e,
       code: SwapErrorTypes.APPROVE_INFINITE_FAILED

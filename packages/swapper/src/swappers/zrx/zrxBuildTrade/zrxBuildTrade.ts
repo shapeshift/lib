@@ -12,7 +12,7 @@ import {
 import { erc20AllowanceAbi } from '../../utils/abi/erc20Allowance-abi'
 import { bnOrZero } from '../../utils/bignumber'
 import { APPROVAL_GAS_LIMIT, DEFAULT_SLIPPAGE } from '../../utils/constants'
-import { getAllowanceRequired, normalizeAmount } from '../../utils/helpers/helpers'
+import { getAllowanceRequired, isSwapError, normalizeAmount } from '../../utils/helpers/helpers'
 import { ZrxQuoteResponse, ZrxSwapperDeps, ZrxTrade } from '../types'
 import { applyAxiosRetry } from '../utils/applyAxiosRetry'
 import { AFFILIATE_ADDRESS, DEFAULT_SOURCE } from '../utils/constants'
@@ -144,7 +144,7 @@ export async function zrxBuildTrade<T extends EvmSupportedChainIds>(
     }
     return trade
   } catch (e) {
-    if (e instanceof SwapError) throw e
+    if (isSwapError(e)) throw e
     throw new SwapError('[zrxBuildTrade]', {
       code: SwapErrorTypes.BUILD_TRADE_FAILED
     })

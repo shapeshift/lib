@@ -2,6 +2,7 @@ import { adapters } from '@shapeshiftoss/caip'
 import { Asset } from '@shapeshiftoss/types'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
+import { isSwapError } from '../../../utils/helpers/helpers'
 import { PoolResponse, ThorchainSwapperDeps } from '../../types'
 import { thorService } from '../thorService'
 
@@ -34,7 +35,7 @@ export const getUsdRate = async ({
 
     return rate
   } catch (e) {
-    if (e instanceof SwapError) throw e
+    if (isSwapError(e)) throw e
     throw new SwapError('[getUsdRate]: Thorchain getUsdRate failed', {
       code: SwapErrorTypes.USD_RATE_FAILED,
       cause: e

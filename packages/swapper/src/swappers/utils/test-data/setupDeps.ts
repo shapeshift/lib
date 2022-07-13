@@ -3,8 +3,6 @@ import { ethereum } from '@shapeshiftoss/chain-adapters'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import Web3 from 'web3'
 
-import { WETH } from './assets'
-
 jest.mock('@shapeshiftoss/chain-adapters')
 jest.mock('web3')
 
@@ -28,5 +26,5 @@ export const setupDeps = () => {
   const ethNodeUrl = 'http://localhost:1000'
   const web3Provider = new Web3.providers.HttpProvider(ethNodeUrl)
 
-  return { web3: new Web3(web3Provider), adapter: ethChainAdapter, feeAsset: WETH }
+  return { web3: new Web3(web3Provider), adapter: ethChainAdapter }
 }

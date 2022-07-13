@@ -3,7 +3,7 @@ import { ChainId, fromAssetId, getFeeAssetIdFromAssetId, toChainId } from '@shap
 import { GetTradeQuoteInput, SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
 import { bnOrZero, fromBaseUnit } from '../../utils/bignumber'
 import { DEFAULT_SLIPPAGE } from '../../utils/constants'
-import { normalizeAmount } from '../../utils/helpers/helpers'
+import { isSwapError, normalizeAmount } from '../../utils/helpers/helpers'
 import { ThorchainSwapperDeps } from '../types'
 import { MAX_THORCHAIN_TRADE } from '../utils/constants'
 import { getThorTxInfo } from '../utils/ethereum/utils/getThorTxData'
@@ -106,7 +106,7 @@ export const getThorTradeQuote = async ({
       sellAssetAccountNumber
     }
   } catch (e) {
-    if (e instanceof SwapError) throw e
+    if (isSwapError(e)) throw e
     throw new SwapError('[getThorTradeQuote]', {
       cause: e,
       code: SwapErrorTypes.TRADE_QUOTE_FAILED

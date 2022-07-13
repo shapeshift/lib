@@ -1,10 +1,13 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
 import { KnownChainIds } from '@shapeshiftoss/types'
-import { AxiosResponse } from 'axios'
 
 import { GetTradeQuoteInput, SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
 import { bn, bnOrZero } from '../../utils/bignumber'
-import { getApproveContractData, normalizeIntegerAmount } from '../../utils/helpers/helpers'
+import {
+  getApproveContractData,
+  isSwapError,
+  normalizeIntegerAmount
+} from '../../utils/helpers/helpers'
 import { CowSwapperDeps } from '../CowSwapper'
 import { getCowSwapMinMax } from '../getCowSwapMinMax/getCowSwapMinMax'
 import { CowSwapQuoteResponse } from '../types'
@@ -13,7 +16,8 @@ import {
   DEFAULT_ADDRESS,
   DEFAULT_APP_DATA,
   DEFAULT_SOURCE,
-  ORDER_KIND_SELL
+  ORDER_KIND_SELL,
+  WETH
 } from '../utils/constants'
 import { cowService } from '../utils/cowService'
 import {
@@ -28,7 +32,8 @@ export async function getCowSwapTradeQuote(
 ): Promise<TradeQuote<KnownChainIds.EthereumMainnet>> {
   try {
     const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, wallet } = input
-    const { adapter, feeAsset, web3 } = deps
+    const { adapter, web3 } = deps
+    const feeAsset = WETH
 
     const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
       fromAssetId(sellAsset.assetId)
@@ -78,8 +83,10 @@ export async function getCowSwapTradeQuote(
      * sellAmountBeforeFee / buyAmountAfterFee: amount in base unit
      * }
      */
-    const quoteResponse: AxiosResponse<CowSwapQuoteResponse> =
-      await cowService.post<CowSwapQuoteResponse>(`${deps.apiUrl}/v1/quote/`, apiInput)
+    const quoteResponse = await cowService.post<CowSwapQuoteResponse>(
+      `${deps.apiUrl}/v1/quote/`,
+      apiInput
+    )
 
     const {
       data: { quote }
@@ -149,7 +156,7 @@ export async function getCowSwapTradeQuote(
       sellAssetAccountNumber
     }
   } catch (e) {
-    if (e instanceof SwapError) throw e
+    if (isSwapError(e)) throw e
     throw new SwapError('[getCowSwapTradeQuote]', {
       cause: e,
       code: SwapErrorTypes.TRADE_QUOTE_FAILED

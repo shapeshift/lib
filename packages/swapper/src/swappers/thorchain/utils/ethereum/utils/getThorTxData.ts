@@ -3,6 +3,7 @@ import { Asset } from '@shapeshiftoss/types'
 
 import { SwapError, SwapErrorTypes } from '../../../../../api'
 import { bn, bnOrZero, fromBaseUnit, toBaseUnit } from '../../../../utils/bignumber'
+import { isSwapError } from '../../../../utils/helpers/helpers'
 import { InboundResponse, ThorchainSwapperDeps } from '../../../types'
 import { getPriceRatio } from '../../getPriceRatio/getPriceRatio'
 import { makeSwapMemo } from '../../makeSwapMemo/makeSwapMemo'
@@ -87,7 +88,7 @@ export const getThorTxInfo = async ({
       router
     }
   } catch (e) {
-    if (e instanceof SwapError) throw e
+    if (isSwapError(e)) throw e
     throw new SwapError('[getThorTxInfo]', { cause: e, code: SwapErrorTypes.TRADE_QUOTE_FAILED })
   }
 }

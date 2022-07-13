@@ -15,6 +15,7 @@ import {
 import { MAX_ALLOWANCE } from '../../cow/utils/constants'
 import { erc20Abi as erc20AbiImported } from '../abi/erc20-abi'
 import { BN, bn, bnOrZero } from '../bignumber'
+import { NORMALIZED_AMOUNT_SIGNIFICANT_DIGITS } from '../constants'
 
 export type GetAllowanceRequiredArgs = {
   adapter: EvmSupportedChainAdapters
@@ -47,6 +48,8 @@ type GrantAllowanceArgs<T extends EvmSupportedChainIds> = {
   erc20Abi: AbiItem[]
   web3: Web3
 }
+
+export const isSwapError = (event: unknown) => event instanceof SwapError
 
 export const getERC20Allowance = async ({
   erc20AllowanceAbi,
@@ -95,7 +98,7 @@ export const getAllowanceRequired = async ({
     const allowanceRequired = bnOrZero(sellAmount).minus(allowanceOnChain)
     return allowanceRequired.lt(0) ? bn(0) : allowanceRequired
   } catch (e) {
-    if (e instanceof SwapError) throw e
+    if (isSwapError(e)) throw e
     throw new SwapError('[getAllowanceRequired]', {
       cause: e,
       code: SwapErrorTypes.ALLOWANCE_REQUIRED_FAILED
@@ -156,7 +159,7 @@ export const grantAllowance = async <T extends EvmSupportedChainIds>({
       })
     }
   } catch (e) {
-    if (e instanceof SwapError) throw e
+    if (isSwapError(e)) throw e
     throw new SwapError('[grantAllowance]', {
       cause: e,
       code: SwapErrorTypes.GRANT_ALLOWANCE_FAILED
@@ -165,19 +168,16 @@ export const grantAllowance = async <T extends EvmSupportedChainIds>({
 }
 
 /**
- * This function keeps 17 significant digits, so even if we try to trade 1 Billion of an
- * ETH or ERC20, we still keep 7 decimal places.
+ * This function keeps 16 significant digits, so even if we try to trade 1 Billion of an
+ * ETH or ERC20, we still keep 6 decimal places.
  * @param amount
  */
 export const normalizeAmount = (amount: string | number | BN): string => {
-  return bnOrZero(amount).toNumber().toLocaleString('fullwide', { useGrouping: false })
+  return bnOrZero(amount).precision(NORMALIZED_AMOUNT_SIGNIFICANT_DIGITS).toFixed()
 }
 
 export const normalizeIntegerAmount = (amount: string | number | BN): string => {
-  return bnOrZero(amount)
-    .integerValue()
-    .toNumber()
-    .toLocaleString('fullwide', { useGrouping: false })
+  return bnOrZero(amount).precision(NORMALIZED_AMOUNT_SIGNIFICANT_DIGITS).toFixed(0)
 }
 
 export const getApproveContractData = ({

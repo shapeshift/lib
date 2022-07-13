@@ -8,6 +8,7 @@ import { bn, bnOrZero } from '../../utils/bignumber'
 import {
   getAllowanceRequired,
   getApproveContractData,
+  isSwapError,
   normalizeAmount
 } from '../../utils/helpers/helpers'
 import { CowSwapperDeps } from '../CowSwapper'
@@ -141,7 +142,7 @@ export async function cowBuildTrade(
 
     return trade
   } catch (e) {
-    if (e instanceof SwapError) throw e
+    if (isSwapError(e)) throw e
     throw new SwapError('[cowBuildTrade]', {
       cause: e,
       code: SwapErrorTypes.TRADE_QUOTE_FAILED

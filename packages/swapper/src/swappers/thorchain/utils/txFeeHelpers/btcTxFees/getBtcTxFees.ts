@@ -3,6 +3,7 @@ import { Asset, KnownChainIds } from '@shapeshiftoss/types'
 
 import { QuoteFeeData, SwapError, SwapErrorTypes } from '../../../../../api'
 import { bn } from '../../../../utils/bignumber'
+import { isSwapError } from '../../../../utils/helpers/helpers'
 import { ThorchainSwapperDeps } from '../../../types'
 import { estimateTradeFee } from '../../estimateTradeFee/estimateTradeFee'
 
@@ -56,7 +57,7 @@ export const getBtcTxFees = async ({
       }
     }
   } catch (e) {
-    if (e instanceof SwapError) throw e
+    if (isSwapError(e)) throw e
     throw new SwapError('[getBtcTxFeess]', { cause: e, code: SwapErrorTypes.TRADE_QUOTE_FAILED })
   }
 }

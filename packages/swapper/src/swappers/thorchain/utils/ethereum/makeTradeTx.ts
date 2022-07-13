@@ -4,6 +4,7 @@ import { ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { Asset, BIP44Params } from '@shapeshiftoss/types'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
+import { isSwapError } from '../../../utils/helpers/helpers'
 import { ThorchainSwapperDeps } from '../../types'
 import { getThorTxInfo } from '../ethereum/utils/getThorTxData'
 
@@ -78,7 +79,7 @@ export const makeTradeTx = async ({
       data
     })
   } catch (e) {
-    if (e instanceof SwapError) throw e
+    if (isSwapError(e)) throw e
     throw new SwapError('[makeTradeTx]: error making trade tx', {
       code: SwapErrorTypes.BUILD_TRADE_FAILED,
       cause: e
