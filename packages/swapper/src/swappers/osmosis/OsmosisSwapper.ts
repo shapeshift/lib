@@ -243,7 +243,13 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       }
       const osmoAddress = isFromOsmo ? sellAddress : buyAddress
       const accountUrl = `${this.deps.osmoUrl}/auth/accounts/${osmoAddress}`
-      const responseAccount = await axios.get(accountUrl)
+      const responseAccount = await (async () => {
+        try {
+          return axios.get(accountUrl)
+        } catch (e) {
+          throw new Error(`Failed to get account: ${e}`)
+        }
+      })()
       const accountNumber = responseAccount.data.result.value.account_number || 0
       const sequence = responseAccount.data.result.value.sequence || 0
 

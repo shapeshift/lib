@@ -22,7 +22,13 @@ export const symbolDenomMapping = {
 
 const txStatus = async (txid: string, baseUrl: string): Promise<string> => {
   try {
-    const txResponse = await axios.get(`${baseUrl}/txs/${txid}`)
+    const txResponse = await (async () => {
+      try {
+        return axios.get(`${baseUrl}/txs/${txid}`)
+      } catch (e) {
+        throw new Error(`Failed to get osmo balance: ${e}`)
+      }
+    })()
     if (!txResponse?.data?.codespace && !!txResponse?.data?.gas_used) return 'success'
     if (txResponse?.data?.codespace) return 'failed'
   } catch (e) {
@@ -52,7 +58,13 @@ export const pollForComplete = async (txid: string, baseUrl: string): Promise<st
 }
 
 export const getAtomChannelBalance = async (address: string, osmoUrl: string) => {
-  const osmoResponseBalance = await axios.get(`${osmoUrl}/bank/balances/${address}`)
+  const osmoResponseBalance = await (async () => {
+    try {
+      return axios.get(`${osmoUrl}/bank/balances/${address}`)
+    } catch (e) {
+      throw new Error(`Failed to get osmo balance: ${e}`)
+    }
+  })()
   let toAtomChannelBalance = 0
   try {
     const { amount } = find(
@@ -95,7 +107,13 @@ const findPool = async (sellAssetSymbol: string, buyAssetSymbol: string, osmoUrl
 
   const poolsUrl = osmoUrl + '/osmosis/gamm/v1beta1/pools?pagination.limit=1000'
 
-  const poolsResponse = await axios.get(poolsUrl)
+  const poolsResponse = await (async () => {
+    try {
+      return axios.get(poolsUrl)
+    } catch (e) {
+      throw new Error(`Failed to get pool: ${e}`)
+    }
+  })()
   const foundPool = find(poolsResponse.data.pools, (pool) => {
     const token0Denom = pool.poolAssets[0].token.denom
     const token1Denom = pool.poolAssets[1].token.denom
@@ -170,13 +188,24 @@ export const performIbcTransfer = async (
 ): Promise<TradeResult> => {
   const { sender, receiver, amount } = input
 
-  const responseLatestBlock = await axios.get(`${blockBaseUrl}/blocks/latest`)
+  const responseLatestBlock = await (async () => {
+    try {
+      return axios.get(`${blockBaseUrl}/blocks/latest`)
+    } catch (e) {
+      throw new Error(`Failed to get latest block: ${e}`)
+    }
+  })()
   const latestBlock = responseLatestBlock.data.block.header.height
 
   const addressNList = bip32ToAddressNList("m/44'/118'/0'/0/0")
-
-  const accountUrl = `${accountBaseUrl}/auth/accounts/${sender}`
-  const responseAccount = await axios.get(accountUrl)
+  const responseAccount = await (async () => {
+    try {
+      const accountUrl = `${accountBaseUrl}/auth/accounts/${sender}`
+      return axios.get(accountUrl)
+    } catch (e) {
+      throw new Error(`Failed to get account: ${e}`)
+    }
+  })()
   const accountNumber = responseAccount.data.result.value.account_number
   const sequence = responseAccount.data.result.value.sequence
 
