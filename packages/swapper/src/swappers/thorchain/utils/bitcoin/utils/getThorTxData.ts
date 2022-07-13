@@ -67,7 +67,7 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
     const isValidSlippageRange =
       bnOrZero(slippageTolerance).gte(0) && bnOrZero(slippageTolerance).lte(1)
     if (bnOrZero(expectedBuyAmount).lt(0) || !isValidSlippageRange)
-      throw new SwapError('[makeTradeTx]: bad expected buy amount or bad slippage tolerance', {
+      throw new SwapError('[getThorTxInfo]: bad expected buy amount or bad slippage tolerance', {
         code: SwapErrorTypes.BUILD_TRADE_FAILED,
         details: { expectedBuyAmount, slippageTolerance }
       })
