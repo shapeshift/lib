@@ -111,6 +111,7 @@ const expectedTradeWethToFox: Trade<KnownChainIds.EthereumMainnet> = {
   buyAsset: FOX,
   sellAsset: WETH,
   sellAssetAccountNumber: 0,
+  buyAssetAccountNumber: 0,
   receiveAddress: 'address11'
 }
 
@@ -131,6 +132,7 @@ const expectedTradeQuoteWbtcToWethWithApprovalFee: Trade<KnownChainIds.EthereumM
   buyAsset: WETH,
   sellAsset: WBTC,
   sellAssetAccountNumber: 0,
+  buyAssetAccountNumber: 0,
   receiveAddress: 'address11'
 }
 
@@ -177,7 +179,7 @@ describe('cowBuildTrade', () => {
       sellAmount: '1000000000000000000',
       sendMax: true,
       sellAssetAccountNumber: 0,
-      buyAssetAccountNumber: 1,
+      buyAssetAccountNumber: 0,
       wallet: <HDWallet>{}
     }
 
@@ -224,7 +226,7 @@ describe('cowBuildTrade', () => {
       sellAmount: '100000000',
       sendMax: true,
       sellAssetAccountNumber: 0,
-      buyAssetAccountNumber: 1,
+      buyAssetAccountNumber: 0,
       wallet: <HDWallet>{}
     }
 

@@ -105,7 +105,8 @@ const expectedTradeQuoteWethToFox: TradeQuote<KnownChainIds.EthereumMainnet> = {
   allowanceContract: '0xc92e8bdf79f0507f65a392b0ab4667716bfe0110',
   buyAsset: FOX,
   sellAsset: WETH,
-  sellAssetAccountNumber: 0
+  sellAssetAccountNumber: 0,
+  buyAssetAccountNumber: 0
 }
 
 const expectedTradeQuoteWbtcToWeth: TradeQuote<KnownChainIds.EthereumMainnet> = {
@@ -127,7 +128,8 @@ const expectedTradeQuoteWbtcToWeth: TradeQuote<KnownChainIds.EthereumMainnet> = 
   allowanceContract: '0xc92e8bdf79f0507f65a392b0ab4667716bfe0110',
   buyAsset: WETH,
   sellAsset: WBTC,
-  sellAssetAccountNumber: 0
+  sellAssetAccountNumber: 0,
+  buyAssetAccountNumber: 0
 }
 
 const defaultDeps: CowSwapperDeps = {
@@ -146,6 +148,7 @@ describe('getCowTradeQuote', () => {
       sellAmount: '11111',
       sendMax: true,
       sellAssetAccountNumber: 1,
+      buyAssetAccountNumber: 1,
       wallet: <HDWallet>{}
     }
 
@@ -174,6 +177,7 @@ describe('getCowTradeQuote', () => {
       sellAmount: '1000000000000000000',
       sendMax: true,
       sellAssetAccountNumber: 0,
+      buyAssetAccountNumber: 0,
       wallet: <HDWallet>{}
     }
 
@@ -221,7 +225,8 @@ describe('getCowTradeQuote', () => {
       buyAsset: WETH,
       sellAmount: '100000000',
       sendMax: true,
-      sellAssetAccountNumber: 0
+      sellAssetAccountNumber: 0,
+      buyAssetAccountNumber: 0
     }
 
     ;(cowService.post as jest.Mock<unknown>).mockReturnValue(
