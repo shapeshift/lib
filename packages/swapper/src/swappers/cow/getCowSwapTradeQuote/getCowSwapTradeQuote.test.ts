@@ -137,7 +137,8 @@ describe('getCowTradeQuote', () => {
       sellAmount: '11111',
       sendMax: true,
       sellAssetAccountNumber: 1,
-      wallet: <HDWallet>{}
+      wallet: <HDWallet>{},
+      receiveAddress: ''
     }
 
     await expect(getCowSwapTradeQuote(defaultDeps, input)).rejects.toThrow(
@@ -163,7 +164,8 @@ describe('getCowTradeQuote', () => {
       sellAmount: '1000000000000000000',
       sendMax: true,
       sellAssetAccountNumber: 0,
-      wallet: <HDWallet>{}
+      wallet: <HDWallet>{},
+      receiveAddress: ''
     }
 
     ;(cowService.post as jest.Mock<unknown>).mockReturnValue(
@@ -210,7 +212,8 @@ describe('getCowTradeQuote', () => {
       buyAsset: WETH,
       sellAmount: '100000000',
       sendMax: true,
-      sellAssetAccountNumber: 0
+      sellAssetAccountNumber: 0,
+      receiveAddress: ''
     }
 
     ;(cowService.post as jest.Mock<unknown>).mockReturnValue(
