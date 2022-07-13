@@ -59,18 +59,6 @@ describe('getTradeQuote', () => {
     supportsOfflineSigning: jest.fn(() => true)
   } as unknown as HDWallet
 
-  it('should throw if no wallet is provided', async () => {
-    const input = {
-      ...quoteInput,
-      buyAsset: ETH,
-      sellAsset: FOX
-    }
-
-    await expect(getThorTradeQuote({ deps, input })).rejects.toThrow(
-      '[getTradeQuote] - wallet is required'
-    )
-  })
-
   it('should get a thorchain quote for a thorchain trade', async () => {
     const addressData = [
       {
