@@ -1,5 +1,3 @@
-import { AxiosResponse } from 'axios'
-
 import { SwapError, SwapErrorTypes, TradeResult, TradeTxs } from '../../../api'
 import { CowSwapperDeps } from '../CowSwapper'
 import { CowSwapGetOrdersResponse, CowSwapGetTradesResponse } from '../types'
@@ -8,8 +6,9 @@ import { cowService } from '../utils/cowService'
 
 export async function cowGetTradeTxs(deps: CowSwapperDeps, input: TradeResult): Promise<TradeTxs> {
   try {
-    const getOrdersResponse: AxiosResponse<CowSwapGetOrdersResponse> =
-      await cowService.get<CowSwapGetOrdersResponse>(`${deps.apiUrl}/v1/orders/${input.tradeId}`)
+    const getOrdersResponse = await cowService.get<CowSwapGetOrdersResponse>(
+      `${deps.apiUrl}/v1/orders/${input.tradeId}`
+    )
 
     const {
       data: { status }
@@ -21,10 +20,9 @@ export async function cowGetTradeTxs(deps: CowSwapperDeps, input: TradeResult): 
       }
     }
 
-    const getTradesResponse: AxiosResponse<CowSwapGetTradesResponse> =
-      await cowService.get<CowSwapGetTradesResponse>(
-        `${deps.apiUrl}/v1/trades/?orderUid=${input.tradeId}`
-      )
+    const getTradesResponse = await cowService.get<CowSwapGetTradesResponse>(
+      `${deps.apiUrl}/v1/trades/?orderUid=${input.tradeId}`
+    )
 
     return {
       sellTxid: '',

@@ -1,4 +1,4 @@
-import { TypedDataDomain } from '@ethersproject/abstract-signer'
+import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { ethAssetId, fromAssetId } from '@shapeshiftoss/caip'
 import { Asset } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
@@ -31,7 +31,7 @@ export const ORDER_TYPE_FIELDS = [
 /**
  * EIP-712 typed data type definitions.
  */
-export declare type TypedDataTypes = Parameters<typeof ethers.utils._TypedDataEncoder.hashStruct>[1]
+export declare type TypedDataTypes = Record<string, Array<TypedDataField>>
 
 export type CowSwapOrder = {
   sellToken: string

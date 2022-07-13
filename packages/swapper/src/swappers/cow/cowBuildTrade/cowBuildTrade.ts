@@ -97,7 +97,7 @@ export async function cowBuildTrade(
     const feeData = feeDataOptions['fast']
 
     // calculating trade fee in USD
-    const tradeFeeInUsd = bnOrZero(quote.feeAmount)
+    const tradeFeeFiat = bnOrZero(quote.feeAmount)
       .div(bn(10).exponentiatedBy(sellAsset.precision))
       .multipliedBy(bnOrZero(sellAssetUsdRate))
       .toString()
@@ -110,7 +110,7 @@ export async function cowBuildTrade(
           estimatedGas: feeData.chainSpecific.gasLimit,
           gasPrice: feeData.chainSpecific.gasPrice
         },
-        tradeFee: tradeFeeInUsd
+        tradeFee: tradeFeeFiat
       },
       sellAmount: normalizedSellAmount,
       buyAmount: quote.buyAmount,
