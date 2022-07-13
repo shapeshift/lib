@@ -25,8 +25,9 @@ const txStatus = async (txid: string, baseUrl: string): Promise<string> => {
     const txResponse = await axios.get(`${baseUrl}/txs/${txid}`)
     if (!txResponse?.data?.codespace && !!txResponse?.data?.gas_used) return 'success'
     if (txResponse?.data?.codespace) return 'failed'
-    // eslint-disable-next-line no-empty
-  } catch (e) {}
+  } catch (e) {
+    console.error('Failed to get status')
+  }
   return 'not found'
 }
 
@@ -114,7 +115,6 @@ const findPool = async (sellAssetSymbol: string, buyAssetSymbol: string, osmoUrl
   } else {
     ;(sellAssetIndex = 1), (buyAssetIndex = 0)
   }
-  console.log('foundPool', foundPool)
   return { pool: foundPool, sellAssetIndex, buyAssetIndex }
 }
 
@@ -187,7 +187,7 @@ export const performIbcTransfer = async (
     fee: {
       amount: [
         {
-          amount: feeAmount.toString(), // having a fee here causes error
+          amount: feeAmount.toString(),
           denom: 'uosmo'
         }
       ],

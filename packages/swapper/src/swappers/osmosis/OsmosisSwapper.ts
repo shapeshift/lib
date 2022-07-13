@@ -276,7 +276,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
                 denom: sellAssetDenom,
                 amount: ibcSellAmount ?? sellAmount
               },
-              tokenOutMinAmount: '1' // TODO: slippage tolerance
+              tokenOutMinAmount: '1' // slippage tolerance
             }
           }
         ]
