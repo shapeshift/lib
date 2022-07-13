@@ -59,7 +59,7 @@ type CommonTradeInput = {
   sellAmount: string
   sendMax: boolean
   sellAssetAccountNumber: number
-  wallet?: HDWallet // TODO remove this in a followup PR
+  wallet: HDWallet // TODO remove this in a followup PR
   receiveAddress: string
 }
 

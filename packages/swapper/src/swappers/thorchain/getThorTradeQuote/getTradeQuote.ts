@@ -14,6 +14,8 @@ import { getPriceRatio } from '../utils/getPriceRatio/getPriceRatio'
 import { getBtcTxFees } from '../utils/txFeeHelpers/btcTxFees/getBtcTxFees'
 import { getEthTxFees } from '../utils/txFeeHelpers/ethTxFees/getEthTxFees'
 
+type CommonQuoteFields = Omit<TradeQuote<ChainId>, 'allowanceContract' | 'feeData'>
+
 export const getThorTradeQuote = async ({
   deps,
   input
@@ -65,7 +67,7 @@ export const getThorTradeQuote = async ({
     // padding minimum by 1.5 the trade fee to avoid thorchain "not enough to cover fee" errors.
     const minimum = fromBaseUnit(sellAssetTradeFee.times(1.5).toString(), sellAsset.precision)
 
-    const commonQuoteFields: Omit<TradeQuote<ChainId>, 'allowanceContract' | 'feeData'> = {
+    const commonQuoteFields: CommonQuoteFields = {
       rate,
       maximum: MAX_THORCHAIN_TRADE,
       sellAmount,
