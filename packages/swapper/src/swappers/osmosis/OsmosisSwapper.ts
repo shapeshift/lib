@@ -45,9 +45,6 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     this.supportAssets = ['cosmos:cosmoshub-4/slip44:118', 'cosmos:osmosis-1/slip44:118']
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  async initialize() {}
-
   async getTradeTxs(tradeResult: TradeResult): Promise<TradeTxs> {
     return {
       sellTxid: tradeResult.tradeId,
