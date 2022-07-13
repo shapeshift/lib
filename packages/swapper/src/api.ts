@@ -73,8 +73,8 @@ export type GetEvmTradeQuoteInput = CommonTradeInput & {
   chainId: EvmSupportedChainIds
 }
 
-export type GetOsmosisTradeQuoteInput = CommonTradeInput & {
-  chainId: OsmosisSupportedChainIds
+export type GetCosmosTradeQuoteInput = CommonTradeInput & {
+  chainId: CosmosSdkSupportedChainIds
 }
 
 type GetBtcTradeQuoteInput = CommonTradeInput & {
@@ -87,7 +87,7 @@ type GetBtcTradeQuoteInput = CommonTradeInput & {
 export type GetTradeQuoteInput =
   | GetBtcTradeQuoteInput
   | GetEvmTradeQuoteInput
-  | GetOsmosisTradeQuoteInput
+  | GetCosmosTradeQuoteInput
 
 export type BuildTradeInput = GetTradeQuoteInput & {
   buyAssetAccountNumber: number
