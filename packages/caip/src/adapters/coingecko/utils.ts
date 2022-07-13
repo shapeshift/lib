@@ -40,6 +40,10 @@ export const fetchData = async (URL: string) => (await axios.get<CoingeckoCoin[]
 export const parseData = (coins: CoingeckoCoin[]): AssetMap => {
   const assetMap = coins.reduce<AssetMap>(
     (prev, { id, platforms }) => {
+      /**
+       * ordering here is important - we want more established networks to take precedence
+       * e.g. this has effects when fetching market data
+       */
       if (Object.keys(platforms).includes('ethereum')) {
         try {
           const assetId = toAssetId({
@@ -49,6 +53,7 @@ export const parseData = (coins: CoingeckoCoin[]): AssetMap => {
             assetReference: platforms.ethereum
           })
           prev[ethChainId][assetId] = id
+          return prev
         } catch {
           // unable to create assetId, skip token
         }
@@ -63,6 +68,7 @@ export const parseData = (coins: CoingeckoCoin[]): AssetMap => {
             assetReference: platforms.avalanche
           })
           prev[avalancheChainId][assetId] = id
+          return prev
         } catch {
           // unable to create assetId, skip token
         }
