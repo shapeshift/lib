@@ -22,13 +22,7 @@ export const symbolDenomMapping = {
 
 const txStatus = async (txid: string, baseUrl: string): Promise<string> => {
   try {
-    const txResponse = await (async () => {
-      try {
-        return axios.get(`${baseUrl}/txs/${txid}`)
-      } catch (e) {
-        throw new Error(`Failed to get osmo balance: ${e}`)
-      }
-    })()
+    const txResponse = await axios.get(`${baseUrl}/txs/${txid}`)
     if (!txResponse?.data?.codespace && !!txResponse?.data?.gas_used) return 'success'
     if (txResponse?.data?.codespace) return 'failed'
   } catch (e) {
