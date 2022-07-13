@@ -1,3 +1,24 @@
+# [@shapeshiftoss/unchained-client-v9.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v9.1.1...@shapeshiftoss/unchained-client-v9.2.0) (2022-07-12)
+
+
+### Features
+
+* **unchained-client:** add websocket reconnect logic ([#870](https://github.com/shapeshift/lib/issues/870)) ([fcf5c32](https://github.com/shapeshift/lib/commit/fcf5c32f2584f95d9c09ce4e34dbcab5bb8e79af))
+
+# [@shapeshiftoss/unchained-client-v9.1.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v9.1.0...@shapeshiftoss/unchained-client-v9.1.1) (2022-07-11)
+
+
+### Bug Fixes
+
+* **unchained-client:** assign this.provider in BaseTransactionParser ([#866](https://github.com/shapeshift/lib/issues/866)) ([af1d52f](https://github.com/shapeshift/lib/commit/af1d52fa5cb9da707c7077219617cd26d068302b))
+
+# [@shapeshiftoss/unchained-client-v9.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v9.0.3...@shapeshiftoss/unchained-client-v9.1.0) (2022-07-11)
+
+
+### Features
+
+* base evm tx parser + avalanche support ([#855](https://github.com/shapeshift/lib/issues/855)) ([153f251](https://github.com/shapeshift/lib/commit/153f251109e56089e80379df485d19a7b33c105d)), closes [#862](https://github.com/shapeshift/lib/issues/862)
+
 # [@shapeshiftoss/unchained-client-v9.0.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v9.0.2...@shapeshiftoss/unchained-client-v9.0.3) (2022-07-07)
 
 # [@shapeshiftoss/unchained-client-v9.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v9.0.1...@shapeshiftoss/unchained-client-v9.0.2) (2022-06-29)
