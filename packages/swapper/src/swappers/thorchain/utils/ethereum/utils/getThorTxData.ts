@@ -9,21 +9,29 @@ import { makeSwapMemo } from '../../makeSwapMemo/makeSwapMemo'
 import { thorService } from '../../thorService'
 import { deposit } from '../routerCalldata'
 
-export const getThorTxInfo = async ({
-  deps,
-  sellAsset,
-  buyAsset,
-  sellAmount,
-  slippageTolerance,
-  destinationAddress
-}: {
+type GetBtcThorTxInfoArgs = {
   deps: ThorchainSwapperDeps
   sellAsset: Asset
   buyAsset: Asset
   sellAmount: string
   slippageTolerance: string
   destinationAddress: string
-}) => {
+}
+type GetBtcThorTxInfoReturn = Promise<{
+  data: string
+  memo: string
+  router: string
+}>
+type GetBtcThorTxInfo = (args: GetBtcThorTxInfoArgs) => GetBtcThorTxInfoReturn
+
+export const getThorTxInfo: GetBtcThorTxInfo = async ({
+  deps,
+  sellAsset,
+  buyAsset,
+  sellAmount,
+  slippageTolerance,
+  destinationAddress
+}: GetBtcThorTxInfoArgs) => {
   try {
     const { assetReference, assetNamespace } = fromAssetId(sellAsset.assetId)
 

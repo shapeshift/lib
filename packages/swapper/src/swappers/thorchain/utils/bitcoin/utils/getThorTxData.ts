@@ -10,17 +10,7 @@ import { getPriceRatio } from '../../getPriceRatio/getPriceRatio'
 import { makeSwapMemo } from '../../makeSwapMemo/makeSwapMemo'
 import { thorService } from '../../thorService'
 
-export const getThorTxInfo = async ({
-  deps,
-  sellAsset,
-  buyAsset,
-  sellAmount,
-  slippageTolerance,
-  destinationAddress,
-  wallet,
-  bip44Params,
-  accountType
-}: {
+type GetBtcThorTxInfoArgs = {
   deps: ThorchainSwapperDeps
   sellAsset: Asset
   buyAsset: Asset
@@ -30,7 +20,25 @@ export const getThorTxInfo = async ({
   wallet: HDWallet
   bip44Params: BIP44Params
   accountType: UtxoAccountType
-}) => {
+}
+type GetBtcThorTxInfoReturn = Promise<{
+  opReturnData: string
+  vault: string
+  pubkey: string
+}>
+type GetBtcThorTxInfo = (args: GetBtcThorTxInfoArgs) => GetBtcThorTxInfoReturn
+
+export const getThorTxInfo: GetBtcThorTxInfo = async ({
+  deps,
+  sellAsset,
+  buyAsset,
+  sellAmount,
+  slippageTolerance,
+  destinationAddress,
+  wallet,
+  bip44Params,
+  accountType
+}: GetBtcThorTxInfoArgs) => {
   try {
     const { data: inboundAddresses } = await thorService.get<InboundResponse[]>(
       `${deps.midgardUrl}/thorchain/inbound_addresses`
