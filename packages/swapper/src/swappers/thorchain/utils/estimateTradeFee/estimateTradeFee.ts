@@ -57,10 +57,13 @@ export const estimateTradeFee = async (
       details: { buyAssetId }
     })
 
-  const feeAssetRatio = await getPriceRatio(deps, {
-    sellAssetId: buyAssetId,
-    buyAssetId: feeAssetId
-  })
+  const feeAssetRatio =
+    buyAssetId !== feeAssetId
+      ? await getPriceRatio(deps, {
+          sellAssetId: buyAssetId,
+          buyAssetId: feeAssetId
+        })
+      : '1'
 
   switch (chainId) {
     case 'bip122:000000000019d6689c085ae165831e93':
