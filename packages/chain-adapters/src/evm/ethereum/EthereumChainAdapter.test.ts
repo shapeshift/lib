@@ -243,6 +243,20 @@ describe('EthereumChainAdapter', () => {
 
       expect(res).toEqual('0x3f2329C9ADFbcCd9A84f52c906E936A42dA18CB8')
     })
+
+    it('should not show address on device by default', async () => {
+      const args = makeChainAdapterArgs()
+      const adapter = new ethereum.ChainAdapter(args)
+      const bip44Params = { purpose: 44, coinType: 60, accountNumber: 0 }
+      const wallet = await getWallet()
+      wallet.ethGetAddress = jest.fn()
+      await adapter.getAddress({ bip44Params, wallet })
+
+      expect(wallet.ethGetAddress).toHaveBeenCalledWith({
+        addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
+        showDisplay: false
+      })
+    })
   })
 
   describe('validateAddress', () => {
