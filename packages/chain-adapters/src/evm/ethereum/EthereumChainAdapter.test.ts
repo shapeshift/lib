@@ -245,11 +245,14 @@ describe('EthereumChainAdapter', () => {
     })
 
     it('should not show address on device by default', async () => {
-      const args = makeChainAdapterArgs()
-      const adapter = new ethereum.ChainAdapter(args)
+      const adapter = new ethereum.ChainAdapter(makeChainAdapterArgs())
       const bip44Params = { purpose: 44, coinType: 60, accountNumber: 0 }
       const wallet = await getWallet()
-      wallet.ethGetAddress = jest.fn()
+
+      wallet.ethGetAddress = jest
+        .fn()
+        .mockResolvedValue('0x3f2329C9ADFbcCd9A84f52c906E936A42dA18CB8')
+
       await adapter.getAddress({ bip44Params, wallet })
 
       expect(wallet.ethGetAddress).toHaveBeenCalledWith({
