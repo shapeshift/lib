@@ -97,7 +97,6 @@ const expectedTradeQuoteWethToFox: TradeQuote<KnownChainIds.EthereumMainnet> = {
   buyAssetAccountNumber: 0
 }
 
-
 const defaultDeps: CowSwapperDeps = {
   apiUrl: '',
   adapter: {} as ethereum.ChainAdapter,
