@@ -87,7 +87,7 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
     const rate = useSellAmount ? price : bn(1).div(price).toString()
 
     const fee = bnOrZero(estimatedGas).multipliedBy(bnOrZero(gasPrice)).toString()
-    // Approvals are cheaper than trades, so we can't use the trade fee from the quote response.
+    // 0x approvals are cheaper than trades, but we don't have dynamic quote data for them.
     // Instead, we use a hardcoded gasLimit estimate in place of the estimatedGas in the 0x quote response.
     const approvalFee =
       sellAssetErc20Address &&

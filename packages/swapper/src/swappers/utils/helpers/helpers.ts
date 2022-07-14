@@ -13,7 +13,6 @@ import {
   TradeQuote
 } from '../../../api'
 import { MAX_ALLOWANCE } from '../../cow/utils/constants'
-import { APPROVAL_GAS_LIMIT } from '../../utils/constants'
 import { erc20Abi as erc20AbiImported } from '../abi/erc20-abi'
 import { BN, bn, bnOrZero } from '../bignumber'
 
@@ -130,9 +129,7 @@ export const grantAllowance = async <T extends EvmSupportedChainIds>({
       chainSpecific: {
         erc20ContractAddress: sellAssetErc20Address,
         gasPrice: numberToHex(quote.feeData?.chainSpecific?.gasPrice || 0),
-        // Approvals are cheaper than trades, so we can't use the trade fee from the quote response.
-        // Instead, we use a hardcoded gasLimit estimate in place of the estimatedGas in the 0x quote response.
-        gasLimit: numberToHex(APPROVAL_GAS_LIMIT)
+        gasLimit: numberToHex(quote.feeData?.chainSpecific?.estimatedGas || 0)
       }
     })
 
