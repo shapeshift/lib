@@ -218,7 +218,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainIds> implements IChainAda
     const addressNList = bip32ToAddressNList(path)
     const address = await (wallet as ETHWallet).ethGetAddress({
       addressNList,
-      showDisplay: showOnDevice
+      showDisplay: Boolean(showOnDevice)
     })
     return address as string
   }
