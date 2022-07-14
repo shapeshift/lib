@@ -85,6 +85,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainIds> implements IChainAda
   abstract getFeeAssetId(): AssetId
   abstract getFeeData(input: Partial<GetFeeDataInput<T>>): Promise<FeeDataEstimate<T>>
   abstract buildSendTransaction(tx: BuildSendTxInput<T>): Promise<{ txToSign: ChainTxType<T> }>
+  abstract getDisplayName(): string
 
   getChainId(): ChainId {
     return this.chainId
@@ -213,7 +214,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainIds> implements IChainAda
   }
 
   async getAddress(input: GetAddressInput): Promise<string> {
-    const { wallet, bip44Params = EvmBaseAdapter.defaultBIP44Params, showOnDevice } = input
+    const { wallet, bip44Params = EvmBaseAdapter.defaultBIP44Params, showOnDevice = false } = input
     const path = toPath(bip44Params)
     const addressNList = bip32ToAddressNList(path)
     const address = await (wallet as ETHWallet).ethGetAddress({
