@@ -25,10 +25,7 @@ type GetThorTradeQuoteReturn = Promise<TradeQuote<ChainId>>
 
 type GetThorTradeQuote = (args: GetThorTradeQuoteInput) => GetThorTradeQuoteReturn
 
-export const getThorTradeQuote: GetThorTradeQuote = async ({
-  deps,
-  input
-}: GetThorTradeQuoteInput): Promise<TradeQuote<ChainId>> => {
+export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
   const {
     sellAsset,
     buyAsset,

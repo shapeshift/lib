@@ -38,7 +38,7 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
   wallet,
   bip44Params,
   accountType
-}: GetBtcThorTxInfoArgs) => {
+}) => {
   try {
     const { data: inboundAddresses } = await thorService.get<InboundResponse[]>(
       `${deps.midgardUrl}/thorchain/inbound_addresses`

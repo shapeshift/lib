@@ -31,7 +31,7 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
   sellAmount,
   slippageTolerance,
   destinationAddress
-}: GetBtcThorTxInfoArgs) => {
+}) => {
   try {
     const { assetReference, assetNamespace } = fromAssetId(sellAsset.assetId)
 
