@@ -29,7 +29,9 @@ export const setupQuote = () => {
     buyAsset,
     sellAssetAccountNumber: 0,
     buyAssetAccountNumber: 0,
-    sendMax: false
+    sendMax: false,
+    receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+    wallet: {} as HDWallet
   }
   return { quoteInput, tradeQuote, buyAsset, sellAsset }
 }
@@ -45,7 +47,8 @@ export const setupBuildTrade = () => {
     sellAssetAccountNumber: 0,
     buyAssetAccountNumber: 0,
     sellAsset,
-    wallet: <HDWallet>{}
+    wallet: <HDWallet>{},
+    receiveAddress: ''
   }
   return { buildTradeInput, buyAsset, sellAsset }
 }
