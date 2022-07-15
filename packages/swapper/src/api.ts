@@ -1,5 +1,5 @@
 import { AssetId, ChainId } from '@shapeshiftoss/caip'
-import { avalanche, ethereum } from '@shapeshiftoss/chain-adapters'
+import { avalanche, cosmos, ethereum, osmosis } from '@shapeshiftoss/chain-adapters'
 import { createErrorClass } from '@shapeshiftoss/errors'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import {
@@ -68,6 +68,8 @@ export type EvmSupportedChainIds = KnownChainIds.EthereumMainnet | KnownChainIds
 export type CosmosSdkSupportedChainIds = KnownChainIds.CosmosMainnet | KnownChainIds.OsmosisMainnet
 
 export type EvmSupportedChainAdapters = ethereum.ChainAdapter | avalanche.ChainAdapter
+
+export type CosmosSdkSupportedChainAdapters = cosmos.ChainAdapter | osmosis.ChainAdapter
 
 export type GetEvmTradeQuoteInput = CommonTradeInput & {
   chainId: EvmSupportedChainIds

@@ -1,11 +1,11 @@
-import { cosmos, osmosis } from '@shapeshiftoss/chain-adapters'
+import { CHAIN_REFERENCE } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import axios from 'axios'
 import { find } from 'lodash'
 
-import { SwapError, TradeResult } from '../../../index'
+import { CosmosSdkSupportedChainAdapters, SwapError, TradeResult } from '../../../index'
 import { bn, bnOrZero } from '../../utils/bignumber'
-import { GAS, OSMOSIS_PRECISION } from './constants'
+import { OSMOSIS_PRECISION } from './constants'
 import { IbcTransferInput, PoolInfo } from './types'
 
 export interface SymbolDenomMapping {
@@ -31,6 +31,7 @@ const txStatus = async (txid: string, baseUrl: string): Promise<string> => {
   return 'not found'
 }
 
+// TODO: leverage chain-adapters websockets
 export const pollForComplete = async (txid: string, baseUrl: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     const timeout = 120000 // 2 mins
@@ -119,14 +120,14 @@ const findPool = async (sellAssetSymbol: string, buyAssetSymbol: string, osmoUrl
 
   if (!foundPool) throw new SwapError('Couldnt find pool')
 
-  let sellAssetIndex
-  let buyAssetIndex
+  const { sellAssetIndex, buyAssetIndex } = (() => {
+    if (foundPool.poolAssets[0].token.denom === sellAssetDenom) {
+      return { sellAssetIndex: 0, buyAssetIndex: 1 }
+    } else {
+      return { sellAssetIndex: 1, buyAssetIndex: 0 }
+    }
+  })()
 
-  if (foundPool.poolAssets[0].token.denom === sellAssetDenom) {
-    ;(sellAssetIndex = 0), (buyAssetIndex = 1)
-  } else {
-    ;(sellAssetIndex = 1), (buyAssetIndex = 0)
-  }
   return { pool: foundPool, sellAssetIndex, buyAssetIndex }
 }
 
@@ -172,13 +173,15 @@ export const getRateInfo = async (
 
 export const performIbcTransfer = async (
   input: IbcTransferInput,
-  adapter: cosmos.ChainAdapter | osmosis.ChainAdapter,
+  adapter: CosmosSdkSupportedChainAdapters,
   wallet: HDWallet,
-  accountBaseUrl: string,
   blockBaseUrl: string,
   denom: string,
   sourceChannel: string,
-  feeAmount: string
+  feeAmount: string,
+  accountNumber: string,
+  sequence: string,
+  gas: string
 ): Promise<TradeResult> => {
   const { sender, receiver, amount } = input
 
@@ -190,20 +193,7 @@ export const performIbcTransfer = async (
     }
   })()
   const latestBlock = responseLatestBlock.data.block.header.height
-
   const addressNList = bip32ToAddressNList("m/44'/118'/0'/0/0")
-  const responseAccount = await (async () => {
-    try {
-      const accountUrl = `${accountBaseUrl}/auth/accounts/${sender}`
-      return axios.get(accountUrl)
-    } catch (e) {
-      throw new Error(`Failed to get account: ${e}`)
-    }
-  })()
-  const accountNumber = responseAccount.data.result.value.account_number
-  const sequence = responseAccount.data.result.value.sequence
-
-  if (!accountNumber) throw new Error('no atom account number')
 
   const tx1 = {
     memo: '',
@@ -214,7 +204,7 @@ export const performIbcTransfer = async (
           denom: 'uosmo'
         }
       ],
-      gas: GAS
+      gas
     },
     signatures: null,
     msg: [
@@ -242,7 +232,7 @@ export const performIbcTransfer = async (
     txToSign: {
       tx: tx1,
       addressNList,
-      chain_id: 'osmosis-1',
+      chain_id: CHAIN_REFERENCE.OsmosisMainnet,
       account_number: accountNumber,
       sequence
     },

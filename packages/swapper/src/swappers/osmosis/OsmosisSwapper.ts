@@ -1,8 +1,13 @@
-import { AssetId, ChainId, cosmosChainId, osmosisChainId } from '@shapeshiftoss/caip'
-import { cosmos, osmosis } from '@shapeshiftoss/chain-adapters'
+import {
+  AssetId,
+  ChainId,
+  cosmosChainId,
+  osmosisAssetId,
+  osmosisChainId
+} from '@shapeshiftoss/caip'
+import { cosmos, osmosis, toPath } from '@shapeshiftoss/chain-adapters'
 import { bip32ToAddressNList } from '@shapeshiftoss/hdwallet-core'
 import { Asset } from '@shapeshiftoss/types'
-import axios from 'axios'
 
 import {
   ApprovalNeededOutput,
@@ -21,7 +26,12 @@ import {
   TradeTxs
 } from '../../api'
 import { bn, bnOrZero } from '../utils/bignumber'
-import { DEFAULT_SOURCE, FEE, GAS, MAX_SWAPPER_SELL } from './utils/constants'
+import {
+  COSMO_OSMO_CHANNEL,
+  DEFAULT_SOURCE,
+  MAX_SWAPPER_SELL,
+  OSMO_COSMO_CHANNEL
+} from './utils/constants'
 import {
   getRateInfo,
   performIbcTransfer,
@@ -120,10 +130,19 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     //convert amount to base
     const amountBaseSell = String(bnOrZero(sellAmount).dp(0))
 
+    const osmosisAdapter = this.deps.adapterManager.get(osmosisChainId) as
+      | osmosis.ChainAdapter
+      | undefined
+
+    if (!osmosisAdapter) throw new Error('Failed to get Osmosis adapter')
+
+    const feeData = await osmosisAdapter.getFeeData({})
+    const fee = feeData.average.txFee
+
     return {
       buyAmount,
       buyAsset,
-      feeData: { fee: FEE, tradeFee },
+      feeData: { fee, tradeFee },
       rate,
       receiveAddress: '',
       sellAmount: amountBaseSell,
@@ -147,9 +166,18 @@ export class OsmosisSwapper implements Swapper<ChainId> {
 
     const { minimum, maximum } = await this.getMinMax(input)
 
+    const osmosisAdapter = this.deps.adapterManager.get(osmosisChainId) as
+      | osmosis.ChainAdapter
+      | undefined
+
+    if (!osmosisAdapter) throw new Error('Failed to get Osmosis adapter')
+
+    const feeData = await osmosisAdapter.getFeeData({})
+    const fee = feeData.average.txFee
+
     return {
       buyAsset,
-      feeData: { fee: FEE, tradeFee },
+      feeData: { fee, tradeFee },
       maximum,
       minimum,
       sellAssetAccountNumber: 0,
@@ -165,8 +193,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
   async executeTrade({ trade, wallet }: ExecuteTradeInput<ChainId>): Promise<TradeResult> {
     const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, receiveAddress } = trade
 
-    const pair = sellAsset.symbol + '_' + buyAsset.symbol
-    const isFromOsmo = pair === 'OSMO_ATOM'
+    const isFromOsmo = sellAsset.assetId === osmosisAssetId
     const sellAssetDenom = symbolDenomMapping[sellAsset.symbol as keyof SymbolDenomMapping]
     const buyAssetDenom = symbolDenomMapping[buyAsset.symbol as keyof SymbolDenomMapping]
     let ibcSellAmount
@@ -180,6 +207,8 @@ export class OsmosisSwapper implements Swapper<ChainId> {
 
     if (cosmosAdapter && osmosisAdapter) {
       let sellAddress
+      const feeData = await osmosisAdapter.getFeeData({})
+      const gas = feeData.average.chainSpecific.gasLimit
 
       if (!isFromOsmo) {
         const sellBip44Params = cosmosAdapter.buildBIP44Params({
@@ -196,15 +225,21 @@ export class OsmosisSwapper implements Swapper<ChainId> {
           amount: String(sellAmount)
         }
 
+        const responseAccount = await cosmosAdapter.getAccount(sellAddress)
+        const accountNumber = responseAccount.chainSpecific.accountNumber || '0'
+        const sequence = responseAccount.chainSpecific.sequence || '0'
+
         const { tradeId } = await performIbcTransfer(
           transfer,
           cosmosAdapter,
           wallet,
-          this.deps.cosmosUrl,
           this.deps.osmoUrl,
           'uatom',
-          'channel-141',
-          '0'
+          COSMO_OSMO_CHANNEL,
+          '0',
+          accountNumber,
+          sequence,
+          gas
         )
 
         // wait till confirmed
@@ -220,32 +255,31 @@ export class OsmosisSwapper implements Swapper<ChainId> {
 
         if (!sellAddress) throw Error('Failed to get osmoAddress!')
       } else {
-        throw Error('Pair not supported! ' + pair)
+        throw Error('Pair not supported! ' + sellAsset.symbol + '_' + buyAsset.symbol)
       }
+
       const osmoAddress = isFromOsmo ? sellAddress : receiveAddress
-      const accountUrl = `${this.deps.osmoUrl}/auth/accounts/${osmoAddress}`
-      const responseAccount = await (async () => {
-        try {
-          return axios.get(accountUrl)
-        } catch (e) {
-          throw new Error(`Failed to get account: ${e}`)
-        }
-      })()
-      const accountNumber = responseAccount.data.result.value.account_number || 0
-      const sequence = responseAccount.data.result.value.sequence || 0
+      const responseAccount = await osmosisAdapter.getAccount(osmoAddress)
 
-      const osmoAddressNList = bip32ToAddressNList("m/44'/118'/0'/0/0")
+      const accountNumber = responseAccount.chainSpecific.accountNumber || '0'
+      const sequence = responseAccount.chainSpecific.sequence || '0'
 
-      const tx1 = {
+      const bip44Params = osmosisAdapter.buildBIP44Params({
+        accountNumber: Number(accountNumber)
+      })
+      const path = toPath(bip44Params)
+      const osmoAddressNList = bip32ToAddressNList(path)
+
+      const tx = {
         memo: '',
         fee: {
           amount: [
             {
-              amount: FEE.toString(),
+              amount: trade.feeData.fee.toString(),
               denom: 'uosmo'
             }
           ],
-          gas: GAS
+          gas
         },
         signatures: null,
         msg: [
@@ -271,7 +305,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
 
       const signTxInput = {
         txToSign: {
-          tx: tx1,
+          tx,
           addressNList: osmoAddressNList,
           chain_id: 'osmosis-1',
           account_number: accountNumber,
@@ -281,10 +315,10 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       }
 
       const signed = await osmosisAdapter.signTransaction(signTxInput)
-      const txid1 = await osmosisAdapter.broadcastTransaction(signed)
+      const tradeId = await osmosisAdapter.broadcastTransaction(signed)
 
       if (isFromOsmo) {
-        const pollResult = await pollForComplete(txid1, this.deps.osmoUrl)
+        const pollResult = await pollForComplete(tradeId, this.deps.osmoUrl)
         if (pollResult !== 'success') throw new Error('osmo swap failed')
 
         const amount = await pollForAtomChannelBalance(sellAddress, this.deps.osmoUrl)
@@ -294,19 +328,25 @@ export class OsmosisSwapper implements Swapper<ChainId> {
           amount: String(amount)
         }
 
+        const ibcResponseAccount = await osmosisAdapter.getAccount(sellAddress)
+        const ibcAccountNumber = ibcResponseAccount.chainSpecific.accountNumber || '0'
+        const ibcSequence = ibcResponseAccount.chainSpecific.sequence || '0'
+
         await performIbcTransfer(
           transfer,
           osmosisAdapter,
           wallet,
-          this.deps.osmoUrl,
           this.deps.cosmosUrl,
           buyAssetDenom,
-          'channel-0',
-          FEE
+          OSMO_COSMO_CHANNEL,
+          trade.feeData.fee,
+          ibcAccountNumber,
+          ibcSequence,
+          gas
         )
       }
 
-      return { tradeId: txid1 || 'error' }
+      return { tradeId: tradeId || 'error' }
     } else {
       throw new SwapError('[executeTrade]: unsupported trade', {
         code: SwapErrorTypes.SIGN_AND_BROADCAST_FAILED,
