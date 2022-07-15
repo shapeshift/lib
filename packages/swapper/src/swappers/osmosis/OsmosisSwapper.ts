@@ -193,7 +193,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         const transfer = {
           sender: sellAddress,
           receiver: receiveAddress,
-          amount: String(sellAmount)
+          amount: sellAmount
         }
 
         const { tradeId } = await performIbcTransfer(
