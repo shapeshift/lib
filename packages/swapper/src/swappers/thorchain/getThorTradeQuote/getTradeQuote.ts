@@ -31,7 +31,6 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
     buyAsset,
     sellAmount,
     sellAssetAccountNumber,
-    buyAssetAccountNumber,
     wallet,
     chainId,
     receiveAddress
@@ -80,7 +79,6 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       buyAsset,
       sellAsset,
       sellAssetAccountNumber,
-      buyAssetAccountNumber,
       minimum
     }
 

@@ -111,7 +111,6 @@ const expectedTradeWethToFox: Trade<KnownChainIds.EthereumMainnet> = {
   buyAsset: FOX,
   sellAsset: WETH,
   sellAssetAccountNumber: 0,
-  buyAssetAccountNumber: 0,
   receiveAddress: 'address11'
 }
 
@@ -132,7 +131,6 @@ const expectedTradeQuoteWbtcToWethWithApprovalFee: Trade<KnownChainIds.EthereumM
   buyAsset: WETH,
   sellAsset: WBTC,
   sellAssetAccountNumber: 0,
-  buyAssetAccountNumber: 0,
   receiveAddress: 'address11'
 }
 

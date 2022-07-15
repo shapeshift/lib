@@ -8,7 +8,7 @@ import { bn, bnOrZero } from '../../utils/bignumber'
 import { GAS, OSMOSIS_PRECISION } from './constants'
 import { IbcTransferInput, PoolInfo } from './types'
 
-export interface IsymbolDenomMapping {
+export interface SymbolDenomMapping {
   OSMO: string
   ATOM: string
   USDC: string
@@ -96,8 +96,8 @@ export const pollForAtomChannelBalance = async (
 }
 
 const findPool = async (sellAssetSymbol: string, buyAssetSymbol: string, osmoUrl: string) => {
-  const sellAssetDenom = symbolDenomMapping[sellAssetSymbol as keyof IsymbolDenomMapping]
-  const buyAssetDenom = symbolDenomMapping[buyAssetSymbol as keyof IsymbolDenomMapping]
+  const sellAssetDenom = symbolDenomMapping[sellAssetSymbol as keyof SymbolDenomMapping]
+  const buyAssetDenom = symbolDenomMapping[buyAssetSymbol as keyof SymbolDenomMapping]
 
   const poolsUrl = osmoUrl + '/osmosis/gamm/v1beta1/pools?pagination.limit=1000'
 

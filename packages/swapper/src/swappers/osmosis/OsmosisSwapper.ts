@@ -24,10 +24,10 @@ import { bn, bnOrZero } from '../utils/bignumber'
 import { DEFAULT_SOURCE, FEE, GAS, MAX_SWAPPER_SELL } from './utils/constants'
 import {
   getRateInfo,
-  IsymbolDenomMapping,
   performIbcTransfer,
   pollForAtomChannelBalance,
   pollForComplete,
+  SymbolDenomMapping,
   symbolDenomMapping
 } from './utils/helpers'
 import { OsmoSwapperDeps } from './utils/types'
@@ -131,7 +131,6 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       sellAmount: amountBaseSellString,
       sellAsset,
       sellAssetAccountNumber: 0,
-      buyAssetAccountNumber: 0,
       sources: [{ name: 'Osmosis', proportion: '100' }]
     }
   }
@@ -166,12 +165,12 @@ export class OsmosisSwapper implements Swapper<ChainId> {
   }
 
   async executeTrade({ trade, wallet }: ExecuteTradeInput<ChainId>): Promise<TradeResult> {
-    const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber } = trade
+    const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, receiveAddress } = trade
 
     const pair = sellAsset.symbol + '_' + buyAsset.symbol
     const isFromOsmo = pair === 'OSMO_ATOM'
-    const sellAssetDenom = symbolDenomMapping[sellAsset.symbol as keyof IsymbolDenomMapping]
-    const buyAssetDenom = symbolDenomMapping[buyAsset.symbol as keyof IsymbolDenomMapping]
+    const sellAssetDenom = symbolDenomMapping[sellAsset.symbol as keyof SymbolDenomMapping]
+    const buyAssetDenom = symbolDenomMapping[buyAsset.symbol as keyof SymbolDenomMapping]
     let ibcSellAmount
 
     const osmosisAdapter = this.deps.adapterManager.get(osmosisChainId) as
@@ -183,25 +182,19 @@ export class OsmosisSwapper implements Swapper<ChainId> {
 
     if (cosmosAdapter && osmosisAdapter) {
       let sellAddress
-      let buyAddress
 
       if (!isFromOsmo) {
-        const buyBip44Params = osmosisAdapter.buildBIP44Params({
-          accountNumber: Number(buyAssetAccountNumber)
-        })
         const sellBip44Params = cosmosAdapter.buildBIP44Params({
           accountNumber: Number(sellAssetAccountNumber)
         })
 
-        buyAddress = await osmosisAdapter.getAddress({ wallet, bip44Params: buyBip44Params })
         sellAddress = await cosmosAdapter.getAddress({ wallet, bip44Params: sellBip44Params })
 
-        if (!buyAddress) throw Error('Failed to get osmoAddress!')
         if (!sellAddress) throw Error('Failed to get atomAddress!')
 
         const transfer = {
           sender: sellAddress,
-          receiver: buyAddress,
+          receiver: receiveAddress,
           amount: String(sellAmount)
         }
 
@@ -220,24 +213,18 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         const pollResult = await pollForComplete(tradeId, this.deps.cosmosUrl)
         if (pollResult !== 'success') throw new Error('ibc transfer failed')
 
-        ibcSellAmount = await pollForAtomChannelBalance(buyAddress, this.deps.osmoUrl)
+        ibcSellAmount = await pollForAtomChannelBalance(receiveAddress, this.deps.osmoUrl)
       } else if (isFromOsmo) {
-        const buyBip44Params = cosmosAdapter.buildBIP44Params({
-          accountNumber: Number(buyAssetAccountNumber)
-        })
         const sellBip44Params = osmosisAdapter.buildBIP44Params({
           accountNumber: Number(sellAssetAccountNumber)
         })
-
-        buyAddress = await cosmosAdapter.getAddress({ wallet, bip44Params: buyBip44Params })
         sellAddress = await osmosisAdapter.getAddress({ wallet, bip44Params: sellBip44Params })
 
-        if (!buyAddress) throw Error('Failed to get cosmosAddress!')
         if (!sellAddress) throw Error('Failed to get osmoAddress!')
       } else {
         throw Error('Pair not supported! ' + pair)
       }
-      const osmoAddress = isFromOsmo ? sellAddress : buyAddress
+      const osmoAddress = isFromOsmo ? sellAddress : receiveAddress
       const accountUrl = `${this.deps.osmoUrl}/auth/accounts/${osmoAddress}`
       const responseAccount = await (async () => {
         try {
@@ -305,7 +292,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         const amount = await pollForAtomChannelBalance(sellAddress, this.deps.osmoUrl)
         const transfer = {
           sender: sellAddress,
-          receiver: buyAddress,
+          receiver: receiveAddress,
           amount: String(amount)
         }
 
