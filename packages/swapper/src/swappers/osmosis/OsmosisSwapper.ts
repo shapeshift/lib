@@ -1,6 +1,7 @@
 import {
   AssetId,
   ChainId,
+  CHAIN_REFERENCE,
   cosmosChainId,
   osmosisAssetId,
   osmosisChainId
