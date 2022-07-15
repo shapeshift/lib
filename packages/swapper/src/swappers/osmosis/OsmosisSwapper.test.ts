@@ -2,7 +2,7 @@ import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 
 import { OsmosisSwapper } from './OsmosisSwapper'
 
-describe('ThorchainSwapper', () => {
+describe('OsmosisSwapper', () => {
   const swapper = new OsmosisSwapper({
     adapterManager: <ChainAdapterManager>{},
     osmoUrl: 'http://mock-osmo-url',
