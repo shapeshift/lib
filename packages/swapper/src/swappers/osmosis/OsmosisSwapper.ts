@@ -273,7 +273,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         txToSign: {
           tx: tx1,
           addressNList: osmoAddressNList,
-          chain_id: 'osmosis-1',
+          chain_id: CHAIN_REFERENCE.OsmosisMainnet,
           account_number: accountNumber,
           sequence
         },
