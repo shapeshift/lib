@@ -54,8 +54,8 @@ export class OsmosisSwapper implements Swapper<ChainId> {
 
   async getUsdRate(input: Pick<Asset, 'symbol' | 'assetId'>): Promise<string> {
     const { symbol } = input
-    const sellAssetSymbol = symbol
 
+    const sellAssetSymbol = symbol
     const buyAssetSymbol = 'USDC'
     const sellAmount = '1'
     const { rate: osmoRate } = await getRateInfo(
@@ -156,7 +156,6 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       maximum,
       minimum,
       sellAssetAccountNumber: 0,
-      buyAssetAccountNumber: 0,
       rate,
       sellAsset,
       sellAmount,
@@ -167,7 +166,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
   }
 
   async executeTrade({ trade, wallet }: ExecuteTradeInput<ChainId>): Promise<TradeResult> {
-    const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, buyAssetAccountNumber } = trade
+    const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber } = trade
 
     const pair = sellAsset.symbol + '_' + buyAsset.symbol
     const isFromOsmo = pair === 'OSMO_ATOM'

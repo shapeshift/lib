@@ -93,8 +93,7 @@ const expectedTradeQuoteWethToFox: TradeQuote<KnownChainIds.EthereumMainnet> = {
   allowanceContract: '0xc92e8bdf79f0507f65a392b0ab4667716bfe0110',
   buyAsset: FOX,
   sellAsset: WETH,
-  sellAssetAccountNumber: 0,
-  buyAssetAccountNumber: 0
+  sellAssetAccountNumber: 0
 }
 
 const defaultDeps: CowSwapperDeps = {
@@ -113,7 +112,6 @@ describe('getCowTradeQuote', () => {
       sellAmount: '11111',
       sendMax: true,
       sellAssetAccountNumber: 1,
-      buyAssetAccountNumber: 1,
       wallet: <HDWallet>{},
       receiveAddress: ''
     }
@@ -143,7 +141,6 @@ describe('getCowTradeQuote', () => {
       sellAmount: '1000000000000000000',
       sendMax: true,
       sellAssetAccountNumber: 0,
-      buyAssetAccountNumber: 0,
       wallet: <HDWallet>{},
       receiveAddress: ''
     }

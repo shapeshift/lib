@@ -32,7 +32,6 @@ export async function getCowSwapTradeQuote(
       buyAsset,
       sellAmount,
       sellAssetAccountNumber,
-      buyAssetAccountNumber,
       wallet
     } = input
     const { adapter, feeAsset, web3 } = deps
@@ -153,8 +152,7 @@ export async function getCowSwapTradeQuote(
       allowanceContract: COW_SWAP_VAULT_RELAYER_ADDRESS,
       buyAsset,
       sellAsset,
-      sellAssetAccountNumber,
-      buyAssetAccountNumber
+      sellAssetAccountNumber
     }
   } catch (e) {
     if (e instanceof SwapError) throw e

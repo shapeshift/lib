@@ -31,7 +31,6 @@ export async function cowBuildTrade(
       buyAsset,
       sellAmount,
       sellAssetAccountNumber,
-      buyAssetAccountNumber,
       wallet
     } = input
     const { adapter, feeAsset, web3 } = deps
@@ -136,7 +135,6 @@ export async function cowBuildTrade(
       buyAsset,
       sellAsset,
       sellAssetAccountNumber,
-      buyAssetAccountNumber,
       receiveAddress
     }
 

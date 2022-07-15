@@ -59,7 +59,6 @@ type CommonTradeInput = {
   sellAmount: string
   sendMax: boolean
   sellAssetAccountNumber: number
-  buyAssetAccountNumber: number
   wallet: HDWallet
   receiveAddress: string
 }
@@ -105,7 +104,6 @@ interface TradeBase<C extends ChainId> {
   buyAsset: Asset
   sellAsset: Asset
   sellAssetAccountNumber: number
-  buyAssetAccountNumber: number
 }
 
 export interface TradeQuote<C extends ChainId> extends TradeBase<C> {
