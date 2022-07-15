@@ -65,7 +65,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       this.deps.osmoUrl
     )
 
-    if (sellAssetSymbol != 'OSMO') {
+    if (sellAssetSymbol !== 'OSMO') {
       const { rate } = await getRateInfo(sellAssetSymbol, 'OSMO', sellAmount, this.deps.osmoUrl)
       return bnOrZero(rate).times(osmoRate).toString()
     }
