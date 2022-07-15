@@ -1,17 +1,5 @@
-import {
-  ASSET_REFERENCE,
-  AssetId,
-  ethAssetId,
-  ethChainId,
-  fromAssetId,
-  fromChainId
-} from '@shapeshiftoss/caip'
-import {
-  bip32ToAddressNList,
-  ETHSignTx,
-  ETHWallet,
-  supportsEthSwitchChain
-} from '@shapeshiftoss/hdwallet-core'
+import { ASSET_REFERENCE, AssetId, ethAssetId, ethChainId, fromAssetId } from '@shapeshiftoss/caip'
+import { bip32ToAddressNList, ETHSignTx } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import axios from 'axios'
@@ -20,7 +8,6 @@ import { numberToHex } from 'web3-utils'
 
 import { ErrorHandler } from '../../error/ErrorHandler'
 import {
-  BuildSendTxInput,
   FeeDataEstimate,
   GasFeeDataEstimate,
   GetFeeDataInput,
@@ -65,78 +52,6 @@ export class ChainAdapter extends EvmBaseAdapter<KnownChainIds.EthereumMainnet> 
 
   getFeeAssetId(): AssetId {
     return this.assetId
-  }
-
-  async buildSendTransaction(tx: BuildSendTxInput<KnownChainIds.EthereumMainnet>): Promise<{
-    txToSign: ETHSignTx
-  }> {
-    try {
-      const { to, wallet, bip44Params = ChainAdapter.defaultBIP44Params, sendMax = false } = tx
-      // If there is a mismatch between the current wallet's EVM chain ID and the adapter's chainId?
-      // Switch the chain on wallet before building/sending the Tx
-      if (supportsEthSwitchChain(wallet)) {
-        const walletEvmChainId = await (wallet as ETHWallet).ethGetChainId?.()
-        const adapterEvmChainId = fromChainId(this.chainId).chainReference
-        if (!bnOrZero(walletEvmChainId).isEqualTo(adapterEvmChainId)) {
-          await (wallet as ETHWallet).ethSwitchChain?.(bnOrZero(adapterEvmChainId).toNumber())
-        }
-      }
-      const { erc20ContractAddress, gasPrice, gasLimit, maxFeePerGas, maxPriorityFeePerGas } =
-        tx.chainSpecific
-
-      if (!tx.to) throw new Error('EthereumChainAdapter: to is required')
-      if (!tx.value) throw new Error('EthereumChainAdapter: value is required')
-
-      const destAddress = erc20ContractAddress ?? to
-
-      const from = await this.getAddress({ bip44Params, wallet })
-      const account = await this.getAccount(from)
-
-      const isErc20Send = !!erc20ContractAddress
-
-      if (sendMax) {
-        if (isErc20Send) {
-          const erc20Balance = account?.chainSpecific?.tokens?.find((token) => {
-            return fromAssetId(token.assetId).assetReference === erc20ContractAddress.toLowerCase()
-          })?.balance
-          if (!erc20Balance) throw new Error('no balance')
-          tx.value = erc20Balance
-        } else {
-          if (bnOrZero(account.balance).isZero()) throw new Error('no balance')
-
-          // (The type system guarantees that either maxFeePerGas or gasPrice will be undefined, but not both)
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          const fee = bnOrZero((maxFeePerGas ?? gasPrice)!).times(bnOrZero(gasLimit))
-          tx.value = bnOrZero(account.balance).minus(fee).toString()
-        }
-      }
-      const data = await getErc20Data(to, tx?.value, erc20ContractAddress)
-
-      const fees = ((): Fees => {
-        if (maxFeePerGas && maxPriorityFeePerGas) {
-          return {
-            maxFeePerGas: numberToHex(maxFeePerGas),
-            maxPriorityFeePerGas: numberToHex(maxPriorityFeePerGas)
-          }
-        }
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return { gasPrice: numberToHex(tx.chainSpecific.gasPrice!) }
-      })()
-
-      const txToSign: ETHSignTx = {
-        addressNList: bip32ToAddressNList(toPath(bip44Params)),
-        value: numberToHex(isErc20Send ? '0' : tx?.value),
-        to: destAddress,
-        chainId: 1,
-        data,
-        nonce: numberToHex(account.chainSpecific.nonce),
-        gasLimit: numberToHex(gasLimit),
-        ...fees
-      }
-      return { txToSign }
-    } catch (err) {
-      return ErrorHandler(err)
-    }
   }
 
   async buildCustomTx(tx: BuildCustomTxInput): Promise<{
