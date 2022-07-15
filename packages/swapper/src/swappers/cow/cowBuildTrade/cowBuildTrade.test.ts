@@ -156,7 +156,8 @@ describe('cowBuildTrade', () => {
       sendMax: true,
       sellAssetAccountNumber: 1,
       buyAssetAccountNumber: 2,
-      wallet: <HDWallet>{}
+      wallet: <HDWallet>{},
+      receiveAddress: ''
     }
 
     await expect(cowBuildTrade(defaultDeps, tradeInput)).rejects.toThrow(
@@ -183,7 +184,8 @@ describe('cowBuildTrade', () => {
       sendMax: true,
       sellAssetAccountNumber: 0,
       buyAssetAccountNumber: 1,
-      wallet: <HDWallet>{}
+      wallet: <HDWallet>{},
+      receiveAddress: ''
     }
 
     ;(cowService.post as jest.Mock<unknown>).mockReturnValue(
@@ -230,7 +232,8 @@ describe('cowBuildTrade', () => {
       sendMax: true,
       sellAssetAccountNumber: 0,
       buyAssetAccountNumber: 1,
-      wallet: <HDWallet>{}
+      wallet: <HDWallet>{},
+      receiveAddress: ''
     }
 
     ;(cowService.post as jest.Mock<unknown>).mockReturnValue(
