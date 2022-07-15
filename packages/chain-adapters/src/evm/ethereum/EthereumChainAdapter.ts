@@ -1,5 +1,17 @@
-import { ASSET_REFERENCE, AssetId, ethAssetId, ethChainId, fromAssetId } from '@shapeshiftoss/caip'
-import { bip32ToAddressNList, ETHSignTx } from '@shapeshiftoss/hdwallet-core'
+import {
+  ASSET_REFERENCE,
+  AssetId,
+  ethAssetId,
+  ethChainId,
+  fromAssetId,
+  fromChainId
+} from '@shapeshiftoss/caip'
+import {
+  bip32ToAddressNList,
+  ETHSignTx,
+  ETHWallet,
+  supportsEthSwitchChain
+} from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import axios from 'axios'
@@ -60,6 +72,15 @@ export class ChainAdapter extends EvmBaseAdapter<KnownChainIds.EthereumMainnet> 
   }> {
     try {
       const { to, wallet, bip44Params = ChainAdapter.defaultBIP44Params, sendMax = false } = tx
+      // If there is a mismatch between the current wallet's EVM chain ID and the adapter's chainId?
+      // Switch the chain on wallet before building/sending the Tx
+      if (supportsEthSwitchChain(wallet)) {
+        const walletEvmChainId = await (wallet as ETHWallet).ethGetChainId?.()
+        const adapterEvmChainId = fromChainId(this.chainId).chainReference
+        if (!bnOrZero(walletEvmChainId).isEqualTo(adapterEvmChainId)) {
+          await (wallet as ETHWallet).ethSwitchChain?.(bnOrZero(adapterEvmChainId).toNumber())
+        }
+      }
       const { erc20ContractAddress, gasPrice, gasLimit, maxFeePerGas, maxPriorityFeePerGas } =
         tx.chainSpecific
 
@@ -106,7 +127,7 @@ export class ChainAdapter extends EvmBaseAdapter<KnownChainIds.EthereumMainnet> 
         addressNList: bip32ToAddressNList(toPath(bip44Params)),
         value: numberToHex(isErc20Send ? '0' : tx?.value),
         to: destAddress,
-        chainId: 1, // TODO: implement for multiple chains
+        chainId: 1,
         data,
         nonce: numberToHex(account.chainSpecific.nonce),
         gasLimit: numberToHex(gasLimit),
@@ -142,7 +163,7 @@ export class ChainAdapter extends EvmBaseAdapter<KnownChainIds.EthereumMainnet> 
         addressNList: bip32ToAddressNList(toPath(bip44Params)),
         value: tx.value,
         to: tx.to,
-        chainId: 1, // TODO: implement for multiple chains
+        chainId: 1,
         data: tx.data,
         nonce: numberToHex(account.chainSpecific.nonce),
         gasLimit: numberToHex(tx.gasLimit),
