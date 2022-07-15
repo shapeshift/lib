@@ -75,7 +75,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       this.deps.osmoUrl
     )
 
-    if (sellAssetSymbol != 'OSMO') {
+    if (sellAssetSymbol !== 'OSMO') {
       const { rate } = await getRateInfo(sellAssetSymbol, 'OSMO', sellAmount, this.deps.osmoUrl)
       return bnOrZero(rate).times(osmoRate).toString()
     }
@@ -222,7 +222,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         const transfer = {
           sender: sellAddress,
           receiver: receiveAddress,
-          amount: String(sellAmount)
+          amount: sellAmount
         }
 
         const responseAccount = await cosmosAdapter.getAccount(sellAddress)
@@ -307,7 +307,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         txToSign: {
           tx,
           addressNList: osmoAddressNList,
-          chain_id: 'osmosis-1',
+          chain_id: CHAIN_REFERENCE.OsmosisMainnet,
           account_number: accountNumber,
           sequence
         },
@@ -325,7 +325,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         const transfer = {
           sender: sellAddress,
           receiver: receiveAddress,
-          amount: String(amount)
+          amount: amount
         }
 
         const ibcResponseAccount = await osmosisAdapter.getAccount(sellAddress)
