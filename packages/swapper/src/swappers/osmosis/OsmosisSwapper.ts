@@ -1,7 +1,7 @@
 import {
   AssetId,
-  ChainId,
   CHAIN_REFERENCE,
+  ChainId,
   cosmosChainId,
   osmosisAssetId,
   osmosisChainId
@@ -326,7 +326,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         const transfer = {
           sender: sellAddress,
           receiver: receiveAddress,
-          amount: amount
+          amount
         }
 
         const ibcResponseAccount = await osmosisAdapter.getAccount(sellAddress)
