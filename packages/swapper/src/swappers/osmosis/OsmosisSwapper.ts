@@ -118,9 +118,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     )
 
     //convert amount to base
-    let amountBaseSell: number = parseFloat(sellAmount)
-    amountBaseSell = parseInt(String(amountBaseSell))
-    const amountBaseSellString = amountBaseSell.toString()
+    const amountBaseSell = String(bnOrZero(sellAmount).dp(0))
 
     return {
       buyAmount,
@@ -128,7 +126,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       feeData: { fee: FEE, tradeFee },
       rate,
       receiveAddress: '',
-      sellAmount: amountBaseSellString,
+      sellAmount: amountBaseSell,
       sellAsset,
       sellAssetAccountNumber: 0,
       sources: [{ name: 'Osmosis', proportion: '100' }]
