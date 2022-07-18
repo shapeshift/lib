@@ -1,6 +1,7 @@
 import {
   AssetId,
   ChainId,
+  cosmosAssetId,
   cosmosChainId,
   osmosisAssetId,
   osmosisChainId
@@ -52,7 +53,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
 
   constructor(deps: OsmoSwapperDeps) {
     this.deps = deps
-    this.supportAssets = ['cosmos:cosmoshub-4/slip44:118', 'cosmos:osmosis-1/slip44:118']
+    this.supportAssets = [cosmosAssetId, osmosisAssetId]
   }
 
   async getTradeTxs(tradeResult: TradeResult): Promise<TradeTxs> {
