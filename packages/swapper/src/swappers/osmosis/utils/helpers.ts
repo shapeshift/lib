@@ -195,7 +195,11 @@ export const performIbcTransfer = async (
     }
   })()
   const latestBlock = responseLatestBlock.data.block.header.height
-  const addressNList = bip32ToAddressNList("m/44'/118'/0'/0/0")
+  const bip44Params = adapter.buildBIP44Params({
+    accountNumber: Number(accountNumber)
+  })
+  const path = toPath(bip44Params)
+  const addressNList = bip32ToAddressNList(path)
 
   const tx1 = {
     memo: '',
