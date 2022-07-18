@@ -1,13 +1,11 @@
 import {
   AssetId,
-  CHAIN_REFERENCE,
   ChainId,
   cosmosChainId,
   osmosisAssetId,
   osmosisChainId
 } from '@shapeshiftoss/caip'
-import { cosmos, osmosis, toPath } from '@shapeshiftoss/chain-adapters'
-import { bip32ToAddressNList } from '@shapeshiftoss/hdwallet-core'
+import { cosmos, osmosis } from '@shapeshiftoss/chain-adapters'
 import { Asset } from '@shapeshiftoss/types'
 
 import {
@@ -34,6 +32,7 @@ import {
   OSMO_COSMO_CHANNEL
 } from './utils/constants'
 import {
+  buildTradeTx,
   getRateInfo,
   performIbcTransfer,
   pollForAtomChannelBalance,
@@ -260,60 +259,16 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       }
 
       const osmoAddress = isFromOsmo ? sellAddress : receiveAddress
-      const responseAccount = await osmosisAdapter.getAccount(osmoAddress)
-
-      const accountNumber = responseAccount.chainSpecific.accountNumber || '0'
-      const sequence = responseAccount.chainSpecific.sequence || '0'
-
-      const bip44Params = osmosisAdapter.buildBIP44Params({
-        accountNumber: Number(accountNumber)
-      })
-      const path = toPath(bip44Params)
-      const osmoAddressNList = bip32ToAddressNList(path)
-
-      const tx = {
-        memo: '',
-        fee: {
-          amount: [
-            {
-              amount: trade.feeData.fee.toString(),
-              denom: 'uosmo'
-            }
-          ],
-          gas
-        },
-        signatures: null,
-        msg: [
-          {
-            type: 'osmosis/gamm/swap-exact-amount-in',
-            value: {
-              sender: osmoAddress,
-              routes: [
-                {
-                  poolId: '1', // TODO: should probably get this from the util pool call
-                  tokenOutDenom: buyAssetDenom
-                }
-              ],
-              tokenIn: {
-                denom: sellAssetDenom,
-                amount: ibcSellAmount ?? sellAmount
-              },
-              tokenOutMinAmount: '1' // slippage tolerance
-            }
-          }
-        ]
-      }
-
-      const signTxInput = {
-        txToSign: {
-          tx,
-          addressNList: osmoAddressNList,
-          chain_id: CHAIN_REFERENCE.OsmosisMainnet,
-          account_number: accountNumber,
-          sequence
-        },
+      const signTxInput = await buildTradeTx({
+        osmoAddress,
+        adapter: osmosisAdapter,
+        trade,
+        buyAssetDenom,
+        sellAssetDenom,
+        sellAmount: ibcSellAmount ?? sellAmount,
+        gas,
         wallet
-      }
+      })
 
       const signed = await osmosisAdapter.signTransaction(signTxInput)
       const tradeId = await osmosisAdapter.broadcastTransaction(signed)

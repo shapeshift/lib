@@ -1,9 +1,10 @@
-import { CHAIN_REFERENCE } from '@shapeshiftoss/caip'
+import { CHAIN_REFERENCE, ChainId } from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import axios from 'axios'
 import { find } from 'lodash'
+import { osmosis, toPath } from 'packages/chain-adapters'
 
-import { CosmosSdkSupportedChainAdapters, SwapError, TradeResult } from '../../../index'
+import { CosmosSdkSupportedChainAdapters, SwapError, Trade, TradeResult } from '../../../index'
 import { bn, bnOrZero } from '../../utils/bignumber'
 import { OSMOSIS_PRECISION } from './constants'
 import { IbcTransferInput, PoolInfo } from './types'
@@ -242,5 +243,80 @@ export const performIbcTransfer = async (
 
   return {
     tradeId
+  }
+}
+
+export const buildTradeTx = async ({
+  osmoAddress,
+  adapter,
+  trade,
+  buyAssetDenom,
+  sellAssetDenom,
+  sellAmount,
+  gas,
+  wallet
+}: {
+  osmoAddress: string
+  adapter: osmosis.ChainAdapter
+  trade: Trade<ChainId>
+  buyAssetDenom: string
+  sellAssetDenom: string
+  sellAmount: string
+  gas: string
+  wallet: HDWallet
+}) => {
+  const responseAccount = await adapter.getAccount(osmoAddress)
+
+  const accountNumber = responseAccount.chainSpecific.accountNumber || '0'
+  const sequence = responseAccount.chainSpecific.sequence || '0'
+
+  const bip44Params = adapter.buildBIP44Params({
+    accountNumber: Number(accountNumber)
+  })
+  const path = toPath(bip44Params)
+  const osmoAddressNList = bip32ToAddressNList(path)
+
+  const tx = {
+    memo: '',
+    fee: {
+      amount: [
+        {
+          amount: trade.feeData.fee.toString(),
+          denom: 'uosmo'
+        }
+      ],
+      gas
+    },
+    signatures: null,
+    msg: [
+      {
+        type: 'osmosis/gamm/swap-exact-amount-in',
+        value: {
+          sender: osmoAddress,
+          routes: [
+            {
+              poolId: '1', // TODO: should probably get this from the util pool call
+              tokenOutDenom: buyAssetDenom
+            }
+          ],
+          tokenIn: {
+            denom: sellAssetDenom,
+            amount: sellAmount
+          },
+          tokenOutMinAmount: '1' // slippage tolerance
+        }
+      }
+    ]
+  }
+
+  return {
+    txToSign: {
+      tx,
+      addressNList: osmoAddressNList,
+      chain_id: CHAIN_REFERENCE.OsmosisMainnet,
+      account_number: accountNumber,
+      sequence
+    },
+    wallet
   }
 }
