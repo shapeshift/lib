@@ -59,21 +59,26 @@ export class ChainAdapter
   constructor(args: ChainAdapterArgs) {
     super(args)
 
+    console.info(`DogecoinChainAdapter instantiated for chainId: ${args.chainId}`)
     if (args.chainId && !this.supportedChainIds.includes(args.chainId)) {
       throw new Error(`Dogecoin chainId ${args.chainId} not supported`)
     }
 
+    console.info('DogecoinChainAdapter 2')
     if (args.chainId) {
       this.chainId = args.chainId
     }
 
+    console.info(`DogecoinChainAdapter 3: ${args.coinName}`)
     this.coinName = args.coinName
     this.assetId = toAssetId({
       chainId: this.chainId,
       assetNamespace: 'slip44',
       assetReference: ASSET_REFERENCE.Dogecoin
     })
+    console.info(`DogecoinChainAdapter 4: ${this.assetId}`)
     this.parser = new unchained.bitcoin.TransactionParser({ chainId: this.chainId })
+    console.info(`DogecoinChainAdapter 5`)
   }
 
   getType(): KnownChainIds.DogecoinMainnet {
@@ -81,7 +86,7 @@ export class ChainAdapter
   }
 
   getFeeAssetId(): AssetId {
-    return 'bip122:000000000019d6689c085ae165831e93/slip44:0'
+    return 'bip122:00000000001a91e3dace36e2be3bf030/slip44:3'
   }
 
   getSupportedAccountTypes() {

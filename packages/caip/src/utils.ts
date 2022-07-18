@@ -9,6 +9,8 @@ import {
   CHAIN_REFERENCE,
   cosmosAssetId,
   cosmosChainId,
+  dogeAssetId,
+  dogeChainId,
   ethAssetId,
   ethChainId,
   osmosisAssetId,
@@ -25,6 +27,7 @@ export const parseAssetIdRegExp =
 export const chainIdToAssetId: Record<ChainId, AssetId> = {
   [ethChainId]: ethAssetId,
   [btcChainId]: btcAssetId,
+  [dogeChainId]: dogeAssetId,
   [cosmosChainId]: cosmosAssetId,
   [osmosisChainId]: osmosisAssetId
 }

@@ -113,7 +113,8 @@ enum PublicKeyType {
   // mainnet
   xpub = '0488b21e', // xpub
   ypub = '049d7cb2', // ypub
-  zpub = '04b24746' // zpub
+  zpub = '04b24746', // zpub
+  dgub = '02facafd'
 }
 
 const accountTypeToVersion = {
