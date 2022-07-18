@@ -115,7 +115,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
   }
 
   async buildTrade(args: BuildTradeInput): Promise<Trade<ChainId>> {
-    const { sellAsset, buyAsset, sellAmount } = args
+    const { sellAsset, buyAsset, sellAmount, receiveAddress } = args
 
     if (!sellAmount) {
       throw new Error('sellAmount is required')
@@ -145,7 +145,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       buyAsset,
       feeData: { fee, tradeFee },
       rate,
-      receiveAddress: '',
+      receiveAddress,
       sellAmount: amountBaseSell,
       sellAsset,
       sellAssetAccountNumber: 0,
