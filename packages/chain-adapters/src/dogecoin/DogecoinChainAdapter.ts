@@ -295,13 +295,14 @@ export class ChainAdapter
     const feeData = await this.providers.http.getNetworkFees()
 
     if (!to || !value || !pubkey) throw new Error('to, from, value and xpub are required')
-    if (
-      !feeData.data.fast?.satsPerKiloByte ||
-      !feeData.data.average?.satsPerKiloByte ||
-      !feeData.data.slow?.satsPerKiloByte
-    )
+    if (!feeData.data.average?.satsPerKiloByte || !feeData.data.slow?.satsPerKiloByte) {
       throw new Error('undefined fee')
+    }
 
+    // fast returning -100000000?
+    if (!feeData.data.fast?.satsPerKiloByte || feeData.data.fast?.satsPerKiloByte < 0) {
+      feeData.data.fast = feeData.data.average
+    }
     // We have to round because coinselect library uses sats per byte which cant be decimals
     const fastPerByte = String(Math.round(feeData.data.fast.satsPerKiloByte / 1024))
     const averagePerByte = String(Math.round(feeData.data.average.satsPerKiloByte / 1024))
