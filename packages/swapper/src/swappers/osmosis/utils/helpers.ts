@@ -172,6 +172,7 @@ export const getRateInfo = async (
   return getInfoFromPool(sellAmount, pool, sellAssetIndex, buyAssetIndex)
 }
 
+// TODO: move to chain adapters
 export const performIbcTransfer = async (
   input: IbcTransferInput,
   adapter: CosmosSdkSupportedChainAdapters,
@@ -246,6 +247,7 @@ export const performIbcTransfer = async (
   }
 }
 
+// TODO: move to chain adapters
 export const buildTradeTx = async ({
   osmoAddress,
   adapter,
