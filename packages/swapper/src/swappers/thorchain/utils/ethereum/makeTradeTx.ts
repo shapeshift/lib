@@ -2,6 +2,7 @@ import { fromAssetId } from '@shapeshiftoss/caip'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { Asset, BIP44Params } from '@shapeshiftoss/types'
+import { numberToHex } from 'web3-utils'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { ThorchainSwapperDeps } from '../../types'
@@ -20,7 +21,8 @@ export const makeTradeTx = async ({
   gasPrice,
   slippageTolerance,
   deps,
-  gasLimit
+  gasLimit,
+  tradeFee
 }: {
   wallet: HDWallet
   bip44Params: BIP44Params
@@ -32,6 +34,7 @@ export const makeTradeTx = async ({
   slippageTolerance: string
   deps: ThorchainSwapperDeps
   gasLimit: string
+  tradeFee: string
 } & (
   | {
       gasPrice: string
@@ -51,13 +54,15 @@ export const makeTradeTx = async ({
 
     const isErc20Trade = assetNamespace === 'erc20'
 
+    console.log('calling getThorTxInfo with', destinationAddress)
     const { data, router } = await getThorTxInfo({
       deps,
       sellAsset,
       buyAsset,
       sellAmount,
       slippageTolerance,
-      destinationAddress
+      destinationAddress,
+      tradeFee
     })
 
     return adapter.buildCustomTx({
@@ -73,7 +78,7 @@ export const makeTradeTx = async ({
             maxFeePerGas,
             maxPriorityFeePerGas
           }),
-      value: isErc20Trade ? '0' : sellAmount,
+      value: isErc20Trade ? '0' : numberToHex(sellAmount),
       data
     })
   } catch (e) {

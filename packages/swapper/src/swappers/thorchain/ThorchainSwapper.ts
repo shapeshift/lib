@@ -8,6 +8,7 @@ import {
   ApprovalNeededInput,
   ApprovalNeededOutput,
   ApproveInfiniteInput,
+  BuildTradeInput,
   BuyAssetBySellIdInput,
   ExecuteTradeInput,
   GetTradeQuoteInput,
@@ -20,6 +21,7 @@ import {
   TradeResult,
   TradeTxs
 } from '../../api'
+import { buildTrade } from './buildThorTrade/buildThorTrade'
 import { getThorTradeQuote } from './getThorTradeQuote/getTradeQuote'
 import { thorTradeApprovalNeeded } from './thorTradeApprovalNeeded/thorTradeApprovalNeeded'
 import { thorTradeApproveInfinite } from './thorTradeApproveInfinite/thorTradeApproveInfinite'
@@ -94,8 +96,8 @@ export class ThorchainSwapper implements Swapper<ChainId> {
     return this.supportedAssetIds
   }
 
-  async buildTrade(): Promise<Trade<ChainId>> {
-    throw new Error('ThorchainSwapper: buildTrade unimplemented')
+  async buildTrade(input: BuildTradeInput): Promise<Trade<ChainId>> {
+    return buildTrade({ deps: this.deps, input })
   }
 
   async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ChainId>> {
@@ -124,7 +126,11 @@ export class ThorchainSwapper implements Swapper<ChainId> {
     }
   }
 
-  async getTradeTxs(): Promise<TradeTxs> {
-    throw new Error('ThorchainSwapper: executeTrade unimplemented')
+  async getTradeTxs(tradeResult: TradeResult): Promise<TradeTxs> {
+    // TODO poll midgard for the correct buyTxid
+    return {
+      sellTxid: tradeResult.tradeId,
+      buyTxid: tradeResult.tradeId
+    }
   }
 }
