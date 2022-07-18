@@ -248,15 +248,13 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         if (pollResult !== 'success') throw new Error('ibc transfer failed')
 
         ibcSellAmount = await pollForAtomChannelBalance(receiveAddress, this.deps.osmoUrl)
-      } else if (isFromOsmo) {
+      } else {
         const sellBip44Params = osmosisAdapter.buildBIP44Params({
           accountNumber: Number(sellAssetAccountNumber)
         })
         sellAddress = await osmosisAdapter.getAddress({ wallet, bip44Params: sellBip44Params })
 
         if (!sellAddress) throw Error('Failed to get osmoAddress!')
-      } else {
-        throw Error('Pair not supported! ' + sellAsset.symbol + '_' + buyAsset.symbol)
       }
 
       const osmoAddress = isFromOsmo ? sellAddress : receiveAddress
