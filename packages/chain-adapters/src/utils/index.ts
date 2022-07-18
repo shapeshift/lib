@@ -38,7 +38,13 @@ export const chainIdToChainLabel = (chainId: ChainId): string => {
 
   switch (chainNamespace) {
     case CHAIN_NAMESPACE.Bitcoin:
-      return 'bitcoin'
+      switch (chainReference) {
+        case CHAIN_REFERENCE.DogecoinMainnet:
+        case CHAIN_REFERENCE.DogecoinTestnet:
+          return 'dogecoin'
+        default:
+          return 'bitcoin'
+      }
     case CHAIN_NAMESPACE.Ethereum:
       switch (chainReference) {
         case CHAIN_REFERENCE.EthereumMainnet:

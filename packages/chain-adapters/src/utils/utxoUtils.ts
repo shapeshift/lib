@@ -123,16 +123,28 @@ const accountTypeToVersion = {
   [UtxoAccountType.SegwitNative]: Buffer.from(PublicKeyType.zpub, 'hex')
 }
 
+const convertVersions = {
+  [PublicKeyType.xpub]: true,
+  [PublicKeyType.ypub]: true,
+  [PublicKeyType.zpub]: true,
+  [PublicKeyType.dgub]: false
+}
+
 /**
  * Convert any public key into an xpub, ypub, or zpub based on account type
  *
  * Blockbook generates addresses from a public key based on the version bytes
  * some wallets always return the public key in "xpub" format, so we need to convert those
  *
+ * TODO - why is this here/used? we shouldn't need to convert xpubs afaik
  * @param {string} xpub - the public key provided by the wallet
  * @param {UtxoAccountType} accountType - The desired account type to be encoded into the public key
  */
 export function convertXpubVersion(xpub: string, accountType: UtxoAccountType) {
+  if (!convertVersions[xpub.substring(0, 4) as PublicKeyType]) {
+    return xpub
+  }
+
   const payload = decode(xpub)
   const version = payload.slice(0, 4)
   if (version.compare(accountTypeToVersion[accountType]) !== 0) {
