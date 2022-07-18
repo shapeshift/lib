@@ -89,7 +89,7 @@ type GetBtcTradeQuoteInput = CommonTradeInput & {
 export type GetTradeQuoteInput =
   | GetBtcTradeQuoteInput
   | GetEvmTradeQuoteInput
-  | GetCosmosTradeQuoteInput
+  | GetCosmosSdkTradeQuoteInput
 
 export type BuildTradeInput = GetTradeQuoteInput & {
   buyAssetAccountNumber: number
