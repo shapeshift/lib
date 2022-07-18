@@ -75,7 +75,7 @@ export type GetEvmTradeQuoteInput = CommonTradeInput & {
   chainId: EvmSupportedChainIds
 }
 
-export type GetCosmosTradeQuoteInput = CommonTradeInput & {
+export type GetCosmosSdkTradeQuoteInput = CommonTradeInput & {
   chainId: CosmosSdkSupportedChainIds
 }
 
