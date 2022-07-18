@@ -50,7 +50,11 @@ export const pollForComplete = async (txid: string, baseUrl: string): Promise<st
       if (status === 'success') {
         resolve(status)
       } else if (Date.now() - startTime > timeout) {
-        reject(new Error(`Couldnt find tx ${txid}`))
+        reject(
+          new SwapError(`Couldnt find tx ${txid}`, {
+            code: SwapErrorTypes.RESPONSE_ERROR
+          })
+        )
       } else {
         setTimeout(poll, interval)
       }
@@ -96,7 +100,11 @@ export const pollForAtomChannelBalance = async (
       if (balance > 0) {
         resolve(balance.toString())
       } else if (Date.now() - startTime > timeout) {
-        reject(new Error(`Couldnt find channel balance for ${address}`))
+        reject(
+          new SwapError(`Couldnt find channel balance for ${address}`, {
+            code: SwapErrorTypes.RESPONSE_ERROR
+          })
+        )
       } else {
         setTimeout(poll, interval)
       }

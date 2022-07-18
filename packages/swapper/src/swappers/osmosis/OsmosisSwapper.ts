@@ -101,7 +101,10 @@ export class OsmosisSwapper implements Swapper<ChainId> {
   }
 
   async approveInfinite(): Promise<string> {
-    throw new Error('OsmosisSwapper: approveInfinite unimplemented')
+    throw new SwapError(
+      'OsmosisSwapper: approveInfinite unimplemented',
+      { code: SwapErrorTypes.RESPONSE_ERROR }
+    )
   }
 
   filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): string[] {
@@ -161,7 +164,9 @@ export class OsmosisSwapper implements Swapper<ChainId> {
   async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ChainId>> {
     const { sellAsset, buyAsset, sellAmount } = input
     if (!sellAmount) {
-      throw new Error('sellAmount is required')
+      throw new SwapError('sellAmount is required', {
+        code: SwapErrorTypes.RESPONSE_ERROR
+      })
     }
     const { tradeFee, rate, buyAmount } = await getRateInfo(
       sellAsset.symbol,
