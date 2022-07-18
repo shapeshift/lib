@@ -101,10 +101,9 @@ export class OsmosisSwapper implements Swapper<ChainId> {
   }
 
   async approveInfinite(): Promise<string> {
-    throw new SwapError(
-      'OsmosisSwapper: approveInfinite unimplemented',
-      { code: SwapErrorTypes.RESPONSE_ERROR }
-    )
+    throw new SwapError('OsmosisSwapper: approveInfinite unimplemented', {
+      code: SwapErrorTypes.RESPONSE_ERROR
+    })
   }
 
   filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): string[] {
