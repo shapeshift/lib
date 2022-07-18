@@ -1,8 +1,8 @@
 import { CHAIN_REFERENCE, ChainId } from '@shapeshiftoss/caip'
+import { osmosis, toPath } from '@shapeshiftoss/chain-adapters'
 import { bip32ToAddressNList, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import axios from 'axios'
 import { find } from 'lodash'
-import { osmosis, toPath } from '@shapeshiftoss/chain-adapters'
 
 import { CosmosSdkSupportedChainAdapters, SwapError, Trade, TradeResult } from '../../../index'
 import { bn, bnOrZero } from '../../utils/bignumber'
