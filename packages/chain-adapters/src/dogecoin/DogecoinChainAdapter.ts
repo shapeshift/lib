@@ -81,6 +81,10 @@ export class ChainAdapter
     console.info(`DogecoinChainAdapter 5`)
   }
 
+  getDisplayName() {
+    return 'Dogecoin'
+  }
+
   getType(): KnownChainIds.DogecoinMainnet {
     return KnownChainIds.DogecoinMainnet
   }
@@ -383,7 +387,7 @@ export class ChainAdapter
       addressNList,
       coin: this.coinName,
       scriptType: accountTypeToScriptType[accountType],
-      showDisplay: Boolean(showOnDevice)
+      showDisplay: showOnDevice
     })
     if (!btcAddress) throw new Error('DogecoinChainAdapter: no btcAddress available from wallet')
     return btcAddress
