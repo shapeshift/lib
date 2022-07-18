@@ -123,12 +123,7 @@ const accountTypeToVersion = {
   [UtxoAccountType.SegwitNative]: Buffer.from(PublicKeyType.zpub, 'hex')
 }
 
-const convertVersions = {
-  [PublicKeyType.xpub]: true,
-  [PublicKeyType.ypub]: true,
-  [PublicKeyType.zpub]: true,
-  [PublicKeyType.dgub]: false
-}
+const convertVersions = ['xpub', 'ypub', 'zpub']
 
 /**
  * Convert any public key into an xpub, ypub, or zpub based on account type
@@ -141,7 +136,7 @@ const convertVersions = {
  * @param {UtxoAccountType} accountType - The desired account type to be encoded into the public key
  */
 export function convertXpubVersion(xpub: string, accountType: UtxoAccountType) {
-  if (!convertVersions[xpub.substring(0, 4) as PublicKeyType]) {
+  if (!convertVersions.includes(xpub.substring(0, 4))) {
     return xpub
   }
 
