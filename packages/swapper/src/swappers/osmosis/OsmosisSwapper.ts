@@ -16,8 +16,6 @@ import {
   ExecuteTradeInput,
   GetTradeQuoteInput,
   MinMaxOutput,
-  SwapError,
-  SwapErrorTypes,
   Swapper,
   SwapperType,
   Trade,
@@ -206,107 +204,104 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       | cosmos.ChainAdapter
       | undefined
 
-    if (cosmosAdapter && osmosisAdapter) {
-      let sellAddress
-      const feeData = await osmosisAdapter.getFeeData({})
-      const gas = feeData.average.chainSpecific.gasLimit
-
-      if (!isFromOsmo) {
-        const sellBip44Params = cosmosAdapter.buildBIP44Params({
-          accountNumber: Number(sellAssetAccountNumber)
-        })
-
-        sellAddress = await cosmosAdapter.getAddress({ wallet, bip44Params: sellBip44Params })
-
-        if (!sellAddress) throw Error('Failed to get atomAddress!')
-
-        const transfer = {
-          sender: sellAddress,
-          receiver: receiveAddress,
-          amount: sellAmount
-        }
-
-        const responseAccount = await cosmosAdapter.getAccount(sellAddress)
-        const accountNumber = responseAccount.chainSpecific.accountNumber || '0'
-        const sequence = responseAccount.chainSpecific.sequence || '0'
-
-        const { tradeId } = await performIbcTransfer(
-          transfer,
-          cosmosAdapter,
-          wallet,
-          this.deps.osmoUrl,
-          'uatom',
-          COSMO_OSMO_CHANNEL,
-          '0',
-          accountNumber,
-          sequence,
-          gas
-        )
-
-        // wait till confirmed
-        const pollResult = await pollForComplete(tradeId, this.deps.cosmosUrl)
-        if (pollResult !== 'success') throw new Error('ibc transfer failed')
-
-        ibcSellAmount = await pollForAtomChannelBalance(receiveAddress, this.deps.osmoUrl)
-      } else {
-        const sellBip44Params = osmosisAdapter.buildBIP44Params({
-          accountNumber: Number(sellAssetAccountNumber)
-        })
-        sellAddress = await osmosisAdapter.getAddress({ wallet, bip44Params: sellBip44Params })
-
-        if (!sellAddress) throw Error('Failed to get osmoAddress!')
-      }
-
-      const osmoAddress = isFromOsmo ? sellAddress : receiveAddress
-      const signTxInput = await buildTradeTx({
-        osmoAddress,
-        adapter: osmosisAdapter,
-        trade,
-        buyAssetDenom,
-        sellAssetDenom,
-        sellAmount: ibcSellAmount ?? sellAmount,
-        gas,
-        wallet
-      })
-
-      const signed = await osmosisAdapter.signTransaction(signTxInput)
-      const tradeId = await osmosisAdapter.broadcastTransaction(signed)
-
-      if (isFromOsmo) {
-        const pollResult = await pollForComplete(tradeId, this.deps.osmoUrl)
-        if (pollResult !== 'success') throw new Error('osmo swap failed')
-
-        const amount = await pollForAtomChannelBalance(sellAddress, this.deps.osmoUrl)
-        const transfer = {
-          sender: sellAddress,
-          receiver: receiveAddress,
-          amount
-        }
-
-        const ibcResponseAccount = await osmosisAdapter.getAccount(sellAddress)
-        const ibcAccountNumber = ibcResponseAccount.chainSpecific.accountNumber || '0'
-        const ibcSequence = ibcResponseAccount.chainSpecific.sequence || '0'
-
-        await performIbcTransfer(
-          transfer,
-          osmosisAdapter,
-          wallet,
-          this.deps.cosmosUrl,
-          buyAssetDenom,
-          OSMO_COSMO_CHANNEL,
-          trade.feeData.fee,
-          ibcAccountNumber,
-          ibcSequence,
-          gas
-        )
-      }
-
-      return { tradeId: tradeId || 'error' }
-    } else {
-      throw new SwapError('[executeTrade]: unsupported trade', {
-        code: SwapErrorTypes.SIGN_AND_BROADCAST_FAILED,
-        fn: 'executeTrade'
-      })
+    if (!cosmosAdapter || !osmosisAdapter) {
+      throw new Error('Failed to get adapters')
     }
+
+    let sellAddress
+    const feeData = await osmosisAdapter.getFeeData({})
+    const gas = feeData.average.chainSpecific.gasLimit
+
+    if (!isFromOsmo) {
+      const sellBip44Params = cosmosAdapter.buildBIP44Params({
+        accountNumber: Number(sellAssetAccountNumber)
+      })
+
+      sellAddress = await cosmosAdapter.getAddress({ wallet, bip44Params: sellBip44Params })
+
+      if (!sellAddress) throw Error('Failed to get atomAddress!')
+
+      const transfer = {
+        sender: sellAddress,
+        receiver: receiveAddress,
+        amount: sellAmount
+      }
+
+      const responseAccount = await cosmosAdapter.getAccount(sellAddress)
+      const accountNumber = responseAccount.chainSpecific.accountNumber || '0'
+      const sequence = responseAccount.chainSpecific.sequence || '0'
+
+      const { tradeId } = await performIbcTransfer(
+        transfer,
+        cosmosAdapter,
+        wallet,
+        this.deps.osmoUrl,
+        'uatom',
+        COSMO_OSMO_CHANNEL,
+        '0',
+        accountNumber,
+        sequence,
+        gas
+      )
+
+      // wait till confirmed
+      const pollResult = await pollForComplete(tradeId, this.deps.cosmosUrl)
+      if (pollResult !== 'success') throw new Error('ibc transfer failed')
+
+      ibcSellAmount = await pollForAtomChannelBalance(receiveAddress, this.deps.osmoUrl)
+    } else {
+      const sellBip44Params = osmosisAdapter.buildBIP44Params({
+        accountNumber: Number(sellAssetAccountNumber)
+      })
+      sellAddress = await osmosisAdapter.getAddress({ wallet, bip44Params: sellBip44Params })
+
+      if (!sellAddress) throw Error('Failed to get osmoAddress!')
+    }
+
+    const osmoAddress = isFromOsmo ? sellAddress : receiveAddress
+    const signTxInput = await buildTradeTx({
+      osmoAddress,
+      adapter: osmosisAdapter,
+      trade,
+      buyAssetDenom,
+      sellAssetDenom,
+      sellAmount: ibcSellAmount ?? sellAmount,
+      gas,
+      wallet
+    })
+
+    const signed = await osmosisAdapter.signTransaction(signTxInput)
+    const tradeId = await osmosisAdapter.broadcastTransaction(signed)
+
+    if (isFromOsmo) {
+      const pollResult = await pollForComplete(tradeId, this.deps.osmoUrl)
+      if (pollResult !== 'success') throw new Error('osmo swap failed')
+
+      const amount = await pollForAtomChannelBalance(sellAddress, this.deps.osmoUrl)
+      const transfer = {
+        sender: sellAddress,
+        receiver: receiveAddress,
+        amount
+      }
+
+      const ibcResponseAccount = await osmosisAdapter.getAccount(sellAddress)
+      const ibcAccountNumber = ibcResponseAccount.chainSpecific.accountNumber || '0'
+      const ibcSequence = ibcResponseAccount.chainSpecific.sequence || '0'
+
+      await performIbcTransfer(
+        transfer,
+        osmosisAdapter,
+        wallet,
+        this.deps.cosmosUrl,
+        buyAssetDenom,
+        OSMO_COSMO_CHANNEL,
+        trade.feeData.fee,
+        ibcAccountNumber,
+        ibcSequence,
+        gas
+      )
+    }
+
+    return { tradeId: tradeId || 'error' }
   }
 }
