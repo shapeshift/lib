@@ -1,3 +1,32 @@
+# [@shapeshiftoss/swapper-v8.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v8.4.0...@shapeshiftoss/swapper-v8.5.0) (2022-07-18)
+
+
+### Features
+
+* **swapper:** osmosis swapper ([#865](https://github.com/shapeshift/lib/issues/865)) ([585dec6](https://github.com/shapeshift/lib/commit/585dec6d49b4a9756a7a344986468dc16776454f))
+
+# [@shapeshiftoss/swapper-v8.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v8.3.1...@shapeshiftoss/swapper-v8.4.0) (2022-07-15)
+
+
+### Features
+
+* **swapper:** use hardcoded gas limit in grantAllowance ([#874](https://github.com/shapeshift/lib/issues/874)) ([b311d5b](https://github.com/shapeshift/lib/commit/b311d5be9268ec47d2f6aebbc158827b385b406f))
+
+# [@shapeshiftoss/swapper-v8.3.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v8.3.0...@shapeshiftoss/swapper-v8.3.1) (2022-07-15)
+
+
+### Bug Fixes
+
+* trade fee and minimum ([#881](https://github.com/shapeshift/lib/issues/881)) ([b94d41d](https://github.com/shapeshift/lib/commit/b94d41d45032d0280dda201b0e04840ff35540ab))
+* **swapper:** fix filterBuyAssetsBySellAssetId for thorchain ([#879](https://github.com/shapeshift/lib/issues/879)) ([83cdead](https://github.com/shapeshift/lib/commit/83cdead80c2ab03bb154a240e4d03227f9be5246))
+
+# [@shapeshiftoss/swapper-v8.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v8.2.0...@shapeshiftoss/swapper-v8.3.0) (2022-07-14)
+
+
+### Features
+
+* thor btcquote ([#840](https://github.com/shapeshift/lib/issues/840)) ([b127077](https://github.com/shapeshift/lib/commit/b1270772b5e7ff9442761d1afeffc028e7e23105))
+
 # [@shapeshiftoss/swapper-v8.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v8.1.0...@shapeshiftoss/swapper-v8.2.0) (2022-07-11)
 
 

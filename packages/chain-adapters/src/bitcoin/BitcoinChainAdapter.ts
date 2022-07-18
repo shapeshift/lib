@@ -83,6 +83,10 @@ export class ChainAdapter
     this.parser = new unchained.bitcoin.TransactionParser({ chainId: this.chainId })
   }
 
+  getDisplayName() {
+    return 'Bitcoin'
+  }
+
   getType(): KnownChainIds.BitcoinMainnet {
     return KnownChainIds.BitcoinMainnet
   }
@@ -383,7 +387,7 @@ export class ChainAdapter
       addressNList,
       coin: this.coinName,
       scriptType: accountTypeToScriptType[accountType],
-      showDisplay: Boolean(showOnDevice)
+      showDisplay: showOnDevice
     })
     if (!btcAddress) throw new Error('BitcoinChainAdapter: no btcAddress available from wallet')
     return btcAddress

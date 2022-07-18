@@ -2860,6 +2860,16 @@
     rxjs "^6.4.0"
     type-assertions "^1.1.0"
 
+"@shapeshiftoss/hdwallet-core@1.26.0", "@shapeshiftoss/hdwallet-core@^1.26.0":
+  version "1.26.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/hdwallet-core/-/hdwallet-core-1.26.0.tgz#c42e526fc4c5d4aea1c8df676a415df763bf18bd"
+  integrity sha512-CIm1eJVSOREsi0KNyBibAlEooAIEfLem7Bufe6I/6awNoUr8UdyjcrJni4A1hA+oWl9pgILCwNCzuH9W/N74SA==
+  dependencies:
+    eventemitter2 "^5.0.1"
+    lodash "^4.17.21"
+    rxjs "^6.4.0"
+    type-assertions "^1.1.0"
+
 "@shapeshiftoss/hdwallet-core@latest":
   version "1.19.0"
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/hdwallet-core/-/hdwallet-core-1.19.0.tgz#7eeae9be9f90fff53887611c6ac02c334781baa3"
@@ -2878,6 +2888,33 @@
     "@shapeshiftoss/bitcoinjs-lib" "5.2.0-shapeshift.2"
     "@shapeshiftoss/fiosdk" "1.2.1-shapeshift.6"
     "@shapeshiftoss/hdwallet-core" "1.23.0"
+    "@shapeshiftoss/proto-tx-builder" "^0.2.1"
+    "@zxing/text-encoding" "^0.9.0"
+    bchaddrjs "^0.4.9"
+    bignumber.js "^9.0.1"
+    bip32 "^2.0.5"
+    bip39 "^3.0.2"
+    bnb-javascript-sdk-nobroadcast "^2.16.14"
+    crypto-js "^4.0.0"
+    ethers "5.6.5"
+    eventemitter2 "^5.0.1"
+    funtypes "^3.0.1"
+    lodash "^4.17.21"
+    node-fetch "^2.6.1"
+    p-lazy "^3.1.0"
+    scrypt-js "^3.0.1"
+    tendermint-tx-builder "^1.0.9"
+    tiny-secp256k1 "^1.1.6"
+    web-encoding "^1.1.0"
+
+"@shapeshiftoss/hdwallet-native@^1.26.0":
+  version "1.26.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/hdwallet-native/-/hdwallet-native-1.26.0.tgz#a6e85751feccb2c528a6e5570a7482b0958f4adc"
+  integrity sha512-PXR2W5RX6MsHLgj6BiN7M0aSJN59p1OXUyXqwjlQXm3frNDLd03WTdtjA1fiwRg43C812DoWLSUZ3k8LE5aGxg==
+  dependencies:
+    "@shapeshiftoss/bitcoinjs-lib" "5.2.0-shapeshift.2"
+    "@shapeshiftoss/fiosdk" "1.2.1-shapeshift.6"
+    "@shapeshiftoss/hdwallet-core" "1.26.0"
     "@shapeshiftoss/proto-tx-builder" "^0.2.1"
     "@zxing/text-encoding" "^0.9.0"
     bchaddrjs "^0.4.9"
@@ -9888,6 +9925,25 @@ object.values@^1.1.5:
     call-bind "^1.0.2"
     define-properties "^1.1.3"
     es-abstract "^1.19.1"
+
+oboe@2.1.5:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/oboe/-/oboe-2.1.5.tgz#5554284c543a2266d7a38f17e073821fbde393cd"
+  integrity sha512-zRFWiF+FoicxEs3jNI/WYUrVEgA7DeET/InK0XQuudGHRg8iIob3cNPrJTKaz4004uaA9Pbe+Dwa8iluhjLZWA==
+  dependencies:
+    http-https "^1.0.0"
+
+omggif@^1.0.5:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/omggif/-/omggif-1.0.10.tgz#ddaaf90d4a42f532e9e7cb3a95ecdd47f17c7b19"
+  integrity sha512-LMJTtvgc/nugXj0Vcrrs68Mn2D1r0zf630VNtqtpI1FEO7e+O9FP4gqs9AcnBaSEeoHIPm28u6qgPR0oyEpGSw==
+
+on-finished@2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/on-finished/-/on-finished-2.4.1.tgz#58c8c44116e54845ad57f14ab10b03533184ac3f"
+  integrity sha512-oVlzkg3ENAhCk2zdv7IJwd/QUD4z2RxRwpkcGY8psCVcCYZNq4wYnVWALHM+brtuJjePWiYF/ClmuDr8Ch5+kg==
+  dependencies:
+    ee-first "1.1.1"
 
 oboe@2.1.5:
   version "2.1.5"

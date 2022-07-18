@@ -1,3 +1,24 @@
+# [@shapeshiftoss/chain-adapters-v7.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v7.6.0...@shapeshiftoss/chain-adapters-v7.7.0) (2022-07-15)
+
+
+### Features
+
+* switch EVM chains on buildSendTransaction ([#883](https://github.com/shapeshift/lib/issues/883)) ([360fac0](https://github.com/shapeshift/lib/commit/360fac0d4c384ad1e382566b5f532ae1ec62aa72))
+
+# [@shapeshiftoss/chain-adapters-v7.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v7.5.1...@shapeshiftoss/chain-adapters-v7.6.0) (2022-07-14)
+
+
+### Features
+
+* chain adapters getDisplayName ([#880](https://github.com/shapeshift/lib/issues/880)) ([bb7e0be](https://github.com/shapeshift/lib/commit/bb7e0be324e39ba53eb9887068cfd8e08876f695))
+
+# [@shapeshiftoss/chain-adapters-v7.5.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v7.5.0...@shapeshiftoss/chain-adapters-v7.5.1) (2022-07-14)
+
+
+### Bug Fixes
+
+* **chain-adapters:** fix showOnDevice in EvmBaseAdapter.ts ([#877](https://github.com/shapeshift/lib/issues/877)) ([dd5ef8b](https://github.com/shapeshift/lib/commit/dd5ef8be414a37a60649841e6b82f97b04df8e2f))
+
 # [@shapeshiftoss/chain-adapters-v7.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v7.4.2...@shapeshiftoss/chain-adapters-v7.5.0) (2022-07-11)
 
 
