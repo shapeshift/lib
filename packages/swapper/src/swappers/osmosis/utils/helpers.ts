@@ -4,7 +4,13 @@ import { bip32ToAddressNList, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import axios from 'axios'
 import { find } from 'lodash'
 
-import { CosmosSdkSupportedChainAdapters, SwapError, Trade, TradeResult } from '../../../index'
+import {
+  CosmosSdkSupportedChainAdapters,
+  SwapError,
+  SwapErrorTypes,
+  Trade,
+  TradeResult
+} from '../../../index'
 import { bn, bnOrZero } from '../../utils/bignumber'
 import { OSMOSIS_PRECISION } from './constants'
 import { IbcTransferInput, PoolInfo } from './types'
@@ -58,7 +64,9 @@ export const getAtomChannelBalance = async (address: string, osmoUrl: string) =>
     try {
       return axios.get(`${osmoUrl}/bank/balances/${address}`)
     } catch (e) {
-      throw new Error(`Failed to get osmo balance: ${e}`)
+      throw new SwapError('failed to get balance', {
+        code: SwapErrorTypes.RESPONSE_ERROR
+      })
     }
   })()
   let toAtomChannelBalance = 0
@@ -107,7 +115,9 @@ const findPool = async (sellAssetSymbol: string, buyAssetSymbol: string, osmoUrl
     try {
       return axios.get(poolsUrl)
     } catch (e) {
-      throw new Error(`Failed to get pool: ${e}`)
+      throw new SwapError('failed to get pool', {
+        code: SwapErrorTypes.POOL_NOT_FOUND
+      })
     }
   })()
   const foundPool = find(poolsResponse.data.pools, (pool) => {
@@ -119,7 +129,10 @@ const findPool = async (sellAssetSymbol: string, buyAssetSymbol: string, osmoUrl
     )
   })
 
-  if (!foundPool) throw new SwapError('Couldnt find pool')
+  if (!foundPool)
+    throw new SwapError('could not find pool', {
+      code: SwapErrorTypes.POOL_NOT_FOUND
+    })
 
   const { sellAssetIndex, buyAssetIndex } = (() => {
     if (foundPool.poolAssets[0].token.denom === sellAssetDenom) {
@@ -191,7 +204,9 @@ export const performIbcTransfer = async (
     try {
       return axios.get(`${blockBaseUrl}/blocks/latest`)
     } catch (e) {
-      throw new Error(`Failed to get latest block: ${e}`)
+      throw new SwapError('failed to get latest block', {
+        code: SwapErrorTypes.RESPONSE_ERROR
+      })
     }
   })()
   const latestBlock = responseLatestBlock.data.block.header.height
