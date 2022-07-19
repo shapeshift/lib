@@ -1,3 +1,4 @@
+import { btcChainId, ChainId, dogeChainId } from '@shapeshiftoss/caip'
 import { BTCInputScriptType, BTCOutputScriptType } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, UtxoAccountType } from '@shapeshiftoss/types'
 import { decode, encode } from 'bs58check'
@@ -30,39 +31,54 @@ export const toBtcOutputScriptType = (x: BTCInputScriptType) => {
  * @returns object with BIP44Params and scriptType or undefined
  */
 export const utxoAccountParams = (
+  chainId: ChainId,
   accountType: UtxoAccountType,
   accountNumber: number
 ): { bip44Params: BIP44Params; scriptType: BTCInputScriptType } => {
-  switch (accountType) {
-    case UtxoAccountType.SegwitNative:
-      return {
-        scriptType: BTCInputScriptType.SpendWitness,
-        bip44Params: {
-          purpose: 84,
-          coinType: 0,
-          accountNumber
-        }
-      }
-    case UtxoAccountType.SegwitP2sh:
-      return {
-        scriptType: BTCInputScriptType.SpendP2SHWitness,
-        bip44Params: {
-          purpose: 49,
-          coinType: 0,
-          accountNumber
-        }
-      }
-    case UtxoAccountType.P2pkh:
+  switch (chainId) {
+    case dogeChainId:
       return {
         scriptType: BTCInputScriptType.SpendAddress,
         bip44Params: {
           purpose: 44,
-          coinType: 0,
+          coinType: 3,
           accountNumber
         }
       }
+    case btcChainId:
+      switch (accountType) {
+        case UtxoAccountType.SegwitNative:
+          return {
+            scriptType: BTCInputScriptType.SpendWitness,
+            bip44Params: {
+              purpose: 84,
+              coinType: 0,
+              accountNumber
+            }
+          }
+        case UtxoAccountType.SegwitP2sh:
+          return {
+            scriptType: BTCInputScriptType.SpendP2SHWitness,
+            bip44Params: {
+              purpose: 49,
+              coinType: 0,
+              accountNumber
+            }
+          }
+        case UtxoAccountType.P2pkh:
+          return {
+            scriptType: BTCInputScriptType.SpendAddress,
+            bip44Params: {
+              purpose: 44,
+              coinType: 0,
+              accountNumber
+            }
+          }
+        default:
+          throw new TypeError('utxoAccountType')
+      }
     default:
-      throw new TypeError('utxoAccountType')
+      throw new TypeError(`not a supported utxo chain ${chainId}`)
   }
 }
 
