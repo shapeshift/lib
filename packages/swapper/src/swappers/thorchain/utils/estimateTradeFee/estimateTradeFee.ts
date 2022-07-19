@@ -19,8 +19,12 @@ const ethEstimate = (gasRate: string) =>
 const erc20Estimate = (gasRate: string) =>
   bnOrZero(gasRate).times(70996).times(3).times(bn(10).exponentiatedBy(gweiGasPrecision)).toString()
 
-// BTC utxo transactions from thorchain are approx 303 bytes long
-const btcEstimate = (gasRate: string) => bnOrZero(gasRate).times(303).times(3).toString()
+// Official docs on fees are incorrect
+// https://discord.com/channels/838986635756044328/997675038675316776/998552541170253834
+// This is still not "perfect" and tends to overestimate by a randomish amount
+// TODO figure out if its possible to accurately estimate the outbound fee
+const btcTxSize = 1000
+const btcEstimate = (gasRate: string) => bnOrZero(gasRate).times(btcTxSize).times(2).toString()
 
 export const estimateTradeFee = async (
   deps: ThorchainSwapperDeps,
@@ -67,6 +71,8 @@ export const estimateTradeFee = async (
 
   switch (chainId) {
     case 'bip122:000000000019d6689c085ae165831e93':
+      console.log('gasRate is', gasRate)
+      console.log('feeAssetRatio is', feeAssetRatio)
       return bnOrZero(btcEstimate(gasRate)).times(feeAssetRatio).dp(0).toString()
     case 'eip155:1':
       switch (assetNamespace) {
