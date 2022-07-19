@@ -234,6 +234,7 @@ export const performIbcTransfer = async (
   const accountNumber = responseAccount.data.result.value.account_number
   const sequence = responseAccount.data.result.value.sequence
 
+
   const tx1 = {
     memo: '',
     fee: {
