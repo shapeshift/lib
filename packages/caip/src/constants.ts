@@ -35,7 +35,6 @@ export const CHAIN_REFERENCE = {
   BitcoinMainnet: '000000000019d6689c085ae165831e93',
   BitcoinTestnet: '000000000933ea01ad0ee984209779ba',
   DogecoinMainnet: '00000000001a91e3dace36e2be3bf030',
-  DogecoinTestnet: 'abc123',
   CosmosHubMainnet: 'cosmoshub-4',
   CosmosHubVega: 'vega-testnet',
   OsmosisMainnet: 'osmosis-1',
@@ -61,7 +60,6 @@ export const VALID_CHAIN_IDS: ValidChainMap = Object.freeze({
     CHAIN_REFERENCE.OsmosisMainnet,
     CHAIN_REFERENCE.OsmosisTestnet
   ]
-  // [CHAIN_NAMESPACE.Bitcoin]: [CHAIN_REFERENCE.DogecoinMainnet, CHAIN_REFERENCE.DogecoinTestnet]
 })
 
 type ValidAssetNamespace = {

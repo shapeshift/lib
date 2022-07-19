@@ -55,9 +55,7 @@ const getTypeGuardAssertion = <T>(
   message: string
 ) => {
   return (value: T | string | undefined): asserts value is T => {
-    if ((value && !typeGuard(value)) || !value) {
-      throw new Error(`${message}: ${value}`)
-    }
+    if ((value && !typeGuard(value)) || !value) throw new Error(`${message}: ${value}`)
   }
 }
 
