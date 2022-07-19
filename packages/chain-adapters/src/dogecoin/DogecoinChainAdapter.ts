@@ -367,7 +367,11 @@ export class ChainAdapter
       throw new Error('DogecoinChainAdapter: wallet does not support btc')
     }
 
-    const { isChange } = bip44Params
+    const { coinType, isChange } = bip44Params
+    if (coinType !== 3) {
+      throw new Error(`DogecoinChainAdapter: invalid coinType ${coinType}, expected 3`)
+    }
+
     let { index } = bip44Params
 
     // If an index is not passed in, we want to use the newest unused change/receive indices
@@ -380,7 +384,7 @@ export class ChainAdapter
     }
 
     const path = toPath({ ...bip44Params, index })
-    const addressNList = path ? bip32ToAddressNList(path) : bip32ToAddressNList("m/84'/0'/0'/0/0")
+    const addressNList = path ? bip32ToAddressNList(path) : bip32ToAddressNList("m/44'/3'/0'/0/0")
     const btcAddress = await wallet.btcGetAddress({
       addressNList,
       coin: this.coinName,
