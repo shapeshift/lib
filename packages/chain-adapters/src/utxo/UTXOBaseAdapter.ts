@@ -25,6 +25,8 @@ import {
   accountTypeToScriptType,
   chainIdToChainLabel,
   convertXpubVersion,
+  getStatus,
+  getType,
   toPath,
   toRootDerivationPath
 } from '../utils'
@@ -81,8 +83,8 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainIds> implements IChainA
   abstract getSupportedAccountTypes(): UtxoAccountType[]
   abstract getDefaultBip44Params(): BIP44Params
   abstract getDefaultAccountType(): UtxoAccountType
+  abstract getTransactionParser(): unchained.bitcoin.TransactionParser
   abstract getFeeAssetId(): AssetId
-  abstract getTxHistory(input: TxHistoryInput): Promise<TxHistoryResponse<T>>
 
   abstract buildBIP44Params(params: Partial<BIP44Params>): BIP44Params
 
@@ -175,6 +177,75 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainIds> implements IChainA
     })
     if (!btcAddress) throw new Error('UTXOBaseAdapter: no address available from wallet')
     return btcAddress
+  }
+
+  async getTxHistory(input: TxHistoryInput): Promise<TxHistoryResponse<T>> {
+    if (!this.accountAddresses[input.pubkey]) {
+      await this.getAccount(input.pubkey)
+    }
+
+    const { data } = await this.providers.http.getTxHistory({
+      pubkey: input.pubkey,
+      pageSize: input.pageSize,
+      cursor: input.cursor
+    })
+
+    const getAddresses = (tx: unchained.bitcoin.BitcoinTx): Array<string> => {
+      const addresses: Array<string> = []
+
+      tx.vin?.forEach((vin) => {
+        if (!vin.addresses) return
+        addresses.push(...vin.addresses)
+      })
+
+      tx.vout?.forEach((vout) => {
+        if (!vout.addresses) return
+        addresses.push(...vout.addresses)
+      })
+
+      return [...new Set(addresses)]
+    }
+
+    const txs = await Promise.all(
+      (data.txs ?? []).map(async (tx) => {
+        const addresses = getAddresses(tx).filter((addr) =>
+          this.accountAddresses[input.pubkey].includes(addr)
+        )
+
+        return await Promise.all(
+          addresses.map(async (addr) => {
+            const parsedTx = await this.getTransactionParser().parse(tx, addr)
+
+            return {
+              address: addr,
+              blockHash: parsedTx.blockHash,
+              blockHeight: parsedTx.blockHeight,
+              blockTime: parsedTx.blockTime,
+              chainId: parsedTx.chainId,
+              chain: this.getType(),
+              confirmations: parsedTx.confirmations,
+              txid: parsedTx.txid,
+              fee: parsedTx.fee,
+              status: getStatus(parsedTx.status),
+              tradeDetails: parsedTx.trade,
+              transfers: parsedTx.transfers.map((transfer) => ({
+                assetId: transfer.assetId,
+                from: transfer.from,
+                to: transfer.to,
+                type: getType(transfer.type),
+                value: transfer.totalValue
+              }))
+            }
+          })
+        )
+      })
+    )
+
+    return {
+      cursor: data.cursor ?? '',
+      pubkey: input.pubkey,
+      transactions: txs.flat()
+    }
   }
 
   async broadcastTransaction(hex: string): Promise<string> {
