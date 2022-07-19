@@ -78,7 +78,7 @@ export const makeTradeTx = async ({
             maxFeePerGas,
             maxPriorityFeePerGas
           }),
-      value: isErc20Trade ? '0' : numberToHex(sellAmount),
+      value: isErc20Trade ? '0x0' : numberToHex(sellAmount),
       data
     })
   } catch (e) {
