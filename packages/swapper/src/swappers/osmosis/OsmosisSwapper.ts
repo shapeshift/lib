@@ -8,7 +8,6 @@ import {
 } from '@shapeshiftoss/caip'
 import { cosmos, osmosis } from '@shapeshiftoss/chain-adapters'
 import { Asset } from '@shapeshiftoss/types'
-
 import {
   ApprovalNeededOutput,
   BuildTradeInput,
@@ -246,20 +245,15 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         amount: sellAmount
       }
 
-      const responseAccount = await cosmosAdapter.getAccount(sellAddress)
-      const accountNumber = responseAccount.chainSpecific.accountNumber || '0'
-      const sequence = responseAccount.chainSpecific.sequence || '0'
-
       const { tradeId } = await performIbcTransfer(
         transfer,
         cosmosAdapter,
         wallet,
         this.deps.osmoUrl,
+        this.deps.cosmosUrl,
         'uatom',
         COSMO_OSMO_CHANNEL,
         '0',
-        accountNumber,
-        sequence,
         gas
       )
 
@@ -284,8 +278,10 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     }
 
     const osmoAddress = isFromOsmo ? sellAddress : receiveAddress
+    const accountUrl = `${this.deps.osmoUrl}/auth/accounts/${osmoAddress}`
     const signTxInput = await buildTradeTx({
       osmoAddress,
+      accountUrl,
       adapter: osmosisAdapter,
       trade,
       buyAssetDenom,
@@ -312,20 +308,15 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         amount
       }
 
-      const ibcResponseAccount = await osmosisAdapter.getAccount(sellAddress)
-      const ibcAccountNumber = ibcResponseAccount.chainSpecific.accountNumber || '0'
-      const ibcSequence = ibcResponseAccount.chainSpecific.sequence || '0'
-
       await performIbcTransfer(
         transfer,
         osmosisAdapter,
         wallet,
         this.deps.cosmosUrl,
+        this.deps.osmoUrl,
         buyAssetDenom,
         OSMO_COSMO_CHANNEL,
         trade.feeData.fee,
-        ibcAccountNumber,
-        ibcSequence,
         gas
       )
     }

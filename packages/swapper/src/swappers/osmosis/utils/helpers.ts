@@ -199,11 +199,10 @@ export const performIbcTransfer = async (
   adapter: CosmosSdkSupportedChainAdapters,
   wallet: HDWallet,
   blockBaseUrl: string,
+  accountBaseUrl: string,
   denom: string,
   sourceChannel: string,
   feeAmount: string,
-  accountNumber: string,
-  sequence: string,
   gas: string
 ): Promise<TradeResult> => {
   const { sender, receiver, amount } = input
@@ -219,10 +218,21 @@ export const performIbcTransfer = async (
   })()
   const latestBlock = responseLatestBlock.data.block.header.height
   const bip44Params = adapter.buildBIP44Params({
-    accountNumber: Number(accountNumber)
+    accountNumber: 0 // TODO: use actual account number
   })
   const path = toPath(bip44Params)
   const addressNList = bip32ToAddressNList(path)
+
+  const responseAccount = await (async () => {
+    try {
+      const accountUrl = `${accountBaseUrl}/auth/accounts/${sender}`
+      return axios.get(accountUrl)
+    } catch (e) {
+      throw new Error(`Failed to get account: ${e}`)
+    }
+  })()
+  const accountNumber = responseAccount.data.result.value.account_number
+  const sequence = responseAccount.data.result.value.sequence
 
   const tx1 = {
     memo: '',
@@ -277,6 +287,7 @@ export const performIbcTransfer = async (
 // TODO: move to chain adapters
 export const buildTradeTx = async ({
   osmoAddress,
+  accountUrl,
   adapter,
   trade,
   buyAssetDenom,
@@ -286,6 +297,7 @@ export const buildTradeTx = async ({
   wallet
 }: {
   osmoAddress: string
+  accountUrl: string
   adapter: osmosis.ChainAdapter
   trade: Trade<ChainId>
   buyAssetDenom: string
@@ -294,13 +306,18 @@ export const buildTradeTx = async ({
   gas: string
   wallet: HDWallet
 }) => {
-  const responseAccount = await adapter.getAccount(osmoAddress)
-
-  const accountNumber = responseAccount.chainSpecific.accountNumber || '0'
-  const sequence = responseAccount.chainSpecific.sequence || '0'
+  const responseAccount = await (async () => {
+    try {
+      return axios.get(accountUrl)
+    } catch (e) {
+      throw new Error(`Failed to get account: ${e}`)
+    }
+  })()
+  const accountNumber = responseAccount.data.result.value.account_number || 0
+  const sequence = responseAccount.data.result.value.sequence || 0
 
   const bip44Params = adapter.buildBIP44Params({
-    accountNumber: Number(accountNumber)
+    accountNumber: 0 // TODO: use actual account number
   })
   const path = toPath(bip44Params)
   const osmoAddressNList = bip32ToAddressNList(path)
