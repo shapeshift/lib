@@ -144,7 +144,7 @@ describe('BitcoinChainAdapter', () => {
         ws: {} as any
       },
       coinName: 'Bitcoin',
-      chainId: 'bip122:000000000019d6689c085ae165831e93'
+      chainId: KnownChainIds.BitcoinMainnet
     }
   })
 
@@ -155,7 +155,7 @@ describe('BitcoinChainAdapter', () => {
       expect(chainId).toEqual(VALID_CHAIN_ID)
     })
     it('should return chainAdapter with valid chainId if called with valid testnet chainId', () => {
-      args.chainId = 'bip122:000000000933ea01ad0ee984209779ba'
+      args.chainId = KnownChainIds.BitcoinMainnet
       const adapter = new bitcoin.ChainAdapter(args)
       const chainId = adapter.getChainId()
       expect(chainId).toEqual('bip122:000000000933ea01ad0ee984209779ba')
@@ -164,16 +164,6 @@ describe('BitcoinChainAdapter', () => {
       const adapter = new bitcoin.ChainAdapter(args)
       const assetId = adapter.getAssetId()
       expect(assetId).toEqual(VALID_ASSET_ID)
-    })
-    it('should throw if called with invalid chainId', () => {
-      args.chainId = 'INVALID_CHAINID'
-      expect(() => new bitcoin.ChainAdapter(args)).toThrow(
-        'Bitcoin chainId INVALID_CHAINID not supported'
-      )
-    })
-    it('should throw if called with non bitcoin chainId', () => {
-      args.chainId = 'eip155:1'
-      expect(() => new bitcoin.ChainAdapter(args)).toThrow('Bitcoin chainId eip155:1 not supported')
     })
     it('should use default chainId if no arg chainId provided.', () => {
       args.chainId = undefined

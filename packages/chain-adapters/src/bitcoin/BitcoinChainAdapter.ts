@@ -1,36 +1,12 @@
 import { ASSET_REFERENCE, AssetId, ChainId, toAssetId } from '@shapeshiftoss/caip'
-import {
-  bip32ToAddressNList,
-  BTCOutputAddressType,
-  BTCSignTx,
-  BTCSignTxInput,
-  BTCSignTxOutput,
-  supportsBTC
-} from '@shapeshiftoss/hdwallet-core'
+import { BTCOutputScriptType } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 
 import { ChainAdapter as IChainAdapter } from '../api'
-import { ErrorHandler } from '../error/ErrorHandler'
-import {
-  BuildSendTxInput,
-  ChainTxType,
-  FeeDataEstimate,
-  FeeDataKey,
-  GetFeeDataInput,
-  SignTxInput,
-  SubscribeError,
-  SubscribeTxsInput,
-  Transaction
-} from '../types'
-import {
-  accountTypeToOutputScriptType,
-  accountTypeToScriptType,
-  getStatus,
-  getType,
-  toRootDerivationPath
-} from '../utils'
-import { ChainAdapterArgs, UTXOBaseAdapter } from '../utxo/UTXOBaseAdapter'
+import { FeeDataEstimate, FeeDataKey, GetFeeDataInput } from '../types'
+import { accountTypeToOutputScriptType } from '../utils'
+import { ChainAdapterArgs, UTXOBaseAdapter, UtxoChainId } from '../utxo/UTXOBaseAdapter'
 import { utxoSelect } from '../utxo/utxoSelect'
 
 export class ChainAdapter
@@ -50,10 +26,7 @@ export class ChainAdapter
     UtxoAccountType.P2pkh
   ]
 
-  protected readonly supportedChainIds: ChainId[] = [
-    'bip122:000000000019d6689c085ae165831e93',
-    'bip122:000000000933ea01ad0ee984209779ba'
-  ]
+  protected readonly supportedChainIds: UtxoChainId[] = [KnownChainIds.BitcoinMainnet]
 
   protected chainId = this.supportedChainIds[0]
 
@@ -82,6 +55,18 @@ export class ChainAdapter
     })
   }
 
+  getChainId(): ChainId {
+    return KnownChainIds.BitcoinMainnet
+  }
+
+  getAssetId(): AssetId {
+    return 'bip122:000000000019d6689c085ae165831e93/slip44:0'
+  }
+
+  accountTypeToOutputScriptType(accountType: UtxoAccountType): BTCOutputScriptType {
+    return accountTypeToOutputScriptType[accountType]
+  }
+
   getDefaultAccountType(): UtxoAccountType {
     return ChainAdapter.defaultUtxoAccountType
   }
@@ -103,130 +88,15 @@ export class ChainAdapter
   }
 
   getFeeAssetId(): AssetId {
-    return 'bip122:000000000019d6689c085ae165831e93/slip44:0'
+    return this.getAssetId()
   }
 
   getSupportedAccountTypes() {
     return ChainAdapter.supportedAccountTypes
   }
 
-  async buildSendTransaction(tx: BuildSendTxInput<KnownChainIds.BitcoinMainnet>): Promise<{
-    txToSign: ChainTxType<KnownChainIds.BitcoinMainnet>
-  }> {
-    try {
-      const {
-        value,
-        to,
-        wallet,
-        bip44Params = ChainAdapter.defaultBIP44Params,
-        chainSpecific: { satoshiPerByte, accountType, opReturnData },
-        sendMax = false
-      } = tx
-
-      if (!value || !to) {
-        throw new Error('BitcoinChainAdapter: (to and value) are required')
-      }
-
-      const path = toRootDerivationPath(bip44Params)
-      const pubkey = await this.getPublicKey(wallet, bip44Params, accountType)
-      const { data: utxos } = await this.providers.http.getUtxos({
-        pubkey: pubkey.xpub
-      })
-
-      if (!supportsBTC(wallet))
-        throw new Error(
-          'BitcoinChainAdapter: signTransaction wallet does not support signing btc txs'
-        )
-
-      const account = await this.getAccount(pubkey.xpub)
-
-      const coinSelectResult = utxoSelect({
-        utxos,
-        to,
-        satoshiPerByte,
-        sendMax,
-        value,
-        opReturnData
-      })
-
-      if (!coinSelectResult || !coinSelectResult.inputs || !coinSelectResult.outputs) {
-        throw new Error(`BitcoinChainAdapter: coinSelect didn't select coins`)
-      }
-
-      const { inputs, outputs } = coinSelectResult
-
-      const signTxInputs: BTCSignTxInput[] = []
-      for (const input of inputs) {
-        if (!input.path) continue
-        const getTransactionResponse = await this.providers.http.getTransaction({
-          txid: input.txid
-        })
-        const inputTx = getTransactionResponse.data
-
-        signTxInputs.push({
-          addressNList: bip32ToAddressNList(input.path),
-          // https://github.com/shapeshift/hdwallet/issues/362
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          scriptType: accountTypeToScriptType[accountType] as any,
-          amount: String(input.value),
-          vout: input.vout,
-          txid: input.txid,
-          hex: inputTx.hex
-        })
-      }
-
-      const signTxOutputs: BTCSignTxOutput[] = outputs.map((out) => {
-        const amount = String(out.value)
-        if (!out.address) {
-          return {
-            addressType: BTCOutputAddressType.Change,
-            amount,
-            addressNList: bip32ToAddressNList(
-              `${path}/1/${String(account.chainSpecific.nextChangeAddressIndex)}`
-            ),
-            scriptType: accountTypeToOutputScriptType[accountType],
-            isChange: true
-          }
-        } else {
-          return {
-            addressType: BTCOutputAddressType.Spend,
-            amount,
-            address: out.address
-          }
-        }
-      })
-
-      const txToSign: BTCSignTx = {
-        coin: this.coinName,
-        inputs: signTxInputs,
-        outputs: signTxOutputs,
-        opReturnData
-      }
-      return { txToSign }
-    } catch (err) {
-      return ErrorHandler(err)
-    }
-  }
-
   buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
     return { ...ChainAdapter.defaultBIP44Params, ...params }
-  }
-
-  async signTransaction(
-    signTxInput: SignTxInput<ChainTxType<KnownChainIds.BitcoinMainnet>>
-  ): Promise<string> {
-    try {
-      const { txToSign, wallet } = signTxInput
-      if (!supportsBTC(wallet))
-        throw new Error(
-          'BitcoinChainAdapter: signTransaction wallet does not support signing btc txs'
-        )
-      const signedTx = await wallet.btcSignTx(txToSign)
-      if (!signedTx) throw ErrorHandler('BitcoinChainAdapter: error signing tx')
-      return signedTx.serializedTx
-    } catch (err) {
-      return ErrorHandler(err)
-    }
   }
 
   async getFeeData({
@@ -298,66 +168,6 @@ export class ChainAdapter
       }
     }
   }
-
-  async subscribeTxs(
-    input: SubscribeTxsInput,
-    onMessage: (msg: Transaction<KnownChainIds.BitcoinMainnet>) => void,
-    onError: (err: SubscribeError) => void
-  ): Promise<void> {
-    const {
-      wallet,
-      bip44Params = ChainAdapter.defaultBIP44Params,
-      accountType = ChainAdapter.defaultUtxoAccountType
-    } = input
-
-    const { xpub } = await this.getPublicKey(wallet, bip44Params, accountType)
-    const account = await this.getAccount(xpub)
-    const addresses = (account.chainSpecific.addresses ?? []).map((address) => address.pubkey)
-    const subscriptionId = `${toRootDerivationPath(bip44Params)}/${accountType}`
-
-    await this.providers.ws.subscribeTxs(
-      subscriptionId,
-      { topic: 'txs', addresses },
-      async (msg) => {
-        const tx = await this.parser.parse(msg.data, msg.address)
-
-        onMessage({
-          address: tx.address,
-          blockHash: tx.blockHash,
-          blockHeight: tx.blockHeight,
-          blockTime: tx.blockTime,
-          chainId: tx.chainId,
-          chain: KnownChainIds.BitcoinMainnet,
-          confirmations: tx.confirmations,
-          fee: tx.fee,
-          status: getStatus(tx.status),
-          tradeDetails: tx.trade,
-          transfers: tx.transfers.map((transfer) => ({
-            assetId: transfer.assetId,
-            from: transfer.from,
-            to: transfer.to,
-            type: getType(transfer.type),
-            value: transfer.totalValue
-          })),
-          txid: tx.txid
-        })
-      },
-      (err) => onError({ message: err.message })
-    )
-  }
-
-  unsubscribeTxs(input?: SubscribeTxsInput): void {
-    if (!input) return this.providers.ws.unsubscribeTxs()
-
-    const {
-      bip44Params = ChainAdapter.defaultBIP44Params,
-      accountType = ChainAdapter.defaultUtxoAccountType
-    } = input
-    const subscriptionId = `${toRootDerivationPath(bip44Params)}/${accountType}`
-
-    this.providers.ws.unsubscribeTxs(subscriptionId, { topic: 'txs', addresses: [] })
-  }
-
   closeTxs(): void {
     this.providers.ws.close('txs')
   }
