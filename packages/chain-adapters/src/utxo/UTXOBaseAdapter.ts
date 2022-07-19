@@ -1,5 +1,5 @@
 import { AssetId, ChainId } from '@shapeshiftoss/caip'
-import { bip32ToAddressNList, HDWallet, PublicKey } from '@shapeshiftoss/hdwallet-core'
+import { bip32ToAddressNList, HDWallet, PublicKey, supportsBTC } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import WAValidator from 'multicoin-address-validator'
@@ -11,7 +11,6 @@ import {
   BuildSendTxInput,
   ChainTxType,
   FeeDataEstimate,
-  GetAddressInput,
   GetFeeDataInput,
   SignTxInput,
   SubscribeError,
@@ -26,9 +25,11 @@ import {
   accountTypeToScriptType,
   chainIdToChainLabel,
   convertXpubVersion,
+  toPath,
   toRootDerivationPath
 } from '../utils'
 import { bnOrZero } from '../utils/bignumber'
+import { GetAddressInput } from './types'
 
 export type UTXOChainIds = KnownChainIds.BitcoinMainnet | KnownChainIds.DogecoinMainnet // to be extended in the future to include other UTXOs
 
@@ -78,14 +79,14 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainIds> implements IChainA
   abstract closeTxs(): void
   abstract getType(): T
   abstract getSupportedAccountTypes(): UtxoAccountType[]
+  abstract getDefaultBip44Params(): BIP44Params
+  abstract getDefaultAccountType(): UtxoAccountType
   abstract getFeeAssetId(): AssetId
   abstract getTxHistory(input: TxHistoryInput): Promise<TxHistoryResponse<T>>
 
   abstract buildBIP44Params(params: Partial<BIP44Params>): BIP44Params
 
   abstract buildSendTransaction(tx: BuildSendTxInput<T>): Promise<{ txToSign: ChainTxType<T> }>
-
-  abstract getAddress(input: GetAddressInput): Promise<string>
 
   abstract getFeeData(input: Partial<GetFeeDataInput<T>>): Promise<FeeDataEstimate<T>>
 
@@ -133,6 +134,47 @@ export abstract class UTXOBaseAdapter<T extends UTXOChainIds> implements IChainA
     } catch (err) {
       return ErrorHandler(err)
     }
+  }
+
+  async getAddress({
+    wallet,
+    bip44Params,
+    accountType,
+    showOnDevice = false
+  }: GetAddressInput): Promise<string> {
+    if (!supportsBTC(wallet)) {
+      throw new Error('UTXOBaseAdapter: wallet does not support btc')
+    }
+
+    if (!bip44Params) {
+      bip44Params = this.getDefaultBip44Params()
+    }
+
+    if (!accountType) {
+      accountType = this.getDefaultAccountType()
+    }
+
+    let { index } = bip44Params
+
+    // If an index is not passed in, we want to use the newest unused change/receive indices
+    if (index === undefined) {
+      const { xpub } = await this.getPublicKey(wallet, bip44Params, accountType)
+      const account = await this.getAccount(xpub)
+      index = bip44Params.isChange
+        ? account.chainSpecific.nextChangeAddressIndex
+        : account.chainSpecific.nextReceiveAddressIndex
+    }
+
+    const path = toPath({ ...bip44Params, index })
+    const addressNList = bip32ToAddressNList(path)
+    const btcAddress = await wallet.btcGetAddress({
+      addressNList,
+      coin: this.coinName,
+      scriptType: accountTypeToScriptType[accountType],
+      showDisplay: showOnDevice
+    })
+    if (!btcAddress) throw new Error('UTXOBaseAdapter: no address available from wallet')
+    return btcAddress
   }
 
   async broadcastTransaction(hex: string): Promise<string> {

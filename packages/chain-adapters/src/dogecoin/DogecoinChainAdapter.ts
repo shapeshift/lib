@@ -10,7 +10,6 @@ import {
 import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 
-import { bitcoin } from '../'
 import { ChainAdapter as IChainAdapter } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
 import {
@@ -31,7 +30,6 @@ import {
   accountTypeToScriptType,
   getStatus,
   getType,
-  toPath,
   toRootDerivationPath
 } from '../utils'
 import { ChainAdapterArgs, UTXOBaseAdapter } from '../utxo/UTXOBaseAdapter'
@@ -78,6 +76,14 @@ export class ChainAdapter
       chainId: this.chainId,
       assetReference: ASSET_REFERENCE.Dogecoin
     })
+  }
+
+  getDefaultAccountType(): UtxoAccountType {
+    return ChainAdapter.defaultUtxoAccountType
+  }
+
+  getDefaultBip44Params(): BIP44Params {
+    return ChainAdapter.defaultBIP44Params
   }
 
   getDisplayName() {
@@ -355,44 +361,6 @@ export class ChainAdapter
         }
       }
     }
-  }
-
-  async getAddress({
-    wallet,
-    bip44Params = ChainAdapter.defaultBIP44Params,
-    accountType = ChainAdapter.defaultUtxoAccountType,
-    showOnDevice = false
-  }: bitcoin.GetAddressInput): Promise<string> {
-    if (!supportsBTC(wallet)) {
-      throw new Error('DogecoinChainAdapter: wallet does not support btc')
-    }
-
-    const { coinType, isChange } = bip44Params
-    if (coinType !== 3) {
-      throw new Error(`DogecoinChainAdapter: invalid coinType ${coinType}, expected 3`)
-    }
-
-    let { index } = bip44Params
-
-    // If an index is not passed in, we want to use the newest unused change/receive indices
-    if (index === undefined) {
-      const { xpub } = await this.getPublicKey(wallet, bip44Params, accountType)
-      const account = await this.getAccount(xpub)
-      index = isChange
-        ? account.chainSpecific.nextChangeAddressIndex
-        : account.chainSpecific.nextReceiveAddressIndex
-    }
-
-    const path = toPath({ ...bip44Params, index })
-    const addressNList = path ? bip32ToAddressNList(path) : bip32ToAddressNList("m/44'/3'/0'/0/0")
-    const btcAddress = await wallet.btcGetAddress({
-      addressNList,
-      coin: this.coinName,
-      scriptType: accountTypeToScriptType[accountType],
-      showDisplay: showOnDevice
-    })
-    if (!btcAddress) throw new Error('DogecoinChainAdapter: no btcAddress available from wallet')
-    return btcAddress
   }
 
   async subscribeTxs(
