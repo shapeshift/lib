@@ -27,7 +27,6 @@ export class ChainAdapter
 
   constructor(args: ChainAdapterArgs) {
     super(args)
-    console.info('DOgecoinChainAdapter args: ', JSON.stringify(args))
     if (!args.chainId) {
       args.chainId = KnownChainIds.DogecoinMainnet
     }
