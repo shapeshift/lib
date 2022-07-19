@@ -80,7 +80,10 @@ export class ChainAdapter
       assetNamespace: 'slip44',
       assetReference: ASSET_REFERENCE.Bitcoin
     })
-    this.parser = new unchained.bitcoin.TransactionParser({ chainId: this.chainId })
+    this.parser = new unchained.bitcoin.TransactionParser({
+      chainId: this.chainId,
+      assetReference: ASSET_REFERENCE.Bitcoin
+    })
   }
 
   getDisplayName() {
