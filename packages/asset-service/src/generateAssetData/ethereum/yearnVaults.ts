@@ -1,5 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { ethChainId as chainId, toAssetId } from '@shapeshiftoss/caip'
+import { ethereumChainId as chainId, toAssetId } from '@shapeshiftoss/caip'
 import { Asset } from '@shapeshiftoss/types'
 import { Token, Vault } from '@yfi/sdk'
 import { Yearn } from '@yfi/sdk'

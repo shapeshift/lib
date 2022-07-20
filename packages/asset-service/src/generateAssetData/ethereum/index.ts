@@ -1,4 +1,4 @@
-import { ethChainId, toAssetId } from '@shapeshiftoss/caip'
+import { ethereumChainId, toAssetId } from '@shapeshiftoss/caip'
 import { Asset } from '@shapeshiftoss/types'
 import axios from 'axios'
 import chunk from 'lodash/chunk'
@@ -20,11 +20,11 @@ import {
 
 const foxyToken: Asset = {
   assetId: toAssetId({
-    chainId: ethChainId,
+    chainId: ethereumChainId,
     assetNamespace: 'erc20',
     assetReference: '0xDc49108ce5C57bc3408c3A5E95F3d864eC386Ed3'
   }),
-  chainId: ethChainId,
+  chainId: ethereumChainId,
   name: 'FOX Yieldy',
   precision: 18,
   color: '#CE3885',
@@ -38,7 +38,7 @@ const foxyToken: Asset = {
 export const getAssets = async (): Promise<Asset[]> => {
   const [ethTokens, yearnVaults, ironBankTokens, zapperTokens, underlyingTokens, uniV2PoolTokens] =
     await Promise.all([
-      coingecko.getAssets(ethChainId, overrideTokens),
+      coingecko.getAssets(ethereumChainId, overrideTokens),
       getYearnVaults(),
       getIronBankTokens(),
       getZapperTokens(),

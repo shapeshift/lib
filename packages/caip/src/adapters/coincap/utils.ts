@@ -4,11 +4,11 @@ import fs from 'fs'
 import { toAssetId } from '../../assetId/assetId'
 import {
   ASSET_REFERENCE,
-  btcChainId,
+  bitcoinChainId,
   CHAIN_NAMESPACE,
   CHAIN_REFERENCE,
   cosmosChainId,
-  ethChainId,
+  ethereumChainId,
   osmosisChainId
 } from '../../constants'
 import { makeBtcData, makeCosmosHubData, makeOsmosisData } from '../../utils'
@@ -65,8 +65,8 @@ export const parseEthData = (data: CoinCapCoin[]) => {
 
 export const parseData = (d: CoinCapCoin[]) => {
   return {
-    [ethChainId]: parseEthData(d),
-    [btcChainId]: makeBtcData(),
+    [ethereumChainId]: parseEthData(d),
+    [bitcoinChainId]: makeBtcData(),
     [cosmosChainId]: makeCosmosHubData(),
     [osmosisChainId]: makeOsmosisData()
   }

@@ -181,11 +181,11 @@ describe('coingecko market service', () => {
     it('can map coingecko to assetIds', async () => {
       mockedAxios.get.mockResolvedValueOnce({ data: [btc] }).mockResolvedValue({ data: [eth] })
       const result = await coinGeckoMarketService.findAll()
-      const btcAssetId = adapters.coingeckoToAssetId('bitcoin')
-      const ethAssetId = adapters.coingeckoToAssetId('ethereum')
+      const bitcoinAssetId = adapters.coingeckoToAssetId('bitcoin')
+      const etherAssetId = adapters.coingeckoToAssetId('ethereum')
       const [btcKey, ethKey] = Object.keys(result)
-      expect(btcKey).toEqual(btcAssetId)
-      expect(ethKey).toEqual(ethAssetId)
+      expect(btcKey).toEqual(bitcoinAssetId)
+      expect(ethKey).toEqual(etherAssetId)
     })
 
     it('extract correct values for each asset', async () => {
@@ -208,10 +208,10 @@ describe('coingecko market service', () => {
 
       mockedAxios.get.mockResolvedValueOnce({ data: [btc] }).mockResolvedValue({ data: [eth] })
       const result = await coinGeckoMarketService.findAll()
-      const btcAssetId = adapters.coingeckoToAssetId('bitcoin')
-      const ethAssetId = adapters.coingeckoToAssetId('ethereum')
-      expect(result[btcAssetId!]).toEqual(btcResult)
-      expect(result[ethAssetId!]).toEqual(ethResult)
+      const bitcoinAssetId = adapters.coingeckoToAssetId('bitcoin')
+      const etherAssetId = adapters.coingeckoToAssetId('ethereum')
+      expect(result[bitcoinAssetId!]).toEqual(btcResult)
+      expect(result[etherAssetId!]).toEqual(ethResult)
     })
 
     it('extract correct values for fox', async () => {

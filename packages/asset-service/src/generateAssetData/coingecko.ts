@@ -1,4 +1,10 @@
-import { adapters, avalancheChainId, ChainId, ethChainId, toAssetId } from '@shapeshiftoss/caip'
+import {
+  adapters,
+  avalancheChainId,
+  ChainId,
+  ethereumChainId,
+  toAssetId
+} from '@shapeshiftoss/caip'
 import { Asset } from '@shapeshiftoss/types'
 import axios from 'axios'
 import lodash from 'lodash'
@@ -28,7 +34,7 @@ export async function getAssets(
 ): Promise<Asset[]> {
   const { category, explorer, explorerAddressLink, explorerTxLink } = (() => {
     switch (chainId) {
-      case ethChainId:
+      case ethereumChainId:
         return {
           category: adapters.chainIdToCoingeckoAssetPlatform(chainId),
           explorer: ethereum.explorer,

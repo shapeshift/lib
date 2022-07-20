@@ -1,4 +1,4 @@
-import { ethChainId as chainId, toAssetId } from '@shapeshiftoss/caip'
+import { ethereumChainId as chainId, toAssetId } from '@shapeshiftoss/caip'
 import { Asset } from '@shapeshiftoss/types'
 
 import { ethereum } from '../baseAssets'

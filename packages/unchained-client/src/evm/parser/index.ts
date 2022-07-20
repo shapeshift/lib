@@ -1,4 +1,4 @@
-import { AssetId, ChainId, ethChainId, toAssetId } from '@shapeshiftoss/caip'
+import { AssetId, ChainId, ethereumChainId, toAssetId } from '@shapeshiftoss/caip'
 import { BigNumber } from 'bignumber.js'
 import { ethers } from 'ethers'
 
@@ -119,7 +119,7 @@ export class BaseTransactionParser<T extends Tx> {
     tx.tokenTransfers?.forEach((transfer) => {
       // FTX Token (FTT) name and symbol was set backwards on the ERC20 contract (Ethereum Mainnet)
       if (
-        this.chainId === ethChainId &&
+        this.chainId === ethereumChainId &&
         transfer.contract === '0x50D1c9771902476076eCFc8B2A83Ad6b9355a4c9'
       ) {
         transfer.name = transfer.symbol
