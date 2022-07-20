@@ -58,7 +58,7 @@ export class ChainAdapter
   }
 
   getAssetId(): AssetId {
-    return 'bip122:000000000019d6689c085ae165831e93/slip44:0'
+    return this.assetId
   }
 
   accountTypeToOutputScriptType(accountType: UtxoAccountType): BTCOutputScriptType {

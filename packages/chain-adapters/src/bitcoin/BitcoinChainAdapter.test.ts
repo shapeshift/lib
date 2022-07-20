@@ -154,12 +154,6 @@ describe('BitcoinChainAdapter', () => {
       const chainId = adapter.getChainId()
       expect(chainId).toEqual(VALID_CHAIN_ID)
     })
-    it('should return chainAdapter with valid chainId if called with valid testnet chainId', () => {
-      args.chainId = KnownChainIds.BitcoinMainnet
-      const adapter = new bitcoin.ChainAdapter(args)
-      const chainId = adapter.getChainId()
-      expect(chainId).toEqual('bip122:000000000933ea01ad0ee984209779ba')
-    })
     it('should return chainAdapter with Bitcoin assetId', () => {
       const adapter = new bitcoin.ChainAdapter(args)
       const assetId = adapter.getAssetId()
