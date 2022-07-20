@@ -8,6 +8,7 @@ import { ChainAdapter as BitcoinChainAdapter } from './bitcoin/BitcoinChainAdapt
 import { ChainAdapter as CosmosChainAdapter } from './cosmossdk/cosmos'
 import { ChainAdapter as OsmosisChainAdapter } from './cosmossdk/osmosis'
 import { ChainAdapter as DogecoinChainAdapter } from './dogecoin/DogecoinChainAdapter'
+import { ChainAdapter as AvalancheChainAdapter } from './evm/avalanche'
 import { ChainAdapter as EthereumChainAdapter } from './evm/ethereum'
 
 dotenv.config()
@@ -54,6 +55,21 @@ const ethChainAdapter = new EthereumChainAdapter({
   rpcUrl: 'https://mainnet.infura.io/v3/d734c7eebcdf400185d7eb67322a7e57'
 })
 
+const avalancheChainAdapter = new AvalancheChainAdapter({
+  providers: {
+    ws: new unchained.ws.Client<unchained.avalanche.AvalancheTx>(
+      'wss://dev-api.avalanche.shapeshift.com'
+    ),
+    http: new unchained.avalanche.V1Api(
+      new unchained.avalanche.Configuration({
+        basePath: 'https://dev-api.avalanche.shapeshift.com'
+      })
+    )
+  },
+  rpcUrl:
+    'https://avalanche--mainnet--rpc.datahub.figment.io/apikey/14c056a2415b6e0d2b9f55985214f3f1/ext/bc/C/rpc'
+})
+
 const cosmosChainAdapter = new CosmosChainAdapter({
   providers: {
     ws: new unchained.ws.Client<unchained.cosmos.Tx>('wss://dev-api.cosmos.shapeshift.com'),
@@ -82,6 +98,7 @@ const adapters = {
   btc: btcChainAdapter,
   doge: dogeChainAdapter,
   eth: ethChainAdapter,
+  avalanche: avalancheChainAdapter,
   cosmos: cosmosChainAdapter,
   osmo: osmosisChainAdapter
 } as const
@@ -233,6 +250,24 @@ const testEthereum = async (wallet: NativeHDWallet, broadcast = false) => {
 }
 
 // @ts-ignore:nextLine
+const testAvalanche = async () => {
+  const chainAdapter = adapters.avalanche
+
+  const feeData = await chainAdapter.getFeeData({
+    to: '0xc2090e54B0Db09a1515f203aEA6Ed62A115548eC',
+    value: '200000000000000',
+    chainSpecific: {
+      from: '0xc2090e54b0db09a1515f203aea6ed62a115548ec',
+      contractAddress: '0x49d5c2bdffac6ce2bfdb6640f4f80f226bc10bab',
+      contractData:
+        '0xa9059cbb000000000000000000000000c2090e54b0db09a1515f203aea6ed62a115548ec0000000000000000000000000000000000000000000000000000b5e620f48000'
+    }
+  })
+
+  console.log(JSON.stringify(feeData, null, 2))
+}
+
+// @ts-ignore:nextLine
 const testCosmos = async (wallet: NativeHDWallet, broadcast = false) => {
   const chainAdapter = adapters.cosmos
   const bip44Params: BIP44Params = { purpose: 44, coinType: 118, accountNumber: 0 }
@@ -307,6 +342,7 @@ const main = async () => {
 
     await testBitcoin(wallet)
     await testEthereum(wallet)
+    await testAvalanche()
     await testCosmos(wallet)
   } catch (err) {
     console.error(err)
