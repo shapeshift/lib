@@ -55,8 +55,8 @@ export type UtxoChainId = typeof UTXOChainIds[number]
  */
 export interface ChainAdapterArgs {
   providers: {
-    http: unchained.bitcoin.V1Api
-    ws: unchained.ws.Client<unchained.bitcoin.BitcoinTx>
+    http: unchained.bitcoin.V1Api | unchained.dogecoin.V1Api
+    ws: unchained.ws.Client<unchained.bitcoin.BitcoinTx | unchained.dogecoin.BitcoinTx>
   }
   coinName: string
   chainId?: UtxoChainId
@@ -75,8 +75,8 @@ export abstract class UTXOBaseAdapter<T extends UtxoChainId> implements IChainAd
   protected accountAddresses: Record<string, Array<string>> = {}
   protected readonly supportedChainIds: ChainId[]
   protected readonly providers: {
-    http: unchained.bitcoin.V1Api
-    ws: unchained.ws.Client<unchained.bitcoin.BitcoinTx>
+    http: unchained.bitcoin.V1Api | unchained.dogecoin.V1Api
+    ws: unchained.ws.Client<unchained.bitcoin.BitcoinTx | unchained.dogecoin.BitcoinTx>
   }
 
   protected constructor(args: ChainAdapterArgs) {
@@ -91,7 +91,9 @@ export abstract class UTXOBaseAdapter<T extends UtxoChainId> implements IChainAd
   abstract getSupportedAccountTypes(): UtxoAccountType[]
   abstract getDefaultBip44Params(): BIP44Params
   abstract getDefaultAccountType(): UtxoAccountType
-  abstract getTransactionParser(): unchained.bitcoin.TransactionParser
+  abstract getTransactionParser():
+    | unchained.bitcoin.TransactionParser
+    | unchained.dogecoin.TransactionParser
   abstract getFeeAssetId(): AssetId
   abstract accountTypeToOutputScriptType(accountType: UtxoAccountType): BTCOutputScriptType
   abstract buildBIP44Params(params: Partial<BIP44Params>): BIP44Params
@@ -364,7 +366,9 @@ export abstract class UTXOBaseAdapter<T extends UtxoChainId> implements IChainAd
       cursor: input.cursor
     })
 
-    const getAddresses = (tx: unchained.bitcoin.BitcoinTx): Array<string> => {
+    const getAddresses = (
+      tx: unchained.bitcoin.BitcoinTx | unchained.dogecoin.BitcoinTx
+    ): Array<string> => {
       const addresses: Array<string> = []
 
       tx.vin?.forEach((vin) => {
