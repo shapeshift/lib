@@ -44,7 +44,9 @@ import { bnOrZero } from '../utils/bignumber'
 import { GetAddressInput } from './types'
 import { utxoSelect } from './utxoSelect'
 
-export type UtxoChainId = KnownChainIds.BitcoinMainnet | KnownChainIds.DogecoinMainnet
+export const UTXOChainIds = [KnownChainIds.BitcoinMainnet, KnownChainIds.DogecoinMainnet] as const
+
+export type UtxoChainId = typeof UTXOChainIds[number]
 
 /**
  * Currently, we don't have a generic interact for UTXO providers, but will in the future.

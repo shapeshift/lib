@@ -4,7 +4,12 @@ import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/type
 import * as unchained from '@shapeshiftoss/unchained-client'
 
 import { ChainAdapter as IChainAdapter } from '../api'
-import { ChainAdapterArgs, UTXOBaseAdapter, UtxoChainId } from '../utxo/UTXOBaseAdapter'
+import {
+  ChainAdapterArgs,
+  UTXOBaseAdapter,
+  UtxoChainId,
+  UTXOChainIds
+} from '../utxo/UTXOBaseAdapter'
 
 export class ChainAdapter
   extends UTXOBaseAdapter<KnownChainIds.DogecoinMainnet>
@@ -27,6 +32,10 @@ export class ChainAdapter
 
   constructor(args: ChainAdapterArgs) {
     super(args)
+
+    if (args.chainId && !UTXOChainIds.includes(args.chainId)) {
+      throw new Error(`${this.getDisplayName()} chainId ${args.chainId} not supported`)
+    }
     if (!args.chainId) {
       args.chainId = KnownChainIds.DogecoinMainnet
     }

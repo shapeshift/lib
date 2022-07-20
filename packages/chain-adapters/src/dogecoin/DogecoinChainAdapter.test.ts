@@ -135,7 +135,7 @@ describe('DogecoinChainAdapter', () => {
         ws: {} as any
       },
       coinName: 'Dogecoin',
-      chainId: 'bip122:00000000001a91e3dace36e2be3bf030'
+      chainId: KnownChainIds.DogecoinMainnet
     }
   })
 
@@ -146,7 +146,8 @@ describe('DogecoinChainAdapter', () => {
       expect(chainId).toEqual(VALID_CHAIN_ID)
     })
     it('should return chainAdapter with valid chainId if called with valid testnet chainId', () => {
-      args.chainId = 'bip122:00000000001a91e3dace36e2be3bf030'
+      // cast here to satisfy the type checker
+      args.chainId = 'bip122:00000000001a91e3dace36e2be3bf030' as KnownChainIds.DogecoinMainnet
       const adapter = new dogecoin.ChainAdapter(args)
       const chainId = adapter.getChainId()
       expect(chainId).toEqual('bip122:00000000001a91e3dace36e2be3bf030')
@@ -157,13 +158,13 @@ describe('DogecoinChainAdapter', () => {
       expect(assetId).toEqual(VALID_ASSET_ID)
     })
     it('should throw if called with invalid chainId', () => {
-      args.chainId = 'INVALID_CHAINID'
+      args.chainId = 'INVALID_CHAINID' as KnownChainIds.DogecoinMainnet
       expect(() => new dogecoin.ChainAdapter(args)).toThrow(
         'Dogecoin chainId INVALID_CHAINID not supported'
       )
     })
     it('should throw if called with non bitcoin chainId', () => {
-      args.chainId = 'eip155:1'
+      args.chainId = 'eip155:1' as KnownChainIds.DogecoinMainnet
       expect(() => new dogecoin.ChainAdapter(args)).toThrow(
         'Dogecoin chainId eip155:1 not supported'
       )
