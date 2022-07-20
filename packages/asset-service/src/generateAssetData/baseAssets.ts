@@ -2,8 +2,8 @@ import * as caip from '@shapeshiftoss/caip'
 import { Asset } from '@shapeshiftoss/types'
 
 export const ethereum: Asset = {
-  assetId: caip.ethAssetId,
-  chainId: caip.ethChainId,
+  assetId: caip.etherAssetId,
+  chainId: caip.ethereumChainId,
   symbol: 'ETH',
   name: 'Ethereum',
   precision: 18,
@@ -15,8 +15,8 @@ export const ethereum: Asset = {
 }
 
 export const bitcoin: Asset = {
-  assetId: caip.btcAssetId,
-  chainId: caip.btcChainId,
+  assetId: caip.bitcoinAssetId,
+  chainId: caip.bitcoinChainId,
   symbol: 'BTC',
   name: 'Bitcoin',
   precision: 8,

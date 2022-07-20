@@ -1,4 +1,4 @@
-import { ethAssetId, fromAssetId } from '@shapeshiftoss/caip'
+import { etherAssetId, fromAssetId } from '@shapeshiftoss/caip'
 import { Asset } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 
@@ -28,7 +28,7 @@ export const getUsdRate = async (
   input: Asset
 ): Promise<string> => {
   // Replacing ETH by WETH specifically for CowSwap in order to get an usd rate when called with ETH as feeAsset
-  const asset = input.assetId !== ethAssetId ? input : feeAsset
+  const asset = input.assetId !== etherAssetId ? input : feeAsset
   const { assetReference: erc20Address, assetNamespace } = fromAssetId(asset.assetId)
 
   if (assetNamespace !== 'erc20') {

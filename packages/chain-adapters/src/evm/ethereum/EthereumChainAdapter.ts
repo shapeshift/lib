@@ -1,4 +1,10 @@
-import { ASSET_REFERENCE, AssetId, ethAssetId, ethChainId, fromAssetId } from '@shapeshiftoss/caip'
+import {
+  ASSET_REFERENCE,
+  AssetId,
+  etherAssetId,
+  ethereumChainId,
+  fromAssetId
+} from '@shapeshiftoss/caip'
 import { bip32ToAddressNList, ETHSignTx } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
@@ -22,8 +28,8 @@ import { Fees } from '../types'
 import { getErc20Data } from '../utils'
 import { BuildCustomTxInput } from './types'
 
-const SUPPORTED_CHAIN_IDS = [ethChainId]
-const DEFAULT_CHAIN_ID = ethChainId
+const SUPPORTED_CHAIN_IDS = [ethereumChainId]
+const DEFAULT_CHAIN_ID = ethereumChainId
 
 export class ChainAdapter extends EvmBaseAdapter<KnownChainIds.EthereumMainnet> {
   static readonly defaultBIP44Params: BIP44Params = {
@@ -35,7 +41,7 @@ export class ChainAdapter extends EvmBaseAdapter<KnownChainIds.EthereumMainnet> 
   constructor(args: ChainAdapterArgs) {
     super({ chainId: DEFAULT_CHAIN_ID, supportedChainIds: SUPPORTED_CHAIN_IDS, ...args })
 
-    this.assetId = ethAssetId
+    this.assetId = etherAssetId
     this.parser = new unchained.ethereum.TransactionParser({
       chainId: this.chainId,
       rpcUrl: this.rpcUrl

@@ -3,14 +3,14 @@ import { ChainNamespace, ChainReference } from 'packages/caip/src/chainId/chainI
 import {
   ASSET_NAMESPACE_STRINGS,
   ASSET_REFERENCE,
-  btcAssetId,
-  btcChainId,
+  bitcoinAssetId,
+  bitcoinChainId,
   CHAIN_NAMESPACE,
   CHAIN_REFERENCE,
   cosmosAssetId,
   cosmosChainId,
-  ethAssetId,
-  ethChainId,
+  etherAssetId,
+  ethereumChainId,
   osmosisAssetId,
   osmosisChainId
 } from './constants'
@@ -40,13 +40,13 @@ describe('accountIdToChainId', () => {
   it('can get eth chainId from accountId', () => {
     const accountId = 'eip155:1:0xdef1cafe'
     const chainId = accountIdToChainId(accountId)
-    expect(chainId).toEqual(ethChainId)
+    expect(chainId).toEqual(ethereumChainId)
   })
 
   it('can get btc chainId from accountId', () => {
     const accountId = 'bip122:000000000019d6689c085ae165831e93:xpubfoobarbaz'
     const chainId = accountIdToChainId(accountId)
-    expect(chainId).toEqual(btcChainId)
+    expect(chainId).toEqual(bitcoinChainId)
   })
 })
 
@@ -68,8 +68,8 @@ describe('accountIdToSpecifier', () => {
 
 describe('chainIdToFeeAssetId', () => {
   it('returns a chain fee assetId for a given Ethereum chainId', () => {
-    const result = chainIdToFeeAssetId(ethChainId)
-    expect(result).toEqual(ethAssetId)
+    const result = chainIdToFeeAssetId(ethereumChainId)
+    expect(result).toEqual(etherAssetId)
   })
 
   it('returns chain fee assetId (ATOM) for a given Cosmos chainId', () => {
@@ -132,8 +132,8 @@ describe('type guard', () => {
 
   describe('isValidChainId', () => {
     it('correctly determines type', () => {
-      expect(isChainId(ethChainId)).toEqual(true)
-      expect(isChainId(btcChainId)).toEqual(true)
+      expect(isChainId(ethereumChainId)).toEqual(true)
+      expect(isChainId(bitcoinChainId)).toEqual(true)
       expect(isChainId(cosmosChainId)).toEqual(true)
       expect(isChainId(osmosisChainId)).toEqual(true)
       expect(isChainId('invalid')).toEqual(false)
@@ -161,8 +161,8 @@ describe('type guard', () => {
 
   describe('isAssetId', () => {
     it('correctly determines type', () => {
-      expect(isAssetId(btcAssetId)).toEqual(true)
-      expect(isAssetId(ethAssetId)).toEqual(true)
+      expect(isAssetId(bitcoinAssetId)).toEqual(true)
+      expect(isAssetId(etherAssetId)).toEqual(true)
       expect(isAssetId(cosmosAssetId)).toEqual(true)
       expect(isAssetId(osmosisAssetId)).toEqual(true)
       expect(isAssetId('invalid')).toEqual(false)
@@ -174,8 +174,8 @@ describe('type guard', () => {
 describe('type guard assertion', () => {
   describe('assertIsChainId', () => {
     it('correctly asserts type', () => {
-      expect(() => assertIsChainId(ethChainId)).not.toThrow()
-      expect(() => assertIsChainId(btcChainId)).not.toThrow()
+      expect(() => assertIsChainId(ethereumChainId)).not.toThrow()
+      expect(() => assertIsChainId(bitcoinChainId)).not.toThrow()
       expect(() => assertIsChainId(cosmosChainId)).not.toThrow()
       expect(() => assertIsChainId(osmosisChainId)).not.toThrow()
       expect(() => assertIsChainId('invalid')).toThrow()

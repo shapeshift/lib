@@ -1,4 +1,4 @@
-import { btcAssetId, ethAssetId } from '../../constants'
+import { bitcoinAssetId, etherAssetId } from '../../constants'
 import { assetIdToPoolAssetId, poolAssetIdToAssetId } from './index'
 
 describe('thortrading', () => {
@@ -7,12 +7,12 @@ describe('thortrading', () => {
   describe('poolAssetIdToAssetId', () => {
     it('returns Ethereum assetId when poolAssetId is ETH.ETH', () => {
       const result = poolAssetIdToAssetId('ETH.ETH')
-      expect(result).toEqual(ethAssetId)
+      expect(result).toEqual(etherAssetId)
     })
 
     it('returns Bitcoin assetId when poolAssetId is BTC.BTC', () => {
       const result = poolAssetIdToAssetId('BTC.BTC')
-      expect(result).toEqual(btcAssetId)
+      expect(result).toEqual(bitcoinAssetId)
     })
 
     it('returns ERC20 assetId when poolAssetId is in ERC20 format', () => {
@@ -35,15 +35,15 @@ describe('thortrading', () => {
   })
 
   describe('assetIdToPoolAssetId', () => {
-    it('returns Ethereum pool when assetId is ethAssetId', () => {
-      const assetId = ethAssetId
+    it('returns Ethereum pool when assetId is etherAssetId', () => {
+      const assetId = etherAssetId
       const result = assetIdToPoolAssetId({ assetId })
       const poolAssetId = 'ETH.ETH'
       expect(result).toEqual(poolAssetId)
     })
 
-    it('returns bitcoin pool when assetId is btcAssetId', () => {
-      const assetId = btcAssetId
+    it('returns bitcoin pool when assetId is bitcoinAssetId', () => {
+      const assetId = bitcoinAssetId
       const result = assetIdToPoolAssetId({ assetId })
       const poolAssetId = 'BTC.BTC'
       expect(result).toEqual(poolAssetId)

@@ -1,14 +1,14 @@
 import { AssetId, AssetNamespace } from './assetId/assetId'
 import { ChainId, ChainNamespace, ChainReference } from './chainId/chainId'
 
-export const btcAssetId: AssetId = 'bip122:000000000019d6689c085ae165831e93/slip44:0'
-export const ethAssetId: AssetId = 'eip155:1/slip44:60'
+export const bitcoinAssetId: AssetId = 'bip122:000000000019d6689c085ae165831e93/slip44:0'
+export const etherAssetId: AssetId = 'eip155:1/slip44:60'
 export const cosmosAssetId: AssetId = 'cosmos:cosmoshub-4/slip44:118'
 export const osmosisAssetId: AssetId = 'cosmos:osmosis-1/slip44:118'
 export const avalancheAssetId: AssetId = 'eip155:43114/slip44:9000'
 
-export const ethChainId: ChainId = 'eip155:1'
-export const btcChainId: ChainId = 'bip122:000000000019d6689c085ae165831e93'
+export const ethereumChainId: ChainId = 'eip155:1'
+export const bitcoinChainId: ChainId = 'bip122:000000000019d6689c085ae165831e93'
 export const cosmosChainId: ChainId = 'cosmos:cosmoshub-4'
 export const osmosisChainId: ChainId = 'cosmos:osmosis-1'
 export const avalancheChainId: ChainId = 'eip155:43114'

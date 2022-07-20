@@ -6,12 +6,12 @@ import { ChainId } from '../../chainId/chainId'
 import {
   avalancheAssetId,
   avalancheChainId,
-  btcChainId,
+  bitcoinChainId,
   CHAIN_NAMESPACE,
   CHAIN_REFERENCE,
   cosmosChainId,
-  ethAssetId,
-  ethChainId,
+  etherAssetId,
+  ethereumChainId,
   osmosisChainId
 } from '../../constants'
 import { makeBtcData, makeCosmosHubData, makeOsmosisData } from '../../utils'
@@ -48,7 +48,7 @@ export const parseData = (coins: CoingeckoCoin[]): AssetMap => {
             assetNamespace: 'erc20',
             assetReference: platforms.ethereum
           })
-          prev[ethChainId][assetId] = id
+          prev[ethereumChainId][assetId] = id
         } catch {
           // unable to create assetId, skip token
         }
@@ -71,14 +71,14 @@ export const parseData = (coins: CoingeckoCoin[]): AssetMap => {
       return prev
     },
     {
-      [ethChainId]: { [ethAssetId]: 'ethereum' },
+      [ethereumChainId]: { [etherAssetId]: 'ethereum' },
       [avalancheChainId]: { [avalancheAssetId]: 'avalanche-2' }
     }
   )
 
   return {
     ...assetMap,
-    [btcChainId]: makeBtcData(),
+    [bitcoinChainId]: makeBtcData(),
     [cosmosChainId]: makeCosmosHubData(),
     [osmosisChainId]: makeOsmosisData()
   }

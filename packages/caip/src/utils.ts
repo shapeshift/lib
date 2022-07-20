@@ -5,14 +5,14 @@ import {
   ASSET_REFERENCE,
   avalancheAssetId,
   avalancheChainId,
-  btcAssetId,
-  btcChainId,
+  bitcoinAssetId,
+  bitcoinChainId,
   CHAIN_NAMESPACE,
   CHAIN_REFERENCE,
   cosmosAssetId,
   cosmosChainId,
-  ethAssetId,
-  ethChainId,
+  etherAssetId,
+  ethereumChainId,
   osmosisAssetId,
   osmosisChainId,
   VALID_CHAIN_IDS
@@ -25,8 +25,8 @@ export const parseAssetIdRegExp =
 // TODO(ryankk): this will be removed and replaced with something like `toAssetId(fromChainId(chainId))`
 // when `fromChainId` supports returning ChainNamespace and ChainReference.
 export const chainIdToAssetId: Record<ChainId, AssetId> = {
-  [ethChainId]: ethAssetId,
-  [btcChainId]: btcAssetId,
+  [ethereumChainId]: etherAssetId,
+  [bitcoinChainId]: bitcoinAssetId,
   [cosmosChainId]: cosmosAssetId,
   [osmosisChainId]: osmosisAssetId,
   [avalancheChainId]: avalancheAssetId

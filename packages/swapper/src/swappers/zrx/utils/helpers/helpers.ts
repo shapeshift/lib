@@ -1,4 +1,4 @@
-import { AssetId, avalancheAssetId, ethAssetId, fromAssetId } from '@shapeshiftoss/caip'
+import { AssetId, avalancheAssetId, etherAssetId, fromAssetId } from '@shapeshiftoss/caip'
 import { Asset, KnownChainIds } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 
@@ -39,7 +39,7 @@ export const isNativeEvmAsset = (assetId: AssetId): boolean => {
   const { chainId } = fromAssetId(assetId)
   switch (chainId) {
     case KnownChainIds.EthereumMainnet:
-      return assetId === ethAssetId
+      return assetId === etherAssetId
     case KnownChainIds.AvalancheMainnet:
       return assetId === avalancheAssetId
     default:
