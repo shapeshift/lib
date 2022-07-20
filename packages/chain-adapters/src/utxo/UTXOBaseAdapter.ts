@@ -199,9 +199,7 @@ export abstract class UTXOBaseAdapter<T extends UtxoChainId> implements IChainAd
       })
 
       if (!supportsBTC(wallet))
-        throw new Error(
-          'DogecoinChainAdapter: signTransaction wallet does not support signing btc txs'
-        )
+        throw new Error('UTXOBaseAdapter: signTransaction wallet does not support signing btc txs')
 
       const account = await this.getAccount(pubkey.xpub)
 
@@ -215,7 +213,7 @@ export abstract class UTXOBaseAdapter<T extends UtxoChainId> implements IChainAd
       })
 
       if (!coinSelectResult || !coinSelectResult.inputs || !coinSelectResult.outputs) {
-        throw new Error(`DogecoinChainAdapter: coinSelect didn't select coins`)
+        throw new Error(`UTXOBaseAdapter: coinSelect didn't select coins`)
       }
 
       const { inputs, outputs } = coinSelectResult

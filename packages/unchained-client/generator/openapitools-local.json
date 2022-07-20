@@ -36,7 +36,7 @@
         }
       },
       "dogecoin": {
-        "inputSpec": "https://dev-api.dogecoin.shapeshift.com/swagger.json",
+        "inputSpec": "http://api.dogecoin.localhost/swagger.json",
         "generatorName": "typescript-axios",
         "output": "#{cwd}/src/generated/dogecoin",
         "reservedWordsMappings": { "in": "in" },
