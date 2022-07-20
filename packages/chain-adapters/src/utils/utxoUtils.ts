@@ -147,7 +147,7 @@ const convertVersions = ['xpub', 'ypub', 'zpub']
  * Blockbook generates addresses from a public key based on the version bytes
  * some wallets always return the public key in "xpub" format, so we need to convert those
  *
- * TODO - why is this here/used? we shouldn't need to convert xpubs afaik
+ * USE SPARINGLY - there aren't many cases where we should convert version bytes
  * @param {string} xpub - the public key provided by the wallet
  * @param {UtxoAccountType} accountType - The desired account type to be encoded into the public key
  */
