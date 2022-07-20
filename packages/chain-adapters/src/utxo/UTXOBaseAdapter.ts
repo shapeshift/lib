@@ -184,7 +184,7 @@ export abstract class UTXOBaseAdapter<T extends UtxoChainId> implements IChainAd
       } = tx
 
       if (!value || !to) {
-        throw new Error('DogecoinChainAdapter: (to and value) are required')
+        throw new Error('UTXOBaseAdapter: (to and value) are required')
       }
 
       let { bip44Params } = tx
