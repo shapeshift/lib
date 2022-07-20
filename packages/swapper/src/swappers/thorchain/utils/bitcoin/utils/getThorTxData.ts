@@ -6,7 +6,7 @@ import { Asset, BIP44Params, UtxoAccountType } from '@shapeshiftoss/types'
 import { SwapError, SwapErrorTypes } from '../../../../../api'
 import { bn, bnOrZero, fromBaseUnit, toBaseUnit } from '../../../../utils/bignumber'
 import { InboundResponse, ThorchainSwapperDeps } from '../../../types'
-import { getPriceRatio } from '../../getPriceRatio/getPriceRatio'
+import { getTradeRate } from '../../getTradeRate/getTradeRate'
 import { makeSwapMemo } from '../../makeSwapMemo/makeSwapMemo'
 import { thorService } from '../../thorService'
 
@@ -54,11 +54,7 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
         details: { inboundAddresses }
       })
 
-    const priceRatio = await getPriceRatio(deps, {
-      buyAssetId: buyAsset.assetId,
-      sellAssetId: sellAsset.assetId
-    })
-
+    const priceRatio = await getTradeRate(sellAsset, buyAsset.assetId, sellAmount, deps)
     const expectedBuyAmount = toBaseUnit(
       fromBaseUnit(bnOrZero(sellAmount).dividedBy(priceRatio), sellAsset.precision),
       buyAsset.precision

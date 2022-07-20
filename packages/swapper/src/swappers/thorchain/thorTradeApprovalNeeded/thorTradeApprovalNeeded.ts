@@ -22,15 +22,7 @@ export const thorTradeApprovalNeeded = async ({
     const { assetReference: sellAssetErc20Address } = fromAssetId(sellAsset.assetId)
     const { chainNamespace } = fromChainId(sellAsset.chainId)
 
-    if (chainNamespace !== 'eip155') {
-      throw new SwapError(
-        '[thorTradeApprovalNeeded] - sellAsset chain namespace is not supported',
-        {
-          code: SwapErrorTypes.UNSUPPORTED_CHAIN,
-          details: { chainNamespace }
-        }
-      )
-    }
+    if (chainNamespace !== 'eip155') return { approvalNeeded: false }
 
     // No approval needed for selling a fee asset
     if (sellAsset.assetId === getFeeAssetIdFromAssetId(sellAsset.assetId)) {

@@ -54,7 +54,7 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
       })
 
     const tradeRate = await getTradeRate(sellAsset, buyAsset.assetId, sellAmount, deps)
-
+    console.log('tradeRate', tradeRate)
     const expectedBuyAmount = toBaseUnit(
       fromBaseUnit(bnOrZero(sellAmount).times(tradeRate), sellAsset.precision),
       8 // limit values are precision 8 regardless of the chain

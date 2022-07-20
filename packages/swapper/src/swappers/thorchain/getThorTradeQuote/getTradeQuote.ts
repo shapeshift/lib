@@ -10,7 +10,7 @@ import { getThorTxInfo as getBtcThorTxInfo } from '../utils/bitcoin/utils/getTho
 import { MAX_THORCHAIN_TRADE } from '../utils/constants'
 import { estimateTradeFee } from '../utils/estimateTradeFee/estimateTradeFee'
 import { getThorTxInfo as getEthThorTxInfo } from '../utils/ethereum/utils/getThorTxData'
-import { getPriceRatio } from '../utils/getPriceRatio/getPriceRatio'
+import { getTradeRate } from '../utils/getTradeRate/getTradeRate'
 import { getBtcTxFees } from '../utils/txFeeHelpers/btcTxFees/getBtcTxFees'
 import { getEthTxFees } from '../utils/txFeeHelpers/ethTxFees/getEthTxFees'
 
@@ -51,7 +51,6 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
         details: { chainId }
       })
 
-    const sellAssetId = sellAsset.assetId
     const buyAssetId = buyAsset.assetId
     const feeAssetId = getFeeAssetIdFromAssetId(buyAssetId)
     if (!feeAssetId)
@@ -60,14 +59,15 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
         details: { buyAssetId }
       })
 
-    const priceRatio = await getPriceRatio(deps, { sellAssetId, buyAssetId })
-    const rate = bnOrZero(1).div(priceRatio).toString()
-    const buyAmount = normalizeAmount(bnOrZero(sellAmount).times(rate))
+    const tradeRate = await getTradeRate(sellAsset, buyAsset.assetId, sellAmount, deps)
+    const rate = bnOrZero(1).div(tradeRate).toString()
+
+    const buyAmount = normalizeAmount(bnOrZero(sellAmount).times(tradeRate))
 
     const tradeFee = await estimateTradeFee(deps, buyAsset.assetId)
 
     const sellAssetTradeFee = fromBaseUnit(
-      bnOrZero(tradeFee).times(bnOrZero(priceRatio)),
+      bnOrZero(tradeFee).times(bnOrZero(rate)),
       buyAsset.precision
     )
 
