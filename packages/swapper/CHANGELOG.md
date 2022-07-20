@@ -1,3 +1,17 @@
+# [@shapeshiftoss/swapper-v8.5.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v8.5.0...@shapeshiftoss/swapper-v8.5.1) (2022-07-19)
+
+
+### Bug Fixes
+
+* account fix ([#891](https://github.com/shapeshift/lib/issues/891)) ([aeec53c](https://github.com/shapeshift/lib/commit/aeec53c15fdd4be38bdae72f832fb957989d64f1))
+
+# [@shapeshiftoss/swapper-v8.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v8.4.0...@shapeshiftoss/swapper-v8.5.0) (2022-07-18)
+
+
+### Features
+
+* **swapper:** osmosis swapper ([#865](https://github.com/shapeshift/lib/issues/865)) ([585dec6](https://github.com/shapeshift/lib/commit/585dec6d49b4a9756a7a344986468dc16776454f))
+
 # [@shapeshiftoss/swapper-v8.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v8.3.1...@shapeshiftoss/swapper-v8.4.0) (2022-07-15)
 
 
