@@ -1,1 +1,1 @@
-export * as dogecoin from '../bitcoin'
+export * as dogecoin from '../dogecoin'
