@@ -1,5 +1,5 @@
+import { Asset } from '@shapeshiftoss/asset-service'
 import { ethAssetId, fromAssetId } from '@shapeshiftoss/caip'
-import { Asset } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
