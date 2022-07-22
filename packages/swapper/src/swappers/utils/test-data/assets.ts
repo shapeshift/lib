@@ -1,4 +1,4 @@
-import { Asset } from '@shapeshiftoss/types'
+import { Asset } from '@shapeshiftoss/asset-service'
 
 export const BTC: Asset = {
   assetId: 'bip122:000000000019d6689c085ae165831e93/slip44:0',
