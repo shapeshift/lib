@@ -28,7 +28,7 @@ export const buildTrade = async ({
   const sellAdapter = deps.adapterManager.get(sellAsset.chainId)
 
   if (!sellAdapter)
-    throw new SwapError('[executeTrade]: unsupported sell asset', {
+    throw new SwapError('[buildTrade]: unsupported sell asset', {
       code: SwapErrorTypes.BUILD_TRADE_FAILED,
       fn: 'executeTrade',
       details: { sellAsset }
@@ -64,7 +64,7 @@ export const buildTrade = async ({
       txData: ethTradeTx.txToSign
     } as ThorTrade<'eip155:1'>
   } else {
-    throw new SwapError('[executeTrade]: unsupported sell asset', {
+    throw new SwapError('[buildTrade]: unsupported sell asset', {
       code: SwapErrorTypes.BUILD_TRADE_FAILED,
       fn: 'executeTrade',
       details: { sellAsset }
