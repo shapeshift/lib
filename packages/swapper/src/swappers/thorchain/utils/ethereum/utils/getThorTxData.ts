@@ -4,7 +4,7 @@ import { Asset } from '@shapeshiftoss/types'
 import { SwapError, SwapErrorTypes } from '../../../../../api'
 import { bn, bnOrZero, fromBaseUnit, toBaseUnit } from '../../../../utils/bignumber'
 import { InboundResponse, ThorchainSwapperDeps } from '../../../types'
-import { getPriceRatio } from '../../getPriceRatio/getPriceRatio'
+import { getTradeRate } from '../../../utils/getTradeRate/getTradeRate'
 import { makeSwapMemo } from '../../makeSwapMemo/makeSwapMemo'
 import { thorService } from '../../thorService'
 import { deposit } from '../routerCalldata'
@@ -16,6 +16,7 @@ type GetBtcThorTxInfoArgs = {
   sellAmount: string
   slippageTolerance: string
   destinationAddress: string
+  tradeFee?: string
 }
 type GetBtcThorTxInfoReturn = Promise<{
   data: string
@@ -30,7 +31,8 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
   buyAsset,
   sellAmount,
   slippageTolerance,
-  destinationAddress
+  destinationAddress,
+  tradeFee
 }) => {
   try {
     const { assetReference, assetNamespace } = fromAssetId(sellAsset.assetId)
@@ -51,15 +53,19 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
         details: { inboundAddresses }
       })
 
-    const priceRatio = await getPriceRatio(deps, {
-      buyAssetId: buyAsset.assetId,
-      sellAssetId: sellAsset.assetId
-    })
-
+    const tradeRate = await getTradeRate(sellAsset, buyAsset.assetId, sellAmount, deps)
+    console.log('tradeRate', tradeRate)
     const expectedBuyAmount = toBaseUnit(
-      fromBaseUnit(bnOrZero(sellAmount).dividedBy(priceRatio), sellAsset.precision),
-      buyAsset.precision
+      fromBaseUnit(bnOrZero(sellAmount).times(tradeRate), sellAsset.precision),
+      8 // limit values are precision 8 regardless of the chain
     )
+
+    const tradeFeeBase8 = toBaseUnit(
+      fromBaseUnit(bnOrZero(tradeFee), buyAsset.precision),
+      8 // limit values are precision 8 regardless of the chain
+    )
+
+    console.log('expectedBuyAmount', expectedBuyAmount)
 
     const isValidSlippageRange =
       bnOrZero(slippageTolerance).gte(0) && bnOrZero(slippageTolerance).lte(1)
@@ -71,14 +77,20 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
 
     const limit = bnOrZero(expectedBuyAmount)
       .times(bn(1).minus(slippageTolerance))
+      .minus(bnOrZero(tradeFeeBase8))
       .decimalPlaces(0)
       .toString()
 
+    console.log('tradeFeeBase8 is', tradeFeeBase8)
+    console.log('slippageTolerance is', slippageTolerance)
+
+    console.log('getting memo for', buyAsset, destinationAddress, limit)
     const memo = makeSwapMemo({
       buyAssetId: buyAsset.assetId,
       destinationAddress,
       limit
     })
+    console.log('memo is', memo)
 
     const data = await deposit(
       router,

@@ -8,19 +8,28 @@ import { thorService } from '../thorService'
 
 const gweiGasPrecision = 9
 
-// https://docs.thorchain.org/how-it-works/fees#outbound-fee
-// estimatedTradeFee = `3 * estimatedFeeOutboundFee`
+// Official docs on fees are incorrect
+// https://discord.com/channels/838986635756044328/997675038675316776/998552541170253834
+// This is still not "perfect" and tends to overestimate by a randomish amount
+// TODO figure out if its possible to accurately estimate the outbound fee. 
+// Neither the discord nor official docs are corret
 
-// eth txs from thorchain use approx 38383 gas
 const ethEstimate = (gasRate: string) =>
-  bnOrZero(gasRate).times(38383).times(3).times(bn(10).exponentiatedBy(gweiGasPrecision)).toString()
+  bnOrZero(gasRate)
+    .times(120000)
+    .times(2)
+    .times(bn(10).exponentiatedBy(gweiGasPrecision))
+    .toString()
 
-// erc20 txs from thorchain use approx 70996 gas
 const erc20Estimate = (gasRate: string) =>
-  bnOrZero(gasRate).times(70996).times(3).times(bn(10).exponentiatedBy(gweiGasPrecision)).toString()
+  bnOrZero(gasRate)
+    .times(120000)
+    .times(3)
+    .times(bn(10).exponentiatedBy(gweiGasPrecision))
+    .toString()
 
-// BTC utxo transactions from thorchain are approx 303 bytes long
-const btcEstimate = (gasRate: string) => bnOrZero(gasRate).times(303).times(3).toString()
+const btcTxSize = 1000
+const btcEstimate = (gasRate: string) => bnOrZero(gasRate).times(btcTxSize).times(2).toString()
 
 export const estimateTradeFee = async (
   deps: ThorchainSwapperDeps,
