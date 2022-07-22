@@ -27,8 +27,7 @@ export class SwapperManager {
   addSwapper(swapperInstance: Swapper<ChainId>): this {
     validateSwapper(swapperInstance)
     const swapperType = swapperInstance.getType()
-    const swapper = this.swappers.get(swapperType)
-    if (!swapper) this.swappers.set(swapperType, swapperInstance)
+    this.swappers.set(swapperType, swapperInstance)
     return this
   }
 
