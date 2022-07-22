@@ -1,3 +1,24 @@
+# [@shapeshiftoss/swapper-v8.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v8.5.3...@shapeshiftoss/swapper-v8.6.0) (2022-07-22)
+
+
+### Features
+
+* cowswap executeTrade and getTradeTxs methods ([#868](https://github.com/shapeshift/lib/issues/868)) ([b9ce707](https://github.com/shapeshift/lib/commit/b9ce7070d3f3a5d70464c57efc488c7a2604e3dc))
+
+# [@shapeshiftoss/swapper-v8.5.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v8.5.2...@shapeshiftoss/swapper-v8.5.3) (2022-07-22)
+
+
+### Bug Fixes
+
+* silently fail if a swapper has already been added instead of throwing ([#898](https://github.com/shapeshift/lib/issues/898)) ([67a6143](https://github.com/shapeshift/lib/commit/67a614363684d77f6c28e6f9875249bacd5bff62))
+
+# [@shapeshiftoss/swapper-v8.5.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v8.5.1...@shapeshiftoss/swapper-v8.5.2) (2022-07-21)
+
+
+### Bug Fixes
+
+* **swapper:** filtering by assets ([#896](https://github.com/shapeshift/lib/issues/896)) ([2df27cb](https://github.com/shapeshift/lib/commit/2df27cbca6b3ea5f5a28bdfd40e0a7fee24b1714))
+
 # [@shapeshiftoss/swapper-v8.5.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v8.5.0...@shapeshiftoss/swapper-v8.5.1) (2022-07-19)
 
 
