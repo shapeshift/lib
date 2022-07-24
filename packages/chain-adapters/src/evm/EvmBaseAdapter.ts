@@ -44,6 +44,14 @@ import { getErc20Data } from './utils'
 
 export type EvmChainIds = KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
 
+export const isEvmChainId = (
+  maybeEvmChainId: string | EvmChainIds
+): maybeEvmChainId is EvmChainIds => {
+  return [KnownChainIds.EthereumMainnet, KnownChainIds.AvalancheMainnet].includes(
+    maybeEvmChainId as EvmChainIds
+  )
+}
+
 export interface ChainAdapterArgs {
   chainId?: ChainId
   providers: {
