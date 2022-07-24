@@ -10,8 +10,9 @@ export const getZrxMinMax = async (sellAsset: Asset, buyAsset: Asset): Promise<M
   try {
     if (
       !(
-        (isEvmChainId(sellAsset.chainId) && isEvmChainId(buyAsset.chainId)) ||
-        buyAsset.chainId !== sellAsset.chainId
+        isEvmChainId(sellAsset.chainId) &&
+        isEvmChainId(buyAsset.chainId) &&
+        buyAsset.chainId === sellAsset.chainId
       )
     ) {
       throw new SwapError('[getZrxMinMax]', { code: SwapErrorTypes.UNSUPPORTED_PAIR })
