@@ -1,4 +1,4 @@
-import { avalancheAssetId, avalancheChainId } from '@shapeshiftoss/caip/src'
+import { avalancheAssetId, avalancheChainId, ethAssetId, ethChainId } from '@shapeshiftoss/caip'
 import { Asset } from '@shapeshiftoss/types'
 
 export const BTC: Asset = {
@@ -16,7 +16,7 @@ export const BTC: Asset = {
 
 export const WETH: Asset = {
   assetId: 'eip155:1/erc20:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-  chainId: 'eip155:1',
+  chainId: ethChainId,
   name: 'WETH',
   precision: 18,
   color: '#FFFFFF',
@@ -29,7 +29,7 @@ export const WETH: Asset = {
 
 export const FOX: Asset = {
   assetId: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
-  chainId: 'eip155:1',
+  chainId: ethChainId,
   name: 'FOX',
   precision: 18,
   color: '#FFFFFF',
@@ -42,7 +42,7 @@ export const FOX: Asset = {
 
 export const WBTC: Asset = {
   assetId: 'eip155:1/erc20:0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
-  chainId: 'eip155:1',
+  chainId: ethChainId,
   color: '#FFFFFF',
   explorer: 'https://etherscan.io',
   explorerAddressLink: 'https://etherscan.io/address/',
@@ -54,8 +54,8 @@ export const WBTC: Asset = {
 }
 
 export const ETH: Asset = {
-  assetId: 'eip155:1/slip44:60',
-  chainId: 'eip155:1',
+  assetId: ethAssetId,
+  chainId: ethChainId,
   symbol: 'ETH',
   name: 'Ethereum',
   precision: 18,
@@ -68,7 +68,7 @@ export const ETH: Asset = {
 
 export const UNSUPPORTED: Asset = {
   assetId: 'eip155:1/slip44:420',
-  chainId: 'eip155:1',
+  chainId: ethChainId,
   symbol: 'ETH',
   name: 'Ethereum',
   precision: 18,
@@ -81,7 +81,7 @@ export const UNSUPPORTED: Asset = {
 
 export const USDC: Asset = {
   assetId: 'eip155:1/erc20:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-  chainId: 'eip155:1',
+  chainId: ethChainId,
   symbol: 'USDC',
   name: 'USD Coin',
   precision: 6,
