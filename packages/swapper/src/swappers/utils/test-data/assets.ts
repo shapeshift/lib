@@ -1,3 +1,4 @@
+import { avalancheAssetId, avalancheChainId } from '@shapeshiftoss/caip/src'
 import { Asset } from '@shapeshiftoss/types'
 
 export const BTC: Asset = {
@@ -89,4 +90,17 @@ export const USDC: Asset = {
   explorer: 'https://etherscan.io',
   explorerAddressLink: 'https://etherscan.io/address/',
   explorerTxLink: 'https://etherscan.io/tx/'
+}
+
+export const AVAX: Asset = {
+  assetId: avalancheAssetId,
+  chainId: avalancheChainId,
+  name: 'Avalanche',
+  symbol: 'AVAX',
+  precision: 18,
+  color: '#FFFFFF',
+  icon: 'https://rawcdn.githack.com/trustwallet/assets/32e51d582a890b3dd3135fe3ee7c20c2fd699a6d/blockchains/avalanchec/info/logo.png',
+  explorer: 'https://snowtrace.io',
+  explorerAddressLink: 'https://snowtrace.io/address/',
+  explorerTxLink: 'https://snowtrace.io/tx/'
 }
