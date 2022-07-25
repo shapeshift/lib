@@ -2,9 +2,8 @@ import { ChainId, fromAssetId, getFeeAssetIdFromAssetId } from '@shapeshiftoss/c
 import { KnownChainIds } from '@shapeshiftoss/types'
 
 import { GetTradeQuoteInput, SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
-import { bnOrZero, fromBaseUnit } from '../../utils/bignumber'
+import { bnOrZero, fromBaseUnit, toBaseUnit } from '../../utils/bignumber'
 import { DEFAULT_SLIPPAGE } from '../../utils/constants'
-import { normalizeAmount } from '../../utils/helpers/helpers'
 import { ThorchainSwapperDeps } from '../types'
 import { getThorTxInfo as getBtcThorTxInfo } from '../utils/bitcoin/utils/getThorTxData'
 import { MAX_THORCHAIN_TRADE } from '../utils/constants'
@@ -62,17 +61,32 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
     const tradeRate = await getTradeRate(sellAsset, buyAsset.assetId, sellAmount, deps)
     const rate = bnOrZero(1).div(tradeRate).toString()
 
-    const buyAmount = normalizeAmount(bnOrZero(sellAmount).times(tradeRate))
+    console.log('tradeRate', tradeRate)
+    console.log('rate', rate)
+    console.log('sellAmount', sellAmount)
+    console.log('buyAsset.precision', buyAsset.precision)
+
+    const buyAmount = toBaseUnit(
+      bnOrZero(fromBaseUnit(sellAmount, sellAsset.precision)).times(tradeRate),
+      buyAsset.precision
+      .toString()
+    console.log('buyAmount', buyAmount)
 
     const tradeFee = await estimateTradeFee(deps, buyAsset.assetId)
+
+    console.log('tradeFee', tradeFee)
 
     const sellAssetTradeFee = fromBaseUnit(
       bnOrZero(tradeFee).times(bnOrZero(rate)),
       buyAsset.precision
     )
 
-    // padding minimum by 1.5 the trade fee to avoid thorchain "not enough to cover fee" errors.
-    const minimum = bnOrZero(sellAssetTradeFee).times(1.5).toString()
+    console.log('sellAssetTradeFee', sellAssetTradeFee)
+
+    // minimum is tradeFee padded by 10% to be sure they get something back
+    // usually it will be more than 10% because sellAssetTradeFee is a high estimate
+    const minimum = bnOrZero(sellAssetTradeFee).times(1.2).toString()
+    console.log('minimum', minimum)
     const commonQuoteFields: CommonQuoteFields = {
       rate,
       maximum: MAX_THORCHAIN_TRADE,
@@ -140,7 +154,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
 
           return {
             ...commonQuoteFields,
-            allowanceContract: '0x0',
+            allowanceContract: '0x0', // not applicable to bitcoin
             feeData
           }
         })()

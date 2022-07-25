@@ -1,6 +1,6 @@
 import { adapters, AssetId, ChainId, fromAssetId } from '@shapeshiftoss/caip'
-import { ethereum } from '@shapeshiftoss/chain-adapters'
-import type { ETHSignTx } from '@shapeshiftoss/hdwallet-core'
+import { bitcoin, ethereum } from '@shapeshiftoss/chain-adapters'
+import { BTCSignTx, ETHSignTx } from '@shapeshiftoss/hdwallet-core'
 import type { Asset } from '@shapeshiftoss/types'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
@@ -106,14 +106,20 @@ export class ThorchainSwapper implements Swapper<ChainId> {
 
   async executeTrade(args: ExecuteTradeInput<ChainId>): Promise<TradeResult> {
     const { trade, wallet } = args
-    const adapter = this.deps.adapterManager.get(trade.sellAsset.chainId) as
-      | ethereum.ChainAdapter
-      | undefined
+    const adapter = this.deps.adapterManager.get(trade.sellAsset.chainId)
 
-    if (adapter && trade.sellAsset.chainId === KnownChainIds.EthereumMainnet) {
-      const thorTradeEth = trade as ThorTrade<'eip155:1'>
-      const signedTx = await adapter.signTransaction({
-        txToSign: thorTradeEth.txData as ETHSignTx,
+    if (!adapter) throw new Error()
+
+    if (trade.sellAsset.chainId === KnownChainIds.EthereumMainnet) {
+      const signedTx = await (adapter as unknown as ethereum.ChainAdapter).signTransaction({
+        txToSign: (trade as ThorTrade<KnownChainIds.EthereumMainnet>).txData as ETHSignTx,
+        wallet
+      })
+      const txid = await adapter.broadcastTransaction(signedTx)
+      return { tradeId: txid }
+    } else if (trade.sellAsset.chainId === KnownChainIds.BitcoinMainnet) {
+      const signedTx = await (adapter as unknown as bitcoin.ChainAdapter).signTransaction({
+        txToSign: (trade as ThorTrade<KnownChainIds.BitcoinMainnet>).txData as BTCSignTx,
         wallet
       })
       const txid = await adapter.broadcastTransaction(signedTx)

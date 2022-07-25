@@ -1,13 +1,15 @@
 import { ChainId } from '@shapeshiftoss/caip'
-import { ethereum } from '@shapeshiftoss/chain-adapters'
-import { BTCSignTx } from '@shapeshiftoss/hdwallet-core'
+import { bitcoin, ethereum } from '@shapeshiftoss/chain-adapters'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
 import { BuildTradeInput, SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
 import { DEFAULT_SLIPPAGE } from '../../utils/constants'
 import { getThorTradeQuote } from '../getThorTradeQuote/getTradeQuote'
 import { ThorchainSwapperDeps, ThorTrade } from '../types'
+import { getThorTxInfo as getBtcThorTxInfo } from '../utils/bitcoin/utils/getThorTxData'
 import { makeTradeTx } from '../utils/ethereum/makeTradeTx'
+import { getBtcTxFees } from '../utils/txFeeHelpers/btcTxFees/getBtcTxFees'
+
 export const buildTrade = async ({
   deps,
   input
@@ -31,7 +33,7 @@ export const buildTrade = async ({
   if (!sellAdapter)
     throw new SwapError('[buildTrade]: unsupported sell asset', {
       code: SwapErrorTypes.BUILD_TRADE_FAILED,
-      fn: 'executeTrade',
+      fn: 'buildTrade',
       details: { sellAsset }
     })
   const sellAssetBip44Params = sellAdapter.buildBIP44Params({
@@ -57,19 +59,64 @@ export const buildTrade = async ({
         '0',
       tradeFee: quote.feeData.tradeFee
     })
-    console.log('ethTradeTx', ethTradeTx)
+
     return {
       chainId: 'eip155:1',
       ...quote,
       receiveAddress: destinationAddress,
       txData: ethTradeTx.txToSign
-    } as ThorTrade<'eip155:1'>
+    } as ThorTrade<'eip155:1'> // Do we need these casted?
   } else if (sellAsset.chainId === 'bip122:000000000019d6689c085ae165831e93') {
+    if (input.chainId !== KnownChainIds.BitcoinMainnet)
+      throw new SwapError('[buildTrade]: bad chain id', {
+        code: SwapErrorTypes.BUILD_TRADE_FAILED,
+        fn: 'executeTrade',
+        details: { chainId: input.chainId }
+      })
+    const { vault, opReturnData, pubkey } = await getBtcThorTxInfo({
+      deps,
+      sellAsset,
+      buyAsset,
+      sellAmount,
+      slippageTolerance: DEFAULT_SLIPPAGE,
+      destinationAddress,
+      wallet,
+      bip44Params: sellAssetBip44Params,
+      accountType: input.accountType
+    })
+
+    const feeData = await getBtcTxFees({
+      deps,
+      buyAsset,
+      sellAmount,
+      vault,
+      opReturnData,
+      pubkey,
+      adapterManager: deps.adapterManager
+    })
+
+    console.log('opReturnData is', opReturnData)
+
+    const buildTxResponse = await (
+      sellAdapter as unknown as bitcoin.ChainAdapter
+    ).buildSendTransaction({
+      value: sellAmount,
+      wallet,
+      to: vault,
+      chainSpecific: {
+        accountType: input.accountType,
+        satoshiPerByte: feeData.chainSpecific.satsPerByte,
+        opReturnData
+      }
+    })
+
     return {
       chainId: 'bip122:000000000019d6689c085ae165831e93',
       ...quote,
       receiveAddress: destinationAddress,
-      txData: {} as BTCSignTx asdfasdfasdfds get the tx data using btc utils
-    } as ThorTrade<'bip122:000000000019d6689c085ae165831e93'>
+      txData: buildTxResponse.txToSign
+    } as ThorTrade<'bip122:000000000019d6689c085ae165831e93'> // Do we need these casted?
+  } else {
+    throw new Error()
   }
 }

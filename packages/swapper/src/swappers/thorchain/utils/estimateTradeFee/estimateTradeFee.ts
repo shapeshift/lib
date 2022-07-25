@@ -24,7 +24,7 @@ const ethEstimate = (gasRate: string) =>
 const erc20Estimate = (gasRate: string) =>
   bnOrZero(gasRate)
     .times(120000)
-    .times(3)
+    .times(2)
     .times(bn(10).exponentiatedBy(gweiGasPrecision))
     .toString()
 
