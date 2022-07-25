@@ -1,4 +1,5 @@
 import { Asset } from '@shapeshiftoss/asset-service'
+import { isEvmChainId } from '@shapeshiftoss/chain-adapters'
 
 import { MinMaxOutput, SwapError, SwapErrorTypes } from '../../../api'
 import { bn, bnOrZero } from '../../utils/bignumber'
@@ -7,7 +8,13 @@ import { getUsdRate } from '../utils/helpers/helpers'
 
 export const getZrxMinMax = async (sellAsset: Asset, buyAsset: Asset): Promise<MinMaxOutput> => {
   try {
-    if (sellAsset.chainId !== 'eip155:1' || buyAsset.chainId !== 'eip155:1') {
+    if (
+      !(
+        isEvmChainId(sellAsset.chainId) &&
+        isEvmChainId(buyAsset.chainId) &&
+        buyAsset.chainId === sellAsset.chainId
+      )
+    ) {
       throw new SwapError('[getZrxMinMax]', { code: SwapErrorTypes.UNSUPPORTED_PAIR })
     }
 

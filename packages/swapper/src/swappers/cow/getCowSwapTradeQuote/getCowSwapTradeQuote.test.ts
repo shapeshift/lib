@@ -100,8 +100,7 @@ const expectedTradeQuoteWethToFox: TradeQuote<KnownChainIds.EthereumMainnet> = {
 const defaultDeps: CowSwapperDeps = {
   apiUrl: '',
   adapter: {} as ethereum.ChainAdapter,
-  web3: {} as Web3,
-  feeAsset: WETH
+  web3: {} as Web3
 }
 
 describe('getCowTradeQuote', () => {
@@ -131,8 +130,7 @@ describe('getCowTradeQuote', () => {
           Promise.resolve(feeData)
         )
       } as unknown as ethereum.ChainAdapter,
-      web3: {} as Web3,
-      feeAsset: WETH
+      web3: {} as Web3
     }
 
     const input: GetTradeQuoteInput = {
