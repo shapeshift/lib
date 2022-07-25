@@ -1,3 +1,24 @@
+# [@shapeshiftoss/chain-adapters-v7.10.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v7.9.0...@shapeshiftoss/chain-adapters-v7.10.0) (2022-07-22)
+
+
+### Features
+
+* cowswap executeTrade and getTradeTxs methods ([#868](https://github.com/shapeshift/lib/issues/868)) ([b9ce707](https://github.com/shapeshift/lib/commit/b9ce7070d3f3a5d70464c57efc488c7a2604e3dc))
+
+# [@shapeshiftoss/chain-adapters-v7.9.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v7.8.0...@shapeshiftoss/chain-adapters-v7.9.0) (2022-07-20)
+
+
+### Features
+
+* dogecoin ([#888](https://github.com/shapeshift/lib/issues/888)) ([7ccb927](https://github.com/shapeshift/lib/commit/7ccb92707b48d912f1fd2126888b314baacbbfda))
+
+# [@shapeshiftoss/chain-adapters-v7.8.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v7.7.0...@shapeshiftoss/chain-adapters-v7.8.0) (2022-07-20)
+
+
+### Features
+
+* export EvmChainIds type ([#892](https://github.com/shapeshift/lib/issues/892)) ([da92508](https://github.com/shapeshift/lib/commit/da925083d7bf0ffe945193694342e4b74da831db))
+
 # [@shapeshiftoss/chain-adapters-v7.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v7.6.0...@shapeshiftoss/chain-adapters-v7.7.0) (2022-07-15)
 
 
