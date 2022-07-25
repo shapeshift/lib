@@ -1,6 +1,7 @@
 export enum Dex {
   Thor = 'thor',
-  Zrx = 'zrx'
+  Zrx = 'zrx',
+  CowSwap = 'cowswap'
 }
 
 export interface Fee {
@@ -55,7 +56,8 @@ export enum TxParser {
   ZRX = 'zrx',
   Thor = 'thor',
   Foxy = 'foxy',
-  WETH = 'weth'
+  WETH = 'weth',
+  CowSwap = 'cowswap'
 }
 
 export interface BaseTxMetadata {
