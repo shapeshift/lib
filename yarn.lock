@@ -2819,10 +2819,10 @@
     varuint-bitcoin "^1.0.4"
     wif "^2.0.1"
 
-"@shapeshiftoss/blockbook@^7.2.0-alpha.0":
-  version "7.2.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/@shapeshiftoss/blockbook/-/blockbook-7.2.0-alpha.0.tgz#ea35acccd4293ebba7d6bed56d5141a60f6820fb"
-  integrity sha512-7XhiCkDm906UAqyUv4sMvkF50/J+NpUMbMFOumhxUgMXM5fFLqE7arICNBRAeoD/g6T4i3hAV4y5uz9pLv2LXA==
+"@shapeshiftoss/blockbook@^7.2.0":
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/blockbook/-/blockbook-7.2.0.tgz#846abad9a7ba1696b67f861b6769464e6ac54e8a"
+  integrity sha512-CP/32Z2R21NTX5hLrf9vn8UiMQGQMdy6sV5uv4ZfLk47Fha3l+vz7EGKyspnPE8GzEDHbpHC+DYk27HWVYZOAQ==
   dependencies:
     axios "^0.27.2"
     axios-retry "^3.2.5"
@@ -2831,14 +2831,17 @@
     tsoa "^4.1.0"
     ws "^8.8.0"
 
-"@shapeshiftoss/common-api@^7.2.0-alpha.0":
-  version "7.2.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/@shapeshiftoss/common-api/-/common-api-7.2.0-alpha.0.tgz#becf8b19aef41b9cbf18ed04c2d21ea0cb08f733"
-  integrity sha512-jmpEuQu8PsHe42gDiNj5vcY0UHu2HX9eSiJMLz3zVsKY9puhw93VkJqCURePlBGbPgwMy6PArJwtWMm89+jp3g==
+"@shapeshiftoss/common-api@^7.2.0":
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/common-api/-/common-api-7.2.0.tgz#5ed4dba4db71e0d17f8812576fb9dd911ee38443"
+  integrity sha512-DNiVz3LL9LVeDO2jpcSWZGAV/hk+gHSuKHzZZTgHJA5nXwUjuqPLRuJtgZWllTzd7gnR9v701vVm0eAUQXiuvg==
   dependencies:
-    "@shapeshiftoss/blockbook" "^7.2.0-alpha.0"
+    "@shapeshiftoss/blockbook" "^7.2.0"
+    "@shapeshiftoss/logger" "^1.1.2"
+    axios "^0.27.2"
     axios-retry "^3.2.5"
     bignumber.js "^9.0.2"
+    ethers "^5.6.9"
     tsoa "^4.1.0"
     uuid "^8.3.2"
     ws "^8.8.0"
@@ -6120,7 +6123,7 @@ ethers@5.6.5:
     "@ethersproject/web" "5.6.0"
     "@ethersproject/wordlists" "5.6.0"
 
-ethers@^5.4.7, ethers@^5.5.3:
+ethers@^5.4.7, ethers@^5.5.3, ethers@^5.6.9:
   version "5.6.9"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.6.9.tgz#4e12f8dfcb67b88ae7a78a9519b384c23c576a4d"
   integrity sha512-lMGC2zv9HC5EC+8r429WaWu3uWJUCgUCt8xxKCFqkrFuBDZXDYIdzDUECxzjf2BMF8IVBByY1EBoGSL3RTm8RA==
