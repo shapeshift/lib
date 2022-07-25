@@ -2,13 +2,14 @@ import Web3 from 'web3'
 // import https from 'https'
 import { find } from 'lodash'
 import filter from 'lodash/filter'
+import { IdleSdk } from './IdleSdk'
 import { Contract } from 'web3-eth-contract'
 import { Logger } from '@shapeshiftoss/logger'
 import { Investor } from '@shapeshiftoss/investor'
 import { KnownChainIds } from '@shapeshiftoss/types'
 import type { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { PreparedTransaction, IdleOpportunity } from './IdleOpportunity'
-import { IdleVault, availableTokens, ssRouterAbi, ssRouterContractAddress } from './constants'
+import { IdleVault, ssRouterAbi, ssRouterContractAddress } from './constants'
 
 type ConstructorArgs = {
   chainAdapter: ChainAdapter<KnownChainIds.EthereumMainnet>
@@ -31,6 +32,7 @@ type ConstructorArgs = {
 //     });
 //   }));
 // }
+const idleSdk = new IdleSdk();
 
 export class IdleInvestor implements Investor<PreparedTransaction, IdleVault> {
   readonly #deps: {
@@ -62,8 +64,10 @@ export class IdleInvestor implements Investor<PreparedTransaction, IdleVault> {
 
     // const vaults = await makeRequest('http://localhost:3333/pools?api-key=bPrtC2bfnAvapyXLgdvzVzW8u8igKv6E');
     // if (vaults){
-      // const vaultsParsed: IdleVault[] = JSON.parse(vaults);
-      this.#opportunities = availableTokens.map(
+      // this.#vaults = JSON.parse(vaults);
+      const vaults: IdleVault[] = await idleSdk.getVaults()
+      // this.#vaults = availableTokens
+      this.#opportunities = vaults.map(
         (vault) => new IdleOpportunity(this.#deps, vault)
       );
     // }
