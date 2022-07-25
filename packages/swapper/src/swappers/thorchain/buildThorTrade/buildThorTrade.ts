@@ -1,5 +1,6 @@
 import { ChainId } from '@shapeshiftoss/caip'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
+import { BTCSignTx } from '@shapeshiftoss/hdwallet-core'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
 import { BuildTradeInput, SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
@@ -63,11 +64,12 @@ export const buildTrade = async ({
       receiveAddress: destinationAddress,
       txData: ethTradeTx.txToSign
     } as ThorTrade<'eip155:1'>
-  } else {
-    throw new SwapError('[buildTrade]: unsupported sell asset', {
-      code: SwapErrorTypes.BUILD_TRADE_FAILED,
-      fn: 'executeTrade',
-      details: { sellAsset }
-    })
+  } else if (sellAsset.chainId === 'bip122:000000000019d6689c085ae165831e93') {
+    return {
+      chainId: 'bip122:000000000019d6689c085ae165831e93',
+      ...quote,
+      receiveAddress: destinationAddress,
+      txData: {} as BTCSignTx asdfasdfasdfds get the tx data using btc utils
+    } as ThorTrade<'bip122:000000000019d6689c085ae165831e93'>
   }
 }
