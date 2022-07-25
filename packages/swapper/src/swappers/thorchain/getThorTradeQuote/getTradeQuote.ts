@@ -69,7 +69,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
     const buyAmount = toBaseUnit(
       bnOrZero(fromBaseUnit(sellAmount, sellAsset.precision)).times(tradeRate),
       buyAsset.precision
-      .toString()
+    )
     console.log('buyAmount', buyAmount)
 
     const tradeFee = await estimateTradeFee(deps, buyAsset.assetId)
