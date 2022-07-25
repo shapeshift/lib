@@ -28,6 +28,7 @@ import {
   AllowanceInput,
   ApproveInput,
   BalanceInput,
+  CanClaimWithdrawParams,
   ClaimWithdrawal,
   ContractAddressInput,
   EstimateGasApproveInput,
@@ -39,7 +40,6 @@ import {
   RebaseHistory,
   SignAndBroadcastTx,
   StakingContract,
-  StakingContractAddressWithUser,
   TokeClaimIpfs,
   TokenAddressInput,
   TxInput,
@@ -538,7 +538,7 @@ export class FoxyApi {
     return this.signAndBroadcastTx({ payload, wallet, dryRun })
   }
 
-  async canClaimWithdraw(input: StakingContractAddressWithUser): Promise<boolean> {
+  async canClaimWithdraw(input: CanClaimWithdrawParams): Promise<boolean> {
     const { userAddress, contractAddress } = input
     const tokeManagerContract = new this.web3.eth.Contract(tokeManagerAbi, tokeManagerAddress)
     const tokePoolContract = new this.web3.eth.Contract(tokePoolAbi, tokePoolAddress)
