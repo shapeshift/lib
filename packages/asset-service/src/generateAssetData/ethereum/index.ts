@@ -18,6 +18,8 @@ import {
   getZapperTokens
 } from './yearnVaults'
 
+import { getIdleTokens } from './idleVaults'
+
 const foxyToken: Asset = {
   assetId: toAssetId({
     chainId: ethChainId,
@@ -36,14 +38,15 @@ const foxyToken: Asset = {
 }
 
 export const getAssets = async (): Promise<Asset[]> => {
-  const [ethTokens, yearnVaults, ironBankTokens, zapperTokens, underlyingTokens, uniV2PoolTokens] =
+  const [ethTokens, yearnVaults, ironBankTokens, zapperTokens, underlyingTokens, uniV2PoolTokens, idleTokens] =
     await Promise.all([
       coingecko.getAssets(ethChainId, overrideTokens),
       getYearnVaults(),
       getIronBankTokens(),
       getZapperTokens(),
       getUnderlyingVaultTokens(),
-      getUniswapV2Pools()
+      getUniswapV2Pools(),
+      getIdleTokens()
     ])
 
   const ethAssets = [
@@ -54,7 +57,8 @@ export const getAssets = async (): Promise<Asset[]> => {
     ...ironBankTokens,
     ...zapperTokens,
     ...underlyingTokens,
-    ...uniV2PoolTokens
+    ...uniV2PoolTokens,
+    ...idleTokens
   ]
   const uniqueAssets = orderBy(uniqBy(ethAssets, 'assetId'), 'assetId') // Remove dups and order for PR readability
   const batchSize = 100 // tune this to keep rate limiting happy
