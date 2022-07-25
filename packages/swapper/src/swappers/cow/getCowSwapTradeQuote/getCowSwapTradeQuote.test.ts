@@ -79,13 +79,13 @@ const expectedTradeQuoteWethToFox: TradeQuote<KnownChainIds.EthereumMainnet> = {
   minimum: '0.00810596500550730736',
   maximum: '100000000000000000000000000',
   feeData: {
-    fee: '14557942658757988', // fee in WETH
+    fee: '0',
     chainSpecific: {
       estimatedGas: '100000',
       gasPrice: '79036500000',
       approvalFee: '7903650000000000'
     },
-    tradeFee: '0'
+    tradeFee: '17.95954294012756741283729339486489192096'
   },
   sellAmount: '1000000000000000000',
   buyAmount: '14501811818247595090576', // 14501 FOX
@@ -99,8 +99,7 @@ const expectedTradeQuoteWethToFox: TradeQuote<KnownChainIds.EthereumMainnet> = {
 const defaultDeps: CowSwapperDeps = {
   apiUrl: '',
   adapter: {} as ethereum.ChainAdapter,
-  web3: {} as Web3,
-  feeAsset: WETH
+  web3: {} as Web3
 }
 
 describe('getCowTradeQuote', () => {
@@ -130,8 +129,7 @@ describe('getCowTradeQuote', () => {
           Promise.resolve(feeData)
         )
       } as unknown as ethereum.ChainAdapter,
-      web3: {} as Web3,
-      feeAsset: WETH
+      web3: {} as Web3
     }
 
     const input: GetTradeQuoteInput = {
