@@ -5,6 +5,7 @@ import { SwapError, SwapErrorTypes } from '../../../../../api'
 import { bn, bnOrZero, fromBaseUnit, toBaseUnit } from '../../../../utils/bignumber'
 import { InboundResponse, ThorchainSwapperDeps } from '../../../types'
 import { getTradeRate } from '../../../utils/getTradeRate/getTradeRate'
+import { THORCHAIN_FIXED_PRECISION } from '../../constants'
 import { makeSwapMemo } from '../../makeSwapMemo/makeSwapMemo'
 import { thorService } from '../../thorService'
 import { deposit } from '../routerCalldata'
@@ -55,25 +56,22 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
 
     const tradeRate = await getTradeRate(sellAsset, buyAsset.assetId, sellAmount, deps)
 
-    const expectedBuyAmount = toBaseUnit(
+    const expectedBuyAmountPrecision8 = toBaseUnit(
       fromBaseUnit(bnOrZero(sellAmount).times(tradeRate), sellAsset.precision),
-      8 // limit values are precision 8 regardless of the chain
+      THORCHAIN_FIXED_PRECISION
     )
 
-    const tradeFeePrecision8 = toBaseUnit(
-      bnOrZero(tradeFee),
-      8 // limit values are precision 8 regardless of the chain
-    )
+    const tradeFeePrecision8 = toBaseUnit(bnOrZero(tradeFee), THORCHAIN_FIXED_PRECISION)
 
     const isValidSlippageRange =
       bnOrZero(slippageTolerance).gte(0) && bnOrZero(slippageTolerance).lte(1)
-    if (bnOrZero(expectedBuyAmount).lt(0) || !isValidSlippageRange)
+    if (bnOrZero(expectedBuyAmountPrecision8).lt(0) || !isValidSlippageRange)
       throw new SwapError('[makeTradeTx]: bad expected buy amount or bad slippage tolerance', {
         code: SwapErrorTypes.BUILD_TRADE_FAILED,
-        details: { expectedBuyAmount, slippageTolerance }
+        details: { expectedBuyAmountPrecision8, slippageTolerance }
       })
 
-    const limit = bnOrZero(expectedBuyAmount)
+    const limit = bnOrZero(expectedBuyAmountPrecision8)
       .times(bn(1).minus(slippageTolerance))
       .minus(bnOrZero(tradeFeePrecision8))
       .decimalPlaces(0)
