@@ -76,7 +76,8 @@ export const buildTrade = async ({
         destinationAddress,
         wallet,
         bip44Params: sellAssetBip44Params,
-        accountType: input.accountType
+        accountType: input.accountType,
+        tradeFee: quote.feeData.tradeFee
       })
 
       const buildTxResponse = await (
