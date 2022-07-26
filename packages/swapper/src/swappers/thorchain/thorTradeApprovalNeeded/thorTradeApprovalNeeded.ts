@@ -1,4 +1,9 @@
-import { CHAIN_NAMESPACE, fromAssetId, fromChainId, getFeeAssetIdFromAssetId } from '@shapeshiftoss/caip'
+import {
+  CHAIN_NAMESPACE,
+  fromAssetId,
+  fromChainId,
+  getFeeAssetIdFromAssetId
+} from '@shapeshiftoss/caip'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
 import { ApprovalNeededInput, ApprovalNeededOutput, SwapError, SwapErrorTypes } from '../../../api'

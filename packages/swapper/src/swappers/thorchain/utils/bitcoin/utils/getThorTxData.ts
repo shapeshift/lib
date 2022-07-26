@@ -71,11 +71,11 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
         details: { expectedBuyAmount, slippageTolerance }
       })
 
-      const tradeFeePrecision8 = toBaseUnit(
-        bnOrZero(tradeFee),
-        8 // limit values are precision 8 regardless of the chain
-      )
-      const limit = bnOrZero(expectedBuyAmount)
+    const tradeFeePrecision8 = toBaseUnit(
+      bnOrZero(tradeFee),
+      8 // limit values are precision 8 regardless of the chain
+    )
+    const limit = bnOrZero(expectedBuyAmount)
       .times(bn(1).minus(slippageTolerance))
       .minus(bnOrZero(tradeFeePrecision8))
       .decimalPlaces(0)
