@@ -1,3 +1,24 @@
+# [@shapeshiftoss/asset-service-v7.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v7.0.0...@shapeshiftoss/asset-service-v7.0.1) (2022-07-26)
+
+
+### Bug Fixes
+
+* unrug lib bump packages ([#910](https://github.com/shapeshift/lib/issues/910)) ([c914e58](https://github.com/shapeshift/lib/commit/c914e58a2832e5bc196d062074499ec46a200d50))
+
+# [@shapeshiftoss/asset-service-v7.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.5.1...@shapeshiftoss/asset-service-v7.0.0) (2022-07-26)
+
+
+### Features
+
+* **types:** export Asset type from asset-service ([#893](https://github.com/shapeshift/lib/issues/893)) ([616ea72](https://github.com/shapeshift/lib/commit/616ea72573dd7a3a91a9233d83f8936b43ca0ed7))
+
+
+### BREAKING CHANGES
+
+* **types:** Asset is now exported from asset-service, and all consumers should now import it from it
+
+* fix: tests Asset type imports
+
 # [@shapeshiftoss/asset-service-v6.5.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.5.0...@shapeshiftoss/asset-service-v6.5.1) (2022-07-21)
 
 # [@shapeshiftoss/asset-service-v6.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v6.4.0...@shapeshiftoss/asset-service-v6.5.0) (2022-07-20)

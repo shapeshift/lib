@@ -1,3 +1,4 @@
+import { Asset } from '@shapeshiftoss/asset-service'
 import { AssetReference } from '@shapeshiftoss/caip'
 import { ChainAdapterManager, ethereum, FeeDataKey } from '@shapeshiftoss/chain-adapters'
 import { KnownChainIds } from '@shapeshiftoss/types'

@@ -1,7 +1,7 @@
+import { Asset } from '@shapeshiftoss/asset-service'
 import { adapters, AssetId, ChainId, fromAssetId } from '@shapeshiftoss/caip'
 import { bitcoin, ethereum } from '@shapeshiftoss/chain-adapters'
 import { BTCSignTx, ETHSignTx } from '@shapeshiftoss/hdwallet-core'
-import type { Asset } from '@shapeshiftoss/types'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
 import {
