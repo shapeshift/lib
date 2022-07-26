@@ -6,7 +6,7 @@ import { bnOrZero, fromBaseUnit, toBaseUnit } from '../../utils/bignumber'
 import { DEFAULT_SLIPPAGE } from '../../utils/constants'
 import { ThorchainSwapperDeps } from '../types'
 import { getThorTxInfo as getBtcThorTxInfo } from '../utils/bitcoin/utils/getThorTxData'
-import { MAX_THORCHAIN_TRADE } from '../utils/constants'
+import { MAX_THORCHAIN_TRADE, THOR_MINIMUM_PADDING } from '../utils/constants'
 import { estimateTradeFee } from '../utils/estimateTradeFee/estimateTradeFee'
 import { getThorTxInfo as getEthThorTxInfo } from '../utils/ethereum/utils/getThorTxData'
 import { getTradeRate } from '../utils/getTradeRate/getTradeRate'
@@ -70,9 +70,9 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
 
     const sellAssetTradeFee = bnOrZero(tradeFee).times(bnOrZero(rate))
 
-    // minimum is tradeFee padded by 20% to be sure they get something back
-    // usually it will be more than 20% because sellAssetTradeFee is already a high estimate
-    const minimum = bnOrZero(sellAssetTradeFee).times(1.2).toString()
+    // minimum is tradeFee padded by an amount to be sure they get something back
+    // usually it will be slightly more than the amount because sellAssetTradeFee is already a high estimate
+    const minimum = bnOrZero(sellAssetTradeFee).times(THOR_MINIMUM_PADDING).toString()
 
     const commonQuoteFields: CommonQuoteFields = {
       rate,
@@ -95,7 +95,8 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             buyAsset,
             sellAmount,
             slippageTolerance: DEFAULT_SLIPPAGE,
-            destinationAddress: receiveAddress
+            destinationAddress: receiveAddress,
+            tradeFee: '0'
           })
           const feeData = await getEthTxFees({
             adapterManager: deps.adapterManager,

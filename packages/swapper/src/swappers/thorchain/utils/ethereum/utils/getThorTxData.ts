@@ -16,7 +16,7 @@ type GetBtcThorTxInfoArgs = {
   sellAmount: string
   slippageTolerance: string
   destinationAddress: string
-  tradeFee?: string
+  tradeFee: string
 }
 type GetBtcThorTxInfoReturn = Promise<{
   data: string
