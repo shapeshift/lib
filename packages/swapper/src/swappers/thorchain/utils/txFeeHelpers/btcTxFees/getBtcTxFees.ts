@@ -1,4 +1,3 @@
-import { Asset } from '@shapeshiftoss/asset-service'
 import { bitcoin, ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
