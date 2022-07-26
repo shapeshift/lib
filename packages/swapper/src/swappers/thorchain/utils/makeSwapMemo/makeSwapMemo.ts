@@ -18,7 +18,6 @@ export const makeSwapMemo = ({
   destinationAddress: string
   limit: string
 }): string => {
-  console.log('makeSwapMemo')
   const thorId = adapters.assetIdToPoolAssetId({ assetId: buyAssetId })
   if (!thorId)
     throw new SwapError('[makeSwapMemo] - undefined thorId for given buyAssetId', {
@@ -28,12 +27,9 @@ export const makeSwapMemo = ({
 
   const memo = `s:${thorId}:${destinationAddress}:${limit}`
 
-  console.log('thorId', thorId)
-  console.log('memo 1', memo)
   if (memo.length <= MAX_LENGTH) return memo
   const abbreviationAmount = memo.length - MAX_LENGTH
 
-  console.log('abbreviationAmount', abbreviationAmount)
   if (abbreviationAmount > 39)
     throw new SwapError('[makeSwapMemo] - too much abbreviation for accurate matching', {
       code: SwapErrorTypes.MAKE_MEMO_FAILED

@@ -54,7 +54,6 @@ export const makeTradeTx = async ({
 
     const isErc20Trade = assetNamespace === 'erc20'
 
-    console.log('calling getThorTxInfo with', destinationAddress)
     const { data, router } = await getThorTxInfo({
       deps,
       sellAsset,

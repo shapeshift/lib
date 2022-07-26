@@ -8,7 +8,6 @@ import { getThorTradeQuote } from '../getThorTradeQuote/getTradeQuote'
 import { ThorchainSwapperDeps, ThorTrade } from '../types'
 import { getThorTxInfo as getBtcThorTxInfo } from '../utils/bitcoin/utils/getThorTxData'
 import { makeTradeTx } from '../utils/ethereum/makeTradeTx'
-import { getBtcTxFees } from '../utils/txFeeHelpers/btcTxFees/getBtcTxFees'
 
 export const buildTrade = async ({
   deps,
@@ -40,7 +39,6 @@ export const buildTrade = async ({
     accountNumber: sellAssetAccountNumber
   })
 
-  console.log('quote is', quote)
   if (sellAsset.chainId === 'eip155:1') {
     const ethTradeTx = await makeTradeTx({
       wallet,
@@ -73,7 +71,7 @@ export const buildTrade = async ({
         fn: 'executeTrade',
         details: { chainId: input.chainId }
       })
-    const { vault, opReturnData, pubkey } = await getBtcThorTxInfo({
+    const { vault, opReturnData } = await getBtcThorTxInfo({
       deps,
       sellAsset,
       buyAsset,
@@ -85,18 +83,6 @@ export const buildTrade = async ({
       accountType: input.accountType
     })
 
-    const feeData = await getBtcTxFees({
-      deps,
-      buyAsset,
-      sellAmount,
-      vault,
-      opReturnData,
-      pubkey,
-      adapterManager: deps.adapterManager
-    })
-
-    console.log('opReturnData is', opReturnData)
-
     const buildTxResponse = await (
       sellAdapter as unknown as bitcoin.ChainAdapter
     ).buildSendTransaction({
@@ -105,7 +91,8 @@ export const buildTrade = async ({
       to: vault,
       chainSpecific: {
         accountType: input.accountType,
-        satoshiPerByte: feeData.chainSpecific.satsPerByte,
+        satoshiPerByte: (quote as TradeQuote<KnownChainIds.BitcoinMainnet>).feeData.chainSpecific
+          .satsPerByte,
         opReturnData
       }
     })

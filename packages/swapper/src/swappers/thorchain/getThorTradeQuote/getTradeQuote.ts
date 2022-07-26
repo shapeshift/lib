@@ -61,32 +61,19 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
     const tradeRate = await getTradeRate(sellAsset, buyAsset.assetId, sellAmount, deps)
     const rate = bnOrZero(1).div(tradeRate).toString()
 
-    console.log('tradeRate', tradeRate)
-    console.log('rate', rate)
-    console.log('sellAmount', sellAmount)
-    console.log('buyAsset.precision', buyAsset.precision)
-
     const buyAmount = toBaseUnit(
       bnOrZero(fromBaseUnit(sellAmount, sellAsset.precision)).times(tradeRate),
       buyAsset.precision
     )
-    console.log('buyAmount', buyAmount)
 
-    const tradeFee = await estimateTradeFee(deps, buyAsset.assetId)
+    const tradeFee = await estimateTradeFee(deps, buyAsset)
 
-    console.log('tradeFee', tradeFee)
+    const sellAssetTradeFee = bnOrZero(tradeFee).times(bnOrZero(rate))
 
-    const sellAssetTradeFee = fromBaseUnit(
-      bnOrZero(tradeFee).times(bnOrZero(rate)),
-      buyAsset.precision
-    )
-
-    console.log('sellAssetTradeFee', sellAssetTradeFee)
-
-    // minimum is tradeFee padded by 10% to be sure they get something back
-    // usually it will be more than 10% because sellAssetTradeFee is a high estimate
+    // minimum is tradeFee padded by 20% to be sure they get something back
+    // usually it will be more than 20% because sellAssetTradeFee is already a high estimate
     const minimum = bnOrZero(sellAssetTradeFee).times(1.2).toString()
-    console.log('minimum', minimum)
+
     const commonQuoteFields: CommonQuoteFields = {
       rate,
       maximum: MAX_THORCHAIN_TRADE,
@@ -111,14 +98,13 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             destinationAddress: receiveAddress
           })
           const feeData = await getEthTxFees({
-            deps,
             data,
             router,
-            buyAsset,
             sellAmount,
             adapterManager: deps.adapterManager,
             receiveAddress,
-            sellAssetReference: sellAssetErc20Address
+            sellAssetReference: sellAssetErc20Address,
+            tradeFee
           })
 
           return {
@@ -143,13 +129,12 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
           })
 
           const feeData = await getBtcTxFees({
-            deps,
-            buyAsset,
             sellAmount,
             vault,
             opReturnData,
             pubkey,
-            adapterManager: deps.adapterManager
+            adapterManager: deps.adapterManager,
+            tradeFee
           })
 
           return {

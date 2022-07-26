@@ -54,18 +54,16 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
       })
 
     const tradeRate = await getTradeRate(sellAsset, buyAsset.assetId, sellAmount, deps)
-    console.log('tradeRate', tradeRate)
+
     const expectedBuyAmount = toBaseUnit(
       fromBaseUnit(bnOrZero(sellAmount).times(tradeRate), sellAsset.precision),
       8 // limit values are precision 8 regardless of the chain
     )
 
     const tradeFeeBase8 = toBaseUnit(
-      fromBaseUnit(bnOrZero(tradeFee), buyAsset.precision),
+      bnOrZero(tradeFee),
       8 // limit values are precision 8 regardless of the chain
     )
-
-    console.log('expectedBuyAmount', expectedBuyAmount)
 
     const isValidSlippageRange =
       bnOrZero(slippageTolerance).gte(0) && bnOrZero(slippageTolerance).lte(1)
@@ -81,16 +79,11 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
       .decimalPlaces(0)
       .toString()
 
-    console.log('tradeFeeBase8 is', tradeFeeBase8)
-    console.log('slippageTolerance is', slippageTolerance)
-
-    console.log('getting memo for', buyAsset, destinationAddress, limit)
     const memo = makeSwapMemo({
       buyAssetId: buyAsset.assetId,
       destinationAddress,
       limit
     })
-    console.log('memo is', memo)
 
     const data = await deposit(
       router,

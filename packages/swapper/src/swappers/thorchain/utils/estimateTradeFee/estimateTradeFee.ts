@@ -1,7 +1,8 @@
-import { adapters, AssetId, fromAssetId, getFeeAssetIdFromAssetId } from '@shapeshiftoss/caip'
+import { adapters, fromAssetId, getFeeAssetIdFromAssetId } from '@shapeshiftoss/caip'
+import { Asset } from '@shapeshiftoss/types'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
-import { bn, bnOrZero } from '../../../utils/bignumber'
+import { bn, bnOrZero, fromBaseUnit } from '../../../utils/bignumber'
 import { InboundResponse, ThorchainSwapperDeps } from '../../types'
 import { getPriceRatio } from '../getPriceRatio/getPriceRatio'
 import { thorService } from '../thorService'
@@ -11,7 +12,7 @@ const gweiGasPrecision = 9
 // Official docs on fees are incorrect
 // https://discord.com/channels/838986635756044328/997675038675316776/998552541170253834
 // This is still not "perfect" and tends to overestimate by a randomish amount
-// TODO figure out if its possible to accurately estimate the outbound fee. 
+// TODO figure out if its possible to accurately estimate the outbound fee.
 // Neither the discord nor official docs are corret
 
 const ethEstimate = (gasRate: string) =>
@@ -33,13 +34,13 @@ const btcEstimate = (gasRate: string) => bnOrZero(gasRate).times(btcTxSize).time
 
 export const estimateTradeFee = async (
   deps: ThorchainSwapperDeps,
-  buyAssetId: AssetId
+  buyAsset: Asset
 ): Promise<string> => {
-  const thorId = adapters.assetIdToPoolAssetId({ assetId: buyAssetId })
+  const thorId = adapters.assetIdToPoolAssetId({ assetId: buyAsset.assetId })
   if (!thorId)
     throw new SwapError('[estimateTradeFee] - undefined thorId for given buyAssetId', {
       code: SwapErrorTypes.VALIDATION_FAILED,
-      details: { buyAssetId }
+      details: { buyAssetId: buyAsset.assetId }
     })
 
   const thorPoolChainId = thorId.slice(0, thorId.indexOf('.'))
@@ -57,32 +58,41 @@ export const estimateTradeFee = async (
     })
 
   const gasRate = inboundInfo.gas_rate
-  const { chainId, assetNamespace } = fromAssetId(buyAssetId)
+  const { chainId, assetNamespace } = fromAssetId(buyAsset.assetId)
 
-  const feeAssetId = getFeeAssetIdFromAssetId(buyAssetId)
+  const feeAssetId = getFeeAssetIdFromAssetId(buyAsset.assetId)
   if (!feeAssetId)
     throw new SwapError('[estimateTradeFee] - no fee assetId', {
       code: SwapErrorTypes.VALIDATION_FAILED,
-      details: { buyAssetId }
+      details: { buyAssetId: buyAsset.assetId }
     })
 
   const feeAssetRatio =
-    buyAssetId !== feeAssetId
+    buyAsset.assetId !== feeAssetId
       ? await getPriceRatio(deps, {
-          sellAssetId: buyAssetId,
+          sellAssetId: buyAsset.assetId,
           buyAssetId: feeAssetId
         })
       : '1'
 
   switch (chainId) {
     case 'bip122:000000000019d6689c085ae165831e93':
-      return bnOrZero(btcEstimate(gasRate)).times(feeAssetRatio).dp(0).toString()
+      return fromBaseUnit(
+        bnOrZero(btcEstimate(gasRate)).times(feeAssetRatio).dp(0),
+        buyAsset.precision
+      )
     case 'eip155:1':
       switch (assetNamespace) {
         case 'slip44':
-          return bnOrZero(ethEstimate(gasRate)).times(feeAssetRatio).dp(0).toString()
+          return fromBaseUnit(
+            bnOrZero(ethEstimate(gasRate)).times(feeAssetRatio).dp(0),
+            buyAsset.precision
+          )
         case 'erc20':
-          return bnOrZero(erc20Estimate(gasRate)).times(feeAssetRatio).dp(0).toString()
+          return fromBaseUnit(
+            bnOrZero(erc20Estimate(gasRate)).times(feeAssetRatio).dp(0),
+            buyAsset.precision
+          )
         default:
           throw new SwapError('[estimateTradeFee] - unsupported asset namespace', {
             code: SwapErrorTypes.VALIDATION_FAILED,
