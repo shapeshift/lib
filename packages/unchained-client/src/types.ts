@@ -30,9 +30,10 @@ export interface Trade {
   type: TradeType
 }
 
+// these are user facing values, and should be rendered as such
 export enum TradeType {
-  Trade = 'trade',
-  Refund = 'refund'
+  Trade = 'Trade',
+  Refund = 'Refund'
 }
 
 export interface Transfer {
