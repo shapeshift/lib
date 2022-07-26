@@ -10,11 +10,12 @@ export interface Fee {
   value: string
 }
 
-export enum Status {
-  Confirmed = 'confirmed',
-  Pending = 'pending',
-  Failed = 'failed',
-  Unknown = 'unknown'
+// these are user facing values, and should be rendered as such
+export enum TxStatus {
+  Confirmed = 'Confirmed',
+  Pending = 'Pending',
+  Failed = 'Failed',
+  Unknown = 'Unknown'
 }
 
 export interface Token {
@@ -46,9 +47,11 @@ export interface Transfer {
   token?: Token
 }
 
+// these are user facing values, and should be rendered as such
 export enum TransferType {
-  Send = 'send',
-  Receive = 'receive'
+  Send = 'Send',
+  Receive = 'Receive',
+  Contract = 'Contract'
 }
 
 export enum TxParser {
@@ -79,7 +82,7 @@ export interface StandardTx {
   chainId: string
   confirmations: number
   fee?: Fee
-  status: Status
+  status: TxStatus
   trade?: Trade
   transfers: Array<Transfer>
   txid: string
