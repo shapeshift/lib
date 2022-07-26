@@ -1,22 +1,12 @@
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import Web3 from 'web3'
 
-import { BTC, ETH } from '../../../utils/test-data/assets'
+import { BTC, FOX, UNSUPPORTED } from '../../../utils/test-data/assets'
 import { ethMidgardPool, foxMidgardPool, mockInboundAdresses } from '../test-data/midgardResponse'
 import { thorService } from '../thorService'
 import { estimateTradeFee } from './estimateTradeFee'
 
 jest.mock('../thorService')
-
-const foxAsset = {
-  ...ETH,
-  chainId: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
-}
-const unsupportedAsset = {
-  ...ETH,
-  chainId: 'eip155:1/erc20:0x420420420204b5180df6a14ee197d99d808ee52d',
-  assetId: 'unsupported'
-}
 
 describe('estimateTradeFee', () => {
   const deps = {
@@ -46,7 +36,7 @@ describe('estimateTradeFee', () => {
     ;(thorService.get as jest.Mock<unknown>)
       .mockReturnValueOnce(Promise.resolve({ data: mockInboundAdresses }))
       .mockReturnValueOnce(Promise.resolve({ data: [foxMidgardPool, ethMidgardPool] }))
-    const estimatedTradeFee = await estimateTradeFee(deps, foxAsset)
+    const estimatedTradeFee = await estimateTradeFee(deps, FOX)
 
     const expectedResult = '0.0672'
     expect(estimatedTradeFee).toEqual(expectedResult)
@@ -56,7 +46,7 @@ describe('estimateTradeFee', () => {
       Promise.resolve({ data: mockInboundAdresses })
     )
 
-    return expect(estimateTradeFee(deps, unsupportedAsset)).rejects.toThrow(
+    return expect(estimateTradeFee(deps, UNSUPPORTED)).rejects.toThrow(
       `[estimateTradeFee] - undefined thorId for given buyAssetId`
     )
   })

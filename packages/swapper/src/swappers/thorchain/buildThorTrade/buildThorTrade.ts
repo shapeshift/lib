@@ -72,7 +72,7 @@ export const buildTrade = async ({
         sellAsset,
         buyAsset,
         sellAmount,
-        slippageTolerance: DEFAULT_SLIPPAGE,
+        slippageTolerance,
         destinationAddress,
         wallet,
         bip44Params: sellAssetBip44Params,

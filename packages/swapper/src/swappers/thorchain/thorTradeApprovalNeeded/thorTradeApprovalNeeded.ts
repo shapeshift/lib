@@ -1,4 +1,4 @@
-import { fromAssetId, fromChainId, getFeeAssetIdFromAssetId } from '@shapeshiftoss/caip'
+import { CHAIN_NAMESPACE, fromAssetId, fromChainId, getFeeAssetIdFromAssetId } from '@shapeshiftoss/caip'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
 import { ApprovalNeededInput, ApprovalNeededOutput, SwapError, SwapErrorTypes } from '../../../api'
@@ -22,7 +22,7 @@ export const thorTradeApprovalNeeded = async ({
     const { assetReference: sellAssetErc20Address } = fromAssetId(sellAsset.assetId)
     const { chainNamespace } = fromChainId(sellAsset.chainId)
 
-    if (chainNamespace !== 'eip155') return { approvalNeeded: false }
+    if (chainNamespace !== CHAIN_NAMESPACE.Ethereum) return { approvalNeeded: false }
 
     // No approval needed for selling a fee asset
     if (sellAsset.assetId === getFeeAssetIdFromAssetId(sellAsset.assetId)) {
