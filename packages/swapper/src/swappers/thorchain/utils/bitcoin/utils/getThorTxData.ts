@@ -21,6 +21,7 @@ type GetBtcThorTxInfoArgs = {
   wallet: HDWallet
   bip44Params: BIP44Params
   accountType: UtxoAccountType
+  tradeFee: string
 }
 type GetBtcThorTxInfoReturn = Promise<{
   opReturnData: string
@@ -38,7 +39,8 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
   destinationAddress,
   wallet,
   bip44Params,
-  accountType
+  accountType,
+  tradeFee
 }) => {
   try {
     const { data: inboundAddresses } = await thorService.get<InboundResponse[]>(
@@ -69,11 +71,15 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
         details: { expectedBuyAmount, slippageTolerance }
       })
 
-    const limit = bnOrZero(expectedBuyAmount)
+      const tradeFeePrecision8 = toBaseUnit(
+        bnOrZero(tradeFee),
+        8 // limit values are precision 8 regardless of the chain
+      )
+      const limit = bnOrZero(expectedBuyAmount)
       .times(bn(1).minus(slippageTolerance))
+      .minus(bnOrZero(tradeFeePrecision8))
       .decimalPlaces(0)
       .toString()
-
     const memo = makeSwapMemo({
       buyAssetId: buyAsset.assetId,
       destinationAddress,

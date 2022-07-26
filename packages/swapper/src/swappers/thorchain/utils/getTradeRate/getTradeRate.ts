@@ -38,6 +38,7 @@ export const getTradeRate = async (
   sellAmount: string,
   deps: ThorchainSwapperDeps
 ): Promise<string> => {
+  // we can't get a quote for a zero amount so use getPriceRatio between pools instead
   if (bnOrZero(sellAmount).eq(0)) {
     return getPriceRatio(deps, {
       sellAssetId: sellAsset.assetId,

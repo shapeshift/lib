@@ -96,7 +96,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             sellAmount,
             slippageTolerance: DEFAULT_SLIPPAGE,
             destinationAddress: receiveAddress,
-            tradeFee: '0'
+            tradeFee
           })
           const feeData = await getEthTxFees({
             adapterManager: deps.adapterManager,
@@ -122,7 +122,8 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             destinationAddress: receiveAddress,
             wallet,
             bip44Params: input.bip44Params,
-            accountType: input.accountType
+            accountType: input.accountType,
+            tradeFee
           })
 
           const feeData = await getBtcTxFees({

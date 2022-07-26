@@ -5,6 +5,7 @@ import { KnownChainIds } from '@shapeshiftoss/types'
 import { QuoteFeeData, SwapError, SwapErrorTypes } from '../../../../../api'
 import { bn, bnOrZero } from '../../../../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../../../../utils/constants'
+import { THOR_ETH_GAS_LIMIT } from '../../constants'
 
 export const getEthTxFees = async ({
   adapterManager,
@@ -30,7 +31,7 @@ export const getEthTxFees = async ({
     }
 
     const gasFeeData = await adapter.getGasFeeData()
-    const gasLimit = '100000' // good value to cover all thortrades out of eth/erc20
+    const gasLimit = THOR_ETH_GAS_LIMIT // good value to cover all thortrades out of eth/erc20
 
     const feeDataOptions = {
       fast: {
