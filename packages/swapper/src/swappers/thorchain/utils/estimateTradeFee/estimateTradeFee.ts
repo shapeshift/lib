@@ -16,18 +16,10 @@ const gweiGasPrecision = 9
 // Neither the discord nor official docs are correct
 
 const ethEstimate = (gasRate: string) =>
-  bnOrZero(gasRate)
-    .times(120000)
-    .times(2)
-    .times(bn(10).exponentiatedBy(gweiGasPrecision))
-    .toString()
+  bnOrZero(gasRate).times(80000).times(2).times(bn(10).exponentiatedBy(gweiGasPrecision)).toString()
 
 const erc20Estimate = (gasRate: string) =>
-  bnOrZero(gasRate)
-    .times(120000)
-    .times(2)
-    .times(bn(10).exponentiatedBy(gweiGasPrecision))
-    .toString()
+  bnOrZero(gasRate).times(80000).times(2).times(bn(10).exponentiatedBy(gweiGasPrecision)).toString()
 
 const btcTxSize = 1000
 const btcEstimate = (gasRate: string) => bnOrZero(gasRate).times(btcTxSize).times(2).toString()
