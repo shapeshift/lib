@@ -1,7 +1,8 @@
+// these are user facing values, and should be rendered as such
 export enum Dex {
-  Thor = 'thor',
-  Zrx = 'zrx',
-  CowSwap = 'cowswap'
+  Thor = 'THORChain',
+  Zrx = '0x',
+  CowSwap = 'CowSwap'
 }
 
 export interface Fee {
