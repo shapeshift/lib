@@ -98,6 +98,10 @@ export const buildTrade = async ({
       txData: buildTxResponse.txToSign
     }
   } else {
-    throw new Error()
+    throw new SwapError('[buildTrade]: unsupported chain id', {
+      code: SwapErrorTypes.BUILD_TRADE_FAILED,
+      fn: 'buildTrade',
+      details: { sellAsset }
+    })
   }
 }

@@ -108,7 +108,12 @@ export class ThorchainSwapper implements Swapper<ChainId> {
     const { trade, wallet } = args
     const adapter = this.deps.adapterManager.get(trade.sellAsset.chainId)
 
-    if (!adapter) throw new Error()
+    if (!adapter)
+      throw new SwapError('[executeTrade]: no adapter for sell asset chain id', {
+        code: SwapErrorTypes.SIGN_AND_BROADCAST_FAILED,
+        details: { chainId: trade.sellAsset.chainId },
+        fn: 'executeTrade'
+      })
 
     if (trade.sellAsset.chainId === KnownChainIds.EthereumMainnet) {
       const signedTx = await (adapter as unknown as ethereum.ChainAdapter).signTransaction({
