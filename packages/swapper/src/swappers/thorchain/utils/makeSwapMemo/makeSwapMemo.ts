@@ -26,7 +26,6 @@ export const makeSwapMemo = ({
     })
 
   const memo = `s:${thorId}:${destinationAddress}:${limit}`
-
   if (memo.length <= MAX_LENGTH) return memo
   const abbreviationAmount = memo.length - MAX_LENGTH
 
