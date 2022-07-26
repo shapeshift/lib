@@ -75,19 +75,18 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
       bnOrZero(tradeFee),
       8 // limit values are precision 8 regardless of the chain
     )
-    console.log('tradeFeePrecision8')
+
     const limit = bnOrZero(expectedBuyAmount)
       .times(bn(1).minus(slippageTolerance))
       .minus(bnOrZero(tradeFeePrecision8))
       .decimalPlaces(0)
       .toString()
-      console.log('limit', limit)
-      const memo = makeSwapMemo({
+
+    const memo = makeSwapMemo({
       buyAssetId: buyAsset.assetId,
       destinationAddress,
       limit
     })
-    console.log('memo', memo)
 
     const adapter = deps.adapterManager.get(btcChainId)
 
