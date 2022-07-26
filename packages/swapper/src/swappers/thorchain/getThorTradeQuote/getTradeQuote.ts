@@ -1,4 +1,4 @@
-import { ChainId, fromAssetId, getFeeAssetIdFromAssetId } from '@shapeshiftoss/caip'
+import { ChainId, fromAssetId } from '@shapeshiftoss/caip'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
 import { GetTradeQuoteInput, SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
@@ -53,7 +53,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
 
     const sellAssetId = sellAsset.assetId
     const buyAssetId = buyAsset.assetId
-    const feeAssetId = getFeeAssetIdFromAssetId(buyAssetId)
+    const feeAssetId = adapter.getFeeAssetId()
     if (!feeAssetId)
       throw new SwapError(`[getThorTradeQuote] - No feeAssetId found for ${buyAssetId}.`, {
         code: SwapErrorTypes.VALIDATION_FAILED,
@@ -64,7 +64,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
     const rate = bnOrZero(1).div(priceRatio).toString()
     const buyAmount = normalizeAmount(bnOrZero(sellAmount).times(rate))
 
-    const tradeFee = await estimateTradeFee(deps, buyAsset.assetId)
+    const tradeFee = await estimateTradeFee(deps, buyAssetId)
 
     const sellAssetTradeFee = fromBaseUnit(
       bnOrZero(tradeFee).times(bnOrZero(priceRatio)),

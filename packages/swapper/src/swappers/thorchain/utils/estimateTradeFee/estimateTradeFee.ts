@@ -1,4 +1,4 @@
-import { adapters, AssetId, fromAssetId, getFeeAssetIdFromAssetId } from '@shapeshiftoss/caip'
+import { adapters, AssetId, fromAssetId } from '@shapeshiftoss/caip'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { bn, bnOrZero } from '../../../utils/bignumber'
@@ -26,6 +26,7 @@ export const estimateTradeFee = async (
   deps: ThorchainSwapperDeps,
   buyAssetId: AssetId
 ): Promise<string> => {
+  const adapter = deps.adapterManager.get(fromAssetId(buyAssetId).chainId)
   const thorId = adapters.assetIdToPoolAssetId({ assetId: buyAssetId })
   if (!thorId)
     throw new SwapError('[estimateTradeFee] - undefined thorId for given buyAssetId', {
@@ -50,7 +51,7 @@ export const estimateTradeFee = async (
   const gasRate = inboundInfo.gas_rate
   const { chainId, assetNamespace } = fromAssetId(buyAssetId)
 
-  const feeAssetId = getFeeAssetIdFromAssetId(buyAssetId)
+  const feeAssetId = adapter?.getFeeAssetId()
   if (!feeAssetId)
     throw new SwapError('[estimateTradeFee] - no fee assetId', {
       code: SwapErrorTypes.VALIDATION_FAILED,
