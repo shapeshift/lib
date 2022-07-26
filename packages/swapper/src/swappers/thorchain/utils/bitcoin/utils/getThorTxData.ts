@@ -55,9 +55,9 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
         details: { inboundAddresses }
       })
 
-    const priceRatio = await getTradeRate(sellAsset, buyAsset.assetId, sellAmount, deps)
+    const tradeRate = await getTradeRate(sellAsset, buyAsset.assetId, sellAmount, deps)
     const expectedBuyAmount = toBaseUnit(
-      fromBaseUnit(bnOrZero(sellAmount).dividedBy(priceRatio), sellAsset.precision),
+      fromBaseUnit(bnOrZero(sellAmount).dividedBy(tradeRate), sellAsset.precision),
       buyAsset.precision
     )
 
