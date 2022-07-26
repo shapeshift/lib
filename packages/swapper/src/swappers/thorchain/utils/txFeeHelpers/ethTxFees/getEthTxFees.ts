@@ -7,20 +7,12 @@ import { bn, bnOrZero } from '../../../../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../../../../utils/constants'
 
 export const getEthTxFees = async ({
-  data,
-  router,
-  sellAmount,
   adapterManager,
-  receiveAddress,
   sellAssetReference,
   tradeFee
 }: {
-  data: string
-  router: string
-  sellAmount: string
-  sellAssetReference: AssetReference | string
   adapterManager: ChainAdapterManager
-  receiveAddress: string
+  sellAssetReference: AssetReference | string
   tradeFee: string
 }): Promise<QuoteFeeData<KnownChainIds.EthereumMainnet>> => {
   try {

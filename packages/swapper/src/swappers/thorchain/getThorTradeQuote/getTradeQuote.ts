@@ -89,7 +89,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
     switch (chainId) {
       case KnownChainIds.EthereumMainnet:
         return (async (): Promise<TradeQuote<KnownChainIds.EthereumMainnet>> => {
-          const { data, router } = await getEthThorTxInfo({
+          const { router } = await getEthThorTxInfo({
             deps,
             sellAsset,
             buyAsset,
@@ -98,11 +98,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             destinationAddress: receiveAddress
           })
           const feeData = await getEthTxFees({
-            data,
-            router,
-            sellAmount,
             adapterManager: deps.adapterManager,
-            receiveAddress,
             sellAssetReference: sellAssetErc20Address,
             tradeFee
           })
