@@ -105,34 +105,42 @@ export class ThorchainSwapper implements Swapper<ChainId> {
   }
 
   async executeTrade(args: ExecuteTradeInput<ChainId>): Promise<TradeResult> {
-    const { trade, wallet } = args
-    const adapter = this.deps.adapterManager.get(trade.sellAsset.chainId)
+    try {
+      const { trade, wallet } = args
+      const adapter = this.deps.adapterManager.get(trade.sellAsset.chainId)
 
-    if (!adapter)
-      throw new SwapError('[executeTrade]: no adapter for sell asset chain id', {
-        code: SwapErrorTypes.SIGN_AND_BROADCAST_FAILED,
-        details: { chainId: trade.sellAsset.chainId },
-        fn: 'executeTrade'
-      })
+      if (!adapter)
+        throw new SwapError('[executeTrade]: no adapter for sell asset chain id', {
+          code: SwapErrorTypes.SIGN_AND_BROADCAST_FAILED,
+          details: { chainId: trade.sellAsset.chainId },
+          fn: 'executeTrade'
+        })
 
-    if (trade.sellAsset.chainId === KnownChainIds.EthereumMainnet) {
-      const signedTx = await (adapter as unknown as ethereum.ChainAdapter).signTransaction({
-        txToSign: (trade as ThorTrade<KnownChainIds.EthereumMainnet>).txData as ETHSignTx,
-        wallet
-      })
-      const txid = await adapter.broadcastTransaction(signedTx)
-      return { tradeId: txid }
-    } else if (trade.sellAsset.chainId === KnownChainIds.BitcoinMainnet) {
-      const signedTx = await (adapter as unknown as bitcoin.ChainAdapter).signTransaction({
-        txToSign: (trade as ThorTrade<KnownChainIds.BitcoinMainnet>).txData as BTCSignTx,
-        wallet
-      })
-      const txid = await adapter.broadcastTransaction(signedTx)
-      return { tradeId: txid }
-    } else {
-      throw new SwapError('[executeTrade]: unsupported trade', {
+      if (trade.sellAsset.chainId === KnownChainIds.EthereumMainnet) {
+        const signedTx = await (adapter as unknown as ethereum.ChainAdapter).signTransaction({
+          txToSign: (trade as ThorTrade<KnownChainIds.EthereumMainnet>).txData as ETHSignTx,
+          wallet
+        })
+        const txid = await adapter.broadcastTransaction(signedTx)
+        return { tradeId: txid }
+      } else if (trade.sellAsset.chainId === KnownChainIds.BitcoinMainnet) {
+        const signedTx = await (adapter as unknown as bitcoin.ChainAdapter).signTransaction({
+          txToSign: (trade as ThorTrade<KnownChainIds.BitcoinMainnet>).txData as BTCSignTx,
+          wallet
+        })
+        const txid = await adapter.broadcastTransaction(signedTx)
+        return { tradeId: txid }
+      } else {
+        throw new SwapError('[executeTrade]: unsupported trade', {
+          code: SwapErrorTypes.SIGN_AND_BROADCAST_FAILED,
+          fn: 'executeTrade'
+        })
+      }
+    } catch (e) {
+      if (e instanceof SwapError) throw e
+      throw new SwapError('[executeTrade]: failed to sign or broadcast', {
         code: SwapErrorTypes.SIGN_AND_BROADCAST_FAILED,
-        fn: 'executeTrade'
+        cause: e
       })
     }
   }
