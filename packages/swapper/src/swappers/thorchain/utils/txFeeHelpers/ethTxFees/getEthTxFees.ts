@@ -31,7 +31,10 @@ export const getEthTxFees = async ({
     }
 
     const gasFeeData = await adapter.getGasFeeData()
-    const gasLimit = THOR_ETH_GAS_LIMIT // good value to cover all thortrades out of eth/erc20
+
+    // this is a good value to cover all thortrades out of eth/erc20
+    // in the future we may want to look at doing this more precisely and in a future-proof way
+    const gasLimit = THOR_ETH_GAS_LIMIT
 
     const feeDataOptions = {
       fast: {
