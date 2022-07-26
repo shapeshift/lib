@@ -39,7 +39,7 @@ export const buildTrade = async ({
     accountNumber: sellAssetAccountNumber
   })
 
-  if (sellAsset.chainId === 'eip155:1') {
+  if (input.chainId === KnownChainIds.EthereumMainnet) {
     const ethTradeTx = await makeTradeTx({
       wallet,
       slippageTolerance,
@@ -59,18 +59,12 @@ export const buildTrade = async ({
     })
 
     return {
-      chainId: 'eip155:1',
+      chainId: KnownChainIds.EthereumMainnet,
       ...quote,
       receiveAddress: destinationAddress,
       txData: ethTradeTx.txToSign
-    } as ThorTrade<'eip155:1'> // Do we need these casted?
-  } else if (sellAsset.chainId === 'bip122:000000000019d6689c085ae165831e93') {
-    if (input.chainId !== KnownChainIds.BitcoinMainnet)
-      throw new SwapError('[buildTrade]: bad chain id', {
-        code: SwapErrorTypes.BUILD_TRADE_FAILED,
-        fn: 'executeTrade',
-        details: { chainId: input.chainId }
-      })
+    }
+  } else if (input.chainId === KnownChainIds.BitcoinMainnet) {
     const { vault, opReturnData } = await getBtcThorTxInfo({
       deps,
       sellAsset,
@@ -98,11 +92,11 @@ export const buildTrade = async ({
     })
 
     return {
-      chainId: 'bip122:000000000019d6689c085ae165831e93',
+      chainId: KnownChainIds.BitcoinMainnet,
       ...quote,
       receiveAddress: destinationAddress,
       txData: buildTxResponse.txToSign
-    } as ThorTrade<'bip122:000000000019d6689c085ae165831e93'> // Do we need these casted?
+    }
   } else {
     throw new Error()
   }

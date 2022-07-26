@@ -36,7 +36,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
   } = input
 
   if (!wallet)
-    throw new SwapError('[getTradeQuote] - wallet is required', {
+    throw new SwapError('[getThorTradeQuote] - wallet is required', {
       code: SwapErrorTypes.VALIDATION_FAILED
     })
 
