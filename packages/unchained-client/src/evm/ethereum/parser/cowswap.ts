@@ -14,7 +14,7 @@ export class Parser implements SubParser<Tx> {
     }
 
     const data = {
-      method: undefined, // TODO - add zrx ABI and decode
+      method: undefined,
       parser: TxParser.CowSwap
     }
 
