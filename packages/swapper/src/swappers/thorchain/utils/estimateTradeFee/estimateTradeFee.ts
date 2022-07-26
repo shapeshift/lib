@@ -13,7 +13,7 @@ const gweiGasPrecision = 9
 // https://discord.com/channels/838986635756044328/997675038675316776/998552541170253834
 // This is still not "perfect" and tends to overestimate by a randomish amount
 // TODO figure out if its possible to accurately estimate the outbound fee.
-// Neither the discord nor official docs are corret
+// Neither the discord nor official docs are correct
 
 const ethEstimate = (gasRate: string) =>
   bnOrZero(gasRate)
