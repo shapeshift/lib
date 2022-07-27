@@ -12,14 +12,13 @@ describe('thorTradeApproveInfinite', () => {
   const deps = setupThorswapDeps()
   const { tradeQuote: quote } = setupQuote()
   const wallet = <HDWallet>{}
-  const input = { wallet, quote }
+  const input = { wallet, quote, bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 } }
 
   it('should return a broadcastedTxId', async () => {
     expect(
       await thorTradeApproveInfinite({
         deps,
-        input,
-        bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 }
+        input
       })
     ).toEqual('grantAllowanceTxId')
   })
