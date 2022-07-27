@@ -1,31 +1,23 @@
-import { ASSET_REFERENCE, AssetId, ChainId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
+import { AssetId, ChainId } from '@shapeshiftoss/caip'
+import type { utxo } from '@shapeshiftoss/common-api'
 import { BigNumber } from 'bignumber.js'
 
-import { BitcoinTx } from '../../generated/bitcoin'
-import { TransferType, Tx as ParsedTx, TxStatus } from '../../types'
+import { ParsedTx, TransferType, TxStatus } from '../../types'
 import { aggregateTransfer } from '../../utils'
 
-export interface TransactionParserArgs {
+export interface BaseTransactionParserArgs {
   chainId: ChainId
-  assetReference?: string
 }
 
-export class TransactionParser {
+export class BaseTransactionParser<T extends utxo.Tx> {
   chainId: ChainId
   assetId: AssetId
 
-  constructor(args: TransactionParserArgs) {
+  constructor(args: BaseTransactionParserArgs) {
     this.chainId = args.chainId
-    const assetReference = args.assetReference || ASSET_REFERENCE.Bitcoin
-
-    this.assetId = toAssetId({
-      ...fromChainId(this.chainId),
-      assetNamespace: 'slip44',
-      assetReference
-    })
   }
 
-  async parse(tx: BitcoinTx, address: string): Promise<ParsedTx> {
+  async parse(tx: T, address: string): Promise<ParsedTx> {
     const parsedTx: ParsedTx = {
       address,
       blockHash: tx.blockHash,

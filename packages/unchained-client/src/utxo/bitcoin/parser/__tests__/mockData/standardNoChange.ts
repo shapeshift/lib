@@ -1,4 +1,6 @@
-const tx = {
+import { Tx } from '../../../../../generated/bitcoin'
+
+const tx: Tx = {
   txid: 'b90e64d010d56f9a4ed4a81f56d497d32407a92ce23f0b6583a4ae2838ae2a0c',
   blockHash: '000000000000000000060c1f01e709357e0aca37d4a6940ce9cf67dfa6c6ff4f',
   blockHeight: 712285,
@@ -32,5 +34,5 @@ const tx = {
 }
 export default {
   tx,
-  txMempool: { ...tx, blockHash: undefined, blockHeight: -1, confirmations: 0 }
+  txMempool: { ...tx, blockHash: undefined, blockHeight: -1, confirmations: 0 } as Tx
 }
