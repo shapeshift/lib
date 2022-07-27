@@ -30,7 +30,8 @@ const erc20Estimate = (gasRate: string) =>
     .times(bn(10).exponentiatedBy(gweiGasPrecision))
     .toString()
 
-const btcEstimate = (gasRate: string) => bnOrZero(gasRate).times(THOR_TRADE_FEE_BTC_SIZE).times(2).toString()
+const btcEstimate = (gasRate: string) =>
+  bnOrZero(gasRate).times(THOR_TRADE_FEE_BTC_SIZE).times(2).toString()
 
 export const estimateTradeFee = async (
   deps: ThorchainSwapperDeps,
