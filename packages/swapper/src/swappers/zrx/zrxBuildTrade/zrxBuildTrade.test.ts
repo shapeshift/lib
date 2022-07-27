@@ -73,7 +73,8 @@ describe('zrxBuildTrade', () => {
     buyAsset,
     sellAmount: '1000000000000000000',
     wallet,
-    receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
+    receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+    bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 }
   }
 
   const buildTradeResponse = {

@@ -153,7 +153,8 @@ describe('cowBuildTrade', () => {
       sellAmount: '11111',
       sendMax: true,
       wallet: <HDWallet>{},
-      receiveAddress: ''
+      receiveAddress: '',
+      bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 }
     }
 
     await expect(cowBuildTrade(defaultDeps, tradeInput)).rejects.toThrow(
@@ -177,7 +178,8 @@ describe('cowBuildTrade', () => {
       sellAmount: '1000000000000000000',
       sendMax: true,
       wallet: <HDWallet>{},
-      receiveAddress: 'address11'
+      receiveAddress: 'address11',
+      bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 }
     }
 
     ;(cowService.post as jest.Mock<unknown>).mockReturnValue(
@@ -221,7 +223,8 @@ describe('cowBuildTrade', () => {
       sellAmount: '100000000',
       sendMax: true,
       wallet: <HDWallet>{},
-      receiveAddress: 'address11'
+      receiveAddress: 'address11',
+      bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 }
     }
 
     ;(cowService.post as jest.Mock<unknown>).mockReturnValue(
