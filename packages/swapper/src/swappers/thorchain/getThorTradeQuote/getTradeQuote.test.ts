@@ -43,7 +43,9 @@ const quoteResponse: TradeQuote<KnownChainIds.EthereumMainnet> = {
   rate: '12755.10204081632653061224',
   sources: [{ name: 'thorchain', proportion: '1' }],
   buyAsset: ETH,
-  sellAsset: FOX
+  sellAsset: FOX,
+  receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+  sellAssetAccountNumber: 0
 }
 
 describe('getTradeQuote', () => {

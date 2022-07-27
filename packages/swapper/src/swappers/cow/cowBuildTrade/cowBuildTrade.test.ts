@@ -114,7 +114,8 @@ const expectedTradeWethToFox: CowTrade<KnownChainIds.EthereumMainnet> = {
   sellAsset: WETH,
   receiveAddress: 'address11',
   feeAmountInSellToken: '14557942658757988',
-  sellAmountWithoutFee: '985442057341242012'
+  sellAmountWithoutFee: '985442057341242012',
+  sellAssetAccountNumber: 0
 }
 
 const expectedTradeQuoteWbtcToWethWithApprovalFee: CowTrade<KnownChainIds.EthereumMainnet> = {
@@ -135,7 +136,8 @@ const expectedTradeQuoteWbtcToWethWithApprovalFee: CowTrade<KnownChainIds.Ethere
   sellAsset: WBTC,
   receiveAddress: 'address11',
   feeAmountInSellToken: '17238',
-  sellAmountWithoutFee: '99982762'
+  sellAmountWithoutFee: '99982762',
+  sellAssetAccountNumber: 0
 }
 
 const defaultDeps: CowSwapperDeps = {
@@ -153,7 +155,8 @@ describe('cowBuildTrade', () => {
       sellAmount: '11111',
       sendMax: true,
       wallet: <HDWallet>{},
-      receiveAddress: ''
+      receiveAddress: '',
+      sellAssetAccountNumber: 0
     }
 
     await expect(cowBuildTrade(defaultDeps, tradeInput)).rejects.toThrow(
@@ -165,7 +168,6 @@ describe('cowBuildTrade', () => {
     const deps: CowSwapperDeps = {
       apiUrl: 'https://api.cow.fi/mainnet/api',
       adapter: {
-        getAddress: jest.fn(() => Promise.resolve('address11')),
         getFeeData: jest.fn(() => Promise.resolve(feeData))
       } as unknown as ethereum.ChainAdapter,
       web3: {} as Web3
@@ -179,7 +181,7 @@ describe('cowBuildTrade', () => {
       sendMax: true,
       sellAssetAccountNumber: 0,
       wallet: <HDWallet>{},
-      receiveAddress: ''
+      receiveAddress: 'address11'
     }
 
     ;(cowService.post as jest.Mock<unknown>).mockReturnValue(
@@ -211,7 +213,6 @@ describe('cowBuildTrade', () => {
     const deps: CowSwapperDeps = {
       apiUrl: 'https://api.cow.fi/mainnet/api',
       adapter: {
-        getAddress: jest.fn(() => Promise.resolve('address11')),
         getFeeData: jest.fn(() => Promise.resolve(feeData))
       } as unknown as ethereum.ChainAdapter,
       web3: {} as Web3
@@ -225,7 +226,7 @@ describe('cowBuildTrade', () => {
       sendMax: true,
       sellAssetAccountNumber: 0,
       wallet: <HDWallet>{},
-      receiveAddress: ''
+      receiveAddress: 'address11'
     }
 
     ;(cowService.post as jest.Mock<unknown>).mockReturnValue(

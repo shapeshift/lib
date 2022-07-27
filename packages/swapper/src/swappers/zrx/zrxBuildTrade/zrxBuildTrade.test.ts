@@ -74,7 +74,7 @@ describe('zrxBuildTrade', () => {
     sellAmount: '1000000000000000000',
     sellAssetAccountNumber: 0,
     wallet,
-    receiveAddress: ''
+    receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
   }
 
   const buildTradeResponse = {
@@ -83,7 +83,6 @@ describe('zrxBuildTrade', () => {
     buyAmount: '',
     depositAddress: quoteResponse.to,
     receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
-    sellAssetAccountNumber: 0,
     txData: quoteResponse.data,
     rate: quoteResponse.price,
     feeData: {
