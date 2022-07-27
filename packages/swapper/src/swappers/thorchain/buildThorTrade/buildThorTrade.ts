@@ -64,7 +64,8 @@ export const buildTrade = async ({
         chainId: KnownChainIds.EthereumMainnet,
         ...quote,
         receiveAddress: destinationAddress,
-        txData: ethTradeTx.txToSign
+        txData: ethTradeTx.txToSign,
+        sellAssetAccountNumber
       }
     } else if (input.chainId === KnownChainIds.BitcoinMainnet) {
       const { vault, opReturnData } = await getBtcThorTxInfo({
@@ -98,7 +99,8 @@ export const buildTrade = async ({
         chainId: KnownChainIds.BitcoinMainnet,
         ...quote,
         receiveAddress: destinationAddress,
-        txData: buildTxResponse.txToSign
+        txData: buildTxResponse.txToSign,
+        sellAssetAccountNumber
       }
     } else {
       throw new SwapError('[buildTrade]: unsupported chain id', {

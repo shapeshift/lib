@@ -112,7 +112,6 @@ const expectedTradeWethToFox: CowTrade<KnownChainIds.EthereumMainnet> = {
   sources: [{ name: 'CowSwap', proportion: '1' }],
   buyAsset: FOX,
   sellAsset: WETH,
-  sellAssetAccountNumber: 0,
   receiveAddress: 'address11',
   feeAmountInSellToken: '14557942658757988',
   sellAmountWithoutFee: '985442057341242012'
@@ -134,7 +133,6 @@ const expectedTradeQuoteWbtcToWethWithApprovalFee: CowTrade<KnownChainIds.Ethere
   sources: [{ name: 'CowSwap', proportion: '1' }],
   buyAsset: WETH,
   sellAsset: WBTC,
-  sellAssetAccountNumber: 0,
   receiveAddress: 'address11',
   feeAmountInSellToken: '17238',
   sellAmountWithoutFee: '99982762'
@@ -154,8 +152,6 @@ describe('cowBuildTrade', () => {
       buyAsset: FOX,
       sellAmount: '11111',
       sendMax: true,
-      sellAssetAccountNumber: 1,
-      buyAssetAccountNumber: 2,
       wallet: <HDWallet>{},
       receiveAddress: ''
     }
@@ -182,7 +178,6 @@ describe('cowBuildTrade', () => {
       sellAmount: '1000000000000000000',
       sendMax: true,
       sellAssetAccountNumber: 0,
-      buyAssetAccountNumber: 0,
       wallet: <HDWallet>{},
       receiveAddress: ''
     }
@@ -229,7 +224,6 @@ describe('cowBuildTrade', () => {
       sellAmount: '100000000',
       sendMax: true,
       sellAssetAccountNumber: 0,
-      buyAssetAccountNumber: 0,
       wallet: <HDWallet>{},
       receiveAddress: ''
     }

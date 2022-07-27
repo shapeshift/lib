@@ -87,7 +87,6 @@ export type GetTradeQuoteInput =
   | GetCosmosSdkTradeQuoteInput
 
 export type BuildTradeInput = GetTradeQuoteInput & {
-  buyAssetAccountNumber: number
   slippage?: string
   wallet: HDWallet
 }
@@ -100,6 +99,7 @@ interface TradeBase<C extends ChainId> {
   sources: Array<SwapSource>
   buyAsset: Asset
   sellAsset: Asset
+  receiveAddress: string
   sellAssetAccountNumber: number
 }
 
@@ -109,9 +109,7 @@ export interface TradeQuote<C extends ChainId> extends TradeBase<C> {
   maximum: string
 }
 
-export interface Trade<C extends ChainId> extends TradeBase<C> {
-  receiveAddress: string
-}
+export type Trade<C extends ChainId> = TradeBase<C>
 
 export type ExecuteTradeInput<C extends ChainId> = {
   trade: Trade<C>

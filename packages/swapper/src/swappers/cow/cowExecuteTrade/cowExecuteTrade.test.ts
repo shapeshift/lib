@@ -63,7 +63,6 @@ const cowTradeEthToFox: CowTrade<KnownChainIds.EthereumMainnet> = {
   sources: [{ name: 'CowSwap', proportion: '1' }],
   buyAsset: FOX,
   sellAsset: ETH,
-  sellAssetAccountNumber: 0,
   receiveAddress: 'address11',
   feeAmountInSellToken: '14557942658757988',
   sellAmountWithoutFee: '111111'
@@ -84,7 +83,6 @@ const cowTradeWethToFox: CowTrade<KnownChainIds.EthereumMainnet> = {
   sources: [{ name: 'CowSwap', proportion: '1' }],
   buyAsset: FOX,
   sellAsset: WETH,
-  sellAssetAccountNumber: 0,
   receiveAddress: 'address11',
   feeAmountInSellToken: '3514395197690019',
   sellAmountWithoutFee: '16685605000000000'

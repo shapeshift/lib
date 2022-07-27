@@ -19,7 +19,8 @@ export const setupQuote = () => {
     maximum: '999999999999',
     feeData: { fee: '0', tradeFee: '0', chainSpecific: {} },
     rate: '1',
-    sources: []
+    sources: [],
+    receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
   }
 
   const quoteInput: GetTradeQuoteInput = {
@@ -44,7 +45,6 @@ export const setupBuildTrade = () => {
     buyAsset,
     sendMax: false,
     sellAssetAccountNumber: 0,
-    buyAssetAccountNumber: 0,
     sellAsset,
     wallet: <HDWallet>{},
     receiveAddress: ''

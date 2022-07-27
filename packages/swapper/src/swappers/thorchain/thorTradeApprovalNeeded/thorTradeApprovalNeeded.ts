@@ -20,7 +20,7 @@ export const thorTradeApprovalNeeded = async ({
   input: ApprovalNeededInput<KnownChainIds.EthereumMainnet>
 }): Promise<ApprovalNeededOutput> => {
   try {
-    const { quote, wallet } = input
+    const { quote } = input
     const { sellAsset } = quote
     const { adapterManager, web3 } = deps
 
@@ -34,8 +34,6 @@ export const thorTradeApprovalNeeded = async ({
       return { approvalNeeded: false }
     }
 
-    const accountNumber = quote.sellAssetAccountNumber
-
     const adapter = adapterManager.get(sellAsset.chainId)
 
     if (!adapter)
@@ -46,9 +44,6 @@ export const thorTradeApprovalNeeded = async ({
           details: { chainId: sellAsset.chainId }
         }
       )
-
-    const bip44Params = adapter.buildBIP44Params({ accountNumber })
-    const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 
     if (!quote.allowanceContract) {
       throw new SwapError('[thorTradeApprovalNeeded] - allowanceTarget is required', {
@@ -62,7 +57,7 @@ export const thorTradeApprovalNeeded = async ({
       erc20AllowanceAbi,
       sellAssetErc20Address,
       spenderAddress: quote.allowanceContract,
-      ownerAddress: receiveAddress
+      ownerAddress: quote.receiveAddress
     })
     const allowanceOnChain = bnOrZero(allowanceResult)
 

@@ -120,7 +120,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
   }
 
   async buildTrade(args: BuildTradeInput): Promise<Trade<ChainId>> {
-    const { sellAsset, buyAsset, sellAmount, receiveAddress } = args
+    const { sellAsset, buyAsset, sellAmount, receiveAddress, sellAssetAccountNumber } = args
 
     if (!sellAmount) {
       throw new SwapError('sellAmount is required', {
@@ -158,13 +158,13 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       receiveAddress,
       sellAmount: amountBaseSell,
       sellAsset,
-      sellAssetAccountNumber: 0,
-      sources: [{ name: 'Osmosis', proportion: '100' }]
+      sources: [{ name: 'Osmosis', proportion: '100' }],
+      sellAssetAccountNumber
     }
   }
 
   async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ChainId>> {
-    const { sellAsset, buyAsset, sellAmount } = input
+    const { sellAsset, buyAsset, sellAmount, receiveAddress, sellAssetAccountNumber } = input
     if (!sellAmount) {
       throw new SwapError('sellAmount is required', {
         code: SwapErrorTypes.RESPONSE_ERROR
@@ -196,13 +196,14 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       feeData: { fee, tradeFee },
       maximum,
       minimum,
-      sellAssetAccountNumber: 0,
       rate,
       sellAsset,
       sellAmount,
       buyAmount,
       sources: DEFAULT_SOURCE,
-      allowanceContract: ''
+      allowanceContract: '',
+      receiveAddress,
+      sellAssetAccountNumber
     }
   }
 

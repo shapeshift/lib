@@ -93,8 +93,7 @@ const expectedTradeQuoteWethToFox: TradeQuote<KnownChainIds.EthereumMainnet> = {
   sources: [{ name: 'CowSwap', proportion: '1' }],
   allowanceContract: '0xc92e8bdf79f0507f65a392b0ab4667716bfe0110',
   buyAsset: FOX,
-  sellAsset: WETH,
-  sellAssetAccountNumber: 0
+  sellAsset: WETH
 }
 
 const defaultDeps: CowSwapperDeps = {

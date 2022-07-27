@@ -29,10 +29,10 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
     sellAsset,
     buyAsset,
     sellAmount,
-    sellAssetAccountNumber,
     wallet,
     chainId,
-    receiveAddress
+    receiveAddress,
+    sellAssetAccountNumber
   } = input
 
   if (!wallet)
@@ -82,8 +82,9 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       sources: [{ name: 'thorchain', proportion: '1' }],
       buyAsset,
       sellAsset,
-      sellAssetAccountNumber,
-      minimum
+      minimum,
+      receiveAddress,
+      sellAssetAccountNumber
     }
 
     switch (chainId) {

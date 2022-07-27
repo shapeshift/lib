@@ -23,15 +23,7 @@ export async function zrxBuildTrade<T extends EvmSupportedChainIds>(
   { adapter, web3 }: ZrxSwapperDeps,
   input: BuildTradeInput
 ): Promise<ZrxTrade<T>> {
-  const {
-    sellAsset,
-    buyAsset,
-    sellAmount,
-    slippage,
-    sellAssetAccountNumber,
-    buyAssetAccountNumber,
-    wallet
-  } = input
+  const { sellAsset, buyAsset, sellAmount, slippage, receiveAddress } = input
   try {
     const { assetReference: buyAssetErc20Address, assetNamespace: buyAssetNamespace } = fromAssetId(
       buyAsset.assetId
@@ -49,9 +41,6 @@ export async function zrxBuildTrade<T extends EvmSupportedChainIds>(
         details: { chainId: sellAsset.chainId }
       })
     }
-
-    const bip44Params = adapter.buildBIP44Params({ accountNumber: Number(buyAssetAccountNumber) })
-    const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 
     const slippagePercentage = slippage ? bnOrZero(slippage).div(100).toString() : DEFAULT_SLIPPAGE
 
@@ -104,7 +93,6 @@ export async function zrxBuildTrade<T extends EvmSupportedChainIds>(
     const trade = {
       sellAsset,
       buyAsset,
-      sellAssetAccountNumber,
       receiveAddress,
       rate: data.price,
       depositAddress: data.to,

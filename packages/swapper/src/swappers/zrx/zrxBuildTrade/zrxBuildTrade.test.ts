@@ -73,7 +73,6 @@ describe('zrxBuildTrade', () => {
     buyAsset,
     sellAmount: '1000000000000000000',
     sellAssetAccountNumber: 0,
-    buyAssetAccountNumber: 0,
     wallet,
     receiveAddress: ''
   }
