@@ -88,7 +88,6 @@ const cowTradeWethToFox: CowTrade<KnownChainIds.EthereumMainnet> = {
   feeAmountInSellToken: '3514395197690019',
   sellAmountWithoutFee: '16685605000000000',
   sellAssetAccountNumber: 0
-
 }
 
 const expectedOrderToSign: CowSwapOrder = {
