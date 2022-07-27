@@ -1,5 +1,4 @@
-import { ChainNamespace, ChainReference } from '@shapeshiftoss/caip'
-
+import { ChainNamespace, ChainReference } from './chainId/chainId'
 import {
   ASSET_NAMESPACE_STRINGS,
   ASSET_REFERENCE,
