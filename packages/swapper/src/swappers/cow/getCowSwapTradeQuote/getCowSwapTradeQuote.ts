@@ -134,7 +134,7 @@ export async function getCowSwapTradeQuote(
       buyAsset,
       sellAsset,
       receiveAddress,
-      sellAssetAccountNumber,
+      sellAssetAccountNumber
     }
   } catch (e) {
     if (e instanceof SwapError) throw e
