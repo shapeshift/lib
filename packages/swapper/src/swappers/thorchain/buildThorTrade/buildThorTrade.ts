@@ -23,7 +23,8 @@ export const buildTrade = async ({
       sellAmount,
       wallet,
       slippage: slippageTolerance = DEFAULT_SLIPPAGE,
-      receiveAddress: destinationAddress
+      receiveAddress: destinationAddress,
+      bip44Params: sellAssetBip44Params
     } = input
 
     const quote = await getThorTradeQuote({ deps, input })
@@ -35,9 +36,6 @@ export const buildTrade = async ({
         fn: 'buildTrade',
         details: { sellAsset }
       })
-    const sellAssetBip44Params = sellAdapter.buildBIP44Params({
-      accountNumber: 0 // TODO
-    })
 
     if (input.chainId === KnownChainIds.EthereumMainnet) {
       const ethTradeTx = await makeTradeTx({
@@ -63,7 +61,8 @@ export const buildTrade = async ({
         chainId: KnownChainIds.EthereumMainnet,
         ...quote,
         receiveAddress: destinationAddress,
-        txData: ethTradeTx.txToSign
+        txData: ethTradeTx.txToSign,
+        bip44Params: sellAssetBip44Params
       }
     } else if (input.chainId === KnownChainIds.BitcoinMainnet) {
       const { vault, opReturnData } = await getBtcThorTxInfo({
@@ -97,7 +96,8 @@ export const buildTrade = async ({
         chainId: KnownChainIds.BitcoinMainnet,
         ...quote,
         receiveAddress: destinationAddress,
-        txData: buildTxResponse.txToSign
+        txData: buildTxResponse.txToSign,
+        bip44Params: sellAssetBip44Params
       }
     } else {
       throw new SwapError('[buildTrade]: unsupported chain id', {

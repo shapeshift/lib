@@ -35,6 +35,12 @@ describe('cowApproveInfinite', () => {
     const deps = { web3, adapter, apiUrl: '', feeAsset }
     const quote = { ...tradeQuote }
 
-    expect(await cowApproveInfinite(deps, { quote, wallet })).toEqual('grantAllowanceTxId')
+    expect(
+      await cowApproveInfinite(deps, {
+        quote,
+        wallet,
+        bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 }
+      })
+    ).toEqual('grantAllowanceTxId')
   })
 })

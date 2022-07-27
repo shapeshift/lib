@@ -72,7 +72,10 @@ describe('ZrxSwapper', () => {
   it('calls ZrxExecuteTrade on swapper.executeTrade', async () => {
     const { executeTradeInput } = setupExecuteTrade()
     const swapper = new ZrxSwapper(zrxEthereumSwapperDeps)
-    const args = { trade: executeTradeInput, wallet }
+    const args = {
+      trade: executeTradeInput,
+      wallet
+    }
     await swapper.executeTrade(args)
     expect(zrxExecuteTrade).toHaveBeenCalled()
   })
@@ -93,7 +96,11 @@ describe('ZrxSwapper', () => {
   it('calls zrxApproveInfinite on swapper.approveInfinite', async () => {
     const swapper = new ZrxSwapper(zrxEthereumSwapperDeps)
     const { tradeQuote } = setupQuote()
-    const args = { quote: tradeQuote, wallet }
+    const args = {
+      quote: tradeQuote,
+      wallet,
+      bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 }
+    }
     await swapper.approveInfinite(args)
     expect(zrxApproveInfinite).toHaveBeenCalled()
   })

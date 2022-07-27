@@ -120,7 +120,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
   }
 
   async buildTrade(args: BuildTradeInput): Promise<Trade<ChainId>> {
-    const { sellAsset, buyAsset, sellAmount, receiveAddress } = args
+    const { sellAsset, buyAsset, sellAmount, receiveAddress, bip44Params } = args
 
     if (!sellAmount) {
       throw new SwapError('sellAmount is required', {
@@ -158,7 +158,8 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       receiveAddress,
       sellAmount: amountBaseSell,
       sellAsset,
-      sources: [{ name: 'Osmosis', proportion: '100' }]
+      sources: [{ name: 'Osmosis', proportion: '100' }],
+      bip44Params
     }
   }
 
@@ -230,11 +231,9 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     const feeData = await osmosisAdapter.getFeeData({})
     const gas = feeData.average.chainSpecific.gasLimit
 
-    if (!isFromOsmo) {
-      const sellBip44Params = cosmosAdapter.buildBIP44Params({
-        accountNumber: Number(0) // TODO
-      })
+    const sellBip44Params = trade.bip44Params
 
+    if (!isFromOsmo) {
       sellAddress = await cosmosAdapter.getAddress({ wallet, bip44Params: sellBip44Params })
 
       if (!sellAddress)
@@ -262,7 +261,8 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         '0',
         accountNumber,
         sequence,
-        gas
+        gas,
+        sellBip44Params
       )
 
       // wait till confirmed
@@ -274,9 +274,6 @@ export class OsmosisSwapper implements Swapper<ChainId> {
 
       ibcSellAmount = await pollForAtomChannelBalance(receiveAddress, this.deps.osmoUrl)
     } else {
-      const sellBip44Params = osmosisAdapter.buildBIP44Params({
-        accountNumber: Number(0) // TODO
-      })
       sellAddress = await osmosisAdapter.getAddress({ wallet, bip44Params: sellBip44Params })
 
       if (!sellAddress)
@@ -294,7 +291,8 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       sellAssetDenom,
       sellAmount: ibcSellAmount ?? sellAmount,
       gas,
-      wallet
+      wallet,
+      bip44Params: sellBip44Params
     })
 
     const signed = await osmosisAdapter.signTransaction(signTxInput)
@@ -328,7 +326,8 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         trade.feeData.fee,
         ibcAccountNumber,
         ibcSequence,
-        gas
+        gas,
+        sellBip44Params
       )
     }
 

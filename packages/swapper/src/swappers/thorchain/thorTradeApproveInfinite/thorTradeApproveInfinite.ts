@@ -17,7 +17,7 @@ export const thorTradeApproveInfinite = async ({
 }): Promise<string> => {
   try {
     const { adapterManager, web3 } = deps
-    const { quote, wallet } = input
+    const { quote, wallet, bip44Params } = input
 
     const approvalQuote = {
       ...quote,
@@ -52,7 +52,8 @@ export const thorTradeApproveInfinite = async ({
       wallet,
       adapter,
       erc20Abi,
-      web3
+      web3,
+      bip44Params
     })
 
     return allowanceGrantRequired

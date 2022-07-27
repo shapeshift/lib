@@ -46,6 +46,12 @@ describe('zrxApproveInfinite', () => {
     const quote = { ...tradeQuote }
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data }))
 
-    expect(await zrxApproveInfinite(deps, { quote, wallet })).toEqual('grantAllowanceTxId')
+    expect(
+      await zrxApproveInfinite(deps, {
+        quote,
+        wallet,
+        bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 }
+      })
+    ).toEqual('grantAllowanceTxId')
   })
 })

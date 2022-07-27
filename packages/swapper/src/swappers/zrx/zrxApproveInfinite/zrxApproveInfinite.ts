@@ -7,7 +7,7 @@ import { MAX_ALLOWANCE } from '../utils/constants'
 
 export async function zrxApproveInfinite<T extends EvmSupportedChainIds>(
   { adapter, web3 }: ZrxSwapperDeps,
-  { quote, wallet }: ApproveInfiniteInput<T>
+  { quote, wallet, bip44Params }: ApproveInfiniteInput<T>
 ) {
   try {
     const approvalQuote = {
@@ -28,7 +28,8 @@ export async function zrxApproveInfinite<T extends EvmSupportedChainIds>(
       wallet,
       adapter,
       erc20Abi,
-      web3
+      web3,
+      bip44Params
     })
 
     return allowanceGrantRequired

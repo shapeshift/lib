@@ -181,7 +181,11 @@ describe('CowSwapper', () => {
   describe('cowApproveInfinite', () => {
     it('calls cowApproveInfinite on swapper.approveInfinite', async () => {
       const { tradeQuote } = setupQuote()
-      const args = { quote: tradeQuote, wallet }
+      const args = {
+        quote: tradeQuote,
+        wallet,
+        bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 }
+      }
       await swapper.approveInfinite(args)
       expect(cowApproveInfinite).toHaveBeenCalledTimes(1)
       expect(cowApproveInfinite).toHaveBeenCalledWith(COW_SWAPPER_DEPS, args)
@@ -207,7 +211,8 @@ describe('CowSwapper', () => {
           },
           tradeFee: '0'
         },
-        sellAmountWithoutFee: '985442057341242012'
+        sellAmountWithoutFee: '985442057341242012',
+        bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 }
       }
       const args = { trade: cowSwapTrade, wallet }
       await swapper.executeTrade(args)

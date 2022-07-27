@@ -1,6 +1,7 @@
 import { CHAIN_REFERENCE, ChainId } from '@shapeshiftoss/caip'
 import { osmosis, toPath } from '@shapeshiftoss/chain-adapters'
 import { bip32ToAddressNList, HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { BIP44Params } from '@shapeshiftoss/types'
 import axios from 'axios'
 import { find } from 'lodash'
 
@@ -203,7 +204,8 @@ export const performIbcTransfer = async (
   feeAmount: string,
   accountNumber: string,
   sequence: string,
-  gas: string
+  gas: string,
+  bip44Params: BIP44Params
 ): Promise<TradeResult> => {
   const { sender, receiver, amount } = input
 
@@ -217,9 +219,7 @@ export const performIbcTransfer = async (
     }
   })()
   const latestBlock = responseLatestBlock.data.block.header.height
-  const bip44Params = adapter.buildBIP44Params({
-    accountNumber: 0 // TODO: Use real accountNumbers
-  })
+
   const path = toPath(bip44Params)
   const addressNList = bip32ToAddressNList(path)
 
@@ -282,7 +282,8 @@ export const buildTradeTx = async ({
   sellAssetDenom,
   sellAmount,
   gas,
-  wallet
+  wallet,
+  bip44Params
 }: {
   osmoAddress: string
   adapter: osmosis.ChainAdapter
@@ -292,15 +293,13 @@ export const buildTradeTx = async ({
   sellAmount: string
   gas: string
   wallet: HDWallet
+  bip44Params: BIP44Params
 }) => {
   const responseAccount = await adapter.getAccount(osmoAddress)
 
   const accountNumber = responseAccount.chainSpecific.accountNumber || '0'
   const sequence = responseAccount.chainSpecific.sequence || '0'
 
-  const bip44Params = adapter.buildBIP44Params({
-    accountNumber: 0 // TODO: Use real accountNumbers
-  })
   const path = toPath(bip44Params)
   const osmoAddressNList = bip32ToAddressNList(path)
 

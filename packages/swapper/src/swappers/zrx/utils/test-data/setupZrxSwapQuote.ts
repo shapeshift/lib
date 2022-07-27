@@ -39,7 +39,8 @@ export const setupExecuteTrade = () => {
     receiveAddress: '0x0',
     feeData: { fee: '0', chainSpecific: {}, tradeFee: '0' },
     rate: '0',
-    sources: []
+    sources: [],
+    bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 }
   }
   return { executeTradeInput, buyAsset, sellAsset }
 }

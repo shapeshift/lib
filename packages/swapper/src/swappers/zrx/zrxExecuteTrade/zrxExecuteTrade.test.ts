@@ -37,7 +37,8 @@ describe('ZrxExecuteTrade', () => {
       chainSpecific: { approvalFee: '123600000', estimatedGas: '1235', gasPrice: '1236' },
       tradeFee: '0'
     },
-    sources: []
+    sources: [],
+    bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 }
   }
 
   const execTradeInput: ZrxExecuteTradeInput<KnownChainIds.EthereumMainnet> = {

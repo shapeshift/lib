@@ -1,6 +1,7 @@
 import { Asset } from '@shapeshiftoss/asset-service'
 import { fromAssetId } from '@shapeshiftoss/caip'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { BIP44Params } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { AbiItem, numberToHex } from 'web3-utils'
@@ -46,6 +47,7 @@ type GrantAllowanceArgs<T extends EvmSupportedChainIds> = {
   adapter: EvmSupportedChainAdapters
   erc20Abi: AbiItem[]
   web3: Web3
+  bip44Params: BIP44Params
 }
 
 export const getERC20Allowance = async ({
@@ -108,7 +110,8 @@ export const grantAllowance = async <T extends EvmSupportedChainIds>({
   wallet,
   adapter,
   erc20Abi,
-  web3
+  web3,
+  bip44Params
 }: GrantAllowanceArgs<T>): Promise<string> => {
   try {
     const { assetReference: sellAssetErc20Address } = fromAssetId(quote.sellAsset.assetId)
@@ -117,9 +120,6 @@ export const grantAllowance = async <T extends EvmSupportedChainIds>({
     const approveTx = erc20Contract.methods
       .approve(quote.allowanceContract, quote.sellAmount)
       .encodeABI()
-
-    const accountNumber = 0 // TODO
-    const bip44Params = adapter.buildBIP44Params({ accountNumber })
 
     const { txToSign } = await adapter.buildSendTransaction({
       wallet,

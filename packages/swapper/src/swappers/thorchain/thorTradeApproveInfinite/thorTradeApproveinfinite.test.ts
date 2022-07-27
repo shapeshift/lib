@@ -15,6 +15,12 @@ describe('thorTradeApproveInfinite', () => {
   const input = { wallet, quote }
 
   it('should return a broadcastedTxId', async () => {
-    expect(await thorTradeApproveInfinite({ deps, input })).toEqual('grantAllowanceTxId')
+    expect(
+      await thorTradeApproveInfinite({
+        deps,
+        input,
+        bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 }
+      })
+    ).toEqual('grantAllowanceTxId')
   })
 })

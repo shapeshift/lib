@@ -8,7 +8,7 @@ import { MAX_ALLOWANCE } from '../utils/constants'
 
 export async function cowApproveInfinite(
   { adapter, web3 }: CowSwapperDeps,
-  { quote, wallet }: ApproveInfiniteInput<KnownChainIds.EthereumMainnet>
+  { quote, wallet, bip44Params }: ApproveInfiniteInput<KnownChainIds.EthereumMainnet>
 ) {
   try {
     const allowanceGrantRequired = await grantAllowance<KnownChainIds.EthereumMainnet>({
@@ -19,7 +19,8 @@ export async function cowApproveInfinite(
       wallet,
       adapter,
       erc20Abi,
-      web3
+      web3,
+      bip44Params
     })
 
     return allowanceGrantRequired

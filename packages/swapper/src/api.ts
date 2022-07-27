@@ -107,7 +107,9 @@ export interface TradeQuote<C extends ChainId> extends TradeBase<C> {
   maximum: string
 }
 
-export type Trade<C extends ChainId> = TradeBase<C>
+export interface Trade<C extends ChainId> extends TradeBase<C> {
+  bip44Params: BIP44Params
+}
 
 export type ExecuteTradeInput<C extends ChainId> = {
   trade: Trade<C>
@@ -121,6 +123,7 @@ export type TradeResult = {
 export type ApproveInfiniteInput<C extends ChainId> = {
   quote: TradeQuote<C>
   wallet: HDWallet
+  bip44Params: BIP44Params
 }
 
 export type ApprovalNeededInput<C extends ChainId> = {

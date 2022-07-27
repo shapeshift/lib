@@ -114,7 +114,8 @@ const expectedTradeWethToFox: CowTrade<KnownChainIds.EthereumMainnet> = {
   sellAsset: WETH,
   receiveAddress: 'address11',
   feeAmountInSellToken: '14557942658757988',
-  sellAmountWithoutFee: '985442057341242012'
+  sellAmountWithoutFee: '985442057341242012',
+  bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 }
 }
 
 const expectedTradeQuoteWbtcToWethWithApprovalFee: CowTrade<KnownChainIds.EthereumMainnet> = {
@@ -135,7 +136,8 @@ const expectedTradeQuoteWbtcToWethWithApprovalFee: CowTrade<KnownChainIds.Ethere
   sellAsset: WBTC,
   receiveAddress: 'address11',
   feeAmountInSellToken: '17238',
-  sellAmountWithoutFee: '99982762'
+  sellAmountWithoutFee: '99982762',
+  bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 }
 }
 
 const defaultDeps: CowSwapperDeps = {
