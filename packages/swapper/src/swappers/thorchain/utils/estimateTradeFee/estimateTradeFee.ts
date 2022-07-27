@@ -4,7 +4,7 @@ import { adapters, fromAssetId, getFeeAssetIdFromAssetId } from '@shapeshiftoss/
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { bn, bnOrZero, fromBaseUnit } from '../../../utils/bignumber'
 import { InboundResponse, ThorchainSwapperDeps } from '../../types'
-import { THOR_BTC_SIZE, THOR_ETH_GAS } from '../constants'
+import { THOR_TRADE_FEE_BTC_SIZE, THOR_TRADE_FEE_ETH_GAS } from '../constants'
 import { getPriceRatio } from '../getPriceRatio/getPriceRatio'
 import { thorService } from '../thorService'
 
@@ -18,19 +18,19 @@ const gweiGasPrecision = 9
 
 const ethEstimate = (gasRate: string) =>
   bnOrZero(gasRate)
-    .times(THOR_ETH_GAS)
+    .times(THOR_TRADE_FEE_ETH_GAS)
     .times(2)
     .times(bn(10).exponentiatedBy(gweiGasPrecision))
     .toString()
 
 const erc20Estimate = (gasRate: string) =>
   bnOrZero(gasRate)
-    .times(THOR_ETH_GAS)
+    .times(THOR_TRADE_FEE_ETH_GAS)
     .times(2)
     .times(bn(10).exponentiatedBy(gweiGasPrecision))
     .toString()
 
-const btcEstimate = (gasRate: string) => bnOrZero(gasRate).times(THOR_BTC_SIZE).times(2).toString()
+const btcEstimate = (gasRate: string) => bnOrZero(gasRate).times(THOR_TRADE_FEE_BTC_SIZE).times(2).toString()
 
 export const estimateTradeFee = async (
   deps: ThorchainSwapperDeps,
