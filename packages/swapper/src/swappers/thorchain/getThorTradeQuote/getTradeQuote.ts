@@ -53,12 +53,6 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
 
     const sellAssetId = sellAsset.assetId
     const buyAssetId = buyAsset.assetId
-    const feeAssetId = adapter.getFeeAssetId()
-    if (!feeAssetId)
-      throw new SwapError(`[getThorTradeQuote] - No feeAssetId found for ${buyAssetId}.`, {
-        code: SwapErrorTypes.VALIDATION_FAILED,
-        details: { buyAssetId }
-      })
 
     const priceRatio = await getPriceRatio(deps, { sellAssetId, buyAssetId })
     const rate = bnOrZero(1).div(priceRatio).toString()
