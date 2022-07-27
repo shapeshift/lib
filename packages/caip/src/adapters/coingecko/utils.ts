@@ -14,7 +14,7 @@ import {
   ethChainId,
   osmosisChainId
 } from '../../constants'
-import { makeBtcData, makeCosmosHubData, makeOsmosisData } from '../../utils'
+import { bitcoinAsset, cosmosAsset, osmosisAsset } from '../../utils'
 
 export type CoingeckoCoin = {
   id: string
@@ -78,8 +78,8 @@ export const parseData = (coins: CoingeckoCoin[]): AssetMap => {
 
   return {
     ...assetMap,
-    [btcChainId]: makeBtcData(),
-    [cosmosChainId]: makeCosmosHubData(),
-    [osmosisChainId]: makeOsmosisData()
+    [btcChainId]: bitcoinAsset,
+    [cosmosChainId]: cosmosAsset,
+    [osmosisChainId]: osmosisAsset
   }
 }
