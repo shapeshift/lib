@@ -14,7 +14,7 @@ export async function zrxExecuteTrade<T extends EvmSupportedChainIds>(
     // value is 0 for erc20s
     const value = isNativeEvmAsset(sellAsset.assetId) ? trade.sellAmount : '0'
     const bip44Params = adapter.buildBIP44Params({
-      accountNumber: trade.sellAssetAccountNumber
+      accountNumber: 0 // TODO
     })
 
     const buildTxResponse = await adapter.buildSendTransaction({

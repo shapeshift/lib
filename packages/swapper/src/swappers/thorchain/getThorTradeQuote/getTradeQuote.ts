@@ -25,15 +25,7 @@ type GetThorTradeQuoteReturn = Promise<TradeQuote<ChainId>>
 type GetThorTradeQuote = (args: GetThorTradeQuoteInput) => GetThorTradeQuoteReturn
 
 export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
-  const {
-    sellAsset,
-    buyAsset,
-    sellAmount,
-    wallet,
-    chainId,
-    receiveAddress,
-    sellAssetAccountNumber
-  } = input
+  const { sellAsset, buyAsset, sellAmount, wallet, chainId, receiveAddress } = input
 
   if (!wallet)
     throw new SwapError('[getThorTradeQuote] - wallet is required', {
@@ -83,8 +75,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       buyAsset,
       sellAsset,
       minimum,
-      receiveAddress,
-      sellAssetAccountNumber
+      receiveAddress
     }
 
     switch (chainId) {

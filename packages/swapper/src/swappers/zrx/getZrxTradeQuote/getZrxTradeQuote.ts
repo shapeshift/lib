@@ -22,7 +22,7 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
   input: GetEvmTradeQuoteInput
 ): Promise<TradeQuote<T>> {
   try {
-    const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber } = input
+    const { sellAsset, buyAsset, sellAmount } = input
     if (buyAsset.chainId !== input.chainId || sellAsset.chainId !== input.chainId) {
       throw new SwapError(
         '[getZrxTradeQuote] - Both assets need to be on the same supported EVM chain to use Zrx',
@@ -111,8 +111,7 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
       sources: sources?.filter((s: SwapSource) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE,
       allowanceContract: allowanceTarget,
       buyAsset,
-      sellAsset,
-      sellAssetAccountNumber
+      sellAsset
     } as TradeQuote<T>
   } catch (e) {
     if (e instanceof SwapError) throw e

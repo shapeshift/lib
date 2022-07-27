@@ -27,7 +27,7 @@ export async function getCowSwapTradeQuote(
   input: GetTradeQuoteInput
 ): Promise<TradeQuote<KnownChainIds.EthereumMainnet>> {
   try {
-    const { sellAsset, buyAsset, sellAmount, receiveAddress, sellAssetAccountNumber } = input
+    const { sellAsset, buyAsset, sellAmount, receiveAddress } = input
     const { adapter, web3 } = deps
 
     const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
@@ -133,8 +133,7 @@ export async function getCowSwapTradeQuote(
       allowanceContract: COW_SWAP_VAULT_RELAYER_ADDRESS,
       buyAsset,
       sellAsset,
-      receiveAddress,
-      sellAssetAccountNumber
+      receiveAddress
     }
   } catch (e) {
     if (e instanceof SwapError) throw e

@@ -33,7 +33,7 @@ export async function zrxApprovalNeeded<T extends EvmSupportedChainIds>(
       return { approvalNeeded: false }
     }
 
-    const accountNumber = quote.sellAssetAccountNumber
+    const accountNumber = 0 // TODO
 
     const bip44Params = adapter.buildBIP44Params({ accountNumber })
     const receiveAddress = await adapter.getAddress({ wallet, bip44Params })

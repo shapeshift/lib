@@ -53,9 +53,9 @@ type CommonTradeInput = {
   buyAsset: Asset
   sellAmount: string
   sendMax: boolean
-  sellAssetAccountNumber: number
   wallet: HDWallet
   receiveAddress: string
+  bip44Params: BIP44Params
 }
 
 export type EvmSupportedChainIds = KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
@@ -77,7 +77,6 @@ export type GetCosmosSdkTradeQuoteInput = CommonTradeInput & {
 type GetBtcTradeQuoteInput = CommonTradeInput & {
   chainId: KnownChainIds.BitcoinMainnet
   accountType: UtxoAccountType
-  bip44Params: BIP44Params
   wallet: HDWallet
 }
 
@@ -100,7 +99,6 @@ interface TradeBase<C extends ChainId> {
   buyAsset: Asset
   sellAsset: Asset
   receiveAddress: string
-  sellAssetAccountNumber: number
 }
 
 export interface TradeQuote<C extends ChainId> extends TradeBase<C> {

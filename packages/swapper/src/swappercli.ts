@@ -106,15 +106,16 @@ const main = async (): Promise<void> => {
 
   let quote
   try {
+    const bip44Params = ethChainAdapter.buildBIP44Params({ accountNumber: 0 })
     quote = await swapper.getTradeQuote({
       chainId: KnownChainIds.EthereumMainnet,
       sellAsset,
       buyAsset,
       sellAmount: sellAmountBase,
-      sellAssetAccountNumber: 0,
       sendMax: false,
       receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
-      wallet
+      wallet,
+      bip44Params
     })
   } catch (e) {
     console.error(e)
@@ -134,6 +135,7 @@ const main = async (): Promise<void> => {
     } on ${swapper.getType()}? (y/n): `
   )
   if (answer === 'y') {
+    const bip44Params = ethChainAdapter.buildBIP44Params({ accountNumber: 0 })
     const trade = await swapper.buildTrade({
       chainId: KnownChainIds.EthereumMainnet,
       wallet,
@@ -141,8 +143,8 @@ const main = async (): Promise<void> => {
       sendMax: false,
       sellAmount: sellAmountBase,
       sellAsset,
-      sellAssetAccountNumber: 0,
-      receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
+      receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+      bip44Params
     })
     const txid = await swapper.executeTrade({ trade, wallet })
     console.info('broadcast tx with id: ', txid)

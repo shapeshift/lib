@@ -118,7 +118,7 @@ export const grantAllowance = async <T extends EvmSupportedChainIds>({
       .approve(quote.allowanceContract, quote.sellAmount)
       .encodeABI()
 
-    const accountNumber = quote.sellAssetAccountNumber
+    const accountNumber = 0 // TODO
     const bip44Params = adapter.buildBIP44Params({ accountNumber })
 
     const { txToSign } = await adapter.buildSendTransaction({
