@@ -1,8 +1,8 @@
-import { ASSET_REFERENCE, AssetId, toAssetId } from '@shapeshiftoss/caip'
+import { ASSET_REFERENCE, AssetId, btcAssetId } from '@shapeshiftoss/caip'
 import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 
-import { ChainAdapterArgs, UtxoBaseAdapter } from '../UTXOBaseAdapter'
+import { ChainAdapterArgs, UtxoBaseAdapter } from '../UtxoBaseAdapter'
 
 const SUPPORTED_CHAIN_IDS = [KnownChainIds.BitcoinMainnet]
 const DEFAULT_CHAIN_ID = KnownChainIds.BitcoinMainnet
@@ -30,12 +30,7 @@ export class ChainAdapter extends UtxoBaseAdapter<KnownChainIds.BitcoinMainnet> 
       ...args
     })
 
-    this.assetId = toAssetId({
-      chainId: this.chainId,
-      assetNamespace: 'slip44',
-      assetReference: ASSET_REFERENCE.Bitcoin
-    })
-
+    this.assetId = btcAssetId
     this.parser = new unchained.dogecoin.TransactionParser({
       chainId: this.chainId
     })
