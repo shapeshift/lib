@@ -8,7 +8,7 @@ import { GetTradeQuoteInput, TradeQuote } from '../../../api'
 import { ETH, FOX, WETH } from '../../utils/test-data/assets'
 import { CowSwapperDeps } from '../CowSwapper'
 import { cowService } from '../utils/cowService'
-import { CowSwapQuoteApiInput } from '../utils/helpers/helpers'
+import { CowSwapSellQuoteApiInput } from '../utils/helpers/helpers'
 import { getCowSwapTradeQuote } from './getCowSwapTradeQuote'
 
 jest.mock('@shapeshiftoss/chain-adapters')
@@ -63,7 +63,7 @@ const feeData: FeeDataEstimate<KnownChainIds.EthereumMainnet> = {
   }
 }
 
-const expectedApiInputWethToFox: CowSwapQuoteApiInput = {
+const expectedApiInputWethToFox: CowSwapSellQuoteApiInput = {
   appData: '0x0000000000000000000000000000000000000000000000000000000000000000',
   buyToken: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
   from: '0x0000000000000000000000000000000000000000',

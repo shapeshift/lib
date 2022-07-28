@@ -11,6 +11,7 @@ export const COW_SWAP_SETTLEMENT_ADDRESS = '0x9008D19f58AAbD9eD0D60971565AA85105
 export const WETH_ASSET_ID = 'eip155:1/erc20:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
 
 export const ORDER_KIND_SELL = 'sell'
+export const ORDER_KIND_BUY = 'buy'
 export const SIGNING_SCHEME = 'ethsign'
 export const ERC20_TOKEN_BALANCE = 'erc20'
 export const ORDER_STATUS_FULFILLED = 'fulfilled'
