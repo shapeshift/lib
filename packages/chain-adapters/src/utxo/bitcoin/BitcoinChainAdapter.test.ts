@@ -10,8 +10,8 @@ import { BTCWallet, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 
-import { Account, BuildSendTxInput } from '../types'
-import { ChainAdapterArgs } from '../utxo/UTXOBaseAdapter'
+import { Account, BuildSendTxInput } from '../../types'
+import { ChainAdapterArgs } from '../UTXOBaseAdapter'
 import * as bitcoin from './BitcoinChainAdapter'
 
 const testMnemonic = 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle'
