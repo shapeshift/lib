@@ -3,6 +3,7 @@ import { btcAssetId, btcChainId, ethAssetId } from '@shapeshiftoss/caip'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import Web3 from 'web3'
 
+import { BTC, ETH, FOX, UNSUPPORTED } from '../../../utils/test-data/assets'
 import { ethMidgardPool, foxMidgardPool, mockInboundAdresses } from '../test-data/midgardResponse'
 import { thorService } from '../thorService'
 import { estimateTradeFee } from './estimateTradeFee'
@@ -22,30 +23,27 @@ describe('estimateTradeFee', () => {
     ;(thorService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: mockInboundAdresses })
     )
-    const estimatedTradeFee = await estimateTradeFee(deps, btcAssetId)
+    const estimatedTradeFee = await estimateTradeFee(deps, BTC)
 
-    const expectedResult = '16362'
+    const expectedResult = '0.00036'
     expect(estimatedTradeFee).toEqual(expectedResult)
   })
   it('should correctly estimate a trade fee for ethereum as buy asset', async () => {
     ;(thorService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: mockInboundAdresses })
     )
-    const estimatedTradeFee = await estimateTradeFee(deps, ethAssetId)
+    const estimatedTradeFee = await estimateTradeFee(deps, ETH)
 
-    const expectedResult = '32241720000000000'
+    const expectedResult = '0.0672'
     expect(estimatedTradeFee).toEqual(expectedResult)
   })
   it('should correctly estimate a trade fee for an ethereum erc20 as a buy asset', async () => {
     ;(thorService.get as jest.Mock<unknown>)
       .mockReturnValueOnce(Promise.resolve({ data: mockInboundAdresses }))
       .mockReturnValueOnce(Promise.resolve({ data: [foxMidgardPool, ethMidgardPool] }))
-    const estimatedTradeFee = await estimateTradeFee(
-      deps,
-      'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
-    )
+    const estimatedTradeFee = await estimateTradeFee(deps, FOX)
 
-    const expectedResult = '760354594956692487365'
+    const expectedResult = '856.785841'
     expect(estimatedTradeFee).toEqual(expectedResult)
   })
   it('should throw if trying to get fee data for an unsupported buy asset', async () => {
@@ -53,8 +51,8 @@ describe('estimateTradeFee', () => {
       Promise.resolve({ data: mockInboundAdresses })
     )
 
-    return expect(
-      estimateTradeFee(deps, 'eip155:1/erc20:0x4204204204204204204204204204204204204204')
-    ).rejects.toThrow(`[estimateTradeFee] - undefined thorId for given buyAssetId`)
+    return expect(estimateTradeFee(deps, UNSUPPORTED)).rejects.toThrow(
+      `[estimateTradeFee] - undefined thorId for given buyAssetId`
+    )
   })
 })

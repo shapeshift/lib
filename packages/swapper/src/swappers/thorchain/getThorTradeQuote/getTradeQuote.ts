@@ -2,15 +2,14 @@ import { ChainId, fromAssetId } from '@shapeshiftoss/caip'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
 import { GetTradeQuoteInput, SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
-import { bnOrZero, fromBaseUnit } from '../../utils/bignumber'
+import { bnOrZero, fromBaseUnit, toBaseUnit } from '../../utils/bignumber'
 import { DEFAULT_SLIPPAGE } from '../../utils/constants'
-import { normalizeAmount } from '../../utils/helpers/helpers'
 import { ThorchainSwapperDeps } from '../types'
 import { getThorTxInfo as getBtcThorTxInfo } from '../utils/bitcoin/utils/getThorTxData'
-import { MAX_THORCHAIN_TRADE } from '../utils/constants'
+import { MAX_THORCHAIN_TRADE, THOR_MINIMUM_PADDING } from '../utils/constants'
 import { estimateTradeFee } from '../utils/estimateTradeFee/estimateTradeFee'
 import { getThorTxInfo as getEthThorTxInfo } from '../utils/ethereum/utils/getThorTxData'
-import { getPriceRatio } from '../utils/getPriceRatio/getPriceRatio'
+import { getTradeRate } from '../utils/getTradeRate/getTradeRate'
 import { getBtcTxFees } from '../utils/txFeeHelpers/btcTxFees/getBtcTxFees'
 import { getEthTxFees } from '../utils/txFeeHelpers/ethTxFees/getEthTxFees'
 
@@ -37,7 +36,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
   } = input
 
   if (!wallet)
-    throw new SwapError('[getTradeQuote] - wallet is required', {
+    throw new SwapError('[getThorTradeQuote] - wallet is required', {
       code: SwapErrorTypes.VALIDATION_FAILED
     })
 
@@ -51,22 +50,22 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
         details: { chainId }
       })
 
-    const sellAssetId = sellAsset.assetId
-    const buyAssetId = buyAsset.assetId
+    const tradeRate = await getTradeRate(sellAsset, buyAsset.assetId, sellAmount, deps)
+    const rate = bnOrZero(1).div(tradeRate).toString()
 
-    const priceRatio = await getPriceRatio(deps, { sellAssetId, buyAssetId })
-    const rate = bnOrZero(1).div(priceRatio).toString()
-    const buyAmount = normalizeAmount(bnOrZero(sellAmount).times(rate))
-
-    const tradeFee = await estimateTradeFee(deps, buyAssetId)
-
-    const sellAssetTradeFee = fromBaseUnit(
-      bnOrZero(tradeFee).times(bnOrZero(priceRatio)),
+    const buyAmount = toBaseUnit(
+      bnOrZero(fromBaseUnit(sellAmount, sellAsset.precision)).times(tradeRate),
       buyAsset.precision
     )
 
-    // padding minimum by 1.5 the trade fee to avoid thorchain "not enough to cover fee" errors.
-    const minimum = bnOrZero(sellAssetTradeFee).times(1.5).toString()
+    const tradeFee = await estimateTradeFee(deps, buyAsset)
+
+    const sellAssetTradeFee = bnOrZero(tradeFee).times(bnOrZero(rate))
+
+    // minimum is tradeFee padded by an amount to be sure they get something back
+    // usually it will be slightly more than the amount because sellAssetTradeFee is already a high estimate
+    const minimum = bnOrZero(sellAssetTradeFee).times(THOR_MINIMUM_PADDING).toString()
+
     const commonQuoteFields: CommonQuoteFields = {
       rate,
       maximum: MAX_THORCHAIN_TRADE,
@@ -82,23 +81,19 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
     switch (chainId) {
       case KnownChainIds.EthereumMainnet:
         return (async (): Promise<TradeQuote<KnownChainIds.EthereumMainnet>> => {
-          const { data, router } = await getEthThorTxInfo({
+          const { router } = await getEthThorTxInfo({
             deps,
             sellAsset,
             buyAsset,
             sellAmount,
             slippageTolerance: DEFAULT_SLIPPAGE,
-            destinationAddress: receiveAddress
+            destinationAddress: receiveAddress,
+            tradeFee
           })
           const feeData = await getEthTxFees({
-            deps,
-            data,
-            router,
-            buyAsset,
-            sellAmount,
             adapterManager: deps.adapterManager,
-            receiveAddress,
-            sellAssetReference: sellAssetErc20Address
+            sellAssetReference: sellAssetErc20Address,
+            tradeFee
           })
 
           return {
@@ -119,22 +114,22 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             destinationAddress: receiveAddress,
             wallet,
             bip44Params: input.bip44Params,
-            accountType: input.accountType
+            accountType: input.accountType,
+            tradeFee
           })
 
           const feeData = await getBtcTxFees({
-            deps,
-            buyAsset,
             sellAmount,
             vault,
             opReturnData,
             pubkey,
-            adapterManager: deps.adapterManager
+            adapterManager: deps.adapterManager,
+            tradeFee
           })
 
           return {
             ...commonQuoteFields,
-            allowanceContract: '0x0',
+            allowanceContract: '0x0', // not applicable to bitcoin
             feeData
           }
         })()

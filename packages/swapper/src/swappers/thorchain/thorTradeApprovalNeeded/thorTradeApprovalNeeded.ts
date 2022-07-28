@@ -1,4 +1,4 @@
-import { fromAssetId, fromChainId } from '@shapeshiftoss/caip'
+import { CHAIN_NAMESPACE, fromAssetId, fromChainId } from '@shapeshiftoss/caip'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
 import { ApprovalNeededInput, ApprovalNeededOutput, SwapError, SwapErrorTypes } from '../../../api'
@@ -22,15 +22,7 @@ export const thorTradeApprovalNeeded = async ({
     const { assetReference: sellAssetErc20Address } = fromAssetId(sellAsset.assetId)
     const { chainNamespace } = fromChainId(sellAsset.chainId)
 
-    if (chainNamespace !== 'eip155') {
-      throw new SwapError(
-        '[thorTradeApprovalNeeded] - sellAsset chain namespace is not supported',
-        {
-          code: SwapErrorTypes.UNSUPPORTED_CHAIN,
-          details: { chainNamespace }
-        }
-      )
-    }
+    if (chainNamespace !== CHAIN_NAMESPACE.Ethereum) return { approvalNeeded: false }
 
     const accountNumber = quote.sellAssetAccountNumber
 
