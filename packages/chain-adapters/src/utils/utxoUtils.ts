@@ -25,10 +25,6 @@ export const toBtcOutputScriptType = (x: BTCInputScriptType) => {
 
 /**
  * Utility function to get BIP44Params and scriptType for chain-adapter functions (getAddress, buildSendTransaction)
- * @param accountType
- * @param asset
- * @param accountNumber
- * @returns object with BIP44Params and scriptType or undefined
  */
 export const utxoAccountParams = (
   chainId: ChainId,
@@ -126,11 +122,12 @@ export const scriptTypeToAccountType: Record<BTCInputScriptType, UtxoAccountType
  *
  */
 enum PublicKeyType {
-  // mainnet
-  xpub = '0488b21e', // xpub
-  ypub = '049d7cb2', // ypub
-  zpub = '04b24746', // zpub
-  dgub = '02facafd'
+  xpub = '0488b21e',
+  ypub = '049d7cb2',
+  zpub = '04b24746',
+  dgub = '02facafd',
+  Ltub = '019da462',
+  Mtub = '01b26ef6'
 }
 
 const accountTypeToVersion = {

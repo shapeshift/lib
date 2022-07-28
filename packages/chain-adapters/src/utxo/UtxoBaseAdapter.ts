@@ -492,7 +492,6 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
       return { xpub: convertXpubVersion(publicKeys[0].xpub, accountType) }
     }
 
-    // TODO: is this even valid if we require an accountType?
     return publicKeys[0]
   }
 }
