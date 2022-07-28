@@ -21,6 +21,7 @@ type ChainSpecificAccount<T> = ChainSpecific<
     [KnownChainIds.AvalancheMainnet]: evm.Account
     [KnownChainIds.BitcoinMainnet]: utxo.Account
     [KnownChainIds.DogecoinMainnet]: utxo.Account
+    [KnownChainIds.LitecoinMainnet]: utxo.Account
     [KnownChainIds.CosmosMainnet]: cosmos.Account
     [KnownChainIds.OsmosisMainnet]: osmosis.Account
   }
@@ -52,6 +53,7 @@ type ChainSpecificFeeData<T> = ChainSpecific<
     [KnownChainIds.AvalancheMainnet]: evm.FeeData
     [KnownChainIds.BitcoinMainnet]: utxo.FeeData
     [KnownChainIds.DogecoinMainnet]: utxo.FeeData
+    [KnownChainIds.LitecoinMainnet]: utxo.FeeData
     [KnownChainIds.CosmosMainnet]: cosmos.FeeData
     [KnownChainIds.OsmosisMainnet]: osmosis.FeeData
   }
@@ -136,6 +138,7 @@ type ChainTxTypeInner = {
   [KnownChainIds.AvalancheMainnet]: ETHSignTx
   [KnownChainIds.BitcoinMainnet]: BTCSignTx
   [KnownChainIds.DogecoinMainnet]: BTCSignTx
+  [KnownChainIds.LitecoinMainnet]: BTCSignTx
   [KnownChainIds.CosmosMainnet]: CosmosSignTx
   [KnownChainIds.OsmosisMainnet]: OsmosisSignTx
 }
@@ -190,6 +193,7 @@ type ChainSpecificBuildTxData<T> = ChainSpecific<
     [KnownChainIds.AvalancheMainnet]: evm.BuildTxInput
     [KnownChainIds.BitcoinMainnet]: utxo.BuildTxInput
     [KnownChainIds.DogecoinMainnet]: utxo.BuildTxInput
+    [KnownChainIds.LitecoinMainnet]: utxo.BuildTxInput
     [KnownChainIds.CosmosMainnet]: cosmos.BuildTxInput
     [KnownChainIds.OsmosisMainnet]: cosmos.BuildTxInput
   }
@@ -229,6 +233,7 @@ type ChainSpecificGetFeeDataInput<T> = ChainSpecific<
     [KnownChainIds.AvalancheMainnet]: evm.GetFeeDataInput
     [KnownChainIds.BitcoinMainnet]: utxo.GetFeeDataInput
     [KnownChainIds.DogecoinMainnet]: utxo.GetFeeDataInput
+    [KnownChainIds.LitecoinMainnet]: utxo.GetFeeDataInput
   }
 >
 export type GetFeeDataInput<T extends ChainId> = {

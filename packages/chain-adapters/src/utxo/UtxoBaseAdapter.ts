@@ -41,7 +41,11 @@ import { bnOrZero } from '../utils/bignumber'
 import { GetAddressInput } from './types'
 import { utxoSelect } from './utxoSelect'
 
-const utxoChainIds = [KnownChainIds.BitcoinMainnet, KnownChainIds.DogecoinMainnet] as const
+const utxoChainIds = [
+  KnownChainIds.BitcoinMainnet,
+  KnownChainIds.DogecoinMainnet,
+  KnownChainIds.LitecoinMainnet
+] as const
 
 export type UtxoChainId = typeof utxoChainIds[number]
 
