@@ -45,11 +45,14 @@ describe('utils', () => {
 
       const rate = await getUsdRate(cowSwapperDeps, FOX)
       expect(parseFloat(rate)).toBeCloseTo(0.129834198, 9)
-      expect(cowService.post).toHaveBeenCalledWith('https://api.cow.fi/mainnet/api/v1/quote/', expect.objectContaining({
-        ...expectedQuoteInputForUsdRate,
-        sellToken: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
-        buyToken: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
-      }))
+      expect(cowService.post).toHaveBeenCalledWith(
+        'https://api.cow.fi/mainnet/api/v1/quote/',
+        expect.objectContaining({
+          ...expectedQuoteInputForUsdRate,
+          sellToken: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+          buyToken: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+        })
+      )
     })
 
     it('gets the usd rate of WBTC', async () => {
@@ -64,11 +67,14 @@ describe('utils', () => {
       )
       const rate = await getUsdRate(cowSwapperDeps, WBTC)
       expect(parseFloat(rate)).toBeCloseTo(29987.13851629, 9)
-      expect(cowService.post).toHaveBeenCalledWith('https://api.cow.fi/mainnet/api/v1/quote/', expect.objectContaining({
-        ...expectedQuoteInputForUsdRate,
-        sellToken: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
-        buyToken: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
-      }))
+      expect(cowService.post).toHaveBeenCalledWith(
+        'https://api.cow.fi/mainnet/api/v1/quote/',
+        expect.objectContaining({
+          ...expectedQuoteInputForUsdRate,
+          sellToken: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
+          buyToken: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+        })
+      )
     })
 
     it('should get the rate of WETH when called with ETH', async () => {
@@ -84,11 +90,14 @@ describe('utils', () => {
 
       const rate = await getUsdRate(cowSwapperDeps, ETH)
       expect(parseFloat(rate)).toBeCloseTo(1094.381925769, 9)
-      expect(cowService.post).toHaveBeenCalledWith('https://api.cow.fi/mainnet/api/v1/quote/', expect.objectContaining({
-        ...expectedQuoteInputForUsdRate,
-        sellToken: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-        buyToken: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
-      }))
+      expect(cowService.post).toHaveBeenCalledWith(
+        'https://api.cow.fi/mainnet/api/v1/quote/',
+        expect.objectContaining({
+          ...expectedQuoteInputForUsdRate,
+          sellToken: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+          buyToken: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+        })
+      )
     })
 
     it('gets the usd rate of USDC without calling api', async () => {
