@@ -41,7 +41,7 @@ export const dogecoin: Asset = {
   explorerTxLink: 'https://live.blockcypher.com/doge/tx/'
 }
 
-export const litcoin: Asset = {
+export const litecoin: Asset = {
   assetId: caip.ltcAssetId,
   chainId: caip.ltcChainId,
   symbol: 'LTC',

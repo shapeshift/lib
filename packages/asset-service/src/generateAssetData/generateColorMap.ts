@@ -6,7 +6,7 @@ import orderBy from 'lodash/orderBy'
 
 import { Asset } from '../service/AssetService'
 import * as avalanche from './avalanche'
-import { atom, bitcoin, dogecoin, litcoin } from './baseAssets'
+import { atom, bitcoin, dogecoin, litecoin } from './baseAssets'
 import * as ethereum from './ethereum'
 import * as osmosis from './osmosis'
 import { setColors } from './setColors'
@@ -23,7 +23,7 @@ const generateColorMap = async () => {
   const unfilteredAssetData: Asset[] = [
     bitcoin,
     dogecoin,
-    litcoin,
+    litecoin,
     atom,
     ...ethAssets,
     ...osmosisAssets,

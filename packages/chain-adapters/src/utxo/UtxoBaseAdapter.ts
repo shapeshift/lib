@@ -41,7 +41,7 @@ import { bnOrZero } from '../utils/bignumber'
 import { GetAddressInput } from './types'
 import { utxoSelect } from './utxoSelect'
 
-const utxoChainIds = [
+export const utxoChainIds = [
   KnownChainIds.BitcoinMainnet,
   KnownChainIds.DogecoinMainnet,
   KnownChainIds.LitecoinMainnet
@@ -53,7 +53,7 @@ export interface ChainAdapterArgs {
   chainId?: UtxoChainId
   coinName: string
   providers: {
-    http: unchained.bitcoin.V1Api | unchained.dogecoin.V1Api
+    http: unchained.bitcoin.V1Api | unchained.dogecoin.V1Api | unchained.litecoin.V1Api
     ws: unchained.ws.Client<unchained.utxo.types.Tx>
   }
 }
@@ -74,7 +74,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
   protected readonly supportedChainIds: Array<ChainId>
   protected readonly supportedAccountTypes: Array<UtxoAccountType>
   protected readonly providers: {
-    http: unchained.bitcoin.V1Api | unchained.dogecoin.V1Api
+    http: unchained.bitcoin.V1Api | unchained.dogecoin.V1Api | unchained.litecoin.V1Api
     ws: unchained.ws.Client<unchained.utxo.types.Tx>
   }
 
@@ -109,6 +109,10 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
 
   getChainId(): ChainId {
     return this.chainId
+  }
+
+  getSupportedAccountTypes(): Array<UtxoAccountType> {
+    return this.supportedAccountTypes
   }
 
   buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
