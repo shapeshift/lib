@@ -157,7 +157,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
       this.assertIsAccountTypeSupported(accountType)
 
       if (!supportsBTC(wallet)) {
-        throw new Error(`UTXOBaseAdapter: wallet does not support ${this.coinName}`)
+        throw new Error(`UtxoBaseAdapter: wallet does not support ${this.coinName}`)
       }
 
       const getNextIndex = async () => {
@@ -169,16 +169,16 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
       }
 
       const index = bip44Params.index ?? (await getNextIndex())
-      const btcAddress = await wallet.btcGetAddress({
+      const address = await wallet.btcGetAddress({
         addressNList: bip32ToAddressNList(toPath({ ...bip44Params, index })),
         coin: this.coinName,
         scriptType: accountTypeToScriptType[accountType],
         showDisplay: showOnDevice
       })
 
-      if (!btcAddress) throw new Error('UTXOBaseAdapter: no address available from wallet')
+      if (!address) throw new Error('UtxoBaseAdapter: no address available from wallet')
 
-      return btcAddress
+      return address
     } catch (err) {
       return ErrorHandler(err)
     }
@@ -199,7 +199,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
       if (!to) throw new Error('to is required')
 
       if (!supportsBTC(wallet)) {
-        throw new Error(`UTXOBaseAdapter: wallet does not support ${this.coinName}`)
+        throw new Error(`UtxoBaseAdapter: wallet does not support ${this.coinName}`)
       }
 
       const { xpub } = await this.getPublicKey(wallet, bip44Params, accountType)
@@ -215,7 +215,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
       })
 
       if (!coinSelectResult?.inputs || !coinSelectResult?.outputs) {
-        throw new Error(`UTXOBaseAdapter: coinSelect didn't select coins`)
+        throw new Error(`UtxoBaseAdapter: coinSelect didn't select coins`)
       }
 
       const { inputs, outputs } = coinSelectResult
@@ -317,12 +317,12 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
   async signTransaction({ txToSign, wallet }: SignTxInput<ChainTxType<T>>): Promise<string> {
     try {
       if (!supportsBTC(wallet)) {
-        throw new Error(`UTXOBaseAdapter: wallet does not support ${this.coinName}`)
+        throw new Error(`UtxoBaseAdapter: wallet does not support ${this.coinName}`)
       }
 
       const signedTx = await wallet.btcSignTx(txToSign)
 
-      if (!signedTx) throw new Error('UTXOBaseAdapter: error signing tx')
+      if (!signedTx) throw new Error('UtxoBaseAdapter: error signing tx')
 
       return signedTx.serializedTx
     } catch (err) {
