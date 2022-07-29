@@ -16,7 +16,7 @@
         }
       },
       "bitcoin": {
-        "inputSpec": "http://api.bitcoin.localhost/swagger.json",
+        "inputSpec": "https://dev-api.bitcoin.shapeshift.com/swagger.json",
         "generatorName": "typescript-axios",
         "output": "#{cwd}/src/generated/bitcoin",
         "reservedWordsMappings": { "in": "in" },
@@ -36,7 +36,7 @@
         }
       },
       "dogecoin": {
-        "inputSpec": "http://api.dogecoin.localhost/swagger.json",
+        "inputSpec": "https://dev-api.dogecoin.shapeshift.com/swagger.json",
         "generatorName": "typescript-axios",
         "output": "#{cwd}/src/generated/dogecoin",
         "reservedWordsMappings": { "in": "in" },
@@ -56,7 +56,7 @@
         }
       },
       "litecoin": {
-        "inputSpec": "http://api.litecoin.localhost/swagger.json",
+        "inputSpec": "https://dev-api.litecoin.shapeshift.com/swagger.json",
         "generatorName": "typescript-axios",
         "output": "#{cwd}/src/generated/litecoin",
         "reservedWordsMappings": { "in": "in" },

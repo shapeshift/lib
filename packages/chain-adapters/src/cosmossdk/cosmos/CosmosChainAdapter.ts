@@ -1,4 +1,4 @@
-import { ASSET_REFERENCE, AssetId, cosmosAssetId } from '@shapeshiftoss/caip'
+import { ASSET_REFERENCE, AssetId, CHAIN_REFERENCE, cosmosAssetId } from '@shapeshiftoss/caip'
 import {
   bip32ToAddressNList,
   CosmosSignTx,
@@ -169,7 +169,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.CosmosMainn
       const txToSign: CosmosSignTx = {
         addressNList,
         tx: utx,
-        chain_id: this.chainId,
+        chain_id: CHAIN_REFERENCE.CosmosHubMainnet,
         account_number: account.chainSpecific.accountNumber,
         sequence: account.chainSpecific.sequence
       }
@@ -241,7 +241,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.CosmosMainn
       const txToSign: CosmosSignTx = {
         addressNList,
         tx: utx,
-        chain_id: this.chainId,
+        chain_id: CHAIN_REFERENCE.CosmosHubMainnet,
         account_number: account.chainSpecific.accountNumber,
         sequence: account.chainSpecific.sequence
       }
@@ -312,7 +312,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.CosmosMainn
       const txToSign: CosmosSignTx = {
         addressNList,
         tx: utx,
-        chain_id: this.chainId,
+        chain_id: CHAIN_REFERENCE.CosmosHubMainnet,
         account_number: account.chainSpecific.accountNumber,
         sequence: account.chainSpecific.sequence
       }
@@ -377,7 +377,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.CosmosMainn
       const txToSign: CosmosSignTx = {
         addressNList,
         tx: utx,
-        chain_id: this.chainId,
+        chain_id: CHAIN_REFERENCE.CosmosHubMainnet,
         account_number: account.chainSpecific.accountNumber,
         sequence: account.chainSpecific.sequence
       }
@@ -456,7 +456,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.CosmosMainn
       const txToSign: CosmosSignTx = {
         addressNList,
         tx: utx,
-        chain_id: this.chainId,
+        chain_id: CHAIN_REFERENCE.CosmosHubMainnet,
         account_number: account.chainSpecific.accountNumber,
         sequence: account.chainSpecific.sequence
       }

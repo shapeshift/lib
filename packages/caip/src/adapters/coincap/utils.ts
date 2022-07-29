@@ -13,7 +13,13 @@ import {
   ltcChainId,
   osmosisChainId
 } from '../../constants'
-import { bitcoinAsset, cosmosAsset, dogecoinAsset, litecoinAsset, osmosisAsset } from '../../utils'
+import {
+  bitcoinAssetMap,
+  cosmosAssetMap,
+  dogecoinAssetMap,
+  litecoinAssetMap,
+  osmosisAssetMap
+} from '../../utils'
 
 export type CoinCapCoin = {
   id: string
@@ -67,9 +73,9 @@ export const parseEthData = (data: CoinCapCoin[]) => {
 
 export const parseData = (d: CoinCapCoin[]) => ({
   [ethChainId]: parseEthData(d),
-  [btcChainId]: bitcoinAsset,
-  [dogeChainId]: dogecoinAsset,
-  [ltcChainId]: litecoinAsset,
-  [cosmosChainId]: cosmosAsset,
-  [osmosisChainId]: osmosisAsset
+  [btcChainId]: bitcoinAssetMap,
+  [dogeChainId]: dogecoinAssetMap,
+  [ltcChainId]: litecoinAssetMap,
+  [cosmosChainId]: cosmosAssetMap,
+  [osmosisChainId]: osmosisAssetMap
 })

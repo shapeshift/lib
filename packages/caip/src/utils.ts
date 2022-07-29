@@ -36,11 +36,11 @@ export const isValidChainPartsPair = (
   chainReference: ChainReference
 ) => constants.VALID_CHAIN_IDS[chainNamespace]?.includes(chainReference) || false
 
-export const bitcoinAsset = { [constants.btcAssetId]: 'bitcoin' }
-export const dogecoinAsset = { [constants.dogeAssetId]: 'dogecoin' }
-export const litecoinAsset = { [constants.ltcAssetId]: 'litecoin' }
-export const cosmosAsset = { [constants.cosmosAssetId]: 'cosmos' }
-export const osmosisAsset = { [constants.osmosisAssetId]: 'osmosis' }
+export const bitcoinAssetMap = { [constants.btcAssetId]: 'bitcoin' }
+export const dogecoinAssetMap = { [constants.dogeAssetId]: 'dogecoin' }
+export const litecoinAssetMap = { [constants.ltcAssetId]: 'litecoin' }
+export const cosmosAssetMap = { [constants.cosmosAssetId]: 'cosmos' }
+export const osmosisAssetMap = { [constants.osmosisAssetId]: 'osmosis' }
 
 interface Flavoring<FlavorT> {
   _type?: FlavorT

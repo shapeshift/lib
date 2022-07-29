@@ -3,3 +3,4 @@ export { BaseTransactionParser } from './parser'
 
 export * as bitcoin from './bitcoin'
 export * as dogecoin from './dogecoin'
+export * as litecoin from './litecoin'
