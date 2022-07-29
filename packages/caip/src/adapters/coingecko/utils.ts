@@ -10,11 +10,13 @@ import {
   CHAIN_NAMESPACE,
   CHAIN_REFERENCE,
   cosmosChainId,
+  dogeAssetId,
   ethAssetId,
   ethChainId,
+  ltcAssetId,
   osmosisChainId
 } from '../../constants'
-import { bitcoinAsset, cosmosAsset, osmosisAsset } from '../../utils'
+import { bitcoinAsset, cosmosAsset, dogecoinAsset, litecoinAsset, osmosisAsset } from '../../utils'
 
 export type CoingeckoCoin = {
   id: string
@@ -79,6 +81,8 @@ export const parseData = (coins: CoingeckoCoin[]): AssetMap => {
   return {
     ...assetMap,
     [btcChainId]: bitcoinAsset,
+    [dogeAssetId]: dogecoinAsset,
+    [ltcAssetId]: litecoinAsset,
     [cosmosChainId]: cosmosAsset,
     [osmosisChainId]: osmosisAsset
   }

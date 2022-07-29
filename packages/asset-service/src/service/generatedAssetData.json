@@ -4135,7 +4135,7 @@
     "name": "Wasder",
     "precision": 18,
     "color": "#04D494",
-    "icon": "https://assets.coingecko.com/coins/images/15374/thumb/wasderlogo200x200.png?1620691729",
+    "icon": "https://assets.coingecko.com/coins/images/15374/thumb/wasderBoxedLogoWhite-200x200.png?1659095342",
     "symbol": "WAS",
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
@@ -4209,6 +4209,18 @@
     "color": "#F4C43C",
     "icon": "https://assets.coingecko.com/coins/images/25845/thumb/20323.png?1654145185",
     "symbol": "EXN",
+    "explorer": "https://etherscan.io",
+    "explorerAddressLink": "https://etherscan.io/address/",
+    "explorerTxLink": "https://etherscan.io/tx/"
+  },
+  "eip155:1/erc20:0x0c9c7712c83b3c70e7c5e11100d33d9401bdf9dd": {
+    "assetId": "eip155:1/erc20:0x0c9c7712c83b3c70e7c5e11100d33d9401bdf9dd",
+    "chainId": "eip155:1",
+    "name": "Wombat",
+    "precision": 18,
+    "color": "#F84C24",
+    "icon": "https://assets.coingecko.com/coins/images/26430/thumb/Project_Page_Icon.png?1657930951",
+    "symbol": "WOMBAT",
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
@@ -7418,18 +7430,6 @@
     "color": "#F2C204",
     "icon": "https://assets.coingecko.com/coins/images/16396/thumb/074606deafab3872.png?1623910120",
     "symbol": "DOJO",
-    "explorer": "https://etherscan.io",
-    "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/"
-  },
-  "eip155:1/erc20:0x181c94a45ed257baf2211d4ff7e1f49a5964134a": {
-    "assetId": "eip155:1/erc20:0x181c94a45ed257baf2211d4ff7e1f49a5964134a",
-    "chainId": "eip155:1",
-    "name": "MetaShib",
-    "precision": 9,
-    "color": "#392122",
-    "icon": "https://assets.coingecko.com/coins/images/19763/thumb/metashib.png?1636252136",
-    "symbol": "METASHIB",
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
@@ -31110,18 +31110,6 @@
     "chainId": "eip155:1",
     "assetId": "eip155:1/erc20:0x6b4d5e9ec2acea23d4110f4803da99e25443c5df"
   },
-  "eip155:1/erc20:0x6b578f63a40173d85215cc01d6d79e553e8c993c": {
-    "assetId": "eip155:1/erc20:0x6b578f63a40173d85215cc01d6d79e553e8c993c",
-    "chainId": "eip155:1",
-    "name": "Magick DAO",
-    "precision": 9,
-    "color": "#BB7B12",
-    "icon": "https://assets.coingecko.com/coins/images/22002/thumb/cXbU6i6.png?1640587963",
-    "symbol": "MAGICK",
-    "explorer": "https://etherscan.io",
-    "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/"
-  },
   "eip155:1/erc20:0x6b5ce31af687a671a804d8070ddda99cab926dfe": {
     "color": "#DDAC51",
     "icon": "https://raw.githack.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x22CF19EB64226e0E1A79c69b345b31466fD273A7/logo-128.png",
@@ -39330,18 +39318,6 @@
     "chainId": "eip155:1",
     "assetId": "eip155:1/erc20:0x898bad2774eb97cf6b94605677f43b41871410b1"
   },
-  "eip155:1/erc20:0x8994c21d588106ba289e014331a1d74491894cee": {
-    "assetId": "eip155:1/erc20:0x8994c21d588106ba289e014331a1d74491894cee",
-    "chainId": "eip155:1",
-    "name": "Chain Flowers",
-    "precision": 8,
-    "color": "#33155E",
-    "icon": "https://assets.coingecko.com/coins/images/17237/thumb/cflo200.png?1626931651",
-    "symbol": "CFLO",
-    "explorer": "https://etherscan.io",
-    "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/"
-  },
   "eip155:1/erc20:0x89a64014d429509cffda1aebc7eb36b9435794bd": {
     "assetId": "eip155:1/erc20:0x89a64014d429509cffda1aebc7eb36b9435794bd",
     "chainId": "eip155:1",
@@ -40781,18 +40757,6 @@
     "color": "#FC9B33",
     "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0x8f3470A7388c05eE4e7AF3d01D8C722b0FF52374/logo.png",
     "symbol": "VERI",
-    "explorer": "https://etherscan.io",
-    "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/"
-  },
-  "eip155:1/erc20:0x8f53af5d2ef322b4c4ed063738d5baa47edcd996": {
-    "assetId": "eip155:1/erc20:0x8f53af5d2ef322b4c4ed063738d5baa47edcd996",
-    "chainId": "eip155:1",
-    "name": "RematicEGC",
-    "precision": 18,
-    "color": "#C4C4C6",
-    "icon": "https://assets.coingecko.com/coins/images/21240/thumb/Rematic_Circle_Logo_200x200.png?1647851612",
-    "symbol": "RMTX",
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
@@ -56390,6 +56354,18 @@
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
   },
+  "eip155:1/erc20:0xc94f3e2ade5e92389af7e543657211ecccaff11e": {
+    "assetId": "eip155:1/erc20:0xc94f3e2ade5e92389af7e543657211ecccaff11e",
+    "chainId": "eip155:1",
+    "name": "Up Spiral",
+    "precision": 18,
+    "color": "#0E0E10",
+    "icon": "https://assets.coingecko.com/coins/images/26615/thumb/spiral.png?1659072838",
+    "symbol": "SPIRAL",
+    "explorer": "https://etherscan.io",
+    "explorerAddressLink": "https://etherscan.io/address/",
+    "explorerTxLink": "https://etherscan.io/tx/"
+  },
   "eip155:1/erc20:0xc962ad021a69d457564e985738c719ae3f79b707": {
     "assetId": "eip155:1/erc20:0xc962ad021a69d457564e985738c719ae3f79b707",
     "chainId": "eip155:1",
@@ -71627,6 +71603,18 @@
     "explorerAddressLink": "https://snowtrace.io/address/",
     "explorerTxLink": "https://snowtrace.io/tx/"
   },
+  "eip155:43114/erc20:0x250bdca7d1845cd543bb55e7d82dca24d48e9f0f": {
+    "assetId": "eip155:43114/erc20:0x250bdca7d1845cd543bb55e7d82dca24d48e9f0f",
+    "chainId": "eip155:43114",
+    "name": "Dragon Crypto Argenti",
+    "precision": 18,
+    "color": "#BABABA",
+    "icon": "https://assets.coingecko.com/coins/images/26613/thumb/dcar%283%29.png?1659067097",
+    "symbol": "DCAR",
+    "explorer": "https://snowtrace.io",
+    "explorerAddressLink": "https://snowtrace.io/address/",
+    "explorerTxLink": "https://snowtrace.io/tx/"
+  },
   "eip155:43114/erc20:0x264c1383ea520f73dd837f915ef3a732e204a493": {
     "assetId": "eip155:43114/erc20:0x264c1383ea520f73dd837f915ef3a732e204a493",
     "chainId": "eip155:43114",
@@ -75067,6 +75055,18 @@
     "color": "#C4ECE0",
     "icon": "https://assets.coingecko.com/coins/images/24189/thumb/Usdt.e.png?1646819144",
     "symbol": "USDT",
+    "explorer": "https://snowtrace.io",
+    "explorerAddressLink": "https://snowtrace.io/address/",
+    "explorerTxLink": "https://snowtrace.io/tx/"
+  },
+  "eip155:43114/erc20:0xc763f8570a48c4c00c80b76107cbe744dda67b79": {
+    "assetId": "eip155:43114/erc20:0xc763f8570a48c4c00c80b76107cbe744dda67b79",
+    "chainId": "eip155:43114",
+    "name": "BetSwirl",
+    "precision": 18,
+    "color": "#476DEF",
+    "icon": "https://assets.coingecko.com/coins/images/26618/thumb/icon_200.png?1659073275",
+    "symbol": "BETS",
     "explorer": "https://snowtrace.io",
     "explorerAddressLink": "https://snowtrace.io/address/",
     "explorerTxLink": "https://snowtrace.io/tx/"
