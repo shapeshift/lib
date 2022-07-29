@@ -2797,6 +2797,17 @@
     lodash "^4.17.4"
     read-pkg-up "^7.0.0"
 
+"@shapeshiftoss/asset-service@^7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/asset-service/-/asset-service-7.1.0.tgz#3f84478fdc67a3de073b1c1e0f66385585539474"
+  integrity sha512-0bkJJTmCNZH7bj15yTLxcyWzDsIuSPE8+iX/KVUQzFv0qJ0KTzcxO9g7ea5Kr6sDFxD5OBTAKOD8tT32vLkiEQ==
+  dependencies:
+    axios "^0.26.1"
+    identicon.js "^2.3.3"
+    js-pixel-fonts "^1.5.0"
+    lodash "^4.17.21"
+    node-polyglot "^2.4.2"
+
 "@shapeshiftoss/bitcoinjs-lib@5.2.0-shapeshift.2":
   version "5.2.0-shapeshift.2"
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/bitcoinjs-lib/-/bitcoinjs-lib-5.2.0-shapeshift.2.tgz#f000da26302a8a35822201a6c49a4cf7e1379ed4"
@@ -2830,6 +2841,25 @@
     swagger-ui-express "^4.4.0"
     tsoa "^4.1.0"
     ws "^8.8.0"
+
+"@shapeshiftoss/caip@^6.7.0":
+  version "6.7.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/caip/-/caip-6.7.0.tgz#7203ef917144ff623e4540add518c4ac1201cc4e"
+  integrity sha512-YSojMDu21w8z4vsmIx39JZAjIeXTxgqs96RiVYPExCLgrV6YHsqtm5M3x0OgH3izGaJfPA8klRKY4QFxskCtPg==
+
+"@shapeshiftoss/chain-adapters@^7.13.0":
+  version "7.13.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/chain-adapters/-/chain-adapters-7.13.0.tgz#c64fc2974b45ea9af95b586f038a4bf505626728"
+  integrity sha512-UA6Q86g2qsGkSCvckm01INF9dD1h2Zfr7R8PxHiHuhOptWf28jNeDssrWonKOKafH90X+iRuescDLoc89Mg5QQ==
+  dependencies:
+    axios "^0.26.1"
+    bech32 "^2.0.0"
+    bignumber.js "^9.0.2"
+    bitcoinjs-lib "^5.2.0"
+    coinselect "^3.1.13"
+    ethers "^5.4.7"
+    multicoin-address-validator "^0.5.2"
+    web3-utils "1.7.4"
 
 "@shapeshiftoss/common-api@^8.0.0":
   version "8.0.0"
@@ -2943,6 +2973,22 @@
     cosmjs-types "^0.4.1"
     google-protobuf "^3.17.0"
     long "^4.0.0"
+
+"@shapeshiftoss/types@^8.1.0":
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/types/-/types-8.1.0.tgz#a087f3b89fd68bb07749a75de4afbb5314850711"
+  integrity sha512-/sDoPB5tHWzcMjF/si66ZkZuzcp4JuTGi7AhQoUUeigYNHD5PHjOER4L60MnKSLIyDX8T+yF8335Zq6U5Q6Hag==
+
+"@shapeshiftoss/unchained-client@^9.5.0":
+  version "9.5.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/unchained-client/-/unchained-client-9.5.0.tgz#60c720059c29b6432f3c6b38e2b7d89ab58af2f3"
+  integrity sha512-/NBPzekWDm4qw9x9L22hHUCdCi5iCLnQmkXj2ty+AJBlu7OGHySA07UAWS+p1QO9aoMDGUYVoBSdHinQHy/R/Q==
+  dependencies:
+    "@yfi/sdk" "^1.0.30"
+    bignumber.js "^9.0.2"
+    ethers "^5.5.3"
+    isomorphic-ws "^4.0.1"
+    ws "^8.3.0"
 
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
