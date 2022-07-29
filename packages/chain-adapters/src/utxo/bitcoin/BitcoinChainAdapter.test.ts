@@ -11,7 +11,7 @@ import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-nativ
 import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 
 import { Account, BuildSendTxInput } from '../../types'
-import { ChainAdapterArgs } from '../UTXOBaseAdapter'
+import { ChainAdapterArgs } from '../UtxoBaseAdapter'
 import * as bitcoin from './BitcoinChainAdapter'
 
 const testMnemonic = 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle'
@@ -156,11 +156,11 @@ describe('BitcoinChainAdapter', () => {
     })
     it('should return chainAdapter with Bitcoin assetId', () => {
       const adapter = new bitcoin.ChainAdapter(args)
-      const assetId = adapter.getAssetId()
+      const assetId = adapter.getFeeAssetId()
       expect(assetId).toEqual(VALID_ASSET_ID)
     })
     it('should use default chainId if no arg chainId provided.', () => {
-      args.chainId = undefined
+      delete args.chainId
       const adapter = new bitcoin.ChainAdapter(args)
       const chainId = adapter.getChainId()
       expect(chainId).toEqual('bip122:000000000019d6689c085ae165831e93')
@@ -206,20 +206,6 @@ describe('BitcoinChainAdapter', () => {
       const data = await adapter.getAccount('SomeFakeAddress')
       expect(data).toMatchObject(expected)
       expect(args.providers.http.getAccount).toHaveBeenCalled()
-    })
-
-    it('should throw for an unspecified address', async () => {
-      args.providers.http = {
-        getAccount: jest.fn<any, any>().mockResolvedValue({
-          pubkey: '1EjpFGTWJ9CGRJUMA3SdQSdigxM31aXAFx',
-          balance: '0'
-        })
-      } as any
-
-      const adapter = new bitcoin.ChainAdapter(args)
-      await expect(adapter.getAccount('')).rejects.toThrow(
-        'UTXOBaseAdapter: pubkey parameter is not defined'
-      )
     })
   })
 

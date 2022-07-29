@@ -10,8 +10,8 @@ import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 
-import { Account, BuildSendTxInput } from '../types'
-import { ChainAdapterArgs } from '../utxo/UTXOBaseAdapter'
+import { Account, BuildSendTxInput } from '../../types'
+import { ChainAdapterArgs } from '../UtxoBaseAdapter'
 import * as dogecoin from './DogecoinChainAdapter'
 
 const testMnemonic = 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle'
@@ -154,23 +154,19 @@ describe('DogecoinChainAdapter', () => {
     })
     it('should return chainAdapter with Dogecoin assetId', () => {
       const adapter = new dogecoin.ChainAdapter(args)
-      const assetId = adapter.getAssetId()
+      const assetId = adapter.getFeeAssetId()
       expect(assetId).toEqual(VALID_ASSET_ID)
     })
     it('should throw if called with invalid chainId', () => {
       args.chainId = 'INVALID_CHAINID' as KnownChainIds.DogecoinMainnet
-      expect(() => new dogecoin.ChainAdapter(args)).toThrow(
-        'Dogecoin chainId INVALID_CHAINID not supported'
-      )
+      expect(() => new dogecoin.ChainAdapter(args)).toThrow()
     })
     it('should throw if called with non bitcoin chainId', () => {
       args.chainId = 'eip155:1' as KnownChainIds.DogecoinMainnet
-      expect(() => new dogecoin.ChainAdapter(args)).toThrow(
-        'Dogecoin chainId eip155:1 not supported'
-      )
+      expect(() => new dogecoin.ChainAdapter(args)).toThrow()
     })
     it('should use default chainId if no arg chainId provided.', () => {
-      args.chainId = undefined
+      delete args.chainId
       const adapter = new dogecoin.ChainAdapter(args)
       const chainId = adapter.getChainId()
       expect(chainId).toEqual('bip122:00000000001a91e3dace36e2be3bf030')
@@ -216,20 +212,6 @@ describe('DogecoinChainAdapter', () => {
       const data = await adapter.getAccount('SomeFakeAddress')
       expect(data).toMatchObject(expected)
       expect(args.providers.http.getAccount).toHaveBeenCalled()
-    })
-
-    it('should throw for an unspecified address', async () => {
-      args.providers.http = {
-        getAccount: jest.fn<any, any>().mockResolvedValue({
-          pubkey: 'DQTjL9vfXVbMfCGM49KWeYvvvNzRPaoiFp',
-          balance: '0'
-        })
-      } as any
-
-      const adapter = new dogecoin.ChainAdapter(args)
-      await expect(adapter.getAccount('')).rejects.toThrow(
-        'UTXOBaseAdapter: pubkey parameter is not defined'
-      )
     })
   })
 
