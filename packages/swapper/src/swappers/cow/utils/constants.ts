@@ -2,7 +2,7 @@ import { AddressZero, HashZero } from '@ethersproject/constants'
 
 export const MAX_ALLOWANCE = '100000000000000000000000000'
 export const MAX_COWSWAP_TRADE = '100000000000000000000000000'
-export const MIN_COWSWAP_VALUE_USD = 10
+export const MIN_COWSWAP_VALUE_USD = 20
 export const DEFAULT_SOURCE = [{ name: 'CowSwap', proportion: '1' }]
 export const DEFAULT_ADDRESS = AddressZero
 export const DEFAULT_APP_DATA = HashZero

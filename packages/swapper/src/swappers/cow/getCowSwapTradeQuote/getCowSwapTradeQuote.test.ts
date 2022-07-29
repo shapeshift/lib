@@ -77,7 +77,7 @@ const expectedApiInputWethToFox: CowSwapSellQuoteApiInput = {
 
 const expectedTradeQuoteWethToFox: TradeQuote<KnownChainIds.EthereumMainnet> = {
   rate: '14716.04718939437505555958', // 14716 FOX per WETH
-  minimum: '0.00810596500550730736',
+  minimum: '0.01621193001101461472',
   maximum: '100000000000000000000000000',
   feeData: {
     fee: '0',
