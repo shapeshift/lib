@@ -115,6 +115,10 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
     return this.supportedAccountTypes
   }
 
+  getCoinName(): string {
+    return this.coinName
+  }
+
   buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
     return { ...this.defaultBIP44Params, ...params }
   }
