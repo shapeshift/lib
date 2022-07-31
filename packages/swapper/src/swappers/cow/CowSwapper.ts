@@ -28,10 +28,6 @@ import { CowTrade } from './types'
 import { COWSWAP_UNSUPPORTED_ASSETS } from './utils/blacklist'
 import { getUsdRate } from './utils/helpers/helpers'
 
-/**
- * CowSwap only supports ERC-20 swaps, hence ETH is not supported
- * In order to get rates correctly, we need WETH asset to be passed as feeAsset
- */
 export type CowSwapperDeps = {
   apiUrl: string
   adapter: ethereum.ChainAdapter
@@ -90,9 +86,7 @@ export class CowSwapper implements Swapper<KnownChainIds.EthereumMainnet> {
 
     return assetIds.filter(
       (id) =>
-        id !== sellAssetId &&
-        id.startsWith('eip155:1/erc20') &&
-        !COWSWAP_UNSUPPORTED_ASSETS.includes(id)
+        id !== sellAssetId && id.startsWith('eip155:1') && !COWSWAP_UNSUPPORTED_ASSETS.includes(id)
     )
   }
 
