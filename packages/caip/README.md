@@ -134,7 +134,7 @@ and commit the generated `adapter.json` files.
 ### Usage
 
 ```ts
-console.log(coingeckoToAssetId('shapeshift-fox-token'))
+console.log(coingeckoToAssetIds('shapeshift-fox-token'))
 
 [eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d]
 
