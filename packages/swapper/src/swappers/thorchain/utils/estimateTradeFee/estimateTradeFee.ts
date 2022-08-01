@@ -6,6 +6,7 @@ import { SwapError, SwapErrorTypes } from '../../../../api'
 import { bn, bnOrZero, fromBaseUnit } from '../../../utils/bignumber'
 import { InboundResponse, ThorchainSwapperDeps } from '../../types'
 import {
+  THORCHAIN_FIXED_PRECISION,
   THOR_TRADE_FEE_BTC_SIZE,
   THOR_TRADE_FEE_DOGE_SIZE,
   THOR_TRADE_FEE_ETH_GAS,
@@ -122,7 +123,7 @@ export const estimateTradeFee = async (
     case KnownChainIds.CosmosMainnet:
       return fromBaseUnit(
         bnOrZero(gaiaEstimate(gasRate)).times(buyFeeAssetRatio).dp(0),
-        8 // because thorchain likes to be inconsistent for no good reason
+        THORCHAIN_FIXED_PRECISION // because thorchain likes to be inconsistent for no good reason
       )
     case KnownChainIds.EthereumMainnet:
       switch (assetNamespace) {
