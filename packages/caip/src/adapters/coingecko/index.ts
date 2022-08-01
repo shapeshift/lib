@@ -14,25 +14,27 @@ export enum CoingeckoAssetPlatform {
   Avalanche = 'avalanche'
 }
 
+type CoinGeckoId = string
+
 export const coingeckoBaseUrl = 'https://api.coingecko.com/api/v3'
 export const coingeckoProBaseUrl = 'https://pro-api.coingecko.com/api/v3'
 export const coingeckoUrl = 'https://api.coingecko.com/api/v3/coins/list?include_platform=true'
 
-const assetIdToCoinGeckoIdMapByChain: Record<AssetId, string>[] = Object.values(adapters)
+const assetIdToCoinGeckoIdMapByChain: Record<AssetId, CoinGeckoId>[] = Object.values(adapters)
 
 const generatedAssetIdToCoingeckoMap = assetIdToCoinGeckoIdMapByChain.reduce((acc, cur) => ({
   ...acc,
   ...cur
 })) as Record<string, string>
 
-const generatedCoingeckoToAssetIdsMap: Record<string, string[]> = invertBy(
+const generatedCoingeckoToAssetIdsMap: Record<CoinGeckoId, AssetId[]> = invertBy(
   generatedAssetIdToCoingeckoMap
 )
 
-export const coingeckoToAssetIds = (id: string): string[] | undefined =>
+export const coingeckoToAssetIds = (id: CoinGeckoId): AssetId[] | undefined =>
   generatedCoingeckoToAssetIdsMap[id]
 
-export const assetIdToCoingecko = (assetId: string): string | undefined =>
+export const assetIdToCoingecko = (assetId: AssetId): CoinGeckoId | undefined =>
   generatedAssetIdToCoingeckoMap[toLower(assetId)]
 
 // https://www.coingecko.com/en/api/documentation - See asset_platforms
@@ -79,7 +81,7 @@ export const makeCoingeckoUrlParts = (
   return { baseUrl, maybeApiKeyQueryParam }
 }
 
-export const makeCoingeckoAssetUrl = (assetId: string, apiKey?: string): string | undefined => {
+export const makeCoingeckoAssetUrl = (assetId: AssetId, apiKey?: string): string | undefined => {
   const id = assetIdToCoingecko(assetId)
   if (!id) return
 
