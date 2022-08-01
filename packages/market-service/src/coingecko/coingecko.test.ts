@@ -208,11 +208,11 @@ describe('CoinGecko market service', () => {
     it('can map CoinGecko id to assetIds', async () => {
       mockedAxios.get.mockResolvedValueOnce({ data: [btc] }).mockResolvedValue({ data: [eth] })
       const result = await coinGeckoMarketService.findAll()
-      const btcAssetId = adapters.coingeckoToAssetIds('bitcoin')?.[0]
-      const ethAssetId = adapters.coingeckoToAssetIds('ethereum')?.[0]
+      const btcAssetId = adapters.coingeckoToAssetIds('bitcoin')
+      const ethAssetId = adapters.coingeckoToAssetIds('ethereum')
       const [btcKey, ethKey] = Object.keys(result)
-      expect(btcKey).toEqual(btcAssetId)
-      expect(ethKey).toEqual(ethAssetId)
+      expect(btcKey).toEqual([btcAssetId])
+      expect(ethKey).toEqual([ethAssetId])
     })
 
     it('can map CoinGecko id to multiple assetIds', async () => {
