@@ -136,7 +136,7 @@ describe('coingecko market service', () => {
     it('can sort by market cap', async () => {
       mockedAxios.get.mockResolvedValueOnce({ data: [btc] }).mockResolvedValue({ data: [eth] })
       const result = await coinGeckoMarketService.findAll()
-      expect(Object.keys(result)[0]).toEqual(adapters.coingeckoToAssetId(btc.id))
+      expect(adapters.coingeckoToAssetIds(btc.id)).toEqual([Object.keys(result)[0]])
     })
 
     it('can handle api errors', async () => {
@@ -181,8 +181,8 @@ describe('coingecko market service', () => {
     it('can map coingecko to assetIds', async () => {
       mockedAxios.get.mockResolvedValueOnce({ data: [btc] }).mockResolvedValue({ data: [eth] })
       const result = await coinGeckoMarketService.findAll()
-      const btcAssetId = adapters.coingeckoToAssetId('bitcoin')
-      const ethAssetId = adapters.coingeckoToAssetId('ethereum')
+      const btcAssetId = adapters.coingeckoToAssetIds('bitcoin')?.[0]
+      const ethAssetId = adapters.coingeckoToAssetIds('ethereum')?.[0]
       const [btcKey, ethKey] = Object.keys(result)
       expect(btcKey).toEqual(btcAssetId)
       expect(ethKey).toEqual(ethAssetId)
@@ -208,8 +208,8 @@ describe('coingecko market service', () => {
 
       mockedAxios.get.mockResolvedValueOnce({ data: [btc] }).mockResolvedValue({ data: [eth] })
       const result = await coinGeckoMarketService.findAll()
-      const btcAssetId = adapters.coingeckoToAssetId('bitcoin')
-      const ethAssetId = adapters.coingeckoToAssetId('ethereum')
+      const btcAssetId = adapters.coingeckoToAssetIds('bitcoin')?.[0]
+      const ethAssetId = adapters.coingeckoToAssetIds('ethereum')?.[0]
       expect(result[btcAssetId!]).toEqual(btcResult)
       expect(result[ethAssetId!]).toEqual(ethResult)
     })
@@ -226,7 +226,7 @@ describe('coingecko market service', () => {
 
       mockedAxios.get.mockResolvedValue({ data: [fox] })
       const result = await coinGeckoMarketService.findAll()
-      const foxAssetId = adapters.coingeckoToAssetId('shapeshift-fox-token')
+      const foxAssetId = adapters.coingeckoToAssetIds('shapeshift-fox-token')?.[0]
       expect(result[foxAssetId!]).toEqual(foxResult)
     })
   })

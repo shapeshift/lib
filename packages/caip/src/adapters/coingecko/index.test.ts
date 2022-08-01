@@ -10,11 +10,11 @@ import {
   assetIdToCoingecko,
   chainIdToCoingeckoAssetPlatform,
   CoingeckoAssetPlatform,
-  coingeckoToAssetId
+  coingeckoToAssetIds
 } from '.'
 
 describe('adapters:coingecko', () => {
-  describe('coingeckoToAssetId', () => {
+  describe('coingeckoToAssetIds', () => {
     it('can get AssetId for bitcoin', () => {
       const chainNamespace = CHAIN_NAMESPACE.Bitcoin
       const chainReference = CHAIN_REFERENCE.BitcoinMainnet
@@ -25,7 +25,7 @@ describe('adapters:coingecko', () => {
         assetNamespace: 'slip44',
         assetReference: ASSET_REFERENCE.Bitcoin
       })
-      expect(coingeckoToAssetId('bitcoin')).toEqual(assetId)
+      expect(coingeckoToAssetIds('bitcoin')).toEqual([assetId])
     })
 
     it('can get AssetId id for ethereum', () => {
@@ -37,7 +37,7 @@ describe('adapters:coingecko', () => {
         assetNamespace: 'slip44',
         assetReference: ASSET_REFERENCE.Ethereum
       })
-      expect(coingeckoToAssetId('ethereum')).toEqual(assetId)
+      expect(coingeckoToAssetIds('ethereum')).toEqual([assetId])
     })
 
     it('can get AssetId id for FOX', () => {
@@ -46,7 +46,7 @@ describe('adapters:coingecko', () => {
       const assetNamespace = 'erc20'
       const assetReference = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
       const assetId = toAssetId({ chainNamespace, chainReference, assetNamespace, assetReference })
-      expect(coingeckoToAssetId('shapeshift-fox-token')).toEqual(assetId)
+      expect(coingeckoToAssetIds('shapeshift-fox-token')).toEqual([assetId])
     })
   })
 
@@ -59,7 +59,7 @@ describe('adapters:coingecko', () => {
       assetNamespace: 'slip44',
       assetReference: ASSET_REFERENCE.Cosmos
     })
-    expect(coingeckoToAssetId('cosmos')).toEqual(assetId)
+    expect(coingeckoToAssetIds('cosmos')).toEqual([assetId])
   })
 
   it('can get AssetId for osmosis', () => {
@@ -71,7 +71,7 @@ describe('adapters:coingecko', () => {
       assetNamespace: 'slip44',
       assetReference: ASSET_REFERENCE.Osmosis
     })
-    expect(coingeckoToAssetId('osmosis')).toEqual(assetId)
+    expect(coingeckoToAssetIds('osmosis')).toEqual([assetId])
   })
 
   describe('AssetIdtoCoingecko', () => {
