@@ -211,8 +211,8 @@ describe('CoinGecko market service', () => {
       const btcAssetId = adapters.coingeckoToAssetIds('bitcoin')
       const ethAssetId = adapters.coingeckoToAssetIds('ethereum')
       const [btcKey, ethKey] = Object.keys(result)
-      expect(btcKey).toEqual([btcAssetId])
-      expect(ethKey).toEqual([ethAssetId])
+      expect(btcAssetId).toEqual([btcKey])
+      expect(ethAssetId).toEqual([ethKey])
     })
 
     it('can map CoinGecko id to multiple assetIds', async () => {
