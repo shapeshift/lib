@@ -1,3 +1,56 @@
+# [@shapeshiftoss/swapper-v9.2.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.2.2...@shapeshiftoss/swapper-v9.2.3) (2022-08-01)
+
+
+### Bug Fixes
+
+* prevent user from cow swapping with small sell amount ([#927](https://github.com/shapeshift/lib/issues/927)) ([27c1b30](https://github.com/shapeshift/lib/commit/27c1b30dbce3d41cbcb9c91a1ef51b47ac6509dc))
+
+# [@shapeshiftoss/swapper-v9.2.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.2.1...@shapeshiftoss/swapper-v9.2.2) (2022-08-01)
+
+
+### Bug Fixes
+
+* use fee asset instead of asset in calculation ([#930](https://github.com/shapeshift/lib/issues/930)) ([fa836e4](https://github.com/shapeshift/lib/commit/fa836e40c8d264a7d8746dc86c690fd87d83465b))
+
+# [@shapeshiftoss/swapper-v9.2.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.2.0...@shapeshiftoss/swapper-v9.2.1) (2022-07-29)
+
+# [@shapeshiftoss/swapper-v9.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.1.1...@shapeshiftoss/swapper-v9.2.0) (2022-07-29)
+
+
+### Features
+
+* replace '/api/v1/market' call with '/api/v1/quote' in getUsdRate ([#916](https://github.com/shapeshift/lib/issues/916)) ([23816aa](https://github.com/shapeshift/lib/commit/23816aaf3d08a76c04e0723b86ac4fbf122c6921))
+
+# [@shapeshiftoss/swapper-v9.1.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.1.0...@shapeshiftoss/swapper-v9.1.1) (2022-07-28)
+
+# [@shapeshiftoss/swapper-v9.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.0.1...@shapeshiftoss/swapper-v9.1.0) (2022-07-27)
+
+
+### Features
+
+* build thor trade ([#895](https://github.com/shapeshift/lib/issues/895)) ([d3cfe4c](https://github.com/shapeshift/lib/commit/d3cfe4c6c4d384e4f9343487c26ec8ea47a68ab3))
+
+# [@shapeshiftoss/swapper-v9.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.0.0...@shapeshiftoss/swapper-v9.0.1) (2022-07-26)
+
+
+### Bug Fixes
+
+* unrug lib bump packages ([#910](https://github.com/shapeshift/lib/issues/910)) ([c914e58](https://github.com/shapeshift/lib/commit/c914e58a2832e5bc196d062074499ec46a200d50))
+
+# [@shapeshiftoss/swapper-v9.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v8.7.1...@shapeshiftoss/swapper-v9.0.0) (2022-07-26)
+
+
+### Features
+
+* **types:** export Asset type from asset-service ([#893](https://github.com/shapeshift/lib/issues/893)) ([616ea72](https://github.com/shapeshift/lib/commit/616ea72573dd7a3a91a9233d83f8936b43ca0ed7))
+
+
+### BREAKING CHANGES
+
+* **types:** Asset is now exported from asset-service, and all consumers should now import it from it
+
+* fix: tests Asset type imports
+
 # [@shapeshiftoss/swapper-v8.7.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v8.7.0...@shapeshiftoss/swapper-v8.7.1) (2022-07-25)
 
 # [@shapeshiftoss/swapper-v8.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v8.6.1...@shapeshiftoss/swapper-v8.7.0) (2022-07-25)

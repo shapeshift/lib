@@ -1,13 +1,12 @@
 import 'dotenv/config'
 
 import { CHAIN_REFERENCE, fromAssetId } from '@shapeshiftoss/caip'
-import { Asset } from '@shapeshiftoss/types'
 import fs from 'fs'
 import orderBy from 'lodash/orderBy'
 
-import { AssetsById } from '../service/AssetService'
+import { Asset, AssetsById } from '../service/AssetService'
 import * as avalanche from './avalanche'
-import { atom, bitcoin, dogecoin } from './baseAssets'
+import { atom, bitcoin, dogecoin, litecoin } from './baseAssets'
 import * as ethereum from './ethereum'
 import * as osmosis from './osmosis'
 import { setColors } from './setColors'
@@ -22,6 +21,7 @@ const generateAssetData = async () => {
   const unfilteredAssetData: Asset[] = [
     bitcoin,
     dogecoin,
+    litecoin,
     atom,
     ...ethAssets,
     ...osmosisAssets,

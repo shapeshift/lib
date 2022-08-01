@@ -30,19 +30,12 @@ import {
   ValidAddressResult,
   ValidAddressResultType
 } from '../types'
-import {
-  chainIdToChainLabel,
-  getAssetNamespace,
-  getStatus,
-  getType,
-  toPath,
-  toRootDerivationPath
-} from '../utils'
+import { chainIdToChainLabel, getAssetNamespace, toPath, toRootDerivationPath } from '../utils'
 import { bnOrZero } from '../utils/bignumber'
 import { Fees } from './types'
 import { getErc20Data } from './utils'
 
-const evmChainIds = [KnownChainIds.EthereumMainnet, KnownChainIds.AvalancheMainnet] as const
+export const evmChainIds = [KnownChainIds.EthereumMainnet, KnownChainIds.AvalancheMainnet] as const
 
 export type EvmChainId = typeof evmChainIds[number]
 
@@ -53,7 +46,7 @@ export const isEvmChainId = (
 }
 
 export interface ChainAdapterArgs {
-  chainId?: ChainId
+  chainId?: EvmChainId
   providers: {
     http: unchained.ethereum.V1Api | unchained.avalanche.V1Api
     ws: unchained.ws.Client<unchained.evm.types.Tx>
@@ -62,12 +55,14 @@ export interface ChainAdapterArgs {
 }
 
 export interface EvmBaseAdapterArgs extends ChainAdapterArgs {
+  defaultBIP44Params: BIP44Params
   supportedChainIds: Array<ChainId>
-  chainId: ChainId
+  chainId: EvmChainId
 }
 
 export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdapter<T> {
-  protected readonly chainId: ChainId
+  protected readonly chainId: EvmChainId
+  protected readonly defaultBIP44Params: BIP44Params
   protected readonly supportedChainIds: Array<ChainId>
   protected readonly providers: {
     http: unchained.ethereum.V1Api | unchained.avalanche.V1Api
@@ -78,15 +73,12 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
   protected assetId: AssetId
   protected parser: unchained.evm.BaseTransactionParser<unchained.evm.types.Tx>
 
-  static defaultBIP44Params: BIP44Params
-
   protected constructor(args: EvmBaseAdapterArgs) {
-    EvmBaseAdapter.defaultBIP44Params = (<typeof EvmBaseAdapter>this.constructor).defaultBIP44Params
-
-    this.supportedChainIds = args.supportedChainIds
     this.chainId = args.chainId
-    this.rpcUrl = args.rpcUrl
+    this.defaultBIP44Params = args.defaultBIP44Params
+    this.supportedChainIds = args.supportedChainIds
     this.providers = args.providers
+    this.rpcUrl = args.rpcUrl
 
     if (!this.supportedChainIds.includes(this.chainId)) {
       throw new Error(`${this.chainId} not supported. (supported: ${this.supportedChainIds})`)
@@ -98,11 +90,23 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
   abstract getFeeData(input: Partial<GetFeeDataInput<T>>): Promise<FeeDataEstimate<T>>
   abstract getDisplayName(): string
 
+  getChainId(): ChainId {
+    return this.chainId
+  }
+
+  getRpcUrl(): string {
+    return this.rpcUrl
+  }
+
+  buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
+    return { ...this.defaultBIP44Params, ...params }
+  }
+
   async buildSendTransaction(tx: BuildSendTxInput<T>): Promise<{
     txToSign: ChainTxType<T>
   }> {
     try {
-      const { to, wallet, bip44Params = EvmBaseAdapter.defaultBIP44Params, sendMax = false } = tx
+      const { to, wallet, bip44Params = this.defaultBIP44Params, sendMax = false } = tx
       // If there is a mismatch between the current wallet's EVM chain ID and the adapter's chainId?
       // Switch the chain on wallet before building/sending the Tx
       if (supportsEthSwitchChain(wallet)) {
@@ -170,18 +174,6 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
     }
   }
 
-  getChainId(): ChainId {
-    return this.chainId
-  }
-
-  getRpcUrl(): string {
-    return this.rpcUrl
-  }
-
-  buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
-    return { ...EvmBaseAdapter.defaultBIP44Params, ...params }
-  }
-
   async getAccount(pubkey: string): Promise<Account<T>> {
     try {
       const { data } = await this.providers.http.getAccount({ pubkey })
@@ -232,13 +224,13 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
           confirmations: parsedTx.confirmations,
           txid: parsedTx.txid,
           fee: parsedTx.fee,
-          status: getStatus(parsedTx.status),
+          status: parsedTx.status,
           tradeDetails: parsedTx.trade,
           transfers: parsedTx.transfers.map((transfer) => ({
             assetId: transfer.assetId,
             from: transfer.from,
             to: transfer.to,
-            type: getType(transfer.type),
+            type: transfer.type,
             value: transfer.totalValue
           })),
           data: parsedTx.data
@@ -288,7 +280,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
       const { messageToSign, wallet } = signMessageInput
       const signedMessage = await (wallet as ETHWallet).ethSignMessage(messageToSign)
 
-      if (!signedMessage) throw new Error('EvmChainAdapter: error signing message')
+      if (!signedMessage) throw new Error('EvmBaseAdapter: error signing message')
 
       return signedMessage.signature
     } catch (err) {
@@ -297,14 +289,15 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
   }
 
   async getAddress(input: GetAddressInput): Promise<string> {
-    const { wallet, bip44Params = EvmBaseAdapter.defaultBIP44Params, showOnDevice = false } = input
-    const path = toPath(bip44Params)
-    const addressNList = bip32ToAddressNList(path)
+    const { wallet, bip44Params = this.defaultBIP44Params, showOnDevice = false } = input
     const address = await (wallet as ETHWallet).ethGetAddress({
-      addressNList,
+      addressNList: bip32ToAddressNList(toPath(bip44Params)),
       showDisplay: showOnDevice
     })
-    return address as string
+
+    if (!address) throw new Error('EvmBaseAdapter: no address available from wallet')
+
+    return address
   }
 
   async validateAddress(address: string): Promise<ValidAddressResult> {
@@ -319,7 +312,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
     onMessage: (msg: Transaction<T>) => void,
     onError: (err: SubscribeError) => void
   ): Promise<void> {
-    const { wallet, bip44Params = EvmBaseAdapter.defaultBIP44Params } = input
+    const { wallet, bip44Params = this.defaultBIP44Params } = input
 
     const address = await this.getAddress({ wallet, bip44Params })
     const subscriptionId = toRootDerivationPath(bip44Params)
@@ -339,13 +332,13 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
           chain: this.getType(),
           confirmations: tx.confirmations,
           fee: tx.fee,
-          status: getStatus(tx.status),
+          status: tx.status,
           tradeDetails: tx.trade,
           transfers: tx.transfers.map((transfer) => ({
             assetId: transfer.assetId,
             from: transfer.from,
             to: transfer.to,
-            type: getType(transfer.type),
+            type: transfer.type,
             value: transfer.totalValue
           })),
           txid: tx.txid,
@@ -359,7 +352,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
   unsubscribeTxs(input?: SubscribeTxsInput): void {
     if (!input) return this.providers.ws.unsubscribeTxs()
 
-    const { bip44Params = EvmBaseAdapter.defaultBIP44Params } = input
+    const { bip44Params = this.defaultBIP44Params } = input
     const subscriptionId = toRootDerivationPath(bip44Params)
 
     this.providers.ws.unsubscribeTxs(subscriptionId, { topic: 'txs', addresses: [] })

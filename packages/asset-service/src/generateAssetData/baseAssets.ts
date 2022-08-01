@@ -1,5 +1,6 @@
 import * as caip from '@shapeshiftoss/caip'
-import { Asset } from '@shapeshiftoss/types'
+
+import { Asset } from '../service/AssetService'
 
 export const ethereum: Asset = {
   assetId: caip.ethAssetId,
@@ -38,6 +39,19 @@ export const dogecoin: Asset = {
   explorer: 'https://live.blockcypher.com',
   explorerAddressLink: 'https://live.blockcypher.com/doge/address/',
   explorerTxLink: 'https://live.blockcypher.com/doge/tx/'
+}
+
+export const litecoin: Asset = {
+  assetId: caip.ltcAssetId,
+  chainId: caip.ltcChainId,
+  symbol: 'LTC',
+  name: 'Litecoin',
+  precision: 8,
+  color: '#B8B8B8',
+  icon: 'https://assets.coincap.io/assets/icons/256/ltc.png',
+  explorer: 'https://live.blockcypher.com',
+  explorerAddressLink: 'https://live.blockcypher.com/ltc/address/',
+  explorerTxLink: 'https://live.blockcypher.com/ltc/tx/'
 }
 
 export const atom: Asset = {

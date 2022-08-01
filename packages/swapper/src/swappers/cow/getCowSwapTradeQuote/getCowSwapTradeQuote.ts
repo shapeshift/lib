@@ -17,7 +17,7 @@ import {
 } from '../utils/constants'
 import { cowService } from '../utils/cowService'
 import {
-  CowSwapQuoteApiInput,
+  CowSwapSellQuoteApiInput,
   getNowPlusThirtyMinutesTimestamp,
   getUsdRate
 } from '../utils/helpers/helpers'
@@ -52,7 +52,7 @@ export async function getCowSwapTradeQuote(
       bnOrZero(sellAmount).lt(minQuoteSellAmount) ? minQuoteSellAmount : sellAmount
     )
 
-    const apiInput: CowSwapQuoteApiInput = {
+    const apiInput: CowSwapSellQuoteApiInput = {
       sellToken: sellAssetErc20Address,
       buyToken: buyAssetErc20Address,
       receiver: DEFAULT_ADDRESS,
@@ -114,6 +114,12 @@ export async function getCowSwapTradeQuote(
       .multipliedBy(bnOrZero(sellAssetUsdRate))
       .toString()
 
+    // If original sellAmount is < minQuoteSellAmount, we don't want to replace it with normalizedSellAmount
+    // The purpose of this was to get a quote from CowSwap even with small amounts
+    const quoteSellAmount = bnOrZero(sellAmount).lt(minQuoteSellAmount)
+      ? sellAmount
+      : normalizedSellAmount
+
     return {
       rate,
       minimum,
@@ -129,7 +135,7 @@ export async function getCowSwapTradeQuote(
         },
         tradeFee: tradeFeeFiat
       },
-      sellAmount: normalizedSellAmount,
+      sellAmount: quoteSellAmount,
       buyAmount: quote.buyAmount,
       sources: DEFAULT_SOURCE,
       allowanceContract: COW_SWAP_VAULT_RELAYER_ADDRESS,

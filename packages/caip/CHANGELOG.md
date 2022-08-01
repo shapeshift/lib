@@ -1,3 +1,26 @@
+# [@shapeshiftoss/caip-v6.7.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.7.0...@shapeshiftoss/caip-v6.7.1) (2022-07-29)
+
+# [@shapeshiftoss/caip-v6.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.6.0...@shapeshiftoss/caip-v6.7.0) (2022-07-29)
+
+
+### Features
+
+* litecoin ([#914](https://github.com/shapeshift/lib/issues/914)) ([5af5c60](https://github.com/shapeshift/lib/commit/5af5c60c954ae0295d4cd175b98da3732d99d9e4))
+
+# [@shapeshiftoss/caip-v6.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.5.1...@shapeshiftoss/caip-v6.6.0) (2022-07-26)
+
+
+### Features
+
+* **caip:** remove chainIdToFeeAssetId ([#907](https://github.com/shapeshift/lib/issues/907)) ([13f526e](https://github.com/shapeshift/lib/commit/13f526eabc21162c1429faa4a31687a3a70947ea))
+
+# [@shapeshiftoss/caip-v6.5.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.5.0...@shapeshiftoss/caip-v6.5.1) (2022-07-26)
+
+
+### Bug Fixes
+
+* unrug lib bump packages ([#910](https://github.com/shapeshift/lib/issues/910)) ([c914e58](https://github.com/shapeshift/lib/commit/c914e58a2832e5bc196d062074499ec46a200d50))
+
 # [@shapeshiftoss/caip-v6.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.4.0...@shapeshiftoss/caip-v6.5.0) (2022-07-20)
 
 

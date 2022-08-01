@@ -1,4 +1,4 @@
-import { Asset } from '@shapeshiftoss/types'
+import { Asset } from '@shapeshiftoss/asset-service'
 
 import { FOX, WETH } from '../../../utils/test-data/assets'
 import { ZrxQuoteResponse } from '../../types'
@@ -35,7 +35,6 @@ export const setupExecuteTrade = () => {
     sellAsset,
     sendMax: false,
     sellAssetAccountNumber: 0,
-    buyAssetAccountNumber: 0,
     txData: '0x0',
     depositAddress: '0x0',
     receiveAddress: '0x0',
