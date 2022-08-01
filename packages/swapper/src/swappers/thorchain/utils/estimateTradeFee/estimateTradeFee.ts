@@ -1,5 +1,5 @@
 import { Asset, AssetService } from '@shapeshiftoss/asset-service'
-import { adapters, fromAssetId, getFeeAssetIdFromAssetId } from '@shapeshiftoss/caip'
+import { adapters, fromAssetId } from '@shapeshiftoss/caip'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { bn, bnOrZero, fromBaseUnit } from '../../../utils/bignumber'
@@ -61,7 +61,16 @@ export const estimateTradeFee = async (
   const gasRate = inboundInfo.gas_rate
   const { chainId: buyChainId, assetNamespace } = fromAssetId(buyAsset.assetId)
 
-  const buyFeeAssetId = getFeeAssetIdFromAssetId(buyAsset.assetId)
+  const buyAdapter = deps.adapterManager.get(buyChainId)
+
+  if (!buyAdapter)
+    throw new SwapError('[estimateTradeFee] - unable to get buy asset adapter', {
+      code: SwapErrorTypes.VALIDATION_FAILED,
+      details: { buyChainId }
+    })
+
+  const buyFeeAssetId = buyAdapter.getFeeAssetId()
+
   if (!buyFeeAssetId)
     throw new SwapError('[estimateTradeFee] - no fee assetId', {
       code: SwapErrorTypes.VALIDATION_FAILED,
@@ -77,6 +86,7 @@ export const estimateTradeFee = async (
       : '1'
 
   const buyFeeAsset = new AssetService().getAll()[buyFeeAssetId]
+
   switch (buyChainId) {
     case 'bip122:000000000019d6689c085ae165831e93':
       return fromBaseUnit(
