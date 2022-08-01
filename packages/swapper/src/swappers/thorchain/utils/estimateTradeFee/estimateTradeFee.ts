@@ -76,8 +76,6 @@ export const estimateTradeFee = async (
         })
       : '1'
 
-  console.log('feeAssetRatio', feeAssetRatio)
-
   const buyFeeAsset = new AssetService().getAll()[buyFeeAssetId]
   switch (buyChainId) {
     case 'bip122:000000000019d6689c085ae165831e93':
