@@ -48,7 +48,11 @@ const thorPoolIdAssetIdSymbolMap: Record<string, AssetId> = {
   'ETH.AAVE-0X7FC66500C84A76AD7E9C93437BFC5AC33E2DDAE9':
     'eip155:1/erc20:0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
   'BTC.BTC': 'bip122:000000000019d6689c085ae165831e93/slip44:0',
-  'ETH.ETH': 'eip155:1/slip44:60'
+  'ETH.ETH': 'eip155:1/slip44:60',
+  'LTC.LTC': 'bip122:12a765e31ffd4059bada1e25190f6e98/slip44:2',
+  'DOGE.DOGE': 'bip122:00000000001a91e3dace36e2be3bf030/slip44:3',
+  'GAIA.ATOM': 'cosmos:cosmoshub-4/slip44:118',
+  'BCH.BCH': 'bip122:000000000000000000651ef99cb9fcbe/slip44:145'
 }
 
 const invert = <T extends Record<string, string>>(data: T) =>
