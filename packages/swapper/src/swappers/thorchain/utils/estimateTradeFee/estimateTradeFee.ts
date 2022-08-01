@@ -6,12 +6,12 @@ import { SwapError, SwapErrorTypes } from '../../../../api'
 import { bn, bnOrZero, fromBaseUnit } from '../../../utils/bignumber'
 import { InboundResponse, ThorchainSwapperDeps } from '../../types'
 import {
-  THORCHAIN_FIXED_PRECISION,
   THOR_TRADE_FEE_BTC_SIZE,
   THOR_TRADE_FEE_DOGE_SIZE,
   THOR_TRADE_FEE_ETH_GAS,
   THOR_TRADE_FEE_GAIA_SIZE,
-  THOR_TRADE_FEE_LTC_SIZE
+  THOR_TRADE_FEE_LTC_SIZE,
+  THORCHAIN_FIXED_PRECISION
 } from '../constants'
 import { getPriceRatio } from '../getPriceRatio/getPriceRatio'
 import { thorService } from '../thorService'
