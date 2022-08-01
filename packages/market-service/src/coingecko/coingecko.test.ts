@@ -109,6 +109,35 @@ describe('coingecko market service', () => {
       last_updated: '2021-10-10T22:16:22.950Z'
     }
 
+    const usdc: CoinGeckoMarketCap = {
+      ath: 1.17,
+      ath_change_percentage: -14.79969,
+      ath_date: '2019-05-08T00:40:28.300Z',
+      atl: 0.891848,
+      atl_change_percentage: 12.03135,
+      atl_date: '2021-05-19T13:14:05.611Z',
+      circulating_supply: 54492069074.1417,
+      current_price: 1,
+      fully_diluted_valuation: null,
+      high_24h: 1.015,
+      id: 'usd-coin',
+      image: 'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389',
+      last_updated: '2022-08-01T05:50:36.806Z',
+      low_24h: 0.99002,
+      market_cap: 54500234986,
+      market_cap_change_24h: 33737555,
+      market_cap_change_percentage_24h: 0.06194,
+      market_cap_rank: 4,
+      max_supply: null,
+      name: 'USD Coin',
+      price_change_24h: -0.000088001691941342,
+      price_change_percentage_24h: -0.0088,
+      roi: null,
+      symbol: 'usdc',
+      total_supply: 54494627696.0103,
+      total_volume: 5745233196
+    }
+
     it('can use free tier with no api key', async () => {
       const freeCoinGeckoMarketService = new CoinGeckoMarketService({ coinGeckoAPIKey: '' })
       await freeCoinGeckoMarketService.findAll({ count: 10 })
@@ -178,7 +207,7 @@ describe('coingecko market service', () => {
       expect(mockedAxios.get).toHaveBeenCalledTimes(2)
     })
 
-    it('can map coingecko to assetIds', async () => {
+    it('can map coingecko id to assetIds', async () => {
       mockedAxios.get.mockResolvedValueOnce({ data: [btc] }).mockResolvedValue({ data: [eth] })
       const result = await coinGeckoMarketService.findAll()
       const btcAssetId = adapters.coingeckoToAssetIds('bitcoin')?.[0]
@@ -186,6 +215,13 @@ describe('coingecko market service', () => {
       const [btcKey, ethKey] = Object.keys(result)
       expect(btcKey).toEqual(btcAssetId)
       expect(ethKey).toEqual(ethAssetId)
+    })
+
+    it('can map coingecko id to multiple assetIds', async () => {
+      mockedAxios.get.mockResolvedValue({ data: [usdc] })
+      const result = await coinGeckoMarketService.findAll()
+      const usdcAssetIds = adapters.coingeckoToAssetIds('usd-coin')
+      expect(usdcAssetIds).toEqual(Object.keys(result))
     })
 
     it('extract correct values for each asset', async () => {
