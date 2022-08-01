@@ -1,4 +1,4 @@
-import { Asset } from '@shapeshiftoss/asset-service'
+import { Asset, AssetService } from '@shapeshiftoss/asset-service'
 import { adapters, fromAssetId } from '@shapeshiftoss/caip'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
@@ -37,7 +37,6 @@ export const estimateTradeFee = async (
   deps: ThorchainSwapperDeps,
   buyAsset: Asset
 ): Promise<string> => {
-  const adapter = deps.adapterManager.get(fromAssetId(buyAsset.assetId).chainId)
   const thorId = adapters.assetIdToPoolAssetId({ assetId: buyAsset.assetId })
   if (!thorId)
     throw new SwapError('[estimateTradeFee] - undefined thorId for given buyAssetId', {
@@ -60,40 +59,51 @@ export const estimateTradeFee = async (
     })
 
   const gasRate = inboundInfo.gas_rate
-  const { chainId, assetNamespace } = fromAssetId(buyAsset.assetId)
+  const { chainId: buyChainId, assetNamespace } = fromAssetId(buyAsset.assetId)
 
-  const feeAssetId = adapter?.getFeeAssetId()
-  if (!feeAssetId)
+  const buyAdapter = deps.adapterManager.get(buyChainId)
+
+  if (!buyAdapter)
+    throw new SwapError('[estimateTradeFee] - unable to get buy asset adapter', {
+      code: SwapErrorTypes.VALIDATION_FAILED,
+      details: { buyChainId }
+    })
+
+  const buyFeeAssetId = buyAdapter.getFeeAssetId()
+
+  if (!buyFeeAssetId)
     throw new SwapError('[estimateTradeFee] - no fee assetId', {
       code: SwapErrorTypes.VALIDATION_FAILED,
       details: { buyAssetId: buyAsset.assetId }
     })
 
   const feeAssetRatio =
-    buyAsset.assetId !== feeAssetId
+    buyAsset.assetId !== buyFeeAssetId
       ? await getPriceRatio(deps, {
           sellAssetId: buyAsset.assetId,
-          buyAssetId: feeAssetId
+          buyAssetId: buyFeeAssetId
         })
       : '1'
 
-  switch (chainId) {
+  const buyFeeAsset = new AssetService().getAll()[buyFeeAssetId]
+
+  switch (buyChainId) {
     case 'bip122:000000000019d6689c085ae165831e93':
       return fromBaseUnit(
         bnOrZero(btcEstimate(gasRate)).times(feeAssetRatio).dp(0),
-        buyAsset.precision
+        buyFeeAsset.precision
       )
     case 'eip155:1':
       switch (assetNamespace) {
         case 'slip44':
           return fromBaseUnit(
             bnOrZero(ethEstimate(gasRate)).times(feeAssetRatio).dp(0),
-            buyAsset.precision
+            buyFeeAsset.precision
           )
         case 'erc20':
           return fromBaseUnit(
             bnOrZero(erc20Estimate(gasRate)).times(feeAssetRatio).dp(0),
-            buyAsset.precision
+            buyFeeAsset.precision
           )
         default:
           throw new SwapError('[estimateTradeFee] - unsupported asset namespace', {
@@ -104,7 +114,7 @@ export const estimateTradeFee = async (
     default:
       throw new SwapError('[estimateTradeFee] - unsupported chain id', {
         code: SwapErrorTypes.VALIDATION_FAILED,
-        details: { chainId }
+        details: { chainId: buyChainId }
       })
   }
 }

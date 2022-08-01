@@ -1,5 +1,4 @@
-import { ethChainId } from '@shapeshiftoss/caip'
-import { btcAssetId, btcChainId, ethAssetId } from '@shapeshiftoss/caip'
+import { btcAssetId, btcChainId, ethAssetId, ethChainId } from '@shapeshiftoss/caip'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import Web3 from 'web3'
 
@@ -37,7 +36,7 @@ describe('estimateTradeFee', () => {
     const expectedResult = '0.0672'
     expect(estimatedTradeFee).toEqual(expectedResult)
   })
-  it('should correctly estimate a trade fee for an ethereum erc20 as a buy asset', async () => {
+  it('should correctly estimate a trade fee for an ethereum erc20 asset as a buy asset', async () => {
     ;(thorService.get as jest.Mock<unknown>)
       .mockReturnValueOnce(Promise.resolve({ data: mockInboundAdresses }))
       .mockReturnValueOnce(Promise.resolve({ data: [foxMidgardPool, ethMidgardPool] }))
