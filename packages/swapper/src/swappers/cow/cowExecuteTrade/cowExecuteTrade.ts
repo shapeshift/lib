@@ -9,7 +9,7 @@ import { ExecuteTradeInput, SwapError, SwapErrorTypes, TradeResult } from '../..
 import { CowSwapperDeps } from '../CowSwapper'
 import { CowTrade } from '../types'
 import {
-  COW_SWAP_ETH_BUY_ADDRESS,
+  COW_SWAP_ETH_MARKER_ADDRESS,
   COW_SWAP_SETTLEMENT_ADDRESS,
   DEFAULT_APP_DATA,
   ERC20_TOKEN_BALANCE,
@@ -52,7 +52,8 @@ export async function cowExecuteTrade(
     })
   }
 
-  const buyToken = buyAsset.assetId !== ethAssetId ? buyAssetErc20Address : COW_SWAP_ETH_BUY_ADDRESS
+  const buyToken =
+    buyAsset.assetId !== ethAssetId ? buyAssetErc20Address : COW_SWAP_ETH_MARKER_ADDRESS
 
   try {
     const orderToSign: CowSwapOrder = {

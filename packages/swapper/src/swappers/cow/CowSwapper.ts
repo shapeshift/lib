@@ -1,5 +1,5 @@
 import { Asset } from '@shapeshiftoss/asset-service'
-import { AssetId } from '@shapeshiftoss/caip'
+import { AssetId, fromAssetId } from '@shapeshiftoss/caip'
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { KnownChainIds } from '@shapeshiftoss/types'
 import Web3 from 'web3'
@@ -79,20 +79,22 @@ export class CowSwapper implements Swapper<KnownChainIds.EthereumMainnet> {
   filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): AssetId[] {
     const { assetIds = [], sellAssetId } = args
     if (
-      !sellAssetId?.startsWith('eip155:1/erc20') ||
+      fromAssetId(sellAssetId).assetNamespace !== 'erc20' ||
       COWSWAP_UNSUPPORTED_ASSETS.includes(sellAssetId)
     )
       return []
 
     return assetIds.filter(
       (id) =>
-        id !== sellAssetId && id.startsWith('eip155:1') && !COWSWAP_UNSUPPORTED_ASSETS.includes(id)
+        id !== sellAssetId &&
+        fromAssetId(id).chainId === KnownChainIds.EthereumMainnet &&
+        !COWSWAP_UNSUPPORTED_ASSETS.includes(id)
     )
   }
 
   filterAssetIdsBySellable(assetIds: AssetId[]): AssetId[] {
     return assetIds.filter(
-      (id) => id.startsWith('eip155:1/erc20') && !COWSWAP_UNSUPPORTED_ASSETS.includes(id)
+      (id) => fromAssetId(id).assetNamespace === 'erc20' && !COWSWAP_UNSUPPORTED_ASSETS.includes(id)
     )
   }
 

@@ -13,7 +13,7 @@ import {
 import { CowSwapperDeps } from '../CowSwapper'
 import { CowSwapQuoteResponse, CowTrade } from '../types'
 import {
-  COW_SWAP_ETH_BUY_ADDRESS,
+  COW_SWAP_ETH_MARKER_ADDRESS,
   COW_SWAP_VAULT_RELAYER_ADDRESS,
   DEFAULT_APP_DATA,
   DEFAULT_SOURCE,
@@ -51,7 +51,7 @@ export async function cowBuildTrade(
     }
 
     const buyToken =
-      buyAsset.assetId !== ethAssetId ? buyAssetErc20Address : COW_SWAP_ETH_BUY_ADDRESS
+      buyAsset.assetId !== ethAssetId ? buyAssetErc20Address : COW_SWAP_ETH_MARKER_ADDRESS
     const receiveAddress = await adapter.getAddress({ wallet })
     const normalizedSellAmount = normalizeAmount(sellAmount)
 
