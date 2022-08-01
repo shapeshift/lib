@@ -51,8 +51,8 @@ const thorPoolIdAssetIdSymbolMap: Record<string, AssetId> = {
   'ETH.ETH': 'eip155:1/slip44:60',
   'LTC.LTC': 'bip122:12a765e31ffd4059bada1e25190f6e98/slip44:2',
   'DOGE.DOGE': 'bip122:00000000001a91e3dace36e2be3bf030/slip44:3',
-  'GAIA.ATOM': 'cosmos:cosmoshub-4/slip44:118',
-  'BCH.BCH': 'bip122:000000000000000000651ef99cb9fcbe/slip44:145'
+  'GAIA.ATOM': 'cosmos:cosmoshub-4/slip44:118'
+//  'BCH.BCH': 'bip122:000000000000000000651ef99cb9fcbe/slip44:145' // uncomment when we support bch
 }
 
 const invert = <T extends Record<string, string>>(data: T) =>

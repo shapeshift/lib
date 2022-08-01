@@ -6,5 +6,8 @@ export const THORCHAIN_FIXED_PRECISION = 8 // limit values are precision 8 regar
 
 // These are different from THOR_ETH_GAS_LIMIT
 // Used to estimate the fee thorchain will take out of the buyAsset
-export const THOR_TRADE_FEE_BTC_SIZE = 1000 // used for estimating thorchain side fees
-export const THOR_TRADE_FEE_ETH_GAS = 120000 // used for estimating thorchain side fees
+export const THOR_TRADE_FEE_BTC_SIZE = 1000
+export const THOR_TRADE_FEE_DOGE_SIZE = 1000
+export const THOR_TRADE_FEE_LTC_SIZE = 250
+export const THOR_TRADE_FEE_GAIA_SIZE = 1
+export const THOR_TRADE_FEE_ETH_GAS = 120000

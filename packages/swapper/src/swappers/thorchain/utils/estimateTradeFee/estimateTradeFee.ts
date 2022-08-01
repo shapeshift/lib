@@ -1,10 +1,17 @@
 import { Asset, AssetService } from '@shapeshiftoss/asset-service'
 import { adapters, fromAssetId } from '@shapeshiftoss/caip'
+import { KnownChainIds } from '@shapeshiftoss/types'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { bn, bnOrZero, fromBaseUnit } from '../../../utils/bignumber'
 import { InboundResponse, ThorchainSwapperDeps } from '../../types'
-import { THOR_TRADE_FEE_BTC_SIZE, THOR_TRADE_FEE_ETH_GAS } from '../constants'
+import {
+  THOR_TRADE_FEE_BTC_SIZE,
+  THOR_TRADE_FEE_DOGE_SIZE,
+  THOR_TRADE_FEE_ETH_GAS,
+  THOR_TRADE_FEE_GAIA_SIZE,
+  THOR_TRADE_FEE_LTC_SIZE
+} from '../constants'
 import { getPriceRatio } from '../getPriceRatio/getPriceRatio'
 import { thorService } from '../thorService'
 
@@ -32,6 +39,15 @@ const erc20Estimate = (gasRate: string) =>
 
 const btcEstimate = (gasRate: string) =>
   bnOrZero(gasRate).times(THOR_TRADE_FEE_BTC_SIZE).times(2).toString()
+
+const dogeEstimate = (gasRate: string) =>
+  bnOrZero(gasRate).times(THOR_TRADE_FEE_DOGE_SIZE).times(2).toString()
+
+const ltcEstimate = (gasRate: string) =>
+  bnOrZero(gasRate).times(THOR_TRADE_FEE_LTC_SIZE).times(2).toString()
+
+const gaiaEstimate = (gasRate: string) =>
+  bnOrZero(gasRate).times(THOR_TRADE_FEE_GAIA_SIZE).times(2).toString()
 
 export const estimateTradeFee = async (
   deps: ThorchainSwapperDeps,
@@ -77,7 +93,7 @@ export const estimateTradeFee = async (
       details: { buyAssetId: buyAsset.assetId }
     })
 
-  const feeAssetRatio =
+  const buyFeeAssetRatio =
     buyAsset.assetId !== buyFeeAssetId
       ? await getPriceRatio(deps, {
           sellAssetId: buyAsset.assetId,
@@ -88,21 +104,36 @@ export const estimateTradeFee = async (
   const buyFeeAsset = new AssetService().getAll()[buyFeeAssetId]
 
   switch (buyChainId) {
-    case 'bip122:000000000019d6689c085ae165831e93':
+    case KnownChainIds.BitcoinMainnet:
       return fromBaseUnit(
-        bnOrZero(btcEstimate(gasRate)).times(feeAssetRatio).dp(0),
+        bnOrZero(btcEstimate(gasRate)).times(buyFeeAssetRatio).dp(0),
         buyFeeAsset.precision
       )
-    case 'eip155:1':
+    case KnownChainIds.DogecoinMainnet:
+      return fromBaseUnit(
+        bnOrZero(dogeEstimate(gasRate)).times(buyFeeAssetRatio).dp(0),
+        buyFeeAsset.precision
+      )
+    case KnownChainIds.LitecoinMainnet:
+      return fromBaseUnit(
+        bnOrZero(ltcEstimate(gasRate)).times(buyFeeAssetRatio).dp(0),
+        buyFeeAsset.precision
+      )
+    case KnownChainIds.CosmosMainnet:
+      return fromBaseUnit(
+        bnOrZero(gaiaEstimate(gasRate)).times(buyFeeAssetRatio).dp(0),
+        8 // because thorchain likes to be inconsistent for no good reason
+      )
+    case KnownChainIds.EthereumMainnet:
       switch (assetNamespace) {
         case 'slip44':
           return fromBaseUnit(
-            bnOrZero(ethEstimate(gasRate)).times(feeAssetRatio).dp(0),
+            bnOrZero(ethEstimate(gasRate)).times(buyFeeAssetRatio).dp(0),
             buyFeeAsset.precision
           )
         case 'erc20':
           return fromBaseUnit(
-            bnOrZero(erc20Estimate(gasRate)).times(feeAssetRatio).dp(0),
+            bnOrZero(erc20Estimate(gasRate)).times(buyFeeAssetRatio).dp(0),
             buyFeeAsset.precision
           )
         default:
