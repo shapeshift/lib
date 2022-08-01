@@ -39,9 +39,9 @@ export class ThorchainSwapper implements Swapper<ChainId> {
   private buySupportedChainIds: Record<ChainId, boolean> = {
     [KnownChainIds.EthereumMainnet]: true,
     [KnownChainIds.BitcoinMainnet]: true,
-    [KnownChainIds.DogecoinMainnet]: true, // implement estimateTradeFee for doge
-    [KnownChainIds.LitecoinMainnet]: true, // implement estimateTradeFee for ltc
-    [KnownChainIds.CosmosMainnet]: true // implement estimateTradeFee for atom
+    [KnownChainIds.DogecoinMainnet]: true,
+    [KnownChainIds.LitecoinMainnet]: true,
+    [KnownChainIds.CosmosMainnet]: true
   }
 
   private supportedSellAssetIds: AssetId[] = []
