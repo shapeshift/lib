@@ -16,7 +16,7 @@ import { KnownChainIds } from '@shapeshiftoss/types'
 import { bnOrZero, normalizeAmount, toPath } from './utils'
 import type { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { bip32ToAddressNList, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { IdleVault, erc20Abi, idleTokenV4Abi, ssRouterContractAddress, MAX_ALLOWANCE } from './constants'
+import { IdleVault, erc20Abi, idleTokenV4Abi, idleCdoAbi, ssRouterContractAddress, MAX_ALLOWANCE } from './constants'
 
 export type PreparedTransaction = {
   chainId: number
@@ -43,9 +43,20 @@ type IdleOpportunityDeps = {
   web3: Web3
 }
 
+export type ClaimableToken = {
+  assetId: string
+  address: string,
+  amount: number
+}
+
+interface IdleClaimableOpportunity {
+  getClaimableTokens(address: string): Promise<ClaimableToken[]>
+}
+
 export class IdleOpportunity implements InvestorOpportunity
   <PreparedTransaction, any>,
-  ApprovalRequired<PreparedTransaction>
+  ApprovalRequired<PreparedTransaction>,
+  IdleClaimableOpportunity
 {
 
   readonly #internals: {
@@ -132,7 +143,7 @@ export class IdleOpportunity implements InvestorOpportunity
         net_apy:parseFloat(bnOrZero(vault.apr).div(100).toFixed())
       }
     };
-    this.version = '';
+    this.version = `${vault.protocolName} ${vault.strategy}`.trim();
     this.name = vault.poolName
     this.displayName = vault.poolName
     this.isNew = false;
@@ -214,14 +225,41 @@ export class IdleOpportunity implements InvestorOpportunity
     // the router to withdraw funds and there is an extra approval required for the user if we
     // withdrew from the vault using the shapeshift router. Affiliate fees for SS are the same
     // either way. For this reason, we simply withdraw from the vault directly.
-    const vaultContract: Contract = new this.#internals.web3.eth.Contract(idleTokenV4Abi, this.id)
 
-    const preWithdraw = await vaultContract.methods.redeemIdleToken(amount.toString())
+    let methodName: string
+    let vaultContract: Contract
+
+    // Handle Tranche Withdraw
+    if (this.metadata.cdoAddress){
+      vaultContract = new this.#internals.web3.eth.Contract(idleCdoAbi, this.metadata.cdoAddress)
+      const trancheType = this.metadata.strategy.match(/senior/i) ? 'AA' : 'BB'
+      methodName = `withdraw${trancheType}`
+    } else {
+      vaultContract = new this.#internals.web3.eth.Contract(idleTokenV4Abi, this.id)
+      methodName = `redeemIdleToken`
+    }
+
+    console.log('prepareWithdrawal',methodName,address,amount.toFixed())
+
+    const preWithdraw = await vaultContract.methods[methodName](amount.toFixed())
+
+    console.log('prepareWithdrawal - preWithdraw',preWithdraw)
+
     const data = await preWithdraw.encodeABI({ from: address })
+    
+    console.log('prepareWithdrawal - data',data)
+
     const estimatedGas = bnOrZero(await preWithdraw.estimateGas({ from: address }))
 
+    console.log('prepareWithdrawal - estimatedGas',estimatedGas)
+
     const nonce = await this.#internals.web3.eth.getTransactionCount(address)
+
+    console.log('prepareWithdrawal - nonce',nonce)
+
     const gasPrice = bnOrZero(await this.#internals.web3.eth.getGasPrice())
+
+    console.log('prepareWithdrawal - gasPrice',gasPrice)
 
     return {
       chainId: 1,
@@ -229,7 +267,44 @@ export class IdleOpportunity implements InvestorOpportunity
       estimatedGas,
       gasPrice,
       nonce: String(nonce),
-      to: this.id,
+      to: vaultContract.options.address,
+      value: '0'
+    }
+  }
+
+  public async prepareClaimTokens(address: string): Promise<PreparedTransaction> {
+
+    const vaultContract = new this.#internals.web3.eth.Contract(idleTokenV4Abi, this.id)
+
+    console.log('prepareWithdrawal',address)
+
+    const preWithdraw = await vaultContract.methods.redeemIdleToken(0)
+
+    console.log('prepareWithdrawal - preWithdraw',preWithdraw)
+
+    const data = await preWithdraw.encodeABI({ from: address })
+    
+    console.log('prepareWithdrawal - data',data)
+
+    const estimatedGas = bnOrZero(await preWithdraw.estimateGas({ from: address }))
+
+    console.log('prepareWithdrawal - estimatedGas',estimatedGas)
+
+    const nonce = await this.#internals.web3.eth.getTransactionCount(address)
+
+    console.log('prepareWithdrawal - nonce',nonce)
+
+    const gasPrice = bnOrZero(await this.#internals.web3.eth.getGasPrice())
+
+    console.log('prepareWithdrawal - gasPrice',gasPrice)
+
+    return {
+      chainId: 1,
+      data,
+      estimatedGas,
+      gasPrice,
+      nonce: String(nonce),
+      to: vaultContract.options.address,
       value: '0'
     }
   }
@@ -247,25 +322,40 @@ export class IdleOpportunity implements InvestorOpportunity
     // router contract. This is not necessary for withdraws. We can withdraw directly from the vault
     // without affecting the DAOs affiliate revenue.
     const tokenChecksum = this.#internals.web3.utils.toChecksumAddress(
-      this.id
+      this.metadata.underlyingAddress
     )
     const userChecksum = this.#internals.web3.utils.toChecksumAddress(address)
     const vaultIndex = await this.getVaultId({
       underlyingAssetAddress: this.metadata.underlyingAddress,
-      vaultAddress: this.metadata.address
+      vaultAddress: this.metadata.cdoAddress || this.metadata.address
     })
 
-    const preDeposit = await this.#internals.routerContract.methods.mintIdleToken(
+    console.log('prepareDeposit - getVaultId',vaultIndex);
+
+    const preDeposit = await this.#internals.routerContract.methods.deposit(
       tokenChecksum,
       userChecksum,
-      amount.toString(),
+      amount.toFixed(),
       vaultIndex
     )
+
+    console.log('prepareDeposit - routerContract.deposit',preDeposit)
+
     const data = await preDeposit.encodeABI({ from: address })
+
+    console.log('prepareDeposit - data',data)
+
     const estimatedGas = bnOrZero(await preDeposit.estimateGas({ from: address }))
 
+    console.log('prepareDeposit - estimatedGas',estimatedGas)
+
     const nonce = await this.#internals.web3.eth.getTransactionCount(address)
+
+    console.log('prepareDeposit - nonce',nonce)
+
     const gasPrice = bnOrZero(await this.#internals.web3.eth.getGasPrice())
+
+    console.log('prepareDeposit - gasPrice',gasPrice)
 
     return {
       chainId: 1,
@@ -278,13 +368,55 @@ export class IdleOpportunity implements InvestorOpportunity
     }
   }
 
+  /**
+   * Prepare an unsigned deposit transaction
+   *
+   * @param input.address - The user's wallet address where the funds are
+   */
+  async getClaimableTokens(address: string): Promise<ClaimableToken[]> {
+    if (this.metadata.cdoAddress) {
+      return []
+    }
+
+    console.log('getClaimableTokens - address',address)
+    console.log('getClaimableTokens - vaultId',this.id)
+
+    const claimableTokens: ClaimableToken[] = [];
+    const vaultContract: Contract = new this.#internals.web3.eth.Contract(idleTokenV4Abi, this.id)
+    const govTokensAmounts = await vaultContract.methods.getGovTokensAmounts(address).call()
+
+    console.log('getClaimableTokens - govTokensAmounts',govTokensAmounts)
+
+    for (let i=0; i<govTokensAmounts.length; i++){
+      const govTokenAddress = await vaultContract.methods.govTokens(i).call()
+
+      console.log(`getClaimableTokens - govTokenAddress(${i})`,govTokenAddress)
+
+      if (govTokenAddress){
+        claimableTokens.push({
+          assetId: toAssetId({
+            chainId: 'eip155:1',
+            assetNamespace: 'erc20',
+            assetReference: govTokenAddress
+          }),
+          address:govTokenAddress,
+          amount:govTokensAmounts[i]
+        })
+      }
+    }
+
+    console.log('getClaimableTokens - claimableTokens',claimableTokens)
+
+    return claimableTokens
+  }
+
   public async allowance(address: string): Promise<BigNumber> {
     const depositTokenContract: Contract = new this.#internals.web3.eth.Contract(
       erc20Abi,
-      this.id
+      this.metadata.underlyingAddress
     )
     const allowance = await depositTokenContract.methods
-      .allowance(address, this.id)
+      .allowance(address, this.#internals.routerContract.options.address)
       .call()
 
     return bnOrZero(allowance)
@@ -293,10 +425,10 @@ export class IdleOpportunity implements InvestorOpportunity
   async prepareApprove(address: string): Promise<PreparedTransaction> {
     const depositTokenContract = new this.#internals.web3.eth.Contract(
       erc20Abi,
-      this.id
+      this.metadata.underlyingAddress
     )
     const preApprove = await depositTokenContract.methods.approve(
-      address,
+      ssRouterContractAddress,
       MAX_ALLOWANCE
     )
     const data = await preApprove.encodeABI({ from: address })
@@ -311,7 +443,7 @@ export class IdleOpportunity implements InvestorOpportunity
       estimatedGas,
       gasPrice,
       nonce: String(nonce),
-      to: this.id,
+      to: this.metadata.underlyingAddress,
       value: '0'
     }
   }
@@ -341,6 +473,8 @@ export class IdleOpportunity implements InvestorOpportunity
       addressNList
     }
 
+    console.log('signAndBroadcast',txToSign)
+
     if (wallet.supportsOfflineSigning()) {
       const signedTx = await chainAdapter.signTransaction({ txToSign, wallet })
       if (this.#internals.dryRun) return signedTx
@@ -352,6 +486,32 @@ export class IdleOpportunity implements InvestorOpportunity
       return chainAdapter.signAndBroadcastTransaction({ txToSign, wallet })
     } else {
       throw new Error('Invalid HDWallet configuration')
+    }
+  }
+
+  /**
+   * This just makes the logging in the CLI easier to read
+   * @returns
+   */
+  [Symbol.for('nodejs.util.inspect.custom')]() {
+    return {
+      id: this.id,
+      metadata: this.metadata,
+      displayName: this.displayName,
+      apy: this.apy.toString(),
+      tvl: {
+        assetId: this.tvl.assetId,
+        balance: this.tvl.balance.toString()
+      },
+      underlyingAsset: {
+        balance: this.underlyingAsset.balance.toString(),
+        assetId: this.underlyingAsset.assetId
+      },
+      positionAsset: {
+        balance: this.positionAsset.balance.toString(),
+        assetId: this.positionAsset.assetId,
+        price: this.positionAsset.underlyingPerPosition.toString()
+      }
     }
   }
 }

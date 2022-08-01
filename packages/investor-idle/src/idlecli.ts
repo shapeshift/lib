@@ -1,9 +1,10 @@
+import { ethereum } from '@shapeshiftoss/chain-adapters'
+import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
+import * as unchained from '@shapeshiftoss/unchained-client'
 import dotenv from 'dotenv'
+
 import { bnOrZero } from './utils'
 import { IdleInvestor } from './IdleInvestor'
-import { ethereum } from '@shapeshiftoss/chain-adapters'
-import * as unchained from '@shapeshiftoss/unchained-client'
-import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 
 dotenv.config()
 
@@ -27,9 +28,7 @@ const main = async (): Promise<void> => {
   const wallet = await getWallet()
   const chainAdapter = new ethereum.ChainAdapter({
     providers: {
-      ws: new unchained.ws.Client<unchained.ethereum.EthereumTx>(
-        'wss://dev-api.ethereum.shapeshift.com'
-      ),
+      ws: new unchained.ws.Client<unchained.ethereum.Tx>('wss://dev-api.ethereum.shapeshift.com'),
       http: new unchained.ethereum.V1Api(
         new unchained.ethereum.Configuration({
           basePath: 'https://dev-api.ethereum.shapeshift.com'
@@ -42,8 +41,7 @@ const main = async (): Promise<void> => {
   const idleInvestor = new IdleInvestor({
     providerUrl: 'https://daemon.ethereum.shapeshift.com',
     dryRun: true,
-    chainAdapter,
-    network: 1
+    chainAdapter
   })
 
   const address = '0x442Aea0Fd2AFbd3391DAE768F7046f132F0a6300'
