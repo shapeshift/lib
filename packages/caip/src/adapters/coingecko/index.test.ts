@@ -15,7 +15,7 @@ import {
 
 describe('adapters:coingecko', () => {
   describe('coingeckoToAssetIds', () => {
-    it('can get AssetId for bitcoin', () => {
+    it('can get AssetIds for bitcoin', () => {
       const chainNamespace = CHAIN_NAMESPACE.Bitcoin
       const chainReference = CHAIN_REFERENCE.BitcoinMainnet
 
@@ -28,7 +28,7 @@ describe('adapters:coingecko', () => {
       expect(coingeckoToAssetIds('bitcoin')).toEqual([assetId])
     })
 
-    it('can get AssetId id for ethereum', () => {
+    it('can get AssetIds id for ethereum', () => {
       const chainNamespace = CHAIN_NAMESPACE.Ethereum
       const chainReference = CHAIN_REFERENCE.EthereumMainnet
       const assetId = toAssetId({
@@ -40,7 +40,7 @@ describe('adapters:coingecko', () => {
       expect(coingeckoToAssetIds('ethereum')).toEqual([assetId])
     })
 
-    it('can get AssetId id for FOX', () => {
+    it('can get AssetIds id for FOX', () => {
       const chainNamespace = CHAIN_NAMESPACE.Ethereum
       const chainReference = CHAIN_REFERENCE.EthereumMainnet
       const assetNamespace = 'erc20'
@@ -49,7 +49,7 @@ describe('adapters:coingecko', () => {
       expect(coingeckoToAssetIds('shapeshift-fox-token')).toEqual([assetId])
     })
 
-    it('can get AssetId for cosmos', () => {
+    it('can get AssetIds for cosmos', () => {
       const chainNamespace = CHAIN_NAMESPACE.Cosmos
       const chainReference = CHAIN_REFERENCE.CosmosHubMainnet
       const assetId = toAssetId({
@@ -61,7 +61,7 @@ describe('adapters:coingecko', () => {
       expect(coingeckoToAssetIds('cosmos')).toEqual([assetId])
     })
 
-    it('can get AssetId for osmosis', () => {
+    it('can get AssetIds for osmosis', () => {
       const chainNamespace = CHAIN_NAMESPACE.Cosmos
       const chainReference = CHAIN_REFERENCE.OsmosisMainnet
       const assetId = toAssetId({
