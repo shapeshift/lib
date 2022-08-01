@@ -66,7 +66,10 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       buyAsset.precision
     )
 
+    console.log('about to estimate fee')
     const tradeFee = await estimateTradeFee(deps, buyAsset)
+
+    console.log('trade fee is', tradeFee)
 
     const sellAssetTradeFee = bnOrZero(tradeFee).times(bnOrZero(rate))
 

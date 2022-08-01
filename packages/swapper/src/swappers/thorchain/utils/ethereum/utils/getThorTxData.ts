@@ -71,11 +71,16 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
         details: { expectedBuyAmountPrecision8, slippageTolerance }
       })
 
+    console.log('expectedBuyAmountPrecision8', expectedBuyAmountPrecision8)
+    console.log('slippageTolerance', slippageTolerance)
+    console.log('tradeFeePrecision8', tradeFeePrecision8)
     const limit = bnOrZero(expectedBuyAmountPrecision8)
       .times(bn(1).minus(slippageTolerance))
       .minus(bnOrZero(tradeFeePrecision8))
       .decimalPlaces(0)
       .toString()
+
+    console.log('limit is', limit)
 
     const memo = makeSwapMemo({
       buyAssetId: buyAsset.assetId,

@@ -14,6 +14,8 @@ export const getPriceRatio = async (
     const buyPoolId = adapters.assetIdToPoolAssetId({ assetId: buyAssetId })
     const sellPoolId = adapters.assetIdToPoolAssetId({ assetId: sellAssetId })
 
+    console.log('buyPoolId', buyPoolId)
+    console.log('sellPoolId', sellPoolId)
     if (!buyPoolId || !sellPoolId)
       throw new SwapError(`[getPriceRatio]: No thorchain pool found`, {
         code: SwapErrorTypes.RESPONSE_ERROR,
@@ -25,6 +27,8 @@ export const getPriceRatio = async (
     const buyUsdPrice = responseData.find((response) => response.asset === buyPoolId)?.assetPrice
     const sellUsdPrice = responseData.find((response) => response.asset === sellPoolId)?.assetPrice
 
+    console.log('buyUsdPrice', buyUsdPrice)
+    console.log('sellUsdPrice', sellUsdPrice)
     if (!buyUsdPrice || !sellUsdPrice)
       throw new SwapError(`[getPriceRatio]: No rate found for pools`, {
         code: SwapErrorTypes.RESPONSE_ERROR,
