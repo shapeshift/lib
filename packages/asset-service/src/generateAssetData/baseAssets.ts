@@ -31,14 +31,14 @@ export const bitcoin: Asset = {
 export const bitcoincash: Asset = {
   assetId: caip.bchAssetId,
   chainId: caip.bchChainId,
-  symbol: 'LTC',
-  name: 'Litecoin',
+  symbol: 'BCH',
+  name: 'Bitcoin Cash',
   precision: 8,
-  color: '#B8B8B8',
-  icon: 'https://assets.coincap.io/assets/icons/256/ltc.png',
-  explorer: 'https://live.blockcypher.com',
-  explorerAddressLink: 'https://live.blockcypher.com/ltc/address/',
-  explorerTxLink: 'https://live.blockcypher.com/ltc/tx/'
+  color: '#8BC34A',
+  icon: 'https://assets.coincap.io/assets/icons/256/bch.png',
+  explorer: 'https://blockchair.com',
+  explorerAddressLink: 'https://blockchair.com/bitcoin-cash/address/',
+  explorerTxLink: 'https://blockchair.com/bitcoin-cash/transaction/'
 }
 
 export const dogecoin: Asset = {
