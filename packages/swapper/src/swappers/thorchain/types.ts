@@ -21,19 +21,19 @@ export type PoolResponse = {
   volume24h: string
 }
 
-type out = {
+type MidgardActionOut = {
   txID: string
 }
-type action = {
+type MidgardAction = {
   date: string
   height: string
-  out: [out]
+  out: [MidgardActionOut]
   status: string
   type: string
 }
 
-export type ActionsResponse = {
-  actions: [action]
+export type MidgardActionsResponse = {
+  actions: MidgardAction[]
 }
 
 export type InboundResponse = {

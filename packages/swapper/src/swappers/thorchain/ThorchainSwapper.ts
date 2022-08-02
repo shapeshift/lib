@@ -25,7 +25,7 @@ import { buildTrade } from './buildThorTrade/buildThorTrade'
 import { getThorTradeQuote } from './getThorTradeQuote/getTradeQuote'
 import { thorTradeApprovalNeeded } from './thorTradeApprovalNeeded/thorTradeApprovalNeeded'
 import { thorTradeApproveInfinite } from './thorTradeApproveInfinite/thorTradeApproveInfinite'
-import { ActionsResponse, PoolResponse, ThorchainSwapperDeps, ThorTrade } from './types'
+import { MidgardActionsResponse, PoolResponse, ThorchainSwapperDeps, ThorTrade } from './types'
 import { getUsdRate } from './utils/getUsdRate/getUsdRate'
 import { thorService } from './utils/thorService'
 
@@ -166,7 +166,7 @@ export class ThorchainSwapper implements Swapper<ChainId> {
         ? tradeResult.tradeId.slice(2)
         : tradeResult.tradeId
 
-      const { data: responseData } = await thorService.get<ActionsResponse>(
+      const { data: responseData } = await thorService.get<MidgardActionsResponse>(
         `${this.deps.midgardUrl}/actions?txid=${midgardTxid}`
       )
 
