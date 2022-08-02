@@ -1,3 +1,4 @@
+import { ChainId } from '@shapeshiftoss/caip'
 import { KnownChainIds } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 
@@ -17,7 +18,7 @@ export const THORCHAIN_AFFILIATE_BIPS = '0' // affiliate fee in basis points (10
 // This is still not "perfect" and tends to overestimate by a small randomish amount
 // TODO figure out if its possible to accurately estimate the outbound fee.
 // Neither the discord nor official docs are correct
-export const THOR_TRADE_FEE_MULTIPLIERS: Record<SUPPORTED_BUY_CHAINS, BigNumber> = {
+export const THOR_TRADE_FEE_MULTIPLIERS: Record<ChainId, BigNumber> = {
   [KnownChainIds.BitcoinMainnet]: bn(0.00002), // 1000 estimated bytes * 2 (as recommended on discord)
   [KnownChainIds.DogecoinMainnet]: bn(0.00002), // 1000 estimated bytes * 2 (as recommended on discord)
   [KnownChainIds.LitecoinMainnet]: bn(0.000005), // 250 estimated bytes * 2 (as recommended on discord)

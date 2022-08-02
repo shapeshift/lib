@@ -3,7 +3,7 @@ import { adapters, fromAssetId } from '@shapeshiftoss/caip'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { InboundResponse, ThorchainSwapperDeps } from '../../types'
-import { SUPPORTED_BUY_CHAINS, THOR_TRADE_FEE_MULTIPLIERS } from '../constants'
+import { THOR_TRADE_FEE_MULTIPLIERS } from '../constants'
 import { getPriceRatio } from '../getPriceRatio/getPriceRatio'
 import { thorService } from '../thorService'
 
@@ -59,8 +59,10 @@ export const estimateTradeFee = async (
         })
       : '1'
 
-  return THOR_TRADE_FEE_MULTIPLIERS[buyChainId as SUPPORTED_BUY_CHAINS]
-    .times(buyFeeAssetRatio)
-    .times(gasRate)
-    .toString()
+  if (!THOR_TRADE_FEE_MULTIPLIERS[buyChainId])
+    throw new SwapError('[estimateTradeFee] - no trade fee multiplier', {
+      code: SwapErrorTypes.VALIDATION_FAILED,
+      details: { buyChainId }
+    })
+  return THOR_TRADE_FEE_MULTIPLIERS[buyChainId].times(buyFeeAssetRatio).times(gasRate).toString()
 }
