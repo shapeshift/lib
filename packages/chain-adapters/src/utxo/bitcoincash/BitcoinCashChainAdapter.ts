@@ -1,18 +1,18 @@
-import { ASSET_REFERENCE, AssetId, ltcAssetId } from '@shapeshiftoss/caip'
+import { ASSET_REFERENCE, AssetId, bchAssetId } from '@shapeshiftoss/caip'
 import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 
 import { ChainAdapterArgs, UtxoBaseAdapter } from '../UtxoBaseAdapter'
 
-const SUPPORTED_CHAIN_IDS = [KnownChainIds.LitecoinMainnet]
-const DEFAULT_CHAIN_ID = KnownChainIds.LitecoinMainnet
+const SUPPORTED_CHAIN_IDS = [KnownChainIds.BitcoinCashMainnet]
+const DEFAULT_CHAIN_ID = KnownChainIds.BitcoinCashMainnet
 const SUPPORTED_ACCOUNT_TYPES = [UtxoAccountType.P2pkh]
 
-export class ChainAdapter extends UtxoBaseAdapter<KnownChainIds.LitecoinMainnet> {
-  public static readonly defaultUtxoAccountType = UtxoAccountType.SegwitNative
+export class ChainAdapter extends UtxoBaseAdapter<KnownChainIds.BitcoinCashMainnet> {
+  public static readonly defaultUtxoAccountType = UtxoAccountType.P2pkh
   public static readonly defaultBIP44Params: BIP44Params = {
-    purpose: 84,
-    coinType: Number(ASSET_REFERENCE.Litecoin),
+    purpose: 44,
+    coinType: Number(ASSET_REFERENCE.Bitcoincash),
     accountNumber: 0
   }
 
@@ -26,18 +26,18 @@ export class ChainAdapter extends UtxoBaseAdapter<KnownChainIds.LitecoinMainnet>
       ...args
     })
 
-    this.assetId = ltcAssetId
-    this.parser = new unchained.litecoin.TransactionParser({
+    this.assetId = bchAssetId
+    this.parser = new unchained.bitcoincash.TransactionParser({
       chainId: this.chainId
     })
   }
 
   getDisplayName() {
-    return 'Litecoin'
+    return 'Bitcoin Cash'
   }
 
-  getType(): KnownChainIds.LitecoinMainnet {
-    return KnownChainIds.LitecoinMainnet
+  getType(): KnownChainIds.BitcoinCashMainnet {
+    return KnownChainIds.BitcoinCashMainnet
   }
 
   getFeeAssetId(): AssetId {
