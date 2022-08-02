@@ -33,8 +33,10 @@ export function aggregateTransfer(
   const transfer = transfers?.[index]
 
   if (transfer) {
-    transfer.totalValue = new BigNumber(transfer.totalValue).plus(value).toString(10)
-    transfer.components.push({ value })
+    transfer.totalValue = new BigNumber(transfer.totalValue ?? 0).plus(value).toString(10)
+    if (transfer.components) {
+      transfer.components.push({ value })
+    }
     transfers[index] = transfer
   } else {
     transfers = [

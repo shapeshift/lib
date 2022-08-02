@@ -231,7 +231,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
             from: transfer.from,
             to: transfer.to,
             type: transfer.type,
-            value: transfer.totalValue
+            value: transfer.totalValue ?? '0'
           })),
           data: parsedTx.data
         }
@@ -339,7 +339,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
             from: transfer.from,
             to: transfer.to,
             type: transfer.type,
-            value: transfer.totalValue
+            value: transfer.totalValue ?? '0'
           })),
           txid: tx.txid,
           data: tx.data

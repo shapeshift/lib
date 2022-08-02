@@ -1,3 +1,5 @@
+import { AssetId, ChainId } from '@shapeshiftoss/caip'
+
 // these are user facing values, and should be rendered as such
 export enum Dex {
   Thor = 'THORChain',
@@ -42,9 +44,10 @@ export interface Transfer {
   to: string
   assetId: string
   type: TransferType
-  totalValue: string
-  components: Array<{ value: string }>
+  totalValue?: string
+  components?: Array<{ value: string }>
   token?: Token
+  value?: string
 }
 
 // these are user facing values, and should be rendered as such
@@ -68,6 +71,7 @@ export enum TxParser {
 export interface BaseTxMetadata {
   method?: string
   parser: string
+  assetId?: AssetId
 }
 
 export interface StandardTxMetadata extends BaseTxMetadata {
@@ -79,11 +83,14 @@ export interface StandardTx {
   blockHash?: string
   blockHeight: number
   blockTime: number
+  chain?: ChainId
+  data?: BaseTxMetadata
   chainId: string
   confirmations: number
   fee?: Fee
   status: TxStatus
   trade?: Trade
+  tradeDetails?: Trade
   transfers: Array<Transfer>
   txid: string
 }

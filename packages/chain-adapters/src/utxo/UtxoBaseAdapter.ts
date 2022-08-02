@@ -388,7 +388,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
                 from: transfer.from,
                 to: transfer.to,
                 type: transfer.type,
-                value: transfer.totalValue
+                value: transfer.totalValue ?? '0'
               }))
             }
           })
@@ -446,7 +446,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
             from: transfer.from,
             to: transfer.to,
             type: transfer.type,
-            value: transfer.totalValue
+            value: transfer.totalValue ?? '0'
           })),
           txid: tx.txid
         })

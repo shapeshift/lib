@@ -23,6 +23,7 @@ import {
   ValidAddressResultType
 } from '../types'
 import { toRootDerivationPath } from '../utils'
+import { bnOrZero } from '../utils/bignumber'
 import { cosmos } from './'
 
 const CHAIN_TO_BECH32_PREFIX_MAPPING = {
@@ -191,7 +192,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
               from: transfer.from,
               to: transfer.to,
               type: transfer.type,
-              value: transfer.totalValue
+              value: bnOrZero(transfer.totalValue).toString()
             })),
             data: parsedTx.data
           }
@@ -268,7 +269,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
             from: transfer.from,
             to: transfer.to,
             type: transfer.type,
-            value: transfer.totalValue
+            value: transfer.totalValue ?? '0'
           })),
           txid: tx.txid
         })
