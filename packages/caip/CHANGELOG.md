@@ -1,3 +1,26 @@
+# [@shapeshiftoss/caip-v6.10.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.9.1...@shapeshiftoss/caip-v6.10.0) (2022-08-02)
+
+
+### Features
+
+* additonal thorchain asset support ([#935](https://github.com/shapeshift/lib/issues/935)) ([0b1a492](https://github.com/shapeshift/lib/commit/0b1a492b4f6c1f69674f3114f284caa0b5b8e1ce))
+
+# [@shapeshiftoss/caip-v6.9.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.9.0...@shapeshiftoss/caip-v6.9.1) (2022-08-01)
+
+# [@shapeshiftoss/caip-v6.9.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.8.0...@shapeshiftoss/caip-v6.9.0) (2022-08-01)
+
+
+### Features
+
+* **caip & market-service:** handle multiple assets with the same CoinGecko `id` ([#929](https://github.com/shapeshift/lib/issues/929)) ([0bdd0a1](https://github.com/shapeshift/lib/commit/0bdd0a13add10e6a9f6d9aa76b119c155191b7b2))
+
+# [@shapeshiftoss/caip-v6.8.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.7.1...@shapeshiftoss/caip-v6.8.0) (2022-08-01)
+
+
+### Features
+
+* **caip:** remove getFeeAssetIdFromAssetId / chainIdToAssetId ([#908](https://github.com/shapeshift/lib/issues/908)) ([d5cfda5](https://github.com/shapeshift/lib/commit/d5cfda5d037e7d1d7a3a4d4b522ec2a5ee8f4ac5))
+
 # [@shapeshiftoss/caip-v6.7.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.7.0...@shapeshiftoss/caip-v6.7.1) (2022-07-29)
 
 # [@shapeshiftoss/caip-v6.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.6.0...@shapeshiftoss/caip-v6.7.0) (2022-07-29)

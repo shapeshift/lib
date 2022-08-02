@@ -1,3 +1,4 @@
+import { btcAssetId, btcChainId, ethAssetId, ethChainId } from '@shapeshiftoss/caip'
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import Web3 from 'web3'
 
@@ -11,10 +12,13 @@ jest.mock('../thorService')
 describe('estimateTradeFee', () => {
   const deps = {
     midgardUrl: 'localhost:3000',
-    adapterManager: <ChainAdapterManager>{},
+    adapterManager: new Map([
+      [ethChainId, { getFeeAssetId: () => ethAssetId }],
+      [btcChainId, { getFeeAssetId: () => btcAssetId }]
+    ]) as ChainAdapterManager,
     web3: <Web3>{}
   }
-  it('should correctly estimate a trade fee for bitcoin', async () => {
+  it('should correctly estimate a trade fee for bitcoin as buy asset', async () => {
     ;(thorService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: mockInboundAdresses })
     )
@@ -23,7 +27,7 @@ describe('estimateTradeFee', () => {
     const expectedResult = '0.00036'
     expect(estimatedTradeFee).toEqual(expectedResult)
   })
-  it('should correctly estimate a trade fee for ethereum', async () => {
+  it('should correctly estimate a trade fee for ethereum as buy asset', async () => {
     ;(thorService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: mockInboundAdresses })
     )
@@ -32,16 +36,16 @@ describe('estimateTradeFee', () => {
     const expectedResult = '0.0672'
     expect(estimatedTradeFee).toEqual(expectedResult)
   })
-  it('should correctly estimate a trade fee for an ethereum erc20 asset', async () => {
+  it('should correctly estimate a trade fee for an ethereum erc20 asset as a buy asset', async () => {
     ;(thorService.get as jest.Mock<unknown>)
       .mockReturnValueOnce(Promise.resolve({ data: mockInboundAdresses }))
       .mockReturnValueOnce(Promise.resolve({ data: [foxMidgardPool, ethMidgardPool] }))
     const estimatedTradeFee = await estimateTradeFee(deps, FOX)
 
-    const expectedResult = '856.785841'
+    const expectedResult = '856.785841407056721352948224'
     expect(estimatedTradeFee).toEqual(expectedResult)
   })
-  it('should throw if trying to get fee data for an unsupprted asset', async () => {
+  it('should throw if trying to get fee data for an unsupported buy asset', async () => {
     ;(thorService.get as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve({ data: mockInboundAdresses })
     )
