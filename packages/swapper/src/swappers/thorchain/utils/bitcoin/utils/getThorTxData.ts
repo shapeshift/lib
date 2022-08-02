@@ -67,7 +67,7 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
       tradeFee
     })
 
-    const memo = await makeSwapMemo({
+    const memo = makeSwapMemo({
       buyAssetId: buyAsset.assetId,
       destinationAddress,
       limit

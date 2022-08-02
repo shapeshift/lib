@@ -10,7 +10,7 @@ const MAX_LENGTH = 80
  * @returns thorchain memo shortened to a max of 80 characters as described:
  * https://dev.thorchain.org/thorchain-dev/memos#mechanism-for-transaction-intent
  */
-export const makeSwapMemo = async ({
+export const makeSwapMemo = ({
   buyAssetId,
   destinationAddress,
   limit
@@ -18,7 +18,7 @@ export const makeSwapMemo = async ({
   buyAssetId: string
   destinationAddress: string
   limit: string
-}): Promise<string> => {
+}): string => {
   const thorId = adapters.assetIdToPoolAssetId({ assetId: buyAssetId })
   if (!thorId)
     throw new SwapError('[makeSwapMemo] - undefined thorId for given buyAssetId', {
@@ -27,6 +27,7 @@ export const makeSwapMemo = async ({
     })
 
   const memo = `s:${thorId}:${destinationAddress}:${limit}:${THORCHAIN_AFFILIATE_NAME}:${THORCHAIN_AFFILIATE_BIPS}`
+
   if (memo.length <= MAX_LENGTH) return memo
   const abbreviationAmount = memo.length - MAX_LENGTH
 
