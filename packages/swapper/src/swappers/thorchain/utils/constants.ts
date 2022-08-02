@@ -16,11 +16,11 @@ export const THORCHAIN_FIXED_PRECISION = 8 // limit values are precision 8 regar
 // TODO figure out if its possible to accurately estimate the outbound fee.
 // Neither the discord nor official docs are correct
 export const THOR_TRADE_FEE_MULTIPLIERS: Record<SUPPORTED_BUY_CHAINS, BigNumber> = {
-  [KnownChainIds.BitcoinMainnet]: bn(0.00002),
-  [KnownChainIds.DogecoinMainnet]: bn(0.00002),
-  [KnownChainIds.LitecoinMainnet]: bn(0.000005),
-  [KnownChainIds.CosmosMainnet]: bn(0.00000002),
-  [KnownChainIds.EthereumMainnet]: bn(0.00024)
+  [KnownChainIds.BitcoinMainnet]: bn(0.00002), // 1000 estimated bytes * 2 (as recommended on discord)
+  [KnownChainIds.DogecoinMainnet]: bn(0.00002), // 1000 estimated bytes * 2 (as recommended on discord)
+  [KnownChainIds.LitecoinMainnet]: bn(0.000005), // 250 estimated bytes * 2 (as recommended on discord)
+  [KnownChainIds.CosmosMainnet]: bn(0.00000002), // 1 gas * 2 (as recommended on discord)
+  [KnownChainIds.EthereumMainnet]: bn(0.00024) // A value that "works". Discord recommended value (80,000 gas * 2 or 160k) is often too low
 }
 
 export type SUPPORTED_BUY_CHAINS =
