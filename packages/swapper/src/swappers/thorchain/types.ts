@@ -21,6 +21,21 @@ export type PoolResponse = {
   volume24h: string
 }
 
+type out = {
+  txID: string
+}
+type action = {
+  date: string
+  height: string
+  out: [out]
+  status: string
+  type: string
+}
+
+export type ActionsResponse = {
+  actions: [action]
+}
+
 export type InboundResponse = {
   chain: string
   pub_key: string
