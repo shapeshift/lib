@@ -1,54 +1,12 @@
 import { Asset, AssetService } from '@shapeshiftoss/asset-service'
 import { adapters, fromAssetId } from '@shapeshiftoss/caip'
-import { KnownChainIds } from '@shapeshiftoss/types'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
-import { bn, bnOrZero, fromBaseUnit } from '../../../utils/bignumber'
+import { fromBaseUnit } from '../../../utils/bignumber'
 import { InboundResponse, ThorchainSwapperDeps } from '../../types'
-import {
-  THOR_TRADE_FEE_BTC_SIZE,
-  THOR_TRADE_FEE_DOGE_SIZE,
-  THOR_TRADE_FEE_ETH_GAS,
-  THOR_TRADE_FEE_GAIA_SIZE,
-  THOR_TRADE_FEE_LTC_SIZE,
-  THORCHAIN_FIXED_PRECISION
-} from '../constants'
+import { SUPPORTED_BUY_CHAINS, THOR_TRADE_FEE_MULTIPLIERS } from '../constants'
 import { getPriceRatio } from '../getPriceRatio/getPriceRatio'
 import { thorService } from '../thorService'
-
-const gweiGasPrecision = 9
-
-// Official docs on fees are incorrect
-// https://discord.com/channels/838986635756044328/997675038675316776/998552541170253834
-// This is still not "perfect" and tends to overestimate by a randomish amount
-// TODO figure out if its possible to accurately estimate the outbound fee.
-// Neither the discord nor official docs are correct
-
-const ethEstimate = (gasRate: string) =>
-  bnOrZero(gasRate)
-    .times(THOR_TRADE_FEE_ETH_GAS)
-    .times(2)
-    .times(bn(10).exponentiatedBy(gweiGasPrecision))
-    .toString()
-
-const erc20Estimate = (gasRate: string) =>
-  bnOrZero(gasRate)
-    .times(THOR_TRADE_FEE_ETH_GAS)
-    .times(2)
-    .times(bn(10).exponentiatedBy(gweiGasPrecision))
-    .toString()
-
-const btcEstimate = (gasRate: string) =>
-  bnOrZero(gasRate).times(THOR_TRADE_FEE_BTC_SIZE).times(2).toString()
-
-const dogeEstimate = (gasRate: string) =>
-  bnOrZero(gasRate).times(THOR_TRADE_FEE_DOGE_SIZE).times(2).toString()
-
-const ltcEstimate = (gasRate: string) =>
-  bnOrZero(gasRate).times(THOR_TRADE_FEE_LTC_SIZE).times(2).toString()
-
-const gaiaEstimate = (gasRate: string) =>
-  bnOrZero(gasRate).times(THOR_TRADE_FEE_GAIA_SIZE).times(2).toString()
 
 export const estimateTradeFee = async (
   deps: ThorchainSwapperDeps,
@@ -76,7 +34,7 @@ export const estimateTradeFee = async (
     })
 
   const gasRate = inboundInfo.gas_rate
-  const { chainId: buyChainId, assetNamespace } = fromAssetId(buyAsset.assetId)
+  const { chainId: buyChainId } = fromAssetId(buyAsset.assetId)
 
   const buyAdapter = deps.adapterManager.get(buyChainId)
 
@@ -104,49 +62,11 @@ export const estimateTradeFee = async (
 
   const buyFeeAsset = new AssetService().getAll()[buyFeeAssetId]
 
-  switch (buyChainId) {
-    case KnownChainIds.BitcoinMainnet:
-      return fromBaseUnit(
-        bnOrZero(btcEstimate(gasRate)).times(buyFeeAssetRatio).dp(0),
-        buyFeeAsset.precision
-      )
-    case KnownChainIds.DogecoinMainnet:
-      return fromBaseUnit(
-        bnOrZero(dogeEstimate(gasRate)).times(buyFeeAssetRatio).dp(0),
-        buyFeeAsset.precision
-      )
-    case KnownChainIds.LitecoinMainnet:
-      return fromBaseUnit(
-        bnOrZero(ltcEstimate(gasRate)).times(buyFeeAssetRatio).dp(0),
-        buyFeeAsset.precision
-      )
-    case KnownChainIds.CosmosMainnet:
-      return fromBaseUnit(
-        bnOrZero(gaiaEstimate(gasRate)).times(buyFeeAssetRatio).dp(0),
-        THORCHAIN_FIXED_PRECISION // because thorchain likes to be inconsistent for no good reason
-      )
-    case KnownChainIds.EthereumMainnet:
-      switch (assetNamespace) {
-        case 'slip44':
-          return fromBaseUnit(
-            bnOrZero(ethEstimate(gasRate)).times(buyFeeAssetRatio).dp(0),
-            buyFeeAsset.precision
-          )
-        case 'erc20':
-          return fromBaseUnit(
-            bnOrZero(erc20Estimate(gasRate)).times(buyFeeAssetRatio).dp(0),
-            buyFeeAsset.precision
-          )
-        default:
-          throw new SwapError('[estimateTradeFee] - unsupported asset namespace', {
-            code: SwapErrorTypes.VALIDATION_FAILED,
-            details: { assetNamespace }
-          })
-      }
-    default:
-      throw new SwapError('[estimateTradeFee] - unsupported chain id', {
-        code: SwapErrorTypes.VALIDATION_FAILED,
-        details: { chainId: buyChainId }
-      })
-  }
+  return fromBaseUnit(
+    THOR_TRADE_FEE_MULTIPLIERS[buyChainId as SUPPORTED_BUY_CHAINS]
+      .times(buyFeeAssetRatio)
+      .times(gasRate)
+      .dp(0),
+    buyFeeAsset.precision
+  )
 }
