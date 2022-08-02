@@ -6,6 +6,7 @@ import { KnownChainIds } from '@shapeshiftoss/types'
 
 import { SwapError, SwapErrorTypes, TradeQuote } from '../../../../api'
 import { InboundResponse, ThorchainSwapperDeps } from '../../types'
+import { getLimit } from '../getLimit/getLimit'
 import { makeSwapMemo } from '../makeSwapMemo/makeSwapMemo'
 import { thorService } from '../thorService'
 
@@ -45,7 +46,7 @@ export const cosmosTxData = async (input: {
       details: { chainId: input.chainId }
     })
 
-  const memo = await makeSwapMemo({
+  const limit = await getLimit({
     buyAssetId: buyAsset.assetId,
     destinationAddress,
     sellAmount,
@@ -54,6 +55,12 @@ export const cosmosTxData = async (input: {
     slippageTolerance,
     deps,
     tradeFee: quote.feeData.tradeFee
+  })
+
+  const memo = await makeSwapMemo({
+    buyAssetId: buyAsset.assetId,
+    destinationAddress,
+    limit
   })
 
   const buildTxResponse = await (

@@ -1,15 +1,7 @@
-import { Asset } from '@shapeshiftoss/asset-service'
 import { adapters } from '@shapeshiftoss/caip'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
-import { bn, bnOrZero, fromBaseUnit, toBaseUnit } from '../../../utils/bignumber'
-import { ThorchainSwapperDeps } from '../../types'
-import {
-  THORCHAIN_AFFILIATE_BIPS,
-  THORCHAIN_AFFILIATE_NAME,
-  THORCHAIN_FIXED_PRECISION
-} from '../constants'
-import { getTradeRate } from '../getTradeRate/getTradeRate'
+import { THORCHAIN_AFFILIATE_BIPS, THORCHAIN_AFFILIATE_NAME } from '../constants'
 
 // BTC (and likely other utxo coins) can only support up to 80 character memos
 const MAX_LENGTH = 80
@@ -21,44 +13,12 @@ const MAX_LENGTH = 80
 export const makeSwapMemo = async ({
   buyAssetId,
   destinationAddress,
-  sellAsset,
-  buyAsset,
-  sellAmount,
-  deps,
-  slippageTolerance,
-  tradeFee
+  limit
 }: {
   buyAssetId: string
   destinationAddress: string
-  sellAsset: Asset
-  buyAsset: Asset
-  sellAmount: string
-  deps: ThorchainSwapperDeps
-  slippageTolerance: string
-  tradeFee: string
+  limit: string
 }): Promise<string> => {
-  const tradeRate = await getTradeRate(sellAsset, buyAsset.assetId, sellAmount, deps)
-  const expectedBuyAmountPrecision8 = toBaseUnit(
-    fromBaseUnit(bnOrZero(sellAmount).times(tradeRate), sellAsset.precision),
-    THORCHAIN_FIXED_PRECISION
-  )
-
-  const isValidSlippageRange =
-    bnOrZero(slippageTolerance).gte(0) && bnOrZero(slippageTolerance).lte(1)
-  if (bnOrZero(expectedBuyAmountPrecision8).lt(0) || !isValidSlippageRange)
-    throw new SwapError('[getThorTxInfo]: bad expected buy amount or bad slippage tolerance', {
-      code: SwapErrorTypes.BUILD_TRADE_FAILED,
-      details: { expectedBuyAmountPrecision8, slippageTolerance }
-    })
-
-  const tradeFeePrecision8 = toBaseUnit(bnOrZero(tradeFee), THORCHAIN_FIXED_PRECISION)
-
-  const limit = bnOrZero(expectedBuyAmountPrecision8)
-    .times(bn(1).minus(slippageTolerance))
-    .minus(bnOrZero(tradeFeePrecision8))
-    .decimalPlaces(0)
-    .toString()
-
   const thorId = adapters.assetIdToPoolAssetId({ assetId: buyAssetId })
   if (!thorId)
     throw new SwapError('[makeSwapMemo] - undefined thorId for given buyAssetId', {

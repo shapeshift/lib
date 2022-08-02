@@ -6,6 +6,7 @@ import { BIP44Params, UtxoAccountType } from '@shapeshiftoss/types'
 
 import { SwapError, SwapErrorTypes } from '../../../../../api'
 import { InboundResponse, ThorchainSwapperDeps } from '../../../types'
+import { getLimit } from '../../getLimit/getLimit'
 import { makeSwapMemo } from '../../makeSwapMemo/makeSwapMemo'
 import { thorService } from '../../thorService'
 
@@ -55,7 +56,7 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
         details: { inboundAddresses }
       })
 
-    const memo = await makeSwapMemo({
+    const limit = await getLimit({
       buyAssetId: buyAsset.assetId,
       destinationAddress,
       sellAmount,
@@ -64,6 +65,12 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
       slippageTolerance,
       deps,
       tradeFee
+    })
+
+    const memo = await makeSwapMemo({
+      buyAssetId: buyAsset.assetId,
+      destinationAddress,
+      limit
     })
 
     const adapter = deps.adapterManager.get(btcChainId)
