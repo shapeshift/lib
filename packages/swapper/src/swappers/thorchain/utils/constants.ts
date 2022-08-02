@@ -12,15 +12,15 @@ export const THORCHAIN_FIXED_PRECISION = 8 // limit values are precision 8 regar
 // Used to estimate the fee thorchain will take out of the buyAsset
 // Official docs on fees are incorrect
 // https://discord.com/channels/838986635756044328/997675038675316776/998552541170253834
-// This is still not "perfect" and tends to overestimate by a randomish amount
+// This is still not "perfect" and tends to overestimate by a small randomish amount
 // TODO figure out if its possible to accurately estimate the outbound fee.
 // Neither the discord nor official docs are correct
 export const THOR_TRADE_FEE_MULTIPLIERS: Record<SUPPORTED_BUY_CHAINS, BigNumber> = {
-  [KnownChainIds.BitcoinMainnet]: bn(2000),
-  [KnownChainIds.DogecoinMainnet]: bn(2000),
-  [KnownChainIds.LitecoinMainnet]: bn(500),
-  [KnownChainIds.CosmosMainnet]: bn(0.02),
-  [KnownChainIds.EthereumMainnet]: bn(240000).times(bn(10).exponentiatedBy(9))
+  [KnownChainIds.BitcoinMainnet]: bn(0.00002),
+  [KnownChainIds.DogecoinMainnet]: bn(0.00002),
+  [KnownChainIds.LitecoinMainnet]: bn(0.000005),
+  [KnownChainIds.CosmosMainnet]: bn(0.00000002),
+  [KnownChainIds.EthereumMainnet]: bn(0.00024)
 }
 
 export type SUPPORTED_BUY_CHAINS =

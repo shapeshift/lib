@@ -1,8 +1,7 @@
-import { Asset, AssetService } from '@shapeshiftoss/asset-service'
+import { Asset } from '@shapeshiftoss/asset-service'
 import { adapters, fromAssetId } from '@shapeshiftoss/caip'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
-import { fromBaseUnit } from '../../../utils/bignumber'
 import { InboundResponse, ThorchainSwapperDeps } from '../../types'
 import { SUPPORTED_BUY_CHAINS, THOR_TRADE_FEE_MULTIPLIERS } from '../constants'
 import { getPriceRatio } from '../getPriceRatio/getPriceRatio'
@@ -60,13 +59,8 @@ export const estimateTradeFee = async (
         })
       : '1'
 
-  const buyFeeAsset = new AssetService().getAll()[buyFeeAssetId]
-
-  return fromBaseUnit(
-    THOR_TRADE_FEE_MULTIPLIERS[buyChainId as SUPPORTED_BUY_CHAINS]
-      .times(buyFeeAssetRatio)
-      .times(gasRate)
-      .dp(0),
-    buyFeeAsset.precision
-  )
+  return THOR_TRADE_FEE_MULTIPLIERS[buyChainId as SUPPORTED_BUY_CHAINS]
+    .times(buyFeeAssetRatio)
+    .times(gasRate)
+    .toString()
 }
