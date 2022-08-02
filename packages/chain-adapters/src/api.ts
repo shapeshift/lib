@@ -1,5 +1,6 @@
 import { AssetId, ChainId } from '@shapeshiftoss/caip'
 import { BIP44Params, UtxoAccountType } from '@shapeshiftoss/types'
+import { StandardTx } from '@shapeshiftoss/unchained-client'
 
 import {
   Account,
@@ -11,7 +12,6 @@ import {
   SignTxInput,
   SubscribeError,
   SubscribeTxsInput,
-  Transaction,
   TxHistoryInput,
   TxHistoryResponse,
   ValidAddressResult
@@ -47,7 +47,7 @@ export type ChainAdapter<T extends ChainId> = {
 
   buildBIP44Params(params: Partial<BIP44Params>): BIP44Params
 
-  getTxHistory(input: TxHistoryInput): Promise<TxHistoryResponse<T>>
+  getTxHistory(input: TxHistoryInput): Promise<TxHistoryResponse>
 
   buildSendTransaction(input: BuildSendTxInput<T>): Promise<{
     txToSign: ChainTxType<T>
@@ -67,7 +67,7 @@ export type ChainAdapter<T extends ChainId> = {
 
   subscribeTxs(
     input: SubscribeTxsInput,
-    onMessage: (msg: Transaction<T>) => void,
+    onMessage: (msg: StandardTx) => void,
     onError?: (err: SubscribeError) => void
   ): Promise<void>
 

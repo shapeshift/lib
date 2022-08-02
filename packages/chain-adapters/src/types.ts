@@ -7,7 +7,7 @@ import {
   OsmosisSignTx
 } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, ChainSpecific, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
-import { TradeType, TransferType, TxStatus } from '@shapeshiftoss/unchained-client'
+import { StandardTx, TradeType, TransferType, TxStatus } from '@shapeshiftoss/unchained-client'
 
 import * as cosmos from './cosmossdk/cosmos'
 import * as osmosis from './cosmossdk/osmosis'
@@ -127,10 +127,10 @@ export type SubscribeError = {
   message: string
 }
 
-export type TxHistoryResponse<T extends ChainId> = {
+export type TxHistoryResponse = {
   cursor: string
   pubkey: string
-  transactions: Array<Transaction<T>>
+  transactions: Array<StandardTx>
 }
 
 type ChainTxTypeInner = {

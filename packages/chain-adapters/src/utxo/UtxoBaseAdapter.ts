@@ -23,7 +23,6 @@ import {
   SignTxInput,
   SubscribeError,
   SubscribeTxsInput,
-  Transaction,
   TxHistoryInput,
   TxHistoryResponse,
   ValidAddressResult,
@@ -334,7 +333,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
     }
   }
 
-  async getTxHistory(input: TxHistoryInput): Promise<TxHistoryResponse<T>> {
+  async getTxHistory(input: TxHistoryInput): Promise<TxHistoryResponse> {
     if (!this.accountAddresses[input.pubkey]) {
       await this.getAccount(input.pubkey)
     }
@@ -410,7 +409,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
 
   async subscribeTxs(
     input: SubscribeTxsInput,
-    onMessage: (msg: Transaction<T>) => void,
+    onMessage: (msg: unchained.StandardTx) => void,
     onError: (err: SubscribeError) => void
   ): Promise<void> {
     const {
