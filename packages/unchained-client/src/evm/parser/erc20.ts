@@ -2,7 +2,7 @@ import { ChainId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
 import { ethers } from 'ethers'
 
 import erc20 from './abi/erc20'
-import { SubParser, Tx, TxParser, TxSpecific } from './types'
+import { SubParser, Tx, TxSpecific } from './types'
 import { getSigHash } from './utils'
 
 interface ParserArgs {
@@ -45,7 +45,7 @@ export class Parser<T extends Tx> implements SubParser<T> {
           assetReference: tx.to
         }),
         method: decoded.name,
-        parser: TxParser.ERC20
+        parser: 'erc20'
       }
     }
   }

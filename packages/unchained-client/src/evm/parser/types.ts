@@ -4,12 +4,8 @@ import { BaseTxMetadata, StandardTx, StandardTxMetadata } from '../../types'
 
 export type Tx = evm.Tx
 
-export enum TxParser {
-  ERC20 = 'erc20'
-}
-
 export interface ERC20TxMetadata extends BaseTxMetadata {
-  parser: TxParser.ERC20
+  parser: 'erc20'
   assetId?: string
 }
 

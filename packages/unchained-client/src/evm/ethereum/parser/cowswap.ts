@@ -1,6 +1,6 @@
 import { Tx } from '../../../generated/ethereum'
-import { Dex, TradeType, TxParser } from '../../../types'
-import { SubParser, txInteractsWithContract, TxSpecific } from '../../parser'
+import { Dex, TradeType } from '../../../types'
+import { SubParser, txInteractsWithContract, TxMetadata, TxSpecific } from '../../parser'
 import { COWSWAP_CONTRACT_MAINNET } from './constants'
 
 export class Parser implements SubParser<Tx> {
@@ -13,9 +13,9 @@ export class Parser implements SubParser<Tx> {
       type: TradeType.Trade
     }
 
-    const data = {
+    const data: TxMetadata = {
       method: undefined,
-      parser: TxParser.CowSwap
+      parser: 'cowswap'
     }
 
     return {

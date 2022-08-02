@@ -333,7 +333,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
           confirmations: tx.confirmations,
           fee: tx.fee,
           status: tx.status,
-          tradeDetails: tx.trade,
+          trade: tx.trade,
           transfers: tx.transfers.map((transfer) => ({
             assetId: transfer.assetId,
             from: transfer.from,

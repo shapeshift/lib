@@ -262,7 +262,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
           confirmations: tx.confirmations,
           fee: tx.fee,
           status: tx.status,
-          tradeDetails: tx.trade,
+          trade: tx.trade,
           transfers: tx.transfers.map((transfer) => ({
             assetId: transfer.assetId,
             from: transfer.from,
