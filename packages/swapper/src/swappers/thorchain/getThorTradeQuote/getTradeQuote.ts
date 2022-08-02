@@ -105,6 +105,8 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
         })()
 
       case KnownChainIds.BitcoinMainnet:
+      case KnownChainIds.DogecoinMainnet:
+      case KnownChainIds.LitecoinMainnet:
         return (async (): Promise<TradeQuote<KnownChainIds.BitcoinMainnet>> => {
           const { vault, opReturnData, pubkey } = await getBtcThorTxInfo({
             deps,
@@ -124,7 +126,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             vault,
             opReturnData,
             pubkey,
-            adapterManager: deps.adapterManager,
+            sellAdapter,
             tradeFee
           })
 

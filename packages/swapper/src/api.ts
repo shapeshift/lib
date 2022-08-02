@@ -78,7 +78,10 @@ export type GetCosmosSdkTradeQuoteInput = CommonTradeInput & {
 }
 
 type GetBtcTradeQuoteInput = CommonTradeInput & {
-  chainId: KnownChainIds.BitcoinMainnet
+  chainId:
+    | KnownChainIds.BitcoinMainnet
+    | KnownChainIds.DogecoinMainnet
+    | KnownChainIds.LitecoinMainnet
   accountType: UtxoAccountType
   bip44Params: BIP44Params
   wallet: HDWallet

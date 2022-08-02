@@ -46,14 +46,16 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
       `${deps.midgardUrl}/thorchain/inbound_addresses`
     )
 
-    const btcInboundAddresses = inboundAddresses.find((inbound) => inbound.chain === 'BTC')
+    const sellAssetInboundAddresses = inboundAddresses.find(
+      (inbound) => inbound.chain === sellAsset.symbol.toUpperCase()
+    )
 
-    const vault = btcInboundAddresses?.address
+    const vault = sellAssetInboundAddresses?.address
 
     if (!vault)
-      throw new SwapError(`[getThorTxInfo]: vault not found for BTC`, {
+      throw new SwapError(`[getThorTxInfo]: vault not found for asset`, {
         code: SwapErrorTypes.RESPONSE_ERROR,
-        details: { inboundAddresses }
+        details: { inboundAddresses, sellAsset }
       })
 
     const limit = await getLimit({
