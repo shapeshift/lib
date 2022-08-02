@@ -42,20 +42,29 @@ const getWallet = async (): Promise<HDWallet> => {
 const getUtxosMockResponse = {
   data: [
     {
-      txid: '8edffe2aca0056b3bba448ab0f4980c9ba22728aa47a1f7fc794718f051f21df',
-      vout: 1,
-      value: '7132554366',
-      height: 4312262,
-      confirmations: 30,
+      txid: 'ef935d850e7d596f98c6e24d5f25faa770f6e6d8e5eab94dea3e2154c3643986',
+      vout: 0,
+      value: '1598',
+      height: 705718,
+      confirmations: 2,
       address,
-      path: "m/44'/145'/0'/1/13"
+      path: "m/44'/145'/0'/0/1"
+    },
+    {
+      txid: 'adb979b44c86393236e307c45f9578d9bd064134a2779b4286c158c51ad4ab05',
+      vout: 0,
+      value: '31961',
+      height: 705718,
+      confirmations: 2,
+      address,
+      path: "m/44'/145'/0'/0/1"
     }
   ]
 }
 
 const getAccountMockResponse = {
   data: {
-    balance: '7332775620',
+    balance: '33559',
     nextChangeAddressIndex: 0,
     nextReceiveAddressIndex: 2,
     pubkey:
@@ -65,8 +74,8 @@ const getAccountMockResponse = {
 
 const getTransactionMockResponse = {
   data: {
-    txid: '8edffe2aca0056b3bba448ab0f4980c9ba22728aa47a1f7fc794718f051f21df',
-    hash: '8edffe2aca0056b3bba448ab0f4980c9ba22728aa47a1f7fc794718f051f21df',
+    txid: 'adb979b44c86393236e307c45f9578d9bd064134a2779b4286c158c51ad4ab05',
+    hash: 'adb979b44c86393236e307c45f9578d9bd064134a2779b4286c158c51ad4ab05',
     version: 1,
     size: 223,
     vsize: 223,
@@ -142,7 +151,7 @@ describe('BitcoinCashChainAdapter', () => {
         ws: {} as any
       },
       coinName: 'Bitcoincash',
-      chainId: KnownChainIds.BitcoincashMainnet
+      chainId: KnownChainIds.BitcoinCashMainnet
     }
   })
 
@@ -166,10 +175,10 @@ describe('BitcoinCashChainAdapter', () => {
   })
 
   describe('getType', () => {
-    it('should return KnownChainIds.BitcoincashMainnet', async () => {
+    it('should return KnownChainIds.BitcoinCashMainnet', async () => {
       const adapter = new bitcoincash.ChainAdapter(args)
       const type = adapter.getType()
-      expect(type).toEqual(KnownChainIds.BitcoincashMainnet)
+      expect(type).toEqual(KnownChainIds.BitcoinCashMainnet)
     })
   })
 
@@ -189,9 +198,9 @@ describe('BitcoinCashChainAdapter', () => {
       } as any
 
       const adapter = new bitcoincash.ChainAdapter(args)
-      const expected: Account<KnownChainIds.BitcoincashMainnet> = {
+      const expected: Account<KnownChainIds.BitcoinCashMainnet> = {
         pubkey: address,
-        chain: KnownChainIds.BitcoincashMainnet,
+        chain: KnownChainIds.BitcoinCashMainnet,
         balance: '150',
         chainId: bchChainId,
         assetId: bchAssetId,
@@ -227,7 +236,7 @@ describe('BitcoinCashChainAdapter', () => {
         isChange: false
       }
 
-      const txInput: BuildSendTxInput<KnownChainIds.BitcoincashMainnet> = {
+      const txInput: BuildSendTxInput<KnownChainIds.BitcoinCashMainnet> = {
         bip44Params,
         to: address,
         value: '400',

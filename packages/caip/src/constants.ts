@@ -42,7 +42,7 @@ export const CHAIN_REFERENCE = {
   // chainId uses max length of 32 chars of the genesis block
   BitcoinMainnet: '000000000019d6689c085ae165831e93',
   BitcoinTestnet: '000000000933ea01ad0ee984209779ba',
-  BitcoincashMainnet: '000000000000000000651ef99cb9fcbe',
+  BitcoinCashMainnet: '000000000000000000651ef99cb9fcbe',
   DogecoinMainnet: '00000000001a91e3dace36e2be3bf030',
   LitecoinMainnet: '12a765e31ffd4059bada1e25190f6e98',
   CosmosHubMainnet: 'cosmoshub-4',
@@ -56,7 +56,7 @@ export const VALID_CHAIN_IDS: ValidChainMap = Object.freeze({
   [CHAIN_NAMESPACE.Bitcoin]: [
     CHAIN_REFERENCE.BitcoinMainnet,
     CHAIN_REFERENCE.BitcoinTestnet,
-    CHAIN_REFERENCE.BitcoincashMainnet,
+    CHAIN_REFERENCE.BitcoinCashMainnet,
     CHAIN_REFERENCE.DogecoinMainnet,
     CHAIN_REFERENCE.LitecoinMainnet
   ],

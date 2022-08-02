@@ -43,7 +43,7 @@ import { utxoSelect } from './utxoSelect'
 
 export const utxoChainIds = [
   KnownChainIds.BitcoinMainnet,
-  KnownChainIds.BitcoincashMainnet,
+  KnownChainIds.BitcoinCashMainnet,
   KnownChainIds.DogecoinMainnet,
   KnownChainIds.LitecoinMainnet
 ] as const

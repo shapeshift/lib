@@ -4,11 +4,11 @@ import * as unchained from '@shapeshiftoss/unchained-client'
 
 import { ChainAdapterArgs, UtxoBaseAdapter } from '../UtxoBaseAdapter'
 
-const SUPPORTED_CHAIN_IDS = [KnownChainIds.BitcoincashMainnet]
-const DEFAULT_CHAIN_ID = KnownChainIds.BitcoincashMainnet
+const SUPPORTED_CHAIN_IDS = [KnownChainIds.BitcoinCashMainnet]
+const DEFAULT_CHAIN_ID = KnownChainIds.BitcoinCashMainnet
 const SUPPORTED_ACCOUNT_TYPES = [UtxoAccountType.P2pkh]
 
-export class ChainAdapter extends UtxoBaseAdapter<KnownChainIds.BitcoincashMainnet> {
+export class ChainAdapter extends UtxoBaseAdapter<KnownChainIds.BitcoinCashMainnet> {
   public static readonly defaultUtxoAccountType = UtxoAccountType.P2pkh
   public static readonly defaultBIP44Params: BIP44Params = {
     purpose: 44,
@@ -36,8 +36,8 @@ export class ChainAdapter extends UtxoBaseAdapter<KnownChainIds.BitcoincashMainn
     return 'Bitcoin Cash'
   }
 
-  getType(): KnownChainIds.BitcoincashMainnet {
-    return KnownChainIds.BitcoincashMainnet
+  getType(): KnownChainIds.BitcoinCashMainnet {
+    return KnownChainIds.BitcoinCashMainnet
   }
 
   getFeeAssetId(): AssetId {

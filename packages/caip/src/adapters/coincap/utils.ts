@@ -16,7 +16,7 @@ import {
 } from '../../constants'
 import {
   bitcoinAssetMap,
-  bitcoincashAssetMap,
+  bitcoinCashAssetMap,
   cosmosAssetMap,
   dogecoinAssetMap,
   litecoinAssetMap,
@@ -76,7 +76,7 @@ export const parseEthData = (data: CoinCapCoin[]) => {
 export const parseData = (d: CoinCapCoin[]) => ({
   [ethChainId]: parseEthData(d),
   [btcChainId]: bitcoinAssetMap,
-  [bchChainId]: bitcoincashAssetMap,
+  [bchChainId]: bitcoinCashAssetMap,
   [dogeChainId]: dogecoinAssetMap,
   [ltcChainId]: litecoinAssetMap,
   [cosmosChainId]: cosmosAssetMap,
