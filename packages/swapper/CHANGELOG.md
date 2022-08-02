@@ -1,3 +1,49 @@
+# [@shapeshiftoss/swapper-v9.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.3.2...@shapeshiftoss/swapper-v9.4.0) (2022-08-02)
+
+
+### Features
+
+* additonal thorchain asset support ([#935](https://github.com/shapeshift/lib/issues/935)) ([0b1a492](https://github.com/shapeshift/lib/commit/0b1a492b4f6c1f69674f3114f284caa0b5b8e1ce))
+
+# [@shapeshiftoss/swapper-v9.3.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.3.1...@shapeshiftoss/swapper-v9.3.2) (2022-08-02)
+
+
+### Bug Fixes
+
+* enables ETH as buy asset for CowSwap ([#928](https://github.com/shapeshift/lib/issues/928)) ([59d7469](https://github.com/shapeshift/lib/commit/59d74697c87c3adaba54753f6df283976f510ad1))
+
+# [@shapeshiftoss/swapper-v9.3.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.3.0...@shapeshiftoss/swapper-v9.3.1) (2022-08-01)
+
+# [@shapeshiftoss/swapper-v9.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.2.3...@shapeshiftoss/swapper-v9.3.0) (2022-08-01)
+
+
+### Features
+
+* **caip:** remove getFeeAssetIdFromAssetId / chainIdToAssetId ([#908](https://github.com/shapeshift/lib/issues/908)) ([d5cfda5](https://github.com/shapeshift/lib/commit/d5cfda5d037e7d1d7a3a4d4b522ec2a5ee8f4ac5))
+
+# [@shapeshiftoss/swapper-v9.2.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.2.2...@shapeshiftoss/swapper-v9.2.3) (2022-08-01)
+
+
+### Bug Fixes
+
+* prevent user from cow swapping with small sell amount ([#927](https://github.com/shapeshift/lib/issues/927)) ([27c1b30](https://github.com/shapeshift/lib/commit/27c1b30dbce3d41cbcb9c91a1ef51b47ac6509dc))
+
+# [@shapeshiftoss/swapper-v9.2.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.2.1...@shapeshiftoss/swapper-v9.2.2) (2022-08-01)
+
+
+### Bug Fixes
+
+* use fee asset instead of asset in calculation ([#930](https://github.com/shapeshift/lib/issues/930)) ([fa836e4](https://github.com/shapeshift/lib/commit/fa836e40c8d264a7d8746dc86c690fd87d83465b))
+
+# [@shapeshiftoss/swapper-v9.2.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.2.0...@shapeshiftoss/swapper-v9.2.1) (2022-07-29)
+
+# [@shapeshiftoss/swapper-v9.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.1.1...@shapeshiftoss/swapper-v9.2.0) (2022-07-29)
+
+
+### Features
+
+* replace '/api/v1/market' call with '/api/v1/quote' in getUsdRate ([#916](https://github.com/shapeshift/lib/issues/916)) ([23816aa](https://github.com/shapeshift/lib/commit/23816aaf3d08a76c04e0723b86ac4fbf122c6921))
+
 # [@shapeshiftoss/swapper-v9.1.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.1.0...@shapeshiftoss/swapper-v9.1.1) (2022-07-28)
 
 # [@shapeshiftoss/swapper-v9.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.0.1...@shapeshiftoss/swapper-v9.1.0) (2022-07-27)
