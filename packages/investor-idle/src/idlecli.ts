@@ -44,7 +44,7 @@ const main = async (): Promise<void> => {
     chainAdapter
   })
 
-  const address = '0x442Aea0Fd2AFbd3391DAE768F7046f132F0a6300'
+  const address = '0x358dae76Bb42Be167dD5A64f95E0d537b024834e'
   const usdcCaip19 = 'eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'.toLowerCase()
 
   await idleInvestor.initialize()
