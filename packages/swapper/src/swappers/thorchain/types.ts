@@ -27,7 +27,7 @@ type MidgardActionOut = {
 type MidgardAction = {
   date: string
   height: string
-  out: [MidgardActionOut]
+  out: MidgardActionOut[]
   status: string
   type: string
 }

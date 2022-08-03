@@ -42,6 +42,7 @@ export class ThorchainSwapper implements Swapper<ChainId> {
     [KnownChainIds.BitcoinMainnet]: true,
     [KnownChainIds.DogecoinMainnet]: true,
     [KnownChainIds.LitecoinMainnet]: true,
+    [KnownChainIds.BitcoinCashMainnet]: true,
     [KnownChainIds.CosmosMainnet]: true
   }
 
@@ -195,7 +196,7 @@ export class ThorchainSwapper implements Swapper<ChainId> {
 
       return {
         sellTxid: tradeResult.tradeId,
-        buyTxid
+        buyTxid: buyTxid.toLowerCase()
       }
     } catch (e) {
       if (e instanceof SwapError) throw e
