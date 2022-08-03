@@ -42,7 +42,7 @@ export class ThorchainSwapper implements Swapper<ChainId> {
     [KnownChainIds.BitcoinMainnet]: true,
     [KnownChainIds.DogecoinMainnet]: true,
     [KnownChainIds.LitecoinMainnet]: true,
-    [KnownChainIds.BitcoinCashMainnet]: true,
+    [KnownChainIds.BitcoinCashMainnet]: false, // TODO figure out bitcoin
     [KnownChainIds.CosmosMainnet]: true
   }
 
