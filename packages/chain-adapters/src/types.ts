@@ -88,8 +88,7 @@ export type SubscribeTxsInput = {
 export type TransferType = unchained.TransferType
 export type TradeType = unchained.TradeType
 
-export type Transaction<T extends ChainId> = Omit<unchained.StandardTx, 'transfers'> & {
-  chain: T
+export type Transaction = Omit<unchained.StandardTx, 'transfers'> & {
   transfers: Array<TxTransfer>
   data?: unchained.StandardTxMetadata | unchained.evm.TxMetadata | unchained.cosmos.TxMetadata
 }
@@ -102,10 +101,10 @@ export type SubscribeError = {
   message: string
 }
 
-export type TxHistoryResponse<T extends ChainId> = {
+export type TxHistoryResponse = {
   cursor: string
   pubkey: string
-  transactions: Array<Transaction<T>>
+  transactions: Array<Transaction>
 }
 
 type ChainTxTypeInner = {
