@@ -1,4 +1,11 @@
-import { bchAssetId, btcAssetId, cosmosAssetId, dogeAssetId, ethAssetId, ltcAssetId } from '../../constants'
+import {
+  bchAssetId,
+  btcAssetId,
+  cosmosAssetId,
+  dogeAssetId,
+  ethAssetId,
+  ltcAssetId
+} from '../../constants'
 import { AssetId } from './../../assetId/assetId'
 
 // derived from https://midgard.thorchain.info/v2/pools
