@@ -1,3 +1,26 @@
+# [@shapeshiftoss/caip-v6.12.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.11.1...@shapeshiftoss/caip-v6.12.0) (2022-08-03)
+
+
+### Features
+
+* detect completed txs and throw error on fail ([#939](https://github.com/shapeshift/lib/issues/939)) ([f85e1fb](https://github.com/shapeshift/lib/commit/f85e1fbbda37da37849a154693a64a5e6c4aa35f))
+
+# [@shapeshiftoss/caip-v6.11.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.11.0...@shapeshiftoss/caip-v6.11.1) (2022-08-03)
+
+# [@shapeshiftoss/caip-v6.11.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.10.0...@shapeshiftoss/caip-v6.11.0) (2022-08-02)
+
+
+### Features
+
+* add bitcoincash ([#932](https://github.com/shapeshift/lib/issues/932)) ([85080ed](https://github.com/shapeshift/lib/commit/85080ed065027d3e9fe6d28799a0c171ac7ea39c))
+
+# [@shapeshiftoss/caip-v6.10.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.9.1...@shapeshiftoss/caip-v6.10.0) (2022-08-02)
+
+
+### Features
+
+* additonal thorchain asset support ([#935](https://github.com/shapeshift/lib/issues/935)) ([0b1a492](https://github.com/shapeshift/lib/commit/0b1a492b4f6c1f69674f3114f284caa0b5b8e1ce))
+
 # [@shapeshiftoss/caip-v6.9.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.9.0...@shapeshiftoss/caip-v6.9.1) (2022-08-01)
 
 # [@shapeshiftoss/caip-v6.9.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.8.0...@shapeshiftoss/caip-v6.9.0) (2022-08-01)
