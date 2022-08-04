@@ -1235,6 +1235,18 @@
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
   },
+  "eip155:1/erc20:0x014550a34149231b8432b8dd210fadd81b1d2668": {
+    "assetId": "eip155:1/erc20:0x014550a34149231b8432b8dd210fadd81b1d2668",
+    "chainId": "eip155:1",
+    "name": "SHEESHETH",
+    "precision": 18,
+    "color": "#ECA434",
+    "icon": "https://assets.coingecko.com/coins/images/26678/thumb/LOGO.png?1659522896",
+    "symbol": "SHEESH",
+    "explorer": "https://etherscan.io",
+    "explorerAddressLink": "https://etherscan.io/address/",
+    "explorerTxLink": "https://etherscan.io/tx/"
+  },
   "eip155:1/erc20:0x014a543f767b3b06e31a811b0a75483ee8dfd72d": {
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
@@ -2565,6 +2577,18 @@
     "color": "#2CE4B4",
     "icon": "https://assets.coingecko.com/coins/images/11081/thumb/logo_haken_vector.png?1593511379",
     "symbol": "HAI",
+    "explorer": "https://etherscan.io",
+    "explorerAddressLink": "https://etherscan.io/address/",
+    "explorerTxLink": "https://etherscan.io/tx/"
+  },
+  "eip155:1/erc20:0x05fc938cc60fb71381514877d66478bab7e2e1ce": {
+    "assetId": "eip155:1/erc20:0x05fc938cc60fb71381514877d66478bab7e2e1ce",
+    "chainId": "eip155:1",
+    "name": "SUPERCATS",
+    "precision": 8,
+    "color": "#161929",
+    "icon": "https://assets.coingecko.com/coins/images/26675/thumb/Supercats_logo.png?1659517034",
+    "symbol": "S-CATS",
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
@@ -6234,16 +6258,16 @@
     "assetId": "eip155:1/erc20:0x1443e7c1cce72662545d94779120c59251447e91"
   },
   "eip155:1/erc20:0x144e3b02e08e644ffbb7ff652763f5b72ee22701": {
-    "assetId": "eip155:1/erc20:0x144e3b02e08e644ffbb7ff652763f5b72ee22701",
-    "chainId": "eip155:1",
-    "name": "DiamondDAO",
-    "precision": 9,
-    "color": "#131262",
-    "icon": "https://assets.coingecko.com/coins/images/22067/thumb/ezgif-3-a4ac424c7a.jpg?1640745397",
-    "symbol": "DMND",
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/"
+    "explorerTxLink": "https://etherscan.io/tx/",
+    "color": "#131262",
+    "icon": "https://assets.yearn.network/tokens/ethereum/0x144e3b02e08e644ffbb7ff652763f5b72ee22701.png",
+    "name": "DMND",
+    "precision": 9,
+    "symbol": "DMND",
+    "chainId": "eip155:1",
+    "assetId": "eip155:1/erc20:0x144e3b02e08e644ffbb7ff652763f5b72ee22701"
   },
   "eip155:1/erc20:0x1453dbb8a29551ade11d89825ca812e05317eaeb": {
     "assetId": "eip155:1/erc20:0x1453dbb8a29551ade11d89825ca812e05317eaeb",
@@ -7193,6 +7217,18 @@
     "color": "#94ACDC",
     "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0x1735Db6AB5BAa19eA55d0AdcEeD7bcDc008B3136/logo.png",
     "symbol": "URQA",
+    "explorer": "https://etherscan.io",
+    "explorerAddressLink": "https://etherscan.io/address/",
+    "explorerTxLink": "https://etherscan.io/tx/"
+  },
+  "eip155:1/erc20:0x173e552bf97bbd50b455514ac52991ef639ba703": {
+    "assetId": "eip155:1/erc20:0x173e552bf97bbd50b455514ac52991ef639ba703",
+    "chainId": "eip155:1",
+    "name": "Shido",
+    "precision": 9,
+    "color": "#4A5F71",
+    "icon": "https://assets.coingecko.com/coins/images/26674/thumb/1_Transparent_200x200.png?1659514531",
+    "symbol": "SHIDO",
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
@@ -8338,18 +8374,6 @@
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
-  },
-  "eip155:1/erc20:0x1b890fd37cd50bea59346fc2f8ddb7cd9f5fabd5": {
-    "explorer": "https://etherscan.io",
-    "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/",
-    "color": "#FCFA5B",
-    "icon": "https://assets.yearn.network/tokens/ethereum/0x1b890fd37cd50bea59346fc2f8ddb7cd9f5fabd5.png",
-    "name": "NEWO",
-    "precision": 18,
-    "symbol": "NEWO",
-    "chainId": "eip155:1",
-    "assetId": "eip155:1/erc20:0x1b890fd37cd50bea59346fc2f8ddb7cd9f5fabd5"
   },
   "eip155:1/erc20:0x1b905331f7de2748f4d6a0678e1521e20347643f": {
     "color": "#68E0D5",
@@ -14124,6 +14148,18 @@
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
   },
+  "eip155:1/erc20:0x30dcba0405004cf124045793e1933c798af9e66a": {
+    "assetId": "eip155:1/erc20:0x30dcba0405004cf124045793e1933c798af9e66a",
+    "chainId": "eip155:1",
+    "name": "Yieldification",
+    "precision": 18,
+    "color": "#F0A124",
+    "icon": "https://assets.coingecko.com/coins/images/26699/thumb/logo.png?1659609811",
+    "symbol": "YDF",
+    "explorer": "https://etherscan.io",
+    "explorerAddressLink": "https://etherscan.io/address/",
+    "explorerTxLink": "https://etherscan.io/tx/"
+  },
   "eip155:1/erc20:0x30df7d7ee52c1b03cd009e656f00ab875adceed2": {
     "assetId": "eip155:1/erc20:0x30df7d7ee52c1b03cd009e656f00ab875adceed2",
     "chainId": "eip155:1",
@@ -15183,16 +15219,16 @@
     "explorerTxLink": "https://etherscan.io/tx/"
   },
   "eip155:1/erc20:0x3431f91b3a388115f00c5ba9fdb899851d005fb5": {
-    "assetId": "eip155:1/erc20:0x3431f91b3a388115f00c5ba9fdb899851d005fb5",
-    "chainId": "eip155:1",
-    "name": "GeroWallet",
-    "precision": 18,
-    "color": "#18817F",
-    "icon": "https://assets.coingecko.com/coins/images/15602/thumb/PdAQXY8t_400x400.jpg?1621307751",
-    "symbol": "GERO",
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/"
+    "explorerTxLink": "https://etherscan.io/tx/",
+    "color": "#18817F",
+    "icon": "https://assets.yearn.network/tokens/ethereum/0x3431f91b3a388115f00c5ba9fdb899851d005fb5.png",
+    "name": "GERO",
+    "precision": 18,
+    "symbol": "GERO",
+    "chainId": "eip155:1",
+    "assetId": "eip155:1/erc20:0x3431f91b3a388115f00c5ba9fdb899851d005fb5"
   },
   "eip155:1/erc20:0x3432b6a60d23ca0dfca7761b7ab56459d9c964d0": {
     "assetId": "eip155:1/erc20:0x3432b6a60d23ca0dfca7761b7ab56459d9c964d0",
@@ -15541,6 +15577,18 @@
     "symbol": "MWBTC",
     "chainId": "eip155:1",
     "assetId": "eip155:1/erc20:0x3521c85c3000bff57eac04489eb05bbd3193a531"
+  },
+  "eip155:1/erc20:0x3540abe4f288b280a0740ad5121aec337c404d15": {
+    "assetId": "eip155:1/erc20:0x3540abe4f288b280a0740ad5121aec337c404d15",
+    "chainId": "eip155:1",
+    "name": "TPRO",
+    "precision": 18,
+    "color": "#0C1420",
+    "icon": "https://assets.coingecko.com/coins/images/26694/thumb/tpro-logo-200x200.png?1659607453",
+    "symbol": "TPRO",
+    "explorer": "https://etherscan.io",
+    "explorerAddressLink": "https://etherscan.io/address/",
+    "explorerTxLink": "https://etherscan.io/tx/"
   },
   "eip155:1/erc20:0x3541a5c1b04adaba0b83f161747815cd7b1516bc": {
     "assetId": "eip155:1/erc20:0x3541a5c1b04adaba0b83f161747815cd7b1516bc",
@@ -17141,6 +17189,19 @@
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
   },
+  "eip155:1/erc20:0x3a52fa30c33caf05faee0f9c5dfe5fd5fe8b3978": {
+    "color": "#FFFFFF",
+    "icon": "https://raw.githubusercontent.com/Idle-Labs/idle-dashboard/master/public/images/tokens/STETH.svg",
+    "name": "Lido STETH Junior Tranche",
+    "precision": 18,
+    "symbol": "STETH",
+    "tokenId": "0x3a52fa30c33caf05faee0f9c5dfe5fd5fe8b3978",
+    "chainId": "eip155:1",
+    "assetId": "eip155:1/erc20:0x3a52fa30c33caf05faee0f9c5dfe5fd5fe8b3978",
+    "explorer": "https://etherscan.io",
+    "explorerAddressLink": "https://etherscan.io/address/",
+    "explorerTxLink": "https://etherscan.io/tx/"
+  },
   "eip155:1/erc20:0x3a664ab939fd8482048609f652f9a0b0677337b9": {
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
@@ -17948,18 +18009,6 @@
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
   },
-  "eip155:1/erc20:0x3ce523bbcf1b29904fcd88278973ba45e4262b9f": {
-    "assetId": "eip155:1/erc20:0x3ce523bbcf1b29904fcd88278973ba45e4262b9f",
-    "chainId": "eip155:1",
-    "name": "MCPEPE",
-    "precision": 9,
-    "color": "#D99B47",
-    "icon": "https://assets.coingecko.com/coins/images/23377/thumb/McPepeLogo.png?1643960384",
-    "symbol": "MCPEPE",
-    "explorer": "https://etherscan.io",
-    "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/"
-  },
   "eip155:1/erc20:0x3d0293f06daf4311b482564330d57c8db6c10893": {
     "assetId": "eip155:1/erc20:0x3d0293f06daf4311b482564330d57c8db6c10893",
     "chainId": "eip155:1",
@@ -18632,6 +18681,18 @@
     "symbol": "RFY",
     "chainId": "eip155:1",
     "assetId": "eip155:1/erc20:0x3f5be50e4651ee184109a0b1b71d344d12e8b603"
+  },
+  "eip155:1/erc20:0x3f5dd1a1538a4f9f82e543098f01f22480b0a3a8": {
+    "assetId": "eip155:1/erc20:0x3f5dd1a1538a4f9f82e543098f01f22480b0a3a8",
+    "chainId": "eip155:1",
+    "name": "KumaDex Token",
+    "precision": 18,
+    "color": "#E78A51",
+    "icon": "https://assets.coingecko.com/coins/images/26693/thumb/dkumaOG02.png?1659606359",
+    "symbol": "DKUMA",
+    "explorer": "https://etherscan.io",
+    "explorerAddressLink": "https://etherscan.io/address/",
+    "explorerTxLink": "https://etherscan.io/tx/"
   },
   "eip155:1/erc20:0x3f68e7b44e9bcb486c2feadb7a2289d9cdfc9088": {
     "assetId": "eip155:1/erc20:0x3f68e7b44e9bcb486c2feadb7a2289d9cdfc9088",
@@ -25494,6 +25555,18 @@
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
   },
+  "eip155:1/erc20:0x57b59f981730c6257df57cf6f0d98283749a9eeb": {
+    "assetId": "eip155:1/erc20:0x57b59f981730c6257df57cf6f0d98283749a9eeb",
+    "chainId": "eip155:1",
+    "name": "BUILD",
+    "precision": 18,
+    "color": "#EC1C24",
+    "icon": "https://assets.coingecko.com/coins/images/26533/thumb/BUILD.png?1658714842",
+    "symbol": "BUILD",
+    "explorer": "https://etherscan.io",
+    "explorerAddressLink": "https://etherscan.io/address/",
+    "explorerTxLink": "https://etherscan.io/tx/"
+  },
   "eip155:1/erc20:0x57b946008913b82e4df85f501cbaed910e58d26c": {
     "assetId": "eip155:1/erc20:0x57b946008913b82e4df85f501cbaed910e58d26c",
     "chainId": "eip155:1",
@@ -26289,18 +26362,6 @@
     "symbol": "ETY",
     "chainId": "eip155:1",
     "assetId": "eip155:1/erc20:0x5acd07353106306a6530ac4d49233271ec372963"
-  },
-  "eip155:1/erc20:0x5acd19b9c91e596b1f062f18e3d02da7ed8d1e50": {
-    "assetId": "eip155:1/erc20:0x5acd19b9c91e596b1f062f18e3d02da7ed8d1e50",
-    "chainId": "eip155:1",
-    "name": "BTC Lite",
-    "precision": 8,
-    "color": "#2413FC",
-    "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0x5acD19b9c91e596b1f062f18e3D02da7eD8D1e50/logo.png",
-    "symbol": "BTCL",
-    "explorer": "https://etherscan.io",
-    "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/"
   },
   "eip155:1/erc20:0x5adc961d6ac3f7062d2ea45fefb8d8167d44b190": {
     "assetId": "eip155:1/erc20:0x5adc961d6ac3f7062d2ea45fefb8d8167d44b190",
@@ -29574,18 +29635,6 @@
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
   },
-  "eip155:1/erc20:0x660e71483785f66133548b10f6926dc332b06e61": {
-    "assetId": "eip155:1/erc20:0x660e71483785f66133548b10f6926dc332b06e61",
-    "chainId": "eip155:1",
-    "name": "Adelphoi",
-    "precision": 18,
-    "color": "#337B83",
-    "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0x660e71483785f66133548B10f6926dC332b06e61/logo.png",
-    "symbol": "ADL",
-    "explorer": "https://etherscan.io",
-    "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/"
-  },
   "eip155:1/erc20:0x66186008c1050627f979d464eabb258860563dbe": {
     "assetId": "eip155:1/erc20:0x66186008c1050627f979d464eabb258860563dbe",
     "chainId": "eip155:1",
@@ -30076,18 +30125,6 @@
     "color": "#897338",
     "icon": "https://assets.coingecko.com/coins/images/21849/thumb/200_%2815%29.png?1640137716",
     "symbol": "TALI",
-    "explorer": "https://etherscan.io",
-    "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/"
-  },
-  "eip155:1/erc20:0x67689fdb3028fb616f4d71a5b9e2dd53c82cc57b": {
-    "assetId": "eip155:1/erc20:0x67689fdb3028fb616f4d71a5b9e2dd53c82cc57b",
-    "chainId": "eip155:1",
-    "name": "Fubuki",
-    "precision": 9,
-    "color": "#100E0C",
-    "icon": "https://assets.coingecko.com/coins/images/23315/thumb/BIGtJoB.png?1643756047",
-    "symbol": "FUBUKI",
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
@@ -35119,6 +35156,18 @@
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
   },
+  "eip155:1/erc20:0x79a06acb8bdd138beeecce0f1605971f3ac7c09b": {
+    "assetId": "eip155:1/erc20:0x79a06acb8bdd138beeecce0f1605971f3ac7c09b",
+    "chainId": "eip155:1",
+    "name": "Lasrever",
+    "precision": 18,
+    "color": "#0A0506",
+    "icon": "https://assets.coingecko.com/coins/images/26681/thumb/E312D296-5EB2-4CF1-B98C-A2E47736BA37.jpeg?1659538133",
+    "symbol": "LSVR",
+    "explorer": "https://etherscan.io",
+    "explorerAddressLink": "https://etherscan.io/address/",
+    "explorerTxLink": "https://etherscan.io/tx/"
+  },
   "eip155:1/erc20:0x79ba92dda26fce15e1e9af47d5cfdfd2a093e000": {
     "assetId": "eip155:1/erc20:0x79ba92dda26fce15e1e9af47d5cfdfd2a093e000",
     "chainId": "eip155:1",
@@ -35703,18 +35752,6 @@
     "color": "#30A96F",
     "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0x7bE00ed6796B21656732E8f739Fc1b8F1C53DA0D/logo.png",
     "symbol": "ACXT",
-    "explorer": "https://etherscan.io",
-    "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/"
-  },
-  "eip155:1/erc20:0x7be647634a942e73f8492d15ae492d867ce5245c": {
-    "assetId": "eip155:1/erc20:0x7be647634a942e73f8492d15ae492d867ce5245c",
-    "chainId": "eip155:1",
-    "name": "Feudalz Goldz",
-    "precision": 18,
-    "color": "#40312A",
-    "icon": "https://assets.coingecko.com/coins/images/22316/thumb/XVgLQJ4F_400x400.png?1641453383",
-    "symbol": "GOLDZ",
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
@@ -37436,18 +37473,6 @@
     "symbol": "DNA",
     "chainId": "eip155:1",
     "assetId": "eip155:1/erc20:0x82b0e50478eeafde392d45d1259ed1071b6fda81"
-  },
-  "eip155:1/erc20:0x82c323740455925e15936f84c1d3f2b074d37af0": {
-    "assetId": "eip155:1/erc20:0x82c323740455925e15936f84c1d3f2b074d37af0",
-    "chainId": "eip155:1",
-    "name": "UNIVE X",
-    "precision": 8,
-    "color": "#7752D1",
-    "icon": "https://assets.coingecko.com/coins/images/23366/thumb/q8lz.png?1643948363",
-    "symbol": "UNVX",
-    "explorer": "https://etherscan.io",
-    "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/"
   },
   "eip155:1/erc20:0x82ca5fcd9ef2d6ceeb49a057bb11c3e091560979": {
     "assetId": "eip155:1/erc20:0x82ca5fcd9ef2d6ceeb49a057bb11c3e091560979",
@@ -39501,6 +39526,18 @@
     "color": "#3BB3E4",
     "icon": "https://assets.coingecko.com/coins/images/10469/thumb/57414069_286321078958466_8377709696580059136_n.jpg?1579733292",
     "symbol": "DRM",
+    "explorer": "https://etherscan.io",
+    "explorerAddressLink": "https://etherscan.io/address/",
+    "explorerTxLink": "https://etherscan.io/tx/"
+  },
+  "eip155:1/erc20:0x89568569da9c83cb35e59f92f5df2f6ca829eeee": {
+    "assetId": "eip155:1/erc20:0x89568569da9c83cb35e59f92f5df2f6ca829eeee",
+    "chainId": "eip155:1",
+    "name": "PYROMATIC",
+    "precision": 6,
+    "color": "#EDEAE5",
+    "icon": "https://assets.coingecko.com/coins/images/26662/thumb/PYRO200.jpg?1659448765",
+    "symbol": "PYRO",
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
@@ -42690,6 +42727,18 @@
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
   },
+  "eip155:1/erc20:0x9590d8c06ba451bbad0893f2ef0d2a8b5acc67d3": {
+    "assetId": "eip155:1/erc20:0x9590d8c06ba451bbad0893f2ef0d2a8b5acc67d3",
+    "chainId": "eip155:1",
+    "name": "SCORCHER",
+    "precision": 6,
+    "color": "#AC644F",
+    "icon": "https://assets.coingecko.com/coins/images/26683/thumb/SCORCHER_LOGO_-_200.png?1659594039",
+    "symbol": "SCOR",
+    "explorer": "https://etherscan.io",
+    "explorerAddressLink": "https://etherscan.io/address/",
+    "explorerTxLink": "https://etherscan.io/tx/"
+  },
   "eip155:1/erc20:0x95a1796437bad6502d1c1cce165cd76e522409a9": {
     "assetId": "eip155:1/erc20:0x95a1796437bad6502d1c1cce165cd76e522409a9",
     "chainId": "eip155:1",
@@ -44480,18 +44529,6 @@
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
   },
-  "eip155:1/erc20:0x9bbc9286cdf6eefebf21df19bac71c6bdd7759d4": {
-    "assetId": "eip155:1/erc20:0x9bbc9286cdf6eefebf21df19bac71c6bdd7759d4",
-    "chainId": "eip155:1",
-    "name": "QUEENBEE",
-    "precision": 18,
-    "color": "#4E4E4E",
-    "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0x9bBc9286cdF6eeFEBF21DF19Bac71c6Bdd7759D4/logo.png",
-    "symbol": "QBZ",
-    "explorer": "https://etherscan.io",
-    "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/"
-  },
   "eip155:1/erc20:0x9bc72b6358379cd9f71c0b4827f9fc1a0f025eed": {
     "assetId": "eip155:1/erc20:0x9bc72b6358379cd9f71c0b4827f9fc1a0f025eed",
     "chainId": "eip155:1",
@@ -44680,6 +44717,18 @@
     "color": "#05A3EB",
     "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0x9Cb2f26A23b8d89973F08c957C4d7cdf75CD341c/logo.png",
     "symbol": "DZAR",
+    "explorer": "https://etherscan.io",
+    "explorerAddressLink": "https://etherscan.io/address/",
+    "explorerTxLink": "https://etherscan.io/tx/"
+  },
+  "eip155:1/erc20:0x9ccf191169a613eca433a249d3f40131178caebc": {
+    "assetId": "eip155:1/erc20:0x9ccf191169a613eca433a249d3f40131178caebc",
+    "chainId": "eip155:1",
+    "name": "MicroChains Gov Token",
+    "precision": 18,
+    "color": "#151BD2",
+    "icon": "https://assets.coingecko.com/coins/images/26663/thumb/B2QwV0BL_400x400.jpeg?1659449087",
+    "symbol": "MCG",
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
@@ -47505,6 +47554,18 @@
     "color": "#34BCD3",
     "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0xa6714a2e5f0B1bdb97b895b0913b4FcD3a775E4D/logo.png",
     "symbol": "PC",
+    "explorer": "https://etherscan.io",
+    "explorerAddressLink": "https://etherscan.io/address/",
+    "explorerTxLink": "https://etherscan.io/tx/"
+  },
+  "eip155:1/erc20:0xa67b8e40111a0edd30c3210b77aadb86ad234c43": {
+    "assetId": "eip155:1/erc20:0xa67b8e40111a0edd30c3210b77aadb86ad234c43",
+    "chainId": "eip155:1",
+    "name": "Banana Index",
+    "precision": 9,
+    "color": "#FFFFFF",
+    "icon": "https://assets.coingecko.com/coins/images/26700/thumb/6233e7f496c72994c313a50a_cactusboy90_%282%29-p-1080.png?1659616101",
+    "symbol": "BANDEX",
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
@@ -51201,18 +51262,6 @@
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
   },
-  "eip155:1/erc20:0xb52bbd3d5bfa3836bf2b55fe3b7467219280bc2e": {
-    "assetId": "eip155:1/erc20:0xb52bbd3d5bfa3836bf2b55fe3b7467219280bc2e",
-    "chainId": "eip155:1",
-    "name": "StiB",
-    "precision": 8,
-    "color": "#D8F4DD",
-    "icon": "https://assets.coingecko.com/coins/images/10059/thumb/200x200_%281%29.png?1576674116",
-    "symbol": "STI",
-    "explorer": "https://etherscan.io",
-    "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/"
-  },
   "eip155:1/erc20:0xb52fc0f17df38ad76f290467aab57cabaeeada14": {
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
@@ -51461,18 +51510,6 @@
     "color": "#61A5D4",
     "icon": "https://assets.coingecko.com/coins/images/20381/thumb/200x200.png?1658719987",
     "symbol": "HEROS",
-    "explorer": "https://etherscan.io",
-    "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/"
-  },
-  "eip155:1/erc20:0xb624fde1a972b1c89ec1dad691442d5e8e891469": {
-    "assetId": "eip155:1/erc20:0xb624fde1a972b1c89ec1dad691442d5e8e891469",
-    "chainId": "eip155:1",
-    "name": "SporkDAO",
-    "precision": 18,
-    "color": "#928DAD",
-    "icon": "https://assets.coingecko.com/coins/images/23358/thumb/sporkdao.PNG?1643942687",
-    "symbol": "SPORK",
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
@@ -56620,6 +56657,18 @@
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
   },
+  "eip155:1/erc20:0xc91c885580da11ac060bdd692bdaa7ee29cfc976": {
+    "assetId": "eip155:1/erc20:0xc91c885580da11ac060bdd692bdaa7ee29cfc976",
+    "chainId": "eip155:1",
+    "name": "ZKasino",
+    "precision": 18,
+    "color": "#CF2376",
+    "icon": "https://assets.coingecko.com/coins/images/26649/thumb/zkasino.jpeg?1659405528",
+    "symbol": "ZKAS",
+    "explorer": "https://etherscan.io",
+    "explorerAddressLink": "https://etherscan.io/address/",
+    "explorerTxLink": "https://etherscan.io/tx/"
+  },
   "eip155:1/erc20:0xc92276872cd1907d2e00b58a81a9bbd275b0a4ba": {
     "assetId": "eip155:1/erc20:0xc92276872cd1907d2e00b58a81a9bbd275b0a4ba",
     "chainId": "eip155:1",
@@ -58446,6 +58495,18 @@
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
+  },
+  "eip155:1/erc20:0xd01ef7c0a5d8c432fc2d1a85c66cf2327362e5c6": {
+    "explorer": "https://etherscan.io",
+    "explorerAddressLink": "https://etherscan.io/address/",
+    "explorerTxLink": "https://etherscan.io/tx/",
+    "color": "#046CFC",
+    "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0xD01ef7C0A5d8c432fc2d1a85c66cF2327362E5C6/logo.png",
+    "name": "aETHb",
+    "precision": 18,
+    "symbol": "aETHb",
+    "chainId": "eip155:1",
+    "assetId": "eip155:1/erc20:0xd01ef7c0a5d8c432fc2d1a85c66cf2327362e5c6"
   },
   "eip155:1/erc20:0xd0345d30fd918d7682398acbcdf139c808998709": {
     "assetId": "eip155:1/erc20:0xd0345d30fd918d7682398acbcdf139c808998709",
@@ -62260,16 +62321,16 @@
     "explorerTxLink": "https://etherscan.io/tx/"
   },
   "eip155:1/erc20:0xdef1fac7bf08f173d286bbbdcbeeade695129840": {
-    "assetId": "eip155:1/erc20:0xdef1fac7bf08f173d286bbbdcbeeade695129840",
-    "chainId": "eip155:1",
-    "name": "Cerby",
-    "precision": 18,
-    "color": "#071838",
-    "icon": "https://assets.coingecko.com/coins/images/15792/thumb/cerby.png?1638785791",
-    "symbol": "CERBY",
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/"
+    "explorerTxLink": "https://etherscan.io/tx/",
+    "color": "#071838",
+    "icon": "https://assets.yearn.network/tokens/ethereum/0xdef1fac7bf08f173d286bbbdcbeeade695129840.png",
+    "name": "CERBY",
+    "precision": 18,
+    "symbol": "CERBY",
+    "chainId": "eip155:1",
+    "assetId": "eip155:1/erc20:0xdef1fac7bf08f173d286bbbdcbeeade695129840"
   },
   "eip155:1/erc20:0xdefa4e8a7bcba345f687a2f1456f5edd9ce97202": {
     "assetId": "eip155:1/erc20:0xdefa4e8a7bcba345f687a2f1456f5edd9ce97202",
@@ -62315,18 +62376,6 @@
     "color": "#04FAFA",
     "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdf09a216Fac5ADC3e640Db418C0b956076509503/logo.png",
     "symbol": "PKN",
-    "explorer": "https://etherscan.io",
-    "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/"
-  },
-  "eip155:1/erc20:0xdf1338fbafe7af1789151627b886781ba556ef9a": {
-    "assetId": "eip155:1/erc20:0xdf1338fbafe7af1789151627b886781ba556ef9a",
-    "chainId": "eip155:1",
-    "name": "Kuende",
-    "precision": 18,
-    "color": "#ED4145",
-    "icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdf1338FbAfe7aF1789151627B886781ba556eF9a/logo.png",
-    "symbol": "KUE",
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
@@ -66095,18 +66144,6 @@
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
   },
-  "eip155:1/erc20:0xecd20f0ebc3da5e514b4454e3dc396e7da18ca6a": {
-    "assetId": "eip155:1/erc20:0xecd20f0ebc3da5e514b4454e3dc396e7da18ca6a",
-    "chainId": "eip155:1",
-    "name": "Cudl Finance",
-    "precision": 18,
-    "color": "#F7D472",
-    "icon": "https://assets.coingecko.com/coins/images/17479/thumb/cudl.PNG?1627950486",
-    "symbol": "CUDL",
-    "explorer": "https://etherscan.io",
-    "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/"
-  },
   "eip155:1/erc20:0xecd5e75afb02efa118af914515d6521aabd189f1": {
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
@@ -67488,16 +67525,16 @@
     "explorerTxLink": "https://etherscan.io/tx/"
   },
   "eip155:1/erc20:0xf1a91c7d44768070f711c68f33a7ca25c8d30268": {
-    "assetId": "eip155:1/erc20:0xf1a91c7d44768070f711c68f33a7ca25c8d30268",
-    "chainId": "eip155:1",
-    "name": "Charli3",
-    "precision": 18,
-    "color": "#E42E2E",
-    "icon": "https://assets.coingecko.com/coins/images/15052/thumb/Charli3-Profile-Icon-1.png?1642643567",
-    "symbol": "C3",
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/"
+    "explorerTxLink": "https://etherscan.io/tx/",
+    "color": "#E42E2E",
+    "icon": "https://assets.yearn.network/tokens/ethereum/0xf1a91c7d44768070f711c68f33a7ca25c8d30268.png",
+    "name": "C3",
+    "precision": 18,
+    "symbol": "C3",
+    "chainId": "eip155:1",
+    "assetId": "eip155:1/erc20:0xf1a91c7d44768070f711c68f33a7ca25c8d30268"
   },
   "eip155:1/erc20:0xf1acfb5d95bc090bc55d8ae58a8df4081d73e009": {
     "assetId": "eip155:1/erc20:0xf1acfb5d95bc090bc55d8ae58a8df4081d73e009",
@@ -71661,6 +71698,18 @@
     "explorerAddressLink": "https://snowtrace.io/address/",
     "explorerTxLink": "https://snowtrace.io/tx/"
   },
+  "eip155:43114/erc20:0x1337bedc9d22ecbe766df105c9623922a27963ec": {
+    "assetId": "eip155:43114/erc20:0x1337bedc9d22ecbe766df105c9623922a27963ec",
+    "chainId": "eip155:43114",
+    "name": "LP 3pool Curve on Avalanche",
+    "precision": 18,
+    "color": "#18E87A",
+    "icon": "https://assets.coingecko.com/coins/images/12972/thumb/3pool_128.png?1603948039",
+    "symbol": "3CRV",
+    "explorer": "https://snowtrace.io",
+    "explorerAddressLink": "https://snowtrace.io/address/",
+    "explorerTxLink": "https://snowtrace.io/tx/"
+  },
   "eip155:43114/erc20:0x152b9d0fdc40c096757f570a51e494bd4b943e50": {
     "assetId": "eip155:43114/erc20:0x152b9d0fdc40c096757f570a51e494bd4b943e50",
     "chainId": "eip155:43114",
@@ -73209,6 +73258,18 @@
     "explorerAddressLink": "https://snowtrace.io/address/",
     "explorerTxLink": "https://snowtrace.io/tx/"
   },
+  "eip155:43114/erc20:0x5f018e73c185ab23647c82bd039e762813877f0e": {
+    "assetId": "eip155:43114/erc20:0x5f018e73c185ab23647c82bd039e762813877f0e",
+    "chainId": "eip155:43114",
+    "name": "BUILD on Avalanche",
+    "precision": 18,
+    "color": "#EC1C24",
+    "icon": "https://assets.coingecko.com/coins/images/26533/thumb/BUILD.png?1658714842",
+    "symbol": "BUILD",
+    "explorer": "https://snowtrace.io",
+    "explorerAddressLink": "https://snowtrace.io/address/",
+    "explorerTxLink": "https://snowtrace.io/tx/"
+  },
   "eip155:43114/erc20:0x5fc17416925789e0852fbfcd81c490ca4abc51f9": {
     "assetId": "eip155:43114/erc20:0x5fc17416925789e0852fbfcd81c490ca4abc51f9",
     "chainId": "eip155:43114",
@@ -73769,18 +73830,6 @@
     "color": "#EEE1E7",
     "icon": "https://assets.coingecko.com/coins/images/21483/thumb/kittyicon-white.d1fdf9f3.png?1639360102",
     "symbol": "KITTY",
-    "explorer": "https://snowtrace.io",
-    "explorerAddressLink": "https://snowtrace.io/address/",
-    "explorerTxLink": "https://snowtrace.io/tx/"
-  },
-  "eip155:43114/erc20:0x78bf833aae77ebf62c21a9a5a6993a691810f2e1": {
-    "assetId": "eip155:43114/erc20:0x78bf833aae77ebf62c21a9a5a6993a691810f2e1",
-    "chainId": "eip155:43114",
-    "name": "Ice Dao",
-    "precision": 9,
-    "color": "#FB5455",
-    "icon": "https://assets.coingecko.com/coins/images/21361/thumb/ICEDAO-modified.png?1639013823",
-    "symbol": "ICY",
     "explorer": "https://snowtrace.io",
     "explorerAddressLink": "https://snowtrace.io/address/",
     "explorerTxLink": "https://snowtrace.io/tx/"
@@ -75765,6 +75814,18 @@
     "explorerAddressLink": "https://snowtrace.io/address/",
     "explorerTxLink": "https://snowtrace.io/tx/"
   },
+  "eip155:43114/erc20:0xd39016475200ab8957e9c772c949ef54bda69111": {
+    "assetId": "eip155:43114/erc20:0xd39016475200ab8957e9c772c949ef54bda69111",
+    "chainId": "eip155:43114",
+    "name": "deUSDC",
+    "precision": 18,
+    "color": "#DB6B8A",
+    "icon": "https://assets.coingecko.com/coins/images/26669/thumb/deUSDC.png?1659509853",
+    "symbol": "DEUSDC",
+    "explorer": "https://snowtrace.io",
+    "explorerAddressLink": "https://snowtrace.io/address/",
+    "explorerTxLink": "https://snowtrace.io/tx/"
+  },
   "eip155:43114/erc20:0xd3df6106346ac91ce76d1adf291a68581d3fa782": {
     "assetId": "eip155:43114/erc20:0xd3df6106346ac91ce76d1adf291a68581d3fa782",
     "chainId": "eip155:43114",
@@ -75977,18 +76038,6 @@
     "color": "#D4A454",
     "icon": "https://assets.coingecko.com/coins/images/16217/thumb/Icon-1000x1000.png?1623316471",
     "symbol": "GEM",
-    "explorer": "https://snowtrace.io",
-    "explorerAddressLink": "https://snowtrace.io/address/",
-    "explorerTxLink": "https://snowtrace.io/tx/"
-  },
-  "eip155:43114/erc20:0xdef1fac7bf08f173d286bbbdcbeeade695129840": {
-    "assetId": "eip155:43114/erc20:0xdef1fac7bf08f173d286bbbdcbeeade695129840",
-    "chainId": "eip155:43114",
-    "name": "Cerby on Avalanche",
-    "precision": 18,
-    "color": "#071838",
-    "icon": "https://assets.coingecko.com/coins/images/15792/thumb/cerby.png?1638785791",
-    "symbol": "CERBY",
     "explorer": "https://snowtrace.io",
     "explorerAddressLink": "https://snowtrace.io/address/",
     "explorerTxLink": "https://snowtrace.io/tx/"
@@ -76329,18 +76378,6 @@
     "explorerAddressLink": "https://snowtrace.io/address/",
     "explorerTxLink": "https://snowtrace.io/tx/"
   },
-  "eip155:43114/erc20:0xf14f4ce569cb3679e99d5059909e23b07bd2f387": {
-    "assetId": "eip155:43114/erc20:0xf14f4ce569cb3679e99d5059909e23b07bd2f387",
-    "chainId": "eip155:43114",
-    "name": "NXUSD",
-    "precision": 18,
-    "color": "#0566DC",
-    "icon": "https://assets.coingecko.com/coins/images/25101/thumb/nxusd-logo.png?1650286304",
-    "symbol": "NXUSD",
-    "explorer": "https://snowtrace.io",
-    "explorerAddressLink": "https://snowtrace.io/address/",
-    "explorerTxLink": "https://snowtrace.io/tx/"
-  },
   "eip155:43114/erc20:0xf30c5083a1479865c9a8916dec6ddadd82e8907b": {
     "assetId": "eip155:43114/erc20:0xf30c5083a1479865c9a8916dec6ddadd82e8907b",
     "chainId": "eip155:43114",
@@ -76409,6 +76446,18 @@
     "color": "#AA9070",
     "icon": "https://assets.coingecko.com/coins/images/22419/thumb/VoltToken.png?1641807414",
     "symbol": "VOLT",
+    "explorer": "https://snowtrace.io",
+    "explorerAddressLink": "https://snowtrace.io/address/",
+    "explorerTxLink": "https://snowtrace.io/tx/"
+  },
+  "eip155:43114/erc20:0xf6557bc62ac67744961479ea6c131b61444714d6": {
+    "assetId": "eip155:43114/erc20:0xf6557bc62ac67744961479ea6c131b61444714d6",
+    "chainId": "eip155:43114",
+    "name": "Vacus Finance",
+    "precision": 18,
+    "color": "#F9E4C4",
+    "icon": "https://assets.coingecko.com/coins/images/26666/thumb/logo200.png?1659500028",
+    "symbol": "VCS",
     "explorer": "https://snowtrace.io",
     "explorerAddressLink": "https://snowtrace.io/address/",
     "explorerTxLink": "https://snowtrace.io/tx/"
