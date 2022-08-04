@@ -87,13 +87,15 @@ const virtualMessageFromEvents = (
         '{}'
     )
 
-    return {
-      type: 'ibc_send',
-      value: { amount: parsedPacketData.amount, denom: parsedPacketData.amount },
-      from: parsedPacketData.sender,
-      to: parsedPacketData.receiver,
-      origin: parsedPacketData.sender
-    }
+    if (parsedPacketData.denom === 'uatom' || parsedPacketData.denom === 'uosmo')
+      return {
+        type: 'ibc_send',
+        value: { amount: parsedPacketData.amount, denom: parsedPacketData.amount },
+        from: parsedPacketData.sender,
+        to: parsedPacketData.receiver,
+        origin: parsedPacketData.sender
+      }
+    return
   } else if (ibcRecvEventData) {
     const parsedPacketData = JSON.parse(
       ibcRecvEventData?.attributes.find((attribute) => attribute.key === 'packet_data')?.value ??
