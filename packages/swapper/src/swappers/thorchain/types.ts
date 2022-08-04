@@ -21,6 +21,25 @@ export type PoolResponse = {
   volume24h: string
 }
 
+type MidardCoins = {
+  asset: string
+}[]
+type MidgardActionOut = {
+  coins: MidardCoins
+  txID: string
+}
+type MidgardAction = {
+  date: string
+  height: string
+  out: MidgardActionOut[]
+  status: string
+  type: string
+}
+
+export type MidgardActionsResponse = {
+  actions: MidgardAction[]
+}
+
 export type InboundResponse = {
   chain: string
   pub_key: string
