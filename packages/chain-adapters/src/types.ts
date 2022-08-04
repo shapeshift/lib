@@ -94,7 +94,7 @@ export type Transaction = Omit<unchained.StandardTx, 'transfers'> & {
 }
 
 export type TransactionMetadataStandard = unchained.StandardTxMetadata
-export type TransactionMetadataEvm = unchained.evm.TxMetadata
+export type TransactionMetadataEvm = unchained.evm.ERC20TxMetadata
 export type TransactionMetadataCosmos = unchained.cosmos.TxMetadata
 
 export type TxTransfer = Omit<unchained.Transfer, 'components' | 'totalValue' | 'token'> & {
