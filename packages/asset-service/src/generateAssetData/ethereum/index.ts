@@ -9,6 +9,7 @@ import { getRenderedIdenticonBase64, IdenticonOptions } from '../../service/Gene
 import { generateTrustWalletUrl } from '../../service/TrustWalletService'
 import { ethereum } from '../baseAssets'
 import * as coingecko from '../coingecko'
+import { getIdleTokens } from './idleVaults'
 import { overrideTokens } from './overrides'
 import { getUniswapV2Pools } from './uniswapV2Pools'
 import {
@@ -17,8 +18,6 @@ import {
   getYearnVaults,
   getZapperTokens
 } from './yearnVaults'
-
-import { getIdleTokens } from './idleVaults'
 
 const foxyToken: Asset = {
   assetId: toAssetId({
@@ -38,16 +37,23 @@ const foxyToken: Asset = {
 }
 
 export const getAssets = async (): Promise<Asset[]> => {
-  const [ethTokens, yearnVaults, ironBankTokens, zapperTokens, underlyingTokens, uniV2PoolTokens, idleTokens] =
-    await Promise.all([
-      coingecko.getAssets(ethChainId, overrideTokens),
-      getYearnVaults(),
-      getIronBankTokens(),
-      getZapperTokens(),
-      getUnderlyingVaultTokens(),
-      getUniswapV2Pools(),
-      getIdleTokens()
-    ])
+  const [
+    ethTokens,
+    yearnVaults,
+    ironBankTokens,
+    zapperTokens,
+    underlyingTokens,
+    uniV2PoolTokens,
+    idleTokens
+  ] = await Promise.all([
+    coingecko.getAssets(ethChainId, overrideTokens),
+    getYearnVaults(),
+    getIronBankTokens(),
+    getZapperTokens(),
+    getUnderlyingVaultTokens(),
+    getUniswapV2Pools(),
+    getIdleTokens()
+  ])
 
   const ethAssets = [
     ethereum,

@@ -1,9 +1,8 @@
 import { ethChainId as chainId, toAssetId } from '@shapeshiftoss/caip'
-import { Asset } from '../../service/AssetService'
-
 import { IdleSdk, IdleVault } from '@shapeshiftoss/investor-idle'
 import toLower from 'lodash/toLower'
 
+import { Asset } from '../../service/AssetService'
 import { ethereum } from '../baseAssets'
 import { colorMap } from '../colorMap'
 
@@ -42,7 +41,11 @@ const getUnderlyingVaultTokens = async (): Promise<Asset[]> => {
   const vaults: IdleVault[] = await idleSdk.getVaults()
 
   return vaults.map((vault: IdleVault) => {
-    const assetId = toAssetId({ chainId, assetNamespace: 'erc20', assetReference: vault.underlyingAddress })
+    const assetId = toAssetId({
+      chainId,
+      assetNamespace: 'erc20',
+      assetReference: vault.underlyingAddress
+    })
 
     return {
       ...explorerData,
@@ -58,14 +61,10 @@ const getUnderlyingVaultTokens = async (): Promise<Asset[]> => {
 }
 
 export const getIdleTokens = async (): Promise<Asset[]> => {
-
-  const [
-    idleVaults,
-    underlyingVaultTokens,
-  ] = await Promise.all([
+  const [idleVaults, underlyingVaultTokens] = await Promise.all([
     getIdleVaults(),
-    getUnderlyingVaultTokens(),
+    getUnderlyingVaultTokens()
   ])
 
-  return [...idleVaults,...underlyingVaultTokens]
+  return [...idleVaults, ...underlyingVaultTokens]
 }

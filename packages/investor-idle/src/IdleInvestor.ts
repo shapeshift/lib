@@ -19,20 +19,6 @@ type ConstructorArgs = {
   providerUrl: string
 }
 
-// const makeRequest = async (url: string): Promise<string> =>  {
-//   return await (new Promise(async (resolve) => {
-//     https.get(url, res => {
-//       res.setEncoding("utf8");
-//       let body = "";
-//       res.on("data", data => {
-//         body += data;
-//       });
-//       res.on("end", () => {
-//         resolve(body);
-//       });
-//     });
-//   }));
-// }
 const idleSdk = new IdleSdk()
 
 export class IdleInvestor implements Investor<PreparedTransaction, IdleVault> {
@@ -62,13 +48,8 @@ export class IdleInvestor implements Investor<PreparedTransaction, IdleVault> {
   }
 
   async initialize() {
-    // const vaults = await makeRequest('http://localhost:3333/pools?api-key=bPrtC2bfnAvapyXLgdvzVzW8u8igKv6E');
-    // if (vaults){
-    // this.#vaults = JSON.parse(vaults);
     const vaults: IdleVault[] = await idleSdk.getVaults()
-    // this.#vaults = availableTokens
     this.#opportunities = vaults.map((vault) => new IdleOpportunity(this.#deps, vault))
-    // }
   }
 
   async findAll() {
