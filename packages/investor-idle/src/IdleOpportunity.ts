@@ -1,22 +1,30 @@
-import Web3 from 'web3'
-import {
-  FeePriority,
-  ApprovalRequired,
-  DepositWithdrawArgs,
-  InvestorOpportunity
-} from '@shapeshiftoss/investor'
-import isNil from 'lodash/isNil'
-import toLower from 'lodash/toLower'
-import { numberToHex } from 'web3-utils'
-import { Contract } from 'web3-eth-contract'
-import type { BigNumber } from 'bignumber.js'
-import { Logger } from '@shapeshiftoss/logger'
 import { toAssetId } from '@shapeshiftoss/caip'
-import { KnownChainIds } from '@shapeshiftoss/types'
-import { bnOrZero, normalizeAmount, toPath } from './utils'
 import type { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { bip32ToAddressNList, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { IdleVault, erc20Abi, idleTokenV4Abi, idleCdoAbi, ssRouterContractAddress, MAX_ALLOWANCE } from './constants'
+import {
+  ApprovalRequired,
+  DepositWithdrawArgs,
+  FeePriority,
+  InvestorOpportunity
+} from '@shapeshiftoss/investor'
+import { Logger } from '@shapeshiftoss/logger'
+import { KnownChainIds } from '@shapeshiftoss/types'
+import type { BigNumber } from 'bignumber.js'
+import isNil from 'lodash/isNil'
+import toLower from 'lodash/toLower'
+import Web3 from 'web3'
+import { Contract } from 'web3-eth-contract'
+import { numberToHex } from 'web3-utils'
+
+import {
+  erc20Abi,
+  idleCdoAbi,
+  idleTokenV4Abi,
+  IdleVault,
+  MAX_ALLOWANCE,
+  ssRouterContractAddress
+} from './constants'
+import { bnOrZero, normalizeAmount, toPath } from './utils'
 
 export type PreparedTransaction = {
   chainId: number
@@ -45,7 +53,7 @@ type IdleOpportunityDeps = {
 
 export type ClaimableToken = {
   assetId: string
-  address: string,
+  address: string
   amount: number
 }
 
@@ -53,12 +61,12 @@ interface IdleClaimableOpportunity {
   getClaimableTokens(address: string): Promise<ClaimableToken[]>
 }
 
-export class IdleOpportunity implements InvestorOpportunity
-  <PreparedTransaction, any>,
-  ApprovalRequired<PreparedTransaction>,
-  IdleClaimableOpportunity
+export class IdleOpportunity
+  implements
+    InvestorOpportunity<PreparedTransaction, IdleVault>,
+    ApprovalRequired<PreparedTransaction>,
+    IdleClaimableOpportunity
 {
-
   readonly #internals: {
     chainAdapter: ChainAdapter<KnownChainIds.EthereumMainnet>
     dryRun?: true
@@ -125,7 +133,6 @@ export class IdleOpportunity implements InvestorOpportunity
   readonly expired: boolean
 
   constructor(deps: IdleOpportunityDeps, vault: IdleVault) {
-
     this.#internals = {
       chainAdapter: deps.chainAdapter,
       dryRun: deps.dryRun,
@@ -139,18 +146,18 @@ export class IdleOpportunity implements InvestorOpportunity
     this.id = toLower(vault.address)
     this.metadata = {
       ...vault,
-      apy:{
-        net_apy:parseFloat(bnOrZero(vault.apr).div(100).toFixed())
+      apy: {
+        net_apy: parseFloat(bnOrZero(vault.apr).div(100).toFixed())
       }
-    };
-    this.version = `${vault.protocolName} ${vault.strategy}`.trim();
+    }
+    this.version = `${vault.protocolName} ${vault.strategy}`.trim()
     this.name = vault.poolName
     this.displayName = vault.poolName
-    this.isNew = false;
-    this.expired = false;
+    this.isNew = false
+    this.expired = false
     this.apy = bnOrZero(vault.apr).div(100)
     this.tvl = {
-      balanceUsdc: normalizeAmount(vault.tvl,6),
+      balanceUsdc: normalizeAmount(vault.tvl, 6),
       balance: normalizeAmount(vault.underlyingTVL),
       assetId: toAssetId({
         chainId: 'eip155:1',
@@ -230,7 +237,7 @@ export class IdleOpportunity implements InvestorOpportunity
     let vaultContract: Contract
 
     // Handle Tranche Withdraw
-    if (this.metadata.cdoAddress){
+    if (this.metadata.cdoAddress) {
       vaultContract = new this.#internals.web3.eth.Contract(idleCdoAbi, this.metadata.cdoAddress)
       const trancheType = this.metadata.strategy.match(/senior/i) ? 'AA' : 'BB'
       methodName = `withdraw${trancheType}`
@@ -239,27 +246,27 @@ export class IdleOpportunity implements InvestorOpportunity
       methodName = `redeemIdleToken`
     }
 
-    console.log('prepareWithdrawal',methodName,address,amount.toFixed())
+    // console.log('prepareWithdrawal', methodName, address, amount.toFixed())
 
     const preWithdraw = await vaultContract.methods[methodName](amount.toFixed())
 
-    console.log('prepareWithdrawal - preWithdraw',preWithdraw)
+    // console.log('prepareWithdrawal - preWithdraw', preWithdraw)
 
     const data = await preWithdraw.encodeABI({ from: address })
-    
-    console.log('prepareWithdrawal - data',data)
+
+    // console.log('prepareWithdrawal - data', data)
 
     const estimatedGas = bnOrZero(await preWithdraw.estimateGas({ from: address }))
 
-    console.log('prepareWithdrawal - estimatedGas',estimatedGas)
+    // console.log('prepareWithdrawal - estimatedGas', estimatedGas)
 
     const nonce = await this.#internals.web3.eth.getTransactionCount(address)
 
-    console.log('prepareWithdrawal - nonce',nonce)
+    // console.log('prepareWithdrawal - nonce', nonce)
 
     const gasPrice = bnOrZero(await this.#internals.web3.eth.getGasPrice())
 
-    console.log('prepareWithdrawal - gasPrice',gasPrice)
+    // console.log('prepareWithdrawal - gasPrice', gasPrice)
 
     return {
       chainId: 1,
@@ -273,30 +280,29 @@ export class IdleOpportunity implements InvestorOpportunity
   }
 
   public async prepareClaimTokens(address: string): Promise<PreparedTransaction> {
-
     const vaultContract = new this.#internals.web3.eth.Contract(idleTokenV4Abi, this.id)
 
-    console.log('prepareWithdrawal',address)
+    // console.log('prepareWithdrawal', address)
 
     const preWithdraw = await vaultContract.methods.redeemIdleToken(0)
 
-    console.log('prepareWithdrawal - preWithdraw',preWithdraw)
+    // console.log('prepareWithdrawal - preWithdraw', preWithdraw)
 
     const data = await preWithdraw.encodeABI({ from: address })
-    
-    console.log('prepareWithdrawal - data',data)
+
+    // console.log('prepareWithdrawal - data', data)
 
     const estimatedGas = bnOrZero(await preWithdraw.estimateGas({ from: address }))
 
-    console.log('prepareWithdrawal - estimatedGas',estimatedGas)
+    // console.log('prepareWithdrawal - estimatedGas', estimatedGas)
 
     const nonce = await this.#internals.web3.eth.getTransactionCount(address)
 
-    console.log('prepareWithdrawal - nonce',nonce)
+    // console.log('prepareWithdrawal - nonce', nonce)
 
     const gasPrice = bnOrZero(await this.#internals.web3.eth.getGasPrice())
 
-    console.log('prepareWithdrawal - gasPrice',gasPrice)
+    // console.log('prepareWithdrawal - gasPrice', gasPrice)
 
     return {
       chainId: 1,
@@ -330,7 +336,7 @@ export class IdleOpportunity implements InvestorOpportunity
       vaultAddress: this.metadata.cdoAddress || this.metadata.address
     })
 
-    console.log('prepareDeposit - getVaultId',vaultIndex);
+    // console.log('prepareDeposit - getVaultId', vaultIndex)
 
     const preDeposit = await this.#internals.routerContract.methods.deposit(
       tokenChecksum,
@@ -339,23 +345,23 @@ export class IdleOpportunity implements InvestorOpportunity
       vaultIndex
     )
 
-    console.log('prepareDeposit - routerContract.deposit',preDeposit)
+    // console.log('prepareDeposit - routerContract.deposit', preDeposit)
 
     const data = await preDeposit.encodeABI({ from: address })
 
-    console.log('prepareDeposit - data',data)
+    // console.log('prepareDeposit - data', data)
 
     const estimatedGas = bnOrZero(await preDeposit.estimateGas({ from: address }))
 
-    console.log('prepareDeposit - estimatedGas',estimatedGas)
+    // console.log('prepareDeposit - estimatedGas', estimatedGas)
 
     const nonce = await this.#internals.web3.eth.getTransactionCount(address)
 
-    console.log('prepareDeposit - nonce',nonce)
+    // console.log('prepareDeposit - nonce', nonce)
 
     const gasPrice = bnOrZero(await this.#internals.web3.eth.getGasPrice())
 
-    console.log('prepareDeposit - gasPrice',gasPrice)
+    // console.log('prepareDeposit - gasPrice', gasPrice)
 
     return {
       chainId: 1,
@@ -378,34 +384,34 @@ export class IdleOpportunity implements InvestorOpportunity
       return []
     }
 
-    console.log('getClaimableTokens - address',address)
-    console.log('getClaimableTokens - vaultId',this.id)
+    // console.log('getClaimableTokens - address', address)
+    // console.log('getClaimableTokens - vaultId', this.id)
 
-    const claimableTokens: ClaimableToken[] = [];
+    const claimableTokens: ClaimableToken[] = []
     const vaultContract: Contract = new this.#internals.web3.eth.Contract(idleTokenV4Abi, this.id)
     const govTokensAmounts = await vaultContract.methods.getGovTokensAmounts(address).call()
 
-    console.log('getClaimableTokens - govTokensAmounts',govTokensAmounts)
+    // console.log('getClaimableTokens - govTokensAmounts', govTokensAmounts)
 
-    for (let i=0; i<govTokensAmounts.length; i++){
+    for (let i = 0; i < govTokensAmounts.length; i++) {
       const govTokenAddress = await vaultContract.methods.govTokens(i).call()
 
-      console.log(`getClaimableTokens - govTokenAddress(${i})`,govTokenAddress)
+      // console.log(`getClaimableTokens - govTokenAddress(${i})`, govTokenAddress)
 
-      if (govTokenAddress){
+      if (govTokenAddress) {
         claimableTokens.push({
           assetId: toAssetId({
             chainId: 'eip155:1',
             assetNamespace: 'erc20',
             assetReference: govTokenAddress
           }),
-          address:govTokenAddress,
-          amount:govTokensAmounts[i]
+          address: govTokenAddress,
+          amount: govTokensAmounts[i]
         })
       }
     }
 
-    console.log('getClaimableTokens - claimableTokens',claimableTokens)
+    // console.log('getClaimableTokens - claimableTokens', claimableTokens)
 
     return claimableTokens
   }
@@ -473,7 +479,7 @@ export class IdleOpportunity implements InvestorOpportunity
       addressNList
     }
 
-    console.log('signAndBroadcast',txToSign)
+    // console.log('signAndBroadcast', txToSign)
 
     if (wallet.supportsOfflineSigning()) {
       const signedTx = await chainAdapter.signTransaction({ txToSign, wallet })

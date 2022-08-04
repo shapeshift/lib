@@ -1,15 +1,16 @@
-import Web3 from 'web3'
+import type { ChainAdapter } from '@shapeshiftoss/chain-adapters'
+import { Investor } from '@shapeshiftoss/investor'
+import { Logger } from '@shapeshiftoss/logger'
+import { KnownChainIds } from '@shapeshiftoss/types'
 // import https from 'https'
 import { find } from 'lodash'
 import filter from 'lodash/filter'
-import { IdleSdk } from './IdleSdk'
+import Web3 from 'web3'
 import { Contract } from 'web3-eth-contract'
-import { Logger } from '@shapeshiftoss/logger'
-import { Investor } from '@shapeshiftoss/investor'
-import { KnownChainIds } from '@shapeshiftoss/types'
-import type { ChainAdapter } from '@shapeshiftoss/chain-adapters'
-import { PreparedTransaction, IdleOpportunity } from './IdleOpportunity'
+
 import { IdleVault, ssRouterAbi, ssRouterContractAddress } from './constants'
+import { IdleOpportunity, PreparedTransaction } from './IdleOpportunity'
+import { IdleSdk } from './IdleSdk'
 
 type ConstructorArgs = {
   chainAdapter: ChainAdapter<KnownChainIds.EthereumMainnet>
@@ -32,7 +33,7 @@ type ConstructorArgs = {
 //     });
 //   }));
 // }
-const idleSdk = new IdleSdk();
+const idleSdk = new IdleSdk()
 
 export class IdleInvestor implements Investor<PreparedTransaction, IdleVault> {
   readonly #deps: {
@@ -49,7 +50,7 @@ export class IdleInvestor implements Investor<PreparedTransaction, IdleVault> {
     const httpProvider = new Web3.providers.HttpProvider(providerUrl)
     // const jsonRpcProvider = new JsonRpcProvider(providerUrl)
     const web3 = new Web3(httpProvider)
-    const contract = new web3.eth.Contract(ssRouterAbi, ssRouterContractAddress);
+    const contract = new web3.eth.Contract(ssRouterAbi, ssRouterContractAddress)
     this.#deps = Object.freeze({
       chainAdapter,
       contract,
@@ -61,15 +62,12 @@ export class IdleInvestor implements Investor<PreparedTransaction, IdleVault> {
   }
 
   async initialize() {
-
     // const vaults = await makeRequest('http://localhost:3333/pools?api-key=bPrtC2bfnAvapyXLgdvzVzW8u8igKv6E');
     // if (vaults){
-      // this.#vaults = JSON.parse(vaults);
-      const vaults: IdleVault[] = await idleSdk.getVaults()
-      // this.#vaults = availableTokens
-      this.#opportunities = vaults.map(
-        (vault) => new IdleOpportunity(this.#deps, vault)
-      );
+    // this.#vaults = JSON.parse(vaults);
+    const vaults: IdleVault[] = await idleSdk.getVaults()
+    // this.#vaults = availableTokens
+    this.#opportunities = vaults.map((vault) => new IdleOpportunity(this.#deps, vault))
     // }
   }
 

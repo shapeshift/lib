@@ -3,8 +3,8 @@ import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-nativ
 import * as unchained from '@shapeshiftoss/unchained-client'
 import dotenv from 'dotenv'
 
-import { bnOrZero } from './utils'
 import { IdleInvestor } from './IdleInvestor'
+import { bnOrZero } from './utils'
 
 dotenv.config()
 
