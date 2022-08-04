@@ -93,6 +93,10 @@ export type Transaction = Omit<unchained.StandardTx, 'transfers'> & {
   data?: unchained.StandardTxMetadata | unchained.evm.TxMetadata | unchained.cosmos.TxMetadata
 }
 
+export type TransactionMetadataStandard = unchained.StandardTxMetadata
+export type TransactionMetadataEvm = unchained.evm.TxMetadata
+export type TransactionMetadataCosmos = unchained.cosmos.TxMetadata
+
 export type TxTransfer = Omit<unchained.Transfer, 'components' | 'totalValue' | 'token'> & {
   value: string
 }
