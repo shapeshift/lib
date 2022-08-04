@@ -25,7 +25,7 @@
     "generate-coincap": "ts-node -P tsconfig.build.json src/adapters/coincap/generate.ts",
     "generate-yearn": "ts-node -P tsconfig.build.json src/adapters/yearn/generate.ts",
     "generate-osmosis": "ts-node -P tsconfig.build.json src/adapters/osmosis/generate.ts",
-    "generate": "yarn generate-coingecko && yarn generate-coincap && yarn generate-yearn && yarn generate-osmosis && generate-idle",
+    "generate": "yarn generate-coingecko && yarn generate-coincap && yarn generate-yearn && yarn generate-osmosis",
     "prepare": "yarn build",
     "test": "jest test",
     "type-check": "tsc --project ./tsconfig.build.json --noEmit"
