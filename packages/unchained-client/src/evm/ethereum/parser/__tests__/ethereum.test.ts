@@ -1,5 +1,5 @@
-import { Dex, Trade, TradeType, TransferType, TxParser, TxStatus } from '../../../../types'
-import { ParsedTx as Tx, TxParser as EvmTxParser } from '../../../parser'
+import { Dex, Trade, TradeType, TransferType, TxStatus } from '../../../../types'
+import { ParsedTx as Tx } from '../../../parser'
 import {
   FOXY_STAKING_CONTRACT,
   SHAPE_SHIFT_ROUTER_CONTRACT,
@@ -127,7 +127,7 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           method: 'deposit',
-          parser: TxParser.Thor
+          parser: 'thor'
         },
         status: TxStatus.Confirmed,
         fee: {
@@ -171,7 +171,7 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           method: 'deposit',
-          parser: TxParser.Thor
+          parser: 'thor'
         },
         status: TxStatus.Confirmed,
         fee: {
@@ -215,7 +215,7 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           method: 'transferOut',
-          parser: TxParser.Thor
+          parser: 'thor'
         },
         status: TxStatus.Confirmed,
         transfers: [buyTransfer],
@@ -255,7 +255,7 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           method: 'transferOut',
-          parser: TxParser.Thor
+          parser: 'thor'
         },
         status: TxStatus.Confirmed,
         transfers: [buyTransfer],
@@ -295,7 +295,7 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           method: 'transferOut',
-          parser: TxParser.Thor
+          parser: 'thor'
         },
         status: TxStatus.Confirmed,
         transfers: [buyTransfer],
@@ -354,7 +354,7 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           method: undefined,
-          parser: TxParser.ZRX
+          parser: 'zrx'
         },
         status: TxStatus.Confirmed,
         fee: {
@@ -416,7 +416,7 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           method: undefined,
-          parser: TxParser.ZRX
+          parser: 'zrx'
         },
         status: TxStatus.Confirmed,
         fee: {
@@ -470,7 +470,7 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           method: undefined,
-          parser: TxParser.ZRX
+          parser: 'zrx'
         },
         status: TxStatus.Confirmed,
         fee: {
@@ -544,7 +544,7 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           method: undefined,
-          parser: TxParser.ZRX
+          parser: 'zrx'
         },
         status: TxStatus.Confirmed,
         fee: {
@@ -745,7 +745,7 @@ describe('parseTx', () => {
         data: {
           assetId: 'eip155:1/erc20:0x470e8de2ebaef52014a47cb5e6af86884947f08c',
           method: 'approve',
-          parser: EvmTxParser.ERC20
+          parser: 'erc20'
         },
         status: TxStatus.Confirmed,
         fee: {
@@ -773,7 +773,7 @@ describe('parseTx', () => {
         confirmations: txMempool.confirmations,
         data: {
           method: 'addLiquidityETH',
-          parser: TxParser.UniV2
+          parser: 'uniV2'
         },
         status: TxStatus.Pending,
         transfers: [
@@ -873,7 +873,7 @@ describe('parseTx', () => {
         confirmations: txMempool.confirmations,
         data: {
           method: 'removeLiquidityETH',
-          parser: TxParser.UniV2
+          parser: 'uniV2'
         },
         status: TxStatus.Pending,
         transfers: [
@@ -998,7 +998,7 @@ describe('parseTx', () => {
         confirmations: txMempool.confirmations,
         data: {
           method: 'stake',
-          parser: TxParser.UniV2
+          parser: 'uniV2'
         },
         status: TxStatus.Pending,
         transfers: []
@@ -1023,7 +1023,7 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           method: 'stake',
-          parser: TxParser.UniV2
+          parser: 'uniV2'
         },
         status: TxStatus.Confirmed,
         fee: {
@@ -1061,7 +1061,7 @@ describe('parseTx', () => {
         confirmations: txMempool.confirmations,
         data: {
           method: 'exit',
-          parser: TxParser.UniV2
+          parser: 'uniV2'
         },
         status: TxStatus.Pending,
         transfers: []
@@ -1086,7 +1086,7 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           method: 'exit',
-          parser: TxParser.UniV2
+          parser: 'uniV2'
         },
         status: TxStatus.Confirmed,
         fee: {
@@ -1136,7 +1136,7 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           method: 'approve',
-          parser: TxParser.Yearn
+          parser: 'yearn'
         },
         status: TxStatus.Confirmed,
         fee: {
@@ -1164,7 +1164,7 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           method: 'deposit',
-          parser: TxParser.Yearn
+          parser: 'yearn'
         },
         status: TxStatus.Confirmed,
         fee: {
@@ -1211,7 +1211,7 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           method: 'withdraw',
-          parser: TxParser.Yearn
+          parser: 'yearn'
         },
         status: TxStatus.Confirmed,
         fee: {
@@ -1258,7 +1258,7 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           method: 'deposit',
-          parser: TxParser.Yearn
+          parser: 'yearn'
         },
         status: TxStatus.Confirmed,
         fee: {
@@ -1307,7 +1307,7 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           method: 'stake',
-          parser: TxParser.Foxy
+          parser: 'foxy'
         },
         status: TxStatus.Confirmed,
         fee: {
@@ -1356,7 +1356,7 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           method: 'unstake',
-          parser: TxParser.Foxy
+          parser: 'foxy'
         },
         status: TxStatus.Confirmed,
         fee: {
@@ -1405,7 +1405,7 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           method: 'instantUnstake',
-          parser: TxParser.Foxy
+          parser: 'foxy'
         },
         status: TxStatus.Confirmed,
         fee: {
@@ -1454,7 +1454,7 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           method: 'claimWithdraw',
-          parser: TxParser.Foxy
+          parser: 'foxy'
         },
         status: TxStatus.Confirmed,
         fee: {
@@ -1497,7 +1497,7 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           method: 'deposit',
-          parser: TxParser.WETH
+          parser: 'weth'
         },
         status: TxStatus.Confirmed,
         fee: {
@@ -1552,7 +1552,7 @@ describe('parseTx', () => {
         confirmations: tx2.confirmations,
         data: {
           method: 'deposit',
-          parser: TxParser.WETH
+          parser: 'weth'
         },
         status: TxStatus.Confirmed,
         fee: {
@@ -1617,7 +1617,7 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           method: 'withdraw',
-          parser: TxParser.WETH
+          parser: 'weth'
         },
         status: TxStatus.Confirmed,
         fee: {

@@ -1,7 +1,7 @@
 import { avalancheAssetId, avalancheChainId } from '@shapeshiftoss/caip'
 
 import { TransferType, TxStatus } from '../../../../types'
-import { ParsedTx, TxParser as EvmTxParser } from '../../../parser'
+import { ParsedTx } from '../../../parser'
 import { TransactionParser } from '../index'
 import avaxSelfSend from './mockData/avaxSelfSend'
 import avaxStandard from './mockData/avaxStandard'
@@ -407,7 +407,7 @@ describe('parseTx', () => {
         data: {
           assetId: 'eip155:43114/erc20:0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e',
           method: 'approve',
-          parser: EvmTxParser.ERC20
+          parser: 'erc20'
         }
       }
 
@@ -437,7 +437,7 @@ describe('parseTx', () => {
         data: {
           assetId: 'eip155:43114/erc20:0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e',
           method: 'approve',
-          parser: EvmTxParser.ERC20
+          parser: 'erc20'
         }
       }
 
