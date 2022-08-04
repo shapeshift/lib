@@ -27,11 +27,14 @@ export const makeSwapMemo = ({
     })
 
   // bch hack
-  const parsedDestAddress = destinationAddress.includes('bitcoincash:')
+  // Our bitcoin cash addresses are prefixed with `bitcoincash:`
+  // But thorchain memos need to be short (under 80 bytes for utxo)
+  // For this reason thorchain doesnt allow / need bitcoincash: in the memo
+  const parsedDestinationAddress = destinationAddress.includes('bitcoincash:')
     ? destinationAddress.replace('bitcoincash:', '')
     : destinationAddress
 
-  const memo = `s:${thorId}:${parsedDestAddress}:${limit}:${THORCHAIN_AFFILIATE_NAME}:${THORCHAIN_AFFILIATE_BIPS}`
+  const memo = `s:${thorId}:${parsedDestinationAddress}:${limit}:${THORCHAIN_AFFILIATE_NAME}:${THORCHAIN_AFFILIATE_BIPS}`
   if (memo.length <= MAX_LENGTH) return memo
   const abbreviationAmount = memo.length - MAX_LENGTH
 
