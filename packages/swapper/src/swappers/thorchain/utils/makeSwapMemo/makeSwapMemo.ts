@@ -26,7 +26,12 @@ export const makeSwapMemo = ({
       details: { buyAssetId }
     })
 
-  const memo = `s:${thorId}:${destinationAddress}:${limit}:${THORCHAIN_AFFILIATE_NAME}:${THORCHAIN_AFFILIATE_BIPS}`
+  // bch hack
+  const parsedDestAddress = destinationAddress.includes('bitcoincash:')
+    ? destinationAddress.replace('bitcoincash:', '')
+    : destinationAddress
+
+  const memo = `s:${thorId}:${parsedDestAddress}:${limit}:${THORCHAIN_AFFILIATE_NAME}:${THORCHAIN_AFFILIATE_BIPS}`
   if (memo.length <= MAX_LENGTH) return memo
   const abbreviationAmount = memo.length - MAX_LENGTH
 
