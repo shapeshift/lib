@@ -50,6 +50,15 @@ const metaData = (msg: Message | undefined, assetId: string): TxMetadata | undef
         assetId,
         value: msg?.value?.amount
       }
+    case 'swap_exact_amount_in':
+      return {
+        parser: 'cosmos',
+        method: msg.type,
+        ibcDestination: msg.to,
+        ibcSource: msg.from,
+        assetId,
+        value: msg?.value?.amount
+      }
     // known message types with no applicable metadata
     case 'send':
       return
@@ -69,6 +78,8 @@ const virtualMessageFromEvents = (
   const ibcRecvEventData = events[1]?.find((event) => event.type === 'recv_packet')
   // get rewards tx indicted by events
   const rewardEventData = events[0]?.find((event) => event.type === 'withdraw_rewards')
+  // swap tx
+  const swapEventData = events[0]?.find((event) => event.type === 'token_swapped')
 
   if (ibcSendEventData) {
     const parsedPacketData = JSON.parse(
@@ -107,6 +118,21 @@ const virtualMessageFromEvents = (
       from: msg.from,
       to: msg.to,
       origin: msg.origin
+    }
+  } else if (swapEventData) {
+    // TODO: Osmosis specific, should probably be moved to it's own parser eventually
+    // For now this is fine
+    const sender = swapEventData?.attributes.find((attribute) => attribute.key === 'sender')?.value
+    const swapAmount = swapEventData?.attributes.find(
+      (attribute) => attribute.key === 'tokens_out'
+    )?.value
+
+    const valueParsed = swapAmount?.slice(0, swapAmount?.length - 'uosmo'.length) ?? ''
+    return {
+      type: 'ibc_receive',
+      value: { amount: valueParsed, denom: 'uosmo' },
+      to: sender,
+      origin: sender
     }
   }
 
