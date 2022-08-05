@@ -1,11 +1,17 @@
-import { ChainId, fromAssetId } from '@shapeshiftoss/caip'
+import { CHAIN_NAMESPACE, ChainId, fromAssetId } from '@shapeshiftoss/caip'
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
-import { GetTradeQuoteInput, SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
+import {
+  GetBtcTradeQuoteInput,
+  GetTradeQuoteInput,
+  SwapError,
+  SwapErrorTypes,
+  TradeQuote
+} from '../../../api'
 import { bnOrZero, fromBaseUnit, toBaseUnit } from '../../utils/bignumber'
 import { DEFAULT_SLIPPAGE } from '../../utils/constants'
-import { ThorchainSwapperDeps } from '../types'
+import { ThorchainSwapperDeps, ThorChainUtxoChainIds } from '../types'
 import { getThorTxInfo as getBtcThorTxInfo } from '../utils/bitcoin/utils/getThorTxData'
 import { MAX_THORCHAIN_TRADE, THOR_MINIMUM_PADDING } from '../utils/constants'
 import { estimateTradeFee } from '../utils/estimateTradeFee/estimateTradeFee'
@@ -79,8 +85,9 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       minimum
     }
 
-    switch (chainId) {
-      case KnownChainIds.EthereumMainnet:
+    const { chainNamespace } = fromAssetId(sellAsset.assetId)
+    switch (chainNamespace) {
+      case CHAIN_NAMESPACE.Ethereum:
         return (async (): Promise<TradeQuote<KnownChainIds.EthereumMainnet>> => {
           const { router } = await getEthThorTxInfo({
             deps,
@@ -104,16 +111,8 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
           }
         })()
 
-      case KnownChainIds.BitcoinMainnet:
-      case KnownChainIds.DogecoinMainnet:
-      case KnownChainIds.LitecoinMainnet:
-        return (async (): Promise<
-          TradeQuote<
-            | KnownChainIds.BitcoinMainnet
-            | KnownChainIds.DogecoinMainnet
-            | KnownChainIds.LitecoinMainnet
-          >
-        > => {
+      case CHAIN_NAMESPACE.Bitcoin:
+        return (async (): Promise<TradeQuote<ThorChainUtxoChainIds>> => {
           const { vault, opReturnData, pubkey } = await getBtcThorTxInfo({
             deps,
             sellAsset,
@@ -122,8 +121,8 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             slippageTolerance: DEFAULT_SLIPPAGE,
             destinationAddress: receiveAddress,
             wallet,
-            bip44Params: input.bip44Params,
-            accountType: input.accountType,
+            bip44Params: (input as GetBtcTradeQuoteInput).bip44Params,
+            accountType: (input as GetBtcTradeQuoteInput).accountType,
             tradeFee
           })
 
@@ -142,7 +141,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             feeData
           }
         })()
-      case KnownChainIds.CosmosMainnet:
+      case CHAIN_NAMESPACE.Cosmos:
         return (async (): Promise<TradeQuote<KnownChainIds.CosmosMainnet>> => {
           const feeData = await (
             sellAdapter as ChainAdapter<KnownChainIds.CosmosMainnet>

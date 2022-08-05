@@ -5,6 +5,8 @@ import { createErrorClass } from '@shapeshiftoss/errors'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, ChainSpecific, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 
+import { ThorChainUtxoChainIds } from './swappers/thorchain/types'
+
 export const SwapError = createErrorClass('SwapError')
 
 type ChainSpecificQuoteFeeData<T extends ChainId> = ChainSpecific<
@@ -77,11 +79,8 @@ export type GetCosmosSdkTradeQuoteInput = CommonTradeInput & {
   chainId: CosmosSdkSupportedChainIds
 }
 
-type GetBtcTradeQuoteInput = CommonTradeInput & {
-  chainId:
-    | KnownChainIds.BitcoinMainnet
-    | KnownChainIds.DogecoinMainnet
-    | KnownChainIds.LitecoinMainnet
+export type GetBtcTradeQuoteInput = CommonTradeInput & {
+  chainId: SwapSupportedUtxoChainIds
   accountType: UtxoAccountType
   bip44Params: BIP44Params
   wallet: HDWallet
@@ -190,6 +189,8 @@ export enum SwapErrorTypes {
   GET_TRADE_TXS_FAILED = 'GET_TRADE_TXS_FAILED',
   TRADE_FAILED = 'TRADE_FAILED'
 }
+
+export type SwapSupportedUtxoChainIds = ThorChainUtxoChainIds
 
 export interface Swapper<T extends ChainId> {
   /** Human readable swapper name */

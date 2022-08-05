@@ -1,8 +1,14 @@
-import { ChainId } from '@shapeshiftoss/caip'
+import { CHAIN_NAMESPACE, ChainId, fromAssetId } from '@shapeshiftoss/caip'
 import { bitcoin, cosmos, ethereum } from '@shapeshiftoss/chain-adapters'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
-import { BuildTradeInput, SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
+import {
+  BuildTradeInput,
+  GetBtcTradeQuoteInput,
+  SwapError,
+  SwapErrorTypes,
+  TradeQuote
+} from '../../../api'
 import { DEFAULT_SLIPPAGE } from '../../utils/constants'
 import { getThorTradeQuote } from '../getThorTradeQuote/getTradeQuote'
 import { ThorchainSwapperDeps, ThorTrade } from '../types'
@@ -38,7 +44,9 @@ export const buildTrade = async ({
         details: { sellAsset }
       })
 
-    if (input.chainId === KnownChainIds.EthereumMainnet) {
+    const { chainNamespace } = fromAssetId(sellAsset.assetId)
+
+    if (chainNamespace === CHAIN_NAMESPACE.Ethereum) {
       const sellAssetBip44Params = sellAdapter.buildBIP44Params({
         accountNumber: sellAssetAccountNumber
       })
@@ -67,12 +75,7 @@ export const buildTrade = async ({
         receiveAddress: destinationAddress,
         txData: ethTradeTx.txToSign
       }
-    } else if (
-      input.chainId === KnownChainIds.BitcoinMainnet ||
-      input.chainId === KnownChainIds.LitecoinMainnet
-    ) {
-
-      console.log('the fucking input is')
+    } else if (chainNamespace === CHAIN_NAMESPACE.Bitcoin) {
       const { vault, opReturnData } = await getBtcThorTxInfo({
         deps,
         sellAsset,
@@ -81,8 +84,8 @@ export const buildTrade = async ({
         slippageTolerance,
         destinationAddress,
         wallet,
-        bip44Params: input.bip44Params,
-        accountType: input.accountType,
+        bip44Params: (input as GetBtcTradeQuoteInput).bip44Params,
+        accountType: (input as GetBtcTradeQuoteInput).accountType,
         tradeFee: quote.feeData.tradeFee
       })
 
@@ -92,9 +95,9 @@ export const buildTrade = async ({
         value: sellAmount,
         wallet,
         to: vault,
-        bip44Params: input.bip44Params,
+        bip44Params: (input as GetBtcTradeQuoteInput).bip44Params,
         chainSpecific: {
-          accountType: input.accountType,
+          accountType: (input as GetBtcTradeQuoteInput).accountType,
           satoshiPerByte: (quote as TradeQuote<KnownChainIds.BitcoinMainnet>).feeData.chainSpecific
             .satsPerByte,
           opReturnData
@@ -107,7 +110,7 @@ export const buildTrade = async ({
         receiveAddress: destinationAddress,
         txData: buildTxResponse.txToSign
       }
-    } else if (input.chainId === KnownChainIds.CosmosMainnet) {
+    } else if (chainNamespace === CHAIN_NAMESPACE.Cosmos) {
       const txData = await cosmosTxData({
         deps,
         sellAdapter: sellAdapter as unknown as cosmos.ChainAdapter,
@@ -135,7 +138,6 @@ export const buildTrade = async ({
       })
     }
   } catch (e) {
-    console.log('its fucked because', e)
     if (e instanceof SwapError) throw e
     throw new SwapError('[buildTrade]: error building trade', {
       code: SwapErrorTypes.BUILD_TRADE_FAILED,

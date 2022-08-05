@@ -71,3 +71,9 @@ export interface CosmosThorTrade<C extends ChainId> extends Trade<C> {
 }
 
 export type ThorTrade<C extends ChainId> = BtcThorTrade<C> | EthThorTrade<C> | CosmosThorTrade<C>
+
+export type ThorChainUtxoChainIds =
+  | KnownChainIds.BitcoinMainnet
+  | KnownChainIds.DogecoinMainnet
+  | KnownChainIds.LitecoinMainnet
+  | KnownChainIds.BitcoinCashMainnet
