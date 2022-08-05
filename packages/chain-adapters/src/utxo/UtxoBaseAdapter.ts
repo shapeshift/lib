@@ -216,7 +216,6 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
       }
 
       const { xpub } = await this.getPublicKey(wallet, bip44Params, accountType)
-
       const { data: utxos } = await this.providers.http.getUtxos({ pubkey: xpub })
 
       const coinSelectResult = utxoSelect({
