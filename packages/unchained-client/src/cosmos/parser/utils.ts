@@ -96,13 +96,18 @@ const virtualMessageFromEvents = (
         '{}'
     )
 
-    return {
-      type: 'ibc_receive',
-      value: { amount: parsedPacketData.amount, denom: parsedPacketData.amount },
-      from: parsedPacketData.sender,
-      to: parsedPacketData.receiver,
-      origin: parsedPacketData.sender
-    }
+    // Osmosis IBC receives are showing up as osmosis. (Requires further debugging, probably during a swapper re-write)
+    // This hack ignores ibc deposits into osmosis
+    // Its fine because ibc assets only ephemerally exist on osmosis during a swap
+    if (!parsedPacketData.receiver.startsWith('osmo'))
+      return {
+        type: 'ibc_receive',
+        value: { amount: parsedPacketData.amount, denom: parsedPacketData.denom },
+        from: parsedPacketData.sender,
+        to: parsedPacketData.receiver,
+        origin: parsedPacketData.sender
+      }
+    return
   } else if (rewardEventData) {
     const valueUnparsed = rewardEventData?.attributes?.find(
       (attribute) => attribute.key === 'amount'
@@ -116,8 +121,8 @@ const virtualMessageFromEvents = (
       origin: msg.origin
     }
   } else if (swapEventData) {
-    const sender = swapEventData?.attributes.find((attribute) => attribute.key === 'sender')?.value
-    const swapAmount = swapEventData?.attributes.find(
+    const sender = swapEventData.attributes.find((attribute) => attribute.key === 'sender')?.value
+    const swapAmount = swapEventData.attributes.find(
       (attribute) => attribute.key === 'tokens_out'
     )?.value
     const valueParsed = swapAmount?.slice(0, swapAmount?.length - 'uosmo'.length) ?? ''
