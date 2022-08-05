@@ -50,15 +50,6 @@ const metaData = (msg: Message | undefined, assetId: string): TxMetadata | undef
         assetId,
         value: msg?.value?.amount
       }
-    case 'swap_exact_amount_in':
-      return {
-        parser: 'cosmos',
-        method: msg.type,
-        ibcDestination: msg.to,
-        ibcSource: msg.from,
-        assetId,
-        value: msg?.value?.amount
-      }
     // known message types with no applicable metadata
     case 'send':
       return
@@ -78,7 +69,9 @@ const virtualMessageFromEvents = (
   const ibcRecvEventData = events[1]?.find((event) => event.type === 'recv_packet')
   // get rewards tx indicted by events
   const rewardEventData = events[0]?.find((event) => event.type === 'withdraw_rewards')
-  // swap tx
+
+  // Osmo swap tx. This works for now as a general cosmos-sdk parser
+  // Eventually may want an osmo parser on its own
   const swapEventData = events[0]?.find((event) => event.type === 'token_swapped')
 
   if (ibcSendEventData) {
@@ -87,10 +80,11 @@ const virtualMessageFromEvents = (
         '{}'
     )
 
+    // We dont support parsing ibc sends unless they are atom or osmo
     if (parsedPacketData.denom === 'uatom' || parsedPacketData.denom === 'uosmo')
       return {
         type: 'ibc_send',
-        value: { amount: parsedPacketData.amount, denom: parsedPacketData.amount },
+        value: { amount: parsedPacketData.amount, denom: parsedPacketData.denom },
         from: parsedPacketData.sender,
         to: parsedPacketData.receiver,
         origin: parsedPacketData.sender
@@ -122,20 +116,17 @@ const virtualMessageFromEvents = (
       origin: msg.origin
     }
   } else if (swapEventData) {
-    // TODO: Osmosis specific, should probably be moved to it's own parser eventually
-    // For now this is fine
     const sender = swapEventData?.attributes.find((attribute) => attribute.key === 'sender')?.value
     const swapAmount = swapEventData?.attributes.find(
       (attribute) => attribute.key === 'tokens_out'
     )?.value
-
     const valueParsed = swapAmount?.slice(0, swapAmount?.length - 'uosmo'.length) ?? ''
-    return {
-      type: 'ibc_receive',
-      value: { amount: valueParsed, denom: 'uosmo' },
-      to: sender,
-      origin: sender
-    }
+    if (swapAmount?.includes('uosmo'))
+      return {
+        type: 'send',
+        value: { amount: valueParsed, denom: 'uosmo' },
+        to: sender
+      }
   }
 
   // no virtual message handled, but also no transaction message
