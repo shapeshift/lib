@@ -88,9 +88,14 @@ export type SubscribeTxsInput = {
 export type TransferType = unchained.TransferType
 export type TradeType = unchained.TradeType
 
+type TransactionData =
+  | unchained.StandardTxMetadata
+  | unchained.evm.TxMetadata
+  | unchained.cosmos.TxMetadata
+
 export type Transaction = Omit<unchained.StandardTx, 'transfers'> & {
   transfers: Array<TxTransfer>
-  data?: unchained.StandardTxMetadata | unchained.evm.TxMetadata | unchained.cosmos.TxMetadata
+  data?: TransactionData
 }
 
 export type TransactionMetadata = unchained.StandardTxMetadata
