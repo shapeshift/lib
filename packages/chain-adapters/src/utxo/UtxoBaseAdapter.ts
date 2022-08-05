@@ -215,9 +215,15 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
         throw new Error(`UtxoBaseAdapter: wallet does not support ${this.coinName}`)
       }
 
+      console.log('GETTING THE XPUB FOR wallet', wallet)
+      console.log('GETTING THE XPUB FOR bip44Params', bip44Params)
+      console.log('GETTING THE XPUB FOR accountType', accountType)
       const { xpub } = await this.getPublicKey(wallet, bip44Params, accountType)
+
+      console.log('xpub is', xpub)
       const { data: utxos } = await this.providers.http.getUtxos({ pubkey: xpub })
 
+      console.log('doing coinselect with utxos', utxos)
       const coinSelectResult = utxoSelect({
         utxos,
         to,

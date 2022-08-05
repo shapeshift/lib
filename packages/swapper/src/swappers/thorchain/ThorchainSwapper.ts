@@ -34,7 +34,8 @@ export class ThorchainSwapper implements Swapper<ChainId> {
   private sellSupportedChainIds: Record<ChainId, boolean> = {
     [KnownChainIds.EthereumMainnet]: true,
     [KnownChainIds.BitcoinMainnet]: true,
-    [KnownChainIds.CosmosMainnet]: true
+    [KnownChainIds.CosmosMainnet]: true,
+    [KnownChainIds.LitecoinMainnet]: true
   }
 
   private buySupportedChainIds: Record<ChainId, boolean> = {
@@ -140,9 +141,14 @@ export class ThorchainSwapper implements Swapper<ChainId> {
         })
         const txid = await adapter.broadcastTransaction(signedTx)
         return { tradeId: txid }
-      } else if (trade.sellAsset.chainId === KnownChainIds.BitcoinMainnet) {
+      } else if (
+        trade.sellAsset.chainId === KnownChainIds.BitcoinMainnet ||
+        trade.sellAsset.chainId === KnownChainIds.LitecoinMainnet
+      ) {
         const signedTx = await (adapter as unknown as bitcoin.ChainAdapter).signTransaction({
-          txToSign: (trade as ThorTrade<KnownChainIds.BitcoinMainnet>).txData as BTCSignTx,
+          txToSign: (
+            trade as ThorTrade<KnownChainIds.BitcoinMainnet | KnownChainIds.LitecoinMainnet>
+          ).txData as BTCSignTx,
           wallet
         })
         const txid = await adapter.broadcastTransaction(signedTx)

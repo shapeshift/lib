@@ -1,6 +1,5 @@
 import { Asset } from '@shapeshiftoss/asset-service'
-import { btcChainId } from '@shapeshiftoss/caip'
-import { bitcoin } from '@shapeshiftoss/chain-adapters'
+import { bitcoin, litecoin } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, UtxoAccountType } from '@shapeshiftoss/types'
 
@@ -75,13 +74,13 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
       limit
     })
 
-    const adapter = deps.adapterManager.get(btcChainId)
+    const adapter = deps.adapterManager.get(sellAsset.chainId)
 
-    const pubkey = await (adapter as unknown as bitcoin.ChainAdapter).getPublicKey(
-      wallet,
-      bip44Params,
-      accountType
-    )
+    console.log('thor pubkey for bip44Params', bip44Params)
+    console.log('thor pubkey for accountType', accountType)
+    const pubkey = await (
+      adapter as unknown as bitcoin.ChainAdapter | litecoin.ChainAdapter
+    ).getPublicKey(wallet, bip44Params, accountType)
 
     return {
       opReturnData: memo,

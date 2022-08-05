@@ -1,5 +1,5 @@
 import { ChainId } from '@shapeshiftoss/caip'
-import { bitcoin, ChainAdapter } from '@shapeshiftoss/chain-adapters'
+import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
 import { QuoteFeeData, SwapError, SwapErrorTypes } from '../../../../../api'

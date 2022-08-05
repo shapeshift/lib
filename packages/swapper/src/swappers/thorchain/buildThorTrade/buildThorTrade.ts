@@ -37,11 +37,11 @@ export const buildTrade = async ({
         fn: 'buildTrade',
         details: { sellAsset }
       })
-    const sellAssetBip44Params = sellAdapter.buildBIP44Params({
-      accountNumber: sellAssetAccountNumber
-    })
 
     if (input.chainId === KnownChainIds.EthereumMainnet) {
+      const sellAssetBip44Params = sellAdapter.buildBIP44Params({
+        accountNumber: sellAssetAccountNumber
+      })
       const ethTradeTx = await makeTradeTx({
         wallet,
         slippageTolerance,
@@ -67,7 +67,12 @@ export const buildTrade = async ({
         receiveAddress: destinationAddress,
         txData: ethTradeTx.txToSign
       }
-    } else if (input.chainId === KnownChainIds.BitcoinMainnet) {
+    } else if (
+      input.chainId === KnownChainIds.BitcoinMainnet ||
+      input.chainId === KnownChainIds.LitecoinMainnet
+    ) {
+
+      console.log('the fucking input is')
       const { vault, opReturnData } = await getBtcThorTxInfo({
         deps,
         sellAsset,
@@ -76,7 +81,7 @@ export const buildTrade = async ({
         slippageTolerance,
         destinationAddress,
         wallet,
-        bip44Params: sellAssetBip44Params,
+        bip44Params: input.bip44Params,
         accountType: input.accountType,
         tradeFee: quote.feeData.tradeFee
       })
@@ -87,6 +92,7 @@ export const buildTrade = async ({
         value: sellAmount,
         wallet,
         to: vault,
+        bip44Params: input.bip44Params,
         chainSpecific: {
           accountType: input.accountType,
           satoshiPerByte: (quote as TradeQuote<KnownChainIds.BitcoinMainnet>).feeData.chainSpecific
@@ -129,6 +135,7 @@ export const buildTrade = async ({
       })
     }
   } catch (e) {
+    console.log('its fucked because', e)
     if (e instanceof SwapError) throw e
     throw new SwapError('[buildTrade]: error building trade', {
       code: SwapErrorTypes.BUILD_TRADE_FAILED,
