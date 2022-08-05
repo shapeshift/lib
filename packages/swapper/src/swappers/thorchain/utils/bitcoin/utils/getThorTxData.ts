@@ -76,8 +76,6 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
 
     const adapter = deps.adapterManager.get(sellAsset.chainId)
 
-    console.log('thor pubkey for bip44Params', bip44Params)
-    console.log('thor pubkey for accountType', accountType)
     const pubkey = await (
       adapter as unknown as bitcoin.ChainAdapter | litecoin.ChainAdapter
     ).getPublicKey(wallet, bip44Params, accountType)
