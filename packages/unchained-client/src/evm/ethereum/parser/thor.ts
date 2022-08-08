@@ -21,7 +21,7 @@ export interface ParserArgs {
 }
 
 export class Parser implements SubParser<Tx> {
-  readonly routerContract: string | null
+  readonly routerContract: string
   readonly abiInterface = new ethers.utils.Interface(THOR_ABI)
 
   readonly supportedFunctions = {
@@ -39,13 +39,12 @@ export class Parser implements SubParser<Tx> {
         case 'eip155:3':
           return THOR_ROUTER_CONTRACT_ROPSTEN
         default:
-          return null
+          throw new Error('chainId is not supported. (supported chainIds: eip155:1, eip155:3)')
       }
     })()
   }
 
   async parse(tx: Tx): Promise<TxSpecific | undefined> {
-    if (!this.routerContract) return
     if (!txInteractsWithContract(tx, this.routerContract)) return
     if (!tx.inputData) return
 

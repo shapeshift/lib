@@ -16,7 +16,7 @@ export class Parser implements SubParser<Tx> {
   provider: ethers.providers.JsonRpcProvider
 
   readonly chainId: ChainId
-  readonly wethContract: string | null
+  readonly wethContract: string
   readonly abiInterface = new ethers.utils.Interface(WETH_ABI)
 
   readonly supportedFunctions = {
@@ -35,13 +35,12 @@ export class Parser implements SubParser<Tx> {
         case 'eip155:3':
           return WETH_CONTRACT_ROPSTEN
         default:
-          return null
+          throw new Error('chainId is not supported. (supported chainIds: eip155:1, eip155:3)')
       }
     })()
   }
 
   async parse(tx: Tx): Promise<TxSpecific | undefined> {
-    if (!this.wethContract) return
     if (!txInteractsWithContract(tx, this.wethContract)) return
     if (!tx.inputData) return
 

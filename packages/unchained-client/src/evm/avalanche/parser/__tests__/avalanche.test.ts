@@ -21,10 +21,7 @@ import zrxTradeAvaxToWeth from './mockData/zrxTradeAvaxToWeth'
 import zrxTradeWethToAvax from './mockData/zrxTradeWethToAvax'
 import zrxTradeWethToWbtc from './mockData/zrxTradeWethToWbtc'
 
-const txParser = new TransactionParser({
-  rpcUrl: '',
-  chainId: avalancheChainId
-})
+const txParser = new TransactionParser({ rpcUrl: '', chainId: avalancheChainId })
 
 describe('parseTx', () => {
   describe('standard', () => {
