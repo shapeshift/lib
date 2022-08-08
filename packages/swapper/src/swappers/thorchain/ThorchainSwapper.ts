@@ -30,6 +30,8 @@ import { MidgardActionsResponse, PoolResponse, ThorchainSwapperDeps, ThorTrade }
 import { getUsdRate } from './utils/getUsdRate/getUsdRate'
 import { thorService } from './utils/thorService'
 
+export * from './types'
+
 export class ThorchainSwapper implements Swapper<ChainId> {
   readonly name = 'Thorchain'
   private sellSupportedChainIds: Record<ChainId, boolean> = {
