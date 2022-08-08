@@ -21,7 +21,7 @@ export interface ParserArgs {
 }
 
 export class Parser implements SubParser<Tx> {
-  readonly routerContract: string
+  readonly routerContract: string | null
   readonly abiInterface = new ethers.utils.Interface(THOR_ABI)
 
   readonly supportedFunctions = {
@@ -32,19 +32,20 @@ export class Parser implements SubParser<Tx> {
   constructor(args: ParserArgs) {
     // TODO: Router contract can change, use /inbound_addresses endpoint to determine current router contract.
     // We will also need to know all past router contract addresses if we intend on using receive address as the means for detection
-    switch (args.chainId) {
-      case 'eip155:1':
-        this.routerContract = THOR_ROUTER_CONTRACT_MAINNET
-        break
-      case 'eip155:3':
-        this.routerContract = THOR_ROUTER_CONTRACT_ROPSTEN
-        break
-      default:
-        throw new Error('chainId is not supported. (supported chainIds: eip155:1, eip155:3)')
-    }
+    this.routerContract = (() => {
+      switch (args.chainId) {
+        case 'eip155:1':
+          return THOR_ROUTER_CONTRACT_MAINNET
+        case 'eip155:3':
+          return THOR_ROUTER_CONTRACT_ROPSTEN
+        default:
+          return null
+      }
+    })()
   }
 
   async parse(tx: Tx): Promise<TxSpecific | undefined> {
+    if (!this.routerContract) return
     if (!txInteractsWithContract(tx, this.routerContract)) return
     if (!tx.inputData) return
 
