@@ -28,6 +28,18 @@ type ChainSpecificQuoteFeeData<T extends ChainId> = ChainSpecific<
       byteCount: string
       satsPerByte: string
     }
+    [KnownChainIds.DogecoinMainnet]: {
+      byteCount: string
+      satsPerByte: string
+    }
+    [KnownChainIds.LitecoinMainnet]: {
+      byteCount: string
+      satsPerByte: string
+    }
+    [KnownChainIds.BitcoinCashMainnet]: {
+      byteCount: string
+      satsPerByte: string
+    }
     [KnownChainIds.CosmosMainnet]: {
       estimatedGas: string
     }
