@@ -1,3 +1,17 @@
+# [@shapeshiftoss/swapper-v9.9.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.8.0...@shapeshiftoss/swapper-v9.9.0) (2022-08-08)
+
+
+### Features
+
+* cowswap app data ([#956](https://github.com/shapeshift/lib/issues/956)) ([ea6b596](https://github.com/shapeshift/lib/commit/ea6b59652437ab744bfa92aa7823fd8ca38b5bcf))
+
+# [@shapeshiftoss/swapper-v9.8.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.7.0...@shapeshiftoss/swapper-v9.8.0) (2022-08-08)
+
+
+### Features
+
+* **swapper:** add isCowTrade typeguard ([#954](https://github.com/shapeshift/lib/issues/954)) ([6d337af](https://github.com/shapeshift/lib/commit/6d337afca8d21fd9be1d98725dc893dc3d113870))
+
 # [@shapeshiftoss/swapper-v9.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.6.1...@shapeshiftoss/swapper-v9.7.0) (2022-08-08)
 
 
