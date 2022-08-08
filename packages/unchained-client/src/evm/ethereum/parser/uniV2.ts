@@ -2,7 +2,7 @@ import { ChainId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
 import { ethers } from 'ethers'
 
 import { Tx } from '../../../generated/ethereum'
-import { TransferType, TxParser } from '../../../types'
+import { TransferType } from '../../../types'
 import { getSigHash, SubParser, txInteractsWithContract, TxSpecific } from '../../parser'
 import ERC20_ABI from '../../parser/abi/erc20'
 import UNIV2_ABI from './abi/uniV2'
@@ -41,16 +41,16 @@ export class Parser implements SubParser<Tx> {
     this.chainId = args.chainId
     this.provider = args.provider
 
-    switch (args.chainId) {
-      case 'eip155:1':
-        this.wethContract = WETH_CONTRACT_MAINNET
-        break
-      case 'eip155:3':
-        this.wethContract = WETH_CONTRACT_ROPSTEN
-        break
-      default:
-        throw new Error('chainId is not supported. (supported chainIds: eip155:1, eip155:3)')
-    }
+    this.wethContract = (() => {
+      switch (args.chainId) {
+        case 'eip155:1':
+          return WETH_CONTRACT_MAINNET
+        case 'eip155:3':
+          return WETH_CONTRACT_ROPSTEN
+        default:
+          throw new Error('chainId is not supported. (supported chainIds: eip155:1, eip155:3)')
+      }
+    })()
   }
 
   async parseUniV2(tx: Tx): Promise<TxSpecific | undefined> {
@@ -132,7 +132,7 @@ export class Parser implements SubParser<Tx> {
     return {
       transfers,
       data: {
-        parser: TxParser.UniV2,
+        parser: 'uniV2',
         method: decoded.name
       }
     }
@@ -153,7 +153,7 @@ export class Parser implements SubParser<Tx> {
 
     return {
       data: {
-        parser: TxParser.UniV2,
+        parser: 'uniV2',
         method: decoded.name
       }
     }
