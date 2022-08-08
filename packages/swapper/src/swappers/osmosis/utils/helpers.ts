@@ -41,7 +41,7 @@ const txStatus = async (txid: string, baseUrl: string): Promise<string> => {
 // TODO: leverage chain-adapters websockets
 export const pollForComplete = async (txid: string, baseUrl: string): Promise<string> => {
   return new Promise((resolve, reject) => {
-    const timeout = 120000 // 2 mins
+    const timeout = 300000 // 5 mins
     const startTime = Date.now()
     const interval = 5000 // 5 seconds
 
@@ -91,7 +91,7 @@ export const pollForAtomChannelBalance = async (
   osmoUrl: string
 ): Promise<string> => {
   return new Promise((resolve, reject) => {
-    const timeout = 120000 // 2 mins
+    const timeout = 300000 // 5 mins
     const startTime = Date.now()
     const interval = 5000 // 5 seconds
 

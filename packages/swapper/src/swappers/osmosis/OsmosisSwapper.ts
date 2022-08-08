@@ -148,7 +148,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       })
 
     const feeData = await osmosisAdapter.getFeeData({})
-    const fee = feeData.average.txFee
+    const fee = feeData.fast.txFee
 
     return {
       buyAmount,
@@ -189,7 +189,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       })
 
     const feeData = await osmosisAdapter.getFeeData({})
-    const fee = feeData.average.txFee
+    const fee = feeData.fast.txFee
 
     return {
       buyAsset,
@@ -229,7 +229,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
 
     let sellAddress
     const feeData = await osmosisAdapter.getFeeData({})
-    const gas = feeData.average.chainSpecific.gasLimit
+    const gas = feeData.fast.chainSpecific.gasLimit
 
     if (!isFromOsmo) {
       const sellBip44Params = cosmosAdapter.buildBIP44Params({
