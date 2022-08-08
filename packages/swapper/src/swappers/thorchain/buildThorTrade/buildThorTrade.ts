@@ -4,7 +4,7 @@ import { KnownChainIds } from '@shapeshiftoss/types'
 
 import {
   BuildTradeInput,
-  GetBtcTradeQuoteInput,
+  GetUtxoTradeQuoteInput,
   SwapError,
   SwapErrorTypes,
   TradeQuote
@@ -84,8 +84,8 @@ export const buildTrade = async ({
         slippageTolerance,
         destinationAddress,
         wallet,
-        bip44Params: (input as GetBtcTradeQuoteInput).bip44Params,
-        accountType: (input as GetBtcTradeQuoteInput).accountType,
+        bip44Params: (input as GetUtxoTradeQuoteInput).bip44Params,
+        accountType: (input as GetUtxoTradeQuoteInput).accountType,
         tradeFee: quote.feeData.tradeFee
       })
 
@@ -95,9 +95,9 @@ export const buildTrade = async ({
         value: sellAmount,
         wallet,
         to: vault,
-        bip44Params: (input as GetBtcTradeQuoteInput).bip44Params,
+        bip44Params: (input as GetUtxoTradeQuoteInput).bip44Params,
         chainSpecific: {
-          accountType: (input as GetBtcTradeQuoteInput).accountType,
+          accountType: (input as GetUtxoTradeQuoteInput).accountType,
           satoshiPerByte: (quote as TradeQuote<KnownChainIds.BitcoinMainnet>).feeData.chainSpecific
             .satsPerByte,
           opReturnData

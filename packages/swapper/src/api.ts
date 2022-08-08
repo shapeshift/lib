@@ -79,15 +79,15 @@ export type GetCosmosSdkTradeQuoteInput = CommonTradeInput & {
   chainId: CosmosSdkSupportedChainIds
 }
 
-export type GetBtcTradeQuoteInput = CommonTradeInput & {
-  chainId: SwapSupportedUtxoChainIds
+export type GetUtxoTradeQuoteInput = CommonTradeInput & {
+  chainId: UtxoSupportedChainIds
   accountType: UtxoAccountType
   bip44Params: BIP44Params
   wallet: HDWallet
 }
 
 export type GetTradeQuoteInput =
-  | GetBtcTradeQuoteInput
+  | GetUtxoTradeQuoteInput
   | GetEvmTradeQuoteInput
   | GetCosmosSdkTradeQuoteInput
 
@@ -190,7 +190,7 @@ export enum SwapErrorTypes {
   TRADE_FAILED = 'TRADE_FAILED'
 }
 
-export type SwapSupportedUtxoChainIds = ThorChainUtxoChainIds
+export type UtxoSupportedChainIds = ThorChainUtxoChainIds
 
 export interface Swapper<T extends ChainId> {
   /** Human readable swapper name */

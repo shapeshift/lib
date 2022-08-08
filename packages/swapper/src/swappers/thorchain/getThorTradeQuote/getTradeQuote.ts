@@ -3,7 +3,7 @@ import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
 import {
-  GetBtcTradeQuoteInput,
+  GetUtxoTradeQuoteInput,
   GetTradeQuoteInput,
   SwapError,
   SwapErrorTypes,
@@ -121,8 +121,8 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             slippageTolerance: DEFAULT_SLIPPAGE,
             destinationAddress: receiveAddress,
             wallet,
-            bip44Params: (input as GetBtcTradeQuoteInput).bip44Params,
-            accountType: (input as GetBtcTradeQuoteInput).accountType,
+            bip44Params: (input as GetUtxoTradeQuoteInput).bip44Params,
+            accountType: (input as GetUtxoTradeQuoteInput).accountType,
             tradeFee
           })
 

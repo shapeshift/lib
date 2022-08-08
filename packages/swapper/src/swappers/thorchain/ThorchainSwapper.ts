@@ -16,11 +16,11 @@ import {
   SwapErrorTypes,
   Swapper,
   SwapperType,
-  SwapSupportedUtxoChainIds,
   Trade,
   TradeQuote,
   TradeResult,
-  TradeTxs
+  TradeTxs,
+  UtxoSupportedChainIds
 } from '../../api'
 import { buildTrade } from './buildThorTrade/buildThorTrade'
 import { getThorTradeQuote } from './getThorTradeQuote/getTradeQuote'
@@ -148,7 +148,7 @@ export class ThorchainSwapper implements Swapper<ChainId> {
         return { tradeId: txid }
       } else if (chainNamespace === CHAIN_NAMESPACE.Bitcoin) {
         const signedTx = await (adapter as unknown as bitcoin.ChainAdapter).signTransaction({
-          txToSign: (trade as ThorTrade<SwapSupportedUtxoChainIds>).txData as BTCSignTx,
+          txToSign: (trade as ThorTrade<UtxoSupportedChainIds>).txData as BTCSignTx,
           wallet
         })
         const txid = await adapter.broadcastTransaction(signedTx)
