@@ -1,8 +1,7 @@
-import { ChainId } from '@shapeshiftoss/caip'
-import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
+import { ChainAdapter, UtxoBaseAdapter } from '@shapeshiftoss/chain-adapters'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
-import { QuoteFeeData, SwapError, SwapErrorTypes } from '../../../../../api'
+import { QuoteFeeData, SwapError, SwapErrorTypes, UtxoSupportedChainIds } from '../../../../../api'
 import { bn } from '../../../../utils/bignumber'
 import { ThorChainUtxoChainIds } from '../../../types'
 
@@ -17,10 +16,10 @@ export const getBtcTxFees = async ({
   opReturnData: string
   vault: string
   sellAmount: string
-  sellAdapter: ChainAdapter<ChainId>
+  sellAdapter: UtxoBaseAdapter<UtxoSupportedChainIds>
   pubkey: string
   tradeFee: string
-}): Promise<QuoteFeeData<KnownChainIds.BitcoinMainnet>> => {
+}): Promise<QuoteFeeData<UtxoSupportedChainIds>> => {
   try {
     const feeDataOptions = await (sellAdapter as ChainAdapter<ThorChainUtxoChainIds>).getFeeData({
       to: vault,

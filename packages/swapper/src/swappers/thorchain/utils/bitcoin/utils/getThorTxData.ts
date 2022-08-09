@@ -1,9 +1,9 @@
 import { Asset } from '@shapeshiftoss/asset-service'
-import { bitcoin, litecoin } from '@shapeshiftoss/chain-adapters'
+import { UtxoBaseAdapter } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, UtxoAccountType } from '@shapeshiftoss/types'
 
-import { SwapError, SwapErrorTypes } from '../../../../../api'
+import { SwapError, SwapErrorTypes, UtxoSupportedChainIds } from '../../../../../api'
 import { InboundResponse, ThorchainSwapperDeps } from '../../../types'
 import { getLimit } from '../../getLimit/getLimit'
 import { makeSwapMemo } from '../../makeSwapMemo/makeSwapMemo'
@@ -74,11 +74,11 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
       limit
     })
 
-    const adapter = deps.adapterManager.get(sellAsset.chainId)
+    const adapter = deps.adapterManager.get(
+      sellAsset.chainId
+    ) as unknown as UtxoBaseAdapter<UtxoSupportedChainIds>
 
-    const pubkey = await (
-      adapter as unknown as bitcoin.ChainAdapter | litecoin.ChainAdapter
-    ).getPublicKey(wallet, bip44Params, accountType)
+    const pubkey = await adapter.getPublicKey(wallet, bip44Params, accountType)
 
     return {
       opReturnData: memo,

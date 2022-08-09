@@ -1,13 +1,14 @@
 import { CHAIN_NAMESPACE, ChainId, fromAssetId } from '@shapeshiftoss/caip'
-import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
+import { ChainAdapter, UtxoBaseAdapter } from '@shapeshiftoss/chain-adapters'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
 import {
-  GetUtxoTradeQuoteInput,
   GetTradeQuoteInput,
+  GetUtxoTradeQuoteInput,
   SwapError,
   SwapErrorTypes,
-  TradeQuote
+  TradeQuote,
+  UtxoSupportedChainIds
 } from '../../../api'
 import { bnOrZero, fromBaseUnit, toBaseUnit } from '../../utils/bignumber'
 import { DEFAULT_SLIPPAGE } from '../../utils/constants'
@@ -131,7 +132,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             vault,
             opReturnData,
             pubkey,
-            sellAdapter,
+            sellAdapter: sellAdapter as unknown as UtxoBaseAdapter<UtxoSupportedChainIds>,
             tradeFee
           })
 
