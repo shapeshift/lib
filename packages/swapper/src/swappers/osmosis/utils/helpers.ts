@@ -33,7 +33,7 @@ const txStatus = async (txid: string, baseUrl: string): Promise<string> => {
     if (!txResponse?.data?.codespace && !!txResponse?.data?.gas_used) return 'success'
     if (txResponse?.data?.codespace) return 'failed'
   } catch (e) {
-    console.error('Failed to get status')
+    console.warn('Retrying to retrieve status')
   }
   return 'not found'
 }
@@ -81,7 +81,7 @@ export const getAtomChannelBalance = async (address: string, osmoUrl: string) =>
     )
     toAtomChannelBalance = Number(amount)
   } catch (e) {
-    console.error('no channel balance')
+    console.warn('Retrying to get ibc balance')
   }
   return toAtomChannelBalance
 }
