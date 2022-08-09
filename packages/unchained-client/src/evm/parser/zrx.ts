@@ -1,6 +1,6 @@
-import { Tx } from '../../../generated/ethereum'
-import { Dex, TradeType } from '../../../types'
-import { SubParser, txInteractsWithContract, TxSpecific } from '../../parser'
+import { Dex, TradeType } from '../../types'
+import { type Tx } from '../parser/types'
+import { type SubParser, type TxSpecific, txInteractsWithContract } from '.'
 import { ZRX_PROXY_CONTRACT } from './constants'
 
 export class Parser implements SubParser<Tx> {
