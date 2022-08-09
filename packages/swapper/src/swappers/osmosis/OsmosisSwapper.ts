@@ -299,6 +299,11 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     })
 
     const signed = await osmosisAdapter.signTransaction(signTxInput)
+
+    // delay to ensure all nodes we interact with are up to date at this point
+    // seeing intermittent bugs that suggest the balances and sequence numbers were sometimes off
+    await new Promise(resolve => setTimeout(resolve, 5000))
+
     const tradeId = await osmosisAdapter.broadcastTransaction(signed)
 
     if (isFromOsmo) {
