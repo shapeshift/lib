@@ -274,6 +274,9 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         })
 
       ibcSellAmount = await pollForAtomChannelBalance(receiveAddress, this.deps.osmoUrl)
+      // delay to ensure all nodes we interact with are up to date at this point
+      // seeing intermittent bugs that suggest the balances and sequence numbers were sometimes off
+      await new Promise((resolve) => setTimeout(resolve, 3000))
     } else {
       const sellBip44Params = osmosisAdapter.buildBIP44Params({
         accountNumber: Number(sellAssetAccountNumber)
@@ -299,11 +302,6 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     })
 
     const signed = await osmosisAdapter.signTransaction(signTxInput)
-
-    // delay to ensure all nodes we interact with are up to date at this point
-    // seeing intermittent bugs that suggest the balances and sequence numbers were sometimes off
-    await new Promise((resolve) => setTimeout(resolve, 8000))
-
     const tradeId = await osmosisAdapter.broadcastTransaction(signed)
 
     if (isFromOsmo) {
@@ -324,6 +322,9 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       const ibcAccountNumber = ibcResponseAccount.chainSpecific.accountNumber || '0'
       const ibcSequence = ibcResponseAccount.chainSpecific.sequence || '0'
 
+      // delay to ensure all nodes we interact with are up to date at this point
+      // seeing intermittent bugs that suggest the balances and sequence numbers were sometimes off
+      await new Promise((resolve) => setTimeout(resolve, 3000))
       await performIbcTransfer(
         transfer,
         osmosisAdapter,
