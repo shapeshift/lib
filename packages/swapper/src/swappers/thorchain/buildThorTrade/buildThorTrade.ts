@@ -1,5 +1,5 @@
 import { CHAIN_NAMESPACE, ChainId, fromAssetId } from '@shapeshiftoss/caip'
-import { bitcoin, cosmos, ethereum } from '@shapeshiftoss/chain-adapters'
+import { cosmos, ethereum, UtxoBaseAdapter } from '@shapeshiftoss/chain-adapters'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
 import {
@@ -7,11 +7,12 @@ import {
   GetUtxoTradeQuoteInput,
   SwapError,
   SwapErrorTypes,
-  TradeQuote
+  TradeQuote,
+  UtxoSupportedChainIds
 } from '../../../api'
 import { DEFAULT_SLIPPAGE } from '../../utils/constants'
 import { getThorTradeQuote } from '../getThorTradeQuote/getTradeQuote'
-import { ThorchainSwapperDeps, ThorTrade } from '../types'
+import { ThorchainSwapperDeps, ThorChainUtxoChainIds, ThorTrade } from '../types'
 import { getThorTxInfo as getBtcThorTxInfo } from '../utils/bitcoin/utils/getThorTxData'
 import { cosmosTxData } from '../utils/cosmos/cosmosTxData'
 import { makeTradeTx } from '../utils/ethereum/makeTradeTx'
@@ -90,7 +91,7 @@ export const buildTrade = async ({
       })
 
       const buildTxResponse = await (
-        sellAdapter as unknown as bitcoin.ChainAdapter
+        sellAdapter as unknown as UtxoBaseAdapter<UtxoSupportedChainIds>
       ).buildSendTransaction({
         value: sellAmount,
         wallet,
@@ -105,7 +106,7 @@ export const buildTrade = async ({
       })
 
       return {
-        chainId: KnownChainIds.BitcoinMainnet,
+        chainId: sellAsset.chainId as ThorChainUtxoChainIds,
         ...quote,
         receiveAddress: destinationAddress,
         txData: buildTxResponse.txToSign

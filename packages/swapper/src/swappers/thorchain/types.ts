@@ -56,7 +56,7 @@ export type ThorchainSwapperDeps = {
 }
 
 export interface BtcThorTrade<C extends ChainId> extends Trade<C> {
-  chainId: KnownChainIds.BitcoinMainnet
+  chainId: ThorChainUtxoChainIds
   txData: BTCSignTx
 }
 
