@@ -46,7 +46,7 @@ export class TransactionParser {
       tx.messages[0],
       tx.events,
       this.assetId,
-      tx.txid
+      address
     )
 
     parsedTx.data = data
