@@ -1,4 +1,4 @@
-import { ChainAdapter, UtxoBaseAdapter } from '@shapeshiftoss/chain-adapters'
+import { UtxoBaseAdapter } from '@shapeshiftoss/chain-adapters'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
 import { QuoteFeeData, SwapError, SwapErrorTypes, UtxoSupportedChainIds } from '../../../../../api'
@@ -20,7 +20,7 @@ export const getBtcTxFees = async ({
   tradeFee: string
 }): Promise<QuoteFeeData<UtxoSupportedChainIds>> => {
   try {
-    const feeDataOptions = await (sellAdapter as ChainAdapter<UtxoSupportedChainIds>).getFeeData({
+    const feeDataOptions = await sellAdapter.getFeeData({
       to: vault,
       value: sellAmount,
       chainSpecific: { pubkey, opReturnData }
