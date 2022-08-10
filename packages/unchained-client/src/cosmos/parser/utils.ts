@@ -65,10 +65,17 @@ const virtualMessageFromEvents = (
 ): Message | undefined => {
   // ibc send tx indicated by events
   const ibcSendEventData = events[0]?.find((event) => event.type === 'send_packet')
-  // ibc receive tx indicated by events
-  const ibcRecvEventData = events[Object.keys(events).length - 1]?.find(
-    (event) => event.type === 'recv_packet'
-  )
+
+  const ibcRecvData = Object.values(events).find((event) => {
+    const eventContainsRecvPacket = event.find(
+      (subEvent: { type: string }) => subEvent.type === 'recv_packet'
+    )
+    if (eventContainsRecvPacket) return true
+    return false
+  })
+  // // ibc receive tx indicated by events
+  const ibcRecvEventData = ibcRecvData?.find((event) => event.type === 'recv_packet')
+
   // get rewards tx indicted by events
   const rewardEventData = events[0]?.find((event) => event.type === 'withdraw_rewards')
 
