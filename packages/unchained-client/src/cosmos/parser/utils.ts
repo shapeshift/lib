@@ -61,20 +61,26 @@ const metaData = (msg: Message | undefined, assetId: string): TxMetadata | undef
 
 const virtualMessageFromEvents = (
   msg: Message,
-  events: { [key: string]: Event[] }
+  events: { [key: string]: Event[] },
+  address: string
 ): Message | undefined => {
   // ibc send tx indicated by events
   const ibcSendEventData = events[0]?.find((event) => event.type === 'send_packet')
 
+  // ibc receive tx indeicated by events
   const ibcRecvData = Object.values(events).find((event) => {
     const eventContainsRecvPacket = event.find(
-      (subEvent: { type: string }) => subEvent.type === 'recv_packet'
+      (subEvent: { type: string; attributes: any }) =>
+        subEvent.type === 'coin_received' &&
+        subEvent.attributes[0].key === 'receiver' &&
+        subEvent.attributes[0].value.toLowerCase() === address.toLowerCase()
     )
     if (eventContainsRecvPacket) return true
     return false
   })
-  // // ibc receive tx indicated by events
-  const ibcRecvEventData = ibcRecvData?.find((event) => event.type === 'recv_packet')
+  const ibcRecvEventData = ibcRecvData?.find((event) => {
+    return event.type === 'recv_packet'
+  })
 
   // get rewards tx indicted by events
   const rewardEventData = events[0]?.find((event) => event.type === 'withdraw_rewards')
@@ -108,14 +114,17 @@ const virtualMessageFromEvents = (
     // Osmosis IBC receives are showing up as osmosis. (Requires further debugging, probably during a swapper re-write)
     // This hack ignores ibc deposits into osmosis
     // Its fine because ibc assets only ephemerally exist on osmosis during a swap
-    if (!parsedPacketData.receiver.startsWith('osmo'))
-      return {
+    if (!parsedPacketData.receiver.startsWith('osmo')) {
+      const data = {
         type: 'ibc_receive',
         value: { amount: parsedPacketData.amount, denom: parsedPacketData.denom },
         from: parsedPacketData.sender,
         to: parsedPacketData.receiver,
         origin: parsedPacketData.sender
       }
+      return data
+    }
+
     return
   } else if (rewardEventData) {
     const valueUnparsed = rewardEventData?.attributes?.find(
@@ -156,9 +165,10 @@ const virtualMessageFromEvents = (
 export const valuesFromMsgEvents = (
   msg: Message,
   events: { [key: string]: Event[] },
-  assetId: string
+  assetId: string,
+  address: string
 ): { from: string; to: string; value: BigNumber; data: TxMetadata | undefined; origin: string } => {
-  const virtualMsg = virtualMessageFromEvents(msg, events)
+  const virtualMsg = virtualMessageFromEvents(msg, events, address)
   const data = metaData(virtualMsg, assetId)
   const from = virtualMsg?.from ?? ''
   const to = virtualMsg?.to ?? ''
