@@ -66,7 +66,9 @@ const virtualMessageFromEvents = (
   // ibc send tx indicated by events
   const ibcSendEventData = events[0]?.find((event) => event.type === 'send_packet')
   // ibc receive tx indicated by events
-  const ibcRecvEventData = events[1]?.find((event) => event.type === 'recv_packet')
+  const ibcRecvEventData = events[Object.keys(events).length - 1]?.find(
+    (event) => event.type === 'recv_packet'
+  )
   // get rewards tx indicted by events
   const rewardEventData = events[0]?.find((event) => event.type === 'withdraw_rewards')
 
