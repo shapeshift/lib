@@ -12,7 +12,7 @@ import {
 } from '../../../api'
 import { bnOrZero, fromBaseUnit, toBaseUnit } from '../../utils/bignumber'
 import { DEFAULT_SLIPPAGE } from '../../utils/constants'
-import { ThorchainSwapperDeps, ThorChainUtxoChainIds } from '../types'
+import { ThorchainSwapperDeps } from '../types'
 import { getThorTxInfo as getBtcThorTxInfo } from '../utils/bitcoin/utils/getThorTxData'
 import { MAX_THORCHAIN_TRADE, THOR_MINIMUM_PADDING } from '../utils/constants'
 import { estimateTradeFee } from '../utils/estimateTradeFee/estimateTradeFee'
@@ -113,7 +113,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
         })()
 
       case CHAIN_NAMESPACE.Bitcoin:
-        return (async (): Promise<TradeQuote<ThorChainUtxoChainIds>> => {
+        return (async (): Promise<TradeQuote<UtxoSupportedChainIds>> => {
           const { vault, opReturnData, pubkey } = await getBtcThorTxInfo({
             deps,
             sellAsset,

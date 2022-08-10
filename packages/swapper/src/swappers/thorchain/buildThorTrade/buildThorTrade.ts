@@ -12,7 +12,7 @@ import {
 } from '../../../api'
 import { DEFAULT_SLIPPAGE } from '../../utils/constants'
 import { getThorTradeQuote } from '../getThorTradeQuote/getTradeQuote'
-import { ThorchainSwapperDeps, ThorChainUtxoChainIds, ThorTrade } from '../types'
+import { ThorchainSwapperDeps, ThorTrade } from '../types'
 import { getThorTxInfo as getBtcThorTxInfo } from '../utils/bitcoin/utils/getThorTxData'
 import { cosmosTxData } from '../utils/cosmos/cosmosTxData'
 import { makeTradeTx } from '../utils/ethereum/makeTradeTx'
@@ -106,7 +106,7 @@ export const buildTrade = async ({
       })
 
       return {
-        chainId: sellAsset.chainId as ThorChainUtxoChainIds,
+        chainId: sellAsset.chainId as UtxoSupportedChainIds,
         ...quote,
         receiveAddress: destinationAddress,
         txData: buildTxResponse.txToSign
