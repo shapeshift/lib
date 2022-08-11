@@ -1,9 +1,9 @@
+import { AssetId } from '@shapeshiftoss/caip'
 import { Logger } from '@shapeshiftoss/logger'
 import BigNumber from 'bignumber.js'
 
 import { Event, Message } from '../../generated/cosmos'
 import { TxMetadata } from '../types'
-
 const logger = new Logger({
   namespace: ['client', 'cosmos', 'utils'],
   level: process.env.LOG_LEVEL
@@ -118,15 +118,14 @@ const virtualMessageFromEvents = (
     // Osmosis IBC receives are showing up as osmosis. (Requires further debugging, probably during a swapper re-write)
     // This hack ignores ibc deposits into osmosis
     // Its fine because ibc assets only ephemerally exist on osmosis during a swap
-    if (!parsedPacketData.receiver.startsWith('osmo'))
-      return {
-        type: 'ibc_receive',
-        value: { amount: parsedPacketData.amount, denom: parsedPacketData.denom },
-        from: parsedPacketData.sender,
-        to: parsedPacketData.receiver,
-        origin: parsedPacketData.sender
-      }
-    return
+    if (parsedPacketData.receiver.startsWith('osmo')) return
+    return {
+      type: 'ibc_receive',
+      value: { amount: parsedPacketData.amount, denom: parsedPacketData.denom },
+      from: parsedPacketData.sender,
+      to: parsedPacketData.receiver,
+      origin: parsedPacketData.sender
+    }
   } else if (rewardEventData) {
     const valueUnparsed = rewardEventData?.attributes?.find(
       (attribute) => attribute.key === 'amount'
