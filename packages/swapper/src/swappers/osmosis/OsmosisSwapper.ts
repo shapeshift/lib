@@ -147,7 +147,8 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         code: SwapErrorTypes.BUILD_TRADE_FAILED
       })
 
-    const fee = '0'
+    const feeData = await osmosisAdapter.getFeeData({})
+    const fee = feeData.fast.txFee
 
     return {
       buyAmount,
@@ -187,7 +188,8 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         code: SwapErrorTypes.TRADE_QUOTE_FAILED
       })
 
-    const fee = '0'
+    const feeData = await osmosisAdapter.getFeeData({})
+    const fee = feeData.fast.txFee
 
     return {
       buyAsset,
