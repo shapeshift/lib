@@ -148,7 +148,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       })
 
     const feeData = await osmosisAdapter.getFeeData({})
-    const fee = feeData.fast.txFee
+    const fee = feeData.slow.txFee
 
     return {
       buyAmount,
@@ -189,7 +189,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       })
 
     const feeData = await osmosisAdapter.getFeeData({})
-    const fee = feeData.fast.txFee
+    const fee = feeData.slow.txFee
 
     return {
       buyAsset,

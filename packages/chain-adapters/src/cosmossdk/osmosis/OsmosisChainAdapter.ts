@@ -483,7 +483,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.OsmosisMain
     return {
       fast: { txFee: '5000', chainSpecific: { gasLimit: '300000' } },
       average: { txFee: '3500', chainSpecific: { gasLimit: '300000' } },
-      slow: { txFee: '2500', chainSpecific: { gasLimit: '300000' } }
+      slow: { txFee: '0', chainSpecific: { gasLimit: '300000' } }
     }
   }
 
