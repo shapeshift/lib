@@ -166,7 +166,7 @@ const virtualMessageFromEvents = (
 export const valuesFromMsgEvents = (
   msg: Message,
   events: { [key: string]: Event[] },
-  assetId: string,
+  assetId: AssetId,
   address: string
 ): { from: string; to: string; value: BigNumber; data: TxMetadata | undefined; origin: string } => {
   const virtualMsg = virtualMessageFromEvents(msg, events, address)
