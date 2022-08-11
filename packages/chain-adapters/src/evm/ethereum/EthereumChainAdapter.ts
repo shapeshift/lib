@@ -29,6 +29,8 @@ export class ChainAdapter extends EvmBaseAdapter<KnownChainIds.EthereumMainnet> 
   static readonly defaultBIP44Params: BIP44Params = {
     purpose: 44,
     coinType: Number(ASSET_REFERENCE.Ethereum),
+    // we may want to consider not making this a static default, and relying on what's pass in the constructor
+    // alternatively, we could require this for all methods at runtime, which is probably the safer option
     accountNumber: 0
   }
 

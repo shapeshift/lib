@@ -449,6 +449,7 @@ export class IdleOpportunity
     wallet: HDWallet
     tx: PreparedTransaction
     feePriority?: FeePriority
+    // accountNumber will need to be passed in here
   }): Promise<string> {
     const { wallet, tx, feePriority } = input
     const feeSpeed: FeePriority = feePriority ? feePriority : 'fast'

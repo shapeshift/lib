@@ -98,6 +98,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
     return this.rpcUrl
   }
 
+  // consider perhaps leveraging this function a lot more to pass in the accountNumber?
   buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
     return { ...this.defaultBIP44Params, ...params }
   }
