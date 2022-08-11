@@ -237,7 +237,7 @@ export interface Swapper<T extends ChainId> {
    * Get the txid of an approve amount transaction
    * If no amount is specified the sell amount of the quote will be used
    */
-  approveAmount(args: ApproveInfiniteInput<T>): Promise<string>
+  approveAmount(args: ApproveAmountInput<T>): Promise<string>
 
   /**
    * Get supported buyAssetId's by sellAssetId
