@@ -82,7 +82,7 @@ const virtualMessageFromEvents = (
         subEvent.attributes[0].value.toLowerCase() === address.toLowerCase()
     )
   )
-  const ibcRecvEventData = ibcRecvData?.find((event) => {
+  const ibcRecvEventData = ibcReceivedData?.find((event) => {
     return event.type === 'recv_packet'
   })
 
