@@ -69,7 +69,7 @@ const virtualMessageFromEvents = (
 
   // ibc receive tx indeicated by events
   const ibcRecvData = Object.values(events).find((event) => {
-    const eventContainsRecvPacket = event.find(
+    const foundEvent = event.find(
       (subEvent: {
         type: string
         attributes: {
@@ -81,7 +81,7 @@ const virtualMessageFromEvents = (
         subEvent.attributes[0].key === 'receiver' &&
         subEvent.attributes[0].value.toLowerCase() === address.toLowerCase()
     )
-    if (eventContainsRecvPacket) return true
+    if (foundEvent) return true
     return false
   })
   const ibcRecvEventData = ibcRecvData?.find((event) => {
