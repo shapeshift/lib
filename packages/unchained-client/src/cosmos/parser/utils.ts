@@ -67,7 +67,7 @@ const virtualMessageFromEvents = (
   // ibc send tx indicated by events
   const ibcSendEventData = events[0]?.find((event) => event.type === 'send_packet')
 
-  // ibc receive tx indeicated by events
+  // ibc receive tx indicated by events
   const ibcRecvData = Object.values(events).find((event) => {
     const foundEvent = event.find(
       (subEvent: {
