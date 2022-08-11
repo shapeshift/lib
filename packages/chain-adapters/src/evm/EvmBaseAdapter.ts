@@ -289,6 +289,8 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
     }
   }
 
+  // NOTE here - GetAddressInput accepts and optional bip44params, we're currently just passing in a wallet and no bip44params
+  // pass in a bip44params with an accountNumber here to get additional account addresses
   async getAddress(input: GetAddressInput): Promise<string> {
     const { wallet, bip44Params = this.defaultBIP44Params, showOnDevice = false } = input
     const address = await (wallet as ETHWallet).ethGetAddress({

@@ -1,5 +1,6 @@
 import { BIP44Params } from '@shapeshiftoss/types'
 
+// these are relevant as well
 export const toRootDerivationPath = (bip44Params: BIP44Params): string => {
   const { purpose, coinType, accountNumber } = bip44Params
   if (typeof purpose === 'undefined') throw new Error('toPath: bip44Params.purpose is required')
@@ -9,6 +10,7 @@ export const toRootDerivationPath = (bip44Params: BIP44Params): string => {
   return `m/${purpose}'/${coinType}'/${accountNumber}'`
 }
 
+// these are relevant as well
 export const toPath = (bip44Params: BIP44Params): string => {
   const { purpose, coinType, accountNumber, isChange = false, index = 0 } = bip44Params
   if (typeof purpose === 'undefined') throw new Error('toPath: bip44Params.purpose is required')
@@ -18,6 +20,7 @@ export const toPath = (bip44Params: BIP44Params): string => {
   return `m/${purpose}'/${coinType}'/${accountNumber}'/${Number(isChange)}/${index}`
 }
 
+// these are relevant as well
 export const fromPath = (path: string): BIP44Params => {
   const parts = path.split('/')
   const sliced = parts.slice(1) // discard the m/

@@ -33,6 +33,7 @@ export const toBtcOutputScriptType = (x: BTCInputScriptType) => {
 /**
  * Utility function to get BIP44Params and scriptType for chain-adapter functions (getAddress, buildSendTransaction)
  */
+// have a chat to adam and/or kevin about this function - it's possibly a relic from axiom days, he believes it can possibly be removed entirely
 export const utxoAccountParams = (
   chainId: ChainId,
   accountType: UtxoAccountType,
@@ -127,6 +128,7 @@ export const utxoAccountParams = (
   }
 }
 
+// these can possible go away as well
 export const accountTypeToScriptType: Record<UtxoAccountType, BTCInputScriptType> = Object.freeze({
   [UtxoAccountType.P2pkh]: BTCInputScriptType.SpendAddress,
   [UtxoAccountType.SegwitP2sh]: BTCInputScriptType.SpendP2SHWitness,
@@ -185,6 +187,8 @@ const accountTypeToVersion = {
   [UtxoAccountType.SegwitNative]: Buffer.from(PublicKeyType.zpub, 'hex')
 }
 
+// xpub is bitcoin legacy, xpub is bitcoin segwit, zpub is bitcoin segwit native
+// note, this is note *strictly* true but is unchained/blockbook specific
 const convertVersions = ['xpub', 'ypub', 'zpub']
 
 /**
@@ -197,6 +201,7 @@ const convertVersions = ['xpub', 'ypub', 'zpub']
  * @param {string} xpub - the public key provided by the wallet
  * @param {UtxoAccountType} accountType - The desired account type to be encoded into the public key
  */
+// also have a chat to adam/kev about this stuff
 export function convertXpubVersion(xpub: string, accountType: UtxoAccountType) {
   if (!convertVersions.includes(xpub.substring(0, 4))) {
     return xpub
