@@ -260,7 +260,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         this.deps.osmoUrl,
         'uatom',
         COSMO_OSMO_CHANNEL,
-        trade.feeData.fee,
+        '0',
         accountNumber,
         sequence,
         gas
