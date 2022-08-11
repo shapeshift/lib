@@ -68,8 +68,8 @@ const virtualMessageFromEvents = (
   const ibcSendEventData = events[0]?.find((event) => event.type === 'send_packet')
 
   // ibc receive tx indicated by events
-  const ibcRecvData = Object.values(events).find((event) => {
-    const foundEvent = event.find(
+  const ibcReceivedData = Object.values(events).find((event) =>
+    event.some(
       (subEvent: {
         type: string
         attributes: {
@@ -81,9 +81,7 @@ const virtualMessageFromEvents = (
         subEvent.attributes[0].key === 'receiver' &&
         subEvent.attributes[0].value.toLowerCase() === address.toLowerCase()
     )
-    if (foundEvent) return true
-    return false
-  })
+  )
   const ibcRecvEventData = ibcRecvData?.find((event) => {
     return event.type === 'recv_packet'
   })
