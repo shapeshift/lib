@@ -15,6 +15,10 @@ import {
 } from '../../constants'
 import { AssetId } from './../../assetId/assetId'
 
+/**
+ * https://docs.google.com/spreadsheets/d/1KU6J1Hl4vxBTIWCwWdrFfSadNltuFheQRoJyPrd0LMQ/edit#gid=631982242
+ * source of truth per banxa
+ */
 const AssetIdToBanxaTickerMap = {
   [btcAssetId]: 'btc',
   [cosmosAssetId]: 'atom',
@@ -67,12 +71,15 @@ export const getSupportedBanxaAssets = () =>
  * map ChainIds to Banxa blockchain codes (ETH, BTC, COSMOS),
  * since some Banxa assets could be on multiple chains and their default
  * chain won't be exactly the same as ours.
+ *
+ * https://docs.google.com/spreadsheets/d/1KU6J1Hl4vxBTIWCwWdrFfSadNltuFheQRoJyPrd0LMQ/edit#gid=631982242
+ * source of truth per banxa
  */
 const chainIdToBanxaBlockchainCodeMap: Record<ChainId, string> = {
   [ethChainId]: 'ETH',
   [btcChainId]: 'BTC',
   [cosmosChainId]: 'COSMOS',
-  [avalancheChainId]: 'AVAX'
+  [avalancheChainId]: 'AVAX-C' // note - the AVAX-C chain is not the same as the AVAX "ticker" on the banxa side
 } as const
 
 /**
