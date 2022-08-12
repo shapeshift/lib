@@ -54,8 +54,8 @@ export const estimateTradeFee = async (
   const buyFeeAssetRatio =
     buyAsset.assetId !== buyFeeAssetId
       ? await getPriceRatio(deps, {
-          sellAssetId: buyFeeAssetId,
-          buyAssetId: buyAsset.assetId
+          sellAssetId: buyAsset.assetId,
+          buyAssetId: buyFeeAssetId
         })
       : '1'
 
