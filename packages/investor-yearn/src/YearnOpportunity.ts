@@ -292,7 +292,7 @@ export class YearnOpportunity
 
     const preApprove = await depositTokenContract.methods.approve(
       ssRouterContractAddress,
-      amount ? numberToHex(bnOrZero(amount).integerValue().toString()) : MAX_ALLOWANCE
+      amount ? numberToHex(bnOrZero(amount).toString()) : MAX_ALLOWANCE
     )
 
     const data = await preApprove.encodeABI({ from: address })

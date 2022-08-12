@@ -403,10 +403,7 @@ export class FoxyApi {
     }
     const depositTokenContract = new this.web3.eth.Contract(erc20Abi, tokenContractAddress)
     const data: string = depositTokenContract.methods
-      .approve(
-        contractAddress,
-        amount ? numberToHex(bnOrZero(amount).integerValue().toString()) : MAX_ALLOWANCE
-      )
+      .approve(contractAddress, amount ? numberToHex(bnOrZero(amount).toString()) : MAX_ALLOWANCE)
       .encodeABI({
         from: userAddress
       })
