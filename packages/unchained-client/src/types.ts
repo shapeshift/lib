@@ -72,6 +72,7 @@ export interface BaseTxMetadata {
 
 export interface StandardTxMetadata extends BaseTxMetadata {
   parser: `${TxParser}`
+  value?: string | null
 }
 
 export interface StandardTx {

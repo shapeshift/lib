@@ -61,9 +61,12 @@ export class Parser implements SubParser<Tx> {
     // failed to decode input data
     if (!decoded) return
 
+    let approveValue: string | null = null
+
     switch (txSigHash) {
       case this.supportedYearnFunctions.approveSigHash:
         if (decoded?.args._spender !== SHAPE_SHIFT_ROUTER_CONTRACT) return
+        approveValue = decoded?.args._value?.toString()
         break
       case this.supportedShapeShiftFunctions.depositSigHash:
         if (tx.to !== SHAPE_SHIFT_ROUTER_CONTRACT) return
@@ -81,7 +84,8 @@ export class Parser implements SubParser<Tx> {
     return {
       data: {
         method: decoded.name,
-        parser: 'yearn'
+        parser: 'yearn',
+        ...(approveValue ? { value: approveValue } : {})
       }
     }
   }
