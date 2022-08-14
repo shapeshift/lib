@@ -155,7 +155,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       })
 
     const feeData = await osmosisAdapter.getFeeData({})
-    const fee = feeData.average.txFee
+    const fee = feeData.fast.txFee
 
     return {
       buyAmount,
@@ -196,7 +196,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       })
 
     const feeData = await osmosisAdapter.getFeeData({})
-    const fee = feeData.average.txFee
+    const fee = feeData.fast.txFee
 
     return {
       buyAsset,
@@ -236,7 +236,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
 
     let sellAddress
     const feeData = await osmosisAdapter.getFeeData({})
-    const gas = feeData.average.chainSpecific.gasLimit
+    const gas = feeData.fast.chainSpecific.gasLimit
 
     if (!isFromOsmo) {
       const sellBip44Params = cosmosAdapter.buildBIP44Params({
@@ -281,6 +281,9 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         })
 
       ibcSellAmount = await pollForAtomChannelBalance(receiveAddress, this.deps.osmoUrl)
+      // delay to ensure all nodes we interact with are up to date at this point
+      // seeing intermittent bugs that suggest the balances and sequence numbers were sometimes off
+      await new Promise((resolve) => setTimeout(resolve, 3000))
     } else {
       const sellBip44Params = osmosisAdapter.buildBIP44Params({
         accountNumber: Number(sellAssetAccountNumber)
@@ -297,7 +300,6 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     const signTxInput = await buildTradeTx({
       osmoAddress,
       adapter: osmosisAdapter,
-      trade,
       buyAssetDenom,
       sellAssetDenom,
       sellAmount: ibcSellAmount ?? sellAmount,
@@ -326,6 +328,9 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       const ibcAccountNumber = ibcResponseAccount.chainSpecific.accountNumber || '0'
       const ibcSequence = ibcResponseAccount.chainSpecific.sequence || '0'
 
+      // delay to ensure all nodes we interact with are up to date at this point
+      // seeing intermittent bugs that suggest the balances and sequence numbers were sometimes off
+      await new Promise((resolve) => setTimeout(resolve, 3000))
       await performIbcTransfer(
         transfer,
         osmosisAdapter,
@@ -333,7 +338,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         this.deps.cosmosUrl,
         buyAssetDenom,
         OSMO_COSMO_CHANNEL,
-        trade.feeData.fee,
+        '0',
         ibcAccountNumber,
         ibcSequence,
         gas

@@ -1,3 +1,59 @@
+# [@shapeshiftoss/swapper-v9.14.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.13.0...@shapeshiftoss/swapper-v9.14.0) (2022-08-12)
+
+
+### Features
+
+* no fee on osmo swapper txs ([#968](https://github.com/shapeshift/lib/issues/968)) ([72d9a96](https://github.com/shapeshift/lib/commit/72d9a966cccdd41742d7b8d44f38584c731d48d4))
+
+# [@shapeshiftoss/swapper-v9.13.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.12.1...@shapeshiftoss/swapper-v9.13.0) (2022-08-12)
+
+
+### Features
+
+* **swapper:** add TRADE_QUOTE_AMOUNT_TOO_SMALL error ([#970](https://github.com/shapeshift/lib/issues/970)) ([f4cab36](https://github.com/shapeshift/lib/commit/f4cab3691f5ef85af159b6e766c1a1e62175fa07))
+
+# [@shapeshiftoss/swapper-v9.12.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.12.0...@shapeshiftoss/swapper-v9.12.1) (2022-08-12)
+
+
+### Bug Fixes
+
+* **swapper:** thorchainSwapper quote inversion ([#969](https://github.com/shapeshift/lib/issues/969)) ([150e041](https://github.com/shapeshift/lib/commit/150e041e866e92eb39fdc0978c4de541eb0ea2d6))
+
+# [@shapeshiftoss/swapper-v9.12.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.11.1...@shapeshiftoss/swapper-v9.12.0) (2022-08-11)
+
+
+### Features
+
+* **cowSwapper:** handle SellAmountDoesNotCoverFee Cow.fi error ([#965](https://github.com/shapeshift/lib/issues/965)) ([c69fad3](https://github.com/shapeshift/lib/commit/c69fad3ac8a486c707ca77862859b78ce86e4ca2))
+
+# [@shapeshiftoss/swapper-v9.11.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.11.0...@shapeshiftoss/swapper-v9.11.1) (2022-08-11)
+
+
+### Bug Fixes
+
+* osmo parser fixes ([#948](https://github.com/shapeshift/lib/issues/948)) ([cd1db39](https://github.com/shapeshift/lib/commit/cd1db3942a55e01e674bdededbcede2b0b787863))
+
+# [@shapeshiftoss/swapper-v9.11.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.10.1...@shapeshiftoss/swapper-v9.11.0) (2022-08-11)
+
+
+### Features
+
+* **swapper:** populate CowSwap `sellTxid` ([#964](https://github.com/shapeshift/lib/issues/964)) ([df0d66e](https://github.com/shapeshift/lib/commit/df0d66ea3c0b22dd17af190189281cbe2a8facc5))
+
+# [@shapeshiftoss/swapper-v9.10.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.10.0...@shapeshiftoss/swapper-v9.10.1) (2022-08-10)
+
+
+### Bug Fixes
+
+* always return 0 tradeFee for cow swaps ([#963](https://github.com/shapeshift/lib/issues/963)) ([e388614](https://github.com/shapeshift/lib/commit/e38861494ccf09c600e2218a95bacc08de8ab359))
+
+# [@shapeshiftoss/swapper-v9.10.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.9.0...@shapeshiftoss/swapper-v9.10.0) (2022-08-10)
+
+
+### Features
+
+* thorswap utxo support ([#949](https://github.com/shapeshift/lib/issues/949)) ([1f63ad9](https://github.com/shapeshift/lib/commit/1f63ad9fe2870472ad6ca5a70d652743d3c1c9ee))
+
 # [@shapeshiftoss/swapper-v9.9.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.8.0...@shapeshiftoss/swapper-v9.9.0) (2022-08-08)
 
 

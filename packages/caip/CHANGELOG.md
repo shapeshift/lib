@@ -1,3 +1,17 @@
+# [@shapeshiftoss/caip-v6.15.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.14.0...@shapeshiftoss/caip-v6.15.0) (2022-08-12)
+
+
+### Features
+
+* support avax via banxa ([#966](https://github.com/shapeshift/lib/issues/966)) ([108762e](https://github.com/shapeshift/lib/commit/108762e8248a7e1741c5fbd378d86b7e8a348ded))
+
+# [@shapeshiftoss/caip-v6.14.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.13.0...@shapeshiftoss/caip-v6.14.0) (2022-08-09)
+
+
+### Features
+
+* idle-investor final ([#955](https://github.com/shapeshift/lib/issues/955)) ([564ba23](https://github.com/shapeshift/lib/commit/564ba23a92ce4086917bac366e1bd6d419de3306))
+
 # [@shapeshiftoss/caip-v6.13.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.12.0...@shapeshiftoss/caip-v6.13.0) (2022-08-04)
 
 
