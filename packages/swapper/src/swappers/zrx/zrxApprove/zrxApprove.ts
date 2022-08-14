@@ -5,9 +5,9 @@ import {
   SwapError,
   SwapErrorTypes
 } from '../../../api'
-import { grantAllowance } from '../../../swappers/utils/helpers/helpers'
 import { erc20Abi } from '../../utils/abi/erc20-abi'
 import { APPROVAL_GAS_LIMIT } from '../../utils/constants'
+import { grantAllowance } from '../../utils/helpers/helpers'
 import { ZrxSwapperDeps } from '../types'
 import { MAX_ALLOWANCE } from '../utils/constants'
 

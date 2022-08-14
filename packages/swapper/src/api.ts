@@ -124,12 +124,14 @@ export type TradeResult = {
   tradeId: string
 }
 
-export type ApproveInfiniteInput<C extends ChainId> = {
+export type ApproveInput<C extends ChainId> = {
   quote: TradeQuote<C>
   wallet: HDWallet
 }
 
-export type ApproveAmountInput<C extends ChainId> = ApproveInfiniteInput<C> & {
+export type ApproveInfiniteInput<C extends ChainId> = ApproveInput<C>
+
+export type ApproveAmountInput<C extends ChainId> = ApproveInput<C> & {
   amount?: string
 }
 
