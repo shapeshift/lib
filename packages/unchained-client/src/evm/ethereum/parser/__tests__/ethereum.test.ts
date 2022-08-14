@@ -745,9 +745,11 @@ describe('parseTx', () => {
         data: {
           assetId: 'eip155:1/erc20:0x470e8de2ebaef52014a47cb5e6af86884947f08c',
           method: 'approve',
-          parser: EvmTxParser.ERC20
+          parser: EvmTxParser.ERC20,
+          value: '115792089237316195423570985008687907853269984665640564039457584007913129639935'
         },
         status: TxStatus.Confirmed,
+        trade: undefined,
         fee: {
           value: '1447243200000000',
           assetId: 'eip155:1/slip44:60'
@@ -1136,7 +1138,8 @@ describe('parseTx', () => {
         confirmations: tx.confirmations,
         data: {
           method: 'approve',
-          parser: TxParser.Yearn
+          parser: TxParser.Yearn,
+          value: '392318858461667547739736838950479151006397215279002157055'
         },
         status: TxStatus.Confirmed,
         fee: {
