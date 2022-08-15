@@ -3,7 +3,7 @@ import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-nativ
 import * as unchained from '@shapeshiftoss/unchained-client'
 import dotenv from 'dotenv'
 
-import { bnOrZero } from './utils'
+import { bn } from './utils'
 import { YearnInvestor } from './YearnInvestor'
 
 dotenv.config()
@@ -16,7 +16,7 @@ const getWallet = async (): Promise<NativeHDWallet> => {
   }
   const nativeAdapterArgs: NativeAdapterArgs = {
     mnemonic: MNEMONIC,
-    deviceId: DEVICE_ID
+    deviceId: DEVICE_ID,
   }
   const wallet = new NativeHDWallet(nativeAdapterArgs)
   await wallet.initialize()
@@ -31,17 +31,17 @@ const main = async (): Promise<void> => {
       ws: new unchained.ws.Client<unchained.ethereum.Tx>('wss://dev-api.ethereum.shapeshift.com'),
       http: new unchained.ethereum.V1Api(
         new unchained.ethereum.Configuration({
-          basePath: 'https://dev-api.ethereum.shapeshift.com'
-        })
-      )
+          basePath: 'https://dev-api.ethereum.shapeshift.com',
+        }),
+      ),
     },
-    rpcUrl: 'https://mainnet.infura.io/v3/d734c7eebcdf400185d7eb67322a7e57'
+    rpcUrl: 'https://mainnet.infura.io/v3/d734c7eebcdf400185d7eb67322a7e57',
   })
 
   const yearnInvestor = new YearnInvestor({
     providerUrl: 'https://daemon.ethereum.shapeshift.com',
     dryRun: true,
-    chainAdapter
+    chainAdapter,
   })
 
   const address = '0x358dae76Bb42Be167dD5A64f95E0d537b024834e'
@@ -56,13 +56,13 @@ const main = async (): Promise<void> => {
 
   const allowance = await opportunity.allowance(address)
   const approvalPreparedTx = await opportunity.prepareApprove(address)
-  const withdrawPreparedTx = await opportunity.prepareDeposit({ address, amount: bnOrZero(1000) })
-  const depositPreparedTx = await opportunity.prepareWithdrawal({ address, amount: bnOrZero(1000) })
+  const withdrawPreparedTx = await opportunity.prepareDeposit({ address, amount: bn(1000) })
+  const depositPreparedTx = await opportunity.prepareWithdrawal({ address, amount: bn(1000) })
 
   const signedTx = await opportunity.signAndBroadcast({
     wallet,
     tx: depositPreparedTx,
-    feePriority: 'fast'
+    feePriority: 'fast',
   })
   console.info(
     JSON.stringify(
@@ -73,11 +73,11 @@ const main = async (): Promise<void> => {
         approvalPreparedTx,
         depositPreparedTx,
         withdrawPreparedTx,
-        signedTx
+        signedTx,
       },
       null,
-      2
-    )
+      2,
+    ),
   )
 }
 
