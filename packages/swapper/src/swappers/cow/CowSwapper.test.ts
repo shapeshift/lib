@@ -7,7 +7,7 @@ import { SwapperType, TradeResult } from '../../api'
 import { BTC, ETH, FOX, WBTC, WETH } from '../utils/test-data/assets'
 import { setupBuildTrade, setupQuote } from '../utils/test-data/setupSwapQuote'
 import { cowApprovalNeeded } from './cowApprovalNeeded/cowApprovalNeeded'
-import { cowApproveInfinite } from './cowApproveInfinite/cowApproveInfinite'
+import { cowApproveAmount, cowApproveInfinite } from './cowApproveInfinite/cowApproveInfinite'
 import { cowBuildTrade } from './cowBuildTrade/cowBuildTrade'
 import { cowExecuteTrade } from './cowExecuteTrade/cowExecuteTrade'
 import { cowGetTradeTxs } from './cowGetTradeTxs/cowGetTradeTxs'
@@ -22,8 +22,9 @@ jest.mock('./cowApprovalNeeded/cowApprovalNeeded', () => ({
   cowApprovalNeeded: jest.fn(),
 }))
 
-jest.mock('./cowApproveInfinite/cowApproveInfinite', () => ({
+jest.mock('./cowApprove/cowApprove', () => ({
   cowApproveInfinite: jest.fn(),
+  cowApproveAmount: jest.fn(),
 }))
 
 const COW_SWAPPER_DEPS: CowSwapperDeps = {
@@ -185,6 +186,16 @@ describe('CowSwapper', () => {
       await swapper.approveInfinite(args)
       expect(cowApproveInfinite).toHaveBeenCalledTimes(1)
       expect(cowApproveInfinite).toHaveBeenCalledWith(COW_SWAPPER_DEPS, args)
+    })
+  })
+
+  describe('cowApproveAmount', () => {
+    it('calls cowApproveAmount on swapper.approveAmount', async () => {
+      const { tradeQuote } = setupQuote()
+      const args = { quote: tradeQuote, wallet, amount: '500' }
+      await swapper.approveAmount(args)
+      expect(cowApproveAmount).toHaveBeenCalledTimes(1)
+      expect(cowApproveAmount).toHaveBeenCalledWith(COW_SWAPPER_DEPS, args)
     })
   })
 
