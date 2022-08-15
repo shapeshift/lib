@@ -77,7 +77,7 @@ export class Parser implements SubParser<Tx> {
               }),
               method: decoded.name,
               parser: 'yearn',
-              approveValue: decoded?.args._value?.toString(),
+              value: decoded?.args._value?.toString(),
             },
           }
 
