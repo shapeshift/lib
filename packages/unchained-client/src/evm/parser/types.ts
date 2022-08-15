@@ -11,7 +11,7 @@ export enum TxParser {
 export interface ERC20TxMetadata extends BaseTxMetadata {
   parser: TxParser.ERC20
   assetId?: string
-  value?: string | null
+  value?: string
 }
 
 export type TxMetadata = StandardTxMetadata | ERC20TxMetadata
