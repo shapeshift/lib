@@ -64,40 +64,44 @@ export class Parser implements SubParser<Tx> {
     // failed to decode input data
     if (!decoded) return
 
-    let approveValue: string | null = null
-    let assetId: string | null = null
+    return (() => {
+      switch (txSigHash) {
+        case this.supportedYearnFunctions.approveSigHash:
+          if (decoded?.args._spender !== SHAPE_SHIFT_ROUTER_CONTRACT) return
+          return {
+            data: {
+              assetId: toAssetId({
+                ...fromChainId(this.chainId),
+                assetNamespace: 'erc20',
+                assetReference: tx.to,
+              }),
+              method: decoded.name,
+              parser: 'yearn',
+              approveValue: decoded?.args._value?.toString(),
+            },
+          }
 
-    switch (txSigHash) {
-      case this.supportedYearnFunctions.approveSigHash:
-        if (decoded?.args._spender !== SHAPE_SHIFT_ROUTER_CONTRACT) return
-        approveValue = decoded?.args._value?.toString()
-        assetId = toAssetId({
-          ...fromChainId(this.chainId),
-          assetNamespace: 'erc20',
-          assetReference: tx.to,
-        })
-        break
-      case this.supportedShapeShiftFunctions.depositSigHash:
-        if (tx.to !== SHAPE_SHIFT_ROUTER_CONTRACT) return
-        break
-      case this.supportedYearnFunctions.withdrawSigHash:
-      case this.supportedYearnFunctions.depositSigHash:
-      case this.supportedYearnFunctions.depositAmountSigHash:
-      case this.supportedYearnFunctions.depositAmountAndRecipientSigHash:
-        if (tx.to && !this.yearnTokenVaultAddresses?.includes(tx.to)) return
-        break
-      default:
-        return
-    }
+          break
+        case this.supportedShapeShiftFunctions.depositSigHash:
+          if (tx.to !== SHAPE_SHIFT_ROUTER_CONTRACT) return
+          break
+        case this.supportedYearnFunctions.withdrawSigHash:
+        case this.supportedYearnFunctions.depositSigHash:
+        case this.supportedYearnFunctions.depositAmountSigHash:
+        case this.supportedYearnFunctions.depositAmountAndRecipientSigHash:
+          if (tx.to && !this.yearnTokenVaultAddresses?.includes(tx.to)) return
+          break
+        default:
+          return
+      }
 
-    return {
-      data: {
-        ...(assetId ? { assetId } : {}),
-        method: decoded.name,
-        parser: 'yearn',
-        ...(approveValue ? { value: approveValue } : {}),
-      },
-    }
+      return {
+        data: {
+          method: decoded.name,
+          parser: 'yearn',
+        },
+      }
+    })()
   }
 
   getAbiInterface(txSigHash: string | undefined): ethers.utils.Interface | undefined {

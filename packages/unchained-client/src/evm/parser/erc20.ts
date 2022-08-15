@@ -34,30 +34,27 @@ export class Parser<T extends Tx> implements SubParser<T> {
 
     const decoded = this.abiInterface.parseTransaction({ data: tx.inputData })
 
-    let approveValue: string | null = null
-
-    switch (txSigHash) {
-      case this.supportedFunctions.approveSigHash:
-        approveValue = decoded?.args.amount?.toString()
-        break
-      default:
-        return
-    }
-
     // failed to decode input data
     if (!decoded) return
 
-    return {
-      data: {
-        assetId: toAssetId({
-          ...fromChainId(this.chainId),
-          assetNamespace: 'erc20',
-          assetReference: tx.to,
-        }),
-        method: decoded.name,
-        parser: TxParser.ERC20,
-        ...(approveValue ? { value: approveValue } : {}),
-      },
-    }
+    return (() => {
+      switch (txSigHash) {
+        case this.supportedFunctions.approveSigHash:
+          return {
+            data: {
+              assetId: toAssetId({
+                ...fromChainId(this.chainId),
+                assetNamespace: 'erc20',
+                assetReference: tx.to,
+              }),
+              method: decoded.name,
+              parser: TxParser.ERC20,
+              value: decoded?.args.amount?.toString() as string,
+            },
+          }
+        default:
+          return
+      }
+    })()
   }
 }
