@@ -1,5 +1,3 @@
-import { AssetId } from '@shapeshiftoss/caip'
-
 // these are user facing values, and should be rendered as such
 export enum Dex {
   Thor = 'THORChain',

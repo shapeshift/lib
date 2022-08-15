@@ -1,6 +1,13 @@
 import type { evm } from '@shapeshiftoss/common-api'
 
 import { BaseTxMetadata, StandardTx, StandardTxMetadata } from '../../types'
+import {
+  CowSwapTxMetadata,
+  FoxyTxMetadata,
+  ThorTxMetadata,
+  WethTxMetadata,
+  YearnTxMetadata,
+} from '../ethereum/parser/types'
 
 export type Tx = evm.Tx
 
@@ -14,7 +21,14 @@ export interface ERC20TxMetadata extends BaseTxMetadata {
   value?: string
 }
 
-export type TxMetadata = StandardTxMetadata | ERC20TxMetadata
+export type TxMetadata =
+  | StandardTxMetadata
+  | ERC20TxMetadata
+  | YearnTxMetadata
+  | CowSwapTxMetadata
+  | FoxyTxMetadata
+  | ThorTxMetadata
+  | WethTxMetadata
 
 export interface ParsedTx extends StandardTx {
   data?: TxMetadata
