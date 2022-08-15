@@ -22,7 +22,7 @@ jest.mock('./cowApprovalNeeded/cowApprovalNeeded', () => ({
   cowApprovalNeeded: jest.fn(),
 }))
 
-jest.mock('./cowApproveInfinite/cowApproveInfinite', () => ({
+jest.mock('./cowApprove/cowApprove', () => ({
   cowApproveInfinite: jest.fn(),
 }))
 
