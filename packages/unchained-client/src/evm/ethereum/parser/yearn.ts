@@ -1,4 +1,4 @@
-import { ChainId } from '@shapeshiftoss/caip'
+import { ChainId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
 import { ChainId as YearnChainId, Yearn } from '@yfi/sdk'
 import { ethers } from 'ethers'
 
@@ -18,6 +18,8 @@ export class Parser implements SubParser<Tx> {
   yearnSdk: Yearn<YearnChainId> | undefined
   yearnTokenVaultAddresses: string[] | undefined
 
+  readonly chainId: ChainId
+
   readonly shapeShiftInterface = new ethers.utils.Interface(shapeShiftRouter)
   readonly yearnInterface = new ethers.utils.Interface(yearnVault)
 
@@ -35,6 +37,7 @@ export class Parser implements SubParser<Tx> {
 
   constructor(args: ParserArgs) {
     this.provider = args.provider
+    this.chainId = args.chainId
 
     // The only Yearn-supported chain we currently support is mainnet
     if (args.chainId === 'eip155:1') {
@@ -83,6 +86,11 @@ export class Parser implements SubParser<Tx> {
 
     return {
       data: {
+        assetId: toAssetId({
+          ...fromChainId(this.chainId),
+          assetNamespace: 'erc20',
+          assetReference: tx.to
+        }),
         method: decoded.name,
         parser: 'yearn',
         ...(approveValue ? { value: approveValue } : {})

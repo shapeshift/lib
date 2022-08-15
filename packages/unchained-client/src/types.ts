@@ -1,3 +1,5 @@
+import { AssetId } from '@shapeshiftoss/caip'
+
 // these are user facing values, and should be rendered as such
 export enum Dex {
   Thor = 'THORChain',
@@ -73,6 +75,7 @@ export interface BaseTxMetadata {
 export interface StandardTxMetadata extends BaseTxMetadata {
   parser: `${TxParser}`
   value?: string | null
+  assetId?: AssetId
 }
 
 export interface StandardTx {
