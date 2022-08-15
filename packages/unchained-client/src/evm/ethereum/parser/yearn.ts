@@ -80,8 +80,6 @@ export class Parser implements SubParser<Tx> {
               value: decoded?.args._value?.toString(),
             },
           }
-
-          break
         case this.supportedShapeShiftFunctions.depositSigHash:
           if (tx.to !== SHAPE_SHIFT_ROUTER_CONTRACT) return
           break
