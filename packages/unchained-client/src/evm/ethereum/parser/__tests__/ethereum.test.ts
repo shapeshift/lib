@@ -1167,7 +1167,6 @@ describe('parseTx', () => {
         chainId: 'eip155:1',
         confirmations: tx.confirmations,
         data: {
-          assetId: 'eip155:1/erc20:0x6a1e73f12018d8e5f966ce794aa2921941feb17e',
           method: 'deposit',
           parser: TxParser.Yearn
         },
@@ -1215,7 +1214,6 @@ describe('parseTx', () => {
         chainId: 'eip155:1',
         confirmations: tx.confirmations,
         data: {
-          assetId: 'eip155:1/erc20:0x671a912c10bba0cfa74cfc2d6fba9ba1ed9530b2',
           method: 'withdraw',
           parser: TxParser.Yearn
         },
@@ -1263,7 +1261,6 @@ describe('parseTx', () => {
         chainId: 'eip155:1',
         confirmations: tx.confirmations,
         data: {
-          assetId: 'eip155:1/erc20:0x5f18c75abdae578b483e5f43f12a39cf75b973a9',
           method: 'deposit',
           parser: TxParser.Yearn
         },

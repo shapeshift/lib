@@ -65,11 +65,17 @@ export class Parser implements SubParser<Tx> {
     if (!decoded) return
 
     let approveValue: string | null = null
+    let assetId: string | null = null
 
     switch (txSigHash) {
       case this.supportedYearnFunctions.approveSigHash:
         if (decoded?.args._spender !== SHAPE_SHIFT_ROUTER_CONTRACT) return
         approveValue = decoded?.args._value?.toString()
+        assetId = toAssetId({
+          ...fromChainId(this.chainId),
+          assetNamespace: 'erc20',
+          assetReference: tx.to
+        })
         break
       case this.supportedShapeShiftFunctions.depositSigHash:
         if (tx.to !== SHAPE_SHIFT_ROUTER_CONTRACT) return
@@ -86,11 +92,7 @@ export class Parser implements SubParser<Tx> {
 
     return {
       data: {
-        assetId: toAssetId({
-          ...fromChainId(this.chainId),
-          assetNamespace: 'erc20',
-          assetReference: tx.to
-        }),
+        ...(assetId ? { assetId } : {}),
         method: decoded.name,
         parser: 'yearn',
         ...(approveValue ? { value: approveValue } : {})
