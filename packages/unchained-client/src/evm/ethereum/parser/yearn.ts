@@ -1,7 +1,6 @@
 import { ChainId, toAssetId } from '@shapeshiftoss/caip'
 import { ChainId as YearnChainId, Yearn } from '@yfi/sdk'
-import BigNumber from 'bignumber.js'
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 
 import { Tx } from '../../../generated/ethereum'
 import { BaseTxMetadata } from '../../../types'
@@ -14,10 +13,6 @@ export interface TxMetadata extends BaseTxMetadata {
   parser: 'yearn'
   assetId?: string
   value?: string
-}
-
-export const isYearnTxMetadata = (data: unknown): data is TxMetadata => {
-  return (data as TxMetadata).parser === 'yearn'
 }
 
 interface ParserArgs {
