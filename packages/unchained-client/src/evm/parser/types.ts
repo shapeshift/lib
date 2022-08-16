@@ -5,6 +5,7 @@ import {
   CowSwapTxMetadata,
   FoxyTxMetadata,
   ThorTxMetadata,
+  UniV2TxMetadata,
   WethTxMetadata,
   YearnTxMetadata,
 } from '../ethereum/parser/types'
@@ -29,6 +30,7 @@ export type TxMetadata =
   | FoxyTxMetadata
   | ThorTxMetadata
   | WethTxMetadata
+  | UniV2TxMetadata
 
 export interface ParsedTx extends StandardTx {
   data?: TxMetadata
