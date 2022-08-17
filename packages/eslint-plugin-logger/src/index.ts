@@ -6,7 +6,7 @@ import { CallExpression } from 'typescript'
 
 import { getVariableByName } from './utils'
 
-const createRule = ESLintUtils.RuleCreator((_) => 'github.com/shapeshift/lib')
+const createRule = ESLintUtils.RuleCreator(() => 'github.com/shapeshift/lib')
 
 function isMemberAccess(reference: Reference) {
   const node = reference.identifier as TSESTree.Node
