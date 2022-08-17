@@ -2,7 +2,7 @@
   "name": "@shapeshiftoss/eslint-plugin-logger",
   "description": "An eslint plugin converting console.* to their moduleLogger equivalent",
   "version": "1.0.0",
-  "main": "build/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "yarn clean && yarn compile",
     "clean": "rm -rf dist && rm -rf tsconfig.build.tsbuildinfo",
