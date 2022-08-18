@@ -1,12 +1,19 @@
-import { ChainId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
+import { ChainId, toAssetId } from '@shapeshiftoss/caip'
 import { ChainId as YearnChainId, Yearn } from '@yfi/sdk'
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 
 import { Tx } from '../../../generated/ethereum'
+import { BaseTxMetadata } from '../../../types'
 import { getSigHash, SubParser, TxSpecific } from '../../parser'
 import shapeShiftRouter from './abi/shapeShiftRouter'
 import yearnVault from './abi/yearnVault'
 import { SHAPE_SHIFT_ROUTER_CONTRACT } from './constants'
+
+export interface TxMetadata extends BaseTxMetadata {
+  parser: 'yearn'
+  assetId?: string
+  value?: string
+}
 
 interface ParserArgs {
   chainId: ChainId
@@ -51,6 +58,13 @@ export class Parser implements SubParser<Tx> {
 
     const txSigHash = getSigHash(tx.inputData)
 
+    const supportedSigHashes = [
+      ...Object.values(this.supportedShapeShiftFunctions),
+      ...Object.values(this.supportedYearnFunctions),
+    ]
+
+    if (!supportedSigHashes.some((hash) => hash === txSigHash)) return
+
     const abiInterface = this.getAbiInterface(txSigHash)
     if (!abiInterface) return
 
@@ -64,42 +78,37 @@ export class Parser implements SubParser<Tx> {
     // failed to decode input data
     if (!decoded) return
 
-    return (() => {
-      switch (txSigHash) {
-        case this.supportedYearnFunctions.approveSigHash:
-          if (decoded?.args._spender !== SHAPE_SHIFT_ROUTER_CONTRACT) return
-          return {
-            data: {
-              assetId: toAssetId({
-                ...fromChainId(this.chainId),
-                assetNamespace: 'erc20',
-                assetReference: tx.to,
-              }),
-              method: decoded.name,
-              parser: 'yearn',
-              value: decoded?.args._value?.toString(),
-            },
-          }
-        case this.supportedShapeShiftFunctions.depositSigHash:
-          if (tx.to !== SHAPE_SHIFT_ROUTER_CONTRACT) return
-          break
-        case this.supportedYearnFunctions.withdrawSigHash:
-        case this.supportedYearnFunctions.depositSigHash:
-        case this.supportedYearnFunctions.depositAmountSigHash:
-        case this.supportedYearnFunctions.depositAmountAndRecipientSigHash:
-          if (tx.to && !this.yearnTokenVaultAddresses?.includes(tx.to)) return
-          break
-        default:
-          return
-      }
+    const data: TxMetadata = {
+      method: decoded.name,
+      parser: 'yearn',
+    }
 
-      return {
-        data: {
-          method: decoded.name,
-          parser: 'yearn',
-        },
-      }
-    })()
+    switch (txSigHash) {
+      case this.supportedYearnFunctions.approveSigHash:
+        if (decoded.args._spender !== SHAPE_SHIFT_ROUTER_CONTRACT) return
+        return {
+          data: {
+            ...data,
+            assetId: toAssetId({
+              chainId: this.chainId,
+              assetNamespace: 'erc20',
+              assetReference: tx.to,
+            }),
+            value: (decoded.args._value as BigNumber).toString(),
+          },
+        }
+      case this.supportedShapeShiftFunctions.depositSigHash:
+        if (tx.to !== SHAPE_SHIFT_ROUTER_CONTRACT) return
+      // eslint-disable-next-line no-fallthrough
+      case this.supportedYearnFunctions.withdrawSigHash:
+      case this.supportedYearnFunctions.depositSigHash:
+      case this.supportedYearnFunctions.depositAmountSigHash:
+      case this.supportedYearnFunctions.depositAmountAndRecipientSigHash:
+        if (tx.to && !this.yearnTokenVaultAddresses?.includes(tx.to)) return
+      // eslint-disable-next-line no-fallthrough
+      default:
+        return { data }
+    }
   }
 
   getAbiInterface(txSigHash: string | undefined): ethers.utils.Interface | undefined {
