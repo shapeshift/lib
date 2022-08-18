@@ -99,13 +99,13 @@ export class Parser implements SubParser<Tx> {
         }
       case this.supportedShapeShiftFunctions.depositSigHash:
         if (tx.to !== SHAPE_SHIFT_ROUTER_CONTRACT) return
-      // eslint-disable-next-line no-fallthrough
+        return { data }
+      case this.supportedYearnFunctions.depositAmountAndRecipientSigHash:
+        if (tx.to && !this.yearnTokenVaultAddresses?.includes(tx.to)) return
+        return { data }
       case this.supportedYearnFunctions.withdrawSigHash:
       case this.supportedYearnFunctions.depositSigHash:
       case this.supportedYearnFunctions.depositAmountSigHash:
-      case this.supportedYearnFunctions.depositAmountAndRecipientSigHash:
-        if (tx.to && !this.yearnTokenVaultAddresses?.includes(tx.to)) return
-      // eslint-disable-next-line no-fallthrough
       default:
         return { data }
     }
