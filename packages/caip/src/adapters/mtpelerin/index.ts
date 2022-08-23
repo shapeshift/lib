@@ -1,6 +1,3 @@
-import entries from 'lodash/entries'
-import toLower from 'lodash/toLower'
-
 import { fromAssetId } from '../../assetId/assetId'
 import { AssetId } from '../../assetId/assetId'
 import { ChainId } from '../../chainId/chainId'
@@ -14,30 +11,31 @@ import {
 } from '../../constants'
 
 /**
- * provider from https:api.mtPelerin.com/currencies/tokens
- * in the same order as the API link
+ * provided from https://api.mtPelerin.com/currencies/tokens
  */
-const AssetIdToMtPelerinTickerMap = {
-  [ethAssetId]: 'ETH',
-  [btcAssetId]: 'BTC',
-  'eip155:1/erc20:0x6b175474e89094c44da98b954eedeac495271d0f': 'DAI',
-  'eip155:1/erc20:0xdac17f958d2ee523a2206206994597c13d831ec7': 'USDT',
-  'eip155:1/erc20:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48': 'USDC',
-  'eip155:1/erc20:0x0f17bc9a994b87b5225cfb6a2cd4d667adb4f20b': 'jEUR',
-  'eip155:1/erc20:0x53dfea0a8cc2a2a2e425e1c174bc162999723ea0': 'jCHF',
-  'eip155:1/erc20:0x7409856cae628f5d578b285b45669b36e7005283': 'jGBP',
-  'eip155:1/erc20:0x2260fac5e5542a773aa44fbcfedf7c193bc2c599': 'WBTC',
-  // AVAX
-  [avalancheAssetId]: 'AVAX',
-  // FANTOM
-  'eip155:1/erc20:0x4e15361fd6b4bb609fa63c81a2be19d873717870': 'FTM',
-  'eip155:1/erc20:0xdb25f211ab05b1c97d595516f45794528a807ad8': 'EURS',
-  'eip155:1/erc20:0xc581b735a1688071a1746c968e0798d642ede491': 'EURT',
-  'eip155:1/erc20:0x1a7e4e63778b4f12a199c062f3efdd288afcbce8': 'agEUR',
-  'eip155:1/erc20:0x853d955acef822db058eb8505911ed77f175b99e': 'FRAX',
-  'eip155:1/erc20:0xa693b19d2931d498c5b318df961919bb4aee87a5': 'UST',
-} as Record<AssetId, string>
-
+const MtPelerinSymbolToAssetIds = {
+  ETH: [ethAssetId],
+  BTC: [btcAssetId],
+  DAI: ['eip155:1/erc20:0x6b175474e89094c44da98b954eedeac495271d0f'],
+  USDT: ['eip155:1/erc20:0xdac17f958d2ee523a2206206994597c13d831ec7'],
+  USDC: [
+    'eip155:1/erc20:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+    'eip155:43114/erc20:0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e',
+  ],
+  jEUR: ['eip155:1/erc20:0x0f17bc9a994b87b5225cfb6a2cd4d667adb4f20b'],
+  jCHF: ['eip155:1/erc20:0x53dfea0a8cc2a2a2e425e1c174bc162999723ea0'],
+  jGBP: ['eip155:1/erc20:0x7409856cae628f5d578b285b45669b36e7005283'],
+  WBTC: ['eip155:1/erc20:0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'],
+  AVAX: [avalancheAssetId],
+  EURS: ['eip155:1/erc20:0xdb25f211ab05b1c97d595516f45794528a807ad8'],
+  EURT: ['eip155:1/erc20:0xc581b735a1688071a1746c968e0798d642ede491'],
+  agEUR: ['eip155:1/erc20:0x1a7e4e63778b4f12a199c062f3efdd288afcbce8'],
+  FRAX: [
+    'eip155:1/erc20:0x853d955acef822db058eb8505911ed77f175b99e',
+    'eip155:43114/erc20:0xd24c2ad096400b6fbcd2ad8b24e7acbc21a1da64',
+  ],
+  UST: ['eip155:1/erc20:0xa693b19d2931d498c5b318df961919bb4aee87a5'],
+} as Record<string, AssetId[]>
 /**
  * The following is the list of assets that Mt Pelerin supports
  * but they're **not supported** (yet?) in ShapeShift
@@ -84,14 +82,10 @@ const AssetIdToMtPelerinTickerMap = {
     '[arbitrum_mainnet]/0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8': 'USDC',
     '[optimism_mainnet]/0x0000000000000000000000000000000000000000': 'ETH',
     '[optimism_mainnet]/0x7F5c764cBc14f9669B88837ca1490cCa17c31607': 'USDC',
-    '[avalanche_mainnet]/0x0000000000000000000000000000000000000000': 'AVAX',
-    '[avalanche_mainnet]/0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E': 'USDC',
     '[avalanche_mainnet]/0x9fB1d52596c44603198fB0aee434fac3a679f702': 'jEUR',
     '[avalanche_mainnet]/0x2d5563da42b06FbBF9c67b7DC073cF6A7842239e': 'jCHF',
-    '[avalanche_mainnet]/0xD24C2Ad096400B6FBcd2ad8B24E7acBc21A1da64': 'FRAX',
     '[avalanche_mainnet]/0x5c49b268c9841AFF1Cc3B0a418ff5c3442eE3F3b': 'MAI',
     '[avalanche_mainnet]/0xb599c3590F42f8F995ECfa0f85D2980B76862fc1': 'UST',
-    '[avalanche_mainnet]/0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E': 'USDC',
     '[fantom_mainnet]/0x0000000000000000000000000000000000000000': 'FTM',
     '[fantom_mainnet]/0x04068DA6C83AFCFA0e13ba15A6696662335D5B75': 'USDC',
     '[fantom_mainnet]/0xdc301622e621166BD8E82f2cA0A26c13Ad0BE355': 'FRAX',
@@ -105,23 +99,13 @@ const AssetIdToMtPelerinTickerMap = {
 * }
 */
 
-const invert = <T extends Record<string, string>>(data: T) =>
-  Object.entries(data).reduce((acc, [k, v]) => ((acc[v] = k), acc), {} as Record<string, string>)
+export const mtPelerinSymbolToAssetIds = (id: string): string[] => MtPelerinSymbolToAssetIds[id]
 
-const mtPelerinTickerToAssetIdMap = invert(AssetIdToMtPelerinTickerMap)
-
-export const mtPelerinTickerToAssetId = (id: string): string | undefined =>
-  mtPelerinTickerToAssetIdMap[id]
-
-export const assetIdToMtPelerinTicker = (assetId: string): string | undefined =>
-  AssetIdToMtPelerinTickerMap[toLower(assetId)]
-
-export const getSupportedMtPelerinAssets = () =>
-  entries(AssetIdToMtPelerinTickerMap).map(([assetId, ticker]) => ({
-    assetId,
-    ticker,
-  }))
-
+export const assetIdToMtPelerinSymbol = (assetId: string): string | undefined => {
+  return Object.entries(MtPelerinSymbolToAssetIds)
+    .filter(([, assetIds]) => assetIds.includes(assetId))
+    .map(([key]) => key)[0]
+}
 /**
  * map ChainIds to MtPelerin network,
  * since some MtPelerin assets could be on multiple chains and their default
@@ -130,7 +114,7 @@ export const getSupportedMtPelerinAssets = () =>
  * https://developers.mtPelerin.com/integration-guides/options -> "net"
  * source of truth per MtPelerin
  */
-const chainIdToMtPelerinBlockchainCodeMap: Record<ChainId, string> = {
+const chainIdToMtPelerinNetworkCodeMap: Record<ChainId, string> = {
   [ethChainId]: 'mainnet',
   [btcChainId]: 'bitcoin_mainnet',
   [avalancheChainId]: 'avalanche_mainnet',
@@ -139,13 +123,10 @@ const chainIdToMtPelerinBlockchainCodeMap: Record<ChainId, string> = {
 /**
  * Convert a mtPelerin asset identifier to a MtPelerin chain identifier for use in MtPelerin HTTP URLs
  *
- * @param {string} mtPelerinAssetId - a MtPelerin asset string referencing a specific asset; e.g., 'ETH'
+ * @param {string} assetId - an assetId string referencing a specific asset; e.g., ethAssetId
  * @returns {string} - a MtPelerin network identifier; e.g., 'mainnet'
  */
-export const getMtPelerinNetFromMtPelerinAssetTicker = (mtPelerinAssetId: string): string => {
-  const assetId = mtPelerinTickerToAssetId(mtPelerinAssetId)
-  if (!assetId)
-    throw new Error(`getMtPelerinNetFromMtPelerinAssetTicker: ${mtPelerinAssetId} is not supported`)
+export const getMtPelerinNetFromMtPelerinAssetSymbol = (assetId: AssetId): string => {
   const { chainId } = fromAssetId(assetId)
-  return chainIdToMtPelerinBlockchainCodeMap[chainId]
+  return chainIdToMtPelerinNetworkCodeMap[chainId]
 }
