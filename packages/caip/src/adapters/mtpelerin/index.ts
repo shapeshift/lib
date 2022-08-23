@@ -99,9 +99,9 @@ const MtPelerinSymbolToAssetIds: Record<string, AssetId[]> = {
 * }
 */
 
-export const mtPelerinSymbolToAssetIds = (id: string): string[] => MtPelerinSymbolToAssetIds[id]
+export const mtPelerinSymbolToAssetIds = (id: string): AssetId[] => MtPelerinSymbolToAssetIds[id]
 
-export const assetIdToMtPelerinSymbol = (assetId: string): string | undefined => {
+export const assetIdToMtPelerinSymbol = (assetId: AssetId): string | undefined => {
   return Object.entries(MtPelerinSymbolToAssetIds)
     .filter(([, assetIds]) => assetIds.includes(assetId))
     .map(([key]) => key)[0]
@@ -117,7 +117,7 @@ export const assetIdToMtPelerinSymbol = (assetId: string): string | undefined =>
 const chainIdToMtPelerinNetworkCodeMap: Record<ChainId, string> = {
   [ethChainId]: 'mainnet',
   [btcChainId]: 'bitcoin_mainnet',
-  [avalancheChainId]: 'avalanche_mainnet',
+  [avalancheChainId]: 'avalanche_mainnet', // this is actually the C-Chain
 } as const
 
 /**
@@ -126,7 +126,7 @@ const chainIdToMtPelerinNetworkCodeMap: Record<ChainId, string> = {
  * @param {string} assetId - an assetId string referencing a specific asset; e.g., ethAssetId
  * @returns {string} - a MtPelerin network identifier; e.g., 'mainnet'
  */
-export const getMtPelerinNetFromAssetId = (assetId: AssetId): string => {
+export const getMtPelerinNetFromAssetId = (assetId: AssetId): string | undefined => {
   const { chainId } = fromAssetId(assetId)
   return chainIdToMtPelerinNetworkCodeMap[chainId]
 }
