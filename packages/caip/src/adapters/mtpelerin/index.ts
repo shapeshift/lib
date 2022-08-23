@@ -13,7 +13,7 @@ import {
 /**
  * provided from https://api.mtPelerin.com/currencies/tokens
  */
-const MtPelerinSymbolToAssetIds = {
+const MtPelerinSymbolToAssetIds: Record<string, AssetId[]> = {
   ETH: [ethAssetId],
   BTC: [btcAssetId],
   DAI: ['eip155:1/erc20:0x6b175474e89094c44da98b954eedeac495271d0f'],
@@ -35,7 +35,7 @@ const MtPelerinSymbolToAssetIds = {
     'eip155:43114/erc20:0xd24c2ad096400b6fbcd2ad8b24e7acbc21a1da64',
   ],
   UST: ['eip155:1/erc20:0xa693b19d2931d498c5b318df961919bb4aee87a5'],
-} as Record<string, AssetId[]>
+}
 /**
  * The following is the list of assets that Mt Pelerin supports
  * but they're **not supported** (yet?) in ShapeShift
@@ -126,7 +126,7 @@ const chainIdToMtPelerinNetworkCodeMap: Record<ChainId, string> = {
  * @param {string} assetId - an assetId string referencing a specific asset; e.g., ethAssetId
  * @returns {string} - a MtPelerin network identifier; e.g., 'mainnet'
  */
-export const getMtPelerinNetFromMtPelerinAssetSymbol = (assetId: AssetId): string => {
+export const getMtPelerinNetFromAssetId = (assetId: AssetId): string => {
   const { chainId } = fromAssetId(assetId)
   return chainIdToMtPelerinNetworkCodeMap[chainId]
 }
