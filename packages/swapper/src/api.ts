@@ -140,6 +140,7 @@ export type ExecuteTradeInput<C extends ChainId> = {
 
 export type TradeResult = {
   tradeId: string
+  buyTradeId?: string
 }
 
 export type ApproveInput<C extends ChainId> = {

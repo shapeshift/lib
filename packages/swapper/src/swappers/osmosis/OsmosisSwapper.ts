@@ -60,7 +60,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
   async getTradeTxs(tradeResult: TradeResult): Promise<TradeTxs> {
     return {
       sellTxid: tradeResult.tradeId,
-      buyTxid: tradeResult.tradeId,
+      buyTxid: tradeResult.buyTradeId ?? tradeResult.tradeId,
     }
   }
 
@@ -74,7 +74,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       'OSMO',
       buyAssetSymbol,
       sellAmount,
-      this.deps.osmoUrl,
+      this.deps.osmoUrl
     )
 
     if (sellAssetSymbol !== 'OSMO') {
@@ -118,7 +118,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     if (!this.supportedAssetIds.includes(sellAssetId)) return []
 
     return assetIds.filter(
-      (assetId) => this.supportedAssetIds.includes(assetId) && assetId !== sellAssetId,
+      (assetId) => this.supportedAssetIds.includes(assetId) && assetId !== sellAssetId
     )
   }
 
@@ -139,7 +139,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       sellAsset.symbol,
       buyAsset.symbol,
       sellAmount !== '0' ? sellAmount : '1',
-      this.deps.osmoUrl,
+      this.deps.osmoUrl
     )
 
     //convert amount to base
@@ -181,7 +181,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       sellAsset.symbol,
       buyAsset.symbol,
       sellAmount !== '0' ? sellAmount : '1',
-      this.deps.osmoUrl,
+      this.deps.osmoUrl
     )
 
     const { minimum, maximum } = await this.getMinMax(input)
@@ -224,6 +224,8 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     const osmosisAdapter = this.deps.adapterManager.get(osmosisChainId) as
       | osmosis.ChainAdapter
       | undefined
+
+    // to make more extensible get this chain adapter dynamically
     const cosmosAdapter = this.deps.adapterManager.get(cosmosChainId) as
       | cosmos.ChainAdapter
       | undefined
@@ -235,6 +237,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     }
 
     let sellAddress
+    let ibcTxId
     const feeData = await osmosisAdapter.getFeeData({})
     const gas = feeData.fast.chainSpecific.gasLimit
 
@@ -270,7 +273,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         '0',
         accountNumber,
         sequence,
-        gas,
+        gas
       )
 
       // wait till confirmed
@@ -281,9 +284,10 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         })
 
       ibcSellAmount = await pollForAtomChannelBalance(receiveAddress, this.deps.osmoUrl)
+      ibcTxId = tradeId
       // delay to ensure all nodes we interact with are up to date at this point
       // seeing intermittent bugs that suggest the balances and sequence numbers were sometimes off
-      await new Promise((resolve) => setTimeout(resolve, 3000))
+      await new Promise((resolve) => setTimeout(resolve, 5000))
     } else {
       const sellBip44Params = osmosisAdapter.buildBIP44Params({
         accountNumber: Number(sellAssetAccountNumber),
@@ -297,6 +301,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     }
 
     const osmoAddress = isFromOsmo ? sellAddress : receiveAddress
+    const cosmosAddress = isFromOsmo ? receiveAddress : sellAddress
     const signTxInput = await buildTradeTx({
       osmoAddress,
       adapter: osmosisAdapter,
@@ -330,7 +335,9 @@ export class OsmosisSwapper implements Swapper<ChainId> {
 
       // delay to ensure all nodes we interact with are up to date at this point
       // seeing intermittent bugs that suggest the balances and sequence numbers were sometimes off
-      await new Promise((resolve) => setTimeout(resolve, 3000))
+      await new Promise((resolve) => setTimeout(resolve, 5000))
+      const cosmosTxHistory = await cosmosAdapter.getTxHistory({ pubkey: cosmosAddress })
+
       await performIbcTransfer(
         transfer,
         osmosisAdapter,
@@ -341,10 +348,29 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         '0',
         ibcAccountNumber,
         ibcSequence,
-        gas,
+        gas
       )
+      const poll = async function () {
+        try {
+          const updatedTxHistory = await cosmosAdapter.getTxHistory({ pubkey: cosmosAddress })
+          if (cosmosTxHistory?.transactions[0].txid !== updatedTxHistory?.transactions[0].txid) {
+            ibcTxId = updatedTxHistory?.transactions[0].txid
+            Promise.resolve(updatedTxHistory)
+          } else {
+            setTimeout(poll, 10000)
+          }
+        } catch (e) {
+          Promise.reject(
+            new SwapError('Failed to see updated tx', {
+              code: SwapErrorTypes.RESPONSE_ERROR,
+            })
+          )
+        }
+      }
+      await poll()
+      return { tradeId, buyTradeId: ibcTxId }
     }
 
-    return { tradeId: tradeId || 'error' }
+    return { tradeId: ibcTxId as string, buyTradeId: tradeId }
   }
 }
