@@ -375,10 +375,10 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         ibcSequence,
         gas,
       )
-      return { tradeId, previousCosmosTxid: cosmosTxHistory?.transactions[0].txid, cosmosAddress }
+      return { tradeId, previousCosmosTxid: cosmosTxHistory.transactions[0].txid, cosmosAddress }
     }
     const cosmosTxHistory = await cosmosAdapter.getTxHistory({ pubkey: cosmosAddress, pageSize: 1 })
 
-    return { tradeId, previousCosmosTxid: cosmosTxHistory?.transactions[0].txid }
+    return { tradeId, previousCosmosTxid: cosmosTxHistory.transactions[0].txid }
   }
 }
