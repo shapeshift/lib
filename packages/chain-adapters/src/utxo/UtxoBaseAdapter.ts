@@ -134,8 +134,6 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
   }
 
   getBIP44Params(params: GetBIP44ParamsInput): BIP44Params {
-    const r = { ...this.defaultBIP44Params }
-    r.accountNumber = params.accountNumber
     let purpose: number
     switch (params.accountType) {
       case UtxoAccountType.SegwitNative:
