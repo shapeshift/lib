@@ -62,9 +62,10 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       | cosmos.ChainAdapter
       | undefined
 
-    if (!cosmosAdapter) throw new SwapError('OsmosisSwapper: couldnt get cosmos adapter', {
-      code: SwapErrorTypes.GET_TRADE_TXS_FAILED,
-    })
+    if (!cosmosAdapter)
+      throw new SwapError('OsmosisSwapper: couldnt get cosmos adapter', {
+        code: SwapErrorTypes.GET_TRADE_TXS_FAILED,
+      })
 
     const cosmosTxHistory = await cosmosAdapter.getTxHistory({ pubkey: tradeResult.cosmosAddress })
     const currentCosmosTxid = cosmosTxHistory?.transactions[0].txid
