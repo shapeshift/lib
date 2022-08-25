@@ -76,6 +76,9 @@ export class OsmosisSwapper implements Swapper<ChainId> {
 
       return {
         sellTxid: tradeResult.tradeId,
+        // This logic assumes there are the next cosmos tx will be the correct ibc transfer
+        // a random incoming tx COULD cause this logic to fail but its unlikely
+        // TODO find a better solution (may require unchained and parser additions)
         buyTxid: currentCosmosTxid !== tradeResult.previousCosmosTxid ? currentCosmosTxid : '',
       }
     } else {
