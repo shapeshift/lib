@@ -74,7 +74,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       'OSMO',
       buyAssetSymbol,
       sellAmount,
-      this.deps.osmoUrl
+      this.deps.osmoUrl,
     )
 
     if (sellAssetSymbol !== 'OSMO') {
@@ -118,7 +118,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     if (!this.supportedAssetIds.includes(sellAssetId)) return []
 
     return assetIds.filter(
-      (assetId) => this.supportedAssetIds.includes(assetId) && assetId !== sellAssetId
+      (assetId) => this.supportedAssetIds.includes(assetId) && assetId !== sellAssetId,
     )
   }
 
@@ -139,7 +139,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       sellAsset.symbol,
       buyAsset.symbol,
       sellAmount !== '0' ? sellAmount : '1',
-      this.deps.osmoUrl
+      this.deps.osmoUrl,
     )
 
     //convert amount to base
@@ -181,7 +181,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       sellAsset.symbol,
       buyAsset.symbol,
       sellAmount !== '0' ? sellAmount : '1',
-      this.deps.osmoUrl
+      this.deps.osmoUrl,
     )
 
     const { minimum, maximum } = await this.getMinMax(input)
@@ -273,7 +273,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         '0',
         accountNumber,
         sequence,
-        gas
+        gas,
       )
 
       // wait till confirmed
@@ -349,7 +349,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         '0',
         ibcAccountNumber,
         ibcSequence,
-        gas
+        gas,
       )
       const pollForNewTx = async () => {
         return new Promise((resolve, reject) => {
@@ -368,7 +368,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
               reject(
                 new SwapError('Failed to see updated tx', {
                   code: SwapErrorTypes.RESPONSE_ERROR,
-                })
+                }),
               )
             }
           }
