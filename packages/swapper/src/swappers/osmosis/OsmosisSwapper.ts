@@ -236,7 +236,6 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       | osmosis.ChainAdapter
       | undefined
 
-    // to make more extensible get this chain adapter dynamically
     const cosmosAdapter = this.deps.adapterManager.get(cosmosChainId) as
       | cosmos.ChainAdapter
       | undefined
@@ -346,7 +345,6 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       // delay to ensure all nodes we interact with are up to date at this point
       // seeing intermittent bugs that suggest the balances and sequence numbers were sometimes off
       await new Promise((resolve) => setTimeout(resolve, 5000))
-      const cosmosTxHistory = await cosmosAdapter.getTxHistory({ pubkey: cosmosAddress })
 
       await performIbcTransfer(
         transfer,
@@ -361,10 +359,11 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         gas,
       )
 
+      const cosmosTxHistory = await cosmosAdapter.getTxHistory({ pubkey: cosmosAddress })
+
       return { tradeId, previousCosmosTxid: cosmosTxHistory?.transactions[0].txid, cosmosAddress }
     }
 
-    // ibcTxId will be set through the boolean above, it's not registering with ts
     return { tradeId, previousCosmosTxid: tradeId, cosmosAddress }
   }
 }
