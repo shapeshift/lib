@@ -16,7 +16,6 @@ import {
   ExecuteTradeInput,
   GetTradeQuoteInput,
   MinMaxOutput,
-  OsmosisTradeResult,
   SwapError,
   SwapErrorTypes,
   Swapper,
@@ -25,6 +24,7 @@ import {
   TradeQuote,
   TradeTxs,
 } from '../../api'
+import { OsmosisTradeResult } from '../thorchain/types'
 import { bn, bnOrZero } from '../utils/bignumber'
 import {
   COSMO_OSMO_CHANNEL,

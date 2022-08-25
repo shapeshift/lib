@@ -141,11 +141,6 @@ export type TradeResult = {
   tradeId: string
 }
 
-export interface OsmosisTradeResult extends TradeResult {
-  previousCosmosTxid: string
-  cosmosAddress?: string
-}
-
 export type ApproveInput<C extends ChainId> = {
   quote: TradeQuote<C>
   wallet: HDWallet
