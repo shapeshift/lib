@@ -16,13 +16,13 @@ import {
   ExecuteTradeInput,
   GetTradeQuoteInput,
   MinMaxOutput,
+  OsmosisTradeResult,
   SwapError,
   SwapErrorTypes,
   Swapper,
   SwapperType,
   Trade,
   TradeQuote,
-  TradeResult,
   TradeTxs,
 } from '../../api'
 import { bn, bnOrZero } from '../utils/bignumber'
@@ -57,10 +57,35 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     this.supportedAssetIds = [cosmosAssetId, osmosisAssetId]
   }
 
-  async getTradeTxs(tradeResult: TradeResult): Promise<TradeTxs> {
-    return {
-      sellTxid: tradeResult.tradeId,
-      buyTxid: tradeResult.buyTradeId,
+  async getTradeTxs(tradeResult: OsmosisTradeResult): Promise<TradeTxs> {
+    if (tradeResult.cosmosAddress) {
+      const cosmosAdapter = this.deps.adapterManager.get(cosmosChainId) as
+        | cosmos.ChainAdapter
+        | undefined
+
+      if (!cosmosAdapter)
+        throw new SwapError('OsmosisSwapper: couldnt get cosmos adapter', {
+          code: SwapErrorTypes.GET_TRADE_TXS_FAILED,
+        })
+
+      const cosmosTxHistory = await cosmosAdapter.getTxHistory({
+        pubkey: tradeResult.cosmosAddress,
+        pageSize: 1,
+      })
+      const currentCosmosTxid = cosmosTxHistory?.transactions[0].txid
+
+      return {
+        sellTxid: tradeResult.tradeId,
+        // This logic assumes there are the next cosmos tx will be the correct ibc transfer
+        // a random incoming tx COULD cause this logic to fail but its unlikely
+        // TODO find a better solution (may require unchained and parser additions)
+        buyTxid: currentCosmosTxid !== tradeResult.previousCosmosTxid ? currentCosmosTxid : '',
+      }
+    } else {
+      return {
+        sellTxid: tradeResult.previousCosmosTxid,
+        buyTxid: tradeResult.tradeId,
+      }
     }
   }
 
@@ -213,7 +238,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     }
   }
 
-  async executeTrade({ trade, wallet }: ExecuteTradeInput<ChainId>): Promise<TradeResult> {
+  async executeTrade({ trade, wallet }: ExecuteTradeInput<ChainId>): Promise<OsmosisTradeResult> {
     const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, receiveAddress } = trade
 
     const isFromOsmo = sellAsset.assetId === osmosisAssetId
@@ -225,7 +250,6 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       | osmosis.ChainAdapter
       | undefined
 
-    // to make more extensible get this chain adapter dynamically
     const cosmosAdapter = this.deps.adapterManager.get(cosmosChainId) as
       | cosmos.ChainAdapter
       | undefined
@@ -237,7 +261,6 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     }
 
     let sellAddress
-    let ibcTxId
     const feeData = await osmosisAdapter.getFeeData({})
     const gas = feeData.fast.chainSpecific.gasLimit
 
@@ -284,7 +307,6 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         })
 
       ibcSellAmount = await pollForAtomChannelBalance(receiveAddress, this.deps.osmoUrl)
-      ibcTxId = tradeId
 
       // delay to ensure all nodes we interact with are up to date at this point
       // seeing intermittent bugs that suggest the balances and sequence numbers were sometimes off
@@ -337,7 +359,10 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       // delay to ensure all nodes we interact with are up to date at this point
       // seeing intermittent bugs that suggest the balances and sequence numbers were sometimes off
       await new Promise((resolve) => setTimeout(resolve, 5000))
-      const cosmosTxHistory = await cosmosAdapter.getTxHistory({ pubkey: cosmosAddress })
+      const cosmosTxHistory = await cosmosAdapter.getTxHistory({
+        pubkey: cosmosAddress,
+        pageSize: 1,
+      })
 
       await performIbcTransfer(
         transfer,
@@ -351,39 +376,10 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         ibcSequence,
         gas,
       )
-
-      // need to get relayed tx on the appropriate chain.  This tx is the finishing transaction, but isn't instantiated by us
-      // we must wait for this
-      const pollForNewTx = async () => {
-        return new Promise((resolve, reject) => {
-          const poll = async function () {
-            try {
-              const updatedTxHistory = await cosmosAdapter.getTxHistory({ pubkey: cosmosAddress })
-              if (
-                cosmosTxHistory?.transactions[0].txid !== updatedTxHistory?.transactions[0].txid
-              ) {
-                ibcTxId = updatedTxHistory?.transactions[0].txid
-                resolve(updatedTxHistory?.transactions[0].txid)
-              } else {
-                setTimeout(poll, 2000)
-              }
-            } catch (e) {
-              reject(
-                new SwapError('Failed to see updated tx', {
-                  code: SwapErrorTypes.RESPONSE_ERROR,
-                }),
-              )
-            }
-          }
-          poll()
-        })
-      }
-      await pollForNewTx()
-
-      return { tradeId, buyTradeId: ibcTxId }
+      return { tradeId, previousCosmosTxid: cosmosTxHistory?.transactions[0].txid, cosmosAddress }
     }
+    const cosmosTxHistory = await cosmosAdapter.getTxHistory({ pubkey: cosmosAddress, pageSize: 1 })
 
-    // ibcTxId will be set through the boolean above, it's not registering with ts
-    return { tradeId: ibcTxId as string, buyTradeId: tradeId }
+    return { tradeId, previousCosmosTxid: cosmosTxHistory?.transactions[0].txid }
   }
 }
