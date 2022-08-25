@@ -351,6 +351,9 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         ibcSequence,
         gas,
       )
+
+      // need to get relayed tx on the appropriate chain.  This tx is the finishing transaction, but isn't instantiated by us
+      // we must wait for this
       const pollForNewTx = async () => {
         return new Promise((resolve, reject) => {
           const poll = async function () {
