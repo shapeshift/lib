@@ -24,7 +24,6 @@ import {
   TradeQuote,
   TradeTxs,
 } from '../../api'
-import { OsmosisTradeResult } from '../thorchain/types'
 import { bn, bnOrZero } from '../utils/bignumber'
 import {
   COSMO_OSMO_CHANNEL,
@@ -41,7 +40,7 @@ import {
   SymbolDenomMapping,
   symbolDenomMapping,
 } from './utils/helpers'
-import { OsmoSwapperDeps } from './utils/types'
+import { OsmosisTradeResult, OsmoSwapperDeps } from './utils/types'
 
 export class OsmosisSwapper implements Swapper<ChainId> {
   readonly name = 'Osmosis'
