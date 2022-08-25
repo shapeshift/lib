@@ -104,9 +104,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
   }
 
   getBIP44Params(params: GetBIP44ParamsInput): BIP44Params {
-    const r = { ...this.defaultBIP44Params }
-    r.accountNumber = params.accountNumber
-    return r
+    return { ...this.defaultBIP44Params, accountNumber: params.accountNumber }
   }
 
   async getAccount(pubkey: string): Promise<Account<T>> {
