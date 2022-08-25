@@ -292,10 +292,11 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         this.deps.osmoUrl,
         'uatom',
         COSMO_OSMO_CHANNEL,
-        '0',
+        feeData.fast.txFee,
         accountNumber,
         sequence,
         gas,
+        'uatom',
       )
 
       // wait till confirmed
@@ -374,6 +375,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         ibcAccountNumber,
         ibcSequence,
         gas,
+        'uosmo',
       )
       return { tradeId, previousCosmosTxid: cosmosTxHistory.transactions[0].txid, cosmosAddress }
     }
