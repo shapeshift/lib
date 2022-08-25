@@ -60,7 +60,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
   async getTradeTxs(tradeResult: TradeResult): Promise<TradeTxs> {
     return {
       sellTxid: tradeResult.tradeId,
-      buyTxid: tradeResult.buyTradeId ?? tradeResult.tradeId,
+      buyTxid: tradeResult.buyTradeId,
     }
   }
 
@@ -285,6 +285,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
 
       ibcSellAmount = await pollForAtomChannelBalance(receiveAddress, this.deps.osmoUrl)
       ibcTxId = tradeId
+
       // delay to ensure all nodes we interact with are up to date at this point
       // seeing intermittent bugs that suggest the balances and sequence numbers were sometimes off
       await new Promise((resolve) => setTimeout(resolve, 5000))
@@ -350,27 +351,36 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         ibcSequence,
         gas
       )
-      const poll = async function () {
-        try {
-          const updatedTxHistory = await cosmosAdapter.getTxHistory({ pubkey: cosmosAddress })
-          if (cosmosTxHistory?.transactions[0].txid !== updatedTxHistory?.transactions[0].txid) {
-            ibcTxId = updatedTxHistory?.transactions[0].txid
-            Promise.resolve(updatedTxHistory)
-          } else {
-            setTimeout(poll, 10000)
+      const pollForNewTx = async () => {
+        return new Promise((resolve, reject) => {
+          const poll = async function () {
+            try {
+              const updatedTxHistory = await cosmosAdapter.getTxHistory({ pubkey: cosmosAddress })
+              if (
+                cosmosTxHistory?.transactions[0].txid !== updatedTxHistory?.transactions[0].txid
+              ) {
+                ibcTxId = updatedTxHistory?.transactions[0].txid
+                resolve(updatedTxHistory?.transactions[0].txid)
+              } else {
+                setTimeout(poll, 2000)
+              }
+            } catch (e) {
+              reject(
+                new SwapError('Failed to see updated tx', {
+                  code: SwapErrorTypes.RESPONSE_ERROR,
+                })
+              )
+            }
           }
-        } catch (e) {
-          Promise.reject(
-            new SwapError('Failed to see updated tx', {
-              code: SwapErrorTypes.RESPONSE_ERROR,
-            })
-          )
-        }
+          poll()
+        })
       }
-      await poll()
+      await pollForNewTx()
+
       return { tradeId, buyTradeId: ibcTxId }
     }
 
+    // ibcTxId will be set through the boolean above, it's not registering with ts
     return { tradeId: ibcTxId as string, buyTradeId: tradeId }
   }
 }
