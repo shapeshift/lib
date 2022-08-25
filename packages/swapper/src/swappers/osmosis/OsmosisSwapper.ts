@@ -70,6 +70,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
 
       const cosmosTxHistory = await cosmosAdapter.getTxHistory({
         pubkey: tradeResult.cosmosAddress,
+        pageSize: 1,
       })
       const currentCosmosTxid = cosmosTxHistory?.transactions[0].txid
 
@@ -333,7 +334,6 @@ export class OsmosisSwapper implements Swapper<ChainId> {
 
     const signed = await osmosisAdapter.signTransaction(signTxInput)
     const tradeId = await osmosisAdapter.broadcastTransaction(signed)
-    const cosmosTxHistory = await cosmosAdapter.getTxHistory({ pubkey: cosmosAddress })
 
     if (isFromOsmo) {
       const pollResult = await pollForComplete(tradeId, this.deps.osmoUrl)
@@ -356,6 +356,10 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       // delay to ensure all nodes we interact with are up to date at this point
       // seeing intermittent bugs that suggest the balances and sequence numbers were sometimes off
       await new Promise((resolve) => setTimeout(resolve, 5000))
+      const cosmosTxHistory = await cosmosAdapter.getTxHistory({
+        pubkey: cosmosAddress,
+        pageSize: 1,
+      })
 
       await performIbcTransfer(
         transfer,
@@ -371,6 +375,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       )
       return { tradeId, previousCosmosTxid: cosmosTxHistory?.transactions[0].txid, cosmosAddress }
     }
+    const cosmosTxHistory = await cosmosAdapter.getTxHistory({ pubkey: cosmosAddress, pageSize: 1 })
 
     return { tradeId, previousCosmosTxid: cosmosTxHistory?.transactions[0].txid }
   }
