@@ -12,6 +12,7 @@ import {
   ChainTxType,
   FeeDataEstimate,
   GetAddressInput,
+  GetBIP44ParamsInput,
   GetFeeDataInput,
   SignTxInput,
   SubscribeError,
@@ -100,6 +101,12 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
 
   buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
     return { ...this.defaultBIP44Params, ...params }
+  }
+
+  getBIP44Params(params: GetBIP44ParamsInput): BIP44Params {
+    const r = { ...this.defaultBIP44Params }
+    r.accountNumber = params.accountNumber
+    return r
   }
 
   async getAccount(pubkey: string): Promise<Account<T>> {

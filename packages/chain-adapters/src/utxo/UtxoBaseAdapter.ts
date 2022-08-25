@@ -19,6 +19,7 @@ import {
   BuildSendTxInput,
   ChainTxType,
   FeeDataEstimate,
+  GetBIP44ParamsInput,
   GetFeeDataInput,
   SignTxInput,
   SubscribeError,
@@ -130,6 +131,25 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
 
   buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
     return { ...this.defaultBIP44Params, ...params }
+  }
+
+  getBIP44Params(params: GetBIP44ParamsInput): BIP44Params {
+    const r = { ...this.defaultBIP44Params }
+    r.accountNumber = params.accountNumber
+    switch (params.accountType) {
+      case UtxoAccountType.SegwitNative:
+        r.purpose = 84
+        break
+      case UtxoAccountType.SegwitP2sh:
+        r.purpose = 49
+        break
+      case UtxoAccountType.P2pkh:
+        r.purpose = 44
+        break
+      default:
+        throw new Error(`not a supported accountType ${params.accountType}`)
+    }
+    return r
   }
 
   async getAccount(pubkey: string): Promise<Account<T>> {
