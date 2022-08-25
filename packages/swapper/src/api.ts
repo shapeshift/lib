@@ -139,7 +139,11 @@ export type ExecuteTradeInput<C extends ChainId> = {
 
 export type TradeResult = {
   tradeId: string
-  buyTradeId?: string
+}
+
+export interface OsmosisTradeResult extends TradeResult {
+  previousCosmosTxid: string
+  cosmosAddress: string
 }
 
 export type ApproveInput<C extends ChainId> = {
