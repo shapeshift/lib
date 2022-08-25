@@ -1,4 +1,4 @@
-import { ChainId } from '@shapeshiftoss/caip'
+import { AccountId, ChainId } from '@shapeshiftoss/caip'
 import {
   BTCSignTx,
   CosmosSignTx,
@@ -93,6 +93,10 @@ export type TxMetadata = unchained.evm.TxMetadata | unchained.cosmos.TxMetadata
 export type Transaction = Omit<unchained.StandardTx, 'transfers'> & {
   transfers: Array<TxTransfer>
   data?: TxMetadata
+}
+
+export type WebsocketTxMsg = Transaction & {
+  accountId: AccountId
 }
 
 export type TxTransfer = Omit<unchained.Transfer, 'components' | 'totalValue' | 'token'> & {

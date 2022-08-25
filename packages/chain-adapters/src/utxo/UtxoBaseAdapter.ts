@@ -1,4 +1,5 @@
 import { AssetId, ChainId } from '@shapeshiftoss/caip'
+import { toAccountId } from '@shapeshiftoss/caip'
 import {
   bip32ToAddressNList,
   BTCOutputAddressType,
@@ -23,11 +24,11 @@ import {
   SignTxInput,
   SubscribeError,
   SubscribeTxsInput,
-  Transaction,
   TxHistoryInput,
   TxHistoryResponse,
   ValidAddressResult,
   ValidAddressResultType,
+  WebsocketTxMsg,
 } from '../types'
 import {
   accountTypeToOutputScriptType,
@@ -419,7 +420,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
 
   async subscribeTxs(
     input: SubscribeTxsInput,
-    onMessage: (msg: Transaction) => void,
+    onMessage: (msg: WebsocketTxMsg) => void,
     onError: (err: SubscribeError) => void,
   ): Promise<void> {
     const {
@@ -432,6 +433,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
     const account = await this.getAccount(xpub)
     const addresses = (account.chainSpecific.addresses ?? []).map((address) => address.pubkey)
     const subscriptionId = `${toRootDerivationPath(bip44Params)}/${accountType}`
+    const accountId = toAccountId({ chainId: this.chainId, account: xpub })
 
     await this.providers.ws.subscribeTxs(
       subscriptionId,
@@ -440,6 +442,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
         const tx = await this.parser.parse(msg.data, msg.address)
 
         onMessage({
+          accountId,
           address: tx.address,
           blockHash: tx.blockHash,
           blockHeight: tx.blockHeight,

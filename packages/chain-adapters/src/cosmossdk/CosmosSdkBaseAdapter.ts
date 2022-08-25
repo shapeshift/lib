@@ -1,4 +1,4 @@
-import { AssetId, ChainId } from '@shapeshiftoss/caip'
+import { AssetId, ChainId, toAccountId } from '@shapeshiftoss/caip'
 import { CosmosSignTx } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
@@ -16,11 +16,11 @@ import {
   SignTxInput,
   SubscribeError,
   SubscribeTxsInput,
-  Transaction,
   TxHistoryInput,
   TxHistoryResponse,
   ValidAddressResult,
   ValidAddressResultType,
+  WebsocketTxMsg,
 } from '../types'
 import { toRootDerivationPath } from '../utils'
 import { cosmos } from './'
@@ -238,13 +238,14 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
 
   async subscribeTxs(
     input: SubscribeTxsInput,
-    onMessage: (msg: Transaction) => void,
+    onMessage: (msg: WebsocketTxMsg) => void,
     onError: (err: SubscribeError) => void,
   ): Promise<void> {
     const { wallet, bip44Params = this.defaultBIP44Params } = input
 
     const address = await this.getAddress({ wallet, bip44Params })
     const subscriptionId = toRootDerivationPath(bip44Params)
+    const accountId = toAccountId({ chainId: this.chainId, account: address })
 
     await this.providers.ws.subscribeTxs(
       subscriptionId,
@@ -253,6 +254,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
         const tx = await this.parser.parse(msg.data, msg.address)
 
         onMessage({
+          accountId,
           address: tx.address,
           blockHash: tx.blockHash,
           blockHeight: tx.blockHeight,
