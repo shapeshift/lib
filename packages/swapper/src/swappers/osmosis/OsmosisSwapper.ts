@@ -58,21 +58,30 @@ export class OsmosisSwapper implements Swapper<ChainId> {
   }
 
   async getTradeTxs(tradeResult: OsmosisTradeResult): Promise<TradeTxs> {
-    const cosmosAdapter = this.deps.adapterManager.get(cosmosChainId) as
-      | cosmos.ChainAdapter
-      | undefined
+    if (tradeResult.cosmosAddress) {
+      const cosmosAdapter = this.deps.adapterManager.get(cosmosChainId) as
+        | cosmos.ChainAdapter
+        | undefined
 
-    if (!cosmosAdapter)
-      throw new SwapError('OsmosisSwapper: couldnt get cosmos adapter', {
-        code: SwapErrorTypes.GET_TRADE_TXS_FAILED,
+      if (!cosmosAdapter)
+        throw new SwapError('OsmosisSwapper: couldnt get cosmos adapter', {
+          code: SwapErrorTypes.GET_TRADE_TXS_FAILED,
+        })
+
+      const cosmosTxHistory = await cosmosAdapter.getTxHistory({
+        pubkey: tradeResult.cosmosAddress,
       })
+      const currentCosmosTxid = cosmosTxHistory?.transactions[0].txid
 
-    const cosmosTxHistory = await cosmosAdapter.getTxHistory({ pubkey: tradeResult.cosmosAddress })
-    const currentCosmosTxid = cosmosTxHistory?.transactions[0].txid
-
-    return {
-      sellTxid: tradeResult.tradeId,
-      buyTxid: currentCosmosTxid !== tradeResult.previousCosmosTxid ? currentCosmosTxid : '',
+      return {
+        sellTxid: tradeResult.tradeId,
+        buyTxid: currentCosmosTxid !== tradeResult.previousCosmosTxid ? currentCosmosTxid : '',
+      }
+    } else {
+      return {
+        sellTxid: tradeResult.previousCosmosTxid,
+        buyTxid: tradeResult.tradeId,
+      }
     }
   }
 
@@ -324,6 +333,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
 
     const signed = await osmosisAdapter.signTransaction(signTxInput)
     const tradeId = await osmosisAdapter.broadcastTransaction(signed)
+    const cosmosTxHistory = await cosmosAdapter.getTxHistory({ pubkey: cosmosAddress })
 
     if (isFromOsmo) {
       const pollResult = await pollForComplete(tradeId, this.deps.osmoUrl)
@@ -359,12 +369,9 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         ibcSequence,
         gas,
       )
-
-      const cosmosTxHistory = await cosmosAdapter.getTxHistory({ pubkey: cosmosAddress })
-
       return { tradeId, previousCosmosTxid: cosmosTxHistory?.transactions[0].txid, cosmosAddress }
     }
 
-    return { tradeId, previousCosmosTxid: tradeId, cosmosAddress }
+    return { tradeId, previousCosmosTxid: cosmosTxHistory?.transactions[0].txid }
   }
 }
