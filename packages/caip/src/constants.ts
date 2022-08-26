@@ -74,6 +74,7 @@ export const VALID_CHAIN_IDS: ValidChainMap = Object.freeze({
     CHAIN_REFERENCE.CosmosHubVega,
     CHAIN_REFERENCE.OsmosisMainnet,
     CHAIN_REFERENCE.OsmosisTestnet,
+    CHAIN_REFERENCE.ThorchainMainnet,
   ],
 })
 
@@ -104,6 +105,7 @@ export const ASSET_REFERENCE = {
   Ethereum: '60',
   Cosmos: '118',
   Osmosis: '118',
+  Thorchain: '931',
   BitcoinCash: '145',
   AvalancheC: '9000',
 } as const
