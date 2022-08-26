@@ -134,20 +134,18 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
   }
 
   getBIP44Params(params: GetBIP44ParamsInput): BIP44Params {
-    let purpose: number
-    switch (params.accountType) {
-      case UtxoAccountType.SegwitNative:
-        purpose = 84
-        break
-      case UtxoAccountType.SegwitP2sh:
-        purpose = 49
-        break
-      case UtxoAccountType.P2pkh:
-        purpose = 44
-        break
-      default:
-        throw new Error(`not a supported accountType ${params.accountType}`)
-    }
+    const purpose: number = (() => {
+      switch (params.accountType) {
+        case UtxoAccountType.SegwitNative:
+          return 84
+        case UtxoAccountType.SegwitP2sh:
+          return 49
+        case UtxoAccountType.P2pkh:
+          return 44
+        default:
+          throw new Error(`not a supported accountType ${params.accountType}`)
+      }
+    })()
     return { ...this.defaultBIP44Params, accountNumber: params.accountNumber, purpose }
   }
 
