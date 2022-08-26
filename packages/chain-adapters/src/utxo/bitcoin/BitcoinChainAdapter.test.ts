@@ -556,8 +556,8 @@ describe('BitcoinChainAdapter', () => {
       }).toThrow('not a supported accountType undefined')
     })
     it('should always be coinType 0', async () => {
-      for (const acctType of adapter.getSupportedAccountTypes()) {
-        const r = adapter.getBIP44Params({ accountNumber: 0, accountType: acctType })
+      for (const accountType of adapter.getSupportedAccountTypes()) {
+        const r = adapter.getBIP44Params({ accountNumber: 0, accountType })
         expect(r.coinType).toStrictEqual(0)
       }
     })
@@ -572,8 +572,8 @@ describe('BitcoinChainAdapter', () => {
         { purpose: 49, coinType: 0, accountNumber: 0 },
         { purpose: 84, coinType: 0, accountNumber: 0 },
       ]
-      accountTypes.forEach((acctType, i) => {
-        const r = adapter.getBIP44Params({ accountNumber: 0, accountType: acctType })
+      accountTypes.forEach((accountType, i) => {
+        const r = adapter.getBIP44Params({ accountNumber: 0, accountType })
         expect(r).toStrictEqual(expected[i])
       })
     })
@@ -588,9 +588,9 @@ describe('BitcoinChainAdapter', () => {
         { purpose: 49, coinType: 0, accountNumber: 1 },
         { purpose: 84, coinType: 0, accountNumber: 2 },
       ]
-      accountTypes.forEach((acctType, i) => {
-        const r = adapter.getBIP44Params({ accountNumber: i, accountType: acctType })
-        expect(r).toStrictEqual(expected[i])
+      accountTypes.forEach((accountType, accountNumber) => {
+        const r = adapter.getBIP44Params({ accountNumber, accountType })
+        expect(r).toStrictEqual(expected[accountNumber])
       })
     })
     it('should throw for negative accountNumber', async () => {

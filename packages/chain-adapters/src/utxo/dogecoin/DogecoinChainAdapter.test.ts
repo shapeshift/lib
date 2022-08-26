@@ -468,25 +468,25 @@ describe('DogecoinChainAdapter', () => {
       }).toThrow('not a supported accountType undefined')
     })
     it('should always be coinType 3', async () => {
-      for (const acctType of adapter.getSupportedAccountTypes()) {
-        const r = adapter.getBIP44Params({ accountNumber: 0, accountType: acctType })
+      for (const accountType of adapter.getSupportedAccountTypes()) {
+        const r = adapter.getBIP44Params({ accountNumber: 0, accountType })
         expect(r.coinType).toStrictEqual(3)
       }
     })
     it('should properly map account types to purposes', async () => {
       const expected: BIP44Params[] = [{ purpose: 44, coinType: 3, accountNumber: 0 }]
       const accountTypes = adapter.getSupportedAccountTypes()
-      accountTypes.forEach((acctType, i) => {
-        const r = adapter.getBIP44Params({ accountNumber: 0, accountType: acctType })
+      accountTypes.forEach((accountType, i) => {
+        const r = adapter.getBIP44Params({ accountNumber: 0, accountType })
         expect(r).toStrictEqual(expected[i])
       })
     })
     it('should respect accountNumber', async () => {
       const accountTypes = adapter.getSupportedAccountTypes()
       const expected: BIP44Params[] = [{ purpose: 44, coinType: 3, accountNumber: 0 }]
-      accountTypes.forEach((acctType, i) => {
-        const r = adapter.getBIP44Params({ accountNumber: i, accountType: acctType })
-        expect(r).toStrictEqual(expected[i])
+      accountTypes.forEach((accountType, accountNumber) => {
+        const r = adapter.getBIP44Params({ accountNumber, accountType })
+        expect(r).toStrictEqual(expected[accountNumber])
       })
     })
     it('should throw for negative accountNumber', async () => {
