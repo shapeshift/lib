@@ -104,6 +104,9 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
   }
 
   getBIP44Params({ accountNumber }: GetBIP44ParamsInput): BIP44Params {
+    if (accountNumber < 0) {
+      throw new Error('accountNumber must be >= 0')
+    }
     return { ...this.defaultBIP44Params, accountNumber }
   }
 
