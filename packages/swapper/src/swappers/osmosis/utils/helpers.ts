@@ -203,7 +203,7 @@ export const performIbcTransfer = async (
   accountNumber: string,
   sequence: string,
   gas: string,
-  feeDenom: string
+  feeDenom: string,
 ): Promise<TradeResult> => {
   const { sender, receiver, amount } = input
 
