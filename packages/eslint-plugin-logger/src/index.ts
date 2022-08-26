@@ -46,7 +46,7 @@ export const rules: Record<
       }
 
       return {
-        Program() {
+        'Program:exit'() {
           const scope = context.getScope() as Scope
           const consoleVar = getVariableByName(scope, 'console')
           const shadowed = consoleVar && consoleVar.defs.length > 0
