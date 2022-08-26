@@ -554,9 +554,9 @@ describe('AvalancheChainAdapter', () => {
     })
   })
   describe('getBIP44Params', () => {
+    const expectedCoinType = 9000
     const adapter = new avalanche.ChainAdapter(makeChainAdapterArgs())
     it('should be coinType 9000', async () => {
-      const expectedCoinType = 9000
       const r = adapter.getBIP44Params({ accountNumber: 0 })
       expect(r.coinType).toStrictEqual(expectedCoinType)
     })
