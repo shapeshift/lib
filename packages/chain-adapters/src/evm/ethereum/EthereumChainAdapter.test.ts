@@ -806,9 +806,9 @@ describe('EthereumChainAdapter', () => {
     })
   })
   describe('getBIP44Params', () => {
-    const expectedCoinType = 60
     const adapter = new ethereum.ChainAdapter(makeChainAdapterArgs())
     it('should be coinType 60', async () => {
+      const expectedCoinType = 60
       const r = adapter.getBIP44Params({ accountNumber: 0 })
       expect(r.coinType).toStrictEqual(expectedCoinType)
     })
