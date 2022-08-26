@@ -133,12 +133,12 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
     return { ...this.defaultBIP44Params, ...params }
   }
 
-  getBIP44Params(params: GetBIP44ParamsInput): BIP44Params {
-    if (params.accountNumber < 0) {
+  getBIP44Params({ accountNumber, accountType }: GetBIP44ParamsInput): BIP44Params {
+    if (accountNumber < 0) {
       throw new Error('accountNumber must be >= 0')
     }
     const purpose: number = (() => {
-      switch (params.accountType) {
+      switch (accountType) {
         case UtxoAccountType.SegwitNative:
           return 84
         case UtxoAccountType.SegwitP2sh:
@@ -146,10 +146,10 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
         case UtxoAccountType.P2pkh:
           return 44
         default:
-          throw new Error(`not a supported accountType ${params.accountType}`)
+          throw new Error(`not a supported accountType ${accountType}`)
       }
     })()
-    return { ...this.defaultBIP44Params, accountNumber: params.accountNumber, purpose }
+    return { ...this.defaultBIP44Params, accountNumber, purpose }
   }
 
   async getAccount(pubkey: string): Promise<Account<T>> {

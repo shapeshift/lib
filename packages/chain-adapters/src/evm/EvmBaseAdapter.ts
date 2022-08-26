@@ -103,8 +103,8 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
     return { ...this.defaultBIP44Params, ...params }
   }
 
-  getBIP44Params(params: GetBIP44ParamsInput): BIP44Params {
-    return { ...this.defaultBIP44Params, accountNumber: params.accountNumber }
+  getBIP44Params({ accountNumber }: GetBIP44ParamsInput): BIP44Params {
+    return { ...this.defaultBIP44Params, accountNumber }
   }
 
   async buildSendTransaction(tx: BuildSendTxInput<T>): Promise<{
