@@ -28,9 +28,12 @@ export const getUsdRate = async ({
     const rate = responseData?.assetPriceUSD
 
     if (!rate)
-      throw new SwapError(`[getUsdRate]: No rate found`, {
-        code: SwapErrorTypes.USD_RATE_FAILED,
-      })
+      throw new SwapError(
+        `[getUsdRate]: No rate found ${assetId}, ${thorchainPoolId}, ${responseData}`,
+        {
+          code: SwapErrorTypes.USD_RATE_FAILED,
+        },
+      )
 
     return rate
   } catch (e) {
