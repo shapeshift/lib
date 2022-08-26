@@ -134,6 +134,9 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
   }
 
   getBIP44Params(params: GetBIP44ParamsInput): BIP44Params {
+    if (params.accountNumber < 0) {
+      throw new Error('accountNumber must be >= 0')
+    }
     const purpose: number = (() => {
       switch (params.accountType) {
         case UtxoAccountType.SegwitNative:
