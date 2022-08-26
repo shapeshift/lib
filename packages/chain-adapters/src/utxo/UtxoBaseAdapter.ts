@@ -137,7 +137,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
     if (accountNumber < 0) {
       throw new Error('accountNumber must be >= 0')
     }
-    const purpose: number = (() => {
+    const purpose = (() => {
       switch (accountType) {
         case UtxoAccountType.SegwitNative:
           return 84
