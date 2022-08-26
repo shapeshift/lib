@@ -8,6 +8,7 @@ import {
   osmosisChainId,
 } from '@shapeshiftoss/caip'
 import { cosmos, osmosis } from '@shapeshiftoss/chain-adapters'
+import axios from 'axios'
 
 import {
   ApprovalNeededOutput,
@@ -283,9 +284,17 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         amount: sellAmount,
       }
 
-      const responseAccount = await cosmosAdapter.getAccount(sellAddress)
-      const accountNumber = responseAccount.chainSpecific.accountNumber || '0'
-      const sequence = responseAccount.chainSpecific.sequence || '0'
+      const responseAccount = await (async () => {
+        try {
+          const accountUrl = `${this.deps.cosmosUrl}/auth/accounts/${sellAddress}`
+          return axios.get(accountUrl)
+        } catch (e) {
+          throw new Error(`Failed to get account: ${e}`)
+        }
+      })()
+
+      const accountNumber = responseAccount.data.result.value.account_number
+      const sequence = responseAccount.data.result.value.sequence
 
       const { tradeId } = await performIbcTransfer(
         transfer,
@@ -327,6 +336,18 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         })
     }
 
+    const responseAccount = await (async () => {
+      try {
+        const accountUrl = `${this.deps.osmoUrl}/auth/accounts/${sellAddress}`
+        return axios.get(accountUrl)
+      } catch (e) {
+        throw new Error(`Failed to get account: ${e}`)
+      }
+    })()
+
+    const accountNumber = responseAccount.data.result.value.account_number
+    const sequence = responseAccount.data.result.value.sequence
+
     const osmoAddress = isFromOsmo ? sellAddress : receiveAddress
     const cosmosAddress = isFromOsmo ? receiveAddress : sellAddress
     const signTxInput = await buildTradeTx({
@@ -337,6 +358,8 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       sellAmount: ibcSellAmount ?? sellAmount,
       gas,
       wallet,
+      sequence,
+      accountNumber,
     })
 
     const signed = await osmosisAdapter.signTransaction(signTxInput)
@@ -356,10 +379,16 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         amount,
       }
 
-      const ibcResponseAccount = await osmosisAdapter.getAccount(sellAddress)
-      const ibcAccountNumber = ibcResponseAccount.chainSpecific.accountNumber || '0'
-      const ibcSequence = ibcResponseAccount.chainSpecific.sequence || '0'
-
+      const ibcResponseAccount = await (async () => {
+        try {
+          const accountUrl = `${this.deps.osmoUrl}/auth/accounts/${sellAddress}`
+          return axios.get(accountUrl)
+        } catch (e) {
+          throw new Error(`Failed to get account: ${e}`)
+        }
+      })()
+      const ibcAccountNumber = ibcResponseAccount.data.result.value.account_number
+      const ibcSequence = ibcResponseAccount.data.result.value.sequence
       // delay to ensure all nodes we interact with are up to date at this point
       // seeing intermittent bugs that suggest the balances and sequence numbers were sometimes off
       await new Promise((resolve) => setTimeout(resolve, 5000))

@@ -216,6 +216,7 @@ export const performIbcTransfer = async (
       })
     }
   })()
+
   const latestBlock = responseLatestBlock.data.block.header.height
   const bip44Params = adapter.buildBIP44Params({
     accountNumber: 0, // TODO: Use real accountNumbers
@@ -282,6 +283,8 @@ export const buildTradeTx = async ({
   sellAmount,
   gas,
   wallet,
+  sequence,
+  accountNumber,
 }: {
   osmoAddress: string
   adapter: osmosis.ChainAdapter
@@ -290,11 +293,13 @@ export const buildTradeTx = async ({
   sellAmount: string
   gas: string
   wallet: HDWallet
+  sequence: string
+  accountNumber: string
 }) => {
-  const responseAccount = await adapter.getAccount(osmoAddress)
+  // const responseAccount = await adapter.getAccount(osmoAddress)
 
-  const accountNumber = responseAccount.chainSpecific.accountNumber || '0'
-  const sequence = responseAccount.chainSpecific.sequence || '0'
+  // const accountNumber = responseAccount.chainSpecific.accountNumber || '0'
+  // const sequence = responseAccount.chainSpecific.sequence || '0'
 
   const bip44Params = adapter.buildBIP44Params({
     accountNumber: 0, // TODO: Use real accountNumbers
