@@ -259,9 +259,11 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       })
     }
 
-    let sellAddress
     const feeData = await osmosisAdapter.getFeeData({})
     const gas = feeData.fast.chainSpecific.gasLimit
+
+    let sellAddress
+    let cosmosIbcTradeId = ''
 
     if (!isFromOsmo) {
       const sellBip44Params = cosmosAdapter.buildBIP44Params({
@@ -298,6 +300,8 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         gas,
         'uatom',
       )
+
+      cosmosIbcTradeId = tradeId
 
       // wait till confirmed
       const pollResult = await pollForComplete(tradeId, this.deps.cosmosUrl)
@@ -359,6 +363,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       // delay to ensure all nodes we interact with are up to date at this point
       // seeing intermittent bugs that suggest the balances and sequence numbers were sometimes off
       await new Promise((resolve) => setTimeout(resolve, 5000))
+
       const cosmosTxHistory = await cosmosAdapter.getTxHistory({
         pubkey: cosmosAddress,
         pageSize: 1,
@@ -379,8 +384,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       )
       return { tradeId, previousCosmosTxid: cosmosTxHistory.transactions[0].txid, cosmosAddress }
     }
-    const cosmosTxHistory = await cosmosAdapter.getTxHistory({ pubkey: cosmosAddress, pageSize: 1 })
 
-    return { tradeId, previousCosmosTxid: cosmosTxHistory.transactions[0].txid }
+    return { tradeId, previousCosmosTxid: cosmosIbcTradeId }
   }
 }
