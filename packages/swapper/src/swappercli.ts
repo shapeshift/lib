@@ -4,6 +4,7 @@ import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-nativ
 import { KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import BigNumber from 'bignumber.js'
+import { assert } from 'console'
 import dotenv from 'dotenv'
 import readline from 'readline-sync'
 import Web3 from 'web3'
@@ -47,17 +48,22 @@ const getWallet = async (): Promise<NativeHDWallet> => {
 
 const main = async (): Promise<void> => {
   const [, , ...args] = process.argv
-  const [sellSymbol, buySymbol, sellAmount] = args
+  const [sellSymbol, buySymbol, sellAmount, accountNumberString] = args
 
   console.info(`sellSymbol: sell ${sellAmount} of ${sellSymbol} to ${buySymbol}`)
 
-  if (!sellAmount || !sellSymbol || !buySymbol) {
+  if (!sellAmount || !sellSymbol || !buySymbol || !accountNumberString) {
     console.error(`
       Usage:
-      swapcli [sellSymbol] [buySymbol] [sellAmount](denominated in sell asset, not wei)
+      swapcli [sellSymbol] [buySymbol] [sellAmount](denominated in sell asset, not wei) [accountNumber]
     `)
     return
   }
+
+  const accountNumber = Number(accountNumberString)
+
+  assert(!Number.isNaN(accountNumber))
+  assert(accountNumber > 0)
 
   const assetService = new AssetService()
   const assetMap = assetService.getAll()
@@ -88,6 +94,8 @@ const main = async (): Promise<void> => {
     },
     rpcUrl: 'https://mainnet.infura.io/v3/d734c7eebcdf400185d7eb67322a7e57',
   })
+
+  const bip44Params = ethChainAdapter.buildBIP44Params({ accountNumber })
 
   const web3Provider = new Web3.providers.HttpProvider(ETH_NODE_URL)
   const web3 = new Web3(web3Provider)
@@ -135,6 +143,7 @@ const main = async (): Promise<void> => {
   if (answer === 'y') {
     const trade = await swapper.buildTrade({
       chainId: KnownChainIds.EthereumMainnet,
+      bip44Params,
       wallet,
       buyAsset,
       sendMax: false,

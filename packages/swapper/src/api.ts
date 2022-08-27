@@ -109,6 +109,7 @@ export type GetTradeQuoteInput =
 export type BuildTradeInput = GetTradeQuoteInput & {
   slippage?: string
   wallet: HDWallet
+  bip44Params: BIP44Params
 }
 
 interface TradeBase<C extends ChainId> {

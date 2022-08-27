@@ -3,6 +3,7 @@ import { ChainId } from '@shapeshiftoss/caip'
 import { ChainAdapter, cosmos } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { KnownChainIds } from '@shapeshiftoss/types'
+import { BIP44Params } from '@shapeshiftoss/types'
 
 import { SwapError, SwapErrorTypes, TradeQuote } from '../../../../api'
 import { InboundResponse, ThorchainSwapperDeps } from '../../types'
@@ -11,6 +12,7 @@ import { makeSwapMemo } from '../makeSwapMemo/makeSwapMemo'
 import { thorService } from '../thorService'
 
 export const cosmosTxData = async (input: {
+  bip44Params: BIP44Params
   destinationAddress: string
   deps: ThorchainSwapperDeps
   sellAmount: string
@@ -30,6 +32,7 @@ export const cosmosTxData = async (input: {
     buyAsset,
     slippageTolerance,
     quote,
+    bip44Params,
     wallet,
     sellAdapter,
   } = input
@@ -67,6 +70,7 @@ export const cosmosTxData = async (input: {
     sellAdapter as unknown as cosmos.ChainAdapter
   ).buildSendTransaction({
     value: sellAmount,
+    bip44Params,
     wallet,
     to: vault,
     memo,
