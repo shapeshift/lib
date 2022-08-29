@@ -2,10 +2,11 @@ import { AssetId } from '@shapeshiftoss/caip'
 import { Logger } from '@shapeshiftoss/logger'
 import BigNumber from 'bignumber.js'
 
-import { Event, Message } from '../../generated/cosmos'
-import { TxMetadata } from '../types'
+import { Event, Message } from '../types'
+import { TxMetadata } from './types'
+
 const logger = new Logger({
-  namespace: ['client', 'cosmos', 'utils'],
+  namespace: ['unchained-client', 'cosmossdk', 'parser', 'utils'],
   level: process.env.LOG_LEVEL,
 })
 

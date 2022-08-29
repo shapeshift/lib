@@ -1,33 +1,24 @@
-import { ASSET_REFERENCE, AssetId, ChainId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
+import { AssetId, ChainId } from '@shapeshiftoss/caip'
 import { BigNumber } from 'bignumber.js'
 
 import { TransferType, TxStatus } from '../../types'
-import { Tx as CosmosTx } from '../index'
-import { ParsedTx } from '../types'
+import { Message } from '../types'
+import { ParsedTx, Tx } from './types'
 import { valuesFromMsgEvents } from './utils'
 
-export interface TransactionParserArgs {
+export interface BaseTransactionParserArgs {
   chainId: ChainId
-  assetId?: AssetId // we should ultimately extend for a base comsos parser with an osmosis parser that has the correct asset reference
 }
 
-export class TransactionParser {
+export class BaseTransactionParser<T extends Tx> {
   chainId: ChainId
   assetId: AssetId
 
-  constructor(args: TransactionParserArgs) {
+  constructor(args: BaseTransactionParserArgs) {
     this.chainId = args.chainId
-
-    this.assetId =
-      args?.assetId ??
-      toAssetId({
-        ...fromChainId(this.chainId),
-        assetNamespace: 'slip44',
-        assetReference: ASSET_REFERENCE.Cosmos,
-      })
   }
 
-  async parse(tx: CosmosTx, address: string): Promise<ParsedTx> {
+  async parse(tx: T, address: string): Promise<ParsedTx> {
     const parsedTx: ParsedTx = {
       address,
       blockHash: tx.blockHash,
@@ -39,6 +30,8 @@ export class TransactionParser {
       transfers: [],
       txid: tx.txid,
     }
+
+    this.getMessageEvents(tx)
 
     // For simplicity and to limit scope we assume 1 message per transaction
     // This works ok enough for transactions we generate but way may want to improve in the future
@@ -87,5 +80,29 @@ export class TransactionParser {
     }
 
     return parsedTx
+  }
+
+  getMessageEvents(tx: T): Array<Message> {
+    const messages = Object.entries(tx.events).reduce<Array<Message>>(
+      (prev, [msgIndex, events]) => {
+        if (events.some((event) => event.type === 'message')) {
+          const msg = tx.messages[Number(msgIndex)]
+          if (!msg) return prev
+          return [...prev, tx.messages[Number(msgIndex)]]
+        }
+
+        events.forEach((event) => {
+          console.log(msgIndex, event.type)
+          console.log(msgIndex, event.attributes)
+        })
+
+        return prev
+      },
+      [],
+    )
+
+    console.log({ messages })
+
+    return messages
   }
 }
