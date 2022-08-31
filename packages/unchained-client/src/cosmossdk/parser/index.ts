@@ -2,9 +2,10 @@ import { AssetId, ChainId } from '@shapeshiftoss/caip'
 import { BigNumber } from 'bignumber.js'
 
 import { TransferType, TxStatus } from '../../types'
+import { aggregateTransfer } from '../../utils'
 import { Message } from '../types'
 import { ParsedTx, Tx } from './types'
-import { valuesFromMsgEvents } from './utils'
+import { metaData } from './utils'
 
 export interface BaseTransactionParserArgs {
   chainId: ChainId
@@ -31,77 +32,65 @@ export class BaseTransactionParser<T extends Tx> {
       txid: tx.txid,
     }
 
-    this.getMessageEvents(tx)
+    const msgs = this.getMessageEvents(tx)
+    parsedTx.data = metaData(msgs[0], this.assetId)
 
-    // For simplicity and to limit scope we assume 1 message per transaction
-    // This works ok enough for transactions we generate but way may want to improve in the future
-    const { from, to, data, value, origin } = valuesFromMsgEvents(
-      tx.messages[0],
-      tx.events,
-      this.assetId,
-      address,
-    )
+    msgs.forEach(({ from = '', to = '', value, origin }) => {
+      const amount = new BigNumber(value?.amount ?? 0)
 
-    parsedTx.data = data
-
-    if (from === address && value.gt(0)) {
-      parsedTx.transfers = [
-        {
-          type: TransferType.Send,
-          assetId: this.assetId,
+      if (from === address && amount.gt(0)) {
+        parsedTx.transfers = aggregateTransfer(
+          parsedTx.transfers,
+          TransferType.Send,
+          this.assetId,
           from,
           to,
-          totalValue: value.toString(10),
-          components: [{ value: value.toString(10) }],
-        },
-      ]
-    }
-
-    if (to === address && value.gt(0)) {
-      parsedTx.transfers = [
-        {
-          type: TransferType.Receive,
-          assetId: this.assetId,
-          from,
-          to,
-          totalValue: value.toString(10),
-          components: [{ value: value.toString(10) }],
-        },
-      ]
-    }
-
-    // We use origin for fees because some txs have a different from and origin addresses
-    if (origin === address) {
-      // network fee
-      const fees = new BigNumber(tx.fee.amount)
-      if (fees.gt(0)) {
-        parsedTx.fee = { assetId: this.assetId, value: fees.toString(10) }
+          amount.toString(10),
+        )
       }
-    }
+
+      if (to === address && amount.gt(0)) {
+        parsedTx.transfers = aggregateTransfer(
+          parsedTx.transfers,
+          TransferType.Receive,
+          this.assetId,
+          from,
+          to,
+          amount.toString(10),
+        )
+      }
+
+      // We use origin for fees because some txs have a different from and origin addresses
+      if (origin === address) {
+        // network fee
+        const fees = new BigNumber(tx.fee.amount)
+        if (fees.gt(0)) {
+          parsedTx.fee = { assetId: this.assetId, value: fees.toString(10) }
+        }
+      }
+    })
 
     return parsedTx
   }
 
   getMessageEvents(tx: T): Array<Message> {
-    const messages = Object.entries(tx.events).reduce<Array<Message>>(
-      (prev, [msgIndex, events]) => {
-        if (events.some((event) => event.type === 'message')) {
-          const msg = tx.messages[Number(msgIndex)]
-          if (!msg) return prev
-          return [...prev, tx.messages[Number(msgIndex)]]
+    const messages = Object.entries(tx.events).reduce<Array<Message>>((prev, [msgIndex, event]) => {
+      const msg = event['message'] ? tx.messages[Number(msgIndex)] : undefined
+
+      if (msg) return [...prev, msg]
+
+      const msgs: Array<Message> = []
+      Object.entries(event).forEach(([type, attribute]) => {
+        switch (type) {
+          default:
+            console.log(msgIndex, type)
+            console.log(msgIndex, attribute)
+            return
         }
+      })
 
-        events.forEach((event) => {
-          console.log(msgIndex, event.type)
-          console.log(msgIndex, event.attributes)
-        })
-
-        return prev
-      },
-      [],
-    )
-
-    console.log({ messages })
+      return [...prev, ...msgs]
+    }, [])
 
     return messages
   }

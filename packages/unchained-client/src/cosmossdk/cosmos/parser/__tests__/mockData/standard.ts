@@ -4,7 +4,7 @@ export default {
     blockHash: 'E7EF67B3D9BD5727E23951E0195C928924D96AC5E2F820D6A3824B14F14456A6',
     blockHeight: 9473608,
     timestamp: 1645207449,
-    confirmations: 358801,
+    confirmations: 2390171,
     fee: {
       amount: '2500',
       denom: 'uatom',
@@ -15,6 +15,7 @@ export default {
     value: '',
     messages: [
       {
+        origin: 'cosmos1t5u0jfg3ljsjrh2m9e47d4ny2hea7eehxrzdgd',
         from: 'cosmos1t5u0jfg3ljsjrh2m9e47d4ny2hea7eehxrzdgd',
         to: 'cosmos14e25lpsedq863vgweqg4m9n0z28c203kfdlzmz',
         type: 'send',
@@ -22,72 +23,29 @@ export default {
           amount: '2002965',
           denom: 'uatom',
         },
-        origin: 'cosmos1t5u0jfg3ljsjrh2m9e47d4ny2hea7eehxrzdgd',
       },
     ],
     events: {
-      '0': [
-        {
-          type: 'coin_received',
-          attributes: [
-            {
-              key: 'receiver',
-              value: 'cosmos14e25lpsedq863vgweqg4m9n0z28c203kfdlzmz',
-            },
-            {
-              key: 'amount',
-              value: '2002965uatom',
-            },
-          ],
+      '0': {
+        coin_received: {
+          amount: '2002965uatom',
+          receiver: 'cosmos14e25lpsedq863vgweqg4m9n0z28c203kfdlzmz',
         },
-        {
-          type: 'coin_spent',
-          attributes: [
-            {
-              key: 'spender',
-              value: 'cosmos1t5u0jfg3ljsjrh2m9e47d4ny2hea7eehxrzdgd',
-            },
-            {
-              key: 'amount',
-              value: '2002965uatom',
-            },
-          ],
+        coin_spent: {
+          amount: '2002965uatom',
+          spender: 'cosmos1t5u0jfg3ljsjrh2m9e47d4ny2hea7eehxrzdgd',
         },
-        {
-          type: 'message',
-          attributes: [
-            {
-              key: 'action',
-              value: '/cosmos.bank.v1beta1.MsgSend',
-            },
-            {
-              key: 'sender',
-              value: 'cosmos1t5u0jfg3ljsjrh2m9e47d4ny2hea7eehxrzdgd',
-            },
-            {
-              key: 'module',
-              value: 'bank',
-            },
-          ],
+        message: {
+          action: '/cosmos.bank.v1beta1.MsgSend',
+          module: 'bank',
+          sender: 'cosmos1t5u0jfg3ljsjrh2m9e47d4ny2hea7eehxrzdgd',
         },
-        {
-          type: 'transfer',
-          attributes: [
-            {
-              key: 'recipient',
-              value: 'cosmos14e25lpsedq863vgweqg4m9n0z28c203kfdlzmz',
-            },
-            {
-              key: 'sender',
-              value: 'cosmos1t5u0jfg3ljsjrh2m9e47d4ny2hea7eehxrzdgd',
-            },
-            {
-              key: 'amount',
-              value: '2002965uatom',
-            },
-          ],
+        transfer: {
+          amount: '2002965uatom',
+          recipient: 'cosmos14e25lpsedq863vgweqg4m9n0z28c203kfdlzmz',
+          sender: 'cosmos1t5u0jfg3ljsjrh2m9e47d4ny2hea7eehxrzdgd',
         },
-      ],
+      },
     },
   },
 }

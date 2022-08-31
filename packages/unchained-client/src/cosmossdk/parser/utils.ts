@@ -10,7 +10,7 @@ const logger = new Logger({
   level: process.env.LOG_LEVEL,
 })
 
-const metaData = (msg: Message | undefined, assetId: string): TxMetadata | undefined => {
+export const metaData = (msg: Message | undefined, assetId: string): TxMetadata | undefined => {
   if (!msg) return
 
   switch (msg.type) {
@@ -41,11 +41,11 @@ const metaData = (msg: Message | undefined, assetId: string): TxMetadata | undef
         value: msg?.value?.amount,
         assetId,
       }
-    case 'ibc_send':
-    case 'ibc_receive':
+    case 'transfer':
+    case 'recv_packet':
       return {
         parser: 'cosmos',
-        method: msg.type,
+        method: 'ibc_transfer',
         ibcDestination: msg.to,
         ibcSource: msg.from,
         assetId,

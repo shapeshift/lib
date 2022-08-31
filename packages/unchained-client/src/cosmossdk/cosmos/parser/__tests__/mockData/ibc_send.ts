@@ -4,7 +4,7 @@ export default {
     blockHash: 'C09E8EA1D6CD85AE8CFC2CF90B5D02EF79742167F0A161580077D44149616C65',
     blockHeight: 8418140,
     timestamp: 1637387732,
-    confirmations: 1632185,
+    confirmations: 3454641,
     fee: {
       amount: '0',
       denom: 'uosmo',
@@ -26,105 +26,35 @@ export default {
       },
     ],
     events: {
-      '0': [
-        {
-          type: 'ibc_transfer',
-          attributes: [
-            {
-              key: 'sender',
-              value: 'cosmos1fx4jwv3aalxqwmrpymn34l582lnehr3eqwuz9e',
-            },
-            {
-              key: 'receiver',
-              value: 'osmo1fx4jwv3aalxqwmrpymn34l582lnehr3eg40jnt',
-            },
-          ],
+      '0': {
+        ibc_transfer: {
+          receiver: 'osmo1fx4jwv3aalxqwmrpymn34l582lnehr3eg40jnt',
+          sender: 'cosmos1fx4jwv3aalxqwmrpymn34l582lnehr3eqwuz9e',
         },
-        {
-          type: 'message',
-          attributes: [
-            {
-              key: 'action',
-              value: 'transfer',
-            },
-            {
-              key: 'sender',
-              value: 'cosmos1fx4jwv3aalxqwmrpymn34l582lnehr3eqwuz9e',
-            },
-            {
-              key: 'module',
-              value: 'ibc_channel',
-            },
-            {
-              key: 'module',
-              value: 'transfer',
-            },
-          ],
+        message: {
+          action: 'transfer',
+          module: 'transfer',
+          sender: 'cosmos1fx4jwv3aalxqwmrpymn34l582lnehr3eqwuz9e',
         },
-        {
-          type: 'send_packet',
-          attributes: [
-            {
-              key: 'packet_data',
-              value:
-                '{"amount":"108444","denom":"uatom","receiver":"osmo1fx4jwv3aalxqwmrpymn34l582lnehr3eg40jnt","sender":"cosmos1fx4jwv3aalxqwmrpymn34l582lnehr3eqwuz9e"}',
-            },
-            {
-              key: 'packet_timeout_height',
-              value: '4-2065302',
-            },
-            {
-              key: 'packet_timeout_timestamp',
-              value: '0',
-            },
-            {
-              key: 'packet_sequence',
-              value: '154193',
-            },
-            {
-              key: 'packet_src_port',
-              value: 'transfer',
-            },
-            {
-              key: 'packet_src_channel',
-              value: 'channel-141',
-            },
-            {
-              key: 'packet_dst_port',
-              value: 'transfer',
-            },
-            {
-              key: 'packet_dst_channel',
-              value: 'channel-0',
-            },
-            {
-              key: 'packet_channel_ordering',
-              value: 'ORDER_UNORDERED',
-            },
-            {
-              key: 'packet_connection',
-              value: 'connection-257',
-            },
-          ],
+        send_packet: {
+          packet_channel_ordering: 'ORDER_UNORDERED',
+          packet_connection: 'connection-257',
+          packet_data:
+            '{"amount":"108444","denom":"uatom","receiver":"osmo1fx4jwv3aalxqwmrpymn34l582lnehr3eg40jnt","sender":"cosmos1fx4jwv3aalxqwmrpymn34l582lnehr3eqwuz9e"}',
+          packet_dst_channel: 'channel-0',
+          packet_dst_port: 'transfer',
+          packet_sequence: '154193',
+          packet_src_channel: 'channel-141',
+          packet_src_port: 'transfer',
+          packet_timeout_height: '4-2065302',
+          packet_timeout_timestamp: '0',
         },
-        {
-          type: 'transfer',
-          attributes: [
-            {
-              key: 'recipient',
-              value: 'cosmos1x54ltnyg88k0ejmk8ytwrhd3ltm84xehrnlslf',
-            },
-            {
-              key: 'sender',
-              value: 'cosmos1fx4jwv3aalxqwmrpymn34l582lnehr3eqwuz9e',
-            },
-            {
-              key: 'amount',
-              value: '108444uatom',
-            },
-          ],
+        transfer: {
+          amount: '108444uatom',
+          recipient: 'cosmos1x54ltnyg88k0ejmk8ytwrhd3ltm84xehrnlslf',
+          sender: 'cosmos1fx4jwv3aalxqwmrpymn34l582lnehr3eqwuz9e',
         },
-      ],
+      },
     },
   },
 }

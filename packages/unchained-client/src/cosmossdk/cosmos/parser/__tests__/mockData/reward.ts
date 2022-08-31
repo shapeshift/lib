@@ -4,7 +4,7 @@ export default {
     blockHash: 'DFFDB4B083138492721673E6754FAE5533C8D2D0AFC1928E959CDBB464E20864',
     blockHeight: 9636957,
     timestamp: 1646430088,
-    confirmations: 229401,
+    confirmations: 2226945,
     fee: {
       amount: '7000',
       denom: 'uatom',
@@ -20,8 +20,8 @@ export default {
         to: 'cosmos179k2lz70rxvjrvvr65cynw9x5c8v3kftg46v05',
         type: 'withdraw_delegator_reward',
         value: {
-          amount: '',
-          denom: '',
+          amount: '39447',
+          denom: 'uatom',
         },
       },
       {
@@ -30,170 +30,60 @@ export default {
         to: 'cosmos179k2lz70rxvjrvvr65cynw9x5c8v3kftg46v05',
         type: 'withdraw_delegator_reward',
         value: {
-          amount: '',
-          denom: '',
+          amount: '7',
+          denom: 'uatom',
         },
       },
     ],
     events: {
-      '0': [
-        {
-          type: 'coin_received',
-          attributes: [
-            {
-              key: 'receiver',
-              value: 'cosmos179k2lz70rxvjrvvr65cynw9x5c8v3kftg46v05',
-            },
-            {
-              key: 'amount',
-              value: '39447uatom',
-            },
-          ],
+      '0': {
+        coin_received: {
+          amount: '39447uatom',
+          receiver: 'cosmos179k2lz70rxvjrvvr65cynw9x5c8v3kftg46v05',
         },
-        {
-          type: 'coin_spent',
-          attributes: [
-            {
-              key: 'spender',
-              value: 'cosmos1jv65s3grqf6v6jl3dp4t6c9t9rk99cd88lyufl',
-            },
-            {
-              key: 'amount',
-              value: '39447uatom',
-            },
-          ],
+        coin_spent: {
+          amount: '39447uatom',
+          spender: 'cosmos1jv65s3grqf6v6jl3dp4t6c9t9rk99cd88lyufl',
         },
-        {
-          type: 'message',
-          attributes: [
-            {
-              key: 'action',
-              value: '/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward',
-            },
-            {
-              key: 'sender',
-              value: 'cosmos1jv65s3grqf6v6jl3dp4t6c9t9rk99cd88lyufl',
-            },
-            {
-              key: 'module',
-              value: 'distribution',
-            },
-            {
-              key: 'sender',
-              value: 'cosmos179k2lz70rxvjrvvr65cynw9x5c8v3kftg46v05',
-            },
-          ],
+        message: {
+          action: '/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward',
+          module: 'distribution',
+          sender: 'cosmos179k2lz70rxvjrvvr65cynw9x5c8v3kftg46v05',
         },
-        {
-          type: 'transfer',
-          attributes: [
-            {
-              key: 'recipient',
-              value: 'cosmos179k2lz70rxvjrvvr65cynw9x5c8v3kftg46v05',
-            },
-            {
-              key: 'sender',
-              value: 'cosmos1jv65s3grqf6v6jl3dp4t6c9t9rk99cd88lyufl',
-            },
-            {
-              key: 'amount',
-              value: '39447uatom',
-            },
-          ],
+        transfer: {
+          amount: '39447uatom',
+          recipient: 'cosmos179k2lz70rxvjrvvr65cynw9x5c8v3kftg46v05',
+          sender: 'cosmos1jv65s3grqf6v6jl3dp4t6c9t9rk99cd88lyufl',
         },
-        {
-          type: 'withdraw_rewards',
-          attributes: [
-            {
-              key: 'amount',
-              value: '39447uatom',
-            },
-            {
-              key: 'validator',
-              value: 'cosmosvaloper1hdrlqvyjfy5sdrseecjrutyws9khtxxaux62l7',
-            },
-          ],
+        withdraw_rewards: {
+          amount: '39447uatom',
+          validator: 'cosmosvaloper1hdrlqvyjfy5sdrseecjrutyws9khtxxaux62l7',
         },
-      ],
-      '1': [
-        {
-          type: 'coin_received',
-          attributes: [
-            {
-              key: 'receiver',
-              value: 'cosmos179k2lz70rxvjrvvr65cynw9x5c8v3kftg46v05',
-            },
-            {
-              key: 'amount',
-              value: '7uatom',
-            },
-          ],
+      },
+      '1': {
+        coin_received: {
+          amount: '7uatom',
+          receiver: 'cosmos179k2lz70rxvjrvvr65cynw9x5c8v3kftg46v05',
         },
-        {
-          type: 'coin_spent',
-          attributes: [
-            {
-              key: 'spender',
-              value: 'cosmos1jv65s3grqf6v6jl3dp4t6c9t9rk99cd88lyufl',
-            },
-            {
-              key: 'amount',
-              value: '7uatom',
-            },
-          ],
+        coin_spent: {
+          amount: '7uatom',
+          spender: 'cosmos1jv65s3grqf6v6jl3dp4t6c9t9rk99cd88lyufl',
         },
-        {
-          type: 'message',
-          attributes: [
-            {
-              key: 'action',
-              value: '/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward',
-            },
-            {
-              key: 'sender',
-              value: 'cosmos1jv65s3grqf6v6jl3dp4t6c9t9rk99cd88lyufl',
-            },
-            {
-              key: 'module',
-              value: 'distribution',
-            },
-            {
-              key: 'sender',
-              value: 'cosmos179k2lz70rxvjrvvr65cynw9x5c8v3kftg46v05',
-            },
-          ],
+        message: {
+          action: '/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward',
+          module: 'distribution',
+          sender: 'cosmos179k2lz70rxvjrvvr65cynw9x5c8v3kftg46v05',
         },
-        {
-          type: 'transfer',
-          attributes: [
-            {
-              key: 'recipient',
-              value: 'cosmos179k2lz70rxvjrvvr65cynw9x5c8v3kftg46v05',
-            },
-            {
-              key: 'sender',
-              value: 'cosmos1jv65s3grqf6v6jl3dp4t6c9t9rk99cd88lyufl',
-            },
-            {
-              key: 'amount',
-              value: '7uatom',
-            },
-          ],
+        transfer: {
+          amount: '7uatom',
+          recipient: 'cosmos179k2lz70rxvjrvvr65cynw9x5c8v3kftg46v05',
+          sender: 'cosmos1jv65s3grqf6v6jl3dp4t6c9t9rk99cd88lyufl',
         },
-        {
-          type: 'withdraw_rewards',
-          attributes: [
-            {
-              key: 'amount',
-              value: '7uatom',
-            },
-            {
-              key: 'validator',
-              value: 'cosmosvaloper1lzhlnpahvznwfv4jmay2tgaha5kmz5qxerarrl',
-            },
-          ],
+        withdraw_rewards: {
+          amount: '7uatom',
+          validator: 'cosmosvaloper1lzhlnpahvznwfv4jmay2tgaha5kmz5qxerarrl',
         },
-      ],
+      },
     },
   },
 }
