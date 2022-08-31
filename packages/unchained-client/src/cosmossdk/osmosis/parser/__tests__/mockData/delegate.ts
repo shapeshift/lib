@@ -1,130 +1,68 @@
-export default {
-  tx: {
-    txid: '8136FF781B38919958249308CFABFD253CF371514661119BCD231875968BD06B',
-    blockHash: 'D8186504233B8AD92ED2799D88A16A38F706889A99F1AEC49A6EA96EC94AE4E7',
-    blockHeight: 9636923,
-    timestamp: 1645207449,
-    confirmations: 358801,
-    fee: {
-      amount: '6250',
-      denom: 'uatom',
-    },
-    gasUsed: '151141',
-    gasWanted: '250000',
-    index: 7,
-    value: '',
-    messages: [
-      {
-        from: 'cosmos179k2lz70rxvjrvvr65cynw9x5c8v3kftg46v05',
-        to: 'cosmosvaloper1lzhlnpahvznwfv4jmay2tgaha5kmz5qxerarrl',
-        origin: 'cosmos179k2lz70rxvjrvvr65cynw9x5c8v3kftg46v05',
-        type: 'delegate',
-        value: {
-          amount: '1920000',
-          denom: 'uatom',
-        },
+import { Tx } from '../../../../types'
+
+const tx: Tx = {
+  txid: 'CA915A263C5FF8265B0D244DADF45F3F66AB684DCC160637EDA6E5F5FEC999B8',
+  blockHash: '08D633CD1D1E9576822394E4F94F644DCB20CBDA0B1764D11648FADFB1CAF05B',
+  blockHeight: 5823208,
+  timestamp: 1661965810,
+  confirmations: 59,
+  fee: {
+    amount: '0',
+    denom: 'uosmo',
+  },
+  gasUsed: '243137',
+  gasWanted: '358242',
+  index: 5,
+  value: '',
+  messages: [
+    {
+      origin: 'osmo1t5nts8y096tezaspwzanpsw6dgdh32u8ehu72v',
+      from: 'osmo1t5nts8y096tezaspwzanpsw6dgdh32u8ehu72v',
+      to: 'osmovaloper1lzhlnpahvznwfv4jmay2tgaha5kmz5qxwmj9we',
+      type: 'delegate',
+      value: {
+        amount: '22824',
+        denom: 'uosmo',
       },
-    ],
-    events: {
-      '0': [
-        {
-          type: 'coin_received',
-          attributes: [
-            {
-              key: 'receiver',
-              value: 'cosmos179k2lz70rxvjrvvr65cynw9x5c8v3kftg46v05',
-            },
-            {
-              key: 'amount',
-              value: '78085uatom',
-            },
-            {
-              key: 'receiver',
-              value: 'cosmos1fl48vsnmsdzcv85q5d2q4z5ajdha8yu34mf0eh',
-            },
-            {
-              key: 'amount',
-              value: '1920000uatom',
-            },
-          ],
-        },
-        {
-          type: 'coin_spent',
-          attributes: [
-            {
-              key: 'spender',
-              value: 'cosmos1jv65s3grqf6v6jl3dp4t6c9t9rk99cd88lyufl',
-            },
-            {
-              key: 'amount',
-              value: '78085uatom',
-            },
-            {
-              key: 'spender',
-              value: 'cosmos179k2lz70rxvjrvvr65cynw9x5c8v3kftg46v05',
-            },
-            {
-              key: 'amount',
-              value: '1920000uatom',
-            },
-          ],
-        },
-        {
-          type: 'delegate',
-          attributes: [
-            {
-              key: 'validator',
-              value: 'cosmosvaloper1lzhlnpahvznwfv4jmay2tgaha5kmz5qxerarrl',
-            },
-            {
-              key: 'amount',
-              value: '1920000uatom',
-            },
-            {
-              key: 'new_shares',
-              value: '1920000.000000000000000000',
-            },
-          ],
-        },
-        {
-          type: 'message',
-          attributes: [
-            {
-              key: 'action',
-              value: '/cosmos.staking.v1beta1.MsgDelegate',
-            },
-            {
-              key: 'sender',
-              value: 'cosmos1jv65s3grqf6v6jl3dp4t6c9t9rk99cd88lyufl',
-            },
-            {
-              key: 'module',
-              value: 'staking',
-            },
-            {
-              key: 'sender',
-              value: 'cosmos179k2lz70rxvjrvvr65cynw9x5c8v3kftg46v05',
-            },
-          ],
-        },
-        {
-          type: 'transfer',
-          attributes: [
-            {
-              key: 'recipient',
-              value: 'cosmos179k2lz70rxvjrvvr65cynw9x5c8v3kftg46v05',
-            },
-            {
-              key: 'sender',
-              value: 'cosmos1jv65s3grqf6v6jl3dp4t6c9t9rk99cd88lyufl',
-            },
-            {
-              key: 'amount',
-              value: '78085uatom',
-            },
-          ],
-        },
-      ],
+    },
+  ],
+  events: {
+    '0': {
+      coin_received: {
+        amount: '22824uosmo',
+        receiver: 'osmo1fl48vsnmsdzcv85q5d2q4z5ajdha8yu3aq6l09',
+      },
+      coin_spent: {
+        amount: '22824uosmo',
+        spender: 'osmo1t5nts8y096tezaspwzanpsw6dgdh32u8ehu72v',
+      },
+      delegate: {
+        amount: '22824uosmo',
+        new_shares: '22824.000000000000000000',
+        validator: 'osmovaloper1lzhlnpahvznwfv4jmay2tgaha5kmz5qxwmj9we',
+      },
+      message: {
+        action: '/cosmos.staking.v1beta1.MsgDelegate',
+        module: 'staking',
+        sender: 'osmo1t5nts8y096tezaspwzanpsw6dgdh32u8ehu72v',
+      },
+      transfer: {
+        amount: '15294uosmo',
+        recipient: 'osmo1t5nts8y096tezaspwzanpsw6dgdh32u8ehu72v',
+        sender: 'osmo1jv65s3grqf6v6jl3dp4t6c9t9rk99cd80yhvld',
+      },
+    },
+  },
+}
+
+export default {
+  tx,
+  txNoFee: tx,
+  txWithFee: {
+    ...tx,
+    fee: {
+      amount: '12345',
+      denom: 'uosmo',
     },
   },
 }

@@ -1,11 +1,21 @@
-import { AssetId, ChainId } from '@shapeshiftoss/caip'
+import { AssetId, ChainId, cosmosAssetId, osmosisAssetId, toAssetId } from '@shapeshiftoss/caip'
+import { Logger } from '@shapeshiftoss/logger'
 import { BigNumber } from 'bignumber.js'
 
 import { TransferType, TxStatus } from '../../types'
 import { aggregateTransfer } from '../../utils'
-import { Message } from '../types'
 import { ParsedTx, Tx } from './types'
 import { metaData } from './utils'
+
+const logger = new Logger({
+  namespace: ['unchained-client', 'cosmossdk', 'parser'],
+  level: process.env.LOG_LEVEL,
+})
+
+const assetIdByDenom = new Map<string, AssetId>([
+  ['uatom', cosmosAssetId],
+  ['uosmo', osmosisAssetId],
+])
 
 export interface BaseTransactionParserArgs {
   chainId: ChainId
@@ -32,17 +42,29 @@ export class BaseTransactionParser<T extends Tx> {
       txid: tx.txid,
     }
 
-    const msgs = this.getMessageEvents(tx)
-    parsedTx.data = metaData(msgs[0], this.assetId)
+    parsedTx.data = metaData(tx.messages[0], this.assetId)
 
-    msgs.forEach(({ from = '', to = '', value, origin }) => {
+    tx.messages.forEach(({ from = '', to = '', value, origin }) => {
       const amount = new BigNumber(value?.amount ?? 0)
+
+      const assetId = (() => {
+        if (!value?.denom) return this.assetId
+        if (assetIdByDenom.has(value.denom)) return assetIdByDenom.get(value.denom) as AssetId
+
+        const [assetNamespace, assetReference] = value.denom.split('/')
+        if (assetNamespace === 'ibc' && assetReference) {
+          return toAssetId({ chainId: this.chainId, assetNamespace, assetReference })
+        }
+
+        logger.warn(`unknown denom: ${value.denom}, defaulting to: ${this.assetId}`)
+        return this.assetId
+      })()
 
       if (from === address && amount.gt(0)) {
         parsedTx.transfers = aggregateTransfer(
           parsedTx.transfers,
           TransferType.Send,
-          this.assetId,
+          assetId,
           from,
           to,
           amount.toString(10),
@@ -53,7 +75,7 @@ export class BaseTransactionParser<T extends Tx> {
         parsedTx.transfers = aggregateTransfer(
           parsedTx.transfers,
           TransferType.Receive,
-          this.assetId,
+          assetId,
           from,
           to,
           amount.toString(10),
@@ -71,27 +93,5 @@ export class BaseTransactionParser<T extends Tx> {
     })
 
     return parsedTx
-  }
-
-  getMessageEvents(tx: T): Array<Message> {
-    const messages = Object.entries(tx.events).reduce<Array<Message>>((prev, [msgIndex, event]) => {
-      const msg = event['message'] ? tx.messages[Number(msgIndex)] : undefined
-
-      if (msg) return [...prev, msg]
-
-      const msgs: Array<Message> = []
-      Object.entries(event).forEach(([type, attribute]) => {
-        switch (type) {
-          default:
-            console.log(msgIndex, type)
-            console.log(msgIndex, attribute)
-            return
-        }
-      })
-
-      return [...prev, ...msgs]
-    }, [])
-
-    return messages
   }
 }

@@ -1,71 +1,56 @@
-export default {
-  tx: {
-    txid: 'A69531AE72161D6556CEE744D5D6B3D0661443FA66C89360F40EC75CF7E278CA',
-    blockHash: 'C3B387CF51B0957D52A79CF5EB4E50665661AC9528C6A65501EB45DA3D3A4A49',
-    blockHeight: 9636911,
-    timestamp: 1646429755,
-    confirmations: 229341,
-    fee: {
-      amount: '6250',
-      denom: 'uatom',
-    },
-    gasUsed: '204950',
-    gasWanted: '250000',
-    index: 5,
-    value: '',
-    messages: [
-      {
-        origin: 'cosmos1fx4jwv3aalxqwmrpymn34l582lnehr3eqwuz9e',
-        from: 'cosmosvaloper1sjllsnramtg3ewxqwwrwjxfgc4n4ef9u2lcnj0',
-        to: 'cosmosvaloper156gqf9837u7d4c4678yt3rl4ls9c5vuursrrzf',
-        type: 'begin_redelegate',
-        value: {
-          amount: '500000',
-          denom: 'uatom',
-        },
+import { Tx } from '../../../../types'
+
+const tx: Tx = {
+  txid: '09984D61B6BFFD66765E72D6BBD0AF4FEDBBFB8F43A1270F24BAE52853388425',
+  blockHash: '931185AE6E53AC86033FB2BE71430BCAEB5A75EBAAD721CFDF1A5B1CE642E3AE',
+  blockHeight: 5825391,
+  timestamp: 1661979767,
+  confirmations: 6,
+  fee: {
+    amount: '0',
+    denom: 'uosmo',
+  },
+  gasUsed: '310504',
+  gasWanted: '437126',
+  index: 6,
+  value: '',
+  messages: [
+    {
+      origin: 'osmo12lpmwhx9dvsz3tuftt2pfhv76743l0xacx2w00',
+      from: 'osmovaloper1ej2es5fjztqjcd4pwa0zyvaevtjd2y5w37wr9t',
+      to: 'osmovaloper16s96n9k9zztdgjy8q4qcxp4hn7ww98qk5wjn0s',
+      type: 'begin_redelegate',
+      value: {
+        amount: '30000000',
+        denom: 'uosmo',
       },
-    ],
-    events: {
-      '0': [
-        {
-          type: 'message',
-          attributes: [
-            {
-              key: 'action',
-              value: '/cosmos.staking.v1beta1.MsgBeginRedelegate',
-            },
-            {
-              key: 'module',
-              value: 'staking',
-            },
-            {
-              key: 'sender',
-              value: 'cosmos1fx4jwv3aalxqwmrpymn34l582lnehr3eqwuz9e',
-            },
-          ],
-        },
-        {
-          type: 'redelegate',
-          attributes: [
-            {
-              key: 'source_validator',
-              value: 'cosmosvaloper1sjllsnramtg3ewxqwwrwjxfgc4n4ef9u2lcnj0',
-            },
-            {
-              key: 'destination_validator',
-              value: 'cosmosvaloper156gqf9837u7d4c4678yt3rl4ls9c5vuursrrzf',
-            },
-            {
-              key: 'amount',
-              value: '500000uatom',
-            },
-            {
-              key: 'completion_time',
-              value: '2022-03-25T21:35:55Z',
-            },
-          ],
-        },
-      ],
+    },
+  ],
+  events: {
+    '0': {
+      message: {
+        action: '/cosmos.staking.v1beta1.MsgBeginRedelegate',
+        module: 'staking',
+        sender: 'osmo12lpmwhx9dvsz3tuftt2pfhv76743l0xacx2w00',
+      },
+      redelegate: {
+        amount: '30000000uosmo',
+        completion_time: '2022-09-14T21:02:47Z',
+        destination_validator: 'osmovaloper16s96n9k9zztdgjy8q4qcxp4hn7ww98qk5wjn0s',
+        source_validator: 'osmovaloper1ej2es5fjztqjcd4pwa0zyvaevtjd2y5w37wr9t',
+      },
+    },
+  },
+}
+
+export default {
+  tx,
+  txNoFee: tx,
+  txWithFee: {
+    ...tx,
+    fee: {
+      amount: '12345',
+      denom: 'uosmo',
     },
   },
 }

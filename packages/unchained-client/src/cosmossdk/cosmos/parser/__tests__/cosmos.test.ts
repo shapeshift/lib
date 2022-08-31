@@ -5,13 +5,13 @@ import { ParsedTx } from '../../../parser/types'
 import { TransactionParser } from '../index'
 import delegate from './mockData/delegate'
 import ibc_receive from './mockData/ibc_receive'
-import ibc_send from './mockData/ibc_send'
+import ibc_transfer from './mockData/ibc_transfer'
 import redelegate from './mockData/redelegate'
 import reward from './mockData/reward'
 import standard from './mockData/standard'
 import undelegate from './mockData/undelegate'
 
-const txParser = new TransactionParser({ chainId: 'cosmos:cosmoshub-4' })
+const txParser = new TransactionParser({ chainId: cosmosChainId })
 
 describe('parseTx', () => {
   it('should be able to parse a standard send tx', async () => {
@@ -99,7 +99,7 @@ describe('parseTx', () => {
         {
           type: TransferType.Send,
           assetId: cosmosAssetId,
-          from: 'cosmos179k2lz70rxvjrvvr65cynw9x5c8v3kftg46v05',
+          from: address,
           to: 'cosmosvaloper1lzhlnpahvznwfv4jmay2tgaha5kmz5qxerarrl',
           totalValue: '1920000',
           components: [{ value: '1920000' }],
@@ -108,9 +108,9 @@ describe('parseTx', () => {
       data: {
         parser: 'cosmos',
         method: 'delegate',
-        delegator: 'cosmos179k2lz70rxvjrvvr65cynw9x5c8v3kftg46v05',
+        delegator: address,
         destinationValidator: 'cosmosvaloper1lzhlnpahvznwfv4jmay2tgaha5kmz5qxerarrl',
-        value: `1920000`,
+        value: '1920000',
       },
     }
 
@@ -141,7 +141,7 @@ describe('parseTx', () => {
           assetId: cosmosAssetId,
           components: [{ value: '200000' }],
           from: 'cosmosvaloper1sjllsnramtg3ewxqwwrwjxfgc4n4ef9u2lcnj0',
-          to: 'cosmos1fx4jwv3aalxqwmrpymn34l582lnehr3eqwuz9e',
+          to: address,
           totalValue: '200000',
           type: TransferType.Receive,
         },
@@ -150,8 +150,8 @@ describe('parseTx', () => {
         parser: 'cosmos',
         method: 'begin_unbonding',
         delegator: 'cosmosvaloper1sjllsnramtg3ewxqwwrwjxfgc4n4ef9u2lcnj0',
-        destinationValidator: 'cosmos1fx4jwv3aalxqwmrpymn34l582lnehr3eqwuz9e',
-        value: `200000`,
+        destinationValidator: address,
+        value: '200000',
       },
     }
 
@@ -185,7 +185,7 @@ describe('parseTx', () => {
         delegator: address,
         destinationValidator: 'cosmosvaloper156gqf9837u7d4c4678yt3rl4ls9c5vuursrrzf',
         assetId: cosmosAssetId,
-        value: `500000`,
+        value: '500000',
       },
     }
 
@@ -240,14 +240,12 @@ describe('parseTx', () => {
 
     const actual = await txParser.parse(tx, address)
 
-    console.log(JSON.stringify(actual))
-
     expect(expected).toEqual(actual)
   })
 
-  it('should be able to parse an ibc send tx', async () => {
-    const { tx } = ibc_send
-    const address = 'cosmos1fx4jwv3aalxqwmrpymn34l582lnehr3eqwuz9e'
+  it('should be able to parse an ibc transfer tx', async () => {
+    const { tx } = ibc_transfer
+    const address = 'cosmos1syj2za9lxkhgpd9zm5lzfss9f6qcuyca354whm'
 
     const expected: ParsedTx = {
       txid: tx.txid,
@@ -258,23 +256,27 @@ describe('parseTx', () => {
       status: TxStatus.Confirmed,
       address,
       chainId: cosmosChainId,
+      fee: {
+        assetId: cosmosAssetId,
+        value: '3250',
+      },
       transfers: [
         {
           type: TransferType.Send,
           assetId: cosmosAssetId,
           from: address,
-          to: 'osmo1fx4jwv3aalxqwmrpymn34l582lnehr3eg40jnt',
-          totalValue: '108444',
-          components: [{ value: '108444' }],
+          to: 'osmo1syj2za9lxkhgpd9zm5lzfss9f6qcuycae0x7pf',
+          totalValue: '600000',
+          components: [{ value: '600000' }],
         },
       ],
       data: {
         parser: 'cosmos',
         method: 'ibc_transfer',
-        ibcDestination: 'osmo1fx4jwv3aalxqwmrpymn34l582lnehr3eg40jnt',
+        ibcDestination: 'osmo1syj2za9lxkhgpd9zm5lzfss9f6qcuycae0x7pf',
         ibcSource: address,
         assetId: cosmosAssetId,
-        value: '108444',
+        value: '600000',
       },
     }
 
