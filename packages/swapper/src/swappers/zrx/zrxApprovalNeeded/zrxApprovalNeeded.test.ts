@@ -37,12 +37,13 @@ describe('zrxApprovalNeeded', () => {
   } as unknown as HDWallet
   ;(deps.adapter.getChainId as jest.Mock).mockReturnValue(KnownChainIds.EthereumMainnet)
 
+  const bip44Params = { purpose: 44, coinType: 60, accountNumber: 0 }
   const { tradeQuote, sellAsset } = setupQuote()
-
   it('returns false if sellAsset assetId is ETH', async () => {
     const input = {
       quote: { ...tradeQuote, sellAsset: { ...sellAsset, assetId: 'eip155:1/slip44:60' } },
       wallet,
+      bip44Params,
     }
 
     expect(await zrxApprovalNeeded(deps, input)).toEqual({ approvalNeeded: false })
@@ -52,6 +53,7 @@ describe('zrxApprovalNeeded', () => {
     const input = {
       quote: { ...tradeQuote, sellAsset: { ...sellAsset, chainId: '' } },
       wallet,
+      bip44Params,
     }
 
     await expect(zrxApprovalNeeded(deps, input)).rejects.toThrow('[zrxApprovalNeeded]')
@@ -67,6 +69,7 @@ describe('zrxApprovalNeeded', () => {
         feeData: { fee: '0', chainSpecific: { gasPrice: '1000' }, tradeFee: '0' },
       },
       wallet,
+      bip44Params,
     }
     ;(deps.web3.eth.Contract as jest.Mock<unknown>).mockImplementation(() => ({
       methods: {
@@ -92,6 +95,7 @@ describe('zrxApprovalNeeded', () => {
         feeData: { fee: '0', chainSpecific: { gasPrice: '1000' }, tradeFee: '0' },
       },
       wallet,
+      bip44Params,
     }
     ;(deps.web3.eth.Contract as jest.Mock<unknown>).mockImplementation(() => ({
       methods: {

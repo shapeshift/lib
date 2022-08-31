@@ -200,7 +200,7 @@ export interface TxHistoryInput {
 
 export type GetAddressInputBase = {
   wallet: HDWallet
-  bip44Params?: BIP44Params
+  bip44Params: BIP44Params
   /**
    * Request that the address be shown to the user by the device, if supported
    */

@@ -1,6 +1,6 @@
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import { SwapperType, TradeResult } from '../../api'
@@ -54,7 +54,12 @@ const ASSET_IDS = [ETH.assetId, WBTC.assetId, WETH.assetId, BTC.assetId, FOX.ass
 describe('CowSwapper', () => {
   const wallet = <HDWallet>{}
   const swapper = new CowSwapper(COW_SWAPPER_DEPS)
-
+  const adapter = <ethereum.ChainAdapter>{
+    getChainId: () => KnownChainIds.EthereumMainnet,
+    getBIP44Params: ({ accountNumber }): BIP44Params => {
+      return { purpose: 44, coinType: 60, accountNumber }
+    },
+  }
   describe('name', () => {
     it('returns the correct human readable swapper name', () => {
       expect(swapper.name).toEqual('CowSwap')
@@ -172,7 +177,8 @@ describe('CowSwapper', () => {
   describe('cowApprovalNeeded', () => {
     it('calls cowApprovalNeeded on swapper.approvalNeeded', async () => {
       const { tradeQuote } = setupQuote()
-      const args = { quote: tradeQuote, wallet }
+      const bip44Params = adapter.getBIP44Params({ accountNumber: 0 })
+      const args = { quote: tradeQuote, wallet, bip44Params }
       await swapper.approvalNeeded(args)
       expect(cowApprovalNeeded).toHaveBeenCalledTimes(1)
       expect(cowApprovalNeeded).toHaveBeenCalledWith(COW_SWAPPER_DEPS, args)

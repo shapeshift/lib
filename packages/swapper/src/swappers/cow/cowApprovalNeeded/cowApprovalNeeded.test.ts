@@ -24,6 +24,8 @@ Web3.mockImplementation(() => ({
 describe('cowApprovalNeeded', () => {
   const { web3, adapter, feeAsset } = setupDeps()
   const args = { web3, adapter, apiUrl: '', feeAsset }
+  const ethBIP44Params = { purpose: 44, coinType: 60, accountNumber: 0 }
+  const btcBIP44Params = { purpose: 84, coinType: 0, accountNumber: 0 }
   ;(adapter.getAddress as jest.Mock).mockResolvedValue('0xc770eefad204b5180df6a14ee197d99d808ee52d')
   const { tradeQuote } = setupQuote()
 
@@ -31,11 +33,13 @@ describe('cowApprovalNeeded', () => {
     const input1 = {
       quote: { ...tradeQuote, sellAsset: ETH },
       wallet: <HDWallet>{},
+      bip44Params: ethBIP44Params,
     }
 
     const input2 = {
       quote: { ...tradeQuote, sellAsset: BTC },
       wallet: <HDWallet>{},
+      bip44Params: btcBIP44Params,
     }
 
     await expect(cowApprovalNeeded(args, input1)).rejects.toThrow(
@@ -54,6 +58,7 @@ describe('cowApprovalNeeded', () => {
         sellAmount: '10',
       },
       wallet: <HDWallet>{},
+      bip44Params: ethBIP44Params,
     }
     const mockedAllowance = jest.fn(() => ({
       call: jest.fn(() => allowanceOnChain),
@@ -82,6 +87,7 @@ describe('cowApprovalNeeded', () => {
         sellAmount: '10',
       },
       wallet: <HDWallet>{},
+      bip44Params: ethBIP44Params,
     }
 
     const mockedAllowance = jest.fn(() => ({

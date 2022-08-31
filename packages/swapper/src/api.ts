@@ -156,6 +156,7 @@ export type ApproveAmountInput<C extends ChainId> = ApproveInput<C> & {
 export type ApprovalNeededInput<C extends ChainId> = {
   quote: TradeQuote<C>
   wallet: HDWallet
+  bip44Params: BIP44Params // account params to get receive address
 }
 
 export type SwapSource = {

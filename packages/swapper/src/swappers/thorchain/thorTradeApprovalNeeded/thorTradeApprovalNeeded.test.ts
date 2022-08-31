@@ -14,12 +14,14 @@ describe('thorTradeApprovalNeeded', () => {
     ethGetAddress: jest.fn(() => Promise.resolve(walletAddress)),
   } as unknown as HDWallet
 
+  const bip44Params = { purpose: 44, coinType: 60, accountNumber: 0 }
   const { tradeQuote, sellAsset } = setupQuote()
 
   it('returns false if sellAsset assetId is ETH', async () => {
     const input = {
       quote: { ...tradeQuote, sellAsset: { ...sellAsset, assetId: 'eip155:1/slip44:60' } },
       wallet,
+      bip44Params,
     }
 
     expect(await thorTradeApprovalNeeded({ deps, input })).toEqual({ approvalNeeded: false })
@@ -34,6 +36,7 @@ describe('thorTradeApprovalNeeded', () => {
         feeData: { fee: '0', chainSpecific: { gasPrice: '1000' }, tradeFee: '0' },
       },
       wallet,
+      bip44Params,
     }
     ;(getERC20Allowance as jest.Mock<unknown>).mockImplementation(() => allowanceOnChain)
 
@@ -51,6 +54,7 @@ describe('thorTradeApprovalNeeded', () => {
         feeData: { fee: '0', chainSpecific: { gasPrice: '1000' }, tradeFee: '0' },
       },
       wallet,
+      bip44Params,
     }
     ;(getERC20Allowance as jest.Mock<unknown>).mockImplementation(() => allowanceOnChain)
 

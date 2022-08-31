@@ -1,9 +1,9 @@
 import { ethereum } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { SwapperType } from '@shapeshiftoss/swapper'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
+import { SwapperType } from '../../api'
 import { ZrxSwapper } from '..'
 import { FOX } from '../utils/test-data/assets'
 import { setupBuildTrade, setupQuote } from '../utils/test-data/setupSwapQuote'
@@ -46,6 +46,9 @@ describe('ZrxSwapper', () => {
   const web3 = <Web3>{}
   const adapter = <ethereum.ChainAdapter>{
     getChainId: () => KnownChainIds.EthereumMainnet,
+    getBIP44Params: ({ accountNumber }): BIP44Params => {
+      return { purpose: 44, coinType: 60, accountNumber }
+    },
   }
   const zrxEthereumSwapperDeps = { web3, adapter }
 
@@ -86,7 +89,8 @@ describe('ZrxSwapper', () => {
   it('calls zrxApprovalNeeded on swapper.approvalNeeded', async () => {
     const swapper = new ZrxSwapper(zrxEthereumSwapperDeps)
     const { tradeQuote } = setupQuote()
-    const args = { quote: tradeQuote, wallet }
+    const bip44Params = adapter.getBIP44Params({ accountNumber: 0 })
+    const args = { quote: tradeQuote, wallet, bip44Params }
     await swapper.approvalNeeded(args)
     expect(zrxApprovalNeeded).toHaveBeenCalled()
   })
