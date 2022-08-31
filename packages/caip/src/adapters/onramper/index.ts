@@ -4,7 +4,7 @@ import invert from 'lodash/invert'
 import { avalancheAssetId, btcAssetId, cosmosAssetId, ethAssetId } from '../../constants'
 import { AssetId } from './../../assetId/assetId'
 
-const AssetIdToTransakTickerMap = {
+const AssetIdToTransakIdMap = {
   [btcAssetId]: 'btc',
   [cosmosAssetId]: 'atom',
   [ethAssetId]: 'eth',
@@ -23,19 +23,43 @@ const AssetIdToTransakTickerMap = {
   'eip155:1/erc20:0xdac17f958d2ee523a2206206994597c13d831ec7': 'USDT',
 } as Record<AssetId, string>
 
-// define and join more providers if needed
-const fullOnRamperAssetIdMap = AssetIdToTransakTickerMap
+const onRamperTickerToAssetIdMap = invert(AssetIdToTransakIdMap)
 
-const onRamperTickerToAssetIdMap = invert(fullOnRamperAssetIdMap)
+const TransakErc20TokenList = [
+  'AAVE_ECR20',
+  'BUSD',
+  'COMP',
+  'DAI_ERC20',
+  'ENJ',
+  'LINK',
+  'MKR',
+  'MANA_ERC20',
+  'SUSHI_ERC20',
+  'UNI-ERC20',
+  'USDC',
+  'USDT'
+]
 
-export const getSupportedOnRamperAssets = () =>
-  entries(fullOnRamperAssetIdMap).map(([assetId, ticker]) => ({
+// Because we need to manually specify which coins are enabled for a given wallet, we need to make sure the customer cannot pick a coin that's not compatible with a given address
+export const getOnRamperSupportedAssets = (assetId: string): string[] => {
+
+  console.log("assetId: " + assetId)
+
+  if(assetId.includes("erc20")){
+    return TransakErc20TokenList
+  } 
+
+  return []
+}
+
+export const getAllOnRamperAssets = () =>
+  entries(AssetIdToTransakIdMap).map(([assetId, ticker]) => ({
     assetId,
     ticker,
   }))
 
 export const onRamperTickerToAssetId = (id: string): string | undefined =>
-  onRamperTickerToAssetIdMap[id.toLowerCase()]
+  onRamperTickerToAssetIdMap[id]
 
-export const assetIdToOnRamperTicker = (assetId: string): string =>
-fullOnRamperAssetIdMap[assetId].toUpperCase()
+export const assetIdToOnRamperTicker = (assetId: string): string | undefined =>
+AssetIdToTransakIdMap[assetId]
