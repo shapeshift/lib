@@ -74,7 +74,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
 
     const { chainNamespace } = fromAssetId(sellAsset.assetId)
     switch (chainNamespace) {
-      case CHAIN_NAMESPACE.Ethereum:
+      case CHAIN_NAMESPACE.Evm:
         return (async (): Promise<TradeQuote<KnownChainIds.EthereumMainnet>> => {
           const { router } = await getEthThorTxInfo({
             deps,

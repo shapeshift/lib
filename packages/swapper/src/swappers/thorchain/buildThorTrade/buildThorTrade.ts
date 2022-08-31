@@ -47,7 +47,7 @@ export const buildTrade = async ({
 
     const { chainNamespace } = fromAssetId(sellAsset.assetId)
 
-    if (chainNamespace === CHAIN_NAMESPACE.Ethereum) {
+    if (chainNamespace === CHAIN_NAMESPACE.Evm) {
       const sellAssetBip44Params = sellAdapter.buildBIP44Params({
         accountNumber: sellAssetAccountNumber,
       })

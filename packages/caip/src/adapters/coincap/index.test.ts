@@ -17,7 +17,7 @@ describe('adapters:coincap', () => {
     })
 
     it('can get AssetId id for ethereum', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Ethereum
+      const chainNamespace = CHAIN_NAMESPACE.Evm
       const chainReference = CHAIN_REFERENCE.EthereumMainnet
       const assetId = toAssetId({
         chainNamespace,
@@ -29,7 +29,7 @@ describe('adapters:coincap', () => {
     })
 
     it('can get AssetId id for FOX', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Ethereum
+      const chainNamespace = CHAIN_NAMESPACE.Evm
       const chainReference = CHAIN_REFERENCE.EthereumMainnet
       const assetNamespace = 'erc20'
       const assetReference = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
@@ -76,7 +76,7 @@ describe('adapters:coincap', () => {
     })
 
     it('can get coincap id for ethereum AssetId', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Ethereum
+      const chainNamespace = CHAIN_NAMESPACE.Evm
       const chainReference = CHAIN_REFERENCE.EthereumMainnet
       const assetId = toAssetId({
         chainNamespace,
@@ -88,7 +88,7 @@ describe('adapters:coincap', () => {
     })
 
     it('can get coincap id for FOX', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Ethereum
+      const chainNamespace = CHAIN_NAMESPACE.Evm
       const chainReference = CHAIN_REFERENCE.EthereumMainnet
       const assetNamespace = 'erc20'
       const assetReference = '0xc770eefad204b5180df6a14ee197d99d808ee52d'

@@ -148,7 +148,7 @@ export class ThorchainSwapper implements Swapper<ChainId> {
 
       const { chainNamespace } = fromAssetId(trade.sellAsset.assetId)
 
-      if (chainNamespace === CHAIN_NAMESPACE.Ethereum) {
+      if (chainNamespace === CHAIN_NAMESPACE.Evm) {
         const signedTx = await (
           adapter as unknown as EvmBaseAdapter<EvmSupportedChainIds>
         ).signTransaction({

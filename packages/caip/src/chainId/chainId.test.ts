@@ -37,14 +37,14 @@ describe('chainId', () => {
     })
 
     it('can turn Ethereum mainnet to ChainId', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Ethereum
+      const chainNamespace = CHAIN_NAMESPACE.Evm
       const chainReference = CHAIN_REFERENCE.EthereumMainnet
       const result = toChainId({ chainNamespace, chainReference })
       expect(result).toEqual('eip155:1')
     })
 
     it('can turn Ethereum testnet to ChainId', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Ethereum
+      const chainNamespace = CHAIN_NAMESPACE.Evm
       const chainReference = CHAIN_REFERENCE.EthereumRopsten
       const result = toChainId({ chainNamespace, chainReference })
       expect(result).toEqual('eip155:3')
@@ -149,7 +149,7 @@ describe('chainId', () => {
     it('can turn Ethereum mainnet to chain and network', () => {
       const ethereumChainId = 'eip155:1'
       const { chainNamespace, chainReference } = fromChainId(ethereumChainId)
-      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Ethereum)
+      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Evm)
       expect(chainReference).toEqual(CHAIN_REFERENCE.EthereumMainnet)
     })
 
@@ -170,14 +170,14 @@ describe('chainId', () => {
     it('can turn Ethereum ropsten to chain and network', () => {
       const ethereumChainId = 'eip155:3'
       const { chainNamespace, chainReference } = fromChainId(ethereumChainId)
-      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Ethereum)
+      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Evm)
       expect(chainReference).toEqual(CHAIN_REFERENCE.EthereumRopsten)
     })
 
     it('can turn Ethereum rinkeby to chain and network', () => {
       const ethereumChainId = 'eip155:4'
       const { chainNamespace, chainReference } = fromChainId(ethereumChainId)
-      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Ethereum)
+      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Evm)
       expect(chainReference).toEqual(CHAIN_REFERENCE.EthereumRinkeby)
     })
 
