@@ -103,7 +103,7 @@ describe('assetId', () => {
     })
 
     it('can make Cosmos AssetId on CosmosHub mainnet', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Cosmos
+      const chainNamespace = CHAIN_NAMESPACE.CosmosSdk
       const chainReference = CHAIN_REFERENCE.CosmosHubMainnet
       const assetIdArgSuperset = {
         chainNamespace,
@@ -120,7 +120,7 @@ describe('assetId', () => {
     })
 
     it('can make Osmosis AssetId on Osmosis mainnet with slip44 reference', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Cosmos
+      const chainNamespace = CHAIN_NAMESPACE.CosmosSdk
       const chainReference = CHAIN_REFERENCE.OsmosisMainnet
       const assetIdArgSuperset = {
         chainNamespace,
@@ -137,7 +137,7 @@ describe('assetId', () => {
     })
 
     it('can return ibc AssetId for osmosis', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Cosmos
+      const chainNamespace = CHAIN_NAMESPACE.CosmosSdk
       const chainReference = CHAIN_REFERENCE.OsmosisMainnet
       const assetIdArgSuperset = {
         chainNamespace,
@@ -155,7 +155,7 @@ describe('assetId', () => {
     })
 
     it('can return native AssetId for osmosis', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Cosmos
+      const chainNamespace = CHAIN_NAMESPACE.CosmosSdk
       const chainReference = CHAIN_REFERENCE.OsmosisMainnet
       const assetIdArgSuperset = {
         chainNamespace,
@@ -172,7 +172,7 @@ describe('assetId', () => {
     })
 
     it('can return cw20 AssetId for osmosis', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Cosmos
+      const chainNamespace = CHAIN_NAMESPACE.CosmosSdk
       const chainReference = CHAIN_REFERENCE.OsmosisMainnet
       const assetIdArgSuperset = {
         chainNamespace,
@@ -189,7 +189,7 @@ describe('assetId', () => {
     })
 
     it('can return cw721 AssetId for osmosis', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Cosmos
+      const chainNamespace = CHAIN_NAMESPACE.CosmosSdk
       const chainReference = CHAIN_REFERENCE.OsmosisMainnet
       const assetIdArgSuperset = {
         chainNamespace,
@@ -206,7 +206,7 @@ describe('assetId', () => {
     })
 
     it('can make Cosmos AssetId on CosmosHub vega', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Cosmos
+      const chainNamespace = CHAIN_NAMESPACE.CosmosSdk
       const chainReference = CHAIN_REFERENCE.CosmosHubVega
       const assetIdArgSuperset = {
         chainNamespace,
@@ -223,7 +223,7 @@ describe('assetId', () => {
     })
 
     it('throws with invalid Cosmos network', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Cosmos
+      const chainNamespace = CHAIN_NAMESPACE.CosmosSdk
       const chainReference = CHAIN_REFERENCE.BitcoinTestnet
       const assetIdArgSuperset = {
         chainNamespace,
@@ -239,7 +239,7 @@ describe('assetId', () => {
     })
 
     it('throws with invalid Cosmos slip44 reference', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Cosmos
+      const chainNamespace = CHAIN_NAMESPACE.CosmosSdk
       const chainReference = CHAIN_REFERENCE.OsmosisMainnet
       const assetIdArgSuperset = {
         chainNamespace,
@@ -454,17 +454,32 @@ describe('assetId', () => {
           erc20,
           '0xc770eefad204b5180df6a14ee197d99d808ee52d',
         ],
-        [CHAIN_NAMESPACE.Cosmos, CHAIN_REFERENCE.CosmosHubMainnet, slip44, ASSET_REFERENCE.Cosmos],
-        [CHAIN_NAMESPACE.Cosmos, CHAIN_REFERENCE.CosmosHubVega, slip44, ASSET_REFERENCE.Cosmos],
-        [CHAIN_NAMESPACE.Cosmos, CHAIN_REFERENCE.OsmosisMainnet, slip44, ASSET_REFERENCE.Osmosis],
-        [CHAIN_NAMESPACE.Cosmos, CHAIN_REFERENCE.OsmosisTestnet, slip44, ASSET_REFERENCE.Osmosis],
         [
-          CHAIN_NAMESPACE.Cosmos,
+          CHAIN_NAMESPACE.CosmosSdk,
+          CHAIN_REFERENCE.CosmosHubMainnet,
+          slip44,
+          ASSET_REFERENCE.Cosmos,
+        ],
+        [CHAIN_NAMESPACE.CosmosSdk, CHAIN_REFERENCE.CosmosHubVega, slip44, ASSET_REFERENCE.Cosmos],
+        [
+          CHAIN_NAMESPACE.CosmosSdk,
+          CHAIN_REFERENCE.OsmosisMainnet,
+          slip44,
+          ASSET_REFERENCE.Osmosis,
+        ],
+        [
+          CHAIN_NAMESPACE.CosmosSdk,
+          CHAIN_REFERENCE.OsmosisTestnet,
+          slip44,
+          ASSET_REFERENCE.Osmosis,
+        ],
+        [
+          CHAIN_NAMESPACE.CosmosSdk,
           CHAIN_REFERENCE.OsmosisMainnet,
           ibc,
           '346786EA82F41FE55FAD14BF69AD8BA9B36985406E43F3CB23E6C45A285A9593',
         ],
-        [CHAIN_NAMESPACE.Cosmos, CHAIN_REFERENCE.OsmosisMainnet, native, 'uion'],
+        [CHAIN_NAMESPACE.CosmosSdk, CHAIN_REFERENCE.OsmosisMainnet, native, 'uion'],
       ])(
         'returns a AssetId from the result of fromAssetId for %s',
         (
@@ -580,7 +595,7 @@ describe('assetId', () => {
       const AssetId = 'cosmos:cosmoshub-4/slip44:118'
       const { chainId, chainReference, chainNamespace, assetNamespace, assetReference } =
         fromAssetId(AssetId)
-      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Cosmos)
+      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.CosmosSdk)
       expect(chainReference).toEqual(CHAIN_REFERENCE.CosmosHubMainnet)
       expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
       expect(assetNamespace).toEqual('slip44')
@@ -591,7 +606,7 @@ describe('assetId', () => {
       const AssetId = 'cosmos:osmosis-1/slip44:118'
       const { chainId, chainReference, chainNamespace, assetNamespace, assetReference } =
         fromAssetId(AssetId)
-      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Cosmos)
+      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.CosmosSdk)
       expect(chainReference).toEqual(CHAIN_REFERENCE.OsmosisMainnet)
       expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
       expect(assetNamespace).toEqual('slip44')
@@ -603,7 +618,7 @@ describe('assetId', () => {
         'cosmos:osmosis-1/ibc:346786EA82F41FE55FAD14BF69AD8BA9B36985406E43F3CB23E6C45A285A9593'
       const { chainId, chainReference, chainNamespace, assetNamespace, assetReference } =
         fromAssetId(AssetId)
-      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Cosmos)
+      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.CosmosSdk)
       expect(chainReference).toEqual(CHAIN_REFERENCE.OsmosisMainnet)
       expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
       expect(assetNamespace).toEqual('ibc')
@@ -616,7 +631,7 @@ describe('assetId', () => {
       const AssetId = 'cosmos:osmosis-1/cw20:canlab'
       const { chainId, chainReference, chainNamespace, assetNamespace, assetReference } =
         fromAssetId(AssetId)
-      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Cosmos)
+      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.CosmosSdk)
       expect(chainReference).toEqual(CHAIN_REFERENCE.OsmosisMainnet)
       expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
       expect(assetNamespace).toEqual('cw20')
@@ -627,7 +642,7 @@ describe('assetId', () => {
       const AssetId = 'cosmos:osmosis-1/cw721:osmokitty'
       const { chainId, chainReference, chainNamespace, assetNamespace, assetReference } =
         fromAssetId(AssetId)
-      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Cosmos)
+      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.CosmosSdk)
       expect(chainReference).toEqual(CHAIN_REFERENCE.OsmosisMainnet)
       expect(chainId).toEqual(toChainId({ chainNamespace, chainReference }))
       expect(assetNamespace).toEqual('cw721')

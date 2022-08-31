@@ -52,7 +52,7 @@ export const chainIdToCoingeckoAssetPlatform = (chainId: ChainId): string => {
             `chainNamespace ${chainNamespace}, chainReference ${chainReference} not supported.`,
           )
       }
-    case CHAIN_NAMESPACE.Cosmos:
+    case CHAIN_NAMESPACE.CosmosSdk:
       switch (chainReference) {
         case CHAIN_REFERENCE.CosmosHubMainnet:
           return CoingeckoAssetPlatform.Cosmos

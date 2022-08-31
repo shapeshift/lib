@@ -26,7 +26,7 @@ export const osmosisChainId: ChainId = 'cosmos:osmosis-1'
 export const CHAIN_NAMESPACE = {
   Evm: 'eip155',
   Utxo: 'bip122',
-  Cosmos: 'cosmos',
+  CosmosSdk: 'cosmos',
 } as const
 
 type ValidChainMap = {
@@ -66,7 +66,7 @@ export const VALID_CHAIN_IDS: ValidChainMap = Object.freeze({
     CHAIN_REFERENCE.EthereumRinkeby,
     CHAIN_REFERENCE.AvalancheCChain,
   ],
-  [CHAIN_NAMESPACE.Cosmos]: [
+  [CHAIN_NAMESPACE.CosmosSdk]: [
     CHAIN_REFERENCE.CosmosHubMainnet,
     CHAIN_REFERENCE.CosmosHubVega,
     CHAIN_REFERENCE.OsmosisMainnet,
@@ -81,7 +81,7 @@ type ValidAssetNamespace = {
 export const VALID_ASSET_NAMESPACE: ValidAssetNamespace = Object.freeze({
   [CHAIN_NAMESPACE.Utxo]: ['slip44'],
   [CHAIN_NAMESPACE.Evm]: ['slip44', 'erc20', 'erc721'],
-  [CHAIN_NAMESPACE.Cosmos]: ['cw20', 'cw721', 'ibc', 'native', 'slip44'],
+  [CHAIN_NAMESPACE.CosmosSdk]: ['cw20', 'cw721', 'ibc', 'native', 'slip44'],
 })
 
 export const ASSET_NAMESPACE_STRINGS = [

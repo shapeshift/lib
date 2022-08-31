@@ -126,7 +126,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             feeData,
           }
         })()
-      case CHAIN_NAMESPACE.Cosmos:
+      case CHAIN_NAMESPACE.CosmosSdk:
         return (async (): Promise<TradeQuote<KnownChainIds.CosmosMainnet>> => {
           const feeData = await (
             sellAdapter as ChainAdapter<KnownChainIds.CosmosMainnet>
