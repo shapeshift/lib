@@ -8,7 +8,7 @@ const tx: Tx = {
   confirmations: 83448,
   fee: {
     amount: '0',
-    denom: 'uatom',
+    denom: 'uosmo',
   },
   gasUsed: '103559',
   gasWanted: '300000',

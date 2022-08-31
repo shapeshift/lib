@@ -8,6 +8,7 @@ const logger = new Logger({
   level: process.env.LOG_LEVEL,
 })
 
+// TODO: break out metadata by parser category to allow more explicit metadata types and pull out chain specific logic to appropriate chain parser
 export const metaData = (msg: Message | undefined, assetId: string): TxMetadata | undefined => {
   if (!msg) return
 

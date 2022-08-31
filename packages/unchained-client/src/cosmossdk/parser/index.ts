@@ -1,4 +1,11 @@
-import { AssetId, ChainId, cosmosAssetId, osmosisAssetId, toAssetId } from '@shapeshiftoss/caip'
+import {
+  AssetId,
+  ChainId,
+  cosmosAssetId,
+  osmosisAssetId,
+  thorchainAssetId,
+  toAssetId,
+} from '@shapeshiftoss/caip'
 import { Logger } from '@shapeshiftoss/logger'
 import { BigNumber } from 'bignumber.js'
 
@@ -15,6 +22,7 @@ const logger = new Logger({
 const assetIdByDenom = new Map<string, AssetId>([
   ['uatom', cosmosAssetId],
   ['uosmo', osmosisAssetId],
+  ['rune', thorchainAssetId],
 ])
 
 export interface BaseTransactionParserArgs {

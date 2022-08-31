@@ -9,7 +9,7 @@ import ibc_transfer from './mockData/ibc_transfer'
 import redelegate from './mockData/redelegate'
 import reward from './mockData/reward'
 import standard from './mockData/standard'
-import swap_exact from './mockData/swap_exact'
+import swap_exact_amount_in from './mockData/swap_exact_amount_in'
 import undelegate from './mockData/undelegate'
 
 const txParser = new TransactionParser({ chainId: osmosisChainId })
@@ -405,8 +405,8 @@ describe('parseTx', () => {
     expect(expected).toEqual(actual)
   })
 
-  it('should be able to parse a swap exact tx', async () => {
-    const { tx, txNoFee, txWithFee } = swap_exact
+  it('should be able to parse a swap exact amount in tx', async () => {
+    const { tx, txNoFee, txWithFee } = swap_exact_amount_in
     const address = 'osmo1qxtuxfu0axkrvwpncj26asv4py3x6mmw8hln6h'
 
     const fee: Fee = {
