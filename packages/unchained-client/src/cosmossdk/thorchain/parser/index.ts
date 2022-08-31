@@ -1,6 +1,6 @@
 import { thorchainAssetId } from '@shapeshiftoss/caip'
 
-import { Tx } from '../../../generated/osmosis'
+import { Tx } from '../../../generated/thorchain'
 import { BaseTransactionParser, BaseTransactionParserArgs } from '../../parser'
 
 export type TransactionParserArgs = BaseTransactionParserArgs
