@@ -36,7 +36,7 @@
         }
       },
       "cosmos": {
-        "inputSpec": "https://dev-api.cosmos.shapeshift.com/swagger.json",
+        "inputSpec": "https://dev-api.cosmos.shapeshift.com/swagger",
         "generatorName": "typescript-axios",
         "output": "#{cwd}/src/generated/cosmos",
         "reservedWordsMappings": { "in": "in" },
@@ -76,7 +76,7 @@
         }
       },
       "osmosis": {
-        "inputSpec": "https://dev-api.osmosis.shapeshift.com/swagger.json",
+        "inputSpec": "https://dev-api.osmosis.shapeshift.com/swagger",
         "generatorName": "typescript-axios",
         "output": "#{cwd}/src/generated/osmosis",
         "reservedWordsMappings": { "in": "in" },
@@ -86,7 +86,7 @@
         }
       },
       "thorchain": {
-        "inputSpec": "https://dev-api.thorchain.shapeshift.com/swagger.json",
+        "inputSpec": "https://dev-api.thorchain.shapeshift.com/swagger",
         "generatorName": "typescript-axios",
         "output": "#{cwd}/src/generated/thorchain",
         "reservedWordsMappings": { "in": "in" },
