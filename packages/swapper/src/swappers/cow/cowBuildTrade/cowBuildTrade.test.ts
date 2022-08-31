@@ -1,5 +1,5 @@
 import { Asset } from '@shapeshiftoss/asset-service'
-import { ethereum, FeeDataEstimate } from '@shapeshiftoss/chain-adapters'
+import { ethereum, EvmBaseAdapter, FeeDataEstimate } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { KnownChainIds } from '@shapeshiftoss/types'
 import Web3 from 'web3'
@@ -196,6 +196,7 @@ describe('cowBuildTrade', () => {
       sellAmount: '11111',
       sendMax: true,
       sellAssetAccountNumber: 1,
+      bip44Params: EvmBaseAdapter.prototype.getBIP44Params({ accountNumber: 0 }),
       wallet: <HDWallet>{},
       receiveAddress: '',
     }
@@ -213,6 +214,7 @@ describe('cowBuildTrade', () => {
       sellAmount: '1000000000000000000',
       sendMax: true,
       sellAssetAccountNumber: 0,
+      bip44Params: EvmBaseAdapter.prototype.getBIP44Params({ accountNumber: 0 }),
       wallet: <HDWallet>{},
       receiveAddress: '',
     }
@@ -250,6 +252,7 @@ describe('cowBuildTrade', () => {
       sellAmount: '100000000',
       sendMax: true,
       sellAssetAccountNumber: 0,
+      bip44Params: EvmBaseAdapter.prototype.getBIP44Params({ accountNumber: 0 }),
       wallet: <HDWallet>{},
       receiveAddress: '',
     }
@@ -287,6 +290,7 @@ describe('cowBuildTrade', () => {
       sellAmount: '1000000000000000000000',
       sendMax: true,
       sellAssetAccountNumber: 0,
+      bip44Params: EvmBaseAdapter.prototype.getBIP44Params({ accountNumber: 0 }),
       wallet: <HDWallet>{},
       receiveAddress: '',
     }

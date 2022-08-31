@@ -1,5 +1,5 @@
 import { AssetService } from '@shapeshiftoss/asset-service'
-import { ethereum } from '@shapeshiftoss/chain-adapters'
+import { ethereum, EvmBaseAdapter } from '@shapeshiftoss/chain-adapters'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
@@ -133,8 +133,10 @@ const main = async (): Promise<void> => {
     } on ${swapper.getType()}? (y/n): `,
   )
   if (answer === 'y') {
+    const bip44Params = EvmBaseAdapter.prototype.getBIP44Params({ accountNumber: 0 })
     const trade = await swapper.buildTrade({
       chainId: KnownChainIds.EthereumMainnet,
+      bip44Params,
       wallet,
       buyAsset,
       sendMax: false,

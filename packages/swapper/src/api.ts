@@ -108,6 +108,7 @@ export type GetTradeQuoteInput =
 
 export type BuildTradeInput = GetTradeQuoteInput & {
   slippage?: string
+  bip44Params: BIP44Params
   wallet: HDWallet
 }
 

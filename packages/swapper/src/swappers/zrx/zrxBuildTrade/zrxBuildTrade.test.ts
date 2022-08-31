@@ -1,4 +1,4 @@
-import { ethereum } from '@shapeshiftoss/chain-adapters'
+import { ethereum, EvmBaseAdapter } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
@@ -73,6 +73,7 @@ describe('zrxBuildTrade', () => {
     buyAsset,
     sellAmount: '1000000000000000000',
     sellAssetAccountNumber: 0,
+    bip44Params: EvmBaseAdapter.prototype.getBIP44Params({ accountNumber: 0 }),
     wallet,
     receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
   }

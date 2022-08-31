@@ -30,6 +30,7 @@ export const buildTrade = async ({
       sellAsset,
       sellAssetAccountNumber,
       sellAmount,
+      bip44Params,
       wallet,
       slippage: slippageTolerance = DEFAULT_SLIPPAGE,
       receiveAddress: destinationAddress,
@@ -111,6 +112,7 @@ export const buildTrade = async ({
       }
     } else if (chainNamespace === CHAIN_NAMESPACE.Cosmos) {
       const txData = await cosmosTxData({
+        bip44Params,
         deps,
         sellAdapter: sellAdapter as unknown as cosmos.ChainAdapter,
         sellAmount,

@@ -166,6 +166,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
            for the reader. */
       } as Account<T>
     } catch (err) {
+      console.error('error retrieving cosmos account: ', err)
       return ErrorHandler(err)
     }
   }

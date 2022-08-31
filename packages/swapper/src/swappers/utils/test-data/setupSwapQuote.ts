@@ -1,4 +1,5 @@
 import { Asset } from '@shapeshiftoss/asset-service'
+import { EvmBaseAdapter } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
@@ -37,6 +38,7 @@ export const setupQuote = () => {
 export const setupBuildTrade = () => {
   const sellAsset: Asset = { ...FOX }
   const buyAsset: Asset = { ...WETH }
+  const bip44Params = EvmBaseAdapter.prototype.getBIP44Params({ accountNumber: 0 })
   const buildTradeInput: BuildTradeInput = {
     chainId: KnownChainIds.EthereumMainnet,
     sellAmount: '1000000000000000000',
@@ -44,6 +46,7 @@ export const setupBuildTrade = () => {
     sendMax: false,
     sellAssetAccountNumber: 0,
     sellAsset,
+    bip44Params,
     wallet: <HDWallet>{},
     receiveAddress: '',
   }
