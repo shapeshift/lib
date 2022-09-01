@@ -1,4 +1,14 @@
 import * as unchained from '@shapeshiftoss/unchained-client'
+
+export type Account = {
+  sequence: string
+  accountNumber: string
+  delegations: Delegation[]
+  redelegations: Redelegation[]
+  undelegations: Undelegation[]
+  rewards: ValidatorReward[]
+}
+
 export type BuildTxInput = {
   gas: string
   fee: string
@@ -56,17 +66,8 @@ export type ValidatorReward = {
   rewards: Reward[]
 }
 
-export type Account = {
-  sequence: string
-  accountNumber: string
-  delegations: Delegation[]
-  redelegations: Redelegation[]
-  undelegations: Undelegation[]
-  rewards: ValidatorReward[]
-}
-
 export type FeeData = {
   gasLimit: string
 }
 
-export type TransactionMetadata = unchained.cosmos.TxMetadata
+export type TransactionMetadata = unchained.cosmossdk.TxMetadata
