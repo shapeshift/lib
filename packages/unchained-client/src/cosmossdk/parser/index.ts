@@ -14,6 +14,8 @@ import { aggregateTransfer } from '../../utils'
 import { ParsedTx, Tx } from './types'
 import { metaData } from './utils'
 
+export * from './types'
+
 const logger = new Logger({
   namespace: ['unchained-client', 'cosmossdk', 'parser'],
   level: process.env.LOG_LEVEL,
