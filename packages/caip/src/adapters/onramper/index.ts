@@ -5,7 +5,7 @@ import { AssetId } from './../../assetId/assetId'
 
 type OnRamperTokenId = string
 
-export const AssetItToOnramperIdList = {
+export const AssetItToOnRamperIdMap = {
   [btcAssetId]: ['BTC'],
   [cosmosAssetId]: ['ATOM'],
   [ethAssetId]: ['ETH'],
@@ -22,56 +22,42 @@ export const AssetItToOnramperIdList = {
   'eip155:1/erc20:0x4e15361fd6b4bb609fa63c81a2be19d873717870': ['FTM'],
   'eip155:1/erc20:0xf57e7e7c23978c3caec3c3548e3d615c346e79ff': ['IMX'],
   'eip155:1/erc20:0x514910771af9ca656af840dff83e8264ecf986ca': ['LINK'],
-  'eip155:1/erc20:0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2': ['MKR'],
-  'eip155:1/erc20:0x0f5d2fb29fb7d3cfee444a200298f468908cc942': ['MANA_ERC20'],
+  'eip155:1/erc20:0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2': ['MKR', 'MKR_ERC20'],
+  'eip155:1/erc20:0x0f5d2fb29fb7d3cfee444a200298f468908cc942': ['MANA', 'MANA_ERC20'],
   'eip155:1/erc20:0xd26114cd6ee289accf82350c8d8487fedb8a0c07': ['OMG'],
   'eip155:1/erc20:0x57ab1ec28d129707052df4df418d58a2d46d5f51': ['SUSDC'],
-  'eip155:1/erc20:0x6b3595068778dd592e39a122f4f5a5cf09c90fe2': ['SUSHI_ERC20'],
+  'eip155:1/erc20:0x6b3595068778dd592e39a122f4f5a5cf09c90fe2': ['SUSHI', 'SUSHI_ERC20'],
   'eip155:1/erc20:0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f': ['SNX'],
-  'eip155:1/erc20:0x1f9840a85d5af5bf1d1762f925bdaddc4201f984': ['UNI-ERC20'],
+  'eip155:1/erc20:0x1f9840a85d5af5bf1d1762f925bdaddc4201f984': ['UNI', 'UNI-ERC20'],
   'eip155:1/erc20:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48': ['USDC'],
   'eip155:1/erc20:0xdac17f958d2ee523a2206206994597c13d831ec7': ['USDT'],
   'eip155:1/erc20:0x2260fac5e5542a773aa44fbcfedf7c193bc2c599': ['WBTC'],
 } as Record<AssetId, OnRamperTokenId[]>
 
-export const onRamperTickerToAssetIdMap = () => {
-  var dd = entries(AssetItToOnramperIdList).flatMap(([assetId, idList]) =>
-    explodeIdList(assetId, idList)
+// explodes and inverts the assetId => tokenId[] map by creating a 1to1 token => assetId mapping
+const invertMap = () => {
+  const invertedMap: Record<OnRamperTokenId, AssetId> = {}
+  entries(AssetItToOnRamperIdMap).flatMap(([assetId, idList]) =>
+    idList.forEach((id) => {
+      invertedMap[id] = assetId
+    }),
   )
-
-  console.log(AssetItToOnramperIdList)
-  console.log(dd)
-  return dd
+  return invertedMap
 }
 
-const explodeIdList = (assetId: AssetId, idList: OnRamperTokenId[]): Record<string, AssetId>[] => {
-  return idList.map((id) => {
-    return { [id]: assetId } as Record<string, AssetId>
-  })
+const OnRamperIdToAssetIdMap = invertMap()
+
+export const getOnRamperSupportedAssets = () => {
+  entries(AssetItToOnRamperIdMap).map(([assetId, ticker]) => ({
+    assetId,
+    ticker,
+  }))
 }
 
-export function toRecord<T extends Record<string, any>, K extends keyof T>(array: T[], selector: K): Record<T[K], T> {
-  return array.reduce((acc, item) => ({ ...acc, [item[selector]]: item }), {} as Record<T[K], T>)
+export const onRamperTokenIdToAssetId = (tokenId: OnRamperTokenId): AssetId | undefined => {
+  return OnRamperIdToAssetIdMap[tokenId]
 }
 
-export const getOnRamperSupportedAssets = () =>
-{
-  return []
+export const assetIdToOnRamperTokenList = (assetId: AssetId): OnRamperTokenId[] | undefined => {
+  return AssetItToOnRamperIdMap[assetId]
 }
-
-
-  // entries(AssetIdToTransakIdMap).map(([assetId, ticker]) => ({
-  //   assetId,
-  //   ticker,
-  // }))
-
-export const onRamperTickerToAssetId = (_id: string): OnRamperTokenId | undefined =>
-{
-  return undefined
-}
-  // onRamperTickerToAssetIdMap[id]
-
-export const assetIdToOnRamperTicker = (_assetId: string): string | undefined =>{
-  return undefined
-}
-  // AssetIdToTransakIdMap[assetId]
