@@ -50,7 +50,7 @@ describe('adapters:coingecko', () => {
     })
 
     it('can get AssetIds for cosmos', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Cosmos
+      const chainNamespace = CHAIN_NAMESPACE.CosmosSdk
       const chainReference = CHAIN_REFERENCE.CosmosHubMainnet
       const assetId = toAssetId({
         chainNamespace,
@@ -62,7 +62,7 @@ describe('adapters:coingecko', () => {
     })
 
     it('can get AssetIds for osmosis', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Cosmos
+      const chainNamespace = CHAIN_NAMESPACE.CosmosSdk
       const chainReference = CHAIN_REFERENCE.OsmosisMainnet
       const assetId = toAssetId({
         chainNamespace,
@@ -127,7 +127,7 @@ describe('adapters:coingecko', () => {
     })
 
     it('can get CoinGecko id for cosmos AssetId', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Cosmos
+      const chainNamespace = CHAIN_NAMESPACE.CosmosSdk
       const chainReference = CHAIN_REFERENCE.CosmosHubMainnet
       const assetId = toAssetId({
         chainNamespace,
@@ -139,7 +139,7 @@ describe('adapters:coingecko', () => {
     })
 
     it('can get CoinGecko id for osmosis AssetId', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Cosmos
+      const chainNamespace = CHAIN_NAMESPACE.CosmosSdk
       const chainReference = CHAIN_REFERENCE.OsmosisMainnet
       const assetId = toAssetId({
         chainNamespace,
