@@ -84,15 +84,15 @@ export const VALID_ASSET_NAMESPACE: ValidAssetNamespace = Object.freeze({
   [CHAIN_NAMESPACE.Cosmos]: ['cw20', 'cw721', 'ibc', 'native', 'slip44'],
 })
 
-export const ASSET_NAMESPACE_STRINGS = [
-  'cw20',
-  'cw721',
-  'erc20',
-  'erc721',
-  'slip44',
-  'native',
-  'ibc',
-] as const
+export const ASSET_NAMESPACE = {
+  cw20: 'cw20',
+  cw721: 'cw721',
+  erc20: 'erc20',
+  erc721: 'erc721',
+  slip44: 'slip44',
+  native: 'native',
+  ibc: 'ibc',
+} as const
 
 export const ASSET_REFERENCE = {
   Bitcoin: '0',
@@ -104,3 +104,10 @@ export const ASSET_REFERENCE = {
   BitcoinCash: '145',
   AvalancheC: '9000',
 } as const
+
+export const enum ASSET_ID_CAPTURE_GROUPS {
+  CHAIN_NAMESPACE_CAPTURE_GROUP = 1,
+  CHAIN_REFERENCE_CAPTURE_GROUP,
+  ASSET_NAMESPACE_CAPTURE_GROUP,
+  ASSET_REFERENCE_CAPTURE_GROUP,
+}
