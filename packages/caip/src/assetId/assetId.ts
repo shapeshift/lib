@@ -10,6 +10,7 @@ import {
 } from '../constants'
 import {
   assertIsAssetNamespace,
+  assertIsAssetReference,
   assertIsChainNamespace,
   assertIsChainReference,
   assertValidChainPartsPair,
@@ -132,23 +133,21 @@ export const fromAssetId: FromAssetId = (assetId) => {
   const matches = parseAssetIdRegExp.exec(assetId)
   if (!matches) throw new Error(`fromAssetId: could not parse AssetId: ${assetId}`)
 
-  // These should never throw because isAssetId() would have already caught it, but they help with type inference
-  assertIsChainNamespace(matches[ASSET_ID_CAPTURE_GROUPS.CHAIN_NAMESPACE_CAPTURE_GROUP])
-  assertIsChainReference(matches[ASSET_ID_CAPTURE_GROUPS.CHAIN_REFERENCE_CAPTURE_GROUP])
-  assertIsAssetNamespace(matches[ASSET_ID_CAPTURE_GROUPS.ASSET_NAMESPACE_CAPTURE_GROUP])
-
   const chainNamespace = matches[ASSET_ID_CAPTURE_GROUPS.CHAIN_NAMESPACE_CAPTURE_GROUP]
   const chainReference = matches[ASSET_ID_CAPTURE_GROUPS.CHAIN_REFERENCE_CAPTURE_GROUP]
   const assetNamespace = matches[ASSET_ID_CAPTURE_GROUPS.ASSET_NAMESPACE_CAPTURE_GROUP]
-
   const shouldLowercaseAssetReference =
     assetNamespace && ['erc20', 'erc721'].includes(assetNamespace)
-
   const assetReference = shouldLowercaseAssetReference
     ? toLower(matches[ASSET_ID_CAPTURE_GROUPS.ASSET_REFERENCE_CAPTURE_GROUP])
     : matches[ASSET_ID_CAPTURE_GROUPS.ASSET_REFERENCE_CAPTURE_GROUP]
-  assertIsChainReference(chainReference)
+
+  // These should never throw because isAssetId() would have already caught it, but they help with type inference
   assertIsChainNamespace(chainNamespace)
+  assertIsChainReference(chainReference)
+  assertIsAssetNamespace(assetNamespace)
+  assertIsAssetReference(assetReference)
+
   const chainId = toChainId({ chainNamespace, chainReference })
 
   if (assetNamespace && assetReference && chainId) {
