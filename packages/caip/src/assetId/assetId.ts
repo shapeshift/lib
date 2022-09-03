@@ -141,10 +141,9 @@ export const fromAssetId: FromAssetId = (assetId) => {
       chainReference,
       chainNamespace,
       assetNamespace,
-      assetReference:
-        assetNamespace && ['erc20', 'erc721'].includes(assetNamespace)
-          ? assetReference.toLowerCase()
-          : assetReference,
+      assetReference: ['erc20', 'erc721'].includes(assetNamespace)
+        ? assetReference.toLowerCase()
+        : assetReference,
     }
   } else {
     throw new Error(`fromAssetId: invalid AssetId: ${assetId}`)
