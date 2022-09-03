@@ -126,23 +126,26 @@ export const fromAssetId: FromAssetId = (assetId) => {
   const matches = parseAssetIdRegExp.exec(assetId)
   if (!matches) throw new Error(`fromAssetId: could not parse AssetId: ${assetId}`)
 
-  const [, chainNamespace, chainReference, assetNamespace] = matches
-  let [, , , , assetReference] = matches
+  const { 1: chainNamespace, 2: chainReference, 3: assetNamespace, 4: assetReference } = matches
 
   // These should never throw because isAssetId() would have already caught it, but they help with type inference
   assertIsChainNamespace(chainNamespace)
   assertIsChainReference(chainReference)
   assertIsAssetNamespace(assetNamespace)
 
-  const shouldLowercaseAssetReference =
-    assetNamespace && ['erc20', 'erc721'].includes(assetNamespace)
-
-  assetReference = shouldLowercaseAssetReference ? assetReference.toLowerCase() : assetReference
-
   const chainId = toChainId({ chainNamespace, chainReference })
 
   if (assetNamespace && assetReference && chainId) {
-    return { chainId, chainReference, chainNamespace, assetNamespace, assetReference }
+    return {
+      chainId,
+      chainReference,
+      chainNamespace,
+      assetNamespace,
+      assetReference:
+        assetNamespace && ['erc20', 'erc721'].includes(assetNamespace)
+          ? assetReference.toLowerCase()
+          : assetReference,
+    }
   } else {
     throw new Error(`fromAssetId: invalid AssetId: ${assetId}`)
   }

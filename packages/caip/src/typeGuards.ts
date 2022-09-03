@@ -25,9 +25,11 @@ export const isAssetReference = (
 
 export const isAssetId = (maybeAssetId: AssetId | string): maybeAssetId is AssetReference => {
   const matches = parseAssetIdRegExp.exec(maybeAssetId)
-  const [, chainNamespace, chainReference, assetNamespace] = matches || []
+  if (!matches) {
+    return false
+  }
+  const { 1: chainNamespace, 2: chainReference, 3: assetNamespace } = matches
   return (
-    !!matches &&
     isChainNamespace(chainNamespace) &&
     isChainReference(chainReference) &&
     isAssetNamespace(assetNamespace)
