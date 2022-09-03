@@ -1,16 +1,9 @@
 // https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-19.md
-import toLower from 'lodash/toLower'
 
 import { ChainId, ChainNamespace, ChainReference, fromChainId, toChainId } from '../chainId/chainId'
-import {
-  ASSET_ID_CAPTURE_GROUPS,
-  ASSET_NAMESPACE,
-  ASSET_REFERENCE,
-  VALID_ASSET_NAMESPACE,
-} from '../constants'
+import { ASSET_NAMESPACE, ASSET_REFERENCE, VALID_ASSET_NAMESPACE } from '../constants'
 import {
   assertIsAssetNamespace,
-  assertIsAssetReference,
   assertIsChainNamespace,
   assertIsChainReference,
   assertValidChainPartsPair,
@@ -133,20 +126,18 @@ export const fromAssetId: FromAssetId = (assetId) => {
   const matches = parseAssetIdRegExp.exec(assetId)
   if (!matches) throw new Error(`fromAssetId: could not parse AssetId: ${assetId}`)
 
-  const chainNamespace = matches[ASSET_ID_CAPTURE_GROUPS.CHAIN_NAMESPACE_CAPTURE_GROUP]
-  const chainReference = matches[ASSET_ID_CAPTURE_GROUPS.CHAIN_REFERENCE_CAPTURE_GROUP]
-  const assetNamespace = matches[ASSET_ID_CAPTURE_GROUPS.ASSET_NAMESPACE_CAPTURE_GROUP]
-  const shouldLowercaseAssetReference =
-    assetNamespace && ['erc20', 'erc721'].includes(assetNamespace)
-  const assetReference = shouldLowercaseAssetReference
-    ? toLower(matches[ASSET_ID_CAPTURE_GROUPS.ASSET_REFERENCE_CAPTURE_GROUP])
-    : matches[ASSET_ID_CAPTURE_GROUPS.ASSET_REFERENCE_CAPTURE_GROUP]
+  const [, chainNamespace, chainReference, assetNamespace] = matches
+  let [, , , , assetReference] = matches
 
   // These should never throw because isAssetId() would have already caught it, but they help with type inference
   assertIsChainNamespace(chainNamespace)
   assertIsChainReference(chainReference)
   assertIsAssetNamespace(assetNamespace)
-  assertIsAssetReference(assetReference)
+
+  const shouldLowercaseAssetReference =
+    assetNamespace && ['erc20', 'erc721'].includes(assetNamespace)
+
+  assetReference = shouldLowercaseAssetReference ? assetReference.toLowerCase() : assetReference
 
   const chainId = toChainId({ chainNamespace, chainReference })
 

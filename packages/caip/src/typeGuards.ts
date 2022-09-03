@@ -24,12 +24,13 @@ export const isAssetReference = (
   Object.values(ASSET_REFERENCE).some((s) => s === maybeAssetReference)
 
 export const isAssetId = (maybeAssetId: AssetId | string): maybeAssetId is AssetReference => {
-  const matches = parseAssetIdRegExp.exec(maybeAssetId)?.groups
+  const matches = parseAssetIdRegExp.exec(maybeAssetId)
+  const [, chainNamespace, chainReference, assetNamespace] = matches || []
   return (
     !!matches &&
-    isChainNamespace(matches.chainNamespace) &&
-    isChainReference(matches.chainReference) &&
-    isAssetNamespace(matches.assetNamespace)
+    isChainNamespace(chainNamespace) &&
+    isChainReference(chainReference) &&
+    isAssetNamespace(assetNamespace)
   )
 }
 
