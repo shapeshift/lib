@@ -1,6 +1,6 @@
 import { ChainNamespace, ChainReference } from './chainId/chainId'
 import {
-  ASSET_NAMESPACE_STRINGS,
+  ASSET_NAMESPACE,
   ASSET_REFERENCE,
   btcAssetId,
   btcChainId,
@@ -61,26 +61,24 @@ describe('accountIdToSpecifier', () => {
 
 describe('isValidChainPartsPair', () => {
   it('correctly validates pairs', () => {
-    expect(isValidChainPartsPair(CHAIN_NAMESPACE.Bitcoin, CHAIN_REFERENCE.BitcoinTestnet)).toEqual(
+    expect(isValidChainPartsPair(CHAIN_NAMESPACE.Utxo, CHAIN_REFERENCE.BitcoinTestnet)).toEqual(
       true,
     )
-    expect(isValidChainPartsPair(CHAIN_NAMESPACE.Ethereum, CHAIN_REFERENCE.BitcoinTestnet)).toEqual(
+    expect(isValidChainPartsPair(CHAIN_NAMESPACE.Evm, CHAIN_REFERENCE.BitcoinTestnet)).toEqual(
       false,
     )
     expect(
       isValidChainPartsPair('invalid' as ChainNamespace, CHAIN_REFERENCE.BitcoinTestnet),
     ).toEqual(false)
-    expect(isValidChainPartsPair(CHAIN_NAMESPACE.Ethereum, 'invalid' as ChainReference)).toEqual(
-      false,
-    )
+    expect(isValidChainPartsPair(CHAIN_NAMESPACE.Evm, 'invalid' as ChainReference)).toEqual(false)
   })
 })
 
 describe('type guard', () => {
   describe('isChainNamespace', () => {
     it('correctly determines type', () => {
-      expect(isChainNamespace(CHAIN_NAMESPACE.Bitcoin)).toEqual(true)
-      expect(isChainNamespace(CHAIN_NAMESPACE.Ethereum)).toEqual(true)
+      expect(isChainNamespace(CHAIN_NAMESPACE.Utxo)).toEqual(true)
+      expect(isChainNamespace(CHAIN_NAMESPACE.Evm)).toEqual(true)
       expect(isChainNamespace('invalid')).toEqual(false)
       expect(isChainNamespace('')).toEqual(false)
     })
@@ -108,8 +106,8 @@ describe('type guard', () => {
 
   describe('isAssetNamespace', () => {
     it('correctly determines type', () => {
-      expect(isAssetNamespace(ASSET_NAMESPACE_STRINGS[0])).toEqual(true)
-      expect(isAssetNamespace(ASSET_NAMESPACE_STRINGS[1])).toEqual(true)
+      expect(isAssetNamespace(ASSET_NAMESPACE.cw20)).toEqual(true)
+      expect(isAssetNamespace(ASSET_NAMESPACE.cw721)).toEqual(true)
       expect(isAssetNamespace('invalid')).toEqual(false)
       expect(isAssetNamespace('')).toEqual(false)
     })
@@ -150,8 +148,8 @@ describe('type guard assertion', () => {
 
   describe('assertIsChainNamespace', () => {
     it('correctly asserts type', () => {
-      expect(() => assertIsChainNamespace(CHAIN_NAMESPACE.Bitcoin)).not.toThrow()
-      expect(() => assertIsChainNamespace(CHAIN_NAMESPACE.Ethereum)).not.toThrow()
+      expect(() => assertIsChainNamespace(CHAIN_NAMESPACE.Utxo)).not.toThrow()
+      expect(() => assertIsChainNamespace(CHAIN_NAMESPACE.Evm)).not.toThrow()
       expect(() => assertIsChainNamespace('invalid')).toThrow()
       expect(() => assertIsChainNamespace('')).toThrow()
     })
@@ -168,8 +166,8 @@ describe('type guard assertion', () => {
 
   describe('assertIsAssetNamespace', () => {
     it('correctly asserts type', () => {
-      expect(() => assertIsAssetNamespace(ASSET_NAMESPACE_STRINGS[0])).not.toThrow()
-      expect(() => assertIsAssetNamespace(ASSET_NAMESPACE_STRINGS[1])).not.toThrow()
+      expect(() => assertIsAssetNamespace(ASSET_NAMESPACE.cw20)).not.toThrow()
+      expect(() => assertIsAssetNamespace(ASSET_NAMESPACE.cw721)).not.toThrow()
       expect(() => assertIsAssetNamespace('invalid')).toThrow()
       expect(() => assertIsAssetNamespace('')).toThrow()
     })
@@ -187,16 +185,16 @@ describe('type guard assertion', () => {
   describe('assertValidChainPartsPair', () => {
     it('correctly asserts type', () => {
       expect(() =>
-        assertValidChainPartsPair(CHAIN_NAMESPACE.Bitcoin, CHAIN_REFERENCE.BitcoinTestnet),
+        assertValidChainPartsPair(CHAIN_NAMESPACE.Utxo, CHAIN_REFERENCE.BitcoinTestnet),
       ).not.toThrow()
       expect(() =>
-        assertValidChainPartsPair(CHAIN_NAMESPACE.Bitcoin, CHAIN_REFERENCE.EthereumMainnet),
+        assertValidChainPartsPair(CHAIN_NAMESPACE.Utxo, CHAIN_REFERENCE.EthereumMainnet),
       ).toThrow()
       expect(() =>
         assertValidChainPartsPair('invalid' as ChainNamespace, CHAIN_REFERENCE.BitcoinTestnet),
       ).toThrow()
       expect(() =>
-        assertValidChainPartsPair(CHAIN_NAMESPACE.Ethereum, 'invalid' as ChainReference),
+        assertValidChainPartsPair(CHAIN_NAMESPACE.Evm, 'invalid' as ChainReference),
       ).toThrow()
     })
   })

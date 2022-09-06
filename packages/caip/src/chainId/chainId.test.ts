@@ -9,56 +9,56 @@ describe('chainId', () => {
   })
   describe('toChainId', () => {
     it('can turn CosmosHub mainnet to ChainId', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Cosmos
+      const chainNamespace = CHAIN_NAMESPACE.CosmosSdk
       const chainReference = CHAIN_REFERENCE.CosmosHubMainnet
       const result = toChainId({ chainNamespace, chainReference })
       expect(result).toEqual('cosmos:cosmoshub-4')
     })
 
     it('can turn CosmosHub testnet to ChainId', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Cosmos
+      const chainNamespace = CHAIN_NAMESPACE.CosmosSdk
       const chainReference = CHAIN_REFERENCE.CosmosHubVega
       const result = toChainId({ chainNamespace, chainReference })
       expect(result).toEqual('cosmos:vega-testnet')
     })
 
     it('can turn Osmosis mainnet to ChainId', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Cosmos
+      const chainNamespace = CHAIN_NAMESPACE.CosmosSdk
       const chainReference = CHAIN_REFERENCE.OsmosisMainnet
       const result = toChainId({ chainNamespace, chainReference })
       expect(result).toEqual('cosmos:osmosis-1')
     })
 
     it('can turn Osmosis testnet to ChainId', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Cosmos
+      const chainNamespace = CHAIN_NAMESPACE.CosmosSdk
       const chainReference = CHAIN_REFERENCE.OsmosisTestnet
       const result = toChainId({ chainNamespace, chainReference })
       expect(result).toEqual('cosmos:osmo-testnet-1')
     })
 
     it('can turn Ethereum mainnet to ChainId', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Ethereum
+      const chainNamespace = CHAIN_NAMESPACE.Evm
       const chainReference = CHAIN_REFERENCE.EthereumMainnet
       const result = toChainId({ chainNamespace, chainReference })
       expect(result).toEqual('eip155:1')
     })
 
     it('can turn Ethereum testnet to ChainId', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Ethereum
+      const chainNamespace = CHAIN_NAMESPACE.Evm
       const chainReference = CHAIN_REFERENCE.EthereumRopsten
       const result = toChainId({ chainNamespace, chainReference })
       expect(result).toEqual('eip155:3')
     })
 
     it('can turn Bitcoin mainnet to ChainId', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Bitcoin
+      const chainNamespace = CHAIN_NAMESPACE.Utxo
       const chainReference = CHAIN_REFERENCE.BitcoinMainnet
       const result = toChainId({ chainNamespace, chainReference })
       expect(result).toEqual('bip122:000000000019d6689c085ae165831e93')
     })
 
     it('can turn Bitcoin testnet to ChainId', () => {
-      const chainNamespace = CHAIN_NAMESPACE.Bitcoin
+      const chainNamespace = CHAIN_NAMESPACE.Utxo
       const chainReference = CHAIN_REFERENCE.BitcoinTestnet
       const result = toChainId({ chainNamespace, chainReference })
       expect(result).toEqual('bip122:000000000933ea01ad0ee984209779ba')
@@ -68,7 +68,7 @@ describe('chainId', () => {
       // @ts-ignore
       expect(() =>
         toChainId({
-          chainNamespace: CHAIN_NAMESPACE.Bitcoin,
+          chainNamespace: CHAIN_NAMESPACE.Utxo,
           chainReference: CHAIN_REFERENCE.CosmosHubVega,
         }),
       ).toThrow('assertIsChainId: unsupported ChainId: bip122:vega-testnet')
@@ -79,14 +79,14 @@ describe('chainId', () => {
     it('can turn Bitcoin mainnet to chain and network', () => {
       const bitcoinChainId = 'bip122:000000000019d6689c085ae165831e93'
       const { chainNamespace, chainReference } = fromChainId(bitcoinChainId)
-      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Bitcoin)
+      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Utxo)
       expect(chainReference).toEqual(CHAIN_REFERENCE.BitcoinMainnet)
     })
 
     it('can turn Bitcoin testnet to chain and network', () => {
       const bitcoinChainId = 'bip122:000000000933ea01ad0ee984209779ba'
       const { chainNamespace, chainReference } = fromChainId(bitcoinChainId)
-      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Bitcoin)
+      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Utxo)
       expect(chainReference).toEqual(CHAIN_REFERENCE.BitcoinTestnet)
     })
 
@@ -107,14 +107,14 @@ describe('chainId', () => {
     it('can turn CosmosHub mainnet to chain and network', () => {
       const cosmosHubChainId = 'cosmos:cosmoshub-4'
       const { chainNamespace, chainReference } = fromChainId(cosmosHubChainId)
-      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Cosmos)
+      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.CosmosSdk)
       expect(chainReference).toEqual(CHAIN_REFERENCE.CosmosHubMainnet)
     })
 
     it('can turn CosmosHub testnet to chain and network', () => {
       const cosmosHubChainId = 'cosmos:vega-testnet'
       const { chainNamespace, chainReference } = fromChainId(cosmosHubChainId)
-      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Cosmos)
+      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.CosmosSdk)
       expect(chainReference).toEqual(CHAIN_REFERENCE.CosmosHubVega)
     })
 
@@ -135,21 +135,21 @@ describe('chainId', () => {
     it('can turn Osmosis mainnet to chain and network', () => {
       const osmosisChainId = 'cosmos:osmosis-1'
       const { chainNamespace, chainReference } = fromChainId(osmosisChainId)
-      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Cosmos)
+      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.CosmosSdk)
       expect(chainReference).toEqual(CHAIN_REFERENCE.OsmosisMainnet)
     })
 
     it('can turn Osmosis testnet to chain and network', () => {
       const osmosisChainId = 'cosmos:osmo-testnet-1'
       const { chainNamespace, chainReference } = fromChainId(osmosisChainId)
-      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Cosmos)
+      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.CosmosSdk)
       expect(chainReference).toEqual(CHAIN_REFERENCE.OsmosisTestnet)
     })
 
     it('can turn Ethereum mainnet to chain and network', () => {
       const ethereumChainId = 'eip155:1'
       const { chainNamespace, chainReference } = fromChainId(ethereumChainId)
-      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Ethereum)
+      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Evm)
       expect(chainReference).toEqual(CHAIN_REFERENCE.EthereumMainnet)
     })
 
@@ -170,14 +170,14 @@ describe('chainId', () => {
     it('can turn Ethereum ropsten to chain and network', () => {
       const ethereumChainId = 'eip155:3'
       const { chainNamespace, chainReference } = fromChainId(ethereumChainId)
-      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Ethereum)
+      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Evm)
       expect(chainReference).toEqual(CHAIN_REFERENCE.EthereumRopsten)
     })
 
     it('can turn Ethereum rinkeby to chain and network', () => {
       const ethereumChainId = 'eip155:4'
       const { chainNamespace, chainReference } = fromChainId(ethereumChainId)
-      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Ethereum)
+      expect(chainNamespace).toEqual(CHAIN_NAMESPACE.Evm)
       expect(chainReference).toEqual(CHAIN_REFERENCE.EthereumRinkeby)
     })
 

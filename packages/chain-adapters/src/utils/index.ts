@@ -19,7 +19,7 @@ export const chainIdToChainLabel = (chainId: ChainId): string => {
   const { chainNamespace, chainReference } = fromChainId(chainId)
 
   switch (chainNamespace) {
-    case CHAIN_NAMESPACE.Bitcoin:
+    case CHAIN_NAMESPACE.Utxo:
       switch (chainReference) {
         case CHAIN_REFERENCE.BitcoinMainnet:
           return 'bitcoin'
@@ -34,7 +34,7 @@ export const chainIdToChainLabel = (chainId: ChainId): string => {
             `chainReference: ${chainReference}, not supported for chainNamespace: ${chainNamespace}`,
           )
       }
-    case CHAIN_NAMESPACE.Ethereum:
+    case CHAIN_NAMESPACE.Evm:
       switch (chainReference) {
         case CHAIN_REFERENCE.EthereumMainnet:
         case CHAIN_REFERENCE.EthereumRinkeby:
@@ -47,7 +47,7 @@ export const chainIdToChainLabel = (chainId: ChainId): string => {
             `chainReference: ${chainReference}, not supported for chainNamespace: ${chainNamespace}`,
           )
       }
-    case CHAIN_NAMESPACE.Cosmos:
+    case CHAIN_NAMESPACE.CosmosSdk:
       switch (chainReference) {
         case CHAIN_REFERENCE.CosmosHubMainnet:
         case CHAIN_REFERENCE.CosmosHubVega:

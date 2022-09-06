@@ -24,9 +24,9 @@ export const cosmosChainId: ChainId = 'cosmos:cosmoshub-4'
 export const osmosisChainId: ChainId = 'cosmos:osmosis-1'
 
 export const CHAIN_NAMESPACE = {
-  Ethereum: 'eip155',
-  Bitcoin: 'bip122',
-  Cosmos: 'cosmos',
+  Evm: 'eip155',
+  Utxo: 'bip122',
+  CosmosSdk: 'cosmos',
 } as const
 
 type ValidChainMap = {
@@ -52,21 +52,42 @@ export const CHAIN_REFERENCE = {
   AvalancheCChain: '43114', // https://docs.avax.network/apis/avalanchego/apis/c-chain
 } as const
 
+export const ASSET_NAMESPACE = {
+  cw20: 'cw20',
+  cw721: 'cw721',
+  erc20: 'erc20',
+  erc721: 'erc721',
+  slip44: 'slip44',
+  native: 'native',
+  ibc: 'ibc',
+} as const
+
+export const ASSET_REFERENCE = {
+  Bitcoin: '0',
+  Litecoin: '2',
+  Dogecoin: '3',
+  Ethereum: '60',
+  Cosmos: '118',
+  Osmosis: '118',
+  BitcoinCash: '145',
+  AvalancheC: '9000',
+} as const
+
 export const VALID_CHAIN_IDS: ValidChainMap = Object.freeze({
-  [CHAIN_NAMESPACE.Bitcoin]: [
+  [CHAIN_NAMESPACE.Utxo]: [
     CHAIN_REFERENCE.BitcoinMainnet,
     CHAIN_REFERENCE.BitcoinTestnet,
     CHAIN_REFERENCE.BitcoinCashMainnet,
     CHAIN_REFERENCE.DogecoinMainnet,
     CHAIN_REFERENCE.LitecoinMainnet,
   ],
-  [CHAIN_NAMESPACE.Ethereum]: [
+  [CHAIN_NAMESPACE.Evm]: [
     CHAIN_REFERENCE.EthereumMainnet,
     CHAIN_REFERENCE.EthereumRopsten,
     CHAIN_REFERENCE.EthereumRinkeby,
     CHAIN_REFERENCE.AvalancheCChain,
   ],
-  [CHAIN_NAMESPACE.Cosmos]: [
+  [CHAIN_NAMESPACE.CosmosSdk]: [
     CHAIN_REFERENCE.CosmosHubMainnet,
     CHAIN_REFERENCE.CosmosHubVega,
     CHAIN_REFERENCE.OsmosisMainnet,
@@ -79,28 +100,13 @@ type ValidAssetNamespace = {
 }
 
 export const VALID_ASSET_NAMESPACE: ValidAssetNamespace = Object.freeze({
-  [CHAIN_NAMESPACE.Bitcoin]: ['slip44'],
-  [CHAIN_NAMESPACE.Ethereum]: ['slip44', 'erc20', 'erc721'],
-  [CHAIN_NAMESPACE.Cosmos]: ['cw20', 'cw721', 'ibc', 'native', 'slip44'],
+  [CHAIN_NAMESPACE.Utxo]: [ASSET_NAMESPACE.slip44],
+  [CHAIN_NAMESPACE.Evm]: [ASSET_NAMESPACE.slip44, ASSET_NAMESPACE.erc20, ASSET_NAMESPACE.erc721],
+  [CHAIN_NAMESPACE.CosmosSdk]: [
+    ASSET_NAMESPACE.cw20,
+    ASSET_NAMESPACE.cw721,
+    ASSET_NAMESPACE.ibc,
+    ASSET_NAMESPACE.native,
+    ASSET_NAMESPACE.slip44,
+  ],
 })
-
-export const ASSET_NAMESPACE_STRINGS = [
-  'cw20',
-  'cw721',
-  'erc20',
-  'erc721',
-  'slip44',
-  'native',
-  'ibc',
-] as const
-
-export const ASSET_REFERENCE = {
-  Bitcoin: '0',
-  Litecoin: '2',
-  Dogecoin: '3',
-  Ethereum: '60',
-  Cosmos: '118',
-  Osmosis: '118',
-  BitcoinCash: '145',
-  AvalancheC: '9000',
-} as const

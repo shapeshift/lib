@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/swapper",
-  "version": "9.17.1",
+  "version": "11.0.2",
   "description": "An interface and implementations to trade coins via various protocols",
   "repository": "https://github.com/shapeshift/lib",
   "license": "MIT",
@@ -31,7 +31,7 @@
   },
   "peerDependencies": {
     "@shapeshiftoss/asset-service": "^7.1.0",
-    "@shapeshiftoss/caip": "^6.7.0",
+    "@shapeshiftoss/caip": "^8.0.0",
     "@shapeshiftoss/chain-adapters": "^7.13.0",
     "@shapeshiftoss/errors": "^1.1.2",
     "@shapeshiftoss/hdwallet-core": "^1.27.0",
@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@shapeshiftoss/asset-service": "^7.1.0",
-    "@shapeshiftoss/caip": "^6.7.0",
+    "@shapeshiftoss/caip": "^8.0.0",
     "@shapeshiftoss/chain-adapters": "^7.13.0",
     "@shapeshiftoss/errors": "^1.1.2",
     "@shapeshiftoss/hdwallet-core": "^1.27.0",

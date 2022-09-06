@@ -1,3 +1,41 @@
+# [@shapeshiftoss/chain-adapters-v9.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v9.0.0...@shapeshiftoss/chain-adapters-v9.0.1) (2022-09-02)
+
+# [@shapeshiftoss/chain-adapters-v9.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v8.0.0...@shapeshiftoss/chain-adapters-v9.0.0) (2022-09-02)
+
+
+### Features
+
+* use CHAIN_NAMESPACE.Evm & CHAIN_NAMESPACE.CosmosSdk ([#1007](https://github.com/shapeshift/lib/issues/1007)) ([b6c5490](https://github.com/shapeshift/lib/commit/b6c54902c9e84fd628e917e4747acdb6faf3405d)), closes [#1008](https://github.com/shapeshift/lib/issues/1008)
+
+
+### BREAKING CHANGES
+
+* CHAIN_NAMESPACE.Ethereum is now CHAIN_NAMESPACE.Evm
+* CHAIN_NAMESPACE.Cosmos is now CHAIN_NAMESPACE.CosmosSdk
+
+* chore: trigger CI
+
+* chore: trigger ci
+
+* fix: internally bump caip
+
+Co-authored-by: Apotheosis <97164662+0xApotheosis@users.noreply.github.com>
+
+# [@shapeshiftoss/chain-adapters-v8.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v7.17.1...@shapeshiftoss/chain-adapters-v8.0.0) (2022-09-01)
+
+
+### Features
+
+* rename CHAIN_NAMESPACE.Bitcoin -> CHAIN_NAMESPACE.Utxo ([#1006](https://github.com/shapeshift/lib/issues/1006)) ([cbb1fbf](https://github.com/shapeshift/lib/commit/cbb1fbfbb30ec81b96f65dab1f8748f07a3d98fd))
+
+
+### BREAKING CHANGES
+
+* CHAIN_NAMESPACE.Bitcoin is now CHAIN_NAMESPACE.Utxo
+
+This renames CHAIN_NAMESPACE.Bitcoin to CHAIN_NAMESPACE.Utxo since it
+now refers to any UTXO chain
+
 # [@shapeshiftoss/chain-adapters-v7.17.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v7.17.0...@shapeshiftoss/chain-adapters-v7.17.1) (2022-08-29)
 
 

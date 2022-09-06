@@ -1,3 +1,48 @@
+# [@shapeshiftoss/swapper-v11.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.0.1...@shapeshiftoss/swapper-v11.0.2) (2022-09-06)
+
+
+### Bug Fixes
+
+* **swapper:** minimum one dollar trade fee ([#994](https://github.com/shapeshift/lib/issues/994)) ([e08194f](https://github.com/shapeshift/lib/commit/e08194f91a50edbf2e203f59f32b9918c6fc7d66))
+
+# [@shapeshiftoss/swapper-v11.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.0.0...@shapeshiftoss/swapper-v11.0.1) (2022-09-02)
+
+# [@shapeshiftoss/swapper-v11.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v10.0.0...@shapeshiftoss/swapper-v11.0.0) (2022-09-02)
+
+
+### Features
+
+* use CHAIN_NAMESPACE.Evm & CHAIN_NAMESPACE.CosmosSdk ([#1007](https://github.com/shapeshift/lib/issues/1007)) ([b6c5490](https://github.com/shapeshift/lib/commit/b6c54902c9e84fd628e917e4747acdb6faf3405d)), closes [#1008](https://github.com/shapeshift/lib/issues/1008)
+
+
+### BREAKING CHANGES
+
+* CHAIN_NAMESPACE.Ethereum is now CHAIN_NAMESPACE.Evm
+* CHAIN_NAMESPACE.Cosmos is now CHAIN_NAMESPACE.CosmosSdk
+
+* chore: trigger CI
+
+* chore: trigger ci
+
+* fix: internally bump caip
+
+Co-authored-by: Apotheosis <97164662+0xApotheosis@users.noreply.github.com>
+
+# [@shapeshiftoss/swapper-v10.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.17.1...@shapeshiftoss/swapper-v10.0.0) (2022-09-01)
+
+
+### Features
+
+* rename CHAIN_NAMESPACE.Bitcoin -> CHAIN_NAMESPACE.Utxo ([#1006](https://github.com/shapeshift/lib/issues/1006)) ([cbb1fbf](https://github.com/shapeshift/lib/commit/cbb1fbfbb30ec81b96f65dab1f8748f07a3d98fd))
+
+
+### BREAKING CHANGES
+
+* CHAIN_NAMESPACE.Bitcoin is now CHAIN_NAMESPACE.Utxo
+
+This renames CHAIN_NAMESPACE.Bitcoin to CHAIN_NAMESPACE.Utxo since it
+now refers to any UTXO chain
+
 # [@shapeshiftoss/swapper-v9.17.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v9.17.0...@shapeshiftoss/swapper-v9.17.1) (2022-08-26)
 
 
