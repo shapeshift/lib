@@ -62,7 +62,7 @@ export interface ChainAdapterArgs {
   coinName: string
   providers: {
     http: unchained.cosmos.V1Api | unchained.osmosis.V1Api | unchained.thorchain.V1Api
-    ws: unchained.ws.Client<unchained.cosmossdk.types.Tx>
+    ws: unchained.ws.Client<unchained.cosmossdk.Tx>
   }
 }
 
@@ -79,11 +79,11 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
   protected readonly supportedChainIds: Array<ChainId>
   protected readonly providers: {
     http: unchained.cosmos.V1Api | unchained.osmosis.V1Api | unchained.thorchain.V1Api
-    ws: unchained.ws.Client<unchained.cosmossdk.types.Tx>
+    ws: unchained.ws.Client<unchained.cosmossdk.Tx>
   }
 
   protected assetId: AssetId
-  protected parser: unchained.cosmossdk.BaseTransactionParser<unchained.cosmossdk.types.Tx>
+  protected parser: unchained.cosmossdk.BaseTransactionParser<unchained.cosmossdk.Tx>
 
   protected constructor(args: CosmosSdkBaseAdapterArgs) {
     this.chainId = args.chainId

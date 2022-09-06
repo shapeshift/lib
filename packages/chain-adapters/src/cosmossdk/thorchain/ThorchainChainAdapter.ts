@@ -85,7 +85,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
 
         if (!signedTx) throw new Error('Error signing tx')
 
-        return signedTx.
+        return signedTx.serialized
       } else {
         throw new Error('Wallet does not support Osmosis.')
       }
@@ -121,7 +121,9 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
         try {
           const val = bnOrZero(account.balance).minus(gas)
           if (val.isFinite() || val.lte(0)) {
-            throw new Error(`ThorchainChainAdapter: transaction value is invalid: ${val.toString()}`)
+            throw new Error(
+              `ThorchainChainAdapter: transaction value is invalid: ${val.toString()}`,
+            )
           }
           tx.value = val.toString()
         } catch (error) {
@@ -134,19 +136,19 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
           amount: [
             {
               amount: bnOrZero(fee).toString(),
-              denom: 'uosmo',
+              denom: 'rune',
             },
           ],
           gas,
         },
         msg: [
           {
-            type: 'cosmos-sdk/MsgSend',
+            type: 'thorchain/MsgSend',
             value: {
               amount: [
                 {
                   amount: bnOrZero(value).toString(),
-                  denom: 'uosmo',
+                  denom: 'rune',
                 },
               ],
               from_address: from,
@@ -161,7 +163,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
       const txToSign: ThorchainSignTx = {
         addressNList,
         tx: utx,
-        chain_id: CHAIN_REFERENCE.OsmosisMainnet,
+        chain_id: CHAIN_REFERENCE.ThorchainMainnet,
         account_number: account.chainSpecific.accountNumber,
         sequence: account.chainSpecific.sequence,
       }
@@ -173,17 +175,16 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
 
   // @ts-ignore - keep type signature with unimplemented state
   async getFeeData({
-    /* eslint-disable-next-line @typescript-eslint/no-unused-vars -- Disable no-unused-vars lint rule for unimplemented variable */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     sendMax,
-  }: Partial<GetFeeDataInput<KnownChainIds.OsmosisMainnet>>): Promise<
-    FeeDataEstimate<KnownChainIds.OsmosisMainnet>
+  }: Partial<GetFeeDataInput<KnownChainIds.ThorchainMainnet>>): Promise<
+    FeeDataEstimate<KnownChainIds.ThorchainMainnet>
   > {
-    // We currently don't have a way to query validators to get dynamic fees, so they are hard coded.
-    // When we find a strategy to make this more dynamic, we can use 'sendMax' to define max amount.
+    // static fee as defined by: https://daemon.thorchain.shapeshift.com/thorchain/constants
     return {
-      fast: { txFee: '5000', chainSpecific: { gasLimit: '300000' } },
-      average: { txFee: '3500', chainSpecific: { gasLimit: '300000' } },
-      slow: { txFee: '2500', chainSpecific: { gasLimit: '300000' } },
+      fast: { txFee: '2000000', chainSpecific: { gasLimit: '500000000' } },
+      average: { txFee: '2000000', chainSpecific: { gasLimit: '500000000' } },
+      slow: { txFee: '2000000', chainSpecific: { gasLimit: '500000000' } },
     }
   }
 
