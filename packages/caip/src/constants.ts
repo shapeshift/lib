@@ -5,9 +5,10 @@ export const btcAssetId: AssetId = 'bip122:000000000019d6689c085ae165831e93/slip
 export const bchAssetId: AssetId = 'bip122:000000000000000000651ef99cb9fcbe/slip44:145'
 export const dogeAssetId: AssetId = 'bip122:00000000001a91e3dace36e2be3bf030/slip44:3'
 export const ltcAssetId: AssetId = 'bip122:12a765e31ffd4059bada1e25190f6e98/slip44:2'
-
 export const ethAssetId: AssetId = 'eip155:1/slip44:60'
 export const avalancheAssetId: AssetId = 'eip155:43114/slip44:9000'
+export const foxAssetId: AssetId = 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
+export const foxyAssetId: AssetId = 'eip155:1/erc20:0xdc49108ce5c57bc3408c3a5e95f3d864ec386ed3'
 
 export const cosmosAssetId: AssetId = 'cosmos:cosmoshub-4/slip44:118'
 export const osmosisAssetId: AssetId = 'cosmos:osmosis-1/slip44:118'
