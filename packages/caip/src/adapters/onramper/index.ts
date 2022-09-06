@@ -56,6 +56,4 @@ export const getOnRamperSupportedAssets = () => {
 
 export const onRamperTokenIdToAssetId = (tokenId: OnRamperTokenId): AssetId | undefined => OnRamperIdToAssetIdMap[tokenId]
 
-export const assetIdToOnRamperTokenList = (assetId: AssetId): OnRamperTokenId[] | undefined => {
-  return AssetItToOnRamperIdMap[assetId]
-}
+export const assetIdToOnRamperTokenList = (assetId: AssetId): OnRamperTokenId[] | undefined => AssetItToOnRamperIdMap[assetId]
