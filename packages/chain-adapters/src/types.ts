@@ -87,6 +87,11 @@ export type SubscribeTxsInput = {
   accountType?: UtxoAccountType
 }
 
+export type GetBIP44ParamsInput = {
+  accountNumber: number
+  accountType?: UtxoAccountType
+}
+
 export type TransferType = unchained.TransferType
 export type TradeType = unchained.TradeType
 

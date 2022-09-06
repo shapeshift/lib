@@ -45,7 +45,7 @@ export const parseData = (coins: CoingeckoCoin[]): AssetMap => {
       if (Object.keys(platforms).includes('ethereum')) {
         try {
           const assetId = toAssetId({
-            chainNamespace: CHAIN_NAMESPACE.Ethereum,
+            chainNamespace: CHAIN_NAMESPACE.Evm,
             chainReference: CHAIN_REFERENCE.EthereumMainnet,
             assetNamespace: 'erc20',
             assetReference: platforms.ethereum,
@@ -59,7 +59,7 @@ export const parseData = (coins: CoingeckoCoin[]): AssetMap => {
       if (Object.keys(platforms).includes('avalanche')) {
         try {
           const assetId = toAssetId({
-            chainNamespace: CHAIN_NAMESPACE.Ethereum,
+            chainNamespace: CHAIN_NAMESPACE.Evm,
             chainReference: CHAIN_REFERENCE.AvalancheCChain,
             assetNamespace: 'erc20',
             assetReference: platforms.avalanche,
