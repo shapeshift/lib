@@ -5,7 +5,7 @@ import { AssetId } from './../../assetId/assetId'
 
 type OnRamperTokenId = string
 
-export const AssetItToOnRamperIdMap: Record<AssetId, OnRamperTokenId[]> = {
+export const AssetIdToOnRamperIdMap: Record<AssetId, OnRamperTokenId[]> = {
   [btcAssetId]: ['BTC'],
   [cosmosAssetId]: ['ATOM'],
   [ethAssetId]: ['ETH'],
