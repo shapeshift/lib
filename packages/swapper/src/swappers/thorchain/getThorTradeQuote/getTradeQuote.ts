@@ -22,6 +22,8 @@ import { getUsdRate } from '../utils/getUsdRate/getUsdRate'
 import { getBtcTxFees } from '../utils/txFeeHelpers/btcTxFees/getBtcTxFees'
 import { getEthTxFees } from '../utils/txFeeHelpers/ethTxFees/getEthTxFees'
 
+const MINIMUM_USD_TRADE_AMOUNT = bn(1)
+
 type CommonQuoteFields = Omit<TradeQuote<ChainId>, 'allowanceContract' | 'feeData'>
 
 type GetThorTradeQuoteInput = {
@@ -55,10 +57,8 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
 
     const estimatedTradeFee = await estimateTradeFee(deps, buyAsset)
 
-    // $1 worth of buy asset
-    const minTradeFeeAmount = bn(1).div(
-      await getUsdRate({ deps, input: { assetId: buyAsset.assetId } }),
-    )
+    const buyAssetUsdRate = await getUsdRate({ deps, input: { assetId: buyAsset.assetId } })
+    const minTradeFeeAmount = MINIMUM_USD_TRADE_AMOUNT.div(buyAssetUsdRate)
 
     const tradeFee = minTradeFeeAmount.gt(estimatedTradeFee)
       ? minTradeFeeAmount.toString()
