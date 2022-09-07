@@ -48,7 +48,7 @@ const invertMap = () => {
 const OnRamperIdToAssetIdMap = invertMap()
 
 export const getOnRamperSupportedAssets = () => {
-  entries(AssetItToOnRamperIdMap).map(([assetId, tokenId]) => ({
+  entries(AssetIdToOnRamperIdMap).map(([assetId, tokenId]) => ({
     assetId,
     token: tokenId,
   }))
