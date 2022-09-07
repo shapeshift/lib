@@ -37,7 +37,7 @@ export const AssetIdToOnRamperIdMap: Record<AssetId, OnRamperTokenId[]> = {
 // explodes and inverts the assetId => tokenId[] map by creating a 1to1 token => assetId mapping
 const invertMap = () => {
   const invertedMap: Record<OnRamperTokenId, AssetId> = {}
-  entries(AssetItToOnRamperIdMap).flatMap(([assetId, idList]) =>
+  entries(AssetIdToOnRamperIdMap).flatMap(([assetId, idList]) =>
     idList.forEach((id) => {
       invertedMap[id] = assetId
     }),
