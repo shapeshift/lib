@@ -46,6 +46,12 @@ export type ChainAdapter<T extends ChainId> = {
    */
   getAccount(pubkey: string): Promise<Account<T>>
 
+  /**
+   * Does the implementation require an account type for proper address derivation
+   * and tx building. typically only bitcoin and clones will return true.
+   */
+  isAccountTypeRequired(): boolean
+
   buildBIP44Params(params: Partial<BIP44Params>): BIP44Params
 
   /**

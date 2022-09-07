@@ -368,4 +368,6 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
   closeTxs(): void {
     this.providers.ws.close('txs')
   }
+
+  isAccountTypeRequired = () => false
 }

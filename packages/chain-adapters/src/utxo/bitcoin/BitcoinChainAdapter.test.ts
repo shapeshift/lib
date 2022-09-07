@@ -175,6 +175,13 @@ describe('BitcoinChainAdapter', () => {
     })
   })
 
+  describe('isAccountTypeRequired', () => {
+    it('should return true for isAccountTypeRequired', async () => {
+      const adapter = new bitcoin.ChainAdapter(args)
+      expect(adapter.isAccountTypeRequired()).toStrictEqual(true)
+    })
+  })
+
   describe('getAccount', () => {
     it('should return account info for a specified address', async () => {
       args.providers.http = {

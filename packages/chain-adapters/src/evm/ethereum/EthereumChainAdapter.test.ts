@@ -829,4 +829,10 @@ describe('EthereumChainAdapter', () => {
       }).toThrow('accountNumber must be >= 0')
     })
   })
+  describe('isAccountTypeRequired', () => {
+    const adapter = new ethereum.ChainAdapter(makeChainAdapterArgs())
+    it('should return false for isAccountTypeRequired', async () => {
+      expect(adapter.isAccountTypeRequired()).toStrictEqual(false)
+    })
+  })
 })

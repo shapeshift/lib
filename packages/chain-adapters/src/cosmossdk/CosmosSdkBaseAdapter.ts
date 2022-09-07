@@ -314,4 +314,5 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
       return ErrorHandler(err)
     }
   }
+  isAccountTypeRequired = () => false
 }

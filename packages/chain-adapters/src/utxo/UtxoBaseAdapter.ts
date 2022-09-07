@@ -121,6 +121,9 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
     return this.chainId
   }
 
+  // utxos require an account/scriptType i.e. p2wpkh/p2pkh etc
+  isAccountTypeRequired = () => true
+
   getSupportedAccountTypes(): Array<UtxoAccountType> {
     return this.supportedAccountTypes
   }
