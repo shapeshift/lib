@@ -2932,6 +2932,11 @@
     tiny-secp256k1 "^1.1.6"
     web-encoding "^1.1.0"
 
+"@shapeshiftoss/investor@^1.0.1":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/investor/-/investor-1.0.2.tgz#32ed90a96e122bb8f6dfdea088a2df9b88527eef"
+  integrity sha512-COHhutd7gPe9tUCdog8YK9OXSU5tu5eXlNdS0g+3XEv4DloaS/q0va/azfNUOj3bPFInsIHY/bojqUm61dDSbA==
+
 "@shapeshiftoss/proto-tx-builder@^0.2.1":
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/proto-tx-builder/-/proto-tx-builder-0.2.1.tgz#82106d45adcec0d5d215a6098b52d16ef3db3dc8"
@@ -2943,6 +2948,11 @@
     cosmjs-types "^0.4.1"
     google-protobuf "^3.17.0"
     long "^4.0.0"
+
+"@shapeshiftoss/types@8.1.0":
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/types/-/types-8.1.0.tgz#a087f3b89fd68bb07749a75de4afbb5314850711"
+  integrity sha512-/sDoPB5tHWzcMjF/si66ZkZuzcp4JuTGi7AhQoUUeigYNHD5PHjOER4L60MnKSLIyDX8T+yF8335Zq6U5Q6Hag==
 
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"

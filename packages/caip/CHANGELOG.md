@@ -1,3 +1,17 @@
+# [@shapeshiftoss/caip-v8.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.1.0...@shapeshiftoss/caip-v8.2.0) (2022-09-07)
+
+
+### Features
+
+* **caip:** onramper support ([#1004](https://github.com/shapeshift/lib/issues/1004)) ([a41ef44](https://github.com/shapeshift/lib/commit/a41ef4450d5365f647f92656e0c59334bc7dfe5b))
+
+# [@shapeshiftoss/caip-v8.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.0.0...@shapeshiftoss/caip-v8.1.0) (2022-09-06)
+
+
+### Features
+
+* **caip:** add FOX & FOXy assetIds to constants ([#1013](https://github.com/shapeshift/lib/issues/1013)) ([e38b623](https://github.com/shapeshift/lib/commit/e38b62396d2170f03efe863262b2d565df2725d7))
+
 # [@shapeshiftoss/caip-v8.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v7.0.0...@shapeshiftoss/caip-v8.0.0) (2022-09-02)
 
 
