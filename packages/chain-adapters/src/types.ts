@@ -98,7 +98,7 @@ export type TradeType = unchained.TradeType
 export type TxMetadata = unchained.evm.TxMetadata | unchained.cosmossdk.TxMetadata
 
 export type Transaction = Omit<unchained.StandardTx, 'transfers'> & {
-  transfers: Array<TxTransfer>
+  transfers: TxTransfer[]
   data?: TxMetadata
 }
 
@@ -113,7 +113,7 @@ export type SubscribeError = {
 export type TxHistoryResponse = {
   cursor: string
   pubkey: string
-  transactions: Array<Transaction>
+  transactions: Transaction[]
 }
 
 type ChainTxTypeInner = {

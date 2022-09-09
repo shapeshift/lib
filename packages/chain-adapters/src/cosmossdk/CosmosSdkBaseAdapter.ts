@@ -68,7 +68,7 @@ export interface ChainAdapterArgs {
 
 export interface CosmosSdkBaseAdapterArgs extends ChainAdapterArgs {
   defaultBIP44Params: BIP44Params
-  supportedChainIds: Array<ChainId>
+  supportedChainIds: ChainId[]
   chainId: CosmosSdkChainId
 }
 
@@ -76,7 +76,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
   protected readonly chainId: CosmosSdkChainId
   protected readonly coinName: string
   protected readonly defaultBIP44Params: BIP44Params
-  protected readonly supportedChainIds: Array<ChainId>
+  protected readonly supportedChainIds: ChainId[]
   protected readonly providers: {
     http: unchained.cosmos.V1Api | unchained.osmosis.V1Api | unchained.thorchain.V1Api
     ws: unchained.ws.Client<unchained.cosmossdk.Tx>
@@ -314,7 +314,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
     this.providers.ws.close('txs')
   }
 
-  async getValidators(): Promise<Array<Validator>> {
+  async getValidators(): Promise<Validator[]> {
     if (this.providers.http instanceof unchained.thorchain.V1Api) return []
 
     try {
