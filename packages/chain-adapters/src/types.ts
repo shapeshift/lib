@@ -134,7 +134,7 @@ export type BuildDelegateTxInput<T extends ChainId> = {
   validator: string
   value: string
   wallet: HDWallet
-  bip44Params?: BIP44Params
+  bip44Params: BIP44Params
   memo?: string
 } & ChainSpecificBuildTxData<T>
 

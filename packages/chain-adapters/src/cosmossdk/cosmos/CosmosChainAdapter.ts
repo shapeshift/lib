@@ -58,7 +58,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.CosmosMainn
   }
 
   async getAddress(input: GetAddressInput): Promise<string> {
-    const { wallet, bip44Params = ChainAdapter.defaultBIP44Params, showOnDevice = false } = input
+    const { wallet, bip44Params, showOnDevice = false } = input
     if (!bip44Params) {
       throw new Error('bip44Params are required in Cosmos SDK getAddress')
     }
@@ -185,9 +185,6 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.CosmosMainn
         value,
         memo = '',
       } = tx
-      if (!bip44Params) {
-        throw new Error('bip44Params are required in Cosmos SDK getAddress')
-      }
 
       if (!validator) throw new Error('CosmosChainAdapter: validator is required')
       if (!value) throw new Error('CosmosChainAdapter: value is required')

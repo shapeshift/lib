@@ -58,7 +58,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.OsmosisMain
   }
 
   async getAddress(input: GetAddressInput): Promise<string> {
-    const { wallet, bip44Params = this.defaultBIP44Params, showOnDevice = false } = input
+    const { wallet, bip44Params, showOnDevice = false } = input
 
     try {
       if (supportsOsmosis(wallet)) {
@@ -102,7 +102,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.OsmosisMain
       const {
         to,
         wallet,
-        bip44Params = this.defaultBIP44Params,
+        bip44Params,
         chainSpecific: { gas, fee },
         sendMax = false,
         value,
@@ -177,7 +177,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.OsmosisMain
       const {
         validator,
         wallet,
-        bip44Params = this.defaultBIP44Params,
+        bip44Params,
         chainSpecific: { gas, fee },
         value,
         memo = '',
@@ -247,7 +247,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.OsmosisMain
       const {
         validator,
         wallet,
-        bip44Params = this.defaultBIP44Params,
+        bip44Params,
         chainSpecific: { gas, fee },
         value,
         memo = '',
@@ -378,7 +378,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.OsmosisMain
     try {
       const {
         wallet,
-        bip44Params = this.defaultBIP44Params,
+        bip44Params,
         chainSpecific: { gas, fee },
         value,
         memo = '',
