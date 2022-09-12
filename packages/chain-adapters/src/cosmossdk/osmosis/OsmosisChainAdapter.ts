@@ -59,6 +59,9 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.OsmosisMain
 
   async getAddress(input: GetAddressInput): Promise<string> {
     const { wallet, bip44Params, showOnDevice = false } = input
+    if (!bip44Params) {
+      throw new Error('bip44Params are required in Cosmos SDK getAddress')
+    }
 
     try {
       if (supportsOsmosis(wallet)) {
@@ -109,6 +112,9 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.OsmosisMain
         memo = '',
       } = tx
 
+      if (!bip44Params) {
+        throw new Error('bip44Params are required in Cosmos SDK getAddress')
+      }
       if (!to) throw new Error('OsmosisChainAdapter: to is required')
       if (!value) throw new Error('OsmosisChainAdapter: value is required')
 

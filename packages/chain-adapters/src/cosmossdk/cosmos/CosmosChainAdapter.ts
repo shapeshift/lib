@@ -112,6 +112,9 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.CosmosMainn
         memo = '',
       } = tx
 
+      if (!bip44Params) {
+        throw new Error('bip44Params are required in Cosmos SDK getAddress')
+      }
       if (!to) throw new Error('CosmosChainAdapter: to is required')
       if (!value) throw new Error('CosmosChainAdapter: value is required')
 
