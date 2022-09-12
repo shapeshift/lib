@@ -5,12 +5,12 @@ import {
   ETHSignTx,
   HDWallet,
   OsmosisSignTx,
+  ThorchainSignTx,
 } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, ChainSpecific, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 
-import * as cosmos from './cosmossdk/cosmos'
-import * as osmosis from './cosmossdk/osmosis'
+import * as cosmossdk from './cosmossdk/types'
 import * as evm from './evm/types'
 import * as utxo from './utxo/types'
 
@@ -23,8 +23,9 @@ type ChainSpecificAccount<T> = ChainSpecific<
     [KnownChainIds.BitcoinCashMainnet]: utxo.Account
     [KnownChainIds.DogecoinMainnet]: utxo.Account
     [KnownChainIds.LitecoinMainnet]: utxo.Account
-    [KnownChainIds.CosmosMainnet]: cosmos.Account
-    [KnownChainIds.OsmosisMainnet]: osmosis.Account
+    [KnownChainIds.CosmosMainnet]: cosmossdk.Account
+    [KnownChainIds.OsmosisMainnet]: cosmossdk.Account
+    [KnownChainIds.ThorchainMainnet]: cosmossdk.Account
   }
 >
 
@@ -56,8 +57,9 @@ type ChainSpecificFeeData<T> = ChainSpecific<
     [KnownChainIds.BitcoinCashMainnet]: utxo.FeeData
     [KnownChainIds.DogecoinMainnet]: utxo.FeeData
     [KnownChainIds.LitecoinMainnet]: utxo.FeeData
-    [KnownChainIds.CosmosMainnet]: cosmos.FeeData
-    [KnownChainIds.OsmosisMainnet]: osmosis.FeeData
+    [KnownChainIds.CosmosMainnet]: cosmossdk.FeeData
+    [KnownChainIds.OsmosisMainnet]: cosmossdk.FeeData
+    [KnownChainIds.ThorchainMainnet]: cosmossdk.FeeData
   }
 >
 
@@ -93,10 +95,10 @@ export type GetBIP44ParamsInput = {
 export type TransferType = unchained.TransferType
 export type TradeType = unchained.TradeType
 
-export type TxMetadata = unchained.evm.TxMetadata | unchained.cosmos.TxMetadata
+export type TxMetadata = unchained.evm.TxMetadata | unchained.cosmossdk.TxMetadata
 
 export type Transaction = Omit<unchained.StandardTx, 'transfers'> & {
-  transfers: Array<TxTransfer>
+  transfers: TxTransfer[]
   data?: TxMetadata
 }
 
@@ -111,7 +113,7 @@ export type SubscribeError = {
 export type TxHistoryResponse = {
   cursor: string
   pubkey: string
-  transactions: Array<Transaction>
+  transactions: Transaction[]
 }
 
 type ChainTxTypeInner = {
@@ -123,6 +125,7 @@ type ChainTxTypeInner = {
   [KnownChainIds.LitecoinMainnet]: BTCSignTx
   [KnownChainIds.CosmosMainnet]: CosmosSignTx
   [KnownChainIds.OsmosisMainnet]: OsmosisSignTx
+  [KnownChainIds.ThorchainMainnet]: ThorchainSignTx
 }
 
 export type ChainTxType<T> = T extends keyof ChainTxTypeInner ? ChainTxTypeInner[T] : never
@@ -177,8 +180,9 @@ type ChainSpecificBuildTxData<T> = ChainSpecific<
     [KnownChainIds.BitcoinCashMainnet]: utxo.BuildTxInput
     [KnownChainIds.DogecoinMainnet]: utxo.BuildTxInput
     [KnownChainIds.LitecoinMainnet]: utxo.BuildTxInput
-    [KnownChainIds.CosmosMainnet]: cosmos.BuildTxInput
-    [KnownChainIds.OsmosisMainnet]: cosmos.BuildTxInput
+    [KnownChainIds.CosmosMainnet]: cosmossdk.BuildTxInput
+    [KnownChainIds.OsmosisMainnet]: cosmossdk.BuildTxInput
+    [KnownChainIds.ThorchainMainnet]: cosmossdk.BuildTxInput
   }
 >
 

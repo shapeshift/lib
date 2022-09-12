@@ -1,3 +1,64 @@
+# [@shapeshiftoss/chain-adapters-v9.1.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v9.1.0...@shapeshiftoss/chain-adapters-v9.1.1) (2022-09-12)
+
+
+### Bug Fixes
+
+* use thorchain tx parser ([#1020](https://github.com/shapeshift/lib/issues/1020)) ([62d51cf](https://github.com/shapeshift/lib/commit/62d51cfd824bfef02c7f00376102ddae07665f57))
+
+# [@shapeshiftoss/chain-adapters-v9.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v9.0.2...@shapeshiftoss/chain-adapters-v9.1.0) (2022-09-12)
+
+
+### Features
+
+* add THORChain support ([#1010](https://github.com/shapeshift/lib/issues/1010)) ([d7c3b72](https://github.com/shapeshift/lib/commit/d7c3b72bbda9795f87fa8f73c35926c95026a3c2))
+
+# [@shapeshiftoss/chain-adapters-v9.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v9.0.1...@shapeshiftoss/chain-adapters-v9.0.2) (2022-09-09)
+
+# [@shapeshiftoss/chain-adapters-v9.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v9.0.0...@shapeshiftoss/chain-adapters-v9.0.1) (2022-09-02)
+
+# [@shapeshiftoss/chain-adapters-v9.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v8.0.0...@shapeshiftoss/chain-adapters-v9.0.0) (2022-09-02)
+
+
+### Features
+
+* use CHAIN_NAMESPACE.Evm & CHAIN_NAMESPACE.CosmosSdk ([#1007](https://github.com/shapeshift/lib/issues/1007)) ([b6c5490](https://github.com/shapeshift/lib/commit/b6c54902c9e84fd628e917e4747acdb6faf3405d)), closes [#1008](https://github.com/shapeshift/lib/issues/1008)
+
+
+### BREAKING CHANGES
+
+* CHAIN_NAMESPACE.Ethereum is now CHAIN_NAMESPACE.Evm
+* CHAIN_NAMESPACE.Cosmos is now CHAIN_NAMESPACE.CosmosSdk
+
+* chore: trigger CI
+
+* chore: trigger ci
+
+* fix: internally bump caip
+
+Co-authored-by: Apotheosis <97164662+0xApotheosis@users.noreply.github.com>
+
+# [@shapeshiftoss/chain-adapters-v8.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v7.17.1...@shapeshiftoss/chain-adapters-v8.0.0) (2022-09-01)
+
+
+### Features
+
+* rename CHAIN_NAMESPACE.Bitcoin -> CHAIN_NAMESPACE.Utxo ([#1006](https://github.com/shapeshift/lib/issues/1006)) ([cbb1fbf](https://github.com/shapeshift/lib/commit/cbb1fbfbb30ec81b96f65dab1f8748f07a3d98fd))
+
+
+### BREAKING CHANGES
+
+* CHAIN_NAMESPACE.Bitcoin is now CHAIN_NAMESPACE.Utxo
+
+This renames CHAIN_NAMESPACE.Bitcoin to CHAIN_NAMESPACE.Utxo since it
+now refers to any UTXO chain
+
+# [@shapeshiftoss/chain-adapters-v7.17.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v7.17.0...@shapeshiftoss/chain-adapters-v7.17.1) (2022-08-29)
+
+
+### Bug Fixes
+
+* also test ltc segwit native bip44Params ([#997](https://github.com/shapeshift/lib/issues/997)) ([8b1192d](https://github.com/shapeshift/lib/commit/8b1192d32e40d7fc4c0d2c8892ae2dc51c40725c))
+
 # [@shapeshiftoss/chain-adapters-v7.17.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v7.16.0...@shapeshiftoss/chain-adapters-v7.17.0) (2022-08-26)
 
 

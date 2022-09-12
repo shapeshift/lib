@@ -1,3 +1,49 @@
+# [@shapeshiftoss/investor-foxy-v6.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v6.0.0...@shapeshiftoss/investor-foxy-v6.1.0) (2022-09-12)
+
+
+### Features
+
+* add THORChain support ([#1010](https://github.com/shapeshift/lib/issues/1010)) ([d7c3b72](https://github.com/shapeshift/lib/commit/d7c3b72bbda9795f87fa8f73c35926c95026a3c2))
+
+# [@shapeshiftoss/investor-foxy-v6.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v5.0.1...@shapeshiftoss/investor-foxy-v6.0.0) (2022-09-08)
+
+
+### Features
+
+* **investor-foxy:** accept bip44Params ([#1016](https://github.com/shapeshift/lib/issues/1016)) ([5523da6](https://github.com/shapeshift/lib/commit/5523da623bdd8655976cf3c7e2884460ff02aa6f))
+
+
+### BREAKING CHANGES
+
+* **investor-foxy:** investor-foxy now expects full `bip44Params` params in tx input methods instead of `accountNumber`
+
+* chore: trigger CI
+
+* chore: trigger CI
+
+# [@shapeshiftoss/investor-foxy-v5.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v5.0.0...@shapeshiftoss/investor-foxy-v5.0.1) (2022-09-02)
+
+# [@shapeshiftoss/investor-foxy-v5.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v4.1.1...@shapeshiftoss/investor-foxy-v5.0.0) (2022-09-02)
+
+
+### Features
+
+* use CHAIN_NAMESPACE.Evm & CHAIN_NAMESPACE.CosmosSdk ([#1007](https://github.com/shapeshift/lib/issues/1007)) ([b6c5490](https://github.com/shapeshift/lib/commit/b6c54902c9e84fd628e917e4747acdb6faf3405d)), closes [#1008](https://github.com/shapeshift/lib/issues/1008)
+
+
+### BREAKING CHANGES
+
+* CHAIN_NAMESPACE.Ethereum is now CHAIN_NAMESPACE.Evm
+* CHAIN_NAMESPACE.Cosmos is now CHAIN_NAMESPACE.CosmosSdk
+
+* chore: trigger CI
+
+* chore: trigger ci
+
+* fix: internally bump caip
+
+Co-authored-by: Apotheosis <97164662+0xApotheosis@users.noreply.github.com>
+
 # [@shapeshiftoss/investor-foxy-v4.1.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v4.1.0...@shapeshiftoss/investor-foxy-v4.1.1) (2022-08-15)
 
 # [@shapeshiftoss/investor-foxy-v4.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v4.0.8...@shapeshiftoss/investor-foxy-v4.1.0) (2022-08-14)

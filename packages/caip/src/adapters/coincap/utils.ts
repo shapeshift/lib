@@ -13,6 +13,7 @@ import {
   ethChainId,
   ltcChainId,
   osmosisChainId,
+  thorchainChainId,
 } from '../../constants'
 import {
   bitcoinAssetMap,
@@ -21,6 +22,7 @@ import {
   dogecoinAssetMap,
   litecoinAssetMap,
   osmosisAssetMap,
+  thorchainAssetMap,
 } from '../../utils'
 
 export type CoinCapCoin = {
@@ -57,7 +59,7 @@ export const parseEthData = (data: CoinCapCoin[]) => {
   )
 
   return ethCoins.reduce((acc, { id, explorer }) => {
-    const chainNamespace = CHAIN_NAMESPACE.Ethereum
+    const chainNamespace = CHAIN_NAMESPACE.Evm
     const chainReference = CHAIN_REFERENCE.EthereumMainnet
     let assetReference: string = ASSET_REFERENCE.Ethereum
     const assetNamespace = id === 'ethereum' ? 'slip44' : 'erc20'
@@ -81,4 +83,5 @@ export const parseData = (d: CoinCapCoin[]) => ({
   [ltcChainId]: litecoinAssetMap,
   [cosmosChainId]: cosmosAssetMap,
   [osmosisChainId]: osmosisAssetMap,
+  [thorchainChainId]: thorchainAssetMap,
 })
