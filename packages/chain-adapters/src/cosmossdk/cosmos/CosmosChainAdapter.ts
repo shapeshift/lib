@@ -59,6 +59,9 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.CosmosMainn
 
   async getAddress(input: GetAddressInput): Promise<string> {
     const { wallet, bip44Params = ChainAdapter.defaultBIP44Params, showOnDevice = false } = input
+    if (!bip44Params) {
+      throw new Error('bip44Params are required in Cosmos SDK getAddress')
+    }
 
     try {
       if (supportsCosmos(wallet)) {
@@ -102,7 +105,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.CosmosMainn
       const {
         to,
         wallet,
-        bip44Params = this.defaultBIP44Params,
+        bip44Params,
         chainSpecific: { gas, fee },
         sendMax = false,
         value,
@@ -177,11 +180,15 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.CosmosMainn
       const {
         validator,
         wallet,
-        bip44Params = this.defaultBIP44Params,
+        bip44Params,
         chainSpecific: { gas, fee },
         value,
         memo = '',
       } = tx
+      if (!bip44Params) {
+        throw new Error('bip44Params are required in Cosmos SDK getAddress')
+      }
+
       if (!validator) throw new Error('CosmosChainAdapter: validator is required')
       if (!value) throw new Error('CosmosChainAdapter: value is required')
       const { prefix } = bech32.decode(validator)
@@ -247,7 +254,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.CosmosMainn
       const {
         validator,
         wallet,
-        bip44Params = this.defaultBIP44Params,
+        bip44Params,
         chainSpecific: { gas, fee },
         value,
         memo = '',
@@ -316,7 +323,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.CosmosMainn
       const {
         validator,
         wallet,
-        bip44Params = this.defaultBIP44Params,
+        bip44Params,
         chainSpecific: { gas, fee },
         memo = '',
       } = tx
@@ -378,7 +385,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.CosmosMainn
     try {
       const {
         wallet,
-        bip44Params = this.defaultBIP44Params,
+        bip44Params,
         chainSpecific: { gas, fee },
         value,
         memo = '',
