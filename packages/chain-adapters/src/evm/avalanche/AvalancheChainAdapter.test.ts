@@ -268,12 +268,12 @@ describe('AvalancheChainAdapter', () => {
         wallet,
         messageToSign: {
           message: 'Hello world 111',
-          addressNList: [2147483692, 2147492648, 2147483648, 0, 0],
+          addressNList: adapter.getAddressNList(0),
         },
       }
 
       await expect(adapter.signMessage(message)).resolves.toEqual(
-        '0x05a0edb4b98fe6b6ed270bf55aef84ddcb641512e19e340bf9eed3427854a7a4734fe45551dc24f1843cf2c823a73aa2454e3785eb15120573c522cc114e472d1c',
+        '0x4e577cdf5b142018700e3944191516da8037071600c7396c8bbab55cdc852e08375f01a35ebfc72699389a3bfbbe33afd95525207963c29048824c5d5e6cf1841b',
       )
     })
 
@@ -287,7 +287,7 @@ describe('AvalancheChainAdapter', () => {
         wallet,
         messageToSign: {
           message: 'Hello world 111',
-          addressNList: [2147483692, 2147492648, 2147483648, 0, 0],
+          addressNList: adapter.getAddressNList(0),
         },
       }
 
@@ -367,7 +367,7 @@ describe('AvalancheChainAdapter', () => {
 
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
-          addressNList: [2147483692, 2147492648, 2147483648, 0, 0],
+          addressNList: adapter.getAddressNList(0),
           chainId: 43114,
           data: '',
           gasLimit: numberToHex(gasLimit),
@@ -434,7 +434,7 @@ describe('AvalancheChainAdapter', () => {
 
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
-          addressNList: [2147483692, 2147492648, 2147483648, 0, 0],
+          addressNList: adapter.getAddressNList(0),
           chainId: 43114,
           data: '',
           gasLimit: numberToHex(gasLimit),
@@ -472,7 +472,7 @@ describe('AvalancheChainAdapter', () => {
 
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
-          addressNList: [2147483692, 2147492648, 2147483648, 0, 0],
+          addressNList: adapter.getAddressNList(0),
           chainId: 43114,
           data: '0xa9059cbb00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000190',
           gasLimit: numberToHex(gasLimit),
@@ -511,7 +511,7 @@ describe('AvalancheChainAdapter', () => {
 
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
-          addressNList: [2147483692, 2147492648, 2147483648, 0, 0],
+          addressNList: adapter.getAddressNList(0),
           chainId: 43114,
           data: '0xa9059cbb000000000000000000000000d8da6bf26964af9d7eed9e03e53415d37aa960450000000000000000000000000000000000000000000000000000000000067932',
           gasLimit: numberToHex(gasLimit),

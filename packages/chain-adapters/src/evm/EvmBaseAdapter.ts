@@ -1,5 +1,6 @@
 import { AssetId, ChainId, fromAssetId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
 import {
+  BIP32Path,
   bip32ToAddressNList,
   ETHSignMessage,
   ETHSignTx,
@@ -108,6 +109,11 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
       throw new Error('accountNumber must be >= 0')
     }
     return { ...this.defaultBIP44Params, accountNumber }
+  }
+
+  getAddressNList(accountNumber: number): BIP32Path {
+    const p = this.getBIP44Params({ accountNumber })
+    return bip32ToAddressNList(`m/${p.purpose}'/${p.coinType}'/${accountNumber}'/0/0`)
   }
 
   async buildSendTransaction(tx: BuildSendTxInput<T>): Promise<{

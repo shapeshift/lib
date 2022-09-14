@@ -258,7 +258,7 @@ describe('EthereumChainAdapter', () => {
       await adapter.getAddress({ bip44Params, wallet })
 
       expect(wallet.ethGetAddress).toHaveBeenCalledWith({
-        addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
+        addressNList: adapter.getAddressNList(0),
         showDisplay: false,
       })
     })
@@ -354,7 +354,7 @@ describe('EthereumChainAdapter', () => {
       const tx = {
         wallet: await getWallet(),
         txToSign: {
-          addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
+          addressNList: adapter.getAddressNList(0),
           value: '0x0',
           to: EOA_ADDRESS,
           chainId: 1,
@@ -382,7 +382,7 @@ describe('EthereumChainAdapter', () => {
       const tx = {
         wallet: await getWallet(),
         txToSign: {
-          addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
+          addressNList: adapter.getAddressNList(0),
           value: '0x0',
           to: EOA_ADDRESS,
           chainId: 1,
@@ -438,12 +438,11 @@ describe('EthereumChainAdapter', () => {
       const args = makeChainAdapterArgs()
       const adapter = new ethereum.ChainAdapter(args)
       const wallet = await getWallet()
-
       const message: SignMessageInput<ETHSignMessage> = {
         wallet,
         messageToSign: {
           message: 'Hello world 111',
-          addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
+          addressNList: adapter.getAddressNList(0),
         },
       }
 
@@ -461,7 +460,7 @@ describe('EthereumChainAdapter', () => {
         wallet,
         messageToSign: {
           message: 'Hello world 111',
-          addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
+          addressNList: adapter.getAddressNList(0),
         },
       }
 
@@ -561,7 +560,7 @@ describe('EthereumChainAdapter', () => {
       } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
-          addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
+          addressNList: adapter.getAddressNList(0),
           chainId: 1,
           data: '',
           gasLimit: numberToHex(gasLimit),
@@ -617,7 +616,7 @@ describe('EthereumChainAdapter', () => {
       } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
-          addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
+          addressNList: adapter.getAddressNList(0),
           chainId: 1,
           data: '',
           gasLimit: numberToHex(gasLimit),
@@ -649,7 +648,7 @@ describe('EthereumChainAdapter', () => {
       } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
-          addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
+          addressNList: adapter.getAddressNList(0),
           chainId: 1,
           data: '0xa9059cbb00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000190',
           gasLimit: numberToHex(gasLimit),
@@ -683,7 +682,7 @@ describe('EthereumChainAdapter', () => {
 
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
-          addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
+          addressNList: adapter.getAddressNList(0),
           chainId: 1,
           data: '0xa9059cbb000000000000000000000000d8da6bf26964af9d7eed9e03e53415d37aa960450000000000000000000000000000000000000000000000000000000000067932',
           gasLimit: numberToHex(gasLimit),
@@ -749,7 +748,7 @@ describe('EthereumChainAdapter', () => {
 
       const expectedOutput = {
         txToSign: {
-          addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
+          addressNList: adapter.getAddressNList(0),
           value: '123',
           to: '0x47CB53752e5dc0A972440dA127DCA9FBA6C2Ab6F',
           chainId: 1,
@@ -790,7 +789,7 @@ describe('EthereumChainAdapter', () => {
 
       const expectedOutput = {
         txToSign: {
-          addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
+          addressNList: adapter.getAddressNList(0),
           value: '123',
           to: '0x47CB53752e5dc0A972440dA127DCA9FBA6C2Ab6F',
           chainId: 1,
