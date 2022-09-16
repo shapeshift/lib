@@ -1,5 +1,12 @@
 import { Asset } from '@shapeshiftoss/asset-service'
-import { adapters, AssetId, CHAIN_NAMESPACE, ChainId, fromAssetId } from '@shapeshiftoss/caip'
+import {
+  adapters,
+  AssetId,
+  CHAIN_NAMESPACE,
+  ChainId,
+  fromAssetId,
+  thorchainAssetId,
+} from '@shapeshiftoss/caip'
 import { cosmos, EvmBaseAdapter, UtxoBaseAdapter } from '@shapeshiftoss/chain-adapters'
 import { BTCSignTx, CosmosSignTx, ETHSignTx } from '@shapeshiftoss/hdwallet-core'
 import { KnownChainIds } from '@shapeshiftoss/types'
@@ -73,6 +80,7 @@ export class ThorchainSwapper implements Swapper<ChainId> {
         acc.push(assetId)
         return acc
       }, [])
+      this.supportedSellAssetIds.push(thorchainAssetId)
 
       this.supportedBuyAssetIds = responseData.reduce<AssetId[]>((acc, midgardPool) => {
         const assetId = adapters.poolAssetIdToAssetId(midgardPool.asset)
@@ -80,6 +88,7 @@ export class ThorchainSwapper implements Swapper<ChainId> {
         acc.push(assetId)
         return acc
       }, [])
+      this.supportedBuyAssetIds.push(thorchainAssetId)
     } catch (e) {
       throw new SwapError('[thorchainInitialize]: initialize failed to set supportedAssetIds', {
         code: SwapErrorTypes.INITIALIZE_FAILED,

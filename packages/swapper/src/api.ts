@@ -74,7 +74,10 @@ type CommonTradeInput = {
 
 export type EvmSupportedChainIds = KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
 
-export type CosmosSdkSupportedChainIds = KnownChainIds.CosmosMainnet | KnownChainIds.OsmosisMainnet
+export type CosmosSdkSupportedChainIds =
+  | KnownChainIds.CosmosMainnet
+  | KnownChainIds.OsmosisMainnet
+  | KnownChainIds.ThorchainMainnet
 
 export type EvmSupportedChainAdapters = ethereum.ChainAdapter | avalanche.ChainAdapter
 
