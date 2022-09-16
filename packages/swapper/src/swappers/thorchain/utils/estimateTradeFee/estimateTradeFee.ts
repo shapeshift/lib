@@ -1,5 +1,5 @@
 import { Asset } from '@shapeshiftoss/asset-service'
-import { adapters, fromAssetId } from '@shapeshiftoss/caip'
+import { adapters, fromAssetId, thorchainAssetId } from '@shapeshiftoss/caip'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { InboundResponse, ThorchainSwapperDeps } from '../../types'
@@ -7,10 +7,14 @@ import { THOR_TRADE_FEE_MULTIPLIERS } from '../constants'
 import { getPriceRatio } from '../getPriceRatio/getPriceRatio'
 import { thorService } from '../thorService'
 
+// TODO rename this estimateOutboundFee or similar
 export const estimateTradeFee = async (
   deps: ThorchainSwapperDeps,
   buyAsset: Asset,
 ): Promise<string> => {
+  if (buyAsset.assetId == thorchainAssetId) {
+    return '0.02' // todo - read from TC mimir/constants
+  }
   const thorId = adapters.assetIdToPoolAssetId({ assetId: buyAsset.assetId })
   if (!thorId)
     throw new SwapError('[estimateTradeFee] - undefined thorId for given buyAssetId', {
