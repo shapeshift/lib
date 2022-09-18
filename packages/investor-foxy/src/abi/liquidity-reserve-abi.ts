@@ -1,6 +1,6 @@
-import { AbiItem } from 'web3-utils'
+import { ContractInterface } from 'ethers/lib/ethers'
 
-export const liquidityReserveAbi: AbiItem[] = [
+export const liquidityReserveAbi: ContractInterface = [
   {
     inputs: [
       {

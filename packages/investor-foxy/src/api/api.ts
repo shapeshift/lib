@@ -1,13 +1,11 @@
-import { JsonRpcProvider } from '@ethersproject/providers'
+import { JsonRpcBatchProvider } from '@ethersproject/providers'
 import { CHAIN_NAMESPACE, CHAIN_REFERENCE, ChainReference, toAssetId } from '@shapeshiftoss/caip'
 import { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { KnownChainIds, WithdrawType } from '@shapeshiftoss/types'
 import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
+import { ethers } from 'ethers'
 import { toLower } from 'lodash'
-import Web3 from 'web3'
-import { HttpProvider, TransactionReceipt } from 'web3-core/types'
-import { Contract } from 'web3-eth-contract'
 import { numberToHex } from 'web3-utils'
 
 import { erc20Abi } from '../abi/erc20-abi'
@@ -85,12 +83,11 @@ const TOKE_IPFS_URL = 'https://ipfs.tokemaklabs.xyz/ipfs'
 
 export class FoxyApi {
   public adapter: ChainAdapter<KnownChainIds.EthereumMainnet>
-  public provider: HttpProvider
+  public provider: JsonRpcBatchProvider
   private providerUrl: string
-  public jsonRpcProvider: JsonRpcProvider
-  public web3: Web3
-  private foxyStakingContracts: Contract[]
-  private liquidityReserveContracts: Contract[]
+  public jsonRpcProvider: JsonRpcBatchProvider
+  private foxyStakingContracts: ethers.Contract[]
+  private liquidityReserveContracts: ethers.Contract[]
   private readonly ethereumChainReference: ChainReference
   private foxyAddresses: FoxyAddressesType
 
@@ -101,14 +98,14 @@ export class FoxyApi {
     chainReference = CHAIN_REFERENCE.EthereumMainnet,
   }: ConstructorArgs) {
     this.adapter = adapter
-    this.provider = new Web3.providers.HttpProvider(providerUrl)
-    this.jsonRpcProvider = new JsonRpcProvider(providerUrl)
-    this.web3 = new Web3(this.provider)
+    this.provider = new JsonRpcBatchProvider(providerUrl)
+    this.jsonRpcProvider = new JsonRpcBatchProvider(providerUrl)
     this.foxyStakingContracts = foxyAddresses.map(
-      (addresses) => new this.web3.eth.Contract(foxyStakingAbi, addresses.staking),
+      (addresses) => new ethers.Contract(addresses.staking, foxyStakingAbi, this.provider),
     )
     this.liquidityReserveContracts = foxyAddresses.map(
-      (addresses) => new this.web3.eth.Contract(liquidityReserveAbi, addresses.liquidityReserve),
+      (addresses) =>
+        new ethers.Contract(addresses.liquidityReserve, liquidityReserveAbi, this.provider),
     )
     this.ethereumChainReference = chainReference
     this.providerUrl = providerUrl
@@ -121,7 +118,7 @@ export class FoxyApi {
    * @param amount
    */
   private normalizeAmount(amount: BigNumber) {
-    return this.web3.utils.toBN(amount.toFixed())
+    return ethers.BigNumber.from(amount.toFixed())
   }
 
   private async signAndBroadcastTx(input: SignAndBroadcastTx): Promise<string> {
@@ -132,8 +129,8 @@ export class FoxyApi {
       if (dryRun) return signedTx
       try {
         if (this.providerUrl.includes('localhost') || this.providerUrl.includes('127.0.0.1')) {
-          const sendSignedTx = await this.web3.eth.sendSignedTransaction(signedTx)
-          return sendSignedTx?.blockHash
+          const sendSignedTx = await this.provider.sendTransaction(signedTx)
+          return sendSignedTx?.blockHash ?? ''
         }
         return this.adapter.broadcastTransaction(signedTx)
       } catch (e) {
@@ -150,7 +147,8 @@ export class FoxyApi {
   }
 
   checksumAddress(address: string): string {
-    return this.web3.utils.toChecksumAddress(address)
+    // ethers always returns checksum addresses from getAddress() calls
+    return ethers.utils.getAddress(address)
   }
 
   private verifyAddresses(addresses: string[]) {
@@ -163,7 +161,7 @@ export class FoxyApi {
     }
   }
 
-  private getStakingContract(contractAddress: string): Contract {
+  private getStakingContract(contractAddress: string): ethers.Contract {
     const stakingContract = this.foxyStakingContracts.find(
       (item) => toLower(item.options.address) === toLower(contractAddress),
     )
@@ -171,7 +169,7 @@ export class FoxyApi {
     return stakingContract
   }
 
-  private getLiquidityReserveContract(liquidityReserveAddress: string): Contract {
+  private getLiquidityReserveContract(liquidityReserveAddress: string): ethers.Contract {
     const liquidityReserveContract = this.liquidityReserveContracts.find(
       (item) => toLower(item.options.address) === toLower(liquidityReserveAddress),
     )
@@ -182,13 +180,13 @@ export class FoxyApi {
   private async getGasPriceAndNonce(userAddress: string) {
     let nonce: number
     try {
-      nonce = await this.web3.eth.getTransactionCount(userAddress)
+      nonce = await this.provider.getTransactionCount(userAddress)
     } catch (e) {
       throw new Error(`Get nonce Error: ${e}`)
     }
     let gasPrice: string
     try {
-      gasPrice = await this.web3.eth.getGasPrice()
+      gasPrice = (await this.provider.getGasPrice()).toString()
     } catch (e) {
       throw new Error(`Get gasPrice Error: ${e}`)
     }
@@ -238,13 +236,13 @@ export class FoxyApi {
   }
 
   async getGasPrice() {
-    const gasPrice = await this.web3.eth.getGasPrice()
-    return bnOrZero(gasPrice)
+    const gasPrice = await this.provider.getGasPrice()
+    return gasPrice
   }
 
-  async getTxReceipt({ txid }: TxReceipt): Promise<TransactionReceipt> {
+  async getTxReceipt({ txid }: TxReceipt): Promise<ethers.providers.TransactionReceipt> {
     if (!txid) throw new Error('Must pass txid')
-    return this.web3.eth.getTransactionReceipt(txid)
+    return this.provider.getTransactionReceipt(txid)
   }
 
   async estimateClaimWithdrawGas(input: ClaimWithdrawal): Promise<BigNumber> {
@@ -349,7 +347,7 @@ export class FoxyApi {
     const { userAddress, tokenContractAddress, contractAddress } = input
     this.verifyAddresses([userAddress, contractAddress, tokenContractAddress])
 
-    const depositTokenContract = new this.web3.eth.Contract(erc20Abi, tokenContractAddress)
+    const depositTokenContract = new ethers.Contract(tokenContractAddress, erc20Abi, this.provider)
 
     try {
       const estimatedGas = await depositTokenContract.methods
@@ -401,7 +399,7 @@ export class FoxyApi {
     } catch (e) {
       throw new Error(`Estimate Gas Error: ${e}`)
     }
-    const depositTokenContract = new this.web3.eth.Contract(erc20Abi, tokenContractAddress)
+    const depositTokenContract = new ethers.Contract(tokenContractAddress, erc20Abi, this.provider)
     const data: string = depositTokenContract.methods
       .approve(contractAddress, amount ? numberToHex(bnOrZero(amount).toString()) : MAX_ALLOWANCE)
       .encodeABI({
@@ -428,9 +426,10 @@ export class FoxyApi {
     const { userAddress, tokenContractAddress, contractAddress } = input
     this.verifyAddresses([userAddress, contractAddress, tokenContractAddress])
 
-    const depositTokenContract: Contract = new this.web3.eth.Contract(
-      erc20Abi,
+    const depositTokenContract: ethers.Contract = new ethers.Contract(
       tokenContractAddress,
+      erc20Abi,
+      this.provider,
     )
 
     let allowance
@@ -463,7 +462,7 @@ export class FoxyApi {
     }
 
     const stakingContract = this.getStakingContract(contractAddress)
-    const userChecksum = this.web3.utils.toChecksumAddress(userAddress)
+    const userChecksum = ethers.utils.getAddress(userAddress)
 
     const data: string = await stakingContract.methods
       .stake(this.normalizeAmount(amountDesired), userAddress)
@@ -539,8 +538,12 @@ export class FoxyApi {
 
   async canClaimWithdraw(input: CanClaimWithdrawParams): Promise<boolean> {
     const { userAddress, contractAddress } = input
-    const tokeManagerContract = new this.web3.eth.Contract(tokeManagerAbi, tokeManagerAddress)
-    const tokePoolContract = new this.web3.eth.Contract(tokePoolAbi, tokePoolAddress)
+    const tokeManagerContract = new ethers.Contract(
+      tokeManagerAddress,
+      tokeManagerAbi,
+      this.provider,
+    )
+    const tokePoolContract = new ethers.Contract(tokePoolAddress, tokePoolAbi, this.provider)
     const stakingContract = this.getStakingContract(contractAddress)
 
     const coolDownInfo = await (async () => {
@@ -654,7 +657,11 @@ export class FoxyApi {
 
   async canSendWithdrawalRequest(input: StakingContract): Promise<boolean> {
     const { stakingContract } = input
-    const tokeManagerContract = new this.web3.eth.Contract(tokeManagerAbi, tokeManagerAddress)
+    const tokeManagerContract = new ethers.Contract(
+      tokeManagerAddress,
+      tokeManagerAbi,
+      this.provider,
+    )
 
     const requestWithdrawalAmount = await (async () => {
       try {
@@ -712,8 +719,8 @@ export class FoxyApi {
 
     const nextCycleStart = bnOrZero(currentCycleStart).plus(duration)
 
-    const blockNumber = await this.web3.eth.getBlockNumber()
-    const timestamp = (await this.web3.eth.getBlock(blockNumber)).timestamp
+    const blockNumber = await this.provider.getBlockNumber()
+    const timestamp = (await this.provider.getBlock(blockNumber)).timestamp
 
     const isTimeToRequest = bnOrZero(timestamp)
       .plus(timeLeftToRequestWithdrawal)
@@ -879,7 +886,7 @@ export class FoxyApi {
     }
     let currentBlock
     try {
-      currentBlock = await this.web3.eth.getBlockNumber()
+      currentBlock = await this.provider.getBlockNumber()
     } catch (e) {
       throw new Error(`Failed to get block number: ${e}`)
     }
@@ -901,7 +908,7 @@ export class FoxyApi {
     const { tokenContractAddress, userAddress } = input
     this.verifyAddresses([userAddress, tokenContractAddress])
 
-    const contract = new this.web3.eth.Contract(erc20Abi, tokenContractAddress)
+    const contract = new ethers.Contract(tokenContractAddress, erc20Abi, this.provider)
     try {
       const balance = await contract.methods.balanceOf(userAddress).call()
       return bnOrZero(balance)
@@ -932,7 +939,7 @@ export class FoxyApi {
 
   async totalSupply({ tokenContractAddress }: TokenAddressInput): Promise<BigNumber> {
     this.verifyAddresses([tokenContractAddress])
-    const contract = new this.web3.eth.Contract(erc20Abi, tokenContractAddress)
+    const contract = new ethers.Contract(tokenContractAddress, erc20Abi, this.provider)
 
     try {
       const totalSupply = await contract.methods.totalSupply().call()
@@ -954,7 +961,7 @@ export class FoxyApi {
   async tvl(input: TokenAddressInput): Promise<BigNumber> {
     const { tokenContractAddress } = input
     this.verifyAddresses([tokenContractAddress])
-    const contract = new this.web3.eth.Contract(foxyAbi, tokenContractAddress)
+    const contract = new ethers.Contract(tokenContractAddress, foxyAbi, this.provider)
 
     try {
       const balance = await contract.methods.circulatingSupply().call()
@@ -989,7 +996,11 @@ export class FoxyApi {
 
   async getClaimFromTokemakArgs(input: ContractAddressInput): Promise<GetTokeRewardAmount> {
     const { contractAddress } = input
-    const rewardHashContract = new this.web3.eth.Contract(tokeRewardHashAbi, tokeRewardHashAddress)
+    const rewardHashContract = new ethers.Contract(
+      tokeRewardHashAddress,
+      tokeRewardHashAbi,
+      this.provider,
+    )
     const latestCycleIndex = await (async () => {
       try {
         return rewardHashContract.methods.latestCycleIndex().call()
@@ -1032,18 +1043,17 @@ export class FoxyApi {
     const { tokenContractAddress, userAddress } = input
     this.verifyAddresses([tokenContractAddress])
 
-    const foxyContract = new this.web3.eth.Contract(foxyAbi, tokenContractAddress)
+    const foxyContract = new ethers.Contract(tokenContractAddress, foxyAbi, this.provider)
     const fromBlock = 14381454 // genesis rebase
 
     const rebaseEvents = await (async () => {
       try {
-        const events = (
-          await foxyContract.getPastEvents('LogRebase', {
-            fromBlock,
-            toBlock: 'latest',
-          })
-        ).filter((rebase) => rebase.returnValues.rebase !== '0')
-        return events
+        const filter = foxyContract.filters.LogRebase()
+        const events = await foxyContract.queryFilter(filter, fromBlock, 'latest')
+        const filteredEvents = events.filter(
+          (rebase) => rebase.args?.rebase && !rebase.args.rebase.isZero(),
+        )
+        return filteredEvents
       } catch (e) {
         console.error(`Failed to get rebase events ${e}`)
         return undefined
@@ -1054,10 +1064,8 @@ export class FoxyApi {
 
     const transferEvents = await (async () => {
       try {
-        const events = await foxyContract.getPastEvents('Transfer', {
-          fromBlock,
-          toBlock: 'latest',
-        })
+        const filter = foxyContract.filters.Transfer()
+        const events = await foxyContract.queryFilter(filter, fromBlock, 'latest')
         return events
       } catch (e) {
         console.error(`Failed to get transfer events ${e}`)
@@ -1066,10 +1074,7 @@ export class FoxyApi {
     })()
 
     const events: RebaseEvent[] = rebaseEvents.map((rebaseEvent) => {
-      const {
-        blockNumber,
-        returnValues: { epoch },
-      } = rebaseEvent
+      const { blockNumber, args: { epoch } = { epoch: '' } } = rebaseEvent
       return {
         blockNumber,
         epoch,
@@ -1090,23 +1095,21 @@ export class FoxyApi {
             // check transfer events to see if a user triggered a rebase through unstake or stake
             const unstakedTransferInfo = transferEvents?.filter(
               (e) =>
-                e.blockNumber === event.blockNumber &&
-                e.returnValues.from.toLowerCase() === userAddress,
+                e.blockNumber === event.blockNumber && e.args?.from.toLowerCase() === userAddress,
             )
-            const unstakedTransferAmount = unstakedTransferInfo?.[0]?.returnValues?.value ?? 0
+            const unstakedTransferAmount = unstakedTransferInfo?.[0]?.args?.value ?? 0
             const stakedTransferInfo = transferEvents?.filter(
               (e) =>
-                e.blockNumber === event.blockNumber &&
-                e.returnValues.to.toLowerCase() === userAddress,
+                e.blockNumber === event.blockNumber && e.args?.to.toLowerCase() === userAddress,
             )
-            const stakedTransferAmount = stakedTransferInfo?.[0]?.returnValues?.value ?? 0
+            const stakedTransferAmount = stakedTransferInfo?.[0]?.args?.value ?? 0
 
-            const postRebaseBalanceResult = await foxyContract.methods
-              .balanceOf(userAddress)
-              .call(null, event.blockNumber)
-            const unadjustedPreRebaseBalance = await foxyContract.methods
-              .balanceOf(userAddress)
-              .call(null, event.blockNumber - 1)
+            const postRebaseBalanceResult = await foxyContract.balanceOf(userAddress, {
+              blockTag: event.blockNumber,
+            })
+            const unadjustedPreRebaseBalance = await foxyContract.balanceOf(userAddress, {
+              blockTag: event.blockNumber - 1,
+            })
 
             // unstake events can trigger rebases, if they do, adjust the amount to not include that unstake's transfer amount
             const preRebaseBalanceResult = bnOrZero(unadjustedPreRebaseBalance)
@@ -1129,7 +1132,7 @@ export class FoxyApi {
 
         const blockTime = await (async () => {
           try {
-            const block = await this.web3.eth.getBlock(event.blockNumber)
+            const block = await this.provider.getBlock(event.blockNumber)
             return bnOrZero(block.timestamp).toNumber()
           } catch (e) {
             console.error(`Failed to get timestamp of block ${e}`)
