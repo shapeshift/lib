@@ -201,7 +201,7 @@ export class FoxyApi {
             (item) => toLower(item.address) === toLower(addresses.staking),
           )
           try {
-            const expired = await stakingContract?.methods.pauseStaking().call()
+            const expired = await stakingContract?.pauseStaking()
             const tvl = await this.tvl({ tokenContractAddress: addresses.foxy })
             const apy = this.apy()
             return transformData({ ...addresses, expired, tvl, apy })
@@ -226,7 +226,7 @@ export class FoxyApi {
     const stakingContract = this.getStakingContract(addresses.staking)
 
     try {
-      const expired = await stakingContract.methods.pauseStaking().call()
+      const expired = await stakingContract.pauseStaking()
       const tvl = await this.tvl({ tokenContractAddress: addresses.foxy })
       const apy = this.apy()
       return transformData({ ...addresses, tvl, apy, expired })
@@ -253,10 +253,8 @@ export class FoxyApi {
     const stakingContract = this.getStakingContract(contractAddress)
 
     try {
-      const estimatedGas = await stakingContract.methods.claimWithdraw(addressToClaim).estimateGas({
-        from: userAddress,
-      })
-      return bnOrZero(estimatedGas)
+      const estimatedGas = await stakingContract.estimateGas.claimWithdraw(addressToClaim)
+      return bnOrZero(estimatedGas.toString())
     } catch (e) {
       throw new Error(`Failed to get gas ${e}`)
     }
@@ -271,10 +269,8 @@ export class FoxyApi {
     const stakingContract = this.getStakingContract(contractAddress)
 
     try {
-      const estimatedGas = await stakingContract.methods.sendWithdrawalRequests().estimateGas({
-        from: userAddress,
-      })
-      return bnOrZero(estimatedGas)
+      const estimatedGas = await stakingContract.estimateGas.sendWithdrawalRequests()
+      return bnOrZero(estimatedGas.toString())
     } catch (e) {
       throw new Error(`Failed to get gas ${e}`)
     }
@@ -288,12 +284,10 @@ export class FoxyApi {
     const liquidityReserveContract = this.getLiquidityReserveContract(contractAddress)
 
     try {
-      const estimatedGas = await liquidityReserveContract.methods
-        .addLiquidity(this.normalizeAmount(amountDesired))
-        .estimateGas({
-          from: userAddress,
-        })
-      return bnOrZero(estimatedGas)
+      const estimatedGas = await liquidityReserveContract.estimateGas.addLiquidity(
+        this.normalizeAmount(amountDesired),
+      )
+      return bnOrZero(estimatedGas.toString())
     } catch (e) {
       throw new Error(`Failed to get gas ${e}`)
     }
@@ -307,12 +301,10 @@ export class FoxyApi {
     const liquidityReserveContract = this.getLiquidityReserveContract(contractAddress)
 
     try {
-      const estimatedGas = await liquidityReserveContract.methods
-        .removeLiquidity(this.normalizeAmount(amountDesired))
-        .estimateGas({
-          from: userAddress,
-        })
-      return bnOrZero(estimatedGas)
+      const estimatedGas = await liquidityReserveContract.estimateGas.removeLiquidity(
+        this.normalizeAmount(amountDesired),
+      )
+      return bnOrZero(estimatedGas.toString())
     } catch (e) {
       throw new Error(`Failed to get gas ${e}`)
     }
@@ -329,15 +321,9 @@ export class FoxyApi {
 
     try {
       const estimatedGas = isDelayed
-        ? await stakingContract.methods
-            .unstake(this.normalizeAmount(amountDesired), true)
-            .estimateGas({
-              from: userAddress,
-            })
-        : await stakingContract.methods.instantUnstake(true).estimateGas({
-            from: userAddress,
-          })
-      return bnOrZero(estimatedGas)
+        ? await stakingContract.estimateGas.unstake(this.normalizeAmount(amountDesired), true)
+        : await stakingContract.estimateGas.instantUnstake(true)
+      return bnOrZero(estimatedGas.toString())
     } catch (e) {
       throw new Error(`Failed to get gas ${e}`)
     }
@@ -350,12 +336,11 @@ export class FoxyApi {
     const depositTokenContract = new ethers.Contract(tokenContractAddress, erc20Abi, this.provider)
 
     try {
-      const estimatedGas = await depositTokenContract.methods
-        .approve(contractAddress, MAX_ALLOWANCE)
-        .estimateGas({
-          from: userAddress,
-        })
-      return bnOrZero(estimatedGas)
+      const estimatedGas = await depositTokenContract.estimateGas.approve(
+        contractAddress,
+        MAX_ALLOWANCE,
+      )
+      return bnOrZero(estimatedGas.toString())
     } catch (e) {
       throw new Error(`Failed to get gas ${e}`)
     }
@@ -369,12 +354,11 @@ export class FoxyApi {
     const stakingContract = this.getStakingContract(contractAddress)
 
     try {
-      const estimatedGas = await stakingContract.methods
-        .stake(this.normalizeAmount(amountDesired), userAddress)
-        .estimateGas({
-          from: userAddress,
-        })
-      return bnOrZero(estimatedGas)
+      const estimatedGas = await stakingContract.estimateGas.stake(
+        this.normalizeAmount(amountDesired),
+        userAddress,
+      )
+      return bnOrZero(estimatedGas.toString())
     } catch (e) {
       throw new Error(`Failed to get gas ${e}`)
     }
@@ -400,7 +384,7 @@ export class FoxyApi {
       throw new Error(`Estimate Gas Error: ${e}`)
     }
     const depositTokenContract = new ethers.Contract(tokenContractAddress, erc20Abi, this.provider)
-    const data: string = depositTokenContract.methods
+    const data: string = depositTokenContract
       .approve(contractAddress, amount ? numberToHex(bnOrZero(amount).toString()) : MAX_ALLOWANCE)
       .encodeABI({
         from: userAddress,
@@ -434,7 +418,7 @@ export class FoxyApi {
 
     let allowance
     try {
-      allowance = await depositTokenContract.methods.allowance(userAddress, contractAddress).call()
+      allowance = await depositTokenContract.allowance(userAddress, contractAddress).call()
     } catch (e) {
       throw new Error(`Failed to get allowance ${e}`)
     }
@@ -464,7 +448,7 @@ export class FoxyApi {
     const stakingContract = this.getStakingContract(contractAddress)
     const userChecksum = ethers.utils.getAddress(userAddress)
 
-    const data: string = await stakingContract.methods
+    const data: string = await stakingContract
       .stake(this.normalizeAmount(amountDesired), userAddress)
       .encodeABI({
         value: 0,
@@ -513,10 +497,10 @@ export class FoxyApi {
     if (isDelayed && !amountDesired.gt(0)) throw new Error('Must send valid amount')
 
     const data: string = isDelayed
-      ? stakingContract.methods.unstake(this.normalizeAmount(amountDesired), true).encodeABI({
+      ? stakingContract.unstake(this.normalizeAmount(amountDesired), true).encodeABI({
           from: userAddress,
         })
-      : stakingContract.methods.instantUnstake(true).encodeABI({
+      : stakingContract.instantUnstake(true).encodeABI({
           from: userAddress,
         })
 
@@ -548,7 +532,7 @@ export class FoxyApi {
 
     const coolDownInfo = await (async () => {
       try {
-        const coolDown = await stakingContract.methods.coolDownInfo(userAddress).call()
+        const coolDown = await stakingContract.coolDownInfo(userAddress).call()
         return {
           ...coolDown,
           endEpoch: coolDown.expiry,
@@ -560,7 +544,7 @@ export class FoxyApi {
 
     const epoch = await (async () => {
       try {
-        return stakingContract.methods.epoch().call()
+        return stakingContract.epoch().call()
       } catch (e) {
         console.error(`Failed to get epoch: ${e}`)
         return {}
@@ -569,7 +553,7 @@ export class FoxyApi {
 
     const requestedWithdrawals = await (async () => {
       try {
-        return tokePoolContract.methods.requestedWithdrawals(stakingContract.address).call()
+        return tokePoolContract.requestedWithdrawals(stakingContract.address).call()
       } catch (e) {
         console.error(`Failed to get requestedWithdrawals: ${e}`)
         return {}
@@ -578,7 +562,7 @@ export class FoxyApi {
 
     const currentCycleIndex = await (async () => {
       try {
-        return tokeManagerContract.methods.getCurrentCycleIndex().call()
+        return tokeManagerContract.getCurrentCycleIndex().call()
       } catch (e) {
         console.error(`Failed to get currentCycleIndex: ${e}`)
         return 0
@@ -587,7 +571,7 @@ export class FoxyApi {
 
     const withdrawalAmount = await (async () => {
       try {
-        return stakingContract.methods.withdrawalAmount().call()
+        return stakingContract.withdrawalAmount().call()
       } catch (e) {
         console.error(`Failed to get currentCycleIndex: ${e}`)
         return 0
@@ -635,7 +619,7 @@ export class FoxyApi {
     const canClaim = await this.canClaimWithdraw({ userAddress, contractAddress })
     if (!canClaim) throw new Error('Not ready to claim')
 
-    const data: string = stakingContract.methods.claimWithdraw(addressToClaim).encodeABI({
+    const data: string = stakingContract.claimWithdraw(addressToClaim).encodeABI({
       from: userAddress,
     })
 
@@ -665,7 +649,7 @@ export class FoxyApi {
 
     const requestWithdrawalAmount = await (async () => {
       try {
-        return stakingContract.methods.requestWithdrawalAmount().call()
+        return stakingContract.requestWithdrawalAmount().call()
       } catch (e) {
         console.error(`Failed to get requestWithdrawalAmount: ${e}`)
         return 0
@@ -674,7 +658,7 @@ export class FoxyApi {
 
     const timeLeftToRequestWithdrawal = await (async () => {
       try {
-        return stakingContract.methods.timeLeftToRequestWithdrawal().call()
+        return stakingContract.timeLeftToRequestWithdrawal().call()
       } catch (e) {
         console.error(`Failed to get timeLeftToRequestWithdrawal: ${e}`)
         return 0
@@ -683,7 +667,7 @@ export class FoxyApi {
 
     const lastTokeCycleIndex = await (async () => {
       try {
-        return stakingContract.methods.lastTokeCycleIndex().call()
+        return stakingContract.lastTokeCycleIndex().call()
       } catch (e) {
         console.error(`Failed to get lastTokeCycleIndex: ${e}`)
         return 0
@@ -692,7 +676,7 @@ export class FoxyApi {
 
     const duration = await (async () => {
       try {
-        return tokeManagerContract.methods.getCycleDuration().call()
+        return tokeManagerContract.getCycleDuration().call()
       } catch (e) {
         console.error(`Failed to get cycleDuration: ${e}`)
         return 0
@@ -701,7 +685,7 @@ export class FoxyApi {
 
     const currentCycleIndex = await (async () => {
       try {
-        return tokeManagerContract.methods.getCurrentCycleIndex().call()
+        return tokeManagerContract.getCurrentCycleIndex().call()
       } catch (e) {
         console.error(`Failed to get currentCycleIndex: ${e}`)
         return 0
@@ -710,7 +694,7 @@ export class FoxyApi {
 
     const currentCycleStart = await (async () => {
       try {
-        return tokeManagerContract.methods.getCurrentCycle().call()
+        return tokeManagerContract.getCurrentCycle().call()
       } catch (e) {
         console.error(`Failed to get currentCycle: ${e}`)
         return 0
@@ -748,7 +732,7 @@ export class FoxyApi {
     const canSendRequest = await this.canSendWithdrawalRequest({ stakingContract })
     if (!canSendRequest) throw new Error('Not ready to send request')
 
-    const data: string = stakingContract.methods.sendWithdrawalRequests().encodeABI({
+    const data: string = stakingContract.sendWithdrawalRequests().encodeABI({
       from: userAddress,
     })
 
@@ -793,7 +777,7 @@ export class FoxyApi {
 
     const liquidityReserveContract = this.getLiquidityReserveContract(contractAddress)
 
-    const data: string = liquidityReserveContract.methods
+    const data: string = liquidityReserveContract
       .addLiquidity(this.normalizeAmount(amountDesired))
       .encodeABI({
         from: userAddress,
@@ -839,7 +823,7 @@ export class FoxyApi {
 
     const liquidityReserveContract = this.getLiquidityReserveContract(contractAddress)
 
-    const data: string = liquidityReserveContract.methods
+    const data: string = liquidityReserveContract
       .removeLiquidity(this.normalizeAmount(amountDesired))
       .encodeABI({
         from: userAddress,
@@ -870,7 +854,7 @@ export class FoxyApi {
 
     let coolDownInfo
     try {
-      const coolDown = await stakingContract.methods.coolDownInfo(userAddress).call()
+      const coolDown = await stakingContract.coolDownInfo(userAddress).call()
       coolDownInfo = {
         ...coolDown,
         endEpoch: coolDown.expiry,
@@ -880,7 +864,7 @@ export class FoxyApi {
     }
     let epoch
     try {
-      epoch = await stakingContract.methods.epoch().call()
+      epoch = await stakingContract.epoch().call()
     } catch (e) {
       throw new Error(`Failed to get epoch: ${e}`)
     }
@@ -910,7 +894,7 @@ export class FoxyApi {
 
     const contract = new ethers.Contract(tokenContractAddress, erc20Abi, this.provider)
     try {
-      const balance = await contract.methods.balanceOf(userAddress).call()
+      const balance = await contract.balanceOf(userAddress).call()
       return bnOrZero(balance)
     } catch (e) {
       throw new Error(`Failed to get balance: ${e}`)
@@ -924,13 +908,13 @@ export class FoxyApi {
 
     let liquidityReserveAddress
     try {
-      liquidityReserveAddress = await stakingContract.methods.LIQUIDITY_RESERVE().call()
+      liquidityReserveAddress = await stakingContract.LIQUIDITY_RESERVE().call()
     } catch (e) {
       throw new Error(`Failed to get liquidityReserve address ${e}`)
     }
     const liquidityReserveContract = this.getLiquidityReserveContract(liquidityReserveAddress)
     try {
-      const feeInBasisPoints = await liquidityReserveContract.methods.fee().call()
+      const feeInBasisPoints = await liquidityReserveContract.fee().call()
       return bnOrZero(feeInBasisPoints).div(10000) // convert from basis points to decimal percentage
     } catch (e) {
       throw new Error(`Failed to get instantUnstake fee ${e}`)
@@ -942,7 +926,7 @@ export class FoxyApi {
     const contract = new ethers.Contract(tokenContractAddress, erc20Abi, this.provider)
 
     try {
-      const totalSupply = await contract.methods.totalSupply().call()
+      const totalSupply = await contract.totalSupply().call()
       return bnOrZero(totalSupply)
     } catch (e) {
       throw new Error(`Failed to get totalSupply: ${e}`)
@@ -978,7 +962,7 @@ export class FoxyApi {
 
     let coolDownInfo
     try {
-      coolDownInfo = await stakingContract.methods.coolDownInfo(userAddress).call()
+      coolDownInfo = await stakingContract.coolDownInfo(userAddress).call()
     } catch (e) {
       throw new Error(`Failed to get coolDowninfo: ${e}`)
     }
@@ -1003,14 +987,14 @@ export class FoxyApi {
     )
     const latestCycleIndex = await (async () => {
       try {
-        return rewardHashContract.methods.latestCycleIndex().call()
+        return rewardHashContract.latestCycleIndex().call()
       } catch (e) {
         throw new Error(`Failed to get latestCycleIndex, ${e}`)
       }
     })()
     const cycleHashes = await (async () => {
       try {
-        return rewardHashContract.methods.cycleHashes(latestCycleIndex).call()
+        return rewardHashContract.cycleHashes(latestCycleIndex).call()
       } catch (e) {
         throw new Error(`Failed to get latestCycleIndex, ${e}`)
       }
