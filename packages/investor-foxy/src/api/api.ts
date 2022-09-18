@@ -964,7 +964,7 @@ export class FoxyApi {
     const contract = new ethers.Contract(tokenContractAddress, foxyAbi, this.provider)
 
     try {
-      const balance = await contract.methods.circulatingSupply().call()
+      const balance = await contract.circulatingSupply()
       return bnOrZero(balance)
     } catch (e) {
       throw new Error(`Failed to get tvl: ${e}`)
