@@ -163,7 +163,7 @@ export class FoxyApi {
 
   private getStakingContract(contractAddress: string): ethers.Contract {
     const stakingContract = this.foxyStakingContracts.find(
-      (item) => toLower(item.options.address) === toLower(contractAddress),
+      (item) => toLower(item.address) === toLower(contractAddress),
     )
     if (!stakingContract) throw new Error('Not a valid contract address')
     return stakingContract
@@ -171,7 +171,7 @@ export class FoxyApi {
 
   private getLiquidityReserveContract(liquidityReserveAddress: string): ethers.Contract {
     const liquidityReserveContract = this.liquidityReserveContracts.find(
-      (item) => toLower(item.options.address) === toLower(liquidityReserveAddress),
+      (item) => toLower(item.address) === toLower(liquidityReserveAddress),
     )
     if (!liquidityReserveContract) throw new Error('Not a valid reserve contract address')
     return liquidityReserveContract
@@ -198,7 +198,7 @@ export class FoxyApi {
       const opportunities = await Promise.all(
         this.foxyAddresses.map(async (addresses) => {
           const stakingContract = this.foxyStakingContracts.find(
-            (item) => toLower(item.options.address) === toLower(addresses.staking),
+            (item) => toLower(item.address) === toLower(addresses.staking),
           )
           try {
             const expired = await stakingContract?.methods.pauseStaking().call()
@@ -569,7 +569,7 @@ export class FoxyApi {
 
     const requestedWithdrawals = await (async () => {
       try {
-        return tokePoolContract.methods.requestedWithdrawals(stakingContract.options.address).call()
+        return tokePoolContract.methods.requestedWithdrawals(stakingContract.address).call()
       } catch (e) {
         console.error(`Failed to get requestedWithdrawals: ${e}`)
         return {}
