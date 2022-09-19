@@ -442,14 +442,17 @@ export class FoxyApi {
     }
 
     const stakingContract = this.getStakingContract(contractAddress)
-    const userChecksum = ethers.utils.getAddress(userAddress)
+    // const userChecksum = ethers.utils.getAddress(userAddress)
 
-    const data: string = await stakingContract
-      .stake(this.normalizeAmount(amountDesired), userAddress)
-      .encodeABI({
-        value: 0,
-        from: userChecksum,
-      })
+    const data: string = stakingContract.interface.encodeFunctionData('stake', [
+      this.normalizeAmount(amountDesired),
+      userAddress,
+    ])
+
+    // {
+    // value: 0,
+    // from: userChecksum,
+    // })
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const chainReferenceAsNumber = Number(this.ethereumChainReference)
@@ -491,13 +494,12 @@ export class FoxyApi {
     const isDelayed = type === WithdrawType.DELAYED && amountDesired
     if (isDelayed && !amountDesired.gt(0)) throw new Error('Must send valid amount')
 
-    const data: string = isDelayed
-      ? stakingContract.unstake(this.normalizeAmount(amountDesired), true).encodeABI({
-          from: userAddress,
-        })
-      : stakingContract.instantUnstake(true).encodeABI({
-          from: userAddress,
-        })
+    const stakingContractCallInput: Parameters<
+      typeof stakingContract.interface.encodeFunctionData
+    > = isDelayed
+      ? ['unstake', [this.normalizeAmount(amountDesired), true]]
+      : ['instantUnstake', ['true']]
+    const data: string = stakingContract.interface.encodeFunctionData(...stakingContractCallInput)
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const chainReferenceAsNumber = Number(this.ethereumChainReference)
@@ -613,9 +615,9 @@ export class FoxyApi {
     const canClaim = await this.canClaimWithdraw({ userAddress, contractAddress })
     if (!canClaim) throw new Error('Not ready to claim')
 
-    const data: string = stakingContract.claimWithdraw(addressToClaim).encodeABI({
-      from: userAddress,
-    })
+    const data: string = stakingContract.interface.encodeFunctionData('claimWithdraw', [
+      addressToClaim,
+    ])
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const chainReferenceAsNumber = Number(this.ethereumChainReference)
@@ -725,10 +727,7 @@ export class FoxyApi {
     const canSendRequest = await this.canSendWithdrawalRequest({ stakingContract })
     if (!canSendRequest) throw new Error('Not ready to send request')
 
-    const data: string = stakingContract.sendWithdrawalRequests().encodeABI({
-      from: userAddress,
-    })
-
+    const data: string = stakingContract.interface.encodeFunctionData('sendWithdrawalRequests')
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const chainReferenceAsNumber = Number(this.ethereumChainReference)
     const payload = {
@@ -769,11 +768,9 @@ export class FoxyApi {
 
     const liquidityReserveContract = this.getLiquidityReserveContract(contractAddress)
 
-    const data: string = liquidityReserveContract
-      .addLiquidity(this.normalizeAmount(amountDesired))
-      .encodeABI({
-        from: userAddress,
-      })
+    const data: string = liquidityReserveContract.interface.encodeFunctionData('addLiquidity', [
+      this.normalizeAmount(amountDesired),
+    ])
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const chainReferenceAsNumber = Number(this.ethereumChainReference)
@@ -814,11 +811,9 @@ export class FoxyApi {
 
     const liquidityReserveContract = this.getLiquidityReserveContract(contractAddress)
 
-    const data: string = liquidityReserveContract
-      .removeLiquidity(this.normalizeAmount(amountDesired))
-      .encodeABI({
-        from: userAddress,
-      })
+    const data: string = liquidityReserveContract.interface.encodeFunctionData('removeLiquidity', [
+      this.normalizeAmount(amountDesired),
+    ])
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const chainReferenceAsNumber = Number(this.ethereumChainReference)
