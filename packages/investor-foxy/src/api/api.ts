@@ -245,7 +245,7 @@ export class FoxyApi {
     return this.provider.getTransactionReceipt(txid)
   }
 
-  async estimateClaimWithdrawGas(input: ClaimWithdrawal): Promise<BigNumber> {
+  async estimateClaimWithdrawGas(input: ClaimWithdrawal): Promise<string> {
     const { claimAddress, userAddress, contractAddress } = input
     const addressToClaim = claimAddress ?? userAddress
     this.verifyAddresses([addressToClaim, userAddress, contractAddress])
@@ -254,15 +254,13 @@ export class FoxyApi {
 
     try {
       const estimatedGas = await stakingContract.estimateGas.claimWithdraw(addressToClaim)
-      return bnOrZero(estimatedGas.toString())
+      return estimatedGas.toString()
     } catch (e) {
       throw new Error(`Failed to get gas ${e}`)
     }
   }
 
-  async estimateSendWithdrawalRequestsGas(
-    input: TxInputWithoutAmountAndWallet,
-  ): Promise<BigNumber> {
+  async estimateSendWithdrawalRequestsGas(input: TxInputWithoutAmountAndWallet): Promise<string> {
     const { userAddress, contractAddress } = input
     this.verifyAddresses([userAddress, contractAddress])
 
@@ -270,13 +268,13 @@ export class FoxyApi {
 
     try {
       const estimatedGas = await stakingContract.estimateGas.sendWithdrawalRequests()
-      return bnOrZero(estimatedGas.toString())
+      return estimatedGas.toString()
     } catch (e) {
       throw new Error(`Failed to get gas ${e}`)
     }
   }
 
-  async estimateAddLiquidityGas(input: EstimateGasTxInput): Promise<BigNumber> {
+  async estimateAddLiquidityGas(input: EstimateGasTxInput): Promise<string> {
     const { amountDesired, userAddress, contractAddress } = input
     this.verifyAddresses([userAddress, contractAddress])
     if (!amountDesired.gt(0)) throw new Error('Must send valid amount')
@@ -287,13 +285,13 @@ export class FoxyApi {
       const estimatedGas = await liquidityReserveContract.estimateGas.addLiquidity(
         this.normalizeAmount(amountDesired),
       )
-      return bnOrZero(estimatedGas.toString())
+      return estimatedGas.toString()
     } catch (e) {
       throw new Error(`Failed to get gas ${e}`)
     }
   }
 
-  async estimateRemoveLiquidityGas(input: EstimateGasTxInput): Promise<BigNumber> {
+  async estimateRemoveLiquidityGas(input: EstimateGasTxInput): Promise<string> {
     const { amountDesired, userAddress, contractAddress } = input
     this.verifyAddresses([userAddress, contractAddress])
     if (!amountDesired.gt(0)) throw new Error('Must send valid amount')
@@ -304,13 +302,13 @@ export class FoxyApi {
       const estimatedGas = await liquidityReserveContract.estimateGas.removeLiquidity(
         this.normalizeAmount(amountDesired),
       )
-      return bnOrZero(estimatedGas.toString())
+      return estimatedGas.toString()
     } catch (e) {
       throw new Error(`Failed to get gas ${e}`)
     }
   }
 
-  async estimateWithdrawGas(input: WithdrawEstimateGasInput): Promise<BigNumber> {
+  async estimateWithdrawGas(input: WithdrawEstimateGasInput): Promise<string> {
     const { amountDesired, userAddress, contractAddress, type } = input
     this.verifyAddresses([userAddress, contractAddress])
 
@@ -323,13 +321,13 @@ export class FoxyApi {
       const estimatedGas = isDelayed
         ? await stakingContract.estimateGas.unstake(this.normalizeAmount(amountDesired), true)
         : await stakingContract.estimateGas.instantUnstake(true)
-      return bnOrZero(estimatedGas.toString())
+      return estimatedGas.toString()
     } catch (e) {
       throw new Error(`Failed to get gas ${e}`)
     }
   }
 
-  async estimateApproveGas(input: EstimateGasApproveInput): Promise<BigNumber> {
+  async estimateApproveGas(input: EstimateGasApproveInput): Promise<string> {
     const { userAddress, tokenContractAddress, contractAddress } = input
     this.verifyAddresses([userAddress, contractAddress, tokenContractAddress])
 
@@ -340,13 +338,13 @@ export class FoxyApi {
         contractAddress,
         MAX_ALLOWANCE,
       )
-      return bnOrZero(estimatedGas.toString())
+      return estimatedGas.toString()
     } catch (e) {
       throw new Error(`Failed to get gas ${e}`)
     }
   }
 
-  async estimateDepositGas(input: EstimateGasTxInput): Promise<BigNumber> {
+  async estimateDepositGas(input: EstimateGasTxInput): Promise<string> {
     const { amountDesired, userAddress, contractAddress } = input
     this.verifyAddresses([userAddress, contractAddress])
     if (!amountDesired.gt(0)) throw new Error('Must send valid amount')
@@ -358,7 +356,7 @@ export class FoxyApi {
         this.normalizeAmount(amountDesired),
         userAddress,
       )
-      return bnOrZero(estimatedGas.toString())
+      return estimatedGas.toString()
     } catch (e) {
       throw new Error(`Failed to get gas ${e}`)
     }
@@ -377,9 +375,9 @@ export class FoxyApi {
     this.verifyAddresses([userAddress, contractAddress, tokenContractAddress])
     if (!wallet) throw new Error('Missing inputs')
 
-    let estimatedGasBN: BigNumber
+    let estimatedGas: string
     try {
-      estimatedGasBN = await this.estimateApproveGas(input)
+      estimatedGas = await this.estimateApproveGas(input)
     } catch (e) {
       throw new Error(`Estimate Gas Error: ${e}`)
     }
@@ -392,7 +390,6 @@ export class FoxyApi {
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const chainReferenceAsNumber = Number(this.ethereumChainReference)
-    const estimatedGas = estimatedGasBN.toString()
     const payload = {
       bip44Params,
       chainId: chainReferenceAsNumber,
@@ -438,9 +435,9 @@ export class FoxyApi {
     if (!amountDesired.gt(0)) throw new Error('Must send valid amount')
     if (!wallet) throw new Error('Missing inputs')
 
-    let estimatedGasBN: BigNumber
+    let estimatedGas: string
     try {
-      estimatedGasBN = await this.estimateDepositGas(input)
+      estimatedGas = await this.estimateDepositGas(input)
     } catch (e) {
       throw new Error(`Estimate Gas Error: ${e}`)
     }
@@ -456,7 +453,6 @@ export class FoxyApi {
       })
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
-    const estimatedGas = estimatedGasBN.toString()
     const chainReferenceAsNumber = Number(this.ethereumChainReference)
     const payload = {
       bip44Params,
@@ -484,9 +480,9 @@ export class FoxyApi {
     this.verifyAddresses([userAddress, contractAddress])
     if (!wallet) throw new Error('Missing inputs')
 
-    let estimatedGasBN: BigNumber
+    let estimatedGas: string
     try {
-      estimatedGasBN = await this.estimateWithdrawGas(input)
+      estimatedGas = await this.estimateWithdrawGas(input)
     } catch (e) {
       throw new Error(`Estimate Gas Error: ${e}`)
     }
@@ -505,7 +501,6 @@ export class FoxyApi {
         })
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
-    const estimatedGas = estimatedGasBN.toString()
     const chainReferenceAsNumber = Number(this.ethereumChainReference)
     const payload = {
       bip44Params,
@@ -607,9 +602,9 @@ export class FoxyApi {
     this.verifyAddresses([userAddress, contractAddress, addressToClaim])
     if (!wallet) throw new Error('Missing inputs')
 
-    let estimatedGasBN: BigNumber
+    let estimatedGas: string
     try {
-      estimatedGasBN = await this.estimateClaimWithdrawGas(input)
+      estimatedGas = await this.estimateClaimWithdrawGas(input)
     } catch (e) {
       throw new Error(`Estimate Gas Error: ${e}`)
     }
@@ -624,7 +619,6 @@ export class FoxyApi {
     })
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
-    const estimatedGas = estimatedGasBN.toString()
     const chainReferenceAsNumber = Number(this.ethereumChainReference)
     const payload = {
       bip44Params,
@@ -720,9 +714,9 @@ export class FoxyApi {
     this.verifyAddresses([userAddress, contractAddress])
     if (!wallet || !contractAddress) throw new Error('Missing inputs')
 
-    let estimatedGasBN: BigNumber
+    let estimatedGas: string
     try {
-      estimatedGasBN = await this.estimateSendWithdrawalRequestsGas(input)
+      estimatedGas = await this.estimateSendWithdrawalRequestsGas(input)
     } catch (e) {
       throw new Error(`Estimate Gas Error: ${e}`)
     }
@@ -737,7 +731,6 @@ export class FoxyApi {
     })
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
-    const estimatedGas = estimatedGasBN.toString()
     const chainReferenceAsNumber = Number(this.ethereumChainReference)
     const payload = {
       bip44Params,
@@ -768,9 +761,9 @@ export class FoxyApi {
 
     if (!wallet) throw new Error('Missing inputs')
 
-    let estimatedGasBN: BigNumber
+    let estimatedGas: string
     try {
-      estimatedGasBN = await this.estimateAddLiquidityGas(input)
+      estimatedGas = await this.estimateAddLiquidityGas(input)
     } catch (e) {
       throw new Error(`Estimate Gas Error: ${e}`)
     }
@@ -784,7 +777,6 @@ export class FoxyApi {
       })
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
-    const estimatedGas = estimatedGasBN.toString()
     const chainReferenceAsNumber = Number(this.ethereumChainReference)
     const payload = {
       bip44Params,
@@ -814,9 +806,9 @@ export class FoxyApi {
     if (!amountDesired.gt(0)) throw new Error('Must send valid amount')
     if (!wallet) throw new Error('Missing inputs')
 
-    let estimatedGasBN: BigNumber
+    let estimatedGas: string
     try {
-      estimatedGasBN = await this.estimateRemoveLiquidityGas(input)
+      estimatedGas = await this.estimateRemoveLiquidityGas(input)
     } catch (e) {
       throw new Error(`Estimate Gas Error: ${e}`)
     }
@@ -830,7 +822,6 @@ export class FoxyApi {
       })
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
-    const estimatedGas = estimatedGasBN.toString()
     const chainReferenceAsNumber = Number(this.ethereumChainReference)
     const payload = {
       bip44Params,
