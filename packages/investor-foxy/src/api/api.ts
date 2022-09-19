@@ -321,7 +321,10 @@ export class FoxyApi {
 
     try {
       const estimatedGas = isDelayed
-        ? await stakingContract.estimateGas.unstake(this.normalizeAmount(amountDesired), true)
+        ? await stakingContract.estimateGas['unstake(uint256,bool)'](
+            this.normalizeAmount(amountDesired),
+            true,
+          )
         : await stakingContract.estimateGas.instantUnstake(true)
       return estimatedGas.toString()
     } catch (e) {
@@ -354,7 +357,7 @@ export class FoxyApi {
     const stakingContract = this.getStakingContract(contractAddress)
 
     try {
-      const estimatedGas = await stakingContract.estimateGas.stake(
+      const estimatedGas = await stakingContract.estimateGas['stake(uint256)'](
         this.normalizeAmount(amountDesired),
         userAddress,
       )
