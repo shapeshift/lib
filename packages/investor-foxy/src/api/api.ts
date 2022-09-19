@@ -177,8 +177,10 @@ export class FoxyApi {
     return liquidityReserveContract
   }
 
-  private async getGasPriceAndNonce(userAddress: string) {
-    let nonce: number
+  private async getGasPriceAndNonce(
+    userAddress: string,
+  ): Promise<{ nonce: string; gasPrice: string }> {
+    let nonce
     try {
       nonce = await this.provider.getTransactionCount(userAddress)
     } catch (e) {
@@ -190,7 +192,7 @@ export class FoxyApi {
     } catch (e) {
       throw new Error(`Get gasPrice Error: ${e}`)
     }
-    return { nonce: String(nonce), gasPrice }
+    return { nonce: nonce.toString(), gasPrice }
   }
 
   async getFoxyOpportunities() {
@@ -235,9 +237,9 @@ export class FoxyApi {
     }
   }
 
-  async getGasPrice() {
+  async getGasPrice(): Promise<string> {
     const gasPrice = await this.provider.getGasPrice()
-    return gasPrice
+    return gasPrice.toString()
   }
 
   async getTxReceipt({ txid }: TxReceipt): Promise<ethers.providers.TransactionReceipt> {
@@ -418,7 +420,7 @@ export class FoxyApi {
     } catch (e) {
       throw new Error(`Failed to get allowance ${e}`)
     }
-    return allowance
+    return allowance.toString()
   }
 
   async deposit(input: TxInput): Promise<string> {
