@@ -141,6 +141,7 @@ export const buildTrade = async ({
     throw new SwapError('[buildTrade]: error building trade', {
       code: SwapErrorTypes.BUILD_TRADE_FAILED,
       fn: 'buildTrade',
+      cause: e,
     })
   }
 }

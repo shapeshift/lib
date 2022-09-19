@@ -174,6 +174,92 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
     }
   }
 
+  /* MsgDeposit is used for thorchain swap/lp operations */
+  async buildDepositTransaction(
+    tx: BuildSendTxInput<KnownChainIds.ThorchainMainnet>,
+  ): Promise<{ txToSign: ThorchainSignTx }> {
+    try {
+      const {
+        wallet,
+        bip44Params = this.defaultBIP44Params,
+        chainSpecific: { gas, fee },
+        sendMax = false,
+        value,
+        memo,
+      } = tx
+
+      // TODO memo validation
+      if (!memo) throw new Error('ThorchainChainAdapter: value is required')
+      if (!value) throw new Error('ThorchainChainAdapter: value is required')
+
+      const path = toPath(bip44Params)
+      const addressNList = bip32ToAddressNList(path)
+      const from = await this.getAddress({ bip44Params, wallet })
+
+      const account = await this.getAccount(from)
+
+      // 0.02 RUNE is automatically charged on outbound transactions
+      // extraFee is the difference of any additional fee over the default 0.02 RUNE (ie. tx.fee >= 2000001)
+      const feeMinusAutomaticOutboundFee = bnOrZero(fee).minus(OUTBOUND_FEE)
+      const extraFee = feeMinusAutomaticOutboundFee.gt(0)
+        ? feeMinusAutomaticOutboundFee.toString()
+        : '0'
+
+      if (sendMax) {
+        try {
+          const val = bnOrZero(account.balance).minus(fee)
+          if (!val.isFinite() || val.lte(0)) {
+            throw new Error(
+              `ThorchainChainAdapter: transaction value is invalid: ${val.toString()}`,
+            )
+          }
+          tx.value = val.toString()
+        } catch (error) {
+          return ErrorHandler(error)
+        }
+      }
+
+      const utx: ThorchainTx = {
+        fee: {
+          amount: [
+            {
+              amount: extraFee,
+              denom: 'rune',
+            },
+          ],
+          gas,
+        },
+        msg: [
+          {
+            type: 'thorchain/MsgDeposit',
+            value: {
+              coins: [
+                {
+                  asset: 'rune',
+                  amount: bnOrZero(value).toString(),
+                },
+              ],
+              memo,
+              signer: from,
+            },
+          },
+        ],
+        signatures: [],
+      }
+
+      const txToSign: ThorchainSignTx = {
+        addressNList,
+        tx: utx,
+        chain_id: CHAIN_REFERENCE.ThorchainMainnet,
+        account_number: account.chainSpecific.accountNumber,
+        sequence: account.chainSpecific.sequence,
+      }
+      return { txToSign }
+    } catch (err) {
+      return ErrorHandler(err)
+    }
+  }
+
   // @ts-ignore - keep type signature with unimplemented state
   async getFeeData({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

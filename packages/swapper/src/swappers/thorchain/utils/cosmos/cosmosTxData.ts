@@ -1,6 +1,6 @@
 import { Asset } from '@shapeshiftoss/asset-service'
 import { ChainId } from '@shapeshiftoss/caip'
-import { ChainAdapter, cosmos } from '@shapeshiftoss/chain-adapters'
+import { ChainAdapter, cosmos, thorchain } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
@@ -33,13 +33,14 @@ export const cosmosTxData = async (input: {
     wallet,
     sellAdapter,
   } = input
+  const fromThorAsset = sellAsset.chainId == KnownChainIds.ThorchainMainnet
   const { data: inboundAddresses } = await thorService.get<InboundResponse[]>(
     `${deps.midgardUrl}/thorchain/inbound_addresses`,
   )
   const atomInboundAddresses = inboundAddresses.find((inbound) => inbound.chain === 'GAIA')
   const vault = atomInboundAddresses?.address
 
-  if (!vault)
+  if (!vault && !fromThorAsset)
     throw new SwapError('[buildTrade]: no vault for chain', {
       code: SwapErrorTypes.BUILD_TRADE_FAILED,
       fn: 'buildTrade',
@@ -62,6 +63,29 @@ export const cosmosTxData = async (input: {
     destinationAddress,
     limit,
   })
+
+  if (fromThorAsset) {
+    const buildTxResponse = await (
+      sellAdapter as unknown as thorchain.ChainAdapter
+    ).buildDepositTransaction({
+      value: sellAmount,
+      wallet,
+      to: vault || '',
+      memo,
+      chainSpecific: {
+        gas: (quote as TradeQuote<KnownChainIds.CosmosMainnet>).feeData.chainSpecific.estimatedGas,
+        fee: quote.feeData.fee,
+      },
+    })
+    return buildTxResponse.txToSign
+  }
+
+  if (!vault)
+    throw new SwapError('[buildTrade]: no vault for chain', {
+      code: SwapErrorTypes.BUILD_TRADE_FAILED,
+      fn: 'buildTrade',
+      details: { chainId: input.chainId },
+    })
 
   const buildTxResponse = await (
     sellAdapter as unknown as cosmos.ChainAdapter

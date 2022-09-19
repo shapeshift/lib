@@ -4,6 +4,7 @@ import {
   bitcoin,
   ChainAdapter,
   ChainAdapterManager,
+  cosmos,
   CosmosSdkChainId,
   ethereum,
   thorchain,
@@ -27,10 +28,14 @@ const {
   UNCHAINED_ETH_WS_API = 'wss://localhost:31300',
   UNCHAINED_BTC_HTTPS_API = 'http://localhost:31300',
   UNCHAINED_BTC_WS_API = 'wss://localhost:31300',
+  UNCHAINED_LTC_HTTPS_API = 'http://localhost:31300',
+  UNCHAINED_LTC_WS_API = 'wss://localhost:31300',
   UNCHAINED_RUNE_HTTPS_API = 'http://localhost:31300',
   UNCHAINED_RUNE_WS_API = 'wss://localhost:31300',
+  UNCHAINED_ATOM_HTTPS_API = 'http://localhost:31300',
+  UNCHAINED_ATOM_WS_API = 'wss://localhost:31300',
   ETH_NODE_URL = 'http://localhost:3000',
-  MIDGARD_URL = 'https://midgard.ninerealms.com/v2',
+  MIDGARD_URL = 'https://midgard.ninerealms.com/v2', // 'https://indexer.thorchain.shapeshift.com',
   DEVICE_ID = 'device123',
   MNEMONIC = 'all all all all all all all all all all all all',
 } = process.env
@@ -116,6 +121,19 @@ const main = async (): Promise<void> => {
   }
   const bitcoinChainAdapter = new bitcoin.ChainAdapter(btcAdapterArgs)
 
+  const ltcAdapterArgs = {
+    coinName: 'litecoin',
+    providers: {
+      ws: new unchained.ws.Client<unchained.bitcoin.Tx>(UNCHAINED_LTC_WS_API),
+      http: new unchained.bitcoin.V1Api(
+        new unchained.bitcoin.Configuration({
+          basePath: UNCHAINED_LTC_HTTPS_API,
+        }),
+      ),
+    },
+  }
+  const litecoinChainAdapter = new bitcoin.ChainAdapter(ltcAdapterArgs)
+
   const runeAdapterArgs = {
     coinName: 'rune',
     providers: {
@@ -127,8 +145,21 @@ const main = async (): Promise<void> => {
       ),
     },
   }
-
   const thorchainChainAdapter = new thorchain.ChainAdapter(runeAdapterArgs)
+
+  const cosmosAdapterArgs = {
+    coinName: 'atom',
+    providers: {
+      ws: new unchained.ws.Client<unchained.thorchain.Tx>(UNCHAINED_ATOM_WS_API),
+      http: new unchained.thorchain.V1Api(
+        new unchained.thorchain.Configuration({
+          basePath: UNCHAINED_ATOM_HTTPS_API,
+        }),
+      ),
+    },
+  }
+  const cosmosChainAdapter = new cosmos.ChainAdapter(cosmosAdapterArgs)
+
   const web3Provider = new Web3.providers.HttpProvider(ETH_NODE_URL)
   const web3 = new Web3(web3Provider)
   const zrxSwapperDeps = { wallet, adapter: ethChainAdapter, web3 }
@@ -148,6 +179,14 @@ const main = async (): Promise<void> => {
   adapterManager.set(
     KnownChainIds.ThorchainMainnet,
     thorchainChainAdapter as unknown as ChainAdapter<ChainId>,
+  )
+  adapterManager.set(
+    KnownChainIds.LitecoinMainnet,
+    litecoinChainAdapter as unknown as ChainAdapter<ChainId>,
+  )
+  adapterManager.set(
+    KnownChainIds.CosmosMainnet,
+    cosmosChainAdapter as unknown as ChainAdapter<ChainId>,
   )
 
   const tcDeps: ThorchainSwapperDeps = { midgardUrl: MIDGARD_URL, web3, adapterManager }
@@ -179,7 +218,7 @@ const main = async (): Promise<void> => {
       sellAmount: sellAmountBase,
       sellAssetAccountNumber: 0,
       sendMax: false,
-      receiveAddress: 'bc1qppxrlqa7gktl3zn78fecp80fat70et5r723gt0',
+      receiveAddress: 'MAED8eG4utBqhkyNjvoDZB7PoAv7XHroCA',
     })
   } catch (e) {
     console.error(e)
@@ -201,15 +240,16 @@ const main = async (): Promise<void> => {
   )
   if (answer === 'y') {
     const trade = await swapper.buildTrade({
-      chainId: KnownChainIds.EthereumMainnet,
+      chainId: sellAsset.chainId as CosmosSdkChainId,
       wallet,
       buyAsset,
       sendMax: false,
       sellAmount: sellAmountBase,
       sellAsset,
       sellAssetAccountNumber: 0,
-      receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
+      receiveAddress: 'MAED8eG4utBqhkyNjvoDZB7PoAv7XHroCA',
     })
+    console.info('trade: ', JSON.stringify(trade))
     const txid = await swapper.executeTrade({ trade, wallet })
     console.info('broadcast tx with id: ', txid)
   }
