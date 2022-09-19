@@ -121,6 +121,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             tradeFee,
           })
 
+          console.info(`pubkey: ${pubkey}, vault: ${vault}, opReturnData: ${opReturnData}`)
           const feeData = await getBtcTxFees({
             sellAmount,
             vault,
@@ -129,7 +130,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             sellAdapter: sellAdapter as unknown as UtxoBaseAdapter<UtxoSupportedChainIds>,
             tradeFee,
           })
-
+          console.info('feeData: ', feeData)
           return {
             ...commonQuoteFields,
             allowanceContract: '0x0', // not applicable to bitcoin

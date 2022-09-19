@@ -5,12 +5,13 @@ import {
   ChainAdapter,
   ChainAdapterManager,
   cosmos,
-  CosmosSdkChainId,
   ethereum,
   thorchain,
+  UtxoBaseAdapter,
+  UtxoChainId,
 } from '@shapeshiftoss/chain-adapters'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import BigNumber from 'bignumber.js'
 import dotenv from 'dotenv'
@@ -207,18 +208,38 @@ const main = async (): Promise<void> => {
     return
   }
 
-  const sellAmountBase = toBaseUnit(sellAmount, sellAsset.precision)
+  const adapter = adapterManager.get(sellAsset.chainId)
+  if (!adapter) {
+    throw new Error(`no adapter for ${sellAsset.chainId}`)
+  }
 
+  const utxoAccountType = UtxoAccountType.SegwitP2sh
+  const bip44Params = adapter?.getBIP44Params({
+    accountNumber: 0,
+    accountType: utxoAccountType,
+  })
+  if (!bip44Params) {
+    throw new Error('falsy bip44Params')
+  }
+
+  const sellAmountBase = toBaseUnit(sellAmount, sellAsset.precision)
+  const publicKey = await (
+    adapter as unknown as UtxoBaseAdapter<KnownChainIds.LitecoinMainnet>
+  ).getPublicKey(wallet, bip44Params, utxoAccountType)
+  console.info('got publicKey: ', JSON.stringify(publicKey))
   let quote
   try {
     quote = await swapper.getTradeQuote({
-      chainId: sellAsset.chainId as CosmosSdkChainId, // wtf?
+      chainId: sellAsset.chainId as UtxoChainId, // wtf?
       sellAsset,
       buyAsset,
       sellAmount: sellAmountBase,
       sellAssetAccountNumber: 0,
       sendMax: false,
-      receiveAddress: 'MAED8eG4utBqhkyNjvoDZB7PoAv7XHroCA',
+      accountType: utxoAccountType,
+      bip44Params,
+      xpub: publicKey.xpub,
+      receiveAddress: 'thor1gz5krpemm0ce4kj8jafjvjv04hmhle576x8gms',
     })
   } catch (e) {
     console.error(e)
@@ -239,18 +260,31 @@ const main = async (): Promise<void> => {
     } on ${swapper.getType()}? (y/n): `,
   )
   if (answer === 'y') {
+    // const xpub = wallet.getPublicKeys([
+    //   {
+    //     addressNList: bip32ToAddressNList(path),
+    //     coin: sellAsset.name.toLowerCase(),
+    //     curve: 'secp256k1',
+    //   },
+    // ])
+
+    console.info('using publicKey: ', JSON.stringify(publicKey))
     const trade = await swapper.buildTrade({
-      chainId: sellAsset.chainId as CosmosSdkChainId,
+      chainId: sellAsset.chainId as UtxoChainId,
       wallet,
       buyAsset,
       sendMax: false,
       sellAmount: sellAmountBase,
       sellAsset,
       sellAssetAccountNumber: 0,
-      receiveAddress: 'MAED8eG4utBqhkyNjvoDZB7PoAv7XHroCA',
+      receiveAddress: 'thor1gz5krpemm0ce4kj8jafjvjv04hmhle576x8gms',
+      accountType: utxoAccountType,
+      bip44Params,
+      xpub: publicKey.xpub,
     })
     console.info('trade: ', JSON.stringify(trade))
     const txid = await swapper.executeTrade({ trade, wallet })
+    // const txid = 'notsent'
     console.info('broadcast tx with id: ', txid)
   }
 }
