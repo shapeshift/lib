@@ -951,9 +951,11 @@ export class FoxyApi {
     this.verifyAddresses([userAddress, contractAddress])
     const stakingContract = this.getStakingContract(contractAddress)
 
-    let coolDownInfo
+    let coolDownInfo: [amount: string, gons: string, expiry: string]
     try {
-      coolDownInfo = await stakingContract.coolDownInfo(userAddress)
+      coolDownInfo = (await stakingContract.coolDownInfo(userAddress)).map(
+        (info: ethers.BigNumber) => info.toString(),
+      )
     } catch (e) {
       throw new Error(`Failed to get coolDowninfo: ${e}`)
     }
@@ -963,8 +965,12 @@ export class FoxyApi {
     } catch (e) {
       throw new Error(`Failed to getTimeUntilClaimable: ${e}`)
     }
+
+    const [amount, gons, expiry] = coolDownInfo
     return {
-      ...coolDownInfo,
+      amount,
+      gons,
+      expiry,
       releaseTime,
     }
   }
