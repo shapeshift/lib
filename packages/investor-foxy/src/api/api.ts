@@ -382,11 +382,10 @@ export class FoxyApi {
       throw new Error(`Estimate Gas Error: ${e}`)
     }
     const depositTokenContract = new ethers.Contract(tokenContractAddress, erc20Abi, this.provider)
-    const data: string = depositTokenContract
-      .approve(contractAddress, amount ? numberToHex(bnOrZero(amount).toString()) : MAX_ALLOWANCE)
-      .encodeABI({
-        from: userAddress,
-      })
+    const data: string = depositTokenContract.interface.encodeFunctionData('approve', [
+      contractAddress,
+      amount ? numberToHex(bnOrZero(amount).toString()) : MAX_ALLOWANCE,
+    ])
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const chainReferenceAsNumber = Number(this.ethereumChainReference)
