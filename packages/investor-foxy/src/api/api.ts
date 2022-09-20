@@ -455,21 +455,12 @@ export class FoxyApi {
     }
 
     const stakingContract = this.getStakingContract(contractAddress)
-    const userChecksum = ethers.utils.getAddress(userAddress)
+    // const userChecksum = ethers.utils.getAddress(userAddress)
 
-    const data: string =
-      (
-        await stakingContract.populateTransaction['stake(uint256,address)'](
-          this.normalizeAmount(amountDesired),
-          userAddress,
-          { from: userChecksum, value: 0 },
-        )
-      ).data ?? ''
-
-    // {
-    // value: 0,
-    // from: userChecksum,
-    // })
+    const data = stakingContract.interface.encodeFunctionData('stake(uint256,address)', [
+      this.normalizeAmount(amountDesired),
+      userAddress,
+    ])
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
     const chainReferenceAsNumber = Number(this.ethereumChainReference)
