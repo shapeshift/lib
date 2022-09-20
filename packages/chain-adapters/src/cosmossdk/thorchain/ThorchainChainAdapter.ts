@@ -192,8 +192,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
       if (!memo) throw new Error('ThorchainChainAdapter: value is required')
       if (!value) throw new Error('ThorchainChainAdapter: value is required')
 
-      const path = toPath(bip44Params)
-      const addressNList = bip32ToAddressNList(path)
+      const addressNList = toAddressNList(bip44Params)
       const from = await this.getAddress({ bip44Params, wallet })
 
       const account = await this.getAccount(from)
