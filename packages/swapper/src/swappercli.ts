@@ -106,7 +106,6 @@ const main = async (): Promise<void> => {
   const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
   swapManager.addSwapper(zrxSwapper)
 
-  console.info(`connecting to midgard at ${MIDGARD_URL}`)
   const tcDeps: ThorchainSwapperDeps = { midgardUrl: MIDGARD_URL, web3, adapterManager }
   const tc = new ThorchainSwapper(tcDeps)
   await tc.initialize()
@@ -117,9 +116,7 @@ const main = async (): Promise<void> => {
     buyAssetId: buyAsset.assetId,
   })
 
-  console.info(
-    `bestSwapper for ${sellAsset.assetId} to ${buyAsset.assetId} is ${swapper?.getType()}`,
-  )
+  console.info(`using swapper ${swapper?.getType()}`)
   if (!swapper) {
     console.warn(`no swapper found for specified assets`)
     return
@@ -165,7 +162,7 @@ const main = async (): Promise<void> => {
     accountType: utxoAccountType,
     bip44Params,
   })
-  console.info(`${buyAsset.symbol} using receive addr ${buyAssetReceiveAddr}`)
+  console.info(`${buyAsset.name} using receive addr ${buyAssetReceiveAddr}`)
   let quote
   try {
     quote = await swapper.getTradeQuote({
@@ -182,14 +179,13 @@ const main = async (): Promise<void> => {
     })
   } catch (e) {
     console.error(e)
+    return
   }
 
   if (!quote) {
     console.warn('no quote returned')
     return
   }
-
-  console.info('quote = ', JSON.stringify(quote))
 
   const buyAmount = fromBaseUnit(quote.buyAmount || '0', buyAsset.precision)
 
@@ -199,7 +195,6 @@ const main = async (): Promise<void> => {
     } on ${swapper.getType()}? (y/n): `,
   )
   if (answer === 'y') {
-    console.info('using publicKey: ', JSON.stringify(publicKey))
     const trade = await swapper.buildTrade({
       chainId: sellAsset.chainId as UtxoChainId,
       wallet,
@@ -213,10 +208,9 @@ const main = async (): Promise<void> => {
       bip44Params,
       xpub: publicKey?.xpub || '',
     })
-    console.info('trade: ', JSON.stringify(trade))
-    const txid = await swapper.executeTrade({ trade, wallet })
-    // const txid = 'notsent'
-    console.info('broadcast tx with id: ', txid)
+
+    const tradeResult = await swapper.executeTrade({ trade, wallet })
+    console.info('broadcast tx with id: ', tradeResult.tradeId)
   }
 }
 
