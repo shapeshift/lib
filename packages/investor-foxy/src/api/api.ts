@@ -255,7 +255,9 @@ export class FoxyApi {
     const stakingContract = this.getStakingContract(contractAddress)
 
     try {
-      const estimatedGas = await stakingContract.estimateGas.claimWithdraw(addressToClaim)
+      const estimatedGas = await stakingContract.estimateGas.claimWithdraw(addressToClaim, {
+        from: userAddress,
+      })
       return estimatedGas.toString()
     } catch (e) {
       throw new Error(`Failed to get gas ${e}`)
@@ -269,7 +271,9 @@ export class FoxyApi {
     const stakingContract = this.getStakingContract(contractAddress)
 
     try {
-      const estimatedGas = await stakingContract.estimateGas.sendWithdrawalRequests()
+      const estimatedGas = await stakingContract.estimateGas.sendWithdrawalRequests([], {
+        from: userAddress,
+      })
       return estimatedGas.toString()
     } catch (e) {
       throw new Error(`Failed to get gas ${e}`)
@@ -286,6 +290,7 @@ export class FoxyApi {
     try {
       const estimatedGas = await liquidityReserveContract.estimateGas.addLiquidity(
         this.normalizeAmount(amountDesired),
+        { from: userAddress },
       )
       return estimatedGas.toString()
     } catch (e) {
@@ -303,6 +308,7 @@ export class FoxyApi {
     try {
       const estimatedGas = await liquidityReserveContract.estimateGas.removeLiquidity(
         this.normalizeAmount(amountDesired),
+        { from: userAddress },
       )
       return estimatedGas.toString()
     } catch (e) {
@@ -324,8 +330,9 @@ export class FoxyApi {
         ? await stakingContract.estimateGas['unstake(uint256,bool)'](
             this.normalizeAmount(amountDesired),
             true,
+            { from: userAddress },
           )
-        : await stakingContract.estimateGas.instantUnstake(true)
+        : await stakingContract.estimateGas.instantUnstake(true, { from: userAddress })
       return estimatedGas.toString()
     } catch (e) {
       throw new Error(`Failed to get gas ${e}`)
@@ -342,6 +349,7 @@ export class FoxyApi {
       const estimatedGas = await depositTokenContract.estimateGas.approve(
         contractAddress,
         MAX_ALLOWANCE,
+        { from: userAddress },
       )
       return estimatedGas.toString()
     } catch (e) {
@@ -447,12 +455,16 @@ export class FoxyApi {
     }
 
     const stakingContract = this.getStakingContract(contractAddress)
-    // const userChecksum = ethers.utils.getAddress(userAddress)
+    const userChecksum = ethers.utils.getAddress(userAddress)
 
-    const data: string = stakingContract.interface.encodeFunctionData('stake', [
-      this.normalizeAmount(amountDesired),
-      userAddress,
-    ])
+    const data: string =
+      (
+        await stakingContract.populateTransaction['stake(uint256,address)'](
+          this.normalizeAmount(amountDesired),
+          userAddress,
+          { from: userChecksum, value: 0 },
+        )
+      ).data ?? ''
 
     // {
     // value: 0,
@@ -502,7 +514,7 @@ export class FoxyApi {
     const stakingContractCallInput: Parameters<
       typeof stakingContract.interface.encodeFunctionData
     > = isDelayed
-      ? ['unstake', [this.normalizeAmount(amountDesired), true]]
+      ? ['unstake(uint256,bool)', [this.normalizeAmount(amountDesired), true]]
       : ['instantUnstake', ['true']]
     const data: string = stakingContract.interface.encodeFunctionData(...stakingContractCallInput)
 
