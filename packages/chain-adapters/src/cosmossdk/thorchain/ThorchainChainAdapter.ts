@@ -14,6 +14,7 @@ import {
 import { toAddressNList } from '../../utils'
 import { bnOrZero } from '../../utils/bignumber'
 import { ChainAdapterArgs, CosmosSdkBaseAdapter } from '../CosmosSdkBaseAdapter'
+import { BuildDepositTxInput } from './types'
 
 // static automatic outbound fee as defined by: https://daemon.thorchain.shapeshift.com/thorchain/constants
 const OUTBOUND_FEE = '2000000'
@@ -175,14 +176,13 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
   }
 
   /* MsgDeposit is used for thorchain swap/lp operations */
-  async buildDepositTransaction(
-    tx: BuildSendTxInput<KnownChainIds.ThorchainMainnet>,
-  ): Promise<{ txToSign: ThorchainSignTx }> {
+  async buildDepositTransaction(tx: BuildDepositTxInput): Promise<{ txToSign: ThorchainSignTx }> {
     try {
       const {
         wallet,
         bip44Params = this.defaultBIP44Params,
-        chainSpecific: { gas, fee },
+        gas,
+        fee,
         sendMax = false,
         value,
         memo,

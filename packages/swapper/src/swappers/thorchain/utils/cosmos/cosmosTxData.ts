@@ -70,12 +70,9 @@ export const cosmosTxData = async (input: {
     ).buildDepositTransaction({
       value: sellAmount,
       wallet,
-      to: vault || '',
       memo,
-      chainSpecific: {
-        gas: (quote as TradeQuote<KnownChainIds.CosmosMainnet>).feeData.chainSpecific.estimatedGas,
-        fee: quote.feeData.fee,
-      },
+      gas: (quote as TradeQuote<KnownChainIds.CosmosMainnet>).feeData.chainSpecific.estimatedGas,
+      fee: quote.feeData.fee,
     })
     return buildTxResponse.txToSign
   }
