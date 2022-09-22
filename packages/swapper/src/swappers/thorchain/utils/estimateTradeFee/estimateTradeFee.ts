@@ -5,6 +5,7 @@ import { SwapError, SwapErrorTypes } from '../../../../api'
 import { InboundResponse, ThorchainSwapperDeps } from '../../types'
 import { THOR_TRADE_FEE_MULTIPLIERS } from '../constants'
 import { getPriceRatio } from '../getPriceRatio/getPriceRatio'
+import { isRune } from '../isRune/isRune'
 import { thorService } from '../thorService'
 
 // TODO rename this estimateOutboundFee or similar
@@ -12,7 +13,7 @@ export const estimateTradeFee = async (
   deps: ThorchainSwapperDeps,
   buyAsset: Asset,
 ): Promise<string> => {
-  if (buyAsset.assetId == thorchainAssetId) {
+  if (isRune(buyAsset.assetId)) {
     return '0.02' // todo - read from TC mimir/constants
   }
   const thorId = adapters.assetIdToPoolAssetId({ assetId: buyAsset.assetId })
