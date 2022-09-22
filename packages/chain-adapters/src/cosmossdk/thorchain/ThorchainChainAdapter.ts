@@ -54,7 +54,11 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
   }
 
   async getAddress(input: GetAddressInput): Promise<string> {
-    const { wallet, bip44Params = this.defaultBIP44Params, showOnDevice = false } = input
+    const { wallet, bip44Params, showOnDevice = false } = input
+
+    if (!bip44Params) {
+      throw new Error('bip44Params required in input')
+    }
 
     try {
       if (supportsThorchain(wallet)) {
@@ -98,12 +102,16 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
       const {
         to,
         wallet,
-        bip44Params = this.defaultBIP44Params,
+        bip44Params,
         chainSpecific: { gas, fee },
         sendMax = false,
         value,
         memo = '',
       } = tx
+
+      if (!bip44Params) {
+        throw new Error('bip44Params required in input')
+      }
 
       if (!to) throw new Error('ThorchainChainAdapter: to is required')
       if (!value) throw new Error('ThorchainChainAdapter: value is required')

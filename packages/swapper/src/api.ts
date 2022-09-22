@@ -64,6 +64,7 @@ export type SupportedSellAssetsInput = {
 }
 
 type CommonTradeInput = {
+  bip44Params?: BIP44Params
   sellAsset: Asset
   buyAsset: Asset
   sellAmount: string
