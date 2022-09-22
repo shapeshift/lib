@@ -54,7 +54,14 @@ const main = async (): Promise<void> => {
     foxyAddresses,
   })
 
-  const userAddress = await api.adapter.getAddress({ wallet })
+  const userAddress = await api.adapter.getAddress({
+    wallet,
+    bip44Params: {
+      accountNumber: 0,
+      coinType: 60,
+      purpose: 44,
+    },
+  })
   console.info('current user address ', userAddress)
 
   const circulatingSupply = async () => {

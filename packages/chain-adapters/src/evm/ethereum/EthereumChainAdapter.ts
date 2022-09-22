@@ -63,7 +63,7 @@ export class ChainAdapter extends EvmBaseAdapter<KnownChainIds.EthereumMainnet> 
     txToSign: ETHSignTx
   }> {
     try {
-      const { wallet, bip44Params = ChainAdapter.defaultBIP44Params } = tx
+      const { wallet, bip44Params } = tx
 
       const from = await this.getAddress({ bip44Params, wallet })
       const account = await this.getAccount(from)

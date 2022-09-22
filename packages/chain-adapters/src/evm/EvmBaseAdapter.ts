@@ -118,7 +118,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
     txToSign: ChainTxType<T>
   }> {
     try {
-      const { to, wallet, bip44Params = this.defaultBIP44Params, sendMax = false } = tx
+      const { to, wallet, bip44Params, sendMax = false } = tx
       // If there is a mismatch between the current wallet's EVM chain ID and the adapter's chainId?
       // Switch the chain on wallet before building/sending the Tx
       if (supportsEthSwitchChain(wallet)) {
@@ -300,7 +300,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
   }
 
   async getAddress(input: GetAddressInput): Promise<string> {
-    const { wallet, bip44Params = this.defaultBIP44Params, showOnDevice = false } = input
+    const { wallet, bip44Params, showOnDevice = false } = input
     const address = await (wallet as ETHWallet).ethGetAddress({
       addressNList: toAddressNList(bip44Params),
       showDisplay: showOnDevice,
@@ -323,7 +323,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
     onMessage: (msg: Transaction) => void,
     onError: (err: SubscribeError) => void,
   ): Promise<void> {
-    const { wallet, bip44Params = this.defaultBIP44Params } = input
+    const { wallet, bip44Params } = input
 
     const address = await this.getAddress({ wallet, bip44Params })
     const subscriptionId = toRootDerivationPath(bip44Params)

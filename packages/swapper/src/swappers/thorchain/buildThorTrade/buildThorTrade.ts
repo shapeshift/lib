@@ -119,6 +119,7 @@ export const buildTrade = async ({
         chainId: input.chainId,
         buyAsset,
         wallet,
+        bip44Params: (input as GetUtxoTradeQuoteInput).bip44Params,
         destinationAddress,
         quote: quote as TradeQuote<KnownChainIds.CosmosMainnet>,
       })

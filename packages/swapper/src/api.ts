@@ -66,6 +66,7 @@ export type SupportedSellAssetsInput = {
 type CommonTradeInput = {
   sellAsset: Asset
   buyAsset: Asset
+  bip44Params: BIP44Params
   sellAmount: string
   sendMax: boolean
   sellAssetAccountNumber: number
@@ -155,6 +156,7 @@ export type ApproveAmountInput<C extends ChainId> = ApproveInput<C> & {
 export type ApprovalNeededInput<C extends ChainId> = {
   quote: TradeQuote<C>
   wallet: HDWallet
+  bip44Params: BIP44Params
 }
 
 export type SwapSource = {

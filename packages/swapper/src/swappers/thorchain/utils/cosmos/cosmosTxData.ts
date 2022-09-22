@@ -2,7 +2,7 @@ import { Asset } from '@shapeshiftoss/asset-service'
 import { ChainId } from '@shapeshiftoss/caip'
 import { ChainAdapter, cosmos } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 
 import { SwapError, SwapErrorTypes, TradeQuote } from '../../../../api'
 import { InboundResponse, ThorchainSwapperDeps } from '../../types'
@@ -18,6 +18,7 @@ export const cosmosTxData = async (input: {
   buyAsset: Asset
   slippageTolerance: string
   wallet: HDWallet
+  bip44Params: BIP44Params
   quote: TradeQuote<KnownChainIds.CosmosMainnet>
   chainId: ChainId
   sellAdapter: ChainAdapter<KnownChainIds.CosmosMainnet>
@@ -31,6 +32,7 @@ export const cosmosTxData = async (input: {
     slippageTolerance,
     quote,
     wallet,
+    bip44Params,
     sellAdapter,
   } = input
   const { data: inboundAddresses } = await thorService.get<InboundResponse[]>(
@@ -68,6 +70,7 @@ export const cosmosTxData = async (input: {
   ).buildSendTransaction({
     value: sellAmount,
     wallet,
+    bip44Params,
     to: vault,
     memo,
     chainSpecific: {

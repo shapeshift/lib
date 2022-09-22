@@ -107,6 +107,11 @@ const main = async (): Promise<void> => {
   let quote
   try {
     quote = await swapper.getTradeQuote({
+      bip44Params: {
+        accountNumber: 0,
+        coinType: 60,
+        purpose: 44,
+      },
       chainId: KnownChainIds.EthereumMainnet,
       sellAsset,
       buyAsset,
@@ -134,6 +139,11 @@ const main = async (): Promise<void> => {
   )
   if (answer === 'y') {
     const trade = await swapper.buildTrade({
+      bip44Params: {
+        accountNumber: 0,
+        coinType: 60,
+        purpose: 44,
+      },
       chainId: KnownChainIds.EthereumMainnet,
       wallet,
       buyAsset,

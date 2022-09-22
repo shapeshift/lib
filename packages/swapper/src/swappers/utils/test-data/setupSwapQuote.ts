@@ -23,6 +23,11 @@ export const setupQuote = () => {
   }
 
   const quoteInput: GetTradeQuoteInput = {
+    bip44Params: {
+      accountNumber: 0,
+      coinType: 60,
+      purpose: 44,
+    },
     chainId: KnownChainIds.EthereumMainnet,
     sellAmount: '1000000000000000000',
     sellAsset,
@@ -38,6 +43,11 @@ export const setupBuildTrade = () => {
   const sellAsset: Asset = { ...FOX }
   const buyAsset: Asset = { ...WETH }
   const buildTradeInput: BuildTradeInput = {
+    bip44Params: {
+      accountNumber: 0,
+      coinType: 60,
+      purpose: 44,
+    },
     chainId: KnownChainIds.EthereumMainnet,
     sellAmount: '1000000000000000000',
     buyAsset,

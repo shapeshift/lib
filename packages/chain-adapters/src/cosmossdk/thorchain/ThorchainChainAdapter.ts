@@ -53,7 +53,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
   }
 
   async getAddress(input: GetAddressInput): Promise<string> {
-    const { wallet, bip44Params = this.defaultBIP44Params, showOnDevice = false } = input
+    const { wallet, bip44Params, showOnDevice = false } = input
 
     try {
       if (supportsThorchain(wallet)) {

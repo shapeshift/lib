@@ -10,7 +10,7 @@ import { COW_SWAP_VAULT_RELAYER_ADDRESS } from '../utils/constants'
 
 export async function cowApprovalNeeded(
   { adapter, web3 }: CowSwapperDeps,
-  { quote, wallet }: ApprovalNeededInput<KnownChainIds.EthereumMainnet>,
+  { quote, wallet, bip44Params }: ApprovalNeededInput<KnownChainIds.EthereumMainnet>,
 ): Promise<ApprovalNeededOutput> {
   const { sellAsset } = quote
 
@@ -24,7 +24,7 @@ export async function cowApprovalNeeded(
       })
     }
 
-    const receiveAddress = await adapter.getAddress({ wallet })
+    const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 
     const allowanceResult = await getERC20Allowance({
       web3,
