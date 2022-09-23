@@ -1,5 +1,5 @@
 import { ethAssetId, fromAssetId } from '@shapeshiftoss/caip'
-import { ethereum, SignMessageInput, toPath } from '@shapeshiftoss/chain-adapters'
+import { SignMessageInput, toPath } from '@shapeshiftoss/chain-adapters'
 import { bip32ToAddressNList, ETHSignMessage } from '@shapeshiftoss/hdwallet-core'
 import { KnownChainIds } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
@@ -28,6 +28,10 @@ export async function cowExecuteTrade(
   { apiUrl, adapter }: CowSwapperDeps,
   { trade, wallet }: ExecuteTradeInput<KnownChainIds.EthereumMainnet>,
 ): Promise<TradeResult> {
+  if (!trade.bip44Params) {
+    throw new Error('bip44Params require for trade')
+  }
+
   const cowTrade = trade as CowTrade<KnownChainIds.EthereumMainnet>
   const { sellAsset, buyAsset, feeAmountInSellToken, sellAmountWithoutFee } = cowTrade
 
@@ -76,10 +80,9 @@ export async function cowExecuteTrade(
     // For more info, check hashOrder method implementation
     const orderDigest = hashOrder(domain(1, COW_SWAP_SETTLEMENT_ADDRESS), orderToSign)
 
-    const bip44Params = ethereum.ChainAdapter.defaultBIP44Params
     const message: SignMessageInput<ETHSignMessage> = {
       messageToSign: {
-        addressNList: bip32ToAddressNList(toPath(bip44Params)),
+        addressNList: bip32ToAddressNList(toPath(trade.bip44Params)),
         message: ethers.utils.arrayify(orderDigest),
       },
       wallet,

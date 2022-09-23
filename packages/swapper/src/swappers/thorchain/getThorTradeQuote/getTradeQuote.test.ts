@@ -44,7 +44,7 @@ const quoteResponse: TradeQuote<KnownChainIds.EthereumMainnet> = {
   sources: [{ name: 'thorchain', proportion: '1' }],
   buyAsset: ETH,
   sellAsset: FOX,
-  sellAssetAccountNumber: 0,
+  sellAssetBip44Params: 0,
 }
 
 describe('getTradeQuote', () => {

@@ -87,11 +87,6 @@ export type SubscribeTxsInput = {
   accountType?: UtxoAccountType
 }
 
-export type GetBIP44ParamsInput = {
-  accountNumber: number
-  accountType?: UtxoAccountType
-}
-
 export type TransferType = unchained.TransferType
 export type TradeType = unchained.TradeType
 
@@ -263,3 +258,5 @@ export type ZrxFeeResult = {
 export type ZrxGasApiResponse = {
   result: ZrxFeeResult[]
 }
+
+export type Identity<T> = (args: T) => T

@@ -254,7 +254,13 @@ export const performIbcTransfer = async (
   const signed = await adapter.signTransaction({
     txToSign: {
       tx,
-      addressNList: toAddressNList(adapter.buildBIP44Params({ accountNumber: 0 })), // TODO: dynamic account numbers
+      addressNList: toAddressNList(
+        adapter.buildBIP44Params({
+          accountNumber: Number(accountNumber),
+          purpose: 44,
+          coinType: 118,
+        }),
+      ),
       chain_id: CHAIN_REFERENCE.OsmosisMainnet,
       account_number: accountNumber,
       sequence,
@@ -288,7 +294,7 @@ export const buildTradeTx = async ({
 }) => {
   const responseAccount = await adapter.getAccount(osmoAddress)
 
-  const accountNumber = responseAccount.chainSpecific.accountNumber || '0'
+  const accountNumber = responseAccount.chainSpecific.accountNumber
   const sequence = responseAccount.chainSpecific.sequence || '0'
 
   const tx: Osmosis.StdTx = {
@@ -327,7 +333,13 @@ export const buildTradeTx = async ({
   return {
     txToSign: {
       tx,
-      addressNList: toAddressNList(adapter.buildBIP44Params({ accountNumber: 0 })), // TODO: dynamic account numbers
+      addressNList: toAddressNList(
+        adapter.buildBIP44Params({
+          accountNumber: Number(accountNumber),
+          purpose: 44,
+          coinType: 118,
+        }),
+      ),
       chain_id: CHAIN_REFERENCE.OsmosisMainnet,
       account_number: accountNumber,
       sequence,

@@ -116,7 +116,12 @@ const main = async (): Promise<void> => {
       sellAsset,
       buyAsset,
       sellAmount: sellAmountBase,
-      sellAssetAccountNumber: 0,
+      sellAssetBip44Params: {
+        // TODO: actual sellAsset coinType/purpose
+        accountNumber: 0,
+        coinType: 60,
+        purpose: 44,
+      },
       sendMax: false,
       receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
     })
@@ -150,7 +155,12 @@ const main = async (): Promise<void> => {
       sendMax: false,
       sellAmount: sellAmountBase,
       sellAsset,
-      sellAssetAccountNumber: 0,
+      sellAssetBip44Params: {
+        // TODO: actual sellAsset coinType/purpose
+        accountNumber: 0,
+        coinType: 60,
+        purpose: 44,
+      },
       receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
     })
     const txid = await swapper.executeTrade({ trade, wallet })

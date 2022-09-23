@@ -69,7 +69,7 @@ type CommonTradeInput = {
   bip44Params: BIP44Params
   sellAmount: string
   sendMax: boolean
-  sellAssetAccountNumber: number
+  sellAssetBip44Params: BIP44Params
   receiveAddress: string
 }
 
@@ -113,6 +113,7 @@ export type BuildTradeInput = GetTradeQuoteInput & {
 }
 
 interface TradeBase<C extends ChainId> {
+  bip44Params?: BIP44Params
   buyAmount: string
   sellAmount: string
   feeData: QuoteFeeData<C>
@@ -120,7 +121,7 @@ interface TradeBase<C extends ChainId> {
   sources: SwapSource[]
   buyAsset: Asset
   sellAsset: Asset
-  sellAssetAccountNumber: number
+  sellAssetBip44Params: BIP44Params
 }
 
 export interface TradeQuote<C extends ChainId> extends TradeBase<C> {

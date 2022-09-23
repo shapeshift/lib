@@ -18,7 +18,6 @@ import {
   ChainTxType,
   FeeDataEstimate,
   GetAddressInput,
-  GetBIP44ParamsInput,
   GetFeeDataInput,
   SignMessageInput,
   SignTxInput,
@@ -60,14 +59,12 @@ export interface ChainAdapterArgs {
 }
 
 export interface EvmBaseAdapterArgs extends ChainAdapterArgs {
-  defaultBIP44Params: BIP44Params
   supportedChainIds: ChainId[]
   chainId: EvmChainId
 }
 
 export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdapter<T> {
   protected readonly chainId: EvmChainId
-  protected readonly defaultBIP44Params: BIP44Params
   protected readonly supportedChainIds: ChainId[]
   protected readonly providers: {
     http: unchained.ethereum.V1Api | unchained.avalanche.V1Api
@@ -80,7 +77,6 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
 
   protected constructor(args: EvmBaseAdapterArgs) {
     this.chainId = args.chainId
-    this.defaultBIP44Params = args.defaultBIP44Params
     this.supportedChainIds = args.supportedChainIds
     this.providers = args.providers
     this.rpcUrl = args.rpcUrl
@@ -103,15 +99,15 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
     return this.rpcUrl
   }
 
-  buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
-    return { ...this.defaultBIP44Params, ...params }
+  buildBIP44Params(params: BIP44Params): BIP44Params {
+    return params
   }
 
-  getBIP44Params({ accountNumber }: GetBIP44ParamsInput): BIP44Params {
-    if (accountNumber < 0) {
+  getBIP44Params(params: BIP44Params): BIP44Params {
+    if (params.accountNumber < 0) {
       throw new Error('accountNumber must be >= 0')
     }
-    return { ...this.defaultBIP44Params, accountNumber }
+    return params
   }
 
   async buildSendTransaction(tx: BuildSendTxInput<T>): Promise<{
@@ -362,7 +358,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
   unsubscribeTxs(input?: SubscribeTxsInput): void {
     if (!input) return this.providers.ws.unsubscribeTxs()
 
-    const { bip44Params = this.defaultBIP44Params } = input
+    const { bip44Params } = input
     const subscriptionId = toRootDerivationPath(bip44Params)
 
     this.providers.ws.unsubscribeTxs(subscriptionId, { topic: 'txs', addresses: [] })

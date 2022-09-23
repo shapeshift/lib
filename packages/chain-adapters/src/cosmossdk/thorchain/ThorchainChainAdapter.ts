@@ -1,6 +1,6 @@
-import { ASSET_REFERENCE, AssetId, CHAIN_REFERENCE, thorchainAssetId } from '@shapeshiftoss/caip'
+import { AssetId, CHAIN_REFERENCE, thorchainAssetId } from '@shapeshiftoss/caip'
 import { supportsThorchain, ThorchainSignTx, ThorchainTx } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
+import { KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 
 import { ErrorHandler } from '../../error/ErrorHandler'
@@ -22,17 +22,10 @@ const SUPPORTED_CHAIN_IDS = [KnownChainIds.ThorchainMainnet]
 const DEFAULT_CHAIN_ID = KnownChainIds.ThorchainMainnet
 
 export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMainnet> {
-  public static readonly defaultBIP44Params: BIP44Params = {
-    purpose: 44,
-    coinType: Number(ASSET_REFERENCE.Thorchain),
-    accountNumber: 0,
-  }
-
   constructor(args: ChainAdapterArgs) {
     super({
       chainId: DEFAULT_CHAIN_ID,
       supportedChainIds: SUPPORTED_CHAIN_IDS,
-      defaultBIP44Params: ChainAdapter.defaultBIP44Params,
       ...args,
     })
 
@@ -97,7 +90,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
       const {
         to,
         wallet,
-        bip44Params = this.defaultBIP44Params,
+        bip44Params,
         chainSpecific: { gas, fee },
         sendMax = false,
         value,

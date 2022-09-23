@@ -24,7 +24,7 @@ export const thorTradeApprovalNeeded = async ({
 
     if (chainNamespace !== CHAIN_NAMESPACE.Evm) return { approvalNeeded: false }
 
-    const accountNumber = quote.sellAssetAccountNumber
+    const bip44Params = quote.sellAssetBip44Params
 
     const adapter = adapterManager.get(sellAsset.chainId)
 
@@ -42,7 +42,6 @@ export const thorTradeApprovalNeeded = async ({
       return { approvalNeeded: false }
     }
 
-    const bip44Params = adapter.buildBIP44Params({ accountNumber })
     const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
 
     if (!quote.allowanceContract) {

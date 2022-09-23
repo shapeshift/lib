@@ -28,7 +28,7 @@ export const buildTrade = async ({
     const {
       buyAsset,
       sellAsset,
-      sellAssetAccountNumber,
+      sellAssetBip44Params,
       sellAmount,
       wallet,
       slippage: slippageTolerance = DEFAULT_SLIPPAGE,
@@ -48,9 +48,6 @@ export const buildTrade = async ({
     const { chainNamespace } = fromAssetId(sellAsset.assetId)
 
     if (chainNamespace === CHAIN_NAMESPACE.Evm) {
-      const sellAssetBip44Params = sellAdapter.buildBIP44Params({
-        accountNumber: sellAssetAccountNumber,
-      })
       const ethTradeTx = await makeTradeTx({
         wallet,
         slippageTolerance,

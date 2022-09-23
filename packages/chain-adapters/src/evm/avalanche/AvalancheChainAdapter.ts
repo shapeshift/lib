@@ -1,5 +1,5 @@
-import { ASSET_REFERENCE, AssetId, avalancheAssetId, fromAssetId } from '@shapeshiftoss/caip'
-import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
+import { AssetId, avalancheAssetId, fromAssetId } from '@shapeshiftoss/caip'
+import { KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import BigNumber from 'bignumber.js'
 
@@ -12,17 +12,10 @@ const SUPPORTED_CHAIN_IDS = [KnownChainIds.AvalancheMainnet]
 const DEFAULT_CHAIN_ID = KnownChainIds.AvalancheMainnet
 
 export class ChainAdapter extends EvmBaseAdapter<KnownChainIds.AvalancheMainnet> {
-  public static readonly defaultBIP44Params: BIP44Params = {
-    purpose: 44,
-    coinType: Number(ASSET_REFERENCE.AvalancheC),
-    accountNumber: 0,
-  }
-
   constructor(args: ChainAdapterArgs) {
     super({
       chainId: DEFAULT_CHAIN_ID,
       supportedChainIds: SUPPORTED_CHAIN_IDS,
-      defaultBIP44Params: ChainAdapter.defaultBIP44Params,
       ...args,
     })
 

@@ -12,7 +12,6 @@ import {
   ChainTxType,
   FeeDataEstimate,
   GetAddressInput,
-  GetBIP44ParamsInput,
   GetFeeDataInput,
   SignTxInput,
   SubscribeError,
@@ -67,7 +66,6 @@ export interface ChainAdapterArgs {
 }
 
 export interface CosmosSdkBaseAdapterArgs extends ChainAdapterArgs {
-  defaultBIP44Params: BIP44Params
   supportedChainIds: ChainId[]
   chainId: CosmosSdkChainId
 }
@@ -75,7 +73,6 @@ export interface CosmosSdkBaseAdapterArgs extends ChainAdapterArgs {
 export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implements IChainAdapter<T> {
   protected readonly chainId: CosmosSdkChainId
   protected readonly coinName: string
-  protected readonly defaultBIP44Params: BIP44Params
   protected readonly supportedChainIds: ChainId[]
   protected readonly providers: {
     http: unchained.cosmos.V1Api | unchained.osmosis.V1Api | unchained.thorchain.V1Api
@@ -88,7 +85,6 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
   protected constructor(args: CosmosSdkBaseAdapterArgs) {
     this.chainId = args.chainId
     this.coinName = args.coinName
-    this.defaultBIP44Params = args.defaultBIP44Params
     this.supportedChainIds = args.supportedChainIds
     this.providers = args.providers
 
@@ -110,15 +106,15 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
     return this.chainId
   }
 
-  buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
-    return { ...this.defaultBIP44Params, ...params }
+  buildBIP44Params(params: BIP44Params): BIP44Params {
+    return params
   }
 
-  getBIP44Params({ accountNumber }: GetBIP44ParamsInput): BIP44Params {
-    if (accountNumber < 0) {
+  getBIP44Params(params: BIP44Params): BIP44Params {
+    if (params.accountNumber < 0) {
       throw new Error('accountNumber must be >= 0')
     }
-    return { ...this.defaultBIP44Params, accountNumber }
+    return params
   }
 
   async getAccount(pubkey: string): Promise<Account<T>> {
@@ -303,7 +299,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
   unsubscribeTxs(input?: SubscribeTxsInput): void {
     if (!input) return this.providers.ws.unsubscribeTxs()
 
-    const { bip44Params = this.defaultBIP44Params } = input
+    const { bip44Params } = input
     const subscriptionId = toRootDerivationPath(bip44Params)
 
     this.providers.ws.unsubscribeTxs(subscriptionId, { topic: 'txs', addresses: [] })

@@ -1,6 +1,6 @@
-import { ASSET_REFERENCE, AssetId, ethAssetId, fromAssetId } from '@shapeshiftoss/caip'
+import { AssetId, ethAssetId, fromAssetId } from '@shapeshiftoss/caip'
 import { ETHSignTx } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
+import { KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
@@ -26,17 +26,10 @@ const SUPPORTED_CHAIN_IDS = [KnownChainIds.EthereumMainnet]
 const DEFAULT_CHAIN_ID = KnownChainIds.EthereumMainnet
 
 export class ChainAdapter extends EvmBaseAdapter<KnownChainIds.EthereumMainnet> {
-  static readonly defaultBIP44Params: BIP44Params = {
-    purpose: 44,
-    coinType: Number(ASSET_REFERENCE.Ethereum),
-    accountNumber: 0,
-  }
-
   constructor(args: ChainAdapterArgs) {
     super({
       chainId: DEFAULT_CHAIN_ID,
       supportedChainIds: SUPPORTED_CHAIN_IDS,
-      defaultBIP44Params: ChainAdapter.defaultBIP44Params,
       ...args,
     })
 

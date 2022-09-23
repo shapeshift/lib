@@ -36,7 +36,7 @@ type GetThorTradeQuoteReturn = Promise<TradeQuote<ChainId>>
 type GetThorTradeQuote = (args: GetThorTradeQuoteInput) => GetThorTradeQuoteReturn
 
 export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
-  const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, chainId, receiveAddress } = input
+  const { sellAsset, buyAsset, sellAmount, sellAssetBip44Params, chainId, receiveAddress } = input
 
   try {
     const { assetReference: sellAssetErc20Address } = fromAssetId(sellAsset.assetId)
@@ -78,7 +78,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       sources: [{ name: 'thorchain', proportion: '1' }],
       buyAsset,
       sellAsset,
-      sellAssetAccountNumber,
+      sellAssetBip44Params,
       minimum,
     }
 

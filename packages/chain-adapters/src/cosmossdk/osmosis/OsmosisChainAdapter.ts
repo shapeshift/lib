@@ -1,6 +1,6 @@
-import { ASSET_REFERENCE, AssetId, CHAIN_REFERENCE, osmosisAssetId } from '@shapeshiftoss/caip'
+import { AssetId, CHAIN_REFERENCE, osmosisAssetId } from '@shapeshiftoss/caip'
 import { OsmosisSignTx, OsmosisTx, supportsOsmosis } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
+import { KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import { bech32 } from 'bech32'
 
@@ -27,17 +27,10 @@ const CHAIN_VALIDATOR_PREFIX_MAPPING = {
 }
 
 export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.OsmosisMainnet> {
-  public static readonly defaultBIP44Params: BIP44Params = {
-    purpose: 44,
-    coinType: Number(ASSET_REFERENCE.Osmosis),
-    accountNumber: 0,
-  }
-
   constructor(args: ChainAdapterArgs) {
     super({
       chainId: DEFAULT_CHAIN_ID,
       supportedChainIds: SUPPORTED_CHAIN_IDS,
-      defaultBIP44Params: ChainAdapter.defaultBIP44Params,
       ...args,
     })
 
@@ -322,7 +315,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.OsmosisMain
       const {
         validator,
         wallet,
-        bip44Params = this.defaultBIP44Params,
+        bip44Params,
         chainSpecific: { gas, fee },
         memo = '',
       } = tx

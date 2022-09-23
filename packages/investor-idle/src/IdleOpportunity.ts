@@ -8,7 +8,7 @@ import {
   InvestorOpportunity,
 } from '@shapeshiftoss/investor'
 import { Logger } from '@shapeshiftoss/logger'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import type { BigNumber } from 'bignumber.js'
 import toLower from 'lodash/toLower'
 import Web3 from 'web3'
@@ -449,8 +449,14 @@ export class IdleOpportunity
     wallet: HDWallet
     tx: PreparedTransaction
     feePriority?: FeePriority
+    bip44Params?: BIP44Params
   }): Promise<string> {
-    const { wallet, tx, feePriority } = input
+    const { bip44Params, wallet, tx, feePriority } = input
+
+    if (!bip44Params) {
+      throw new Error('bip44Params required in input')
+    }
+
     const feeSpeed: FeePriority = feePriority ? feePriority : 'fast'
     const chainAdapter = this.#internals.chainAdapter
 
@@ -462,7 +468,7 @@ export class IdleOpportunity
       gasLimit: numberToHex(tx.estimatedGas.times(1.5).integerValue().toString()),
       nonce: numberToHex(tx.nonce),
       value: numberToHex(tx.value),
-      addressNList: toAddressNList(chainAdapter.buildBIP44Params({ accountNumber: 0 })),
+      addressNList: toAddressNList(chainAdapter.buildBIP44Params(bip44Params)),
     }
 
     // console.log('signAndBroadcast', txToSign)

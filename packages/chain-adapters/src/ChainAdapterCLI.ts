@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { ASSET_REFERENCE } from '@shapeshiftoss/caip'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { BIP44Params, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
@@ -302,7 +303,11 @@ const testCosmos = async (wallet: NativeHDWallet, broadcast = false) => {
 // @ts-ignore:nextLine
 const testThorchain = async (wallet: NativeHDWallet, broadcast = false) => {
   const chainAdapter = adapters.thorchain
-  const bip44Params = chainAdapter.buildBIP44Params({})
+  const bip44Params = chainAdapter.buildBIP44Params({
+    purpose: 44,
+    coinType: Number(ASSET_REFERENCE.Thorchain),
+    accountNumber: 0,
+  })
 
   const address = await chainAdapter.getAddress({ wallet, bip44Params })
   console.log('thorchain: address:', address)
