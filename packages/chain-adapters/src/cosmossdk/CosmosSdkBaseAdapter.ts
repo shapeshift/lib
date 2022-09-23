@@ -131,42 +131,38 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
 
         const data = await this.providers.http.getAccount({ pubkey })
 
-        const delegations =
-          data.delegations?.map<Delegation>((delegation) => ({
+        const delegations = data.delegations.map<Delegation>((delegation) => ({
+          assetId: this.assetId,
+          amount: delegation.balance.amount,
+          validator: transformValidator(delegation.validator),
+        }))
+
+        const redelegations = data.redelegations.map<Redelegation>((redelegation) => ({
+          destinationValidator: transformValidator(redelegation.destinationValidator),
+          sourceValidator: transformValidator(redelegation.sourceValidator),
+          entries: redelegation.entries.map<RedelegationEntry>((entry) => ({
             assetId: this.assetId,
-            amount: delegation.balance.amount,
-            validator: transformValidator(delegation.validator),
-          })) ?? []
+            completionTime: Number(entry.completionTime),
+            amount: entry.balance,
+          })),
+        }))
 
-        const redelegations =
-          data.redelegations?.map<Redelegation>((redelegation) => ({
-            destinationValidator: transformValidator(redelegation.destinationValidator),
-            sourceValidator: transformValidator(redelegation.sourceValidator),
-            entries: redelegation.entries.map<RedelegationEntry>((entry) => ({
-              assetId: this.assetId,
-              completionTime: Number(entry.completionTime),
-              amount: entry.balance,
-            })),
-          })) ?? []
+        const undelegations = data.unbondings.map<Undelegation>((undelegation) => ({
+          validator: transformValidator(undelegation.validator),
+          entries: undelegation.entries.map<UndelegationEntry>((entry) => ({
+            assetId: this.assetId,
+            completionTime: Number(entry.completionTime),
+            amount: entry.balance.amount,
+          })),
+        }))
 
-        const undelegations =
-          data.unbondings?.map<Undelegation>((undelegation) => ({
-            validator: transformValidator(undelegation.validator),
-            entries: undelegation.entries.map<UndelegationEntry>((entry) => ({
-              assetId: this.assetId,
-              completionTime: Number(entry.completionTime),
-              amount: entry.balance.amount,
-            })),
-          })) ?? []
-
-        const rewards =
-          data.rewards.map<ValidatorReward>((validatorReward) => ({
-            validator: transformValidator(validatorReward.validator),
-            rewards: validatorReward.rewards.map<Reward>((reward) => ({
-              assetId: this.assetId,
-              amount: reward.amount,
-            })),
-          })) ?? []
+        const rewards = data.rewards.map<ValidatorReward>((validatorReward) => ({
+          validator: transformValidator(validatorReward.validator),
+          rewards: validatorReward.rewards.map<Reward>((reward) => ({
+            assetId: this.assetId,
+            amount: reward.amount,
+          })),
+        }))
 
         return { ...data, delegations, redelegations, undelegations, rewards }
       })()
