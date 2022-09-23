@@ -20,7 +20,7 @@ import {
   ORDER_KIND_SELL,
 } from '../utils/constants'
 import { cowService } from '../utils/cowService'
-import { getNowPlusThirtyMinutesTimestamp } from '../utils/helpers/helpers'
+import { getNowPlusThirtyMinutesTimestamp, getUsdRate } from '../utils/helpers/helpers'
 
 export async function cowBuildTrade(
   deps: CowSwapperDeps,
@@ -96,13 +96,21 @@ export async function cowBuildTrade(
       contractAddress: sellAssetErc20Address,
     })
 
-    const feeDataOptions = await adapter.getFeeData({
-      to: sellAssetErc20Address,
-      value: '0',
-      chainSpecific: { from: receiveAddress, contractData: data },
-    })
+    const [feeDataOptions, sellAssetUsdRate] = await Promise.all([
+      adapter.getFeeData({
+        to: sellAssetErc20Address,
+        value: '0',
+        chainSpecific: { from: receiveAddress, contractData: data },
+      }),
+      getUsdRate(deps, sellAsset),
+    ])
 
     const feeData = feeDataOptions['fast']
+
+    const tradeFeeFiat = bnOrZero(quote.feeAmount)
+      .div(bn(10).exponentiatedBy(sellAsset.precision))
+      .multipliedBy(bnOrZero(sellAssetUsdRate))
+      .toString()
 
     const trade: CowTrade<KnownChainIds.EthereumMainnet> = {
       rate,
@@ -112,7 +120,7 @@ export async function cowBuildTrade(
           estimatedGas: feeData.chainSpecific.gasLimit,
           gasPrice: feeData.chainSpecific.gasPrice,
         },
-        tradeFee: '0', // Trade fees for buy Asset are always 0 since trade fees are subtracted from sell asset
+        tradeFee: tradeFeeFiat,
       },
       sellAmount: normalizedSellAmount,
       buyAmount: quote.buyAmount,
