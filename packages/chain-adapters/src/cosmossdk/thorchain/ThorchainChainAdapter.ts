@@ -57,7 +57,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
     const { wallet, bip44Params, showOnDevice = false } = input
 
     if (!bip44Params) {
-      throw new Error('bip44Params required in input')
+      throw new Error('bip44Params required in getAddress input')
     }
 
     try {
@@ -110,7 +110,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
       } = tx
 
       if (!bip44Params) {
-        throw new Error('bip44Params required in input')
+        throw new Error('bip44Params required in buildSendTransaction input')
       }
 
       if (!to) throw new Error('ThorchainChainAdapter: to is required')
