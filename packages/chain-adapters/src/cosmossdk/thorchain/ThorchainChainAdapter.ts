@@ -114,6 +114,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
         throw new Error('bip44Params required in buildSendTransaction input')
       }
 
+      if (!bip44Params) throw new Error('ThorchainChainAdapter: bip44Params are required')
       if (!to) throw new Error('ThorchainChainAdapter: to is required')
       if (!value) throw new Error('ThorchainChainAdapter: value is required')
 
