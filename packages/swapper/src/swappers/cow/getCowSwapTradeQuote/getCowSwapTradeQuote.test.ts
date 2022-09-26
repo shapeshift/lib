@@ -126,7 +126,7 @@ const expectedTradeQuoteWethToFox: TradeQuote<KnownChainIds.EthereumMainnet> = {
       gasPrice: '79036500000',
       approvalFee: '7903650000000000',
     },
-    tradeFee: '17.95954294012756741283729339486489192096',
+    tradeFee: '0',
   },
   sellAmount: '1000000000000000000',
   buyAmount: '14501811818247595090576', // 14501 FOX
@@ -148,7 +148,7 @@ const expectedTradeQuoteFoxToEth: TradeQuote<KnownChainIds.EthereumMainnet> = {
       gasPrice: '79036500000',
       approvalFee: '7903650000000000',
     },
-    tradeFee: '5.3955565850972847808512',
+    tradeFee: '0',
   },
   sellAmount: '1000000000000000000000',
   buyAmount: '46868859830863283',
@@ -170,7 +170,7 @@ const expectedTradeQuoteSmallAmountWethToFox: TradeQuote<KnownChainIds.EthereumM
       gasPrice: '79036500000',
       approvalFee: '7903650000000000',
     },
-    tradeFee: '1.79595429401274711874033728120645035672',
+    tradeFee: '0',
   },
   sellAmount: '1000000000000',
   buyAmount: '145018118182475950905', // 14501 FOX

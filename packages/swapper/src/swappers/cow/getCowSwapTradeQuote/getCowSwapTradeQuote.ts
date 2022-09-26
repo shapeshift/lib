@@ -20,7 +20,6 @@ import { cowService } from '../utils/cowService'
 import {
   CowSwapSellQuoteApiInput,
   getNowPlusThirtyMinutesTimestamp,
-  getUsdRate,
 } from '../utils/helpers/helpers'
 
 export async function getCowSwapTradeQuote(
@@ -108,22 +107,13 @@ export async function getCowSwapTradeQuote(
       contractAddress: sellAssetErc20Address,
     })
 
-    const [feeDataOptions, sellAssetUsdRate] = await Promise.all([
-      adapter.getFeeData({
-        to: sellAssetErc20Address,
-        value: '0',
-        chainSpecific: { from: receiveAddress, contractData: data },
-      }),
-      getUsdRate(deps, sellAsset),
-    ])
+    const feeDataOptions = await adapter.getFeeData({
+      to: sellAssetErc20Address,
+      value: '0',
+      chainSpecific: { from: receiveAddress, contractData: data },
+    })
 
     const feeData = feeDataOptions['fast']
-
-    // calculating trade fee in USD
-    const tradeFeeFiat = bnOrZero(quote.feeAmount)
-      .div(bn(10).exponentiatedBy(sellAsset.precision))
-      .multipliedBy(bnOrZero(sellAssetUsdRate))
-      .toString()
 
     // If original sellAmount is < minQuoteSellAmount, we don't want to replace it with normalizedSellAmount
     // The purpose of this was to get a quote from CowSwap even with small amounts
@@ -144,7 +134,7 @@ export async function getCowSwapTradeQuote(
             .multipliedBy(bnOrZero(feeData.chainSpecific.gasPrice))
             .toString(),
         },
-        tradeFee: tradeFeeFiat,
+        tradeFee: '0', // Trade fees for buy Asset are always 0 since trade fees are subtracted from sell asset
       },
       sellAmount: quoteSellAmount,
       buyAmount: quote.buyAmount,
