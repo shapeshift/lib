@@ -27,7 +27,12 @@ import { buildTrade } from './buildThorTrade/buildThorTrade'
 import { getThorTradeQuote } from './getThorTradeQuote/getTradeQuote'
 import { thorTradeApprovalNeeded } from './thorTradeApprovalNeeded/thorTradeApprovalNeeded'
 import { thorTradeApproveInfinite } from './thorTradeApproveInfinite/thorTradeApproveInfinite'
-import { MidgardActionsResponse, PoolResponse, ThorchainSwapperDeps, ThorTrade } from './types'
+import {
+  MidgardActionsResponse,
+  ThorchainSwapperDeps,
+  ThornodePoolResponse,
+  ThorTrade,
+} from './types'
 import { getUsdRate } from './utils/getUsdRate/getUsdRate'
 import { thorService } from './utils/thorService'
 
@@ -63,19 +68,19 @@ export class ThorchainSwapper implements Swapper<ChainId> {
 
   async initialize() {
     try {
-      const { data: responseData } = await thorService.get<PoolResponse[]>(
-        `${this.deps.midgardUrl}/pools`,
+      const { data } = await thorService.get<ThornodePoolResponse[]>(
+        `${this.deps.daemonUrl}/lcd/thorchain/pools`,
       )
 
-      this.supportedSellAssetIds = responseData.reduce<AssetId[]>((acc, midgardPool) => {
-        const assetId = adapters.poolAssetIdToAssetId(midgardPool.asset)
+      this.supportedSellAssetIds = data.reduce<AssetId[]>((acc, pool) => {
+        const assetId = adapters.poolAssetIdToAssetId(pool.asset)
         if (!assetId || !this.sellSupportedChainIds[fromAssetId(assetId).chainId]) return acc
         acc.push(assetId)
         return acc
       }, [])
 
-      this.supportedBuyAssetIds = responseData.reduce<AssetId[]>((acc, midgardPool) => {
-        const assetId = adapters.poolAssetIdToAssetId(midgardPool.asset)
+      this.supportedBuyAssetIds = data.reduce<AssetId[]>((acc, pool) => {
+        const assetId = adapters.poolAssetIdToAssetId(pool.asset)
         if (!assetId || !this.buySupportedChainIds[fromAssetId(assetId).chainId]) return acc
         acc.push(assetId)
         return acc
@@ -194,26 +199,23 @@ export class ThorchainSwapper implements Swapper<ChainId> {
         ? tradeResult.tradeId.slice(2)
         : tradeResult.tradeId
 
-      const { data: responseData } = await thorService.get<MidgardActionsResponse>(
+      const { data } = await thorService.get<MidgardActionsResponse>(
         `${this.deps.midgardUrl}/actions?txid=${midgardTxid}`,
       )
 
       const buyTxid =
-        responseData?.actions[0]?.status === 'success' && responseData?.actions[0]?.type === 'swap'
-          ? responseData?.actions[0].out[0].txID
+        data?.actions[0]?.status === 'success' && data?.actions[0]?.type === 'swap'
+          ? data?.actions[0].out[0].txID
           : ''
 
       // This will detect all the errors I have seen.
-      if (
-        responseData?.actions[0]?.status === 'success' &&
-        responseData?.actions[0]?.type !== 'swap'
-      )
+      if (data?.actions[0]?.status === 'success' && data?.actions[0]?.type !== 'swap')
         throw new SwapError('[getTradeTxs]: trade failed', {
           code: SwapErrorTypes.TRADE_FAILED,
-          cause: responseData,
+          cause: data,
         })
 
-      const standardBuyTxid = responseData?.actions[0]?.out[0]?.coins[0]?.asset.startsWith('ETH.')
+      const standardBuyTxid = data?.actions[0]?.out[0]?.coins[0]?.asset.startsWith('ETH.')
         ? `0x${buyTxid}`
         : buyTxid
 

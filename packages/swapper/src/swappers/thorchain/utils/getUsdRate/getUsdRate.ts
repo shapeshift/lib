@@ -2,7 +2,7 @@ import { Asset } from '@shapeshiftoss/asset-service'
 import { adapters } from '@shapeshiftoss/caip'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
-import { PoolResponse, ThorchainSwapperDeps } from '../../types'
+import { MidgardPoolResponse, ThorchainSwapperDeps } from '../../types'
 import { thorService } from '../thorService'
 
 export const getUsdRate = async ({
@@ -16,12 +16,13 @@ export const getUsdRate = async ({
   try {
     const thorchainPoolId = adapters.assetIdToPoolAssetId({ assetId })
 
-    if (!thorchainPoolId)
+    if (!thorchainPoolId) {
       throw new SwapError(`[getUsdRate]: No thorchainPoolId found for assetId: ${assetId}`, {
         code: SwapErrorTypes.USD_RATE_FAILED,
       })
+    }
 
-    const { data: responseData } = await thorService.get<PoolResponse>(
+    const { data: responseData } = await thorService.get<MidgardPoolResponse>(
       `${deps.midgardUrl}/pool/${thorchainPoolId}`,
     )
 

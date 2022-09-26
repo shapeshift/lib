@@ -4,27 +4,26 @@ import { adapters, AssetId } from '@shapeshiftoss/caip'
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { BN, bn, bnOrZero } from '../../../utils/bignumber'
 import { fromBaseUnit, toBaseUnit } from '../../../utils/bignumber'
-import { PoolResponse, ThorchainSwapperDeps } from '../../types'
+import { ThorchainSwapperDeps, ThornodePoolResponse } from '../../types'
 import { getPriceRatio } from '../getPriceRatio/getPriceRatio'
 import { thorService } from '../thorService'
 
 const THOR_PRECISION = 8
 
-type PoolData = {
-  assetBalance: BN
-  runeBalance: BN
-}
-
-const getSwapOutput = (inputAmount: BN, poolData: PoolData, toRune: boolean): BN => {
+const getSwapOutput = (inputAmount: BN, pool: ThornodePoolResponse, toRune: boolean): BN => {
   const x = inputAmount
-  const X = toRune ? poolData.assetBalance : poolData.runeBalance
-  const Y = toRune ? poolData.runeBalance : poolData.assetBalance
-  const numerator = x.times(X).times(Y)
-  const denominator = x.plus(X).pow(2)
+  const X = toRune ? pool.balance_asset : pool.balance_rune
+  const Y = toRune ? pool.balance_rune : pool.balance_asset
+  const numerator = bn(x).times(X).times(Y)
+  const denominator = bn(x).plus(X).pow(2)
   return numerator.div(denominator)
 }
 
-const getDoubleSwapOutput = (input: BN, inputPool: PoolData, outputPool: PoolData): BN => {
+const getDoubleSwapOutput = (
+  input: BN,
+  inputPool: ThornodePoolResponse,
+  outputPool: ThornodePoolResponse,
+): BN => {
   const runeToOutput = getSwapOutput(input, inputPool, true)
   return getSwapOutput(runeToOutput, outputPool, false)
 }
@@ -49,20 +48,23 @@ export const getTradeRate = async (
   const buyPoolId = adapters.assetIdToPoolAssetId({ assetId: buyAssetId })
   const sellPoolId = adapters.assetIdToPoolAssetId({ assetId: sellAsset.assetId })
 
-  if (!buyPoolId || !sellPoolId)
+  if (!buyPoolId || !sellPoolId) {
     throw new SwapError(`[getPriceRatio]: No thorchain pool found`, {
       code: SwapErrorTypes.POOL_NOT_FOUND,
       fn: 'getPriceRatio',
       details: { buyPoolId, sellPoolId },
     })
+  }
 
-  const { data: responseData } = await thorService.get<PoolResponse[]>(`${deps.midgardUrl}/pools`)
+  const { data } = await thorService.get<ThornodePoolResponse[]>(
+    `${deps.daemonUrl}/lcd/thorchain/pools`,
+  )
 
-  const buyPool = responseData.find((response) => response.asset === buyPoolId)
-  const sellPool = responseData.find((response) => response.asset === sellPoolId)
+  const buyPool = data.find((response) => response.asset === buyPoolId)
+  const sellPool = data.find((response) => response.asset === sellPoolId)
 
   if (!buyPool || !sellPool)
-    throw new SwapError(`[getPriceRatio]: no pools found for`, {
+    throw new SwapError(`[getPriceRatio]: no pools found`, {
       code: SwapErrorTypes.POOL_NOT_FOUND,
       fn: 'getPriceRatio',
       details: { buyPoolId, sellPoolId },
@@ -73,16 +75,7 @@ export const getTradeRate = async (
     toBaseUnit(fromBaseUnit(sellAmount, sellAsset.precision), THOR_PRECISION),
   )
 
-  const sellAssetPoolData = {
-    assetBalance: bn(sellPool.assetDepth),
-    runeBalance: bn(sellPool.runeDepth),
-  }
-  const buyAssetPoolData = {
-    assetBalance: bn(buyPool.assetDepth),
-    runeBalance: bn(buyPool.runeDepth),
-  }
-  const outputAmountBase8 = getDoubleSwapOutput(sellBaseAmount, sellAssetPoolData, buyAssetPoolData)
-
+  const outputAmountBase8 = getDoubleSwapOutput(sellBaseAmount, sellPool, buyPool)
   const outputAmount = fromBaseUnit(outputAmountBase8, THOR_PRECISION)
 
   return bn(outputAmount).div(fromBaseUnit(sellAmount, sellAsset.precision)).toString()
