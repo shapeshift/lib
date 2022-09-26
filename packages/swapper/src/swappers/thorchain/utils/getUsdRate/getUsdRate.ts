@@ -7,6 +7,7 @@ import { PoolResponse, ThorchainSwapperDeps } from '../../types'
 import { isRune } from '../isRune/isRune'
 import { thorService } from '../thorService'
 
+const THOR_PRECISION = 8
 // not sure what to do for rune usd rate - inverting USDC pool rate for now
 const usdcPool = 'ETH.USDC-0XA0B86991C6218B36C1D19D4A2E9EB0CE3606EB48'
 
@@ -44,7 +45,7 @@ export const getUsdRate = async ({
           })
         }
         const inverseRate = bn(1).div(bnRate)
-        return inverseRate.toFixed(8)
+        return inverseRate.toFixed(THOR_PRECISION)
       }
       return responseData?.assetPriceUSD
     })()

@@ -8,6 +8,4 @@ export type BuildDepositTxInput = {
   gas: string
   fee: string
   bip44Params: BIP44Params
-  // for synth support:
-  // asset?: AssetId // synths/ibc?
 }
