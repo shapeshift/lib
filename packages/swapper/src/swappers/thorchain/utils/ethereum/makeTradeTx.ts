@@ -23,7 +23,7 @@ export const makeTradeTx = async ({
   slippageTolerance,
   deps,
   gasLimit,
-  tradeFee,
+  tradeFeeBuyAsset,
 }: {
   wallet: HDWallet
   bip44Params: BIP44Params
@@ -35,7 +35,7 @@ export const makeTradeTx = async ({
   slippageTolerance: string
   deps: ThorchainSwapperDeps
   gasLimit: string
-  tradeFee: string
+  tradeFeeBuyAsset: string
 } & (
   | {
       gasPrice: string
@@ -62,7 +62,7 @@ export const makeTradeTx = async ({
       sellAmount,
       slippageTolerance,
       destinationAddress,
-      tradeFee,
+      tradeFeeBuyAsset,
     })
 
     return adapter.buildCustomTx({

@@ -10,14 +10,14 @@ export const getBtcTxFees = async ({
   sellAmount,
   sellAdapter,
   pubkey,
-  tradeFee,
+  tradeFeeBuyAsset,
 }: {
   opReturnData: string
   vault: string
   sellAmount: string
   sellAdapter: UtxoBaseAdapter<UtxoSupportedChainIds>
   pubkey: string
-  tradeFee: string
+  tradeFeeBuyAsset: string
 }): Promise<QuoteFeeData<UtxoSupportedChainIds>> => {
   try {
     const feeDataOptions = await sellAdapter.getFeeData({
@@ -36,12 +36,15 @@ export const getBtcTxFees = async ({
     const isFromBch = sellAdapter.getChainId() === KnownChainIds.BitcoinCashMainnet
     const feeMultiplier = isFromBch ? bn(1.5) : bn(1)
 
-    const fee = feeMultiplier.times(feeData.txFee).dp(0).toString()
+    const minerFee = feeMultiplier.times(feeData.txFee).dp(0).toString()
     const satsPerByte = feeMultiplier.times(feeData.chainSpecific.satoshiPerByte).dp(0).toString()
 
     return {
-      fee,
-      tradeFee,
+      fee: minerFee,
+      minerFee,
+      tradeFee: tradeFeeBuyAsset,
+      tradeFeeBuyAsset,
+      tradeFeeSellAsset: '0',
       chainSpecific: {
         satsPerByte,
         byteCount: bn(feeData.txFee)

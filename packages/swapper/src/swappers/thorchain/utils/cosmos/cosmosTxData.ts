@@ -54,7 +54,7 @@ export const cosmosTxData = async (input: {
     buyAsset,
     slippageTolerance,
     deps,
-    tradeFee: quote.feeData.tradeFee,
+    tradeFeeBuyAsset: quote.feeData.tradeFee,
   })
 
   const memo = makeSwapMemo({

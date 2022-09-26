@@ -67,7 +67,7 @@ export const buildTrade = async ({
         gasLimit:
           (quote as TradeQuote<KnownChainIds.EthereumMainnet>).feeData.chainSpecific
             ?.estimatedGas ?? '0',
-        tradeFee: quote.feeData.tradeFee,
+        tradeFeeBuyAsset: quote.feeData.tradeFee,
       })
 
       return {
@@ -85,7 +85,7 @@ export const buildTrade = async ({
         slippageTolerance,
         destinationAddress,
         xpub: (input as GetUtxoTradeQuoteInput).xpub,
-        tradeFee: quote.feeData.tradeFee,
+        tradeFeeBuyAsset: quote.feeData.tradeFee,
       })
 
       const buildTxResponse = await (

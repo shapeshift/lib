@@ -17,7 +17,14 @@ export const setupQuote = () => {
     sellAssetAccountNumber: 0,
     minimum: '0',
     maximum: '999999999999',
-    feeData: { fee: '0', tradeFee: '0', chainSpecific: {} },
+    feeData: {
+      fee: '0', // TODO: remove once web has been updated
+      tradeFee: '0', // TODO: remove once web has been updated
+      chainSpecific: {},
+      tradeFeeSellAsset: '0',
+      minerFee: '0',
+      tradeFeeBuyAsset: '0',
+    },
     rate: '1',
     sources: [],
   }

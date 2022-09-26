@@ -20,6 +20,7 @@ import { cowService } from '../utils/cowService'
 import {
   CowSwapSellQuoteApiInput,
   getNowPlusThirtyMinutesTimestamp,
+  getUsdRate,
 } from '../utils/helpers/helpers'
 
 export async function getCowSwapTradeQuote(
@@ -107,11 +108,19 @@ export async function getCowSwapTradeQuote(
       contractAddress: sellAssetErc20Address,
     })
 
-    const feeDataOptions = await adapter.getFeeData({
-      to: sellAssetErc20Address,
-      value: '0',
-      chainSpecific: { from: receiveAddress, contractData: data },
-    })
+    const [feeDataOptions, sellAssetUsdRate] = await Promise.all([
+      adapter.getFeeData({
+        to: sellAssetErc20Address,
+        value: '0',
+        chainSpecific: { from: receiveAddress, contractData: data },
+      }),
+      getUsdRate(deps, sellAsset),
+    ])
+
+    const tradeFeeSellAsset = bnOrZero(quote.feeAmount)
+      .div(bn(10).exponentiatedBy(sellAsset.precision))
+      .multipliedBy(bnOrZero(sellAssetUsdRate))
+      .toString()
 
     const feeData = feeDataOptions['fast']
 
@@ -126,7 +135,8 @@ export async function getCowSwapTradeQuote(
       minimum,
       maximum,
       feeData: {
-        fee: '0', // no miner fee for CowSwap
+        fee: '0', // TODO: remove once web has been updated
+        minerFee: '0', // no miner fee for CowSwap
         chainSpecific: {
           estimatedGas: feeData.chainSpecific.gasLimit,
           gasPrice: feeData.chainSpecific.gasPrice,
@@ -134,7 +144,9 @@ export async function getCowSwapTradeQuote(
             .multipliedBy(bnOrZero(feeData.chainSpecific.gasPrice))
             .toString(),
         },
-        tradeFee: '0', // Trade fees for buy Asset are always 0 since trade fees are subtracted from sell asset
+        tradeFee: '0', // TODO: remove once web has been updated
+        tradeFeeBuyAsset: '0', // Trade fees for buy Asset are always 0 since trade fees are subtracted from sell asset
+        tradeFeeSellAsset,
       },
       sellAmount: quoteSellAmount,
       buyAmount: quote.buyAmount,

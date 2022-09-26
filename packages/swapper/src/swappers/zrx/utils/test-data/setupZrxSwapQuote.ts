@@ -38,7 +38,14 @@ export const setupExecuteTrade = () => {
     txData: '0x0',
     depositAddress: '0x0',
     receiveAddress: '0x0',
-    feeData: { fee: '0', chainSpecific: {}, tradeFee: '0' },
+    feeData: {
+      fee: '0',
+      chainSpecific: {},
+      tradeFee: '0',
+      tradeFeeBuyAsset: '0',
+      tradeFeeSellAsset: '0',
+      minerFee: '0',
+    },
     rate: '0',
     sources: [],
   }
