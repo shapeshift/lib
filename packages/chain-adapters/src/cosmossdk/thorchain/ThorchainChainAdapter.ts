@@ -16,7 +16,8 @@ import { bnOrZero } from '../../utils/bignumber'
 import { ChainAdapterArgs, CosmosSdkBaseAdapter } from '../CosmosSdkBaseAdapter'
 import { BuildDepositTxInput } from './types'
 
-// static automatic outbound fee as defined by: https://daemon.thorchain.shapeshift.com/thorchain/constants
+// https://dev.thorchain.org/thorchain-dev/interface-guide/fees#thorchain-native-rune
+// static automatic outbound fee as defined by: https://thornode.ninerealms.com/thorchain/constants
 const OUTBOUND_FEE = '2000000'
 
 const SUPPORTED_CHAIN_IDS = [KnownChainIds.ThorchainMainnet]
@@ -186,18 +187,10 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
   /* MsgDeposit is used for thorchain swap/lp operations */
   async buildDepositTransaction(tx: BuildDepositTxInput): Promise<{ txToSign: ThorchainSignTx }> {
     try {
-      const {
-        wallet,
-        bip44Params = this.defaultBIP44Params,
-        gas,
-        fee,
-        sendMax = false,
-        value,
-        memo,
-      } = tx
+      const { wallet, bip44Params, gas, fee, value, memo } = tx
 
       // TODO memo validation
-      if (!memo) throw new Error('ThorchainChainAdapter: value is required')
+      if (!memo) throw new Error('ThorchainChainAdapter: memo is required')
       if (!value) throw new Error('ThorchainChainAdapter: value is required')
 
       const addressNList = toAddressNList(bip44Params)
@@ -211,20 +204,6 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
       const extraFee = feeMinusAutomaticOutboundFee.gt(0)
         ? feeMinusAutomaticOutboundFee.toString()
         : '0'
-
-      if (sendMax) {
-        try {
-          const val = bnOrZero(account.balance).minus(fee)
-          if (!val.isFinite() || val.lte(0)) {
-            throw new Error(
-              `ThorchainChainAdapter: transaction value is invalid: ${val.toString()}`,
-            )
-          }
-          tx.value = val.toString()
-        } catch (error) {
-          return ErrorHandler(error)
-        }
-      }
 
       const utx: ThorchainTx = {
         fee: {

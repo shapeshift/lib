@@ -7,8 +7,7 @@ export type BuildDepositTxInput = {
   wallet: HDWallet
   gas: string
   fee: string
-  bip44Params: BIP44Params // TODO mandatory for multi account
-  sendMax?: boolean
+  bip44Params: BIP44Params
   // for synth support:
   // asset?: AssetId // synths/ibc?
 }
