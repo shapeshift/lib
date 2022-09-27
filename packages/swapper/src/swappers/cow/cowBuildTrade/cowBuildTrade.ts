@@ -115,7 +115,6 @@ export async function cowBuildTrade(
         },
         tradeFee: '0', // Trade fees for buy Asset are always 0 since trade fees are subtracted from sell asset
         buyAssetTradeFeeUsd: '0',
-        sellAssetTradeFeeUsd: undefined, // Not used by web, and would be a waste to compute
       },
       sellAmount: normalizedSellAmount,
       buyAmount: quote.buyAmount,
