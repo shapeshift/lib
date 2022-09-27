@@ -2,10 +2,10 @@ import { Asset } from '@shapeshiftoss/asset-service'
 import { adapters, AssetId } from '@shapeshiftoss/caip'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
-import { BN, bn, bnOrZero } from '../../../utils/bignumber'
-import { fromBaseUnit, toBaseUnit } from '../../../utils/bignumber'
+import { BN, bn, bnOrZero, fromBaseUnit, toBaseUnit } from '../../../utils/bignumber'
 import { ThorchainSwapperDeps, ThornodePoolResponse } from '../../types'
 import { getPriceRatio } from '../getPriceRatio/getPriceRatio'
+import { isRune } from '../isRune/isRune'
 import { thorService } from '../thorService'
 
 const THOR_PRECISION = 8
@@ -48,11 +48,19 @@ export const getTradeRate = async (
   const buyPoolId = adapters.assetIdToPoolAssetId({ assetId: buyAssetId })
   const sellPoolId = adapters.assetIdToPoolAssetId({ assetId: sellAsset.assetId })
 
-  if (!buyPoolId || !sellPoolId) {
-    throw new SwapError(`[getPriceRatio]: No thorchain pool found`, {
+  if (!buyPoolId && !isRune(buyAssetId)) {
+    throw new SwapError(`[getTradeRate]: No buyPoolId for asset ${buyAssetId}`, {
       code: SwapErrorTypes.POOL_NOT_FOUND,
-      fn: 'getPriceRatio',
-      details: { buyPoolId, sellPoolId },
+      fn: 'getTradeRate',
+      details: { buyAssetId },
+    })
+  }
+
+  if (!sellPoolId && !isRune(sellAsset.assetId)) {
+    throw new SwapError(`[getTradeRate]: No sellPoolId for asset ${sellAsset.assetId}`, {
+      code: SwapErrorTypes.POOL_NOT_FOUND,
+      fn: 'getTradeRate',
+      details: { sellAsset: sellAsset.assetId },
     })
   }
 
@@ -60,8 +68,8 @@ export const getTradeRate = async (
     `${deps.daemonUrl}/lcd/thorchain/pools`,
   )
 
-  const buyPool = data.find((response) => response.asset === buyPoolId)
-  const sellPool = data.find((response) => response.asset === sellPoolId)
+  const buyPool = buyPoolId && data.find((response) => response.asset === buyPoolId)
+  const sellPool = sellPoolId && data.find((response) => response.asset === sellPoolId)
 
   if (!buyPool || !sellPool)
     throw new SwapError(`[getPriceRatio]: no pools found`, {

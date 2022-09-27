@@ -1,5 +1,12 @@
 import { Asset } from '@shapeshiftoss/asset-service'
-import { adapters, AssetId, CHAIN_NAMESPACE, ChainId, fromAssetId } from '@shapeshiftoss/caip'
+import {
+  adapters,
+  AssetId,
+  CHAIN_NAMESPACE,
+  ChainId,
+  fromAssetId,
+  thorchainAssetId,
+} from '@shapeshiftoss/caip'
 import { cosmos, EvmBaseAdapter, UtxoBaseAdapter } from '@shapeshiftoss/chain-adapters'
 import { BTCSignTx, CosmosSignTx, ETHSignTx } from '@shapeshiftoss/hdwallet-core'
 import { KnownChainIds } from '@shapeshiftoss/types'
@@ -78,6 +85,7 @@ export class ThorchainSwapper implements Swapper<ChainId> {
         acc.push(assetId)
         return acc
       }, [])
+      this.supportedSellAssetIds.push(thorchainAssetId)
 
       this.supportedBuyAssetIds = data.reduce<AssetId[]>((acc, pool) => {
         const assetId = adapters.poolAssetIdToAssetId(pool.asset)
@@ -85,6 +93,7 @@ export class ThorchainSwapper implements Swapper<ChainId> {
         acc.push(assetId)
         return acc
       }, [])
+      this.supportedBuyAssetIds.push(thorchainAssetId)
     } catch (e) {
       throw new SwapError('[thorchainInitialize]: initialize failed to set supportedAssetIds', {
         code: SwapErrorTypes.INITIALIZE_FAILED,
@@ -203,9 +212,12 @@ export class ThorchainSwapper implements Swapper<ChainId> {
         `${this.deps.midgardUrl}/actions?txid=${midgardTxid}`,
       )
 
+      // https://gitlab.com/thorchain/thornode/-/blob/develop/common/tx.go#L22
+      // responseData?.actions[0].out[0].txID should be the txId for consistency, but the outbound Tx for Thor rune swaps is actually a BlankTxId
+      // so we use the buyTxId for completion detection
       const buyTxid =
         data?.actions[0]?.status === 'success' && data?.actions[0]?.type === 'swap'
-          ? data?.actions[0].out[0].txID
+          ? midgardTxid
           : ''
 
       // This will detect all the errors I have seen.

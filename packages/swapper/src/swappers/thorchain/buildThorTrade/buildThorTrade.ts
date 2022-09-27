@@ -27,12 +27,12 @@ export const buildTrade = async ({
   try {
     const {
       buyAsset,
-      sellAsset,
-      sellAssetAccountNumber,
-      sellAmount,
-      wallet,
-      slippage: slippageTolerance = DEFAULT_SLIPPAGE,
       receiveAddress: destinationAddress,
+      sellAmount,
+      sellAsset,
+      bip44Params,
+      slippage: slippageTolerance = DEFAULT_SLIPPAGE,
+      wallet,
     } = input
 
     const quote = await getThorTradeQuote({ deps, input })
@@ -48,13 +48,10 @@ export const buildTrade = async ({
     const { chainNamespace } = fromAssetId(sellAsset.assetId)
 
     if (chainNamespace === CHAIN_NAMESPACE.Evm) {
-      const sellAssetBip44Params = sellAdapter.buildBIP44Params({
-        accountNumber: sellAssetAccountNumber,
-      })
       const ethTradeTx = await makeTradeTx({
         wallet,
         slippageTolerance,
-        bip44Params: sellAssetBip44Params,
+        bip44Params,
         sellAsset,
         buyAsset,
         adapter: sellAdapter as unknown as ethereum.ChainAdapter,
@@ -110,7 +107,12 @@ export const buildTrade = async ({
         txData: buildTxResponse.txToSign,
       }
     } else if (chainNamespace === CHAIN_NAMESPACE.CosmosSdk) {
+      if (!bip44Params) {
+        throw new Error('bip44Params required as input')
+      }
+
       const txData = await cosmosTxData({
+        bip44Params,
         deps,
         sellAdapter: sellAdapter as unknown as cosmos.ChainAdapter,
         sellAmount,
@@ -141,6 +143,7 @@ export const buildTrade = async ({
     throw new SwapError('[buildTrade]: error building trade', {
       code: SwapErrorTypes.BUILD_TRADE_FAILED,
       fn: 'buildTrade',
+      cause: e,
     })
   }
 }
