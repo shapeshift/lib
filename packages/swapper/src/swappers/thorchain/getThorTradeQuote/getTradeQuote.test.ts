@@ -41,7 +41,7 @@ const quoteResponse: TradeQuote<KnownChainIds.EthereumMainnet> = {
     tradeFee: '0.00050931609817562157',
     tradeFeeBuyAsset: '0.00050931609817562157',
     tradeFeeSellAsset: '0',
-    minerFee: '700000',
+    networkFee: '700000',
   },
   rate: '0.0000784',
   sources: [{ name: 'thorchain', proportion: '1' }],

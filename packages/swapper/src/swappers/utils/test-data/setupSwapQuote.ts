@@ -22,7 +22,7 @@ export const setupQuote = () => {
       tradeFee: '0', // TODO: remove once web has been updated
       chainSpecific: {},
       tradeFeeSellAsset: '0',
-      minerFee: '0',
+      networkFee: '0',
       tradeFeeBuyAsset: '0',
     },
     rate: '1',

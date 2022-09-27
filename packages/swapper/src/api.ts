@@ -45,11 +45,11 @@ type ChainSpecificQuoteFeeData<T extends ChainId> = ChainSpecific<
 >
 
 export type QuoteFeeData<T extends ChainId> = {
-  minerFee: string // fee paid to the miner from the fee asset
+  networkFee: string // fee paid to the miner from the fee asset
   tradeFeeBuyAsset: string // fee taken out of the trade from the buyAsset
   tradeFeeSellAsset: string | undefined // fee taken out of the trade from the sellAsset
 
-  /** @deprecated Use minerFee instead */
+  /** @deprecated Use networkFee instead */
   fee: string
   /** @deprecated Use tradeFeeSellAsset instead */
   tradeFee: string // fee taken out of the trade from the buyAsset

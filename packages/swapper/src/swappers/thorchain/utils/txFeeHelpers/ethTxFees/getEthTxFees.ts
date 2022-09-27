@@ -50,7 +50,7 @@ export const getEthTxFees = async ({
 
     return {
       fee: feeData.txFee, // TODO: remove once web has been updated
-      minerFee: feeData.txFee,
+      networkFee: feeData.txFee,
       chainSpecific: {
         estimatedGas: feeData.chainSpecific.gasLimit,
         gasPrice: feeData.chainSpecific.gasPrice,

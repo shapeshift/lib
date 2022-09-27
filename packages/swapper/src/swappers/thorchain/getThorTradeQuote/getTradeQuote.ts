@@ -151,7 +151,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             allowanceContract: '0x0', // not applicable to cosmos
             feeData: {
               fee: feeData.fast.txFee,
-              minerFee: feeData.fast.txFee,
+              networkFee: feeData.fast.txFee,
               tradeFee: tradeFeeBuyAsset,
               tradeFeeBuyAsset,
               tradeFeeSellAsset: '0',

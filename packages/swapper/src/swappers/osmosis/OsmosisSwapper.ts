@@ -184,7 +184,13 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     return {
       buyAmount,
       buyAsset,
-      feeData: { fee, tradeFee, minerFee: fee, tradeFeeSellAsset: '0', tradeFeeBuyAsset: tradeFee },
+      feeData: {
+        fee,
+        tradeFee,
+        networkFee: fee,
+        tradeFeeSellAsset: '0',
+        tradeFeeBuyAsset: tradeFee,
+      },
       rate,
       receiveAddress,
       sellAmount: amountBaseSell,
@@ -224,7 +230,13 @@ export class OsmosisSwapper implements Swapper<ChainId> {
 
     return {
       buyAsset,
-      feeData: { fee, tradeFee, minerFee: fee, tradeFeeSellAsset: '0', tradeFeeBuyAsset: tradeFee },
+      feeData: {
+        fee,
+        tradeFee,
+        networkFee: fee,
+        tradeFeeSellAsset: '0',
+        tradeFeeBuyAsset: tradeFee,
+      },
       maximum,
       minimum,
       bip44Params,

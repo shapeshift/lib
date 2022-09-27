@@ -220,7 +220,7 @@ describe('CowSwapper', () => {
           tradeFee: '0',
           tradeFeeBuyAsset: '0',
           tradeFeeSellAsset: '0',
-          minerFee: '14557942658757988',
+          networkFee: '14557942658757988',
         },
         sellAmountWithoutFee: '985442057341242012',
       }

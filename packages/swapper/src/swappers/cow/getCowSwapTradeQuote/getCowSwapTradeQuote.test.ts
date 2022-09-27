@@ -129,7 +129,7 @@ const expectedTradeQuoteWethToFox: TradeQuote<KnownChainIds.EthereumMainnet> = {
     tradeFee: '0',
     tradeFeeBuyAsset: '0',
     tradeFeeSellAsset: '17.95954294012756741283729339486489192096',
-    minerFee: '0',
+    networkFee: '0',
   },
   sellAmount: '1000000000000000000',
   buyAmount: '14501811818247595090576', // 14501 FOX
@@ -154,7 +154,7 @@ const expectedTradeQuoteFoxToEth: TradeQuote<KnownChainIds.EthereumMainnet> = {
     tradeFee: '0',
     tradeFeeBuyAsset: '0',
     tradeFeeSellAsset: '5.3955565850972847808512',
-    minerFee: '0',
+    networkFee: '0',
   },
   sellAmount: '1000000000000000000000',
   buyAmount: '46868859830863283',
@@ -179,7 +179,7 @@ const expectedTradeQuoteSmallAmountWethToFox: TradeQuote<KnownChainIds.EthereumM
     tradeFee: '0',
     tradeFeeBuyAsset: '0',
     tradeFeeSellAsset: '1.79595429401274711874033728120645035672',
-    minerFee: '0',
+    networkFee: '0',
   },
   sellAmount: '1000000000000',
   buyAmount: '145018118182475950905', // 14501 FOX

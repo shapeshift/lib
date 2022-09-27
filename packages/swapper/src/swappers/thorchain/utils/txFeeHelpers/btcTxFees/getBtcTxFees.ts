@@ -36,12 +36,12 @@ export const getBtcTxFees = async ({
     const isFromBch = sellAdapter.getChainId() === KnownChainIds.BitcoinCashMainnet
     const feeMultiplier = isFromBch ? bn(1.5) : bn(1)
 
-    const minerFee = feeMultiplier.times(feeData.txFee).dp(0).toString()
+    const networkFee = feeMultiplier.times(feeData.txFee).dp(0).toString()
     const satsPerByte = feeMultiplier.times(feeData.chainSpecific.satoshiPerByte).dp(0).toString()
 
     return {
-      fee: minerFee,
-      minerFee,
+      fee: networkFee,
+      networkFee,
       tradeFee: tradeFeeBuyAsset,
       tradeFeeBuyAsset,
       tradeFeeSellAsset: '0',

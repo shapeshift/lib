@@ -39,7 +39,7 @@ describe('ZrxExecuteTrade', () => {
       tradeFee: '0',
       tradeFeeBuyAsset: '0',
       tradeFeeSellAsset: '0',
-      minerFee: '0',
+      networkFee: '0',
     },
     sources: [],
   }
