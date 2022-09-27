@@ -38,7 +38,7 @@ describe('getPriceRatio', () => {
     )
 
     await expect(getPriceRatio(deps, { buyAssetId: derpId, sellAssetId: ethId })).rejects.toThrow(
-      `[getPriceRatio]: No thorchain pool found`,
+      `[getPriceRatio]: No buyPoolId found for asset ${derpId}`,
     )
   })
 })
