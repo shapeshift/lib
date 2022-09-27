@@ -36,10 +36,14 @@ type GetThorTradeQuoteReturn = Promise<TradeQuote<ChainId>>
 type GetThorTradeQuote = (args: GetThorTradeQuoteInput) => GetThorTradeQuoteReturn
 
 export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
-  const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, chainId, receiveAddress } = input
+  const { sellAsset, buyAsset, sellAmount, bip44Params, chainId, receiveAddress } = input
+
+  if (!bip44Params) {
+    throw new Error('bip44Params required in getThorTradeQuote')
+  }
 
   try {
-    const { assetReference: sellAssetErc20Address } = fromAssetId(sellAsset.assetId)
+    const { assetReference: sellAssetReference } = fromAssetId(sellAsset.assetId)
 
     const sellAdapter = deps.adapterManager.get(chainId)
     if (!sellAdapter)
@@ -78,7 +82,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       sources: [{ name: 'thorchain', proportion: '1' }],
       buyAsset,
       sellAsset,
-      sellAssetAccountNumber,
+      bip44Params,
       minimum,
     }
 
@@ -97,7 +101,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
           })
           const feeData = await getEthTxFees({
             adapterManager: deps.adapterManager,
-            sellAssetReference: sellAssetErc20Address,
+            sellAssetReference,
             tradeFeeBuyAsset,
           })
 
@@ -144,7 +148,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
 
           return {
             ...commonQuoteFields,
-            allowanceContract: '0x0', // not applicable to bitcoin
+            allowanceContract: '0x0', // not applicable to cosmos
             feeData: {
               fee: feeData.fast.txFee,
               minerFee: feeData.fast.txFee,

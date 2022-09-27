@@ -74,13 +74,16 @@ type CommonTradeInput = {
   buyAsset: Asset
   sellAmount: string
   sendMax: boolean
-  sellAssetAccountNumber: number
   receiveAddress: string
+  bip44Params: BIP44Params
 }
 
 export type EvmSupportedChainIds = KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
 
-export type CosmosSdkSupportedChainIds = KnownChainIds.CosmosMainnet | KnownChainIds.OsmosisMainnet
+export type CosmosSdkSupportedChainIds =
+  | KnownChainIds.CosmosMainnet
+  | KnownChainIds.OsmosisMainnet
+  | KnownChainIds.ThorchainMainnet
 
 export type EvmSupportedChainAdapters = ethereum.ChainAdapter | avalanche.ChainAdapter
 
@@ -125,7 +128,7 @@ interface TradeBase<C extends ChainId> {
   sources: SwapSource[]
   buyAsset: Asset
   sellAsset: Asset
-  sellAssetAccountNumber: number
+  bip44Params: BIP44Params
 }
 
 export interface TradeQuote<C extends ChainId> extends TradeBase<C> {
