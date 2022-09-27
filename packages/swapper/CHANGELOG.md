@@ -1,3 +1,17 @@
+# [@shapeshiftoss/swapper-v11.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.3.1...@shapeshiftoss/swapper-v11.4.0) (2022-09-27)
+
+
+### Features
+
+* **swapper:** use thornode pools endpoint over midgard ([#1039](https://github.com/shapeshift/lib/issues/1039)) ([d6ae142](https://github.com/shapeshift/lib/commit/d6ae142598d82888d2c28190293ae56fc92c56e7))
+
+# [@shapeshiftoss/swapper-v11.3.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.3.0...@shapeshiftoss/swapper-v11.3.1) (2022-09-27)
+
+
+### Bug Fixes
+
+* **swapper:** typo in MidgardCoins ([#1040](https://github.com/shapeshift/lib/issues/1040)) ([2c29b50](https://github.com/shapeshift/lib/commit/2c29b500f2d5a2dc12b11a810a46c70060da9b64))
+
 # [@shapeshiftoss/swapper-v11.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.2.0...@shapeshiftoss/swapper-v11.3.0) (2022-09-26)
 
 
