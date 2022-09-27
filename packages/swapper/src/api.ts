@@ -51,7 +51,7 @@ export type QuoteFeeData<T extends ChainId> = {
 
   /** @deprecated Use networkFee instead */
   fee: string
-  /** @deprecated Use tradeFeeSellAsset instead */
+  /** @deprecated Use sellAssetTradeFeeUsd instead */
   tradeFee: string // fee taken out of the trade from the buyAsset
 } & ChainSpecificQuoteFeeData<T>
 
