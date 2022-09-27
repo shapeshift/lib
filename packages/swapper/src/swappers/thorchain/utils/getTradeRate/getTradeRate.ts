@@ -22,10 +22,10 @@ const getSwapOutput = (inputAmount: BN, pool: ThornodePoolResponse, toRune: bool
 const getDoubleSwapOutput = (
   input: BN,
   inputPool: ThornodePoolResponse,
-  outputPool: ThornodePoolResponse,
+  outputPool: ThornodePoolResponse | undefined,
 ): BN => {
   const runeToOutput = getSwapOutput(input, inputPool, true)
-  return getSwapOutput(runeToOutput, outputPool, false)
+  return outputPool ? getSwapOutput(runeToOutput, outputPool, false) : runeToOutput
 }
 
 // https://docs.thorchain.org/how-it-works/prices
@@ -71,18 +71,28 @@ export const getTradeRate = async (
   const buyPool = buyPoolId && data.find((response) => response.asset === buyPoolId)
   const sellPool = sellPoolId && data.find((response) => response.asset === sellPoolId)
 
-  if (!buyPool || !sellPool)
-    throw new SwapError(`[getPriceRatio]: no pools found`, {
+  if (!buyPool && !isRune(buyAssetId)) {
+    throw new SwapError(`[getTradeRate]: no pools found`, {
       code: SwapErrorTypes.POOL_NOT_FOUND,
-      fn: 'getPriceRatio',
+      fn: 'getTradeRate',
       details: { buyPoolId, sellPoolId },
     })
+  }
+
+  if (!sellPool && !isRune(sellAsset.assetId)) {
+    throw new SwapError(`[getTradeRate]: no pools found`, {
+      code: SwapErrorTypes.POOL_NOT_FOUND,
+      fn: 'getTradeRate',
+      details: { buyPoolId, sellPoolId },
+    })
+  }
 
   // All thorchain pool amounts are base 8 regardless of token precision
   const sellBaseAmount = bn(
     toBaseUnit(fromBaseUnit(sellAmount, sellAsset.precision), THOR_PRECISION),
   )
 
+  // @ts-ignore
   const outputAmountBase8 = getDoubleSwapOutput(sellBaseAmount, sellPool, buyPool)
   const outputAmount = fromBaseUnit(outputAmountBase8, THOR_PRECISION)
 
