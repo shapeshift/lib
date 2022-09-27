@@ -14,7 +14,7 @@ type GetBtcThorTxInfoArgs = {
   slippageTolerance: string
   destinationAddress: string
   xpub: string
-  tradeFeeBuyAsset: string
+  buyAssetTradeFeeUsd: string
 }
 type GetBtcThorTxInfoReturn = Promise<{
   opReturnData: string
@@ -31,7 +31,7 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
   slippageTolerance,
   destinationAddress,
   xpub,
-  tradeFeeBuyAsset,
+  buyAssetTradeFeeUsd,
 }) => {
   try {
     const { data: inboundAddresses } = await thorService.get<InboundResponse[]>(
@@ -58,7 +58,7 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
       buyAsset,
       slippageTolerance,
       deps,
-      tradeFeeBuyAsset,
+      buyAssetTradeFeeUsd,
     })
 
     const memo = makeSwapMemo({

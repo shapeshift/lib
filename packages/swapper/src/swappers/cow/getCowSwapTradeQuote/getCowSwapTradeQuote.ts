@@ -117,7 +117,7 @@ export async function getCowSwapTradeQuote(
       getUsdRate(deps, sellAsset),
     ])
 
-    const tradeFeeSellAsset = bnOrZero(quote.feeAmount)
+    const sellAssetTradeFeeUsd = bnOrZero(quote.feeAmount)
       .div(bn(10).exponentiatedBy(sellAsset.precision))
       .multipliedBy(bnOrZero(sellAssetUsdRate))
       .toString()
@@ -145,8 +145,8 @@ export async function getCowSwapTradeQuote(
             .toString(),
         },
         tradeFee: '0', // TODO: remove once web has been updated
-        tradeFeeBuyAsset: '0', // Trade fees for buy Asset are always 0 since trade fees are subtracted from sell asset
-        tradeFeeSellAsset,
+        buyAssetTradeFeeUsd: '0', // Trade fees for buy Asset are always 0 since trade fees are subtracted from sell asset
+        sellAssetTradeFeeUsd,
       },
       sellAmount: quoteSellAmount,
       buyAmount: quote.buyAmount,

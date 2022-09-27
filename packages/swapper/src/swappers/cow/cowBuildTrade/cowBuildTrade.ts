@@ -114,8 +114,8 @@ export async function cowBuildTrade(
           gasPrice: feeData.chainSpecific.gasPrice,
         },
         tradeFee: '0', // Trade fees for buy Asset are always 0 since trade fees are subtracted from sell asset
-        tradeFeeBuyAsset: '0',
-        tradeFeeSellAsset: undefined, // Not used by web, and would be a waste to compute
+        buyAssetTradeFeeUsd: '0',
+        sellAssetTradeFeeUsd: undefined, // Not used by web, and would be a waste to compute
       },
       sellAmount: normalizedSellAmount,
       buyAmount: quote.buyAmount,

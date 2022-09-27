@@ -21,9 +21,9 @@ export const setupQuote = () => {
       fee: '0', // TODO: remove once web has been updated
       tradeFee: '0', // TODO: remove once web has been updated
       chainSpecific: {},
-      tradeFeeSellAsset: '0',
+      sellAssetTradeFeeUsd: '0',
       networkFee: '0',
-      tradeFeeBuyAsset: '0',
+      buyAssetTradeFeeUsd: '0',
     },
     rate: '1',
     sources: [],

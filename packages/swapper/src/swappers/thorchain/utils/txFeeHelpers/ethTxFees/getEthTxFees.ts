@@ -10,11 +10,11 @@ import { THOR_ETH_GAS_LIMIT } from '../../constants'
 export const getEthTxFees = async ({
   adapterManager,
   sellAssetReference,
-  tradeFeeBuyAsset,
+  buyAssetTradeFeeUsd,
 }: {
   adapterManager: ChainAdapterManager
   sellAssetReference: AssetReference | string
-  tradeFeeBuyAsset: string
+  buyAssetTradeFeeUsd: string
 }): Promise<QuoteFeeData<KnownChainIds.EthereumMainnet>> => {
   try {
     const adapter = adapterManager.get(KnownChainIds.EthereumMainnet) as
@@ -60,9 +60,9 @@ export const getEthTxFees = async ({
             .multipliedBy(bnOrZero(feeData.chainSpecific.gasPrice))
             .toString(),
       },
-      tradeFee: tradeFeeBuyAsset, // TODO: remove once web has been updated
-      tradeFeeBuyAsset,
-      tradeFeeSellAsset: '0',
+      tradeFee: buyAssetTradeFeeUsd, // TODO: remove once web has been updated
+      buyAssetTradeFeeUsd,
+      sellAssetTradeFeeUsd: '0',
     }
   } catch (e) {
     if (e instanceof SwapError) throw e
