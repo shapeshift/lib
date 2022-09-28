@@ -20,7 +20,7 @@ import {
   ORDER_KIND_SELL,
 } from '../utils/constants'
 import { cowService } from '../utils/cowService'
-import { getNowPlusThirtyMinutesTimestamp } from '../utils/helpers/helpers'
+import { getNowPlusThirtyMinutesTimestamp, getUsdRate } from '../utils/helpers/helpers'
 
 export async function cowBuildTrade(
   deps: CowSwapperDeps,
@@ -86,6 +86,12 @@ export async function cowBuildTrade(
       data: { quote },
     } = quoteResponse
 
+    const sellAssetUsdRate = await getUsdRate(deps, sellAsset)
+    const sellAssetTradeFeeUsd = bnOrZero(quote.feeAmount)
+      .div(bn(10).exponentiatedBy(sellAsset.precision))
+      .multipliedBy(bnOrZero(sellAssetUsdRate))
+      .toString()
+
     const buyCryptoAmount = bn(quote.buyAmount).div(bn(10).exponentiatedBy(buyAsset.precision))
     const sellCryptoAmount = bn(quote.sellAmount).div(bn(10).exponentiatedBy(sellAsset.precision))
     const rate = buyCryptoAmount.div(sellCryptoAmount).toString()
@@ -115,6 +121,7 @@ export async function cowBuildTrade(
         },
         tradeFee: '0', // TODO: remove once web has been updated
         buyAssetTradeFeeUsd: '0', // Trade fees for buy Asset are always 0 since trade fees are subtracted from sell asset
+        sellAssetTradeFeeUsd,
       },
       sellAmount: normalizedSellAmount,
       buyAmount: quote.buyAmount,
