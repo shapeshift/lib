@@ -125,6 +125,7 @@ const expectedTradeWethToFox: CowTrade<KnownChainIds.EthereumMainnet> = {
     tradeFee: '0',
     buyAssetTradeFeeUsd: '0',
     networkFee: '0',
+    sellAssetTradeFeeUsd: '17.95954294012756741283729339486489192096',
   },
   sellAmount: '1000000000000000000',
   buyAmount: '14501811818247595090576', // 14501 FOX
@@ -149,6 +150,7 @@ const expectedTradeQuoteWbtcToWethWithApprovalFee: CowTrade<KnownChainIds.Ethere
     tradeFee: '0',
     buyAssetTradeFeeUsd: '0',
     networkFee: '0',
+    sellAssetTradeFeeUsd: '3.6162531444',
   },
   sellAmount: '100000000',
   buyAmount: '19136098853078932263', // 19.13 WETH
@@ -172,6 +174,7 @@ const expectedTradeQuoteFoxToEth: CowTrade<KnownChainIds.EthereumMainnet> = {
     tradeFee: '0',
     buyAssetTradeFeeUsd: '0',
     networkFee: '0',
+    sellAssetTradeFeeUsd: '5.3955565850972847808512',
   },
   sellAmount: '1000000000000000000000',
   buyAmount: '46868859830863283',
