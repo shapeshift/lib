@@ -63,8 +63,8 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
     const estimatedBuyAssetTradeFeeCrypto = await estimateBuyAssetTradeFeeCrypto(deps, buyAsset)
 
     const buyAssetUsdRate = await getUsdRate({ deps, input: { assetId: buyAsset.assetId } })
-    const estimatedBuyAssetTradeFeeUsd = bn(estimatedBuyAssetTradeFeeCrypto)
-      .div(buyAssetUsdRate)
+    const estimatedBuyAssetTradeFeeUsd = bn(buyAssetUsdRate)
+      .times(estimatedBuyAssetTradeFeeCrypto)
       .toString()
 
     const buyAssetTradeFeeUsdOrMinimum = MINIMUM_USD_TRADE_AMOUNT.gt(estimatedBuyAssetTradeFeeUsd)
@@ -72,15 +72,17 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       : estimatedBuyAssetTradeFeeUsd
 
     // The 1$ minimum doesn't seem to apply for swaps to RUNE
-    const sellAssetTradeFeeCrypto = bnOrZero(
-      isRune(buyAsset?.assetId) ? bn('0.02') : buyAssetTradeFeeUsdOrMinimum,
-    ).times(rate)
+    const sellAssetTradeFeeCrypto = isRune(buyAsset?.assetId)
+      ? bn('0.02')
+      : bnOrZero(buyAssetTradeFeeUsdOrMinimum).times(
+          isRune(sellAsset?.assetId) ? rate : bn(1).div(rate), // RUNE is the native asset of Thorchain and the quote asset of all Thorswap pools, so the rate is already inverted
+        )
     // minimum is tradeFee padded by an amount to be sure they get something back
     // usually it will be slightly more than the amount because sellAssetTradeFee is already a high estimate
     const minimum = bnOrZero(sellAssetTradeFeeCrypto).times(THOR_MINIMUM_PADDING).toString()
 
     const buyAssetTradeFeeUsdOrDefault = isRune(buyAsset?.assetId)
-      ? bn('0.02').div(buyAssetUsdRate).toString()
+      ? bn(buyAssetUsdRate).times('0.02').toString()
       : buyAssetTradeFeeUsdOrMinimum
 
     const commonQuoteFields: CommonQuoteFields = {
