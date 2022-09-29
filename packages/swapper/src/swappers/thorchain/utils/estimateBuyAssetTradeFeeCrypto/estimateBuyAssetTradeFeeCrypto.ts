@@ -8,7 +8,6 @@ import { getPriceRatio } from '../getPriceRatio/getPriceRatio'
 import { isRune } from '../isRune/isRune'
 import { thorService } from '../thorService'
 
-// TODO rename this estimateOutboundFee or similar
 export const estimateBuyAssetTradeFeeCrypto = async (
   deps: ThorchainSwapperDeps,
   buyAsset: Asset,

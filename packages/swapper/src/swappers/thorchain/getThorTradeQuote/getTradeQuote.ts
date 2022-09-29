@@ -72,7 +72,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       ? minTradeFeeAmountUsd.toString()
       : estimatedBuyAssetTradeFeeUsd
 
-    const sellAssetTradeFeeCrypto = bnOrZero(buyAssetTradeFeeUsdOrMinimum).div(bnOrZero(rate))
+    const sellAssetTradeFeeCrypto = bnOrZero(buyAssetTradeFeeUsdOrMinimum).times(bnOrZero(rate))
 
     // minimum is tradeFee padded by an amount to be sure they get something back
     // usually it will be slightly more than the amount because sellAssetTradeFee is already a high estimate
