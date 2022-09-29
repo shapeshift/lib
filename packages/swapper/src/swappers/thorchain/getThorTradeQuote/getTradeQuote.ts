@@ -70,11 +70,11 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       ? minTradeFeeAmountUsd.toString()
       : estimatedTradeFeeUsd
 
-    const sellAssetTradeFee = bnOrZero(buyAssetTradeFeeUsd).times(bnOrZero(rate))
+    const sellAssetTradeFeeCrypto = bnOrZero(buyAssetTradeFeeUsd).times(bnOrZero(rate))
 
     // minimum is tradeFee padded by an amount to be sure they get something back
     // usually it will be slightly more than the amount because sellAssetTradeFee is already a high estimate
-    const minimum = bnOrZero(sellAssetTradeFee).times(THOR_MINIMUM_PADDING).toString()
+    const minimum = bnOrZero(sellAssetTradeFeeCrypto).times(THOR_MINIMUM_PADDING).toString()
 
     const commonQuoteFields: CommonQuoteFields = {
       rate,

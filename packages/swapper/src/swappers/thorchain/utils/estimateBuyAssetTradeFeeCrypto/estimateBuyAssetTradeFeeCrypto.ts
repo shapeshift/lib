@@ -18,10 +18,13 @@ export const estimateBuyAssetTradeFeeCrypto = async (
   }
   const thorId = adapters.assetIdToPoolAssetId({ assetId: buyAsset.assetId })
   if (!thorId)
-    throw new SwapError('[estimateTradeFee] - undefined thorId for given buyAssetId', {
-      code: SwapErrorTypes.VALIDATION_FAILED,
-      details: { buyAssetId: buyAsset.assetId },
-    })
+    throw new SwapError(
+      '[estimateBuyAssetTradeFeeCrypto] - undefined thorId for given buyAssetId',
+      {
+        code: SwapErrorTypes.VALIDATION_FAILED,
+        details: { buyAssetId: buyAsset.assetId },
+      },
+    )
 
   const thorPoolChainId = thorId.slice(0, thorId.indexOf('.'))
 
@@ -32,7 +35,7 @@ export const estimateBuyAssetTradeFeeCrypto = async (
   const inboundInfo = inboundAddresses.find((inbound) => inbound.chain === thorPoolChainId)
 
   if (!inboundInfo)
-    throw new SwapError('[estimateTradeFee] - unable to locate inbound pool info', {
+    throw new SwapError('[estimateBuyAssetTradeFeeCrypto] - unable to locate inbound pool info', {
       code: SwapErrorTypes.VALIDATION_FAILED,
       details: { thorPoolChainId },
     })
@@ -43,7 +46,7 @@ export const estimateBuyAssetTradeFeeCrypto = async (
   const buyAdapter = deps.adapterManager.get(buyChainId)
 
   if (!buyAdapter)
-    throw new SwapError('[estimateTradeFee] - unable to get buy asset adapter', {
+    throw new SwapError('[estimateBuyAssetTradeFeeCrypto] - unable to get buy asset adapter', {
       code: SwapErrorTypes.VALIDATION_FAILED,
       details: { buyChainId },
     })
@@ -51,7 +54,7 @@ export const estimateBuyAssetTradeFeeCrypto = async (
   const buyFeeAssetId = buyAdapter.getFeeAssetId()
 
   if (!buyFeeAssetId)
-    throw new SwapError('[estimateTradeFee] - no fee assetId', {
+    throw new SwapError('[estimateBuyAssetTradeFeeCrypto] - no fee assetId', {
       code: SwapErrorTypes.VALIDATION_FAILED,
       details: { buyAssetId: buyAsset.assetId },
     })
@@ -65,7 +68,7 @@ export const estimateBuyAssetTradeFeeCrypto = async (
       : '1'
 
   if (!THOR_TRADE_FEE_MULTIPLIERS[buyChainId])
-    throw new SwapError('[estimateTradeFee] - no trade fee multiplier', {
+    throw new SwapError('[estimateBuyAssetTradeFeeCrypto] - no trade fee multiplier', {
       code: SwapErrorTypes.VALIDATION_FAILED,
       details: { buyChainId },
     })
