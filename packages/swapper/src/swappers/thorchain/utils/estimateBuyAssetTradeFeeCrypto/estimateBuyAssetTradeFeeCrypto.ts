@@ -9,7 +9,7 @@ import { isRune } from '../isRune/isRune'
 import { thorService } from '../thorService'
 
 // TODO rename this estimateOutboundFee or similar
-export const estimateTradeFee = async (
+export const estimateBuyAssetTradeFeeCrypto = async (
   deps: ThorchainSwapperDeps,
   buyAsset: Asset,
 ): Promise<string> => {

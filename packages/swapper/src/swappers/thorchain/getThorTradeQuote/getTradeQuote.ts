@@ -15,7 +15,7 @@ import { DEFAULT_SLIPPAGE } from '../../utils/constants'
 import { ThorchainSwapperDeps } from '../types'
 import { getThorTxInfo as getBtcThorTxInfo } from '../utils/bitcoin/utils/getThorTxData'
 import { MAX_THORCHAIN_TRADE, THOR_MINIMUM_PADDING } from '../utils/constants'
-import { estimateTradeFee } from '../utils/estimateTradeFee/estimateTradeFee'
+import { estimateBuyAssetTradeFeeCrypto } from '../utils/estimateBuyAssetTradeFeeCrypto/estimateBuyAssetTradeFeeCrypto'
 import { getThorTxInfo as getEthThorTxInfo } from '../utils/ethereum/utils/getThorTxData'
 import { getTradeRate } from '../utils/getTradeRate/getTradeRate'
 import { getUsdRate } from '../utils/getUsdRate/getUsdRate'
@@ -59,16 +59,18 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       buyAsset.precision,
     )
 
-    const estimatedTradeFee = await estimateTradeFee(deps, buyAsset)
+    const estimatedTradeFeeCrypto = await estimateBuyAssetTradeFeeCrypto(deps, buyAsset)
 
-    const buyAssetUsdRate = await getUsdRate({ deps, input: { assetId: buyAsset.assetId } })
-    const minTradeFeeAmount = MINIMUM_USD_TRADE_AMOUNT.div(buyAssetUsdRate)
+    const sellAssetUsdRate = await getUsdRate({ deps, input: { assetId: sellAsset.assetId } })
+    const estimatedTradeFeeUsd = bn(estimatedTradeFeeCrypto).div(sellAssetUsdRate).toString()
 
-    const buyAssetTradeFeeUsd = minTradeFeeAmount.gt(estimatedTradeFee)
-      ? minTradeFeeAmount.toString()
-      : estimatedTradeFee
+    const minTradeFeeAmountUsd = MINIMUM_USD_TRADE_AMOUNT
 
-    const sellAssetTradeFee = bnOrZero(buyAssetTradeFeeUsd).dividedBy(bnOrZero(rate))
+    const buyAssetTradeFeeUsd = minTradeFeeAmountUsd.gt(estimatedTradeFeeUsd)
+      ? minTradeFeeAmountUsd.toString()
+      : estimatedTradeFeeUsd
+
+    const sellAssetTradeFee = bnOrZero(buyAssetTradeFeeUsd).times(bnOrZero(rate))
 
     // minimum is tradeFee padded by an amount to be sure they get something back
     // usually it will be slightly more than the amount because sellAssetTradeFee is already a high estimate
