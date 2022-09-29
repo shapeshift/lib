@@ -59,18 +59,20 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       buyAsset.precision,
     )
 
-    const estimatedTradeFeeCrypto = await estimateBuyAssetTradeFeeCrypto(deps, buyAsset)
+    const estimatedBuyAssetTradeFeeCrypto = await estimateBuyAssetTradeFeeCrypto(deps, buyAsset)
 
     const buyAssetUsdRate = await getUsdRate({ deps, input: { assetId: buyAsset.assetId } })
-    const estimatedTradeFeeUsd = bn(estimatedTradeFeeCrypto).div(buyAssetUsdRate).toString()
+    const estimatedBuyAssetTradeFeeUsd = bn(estimatedBuyAssetTradeFeeCrypto)
+      .div(buyAssetUsdRate)
+      .toString()
 
     const minTradeFeeAmountUsd = MINIMUM_USD_TRADE_AMOUNT
 
-    const buyAssetTradeFeeUsd = minTradeFeeAmountUsd.gt(estimatedTradeFeeUsd)
+    const buyAssetTradeFeeUsdOrMinimum = minTradeFeeAmountUsd.gt(estimatedBuyAssetTradeFeeUsd)
       ? minTradeFeeAmountUsd.toString()
-      : estimatedTradeFeeUsd
+      : estimatedBuyAssetTradeFeeUsd
 
-    const sellAssetTradeFeeCrypto = bnOrZero(buyAssetTradeFeeUsd).times(bnOrZero(rate))
+    const sellAssetTradeFeeCrypto = bnOrZero(buyAssetTradeFeeUsdOrMinimum).times(bnOrZero(rate))
 
     // minimum is tradeFee padded by an amount to be sure they get something back
     // usually it will be slightly more than the amount because sellAssetTradeFee is already a high estimate
@@ -99,12 +101,12 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             sellAmount,
             slippageTolerance: DEFAULT_SLIPPAGE,
             destinationAddress: receiveAddress,
-            buyAssetTradeFeeUsd,
+            buyAssetTradeFeeUsd: buyAssetTradeFeeUsdOrMinimum,
           })
           const feeData = await getEthTxFees({
             adapterManager: deps.adapterManager,
             sellAssetReference,
-            buyAssetTradeFeeUsd,
+            buyAssetTradeFeeUsd: buyAssetTradeFeeUsdOrMinimum,
           })
 
           return {
@@ -124,7 +126,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             slippageTolerance: DEFAULT_SLIPPAGE,
             destinationAddress: receiveAddress,
             xpub: (input as GetUtxoTradeQuoteInput).xpub,
-            buyAssetTradeFeeUsd,
+            buyAssetTradeFeeUsd: buyAssetTradeFeeUsdOrMinimum,
           })
 
           const feeData = await getBtcTxFees({
@@ -133,7 +135,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             opReturnData,
             pubkey,
             sellAdapter: sellAdapter as unknown as UtxoBaseAdapter<UtxoSupportedChainIds>,
-            buyAssetTradeFeeUsd,
+            buyAssetTradeFeeUsd: buyAssetTradeFeeUsdOrMinimum,
           })
 
           return {
@@ -154,8 +156,8 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             feeData: {
               fee: feeData.fast.txFee,
               networkFee: feeData.fast.txFee,
-              tradeFee: buyAssetTradeFeeUsd,
-              buyAssetTradeFeeUsd,
+              tradeFee: buyAssetTradeFeeUsdOrMinimum,
+              buyAssetTradeFeeUsd: buyAssetTradeFeeUsdOrMinimum,
               sellAssetTradeFeeUsd: '0',
               chainSpecific: { estimatedGas: feeData.fast.chainSpecific.gasLimit },
             },
