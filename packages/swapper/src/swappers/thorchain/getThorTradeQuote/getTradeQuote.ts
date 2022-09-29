@@ -61,8 +61,8 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
 
     const estimatedTradeFeeCrypto = await estimateBuyAssetTradeFeeCrypto(deps, buyAsset)
 
-    const sellAssetUsdRate = await getUsdRate({ deps, input: { assetId: sellAsset.assetId } })
-    const estimatedTradeFeeUsd = bn(estimatedTradeFeeCrypto).div(sellAssetUsdRate).toString()
+    const buyAssetUsdRate = await getUsdRate({ deps, input: { assetId: buyAsset.assetId } })
+    const estimatedTradeFeeUsd = bn(estimatedTradeFeeCrypto).div(buyAssetUsdRate).toString()
 
     const minTradeFeeAmountUsd = MINIMUM_USD_TRADE_AMOUNT
 
