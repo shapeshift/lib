@@ -19,6 +19,7 @@ import { estimateBuyAssetTradeFeeCrypto } from '../utils/estimateBuyAssetTradeFe
 import { getThorTxInfo as getEthThorTxInfo } from '../utils/ethereum/utils/getThorTxData'
 import { getTradeRate } from '../utils/getTradeRate/getTradeRate'
 import { getUsdRate } from '../utils/getUsdRate/getUsdRate'
+import { isRune } from '../utils/isRune/isRune'
 import { getBtcTxFees } from '../utils/txFeeHelpers/btcTxFees/getBtcTxFees'
 import { getEthTxFees } from '../utils/txFeeHelpers/ethTxFees/getEthTxFees'
 
@@ -66,17 +67,21 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       .div(buyAssetUsdRate)
       .toString()
 
-    const minTradeFeeAmountUsd = MINIMUM_USD_TRADE_AMOUNT
-
-    const buyAssetTradeFeeUsdOrMinimum = minTradeFeeAmountUsd.gt(estimatedBuyAssetTradeFeeUsd)
-      ? minTradeFeeAmountUsd.toString()
+    const buyAssetTradeFeeUsdOrMinimum = MINIMUM_USD_TRADE_AMOUNT.gt(estimatedBuyAssetTradeFeeUsd)
+      ? MINIMUM_USD_TRADE_AMOUNT.toString()
       : estimatedBuyAssetTradeFeeUsd
 
-    const sellAssetTradeFeeCrypto = bnOrZero(buyAssetTradeFeeUsdOrMinimum).times(bnOrZero(rate))
-
+    // The 1$ minimum doesn't seem to apply for swaps to RUNE
+    const sellAssetTradeFeeCrypto = bnOrZero(
+      isRune(buyAsset?.assetId) ? bn('0.02') : buyAssetTradeFeeUsdOrMinimum,
+    ).times(rate)
     // minimum is tradeFee padded by an amount to be sure they get something back
     // usually it will be slightly more than the amount because sellAssetTradeFee is already a high estimate
     const minimum = bnOrZero(sellAssetTradeFeeCrypto).times(THOR_MINIMUM_PADDING).toString()
+
+    const buyAssetTradeFeeUsdOrDefault = isRune(buyAsset?.assetId)
+      ? bn('0.02').div(buyAssetUsdRate).toString()
+      : buyAssetTradeFeeUsdOrMinimum
 
     const commonQuoteFields: CommonQuoteFields = {
       rate,
@@ -156,8 +161,8 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             feeData: {
               fee: feeData.fast.txFee,
               networkFee: feeData.fast.txFee,
-              tradeFee: buyAssetTradeFeeUsdOrMinimum,
-              buyAssetTradeFeeUsd: buyAssetTradeFeeUsdOrMinimum,
+              tradeFee: buyAssetTradeFeeUsdOrDefault,
+              buyAssetTradeFeeUsd: buyAssetTradeFeeUsdOrDefault,
               sellAssetTradeFeeUsd: '0',
               chainSpecific: { estimatedGas: feeData.fast.chainSpecific.gasLimit },
             },
