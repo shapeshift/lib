@@ -36,7 +36,14 @@ type GetThorTradeQuoteReturn = Promise<TradeQuote<ChainId>>
 type GetThorTradeQuote = (args: GetThorTradeQuoteInput) => GetThorTradeQuoteReturn
 
 export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
-  const { sellAsset, buyAsset, sellAmount, bip44Params, chainId, receiveAddress } = input
+  const {
+    sellAsset,
+    buyAsset,
+    sellAmount: sellAmountCryptoPrecision,
+    bip44Params,
+    chainId,
+    receiveAddress,
+  } = input
 
   if (!bip44Params) {
     throw new Error('bip44Params required in getThorTradeQuote')
@@ -52,26 +59,29 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
         details: { chainId },
       })
 
-    const rate = await getTradeRate(sellAsset, buyAsset.assetId, sellAmount, deps)
+    const rate = await getTradeRate(sellAsset, buyAsset.assetId, sellAmountCryptoPrecision, deps)
 
-    const buyAmount = toBaseUnit(
-      bnOrZero(fromBaseUnit(sellAmount, sellAsset.precision)).times(rate),
+    const buyAmountCryptoPrecision = toBaseUnit(
+      bnOrZero(fromBaseUnit(sellAmountCryptoPrecision, sellAsset.precision)).times(rate),
       buyAsset.precision,
     )
 
-    const estimatedBuyAssetTradeFeeCrypto = await estimateBuyAssetTradeFeeCrypto(deps, buyAsset)
+    const estimatedBuyAssetTradeFeeCryptoHuman = await estimateBuyAssetTradeFeeCrypto(
+      deps,
+      buyAsset,
+    )
 
     const buyAssetUsdRate = await getUsdRate({ deps, input: { assetId: buyAsset.assetId } })
     const sellAssetUsdRate = await getUsdRate({ deps, input: { assetId: sellAsset.assetId } })
     const estimatedBuyAssetTradeFeeUsd = bn(buyAssetUsdRate)
-      .times(estimatedBuyAssetTradeFeeCrypto)
+      .times(estimatedBuyAssetTradeFeeCryptoHuman)
       .toString()
 
     const buyAssetTradeFeeUsdOrMinimum = MINIMUM_USD_TRADE_AMOUNT.gt(estimatedBuyAssetTradeFeeUsd)
       ? MINIMUM_USD_TRADE_AMOUNT.toString()
       : estimatedBuyAssetTradeFeeUsd
 
-    const sellAssetTradeFeeCrypto = (() => {
+    const sellAssetTradeFeeCryptoHuman = (() => {
       // The 1$ minimum doesn't apply for swaps to RUNE, use OutboundTransactionFee in human value instead
       if (isRune(buyAsset?.assetId)) return RUNE_OUTBOUND_TRANSACTION_FEE_CRYPTO_HUMAN
 
@@ -79,7 +89,9 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
     })()
     // minimum is tradeFee padded by an amount to be sure they get something back
     // usually it will be slightly more than the amount because sellAssetTradeFee is already a high estimate
-    const minimum = bnOrZero(sellAssetTradeFeeCrypto).times(THOR_MINIMUM_PADDING).toString()
+    const minimumCryptoHuman = bnOrZero(sellAssetTradeFeeCryptoHuman)
+      .times(THOR_MINIMUM_PADDING)
+      .toString()
 
     const buyAssetTradeFeeUsdOrDefault = isRune(buyAsset?.assetId)
       ? bn(buyAssetUsdRate).times(RUNE_OUTBOUND_TRANSACTION_FEE_CRYPTO_HUMAN).toString()
@@ -88,13 +100,13 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
     const commonQuoteFields: CommonQuoteFields = {
       rate,
       maximum: MAX_THORCHAIN_TRADE,
-      sellAmount,
-      buyAmount,
+      sellAmount: sellAmountCryptoPrecision,
+      buyAmount: buyAmountCryptoPrecision,
       sources: [{ name: 'thorchain', proportion: '1' }],
       buyAsset,
       sellAsset,
       bip44Params,
-      minimum,
+      minimum: minimumCryptoHuman,
     }
 
     const { chainNamespace } = fromAssetId(sellAsset.assetId)
@@ -105,7 +117,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             deps,
             sellAsset,
             buyAsset,
-            sellAmount,
+            sellAmount: sellAmountCryptoPrecision,
             slippageTolerance: DEFAULT_SLIPPAGE,
             destinationAddress: receiveAddress,
             buyAssetTradeFeeUsd: buyAssetTradeFeeUsdOrMinimum,
@@ -129,7 +141,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             deps,
             sellAsset,
             buyAsset,
-            sellAmount,
+            sellAmount: sellAmountCryptoPrecision,
             slippageTolerance: DEFAULT_SLIPPAGE,
             destinationAddress: receiveAddress,
             xpub: (input as GetUtxoTradeQuoteInput).xpub,
@@ -137,7 +149,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
           })
 
           const feeData = await getBtcTxFees({
-            sellAmount,
+            sellAmount: sellAmountCryptoPrecision,
             vault,
             opReturnData,
             pubkey,
