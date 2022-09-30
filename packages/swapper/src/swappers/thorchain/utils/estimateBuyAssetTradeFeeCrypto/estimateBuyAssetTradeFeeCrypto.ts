@@ -2,6 +2,7 @@ import { Asset } from '@shapeshiftoss/asset-service'
 import { adapters, fromAssetId } from '@shapeshiftoss/caip'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
+import { RUNE_OUTBOUND_TRANSACTION_FEE_CRYPTO_HUMAN } from '../../constants'
 import { InboundResponse, ThorchainSwapperDeps } from '../../types'
 import { THOR_TRADE_FEE_MULTIPLIERS } from '../constants'
 import { getPriceRatio } from '../getPriceRatio/getPriceRatio'
@@ -13,7 +14,7 @@ export const estimateBuyAssetTradeFeeCrypto = async (
   buyAsset: Asset,
 ): Promise<string> => {
   if (isRune(buyAsset.assetId)) {
-    return '0.02' // todo - read from TC mimir/constants
+    return RUNE_OUTBOUND_TRANSACTION_FEE_CRYPTO_HUMAN.toString()
   }
   const thorId = adapters.assetIdToPoolAssetId({ assetId: buyAsset.assetId })
   if (!thorId)
