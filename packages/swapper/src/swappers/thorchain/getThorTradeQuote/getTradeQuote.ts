@@ -74,11 +74,8 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
     const sellAssetTradeFeeCrypto = (() => {
       // The 1$ minimum doesn't apply for swaps to RUNE, use OutboundTransactionFee in human value instead
       if (isRune(buyAsset?.assetId)) return RUNE_OUTBOUND_TRANSACTION_FEE_CRYPTO_HUMAN
-      if (isRune(sellAsset?.assetId)) return sellAssetUsdRate
 
-      return bnOrZero(buyAssetTradeFeeUsdOrMinimum).div(
-        isRune(sellAsset?.assetId) ? rate : sellAssetUsdRate, // RUNE is the native asset of Thorchain and the quote asset of all Thorswap pools, so the rate is already inverted
-      )
+      return bnOrZero(buyAssetTradeFeeUsdOrMinimum).div(sellAssetUsdRate)
     })()
     // minimum is tradeFee padded by an amount to be sure they get something back
     // usually it will be slightly more than the amount because sellAssetTradeFee is already a high estimate
