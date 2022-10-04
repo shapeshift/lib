@@ -11,6 +11,7 @@ export const getBtcTxFees = async ({
   sellAdapter,
   pubkey,
   buyAssetTradeFeeUsd,
+  sendMax,
 }: {
   opReturnData: string
   vault: string
@@ -18,12 +19,14 @@ export const getBtcTxFees = async ({
   sellAdapter: UtxoBaseAdapter<UtxoSupportedChainIds>
   pubkey: string
   buyAssetTradeFeeUsd: string
+  sendMax: boolean
 }): Promise<QuoteFeeData<UtxoSupportedChainIds>> => {
   try {
     const feeDataOptions = await sellAdapter.getFeeData({
       to: vault,
       value: sellAmount,
       chainSpecific: { pubkey, opReturnData },
+      sendMax,
     })
 
     const feeData = feeDataOptions['fast']
