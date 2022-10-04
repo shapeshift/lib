@@ -37,7 +37,7 @@ const MtPelerinSymbolToAssetIds: Record<string, AssetId[]> = {
   UST: ['eip155:1/erc20:0xa693b19d2931d498c5b318df961919bb4aee87a5'],
   EUROC: ['eip155:1/erc20:0x1abaea1f7c830bd89acc67ec4af516284b1bc33c'],
   LUSD: ['eip155:1/erc20:0x5f98805a4e8be255a32880fdec7f6728c6568ba0'],
-  XCHF: ['eip155:1/erc20:0xb4272071ecadd69d933adcd19ca99fe80664fc08']
+  XCHF: ['eip155:1/erc20:0xb4272071ecadd69d933adcd19ca99fe80664fc08'],
 }
 /**
  * The following is the list of assets that Mt Pelerin supports
