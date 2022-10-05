@@ -1,3 +1,24 @@
+# [@shapeshiftoss/swapper-v11.5.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.5.3...@shapeshiftoss/swapper-v11.5.4) (2022-10-04)
+
+
+### Bug Fixes
+
+* get price ratio when buy asset is rune ([#1049](https://github.com/shapeshift/lib/issues/1049)) ([a6cf661](https://github.com/shapeshift/lib/commit/a6cf661172f2c6b5c53b44c9c07a9366912dd746))
+
+# [@shapeshiftoss/swapper-v11.5.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.5.2...@shapeshiftoss/swapper-v11.5.3) (2022-10-04)
+
+
+### Bug Fixes
+
+* **swapper:** plumb `sendMax` through ThorSwapper ([#1046](https://github.com/shapeshift/lib/issues/1046)) ([f8183ca](https://github.com/shapeshift/lib/commit/f8183cae9eed294d52a3b8c3bf1db9ec878ac4b6))
+
+# [@shapeshiftoss/swapper-v11.5.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.5.1...@shapeshiftoss/swapper-v11.5.2) (2022-10-03)
+
+
+### Bug Fixes
+
+* thorswap fees and minimums estimation ([#1043](https://github.com/shapeshift/lib/issues/1043)) ([9e33dee](https://github.com/shapeshift/lib/commit/9e33deeb6fb22bce16f2af20239fb96b0970207c))
+
 # [@shapeshiftoss/swapper-v11.5.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.5.0...@shapeshiftoss/swapper-v11.5.1) (2022-09-30)
 
 
