@@ -67,10 +67,13 @@ export type SupportedSellAssetsInput = {
 type CommonTradeInput = {
   sellAsset: Asset
   buyAsset: Asset
-  sellAmount: string
+  sellAmountCryptoPrecision: string
   sendMax: boolean
   receiveAddress: string
   bip44Params: BIP44Params
+
+  /** @deprecated Use sellAmountCryptoPrecision instead */
+  sellAmount?: string
 }
 
 export type EvmSupportedChainIds = KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
@@ -116,20 +119,28 @@ export type BuildTradeInput = GetTradeQuoteInput & {
 }
 
 interface TradeBase<C extends ChainId> {
-  buyAmount: string
-  sellAmount: string
+  buyAmountCryptoPrecision: string
+  sellAmountCryptoPrecision: string
   feeData: QuoteFeeData<C>
   rate: string
   sources: SwapSource[]
   buyAsset: Asset
   sellAsset: Asset
   bip44Params: BIP44Params
+
+  /** @deprecated Use buyAmountCryptoPrecision instead */
+  buyAmount?: string
+  /** @deprecated Use sellAmountCryptoPrecision instead */
+  sellAmount?: string
 }
 
 export interface TradeQuote<C extends ChainId> extends TradeBase<C> {
   allowanceContract: string
-  minimum: string
+  minimumCryptoHuman: string
   maximum: string
+
+  /** @deprecated Use sellAmountCryptoHuman instead */
+  minimum?: string
 }
 
 export interface Trade<C extends ChainId> extends TradeBase<C> {
