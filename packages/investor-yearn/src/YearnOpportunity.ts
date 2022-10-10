@@ -177,7 +177,7 @@ export class YearnOpportunity
     wallet: HDWallet
     tx: PreparedTransaction
     feePriority?: FeePriority
-    bip44Params?: BIP44Params
+    bip44Params: BIP44Params
   }): Promise<string> {
     const { bip44Params, wallet, tx, feePriority } = input
 
