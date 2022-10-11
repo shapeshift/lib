@@ -83,7 +83,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       .toString()
 
     const minimumUsdAmount =
-      chainId === KnownChainIds.EthereumMainnet
+      buyAsset.chainId === KnownChainIds.EthereumMainnet
         ? MINIMUM_USD_TRADE_AMOUNT_ETHEREUM_NETWORK
         : MINIMUM_USD_TRADE_AMOUNT
 
