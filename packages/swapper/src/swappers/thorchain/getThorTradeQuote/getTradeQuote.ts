@@ -130,12 +130,12 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             sellAmount: sellAmountCryptoPrecision,
             slippageTolerance: DEFAULT_SLIPPAGE,
             destinationAddress: receiveAddress,
-            buyAssetTradeFeeUsd: buyAssetTradeFeeUsdOrMinimum,
+            buyAssetTradeFeeUsd: estimatedBuyAssetTradeFeeUsd,
           })
           const feeData = await getEthTxFees({
             adapterManager: deps.adapterManager,
             sellAssetReference,
-            buyAssetTradeFeeUsd: buyAssetTradeFeeUsdOrMinimum,
+            buyAssetTradeFeeUsd: estimatedBuyAssetTradeFeeUsd,
           })
 
           return {

@@ -38,8 +38,8 @@ const quoteResponse: TradeQuote<KnownChainIds.EthereumMainnet> = {
   feeData: {
     fee: '700000',
     chainSpecific: { estimatedGas: '100000', approvalFee: '700000', gasPrice: '7' },
-    tradeFee: '42',
-    buyAssetTradeFeeUsd: '42',
+    tradeFee: '0.471220133939775024',
+    buyAssetTradeFeeUsd: '0.471220133939775024',
     sellAssetTradeFeeUsd: '0',
     networkFee: '700000',
   },
