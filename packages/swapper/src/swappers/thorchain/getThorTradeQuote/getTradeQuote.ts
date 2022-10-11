@@ -12,7 +12,11 @@ import {
 } from '../../../api'
 import { bn, bnOrZero, fromBaseUnit, toBaseUnit } from '../../utils/bignumber'
 import { DEFAULT_SLIPPAGE } from '../../utils/constants'
-import { MINIMUM_USD_TRADE_AMOUNT, RUNE_OUTBOUND_TRANSACTION_FEE_CRYPTO_HUMAN } from '../constants'
+import {
+  MINIMUM_USD_TRADE_AMOUNT,
+  MINIMUM_USD_TRADE_AMOUNT_ETHEREUM_NETWORK,
+  RUNE_OUTBOUND_TRANSACTION_FEE_CRYPTO_HUMAN,
+} from '../constants'
 import { ThorchainSwapperDeps } from '../types'
 import { getThorTxInfo as getBtcThorTxInfo } from '../utils/bitcoin/utils/getThorTxData'
 import { MAX_THORCHAIN_TRADE, THOR_MINIMUM_PADDING } from '../utils/constants'
@@ -78,8 +82,13 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       .times(estimatedBuyAssetTradeFeeCryptoHuman)
       .toString()
 
-    const buyAssetTradeFeeUsdOrMinimum = MINIMUM_USD_TRADE_AMOUNT.gt(estimatedBuyAssetTradeFeeUsd)
-      ? MINIMUM_USD_TRADE_AMOUNT.toString()
+    const minimumUsdAmount =
+      chainId === KnownChainIds.EthereumMainnet
+        ? MINIMUM_USD_TRADE_AMOUNT_ETHEREUM_NETWORK
+        : MINIMUM_USD_TRADE_AMOUNT
+
+    const buyAssetTradeFeeUsdOrMinimum = minimumUsdAmount.gt(estimatedBuyAssetTradeFeeUsd)
+      ? minimumUsdAmount.toString()
       : estimatedBuyAssetTradeFeeUsd
 
     const sellAssetTradeFeeCryptoHuman = (() => {
