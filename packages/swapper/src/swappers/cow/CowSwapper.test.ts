@@ -207,7 +207,7 @@ describe('CowSwapper', () => {
         sources: [{ name: 'CowSwap', proportion: '1' }],
         buyAsset: FOX,
         sellAsset: WETH,
-        sellAssetAccountNumber: 0,
+        bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
         receiveAddress: 'address11',
         feeAmountInSellToken: '14557942658757988',
         rate: '14716.04718939437505555958',
@@ -218,6 +218,9 @@ describe('CowSwapper', () => {
             gasPrice: '79036500000',
           },
           tradeFee: '0',
+          buyAssetTradeFeeUsd: '0',
+          sellAssetTradeFeeUsd: '0',
+          networkFee: '14557942658757988',
         },
         sellAmountWithoutFee: '985442057341242012',
       }

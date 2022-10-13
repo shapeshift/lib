@@ -1,3 +1,98 @@
+# [@shapeshiftoss/swapper-v12.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v12.0.0...@shapeshiftoss/swapper-v12.0.1) (2022-10-12)
+
+# [@shapeshiftoss/swapper-v12.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.5.7...@shapeshiftoss/swapper-v12.0.0) (2022-10-12)
+
+
+### Features
+
+* **chain-adapters:** make bip44Params required in `chain-adapters` ([#1057](https://github.com/shapeshift/lib/issues/1057)) ([9cee51e](https://github.com/shapeshift/lib/commit/9cee51e66cee984adc70475230d1d4893128e5fc))
+
+
+### BREAKING CHANGES
+
+* **chain-adapters:** Makes bip44Params required in chain-adapters
+
+# [@shapeshiftoss/swapper-v11.5.7](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.5.6...@shapeshiftoss/swapper-v11.5.7) (2022-10-11)
+
+# [@shapeshiftoss/swapper-v11.5.6](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.5.5...@shapeshiftoss/swapper-v11.5.6) (2022-10-11)
+
+# [@shapeshiftoss/swapper-v11.5.5](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.5.4...@shapeshiftoss/swapper-v11.5.5) (2022-10-06)
+
+
+### Bug Fixes
+
+* allow thor trades for wallets that require signAndBroadcast ([#1051](https://github.com/shapeshift/lib/issues/1051)) ([33ad6c0](https://github.com/shapeshift/lib/commit/33ad6c0ea9ebc5f00145507f83149a7b05b388f6))
+
+# [@shapeshiftoss/swapper-v11.5.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.5.3...@shapeshiftoss/swapper-v11.5.4) (2022-10-04)
+
+
+### Bug Fixes
+
+* get price ratio when buy asset is rune ([#1049](https://github.com/shapeshift/lib/issues/1049)) ([a6cf661](https://github.com/shapeshift/lib/commit/a6cf661172f2c6b5c53b44c9c07a9366912dd746))
+
+# [@shapeshiftoss/swapper-v11.5.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.5.2...@shapeshiftoss/swapper-v11.5.3) (2022-10-04)
+
+
+### Bug Fixes
+
+* **swapper:** plumb `sendMax` through ThorSwapper ([#1046](https://github.com/shapeshift/lib/issues/1046)) ([f8183ca](https://github.com/shapeshift/lib/commit/f8183cae9eed294d52a3b8c3bf1db9ec878ac4b6))
+
+# [@shapeshiftoss/swapper-v11.5.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.5.1...@shapeshiftoss/swapper-v11.5.2) (2022-10-03)
+
+
+### Bug Fixes
+
+* thorswap fees and minimums estimation ([#1043](https://github.com/shapeshift/lib/issues/1043)) ([9e33dee](https://github.com/shapeshift/lib/commit/9e33deeb6fb22bce16f2af20239fb96b0970207c))
+
+# [@shapeshiftoss/swapper-v11.5.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.5.0...@shapeshiftoss/swapper-v11.5.1) (2022-09-30)
+
+
+### Bug Fixes
+
+* truthy check always true rugging 0x trade fee data ([#1045](https://github.com/shapeshift/lib/issues/1045)) ([1fefa4a](https://github.com/shapeshift/lib/commit/1fefa4ac444f88d0af8205529a5d1b9c49548a9f))
+
+# [@shapeshiftoss/swapper-v11.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.4.1...@shapeshiftoss/swapper-v11.5.0) (2022-09-28)
+
+
+### Features
+
+* improve `QuoteFeeData` interface ([#1038](https://github.com/shapeshift/lib/issues/1038)) ([f550404](https://github.com/shapeshift/lib/commit/f5504044693f5f62fa6a64a2114988a2e45fcce7))
+
+# [@shapeshiftoss/swapper-v11.4.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.4.0...@shapeshiftoss/swapper-v11.4.1) (2022-09-27)
+
+
+### Bug Fixes
+
+* rune swaps ([#1041](https://github.com/shapeshift/lib/issues/1041)) ([f11fd49](https://github.com/shapeshift/lib/commit/f11fd493f356536e54c52ede737661f03f554a1f))
+
+# [@shapeshiftoss/swapper-v11.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.3.1...@shapeshiftoss/swapper-v11.4.0) (2022-09-27)
+
+
+### Features
+
+* **swapper:** use thornode pools endpoint over midgard ([#1039](https://github.com/shapeshift/lib/issues/1039)) ([d6ae142](https://github.com/shapeshift/lib/commit/d6ae142598d82888d2c28190293ae56fc92c56e7))
+
+# [@shapeshiftoss/swapper-v11.3.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.3.0...@shapeshiftoss/swapper-v11.3.1) (2022-09-27)
+
+
+### Bug Fixes
+
+* **swapper:** typo in MidgardCoins ([#1040](https://github.com/shapeshift/lib/issues/1040)) ([2c29b50](https://github.com/shapeshift/lib/commit/2c29b500f2d5a2dc12b11a810a46c70060da9b64))
+
+# [@shapeshiftoss/swapper-v11.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.2.0...@shapeshiftoss/swapper-v11.3.0) (2022-09-26)
+
+
+### Features
+
+* sellAssetAccountNumber -> bip44Params ([#1037](https://github.com/shapeshift/lib/issues/1037)) ([37ac813](https://github.com/shapeshift/lib/commit/37ac813ca997db0db5a9427d0e0eaadaa158b354))
+
+# [@shapeshiftoss/swapper-v11.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.1.3...@shapeshiftoss/swapper-v11.2.0) (2022-09-26)
+
+
+### Features
+
+* swap to/from RUNE ([#1030](https://github.com/shapeshift/lib/issues/1030)) ([6b5c9c8](https://github.com/shapeshift/lib/commit/6b5c9c8e855ffb68d865cfae8f545e7a819a9667))
+
 # [@shapeshiftoss/swapper-v11.1.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.1.2...@shapeshiftoss/swapper-v11.1.3) (2022-09-16)
 
 # [@shapeshiftoss/swapper-v11.1.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v11.1.1...@shapeshiftoss/swapper-v11.1.2) (2022-09-16)

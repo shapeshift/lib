@@ -1,5 +1,12 @@
 import { Asset } from '@shapeshiftoss/asset-service'
-import { adapters, AssetId, CHAIN_NAMESPACE, ChainId, fromAssetId } from '@shapeshiftoss/caip'
+import {
+  adapters,
+  AssetId,
+  CHAIN_NAMESPACE,
+  ChainId,
+  fromAssetId,
+  thorchainAssetId,
+} from '@shapeshiftoss/caip'
 import { cosmos, EvmBaseAdapter, UtxoBaseAdapter } from '@shapeshiftoss/chain-adapters'
 import { BTCSignTx, CosmosSignTx, ETHSignTx } from '@shapeshiftoss/hdwallet-core'
 import { KnownChainIds } from '@shapeshiftoss/types'
@@ -16,6 +23,7 @@ import {
   SwapError,
   SwapErrorTypes,
   Swapper,
+  SwapperName,
   SwapperType,
   Trade,
   TradeQuote,
@@ -27,14 +35,19 @@ import { buildTrade } from './buildThorTrade/buildThorTrade'
 import { getThorTradeQuote } from './getThorTradeQuote/getTradeQuote'
 import { thorTradeApprovalNeeded } from './thorTradeApprovalNeeded/thorTradeApprovalNeeded'
 import { thorTradeApproveInfinite } from './thorTradeApproveInfinite/thorTradeApproveInfinite'
-import { MidgardActionsResponse, PoolResponse, ThorchainSwapperDeps, ThorTrade } from './types'
+import {
+  MidgardActionsResponse,
+  ThorchainSwapperDeps,
+  ThornodePoolResponse,
+  ThorTrade,
+} from './types'
 import { getUsdRate } from './utils/getUsdRate/getUsdRate'
 import { thorService } from './utils/thorService'
 
 export * from './types'
 
 export class ThorchainSwapper implements Swapper<ChainId> {
-  readonly name = 'Thorchain'
+  readonly name = SwapperName.Thorchain
   private sellSupportedChainIds: Record<ChainId, boolean> = {
     [KnownChainIds.EthereumMainnet]: true,
     [KnownChainIds.BitcoinMainnet]: true,
@@ -63,23 +76,25 @@ export class ThorchainSwapper implements Swapper<ChainId> {
 
   async initialize() {
     try {
-      const { data: responseData } = await thorService.get<PoolResponse[]>(
-        `${this.deps.midgardUrl}/pools`,
+      const { data } = await thorService.get<ThornodePoolResponse[]>(
+        `${this.deps.daemonUrl}/lcd/thorchain/pools`,
       )
 
-      this.supportedSellAssetIds = responseData.reduce<AssetId[]>((acc, midgardPool) => {
-        const assetId = adapters.poolAssetIdToAssetId(midgardPool.asset)
+      this.supportedSellAssetIds = data.reduce<AssetId[]>((acc, pool) => {
+        const assetId = adapters.poolAssetIdToAssetId(pool.asset)
         if (!assetId || !this.sellSupportedChainIds[fromAssetId(assetId).chainId]) return acc
         acc.push(assetId)
         return acc
       }, [])
+      this.supportedSellAssetIds.push(thorchainAssetId)
 
-      this.supportedBuyAssetIds = responseData.reduce<AssetId[]>((acc, midgardPool) => {
-        const assetId = adapters.poolAssetIdToAssetId(midgardPool.asset)
+      this.supportedBuyAssetIds = data.reduce<AssetId[]>((acc, pool) => {
+        const assetId = adapters.poolAssetIdToAssetId(pool.asset)
         if (!assetId || !this.buySupportedChainIds[fromAssetId(assetId).chainId]) return acc
         acc.push(assetId)
         return acc
       }, [])
+      this.supportedBuyAssetIds.push(thorchainAssetId)
     } catch (e) {
       throw new SwapError('[thorchainInitialize]: initialize failed to set supportedAssetIds', {
         code: SwapErrorTypes.INITIALIZE_FAILED,
@@ -149,14 +164,15 @@ export class ThorchainSwapper implements Swapper<ChainId> {
       const { chainNamespace } = fromAssetId(trade.sellAsset.assetId)
 
       if (chainNamespace === CHAIN_NAMESPACE.Evm) {
-        const signedTx = await (
-          adapter as unknown as EvmBaseAdapter<EvmSupportedChainIds>
-        ).signTransaction({
-          txToSign: (trade as ThorTrade<KnownChainIds.EthereumMainnet>).txData as ETHSignTx,
-          wallet,
-        })
-        const txid = await adapter.broadcastTransaction(signedTx)
-        return { tradeId: txid }
+        const evmAdapter = adapter as unknown as EvmBaseAdapter<EvmSupportedChainIds>
+        const txToSign = (trade as ThorTrade<KnownChainIds.EthereumMainnet>).txData as ETHSignTx
+        if (wallet.supportsBroadcast()) {
+          const tradeId = await evmAdapter.signAndBroadcastTransaction({ txToSign, wallet })
+          return { tradeId }
+        }
+        const signedTx = await evmAdapter.signTransaction({ txToSign, wallet })
+        const tradeId = await adapter.broadcastTransaction(signedTx)
+        return { tradeId }
       } else if (chainNamespace === CHAIN_NAMESPACE.Utxo) {
         const signedTx = await (
           adapter as unknown as UtxoBaseAdapter<UtxoSupportedChainIds>
@@ -194,26 +210,26 @@ export class ThorchainSwapper implements Swapper<ChainId> {
         ? tradeResult.tradeId.slice(2)
         : tradeResult.tradeId
 
-      const { data: responseData } = await thorService.get<MidgardActionsResponse>(
+      const { data } = await thorService.get<MidgardActionsResponse>(
         `${this.deps.midgardUrl}/actions?txid=${midgardTxid}`,
       )
 
+      // https://gitlab.com/thorchain/thornode/-/blob/develop/common/tx.go#L22
+      // responseData?.actions[0].out[0].txID should be the txId for consistency, but the outbound Tx for Thor rune swaps is actually a BlankTxId
+      // so we use the buyTxId for completion detection
       const buyTxid =
-        responseData?.actions[0]?.status === 'success' && responseData?.actions[0]?.type === 'swap'
-          ? responseData?.actions[0].out[0].txID
+        data?.actions[0]?.status === 'success' && data?.actions[0]?.type === 'swap'
+          ? midgardTxid
           : ''
 
       // This will detect all the errors I have seen.
-      if (
-        responseData?.actions[0]?.status === 'success' &&
-        responseData?.actions[0]?.type !== 'swap'
-      )
+      if (data?.actions[0]?.status === 'success' && data?.actions[0]?.type !== 'swap')
         throw new SwapError('[getTradeTxs]: trade failed', {
           code: SwapErrorTypes.TRADE_FAILED,
-          cause: responseData,
+          cause: data,
         })
 
-      const standardBuyTxid = responseData?.actions[0]?.out[0]?.coins[0]?.asset.startsWith('ETH.')
+      const standardBuyTxid = data?.actions[0]?.out[0]?.coins[0]?.asset.startsWith('ETH.')
         ? `0x${buyTxid}`
         : buyTxid
 

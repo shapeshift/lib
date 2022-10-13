@@ -30,13 +30,16 @@ describe('ZrxExecuteTrade', () => {
     buyAmount: '',
     depositAddress: '0x123',
     receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
-    sellAssetAccountNumber: 0,
+    bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
     txData: '0x123',
     rate: '1',
     feeData: {
       fee: '0',
       chainSpecific: { approvalFee: '123600000', estimatedGas: '1235', gasPrice: '1236' },
       tradeFee: '0',
+      buyAssetTradeFeeUsd: '0',
+      sellAssetTradeFeeUsd: '0',
+      networkFee: '0',
     },
     sources: [],
   }

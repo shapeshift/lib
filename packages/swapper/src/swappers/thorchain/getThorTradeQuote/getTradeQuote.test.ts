@@ -6,7 +6,7 @@ import { TradeQuote } from '../../../api'
 import { ETH, FOX } from '../../utils/test-data/assets'
 import { setupQuote } from '../../utils/test-data/setupSwapQuote'
 import { ThorchainSwapperDeps } from '../types'
-import { ethMidgardPool, foxMidgardPool } from '../utils/test-data/midgardResponse'
+import { ethMidgardPool, ethThornodePool, foxThornodePool } from '../utils/test-data/responses'
 import { setupThorswapDeps } from '../utils/test-data/setupThorswapDeps'
 import { thorService } from '../utils/thorService'
 import { getThorTradeQuote } from './getTradeQuote'
@@ -30,7 +30,7 @@ Web3.mockImplementation(() => ({
 const mockedAxios = jest.mocked(thorService, true)
 
 const quoteResponse: TradeQuote<KnownChainIds.EthereumMainnet> = {
-  minimum: '7.795654563912575051016',
+  minimum: '0.025669531348051326924',
   maximum: '100000000000000000000000000',
   sellAmount: '10000000000000000000', // 1000 FOX
   allowanceContract: '0x3624525075b88B24ecc29CE226b0CEc1fFcB6976',
@@ -38,20 +38,24 @@ const quoteResponse: TradeQuote<KnownChainIds.EthereumMainnet> = {
   feeData: {
     fee: '700000',
     chainSpecific: { estimatedGas: '100000', approvalFee: '700000', gasPrice: '7' },
-    tradeFee: '0.00050931609817562157',
+    tradeFee: '0.471220133939775024',
+    buyAssetTradeFeeUsd: '0.471220133939775024',
+    sellAssetTradeFeeUsd: '0',
+    networkFee: '700000',
   },
   rate: '0.0000784',
   sources: [{ name: 'thorchain', proportion: '1' }],
   buyAsset: ETH,
   sellAsset: FOX,
-  sellAssetAccountNumber: 0,
+  bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
 }
 
 describe('getTradeQuote', () => {
   const { quoteInput } = setupQuote()
   const { adapterManager } = setupThorswapDeps()
   const deps = {
-    midgardUrl: 'https://midgard.thorchain.info/v2',
+    midgardUrl: '',
+    daemonUrl: '',
     adapterManager,
   } as unknown as ThorchainSwapperDeps
 
@@ -73,19 +77,20 @@ describe('getTradeQuote', () => {
       sellAmount: '10000000000000000000', // 100 FOX
       buyAsset: ETH,
       sellAsset: FOX,
+      rate: '1',
       wallet,
     }
 
-    // Mock midgard api calls in 'getThorTxInfo' and 'getPriceRatio'
     mockedAxios.get.mockImplementation((url) => {
-      const isPoolsResponse = url.includes('pools')
-      const isPoolResponse = url.includes('pool') && !isPoolsResponse
+      const isMidgardPoolResponse = url.includes('/pool/')
+      const isThornodePoolsResponse = url.includes('lcd/thorchain/pools')
+
       const data = (() => {
         switch (true) {
-          case isPoolResponse:
+          case isMidgardPoolResponse:
             return ethMidgardPool
-          case isPoolsResponse:
-            return [ethMidgardPool, foxMidgardPool]
+          case isThornodePoolsResponse:
+            return [ethThornodePool, foxThornodePool]
           default:
             return addressData
         }

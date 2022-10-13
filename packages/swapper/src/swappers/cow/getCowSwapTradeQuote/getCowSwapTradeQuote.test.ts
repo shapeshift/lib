@@ -126,7 +126,10 @@ const expectedTradeQuoteWethToFox: TradeQuote<KnownChainIds.EthereumMainnet> = {
       gasPrice: '79036500000',
       approvalFee: '7903650000000000',
     },
-    tradeFee: '17.95954294012756741283729339486489192096',
+    tradeFee: '0',
+    buyAssetTradeFeeUsd: '0',
+    sellAssetTradeFeeUsd: '17.95954294012756741283729339486489192096',
+    networkFee: '0',
   },
   sellAmount: '1000000000000000000',
   buyAmount: '14501811818247595090576', // 14501 FOX
@@ -134,7 +137,7 @@ const expectedTradeQuoteWethToFox: TradeQuote<KnownChainIds.EthereumMainnet> = {
   allowanceContract: '0xc92e8bdf79f0507f65a392b0ab4667716bfe0110',
   buyAsset: FOX,
   sellAsset: WETH,
-  sellAssetAccountNumber: 0,
+  bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
 }
 
 const expectedTradeQuoteFoxToEth: TradeQuote<KnownChainIds.EthereumMainnet> = {
@@ -148,7 +151,10 @@ const expectedTradeQuoteFoxToEth: TradeQuote<KnownChainIds.EthereumMainnet> = {
       gasPrice: '79036500000',
       approvalFee: '7903650000000000',
     },
-    tradeFee: '5.3955565850972847808512',
+    tradeFee: '0',
+    buyAssetTradeFeeUsd: '0',
+    sellAssetTradeFeeUsd: '5.3955565850972847808512',
+    networkFee: '0',
   },
   sellAmount: '1000000000000000000000',
   buyAmount: '46868859830863283',
@@ -156,7 +162,7 @@ const expectedTradeQuoteFoxToEth: TradeQuote<KnownChainIds.EthereumMainnet> = {
   allowanceContract: '0xc92e8bdf79f0507f65a392b0ab4667716bfe0110',
   buyAsset: ETH,
   sellAsset: FOX,
-  sellAssetAccountNumber: 0,
+  bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
 }
 
 const expectedTradeQuoteSmallAmountWethToFox: TradeQuote<KnownChainIds.EthereumMainnet> = {
@@ -170,7 +176,10 @@ const expectedTradeQuoteSmallAmountWethToFox: TradeQuote<KnownChainIds.EthereumM
       gasPrice: '79036500000',
       approvalFee: '7903650000000000',
     },
-    tradeFee: '1.79595429401274711874033728120645035672',
+    tradeFee: '0',
+    buyAssetTradeFeeUsd: '0',
+    sellAssetTradeFeeUsd: '1.79595429401274711874033728120645035672',
+    networkFee: '0',
   },
   sellAmount: '1000000000000',
   buyAmount: '145018118182475950905', // 14501 FOX
@@ -178,7 +187,7 @@ const expectedTradeQuoteSmallAmountWethToFox: TradeQuote<KnownChainIds.EthereumM
   allowanceContract: '0xc92e8bdf79f0507f65a392b0ab4667716bfe0110',
   buyAsset: FOX,
   sellAsset: WETH,
-  sellAssetAccountNumber: 0,
+  bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
 }
 
 const deps: CowSwapperDeps = {
@@ -200,7 +209,7 @@ describe('getCowTradeQuote', () => {
       buyAsset: FOX,
       sellAmount: '11111',
       sendMax: true,
-      sellAssetAccountNumber: 1,
+      bip44Params: { purpose: 44, coinType: 60, accountNumber: 1 },
       receiveAddress: '',
     }
 
@@ -216,7 +225,7 @@ describe('getCowTradeQuote', () => {
       buyAsset: FOX,
       sellAmount: '1000000000000000000',
       sendMax: true,
-      sellAssetAccountNumber: 0,
+      bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
       receiveAddress: '',
     }
 
@@ -252,7 +261,7 @@ describe('getCowTradeQuote', () => {
       buyAsset: ETH,
       sellAmount: '1000000000000000000000',
       sendMax: true,
-      sellAssetAccountNumber: 0,
+      bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
       receiveAddress: '',
     }
 
@@ -288,7 +297,7 @@ describe('getCowTradeQuote', () => {
       buyAsset: FOX,
       sellAmount: '1000000000000',
       sendMax: true,
-      sellAssetAccountNumber: 0,
+      bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
       receiveAddress: '',
     }
 

@@ -20,14 +20,14 @@ import {
   ORDER_KIND_SELL,
 } from '../utils/constants'
 import { cowService } from '../utils/cowService'
-import { getNowPlusThirtyMinutesTimestamp } from '../utils/helpers/helpers'
+import { getNowPlusThirtyMinutesTimestamp, getUsdRate } from '../utils/helpers/helpers'
 
 export async function cowBuildTrade(
   deps: CowSwapperDeps,
   input: BuildTradeInput,
 ): Promise<CowTrade<KnownChainIds.EthereumMainnet>> {
   try {
-    const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, wallet } = input
+    const { sellAsset, buyAsset, sellAmount, bip44Params, wallet } = input
     const { adapter, web3 } = deps
 
     const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
@@ -52,7 +52,7 @@ export async function cowBuildTrade(
 
     const buyToken =
       buyAsset.assetId !== ethAssetId ? buyAssetErc20Address : COW_SWAP_ETH_MARKER_ADDRESS
-    const receiveAddress = await adapter.getAddress({ wallet })
+    const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
     const normalizedSellAmount = normalizeAmount(sellAmount)
 
     /**
@@ -86,6 +86,12 @@ export async function cowBuildTrade(
       data: { quote },
     } = quoteResponse
 
+    const sellAssetUsdRate = await getUsdRate(deps, sellAsset)
+    const sellAssetTradeFeeUsd = bnOrZero(quote.feeAmount)
+      .div(bn(10).exponentiatedBy(sellAsset.precision))
+      .multipliedBy(bnOrZero(sellAssetUsdRate))
+      .toString()
+
     const buyCryptoAmount = bn(quote.buyAmount).div(bn(10).exponentiatedBy(buyAsset.precision))
     const sellCryptoAmount = bn(quote.sellAmount).div(bn(10).exponentiatedBy(sellAsset.precision))
     const rate = buyCryptoAmount.div(sellCryptoAmount).toString()
@@ -107,19 +113,22 @@ export async function cowBuildTrade(
     const trade: CowTrade<KnownChainIds.EthereumMainnet> = {
       rate,
       feeData: {
-        fee: '0', // no miner fee for CowSwap
+        fee: '0', // TODO: remove once web has been updated
+        networkFee: '0', // no miner fee for CowSwap
         chainSpecific: {
           estimatedGas: feeData.chainSpecific.gasLimit,
           gasPrice: feeData.chainSpecific.gasPrice,
         },
-        tradeFee: '0', // Trade fees for buy Asset are always 0 since trade fees are subtracted from sell asset
+        tradeFee: '0', // TODO: remove once web has been updated
+        buyAssetTradeFeeUsd: '0', // Trade fees for buy Asset are always 0 since trade fees are subtracted from sell asset
+        sellAssetTradeFeeUsd,
       },
       sellAmount: normalizedSellAmount,
       buyAmount: quote.buyAmount,
       sources: DEFAULT_SOURCE,
       buyAsset,
       sellAsset,
-      sellAssetAccountNumber,
+      bip44Params,
       receiveAddress,
       feeAmountInSellToken: quote.feeAmount,
       sellAmountWithoutFee: quote.sellAmount,

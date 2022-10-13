@@ -45,7 +45,13 @@ type ChainSpecificQuoteFeeData<T extends ChainId> = ChainSpecific<
 >
 
 export type QuoteFeeData<T extends ChainId> = {
+  networkFee: string // fee paid to the network from the fee asset
+  buyAssetTradeFeeUsd: string // fee taken out of the trade from the buyAsset
+  sellAssetTradeFeeUsd?: string // fee taken out of the trade from the sellAsset
+
+  /** @deprecated Use networkFee instead */
   fee: string
+  /** @deprecated Use sellAssetTradeFeeUsd instead */
   tradeFee: string // fee taken out of the trade from the buyAsset
 } & ChainSpecificQuoteFeeData<T>
 
@@ -68,13 +74,16 @@ type CommonTradeInput = {
   buyAsset: Asset
   sellAmount: string
   sendMax: boolean
-  sellAssetAccountNumber: number
   receiveAddress: string
+  bip44Params: BIP44Params
 }
 
 export type EvmSupportedChainIds = KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
 
-export type CosmosSdkSupportedChainIds = KnownChainIds.CosmosMainnet | KnownChainIds.OsmosisMainnet
+export type CosmosSdkSupportedChainIds =
+  | KnownChainIds.CosmosMainnet
+  | KnownChainIds.OsmosisMainnet
+  | KnownChainIds.ThorchainMainnet
 
 export type EvmSupportedChainAdapters = ethereum.ChainAdapter | avalanche.ChainAdapter
 
@@ -119,7 +128,7 @@ interface TradeBase<C extends ChainId> {
   sources: SwapSource[]
   buyAsset: Asset
   sellAsset: Asset
-  sellAssetAccountNumber: number
+  bip44Params: BIP44Params
 }
 
 export interface TradeQuote<C extends ChainId> extends TradeBase<C> {
@@ -169,6 +178,14 @@ export interface MinMaxOutput {
 
 export type ApprovalNeededOutput = {
   approvalNeeded: boolean
+}
+
+export enum SwapperName {
+  Thorchain = 'THORChain',
+  Osmosis = 'Osmosis',
+  CowSwap = 'CowSwap',
+  Zrx = '0x',
+  Test = 'Test',
 }
 
 export enum SwapperType {

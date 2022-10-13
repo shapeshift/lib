@@ -2,13 +2,7 @@ import { fromAssetId } from '@shapeshiftoss/caip'
 import { AxiosResponse } from 'axios'
 import * as rax from 'retry-axios'
 
-import {
-  BuildTradeInput,
-  EvmSupportedChainIds,
-  QuoteFeeData,
-  SwapError,
-  SwapErrorTypes,
-} from '../../../api'
+import { BuildTradeInput, EvmSupportedChainIds, SwapError, SwapErrorTypes } from '../../../api'
 import { erc20AllowanceAbi } from '../../utils/abi/erc20Allowance-abi'
 import { bnOrZero } from '../../utils/bignumber'
 import { APPROVAL_GAS_LIMIT, DEFAULT_SLIPPAGE } from '../../utils/constants'
@@ -23,8 +17,7 @@ export async function zrxBuildTrade<T extends EvmSupportedChainIds>(
   { adapter, web3 }: ZrxSwapperDeps,
   input: BuildTradeInput,
 ): Promise<ZrxTrade<T>> {
-  const { sellAsset, buyAsset, sellAmount, slippage, sellAssetAccountNumber, receiveAddress } =
-    input
+  const { sellAsset, buyAsset, sellAmount, slippage, bip44Params, receiveAddress } = input
   try {
     const { assetReference: buyAssetErc20Address, assetNamespace: buyAssetNamespace } = fromAssetId(
       buyAsset.assetId,
@@ -90,27 +83,7 @@ export async function zrxBuildTrade<T extends EvmSupportedChainIds>(
     const { data } = quoteResponse
 
     const estimatedGas = bnOrZero(data.gas || 0)
-
-    const trade = {
-      sellAsset,
-      buyAsset,
-      sellAssetAccountNumber,
-      receiveAddress,
-      rate: data.price,
-      depositAddress: data.to,
-      feeData: {
-        fee: bnOrZero(estimatedGas).multipliedBy(bnOrZero(data.gasPrice)).toString(),
-        chainSpecific: {
-          estimatedGas: estimatedGas.toString(),
-          gasPrice: data.gasPrice,
-        },
-        tradeFee: '0',
-      },
-      txData: data.data,
-      sellAmount: data.sellAmount,
-      buyAmount: data.buyAmount,
-      sources: data.sources?.filter((s) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE,
-    } as ZrxTrade<T>
+    const networkFee = bnOrZero(estimatedGas).multipliedBy(bnOrZero(data.gasPrice)).toString()
 
     const allowanceRequired = await getAllowanceRequired({
       adapter,
@@ -122,19 +95,35 @@ export async function zrxBuildTrade<T extends EvmSupportedChainIds>(
       erc20AllowanceAbi,
     })
 
-    if (allowanceRequired) {
-      trade.feeData = {
-        fee: trade.feeData?.fee || '0',
+    const approvalFee = bnOrZero(APPROVAL_GAS_LIMIT)
+      .multipliedBy(bnOrZero(data.gasPrice))
+      .toString()
+
+    const trade: ZrxTrade<EvmSupportedChainIds> = {
+      sellAsset,
+      buyAsset,
+      bip44Params,
+      receiveAddress,
+      rate: data.price,
+      depositAddress: data.to,
+      feeData: {
+        fee: networkFee,
         chainSpecific: {
-          ...trade.feeData?.chainSpecific,
-          approvalFee: bnOrZero(APPROVAL_GAS_LIMIT)
-            .multipliedBy(bnOrZero(data.gasPrice))
-            .toString(),
+          estimatedGas: estimatedGas.toString(),
+          gasPrice: data.gasPrice,
+          approvalFee: allowanceRequired.gt(0) ? approvalFee : undefined,
         },
         tradeFee: '0',
-      } as QuoteFeeData<T>
+        networkFee,
+        buyAssetTradeFeeUsd: '0',
+        sellAssetTradeFeeUsd: '0',
+      },
+      txData: data.data,
+      sellAmount: data.sellAmount,
+      buyAmount: data.buyAmount,
+      sources: data.sources?.filter((s) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE,
     }
-    return trade
+    return trade as ZrxTrade<T>
   } catch (e) {
     if (e instanceof SwapError) throw e
     throw new SwapError('[zrxBuildTrade]', {

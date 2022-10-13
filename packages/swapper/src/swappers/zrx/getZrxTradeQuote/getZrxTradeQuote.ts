@@ -22,7 +22,7 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
   input: GetEvmTradeQuoteInput,
 ): Promise<TradeQuote<T>> {
   try {
-    const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber } = input
+    const { sellAsset, buyAsset, sellAmount, bip44Params } = input
     if (buyAsset.chainId !== input.chainId || sellAsset.chainId !== input.chainId) {
       throw new SwapError(
         '[getZrxTradeQuote] - Both assets need to be on the same supported EVM chain to use Zrx',
@@ -93,7 +93,7 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
       sellAssetErc20Address &&
       bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(bnOrZero(gasPrice)).toString()
 
-    return {
+    const tradeQuote: TradeQuote<EvmSupportedChainIds> = {
       rate,
       minimum,
       maximum,
@@ -105,6 +105,9 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
           approvalFee,
         },
         tradeFee: '0',
+        networkFee: fee,
+        buyAssetTradeFeeUsd: '0',
+        sellAssetTradeFeeUsd: '0',
       },
       sellAmount: sellAmountResponse,
       buyAmount,
@@ -112,8 +115,9 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
       allowanceContract: allowanceTarget,
       buyAsset,
       sellAsset,
-      sellAssetAccountNumber,
-    } as TradeQuote<T>
+      bip44Params,
+    }
+    return tradeQuote as TradeQuote<T>
   } catch (e) {
     if (e instanceof SwapError) throw e
     throw new SwapError('[getZrxTradeQuote]', { cause: e, code: SwapErrorTypes.TRADE_QUOTE_FAILED })

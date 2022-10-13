@@ -15,8 +15,7 @@ import {
   SIGNING_SCHEME,
 } from '../utils/constants'
 import { cowService } from '../utils/cowService'
-import { CowSwapOrder } from '../utils/helpers/helpers'
-import { hashOrder } from '../utils/helpers/helpers'
+import { CowSwapOrder, hashOrder } from '../utils/helpers/helpers'
 import { cowExecuteTrade } from './cowExecuteTrade'
 
 const OrderDigest = '0xaf1d4f80d997d0cefa325dd6e003e5b5940247694eaba507b793c7ec60db10a0'
@@ -57,13 +56,16 @@ const cowTradeEthToFox: CowTrade<KnownChainIds.EthereumMainnet> = {
       gasPrice: '79036500000',
     },
     tradeFee: '0',
+    buyAssetTradeFeeUsd: '0',
+    sellAssetTradeFeeUsd: '0',
+    networkFee: '14557942658757988',
   },
   sellAmount: '1000000000000000000',
   buyAmount: '14501811818247595090576',
   sources: [{ name: 'CowSwap', proportion: '1' }],
   buyAsset: FOX,
   sellAsset: ETH,
-  sellAssetAccountNumber: 0,
+  bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
   receiveAddress: 'address11',
   feeAmountInSellToken: '14557942658757988',
   sellAmountWithoutFee: '111111',
@@ -78,13 +80,16 @@ const cowTradeWethToFox: CowTrade<KnownChainIds.EthereumMainnet> = {
       gasPrice: '79036500000',
     },
     tradeFee: '0',
+    buyAssetTradeFeeUsd: '0',
+    sellAssetTradeFeeUsd: '0',
+    networkFee: '14557942658757988',
   },
   sellAmount: '20200000000000000',
   buyAmount: '272522025311597443544',
   sources: [{ name: 'CowSwap', proportion: '1' }],
   buyAsset: FOX,
   sellAsset: WETH,
-  sellAssetAccountNumber: 0,
+  bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
   receiveAddress: 'address11',
   feeAmountInSellToken: '3514395197690019',
   sellAmountWithoutFee: '16685605000000000',
@@ -99,13 +104,16 @@ const cowTradeFoxToEth: CowTrade<KnownChainIds.EthereumMainnet> = {
       gasPrice: '79036500000',
     },
     tradeFee: '5.3955565850972847808512',
+    buyAssetTradeFeeUsd: '5.3955565850972847808512',
+    sellAssetTradeFeeUsd: '0',
+    networkFee: '0',
   },
   sellAmount: '1000000000000000000000',
   buyAmount: '46868859830863283',
   sources: [{ name: 'CowSwap', proportion: '1' }],
   buyAsset: ETH,
   sellAsset: FOX,
-  sellAssetAccountNumber: 0,
+  bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
   receiveAddress: 'address11',
   feeAmountInSellToken: '61804771879693983744',
   sellAmountWithoutFee: '938195228120306016256',

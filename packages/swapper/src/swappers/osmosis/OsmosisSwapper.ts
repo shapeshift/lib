@@ -19,6 +19,7 @@ import {
   SwapError,
   SwapErrorTypes,
   Swapper,
+  SwapperName,
   SwapperType,
   Trade,
   TradeQuote,
@@ -43,7 +44,7 @@ import {
 import { OsmosisTradeResult, OsmoSwapperDeps } from './utils/types'
 
 export class OsmosisSwapper implements Swapper<ChainId> {
-  readonly name = 'Osmosis'
+  readonly name = SwapperName.Osmosis
   supportedAssetIds: string[]
   deps: OsmoSwapperDeps
 
@@ -151,7 +152,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
   }
 
   async buildTrade(args: BuildTradeInput): Promise<Trade<ChainId>> {
-    const { sellAsset, buyAsset, sellAmount, receiveAddress } = args
+    const { sellAsset, buyAsset, sellAmount, receiveAddress, bip44Params } = args
 
     if (!sellAmount) {
       throw new SwapError('sellAmount is required', {
@@ -159,7 +160,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       })
     }
 
-    const { tradeFee, rate, buyAmount } = await getRateInfo(
+    const { buyAssetTradeFeeUsd, rate, buyAmount } = await getRateInfo(
       sellAsset.symbol,
       buyAsset.symbol,
       sellAmount !== '0' ? sellAmount : '1',
@@ -184,24 +185,30 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     return {
       buyAmount,
       buyAsset,
-      feeData: { fee, tradeFee },
+      feeData: {
+        fee,
+        tradeFee: buyAssetTradeFeeUsd,
+        networkFee: fee,
+        sellAssetTradeFeeUsd: '0',
+        buyAssetTradeFeeUsd,
+      },
       rate,
       receiveAddress,
       sellAmount: amountBaseSell,
       sellAsset,
-      sellAssetAccountNumber: 0,
+      bip44Params,
       sources: [{ name: 'Osmosis', proportion: '100' }],
     }
   }
 
   async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ChainId>> {
-    const { sellAsset, buyAsset, sellAmount } = input
+    const { bip44Params, sellAsset, buyAsset, sellAmount } = input
     if (!sellAmount) {
       throw new SwapError('sellAmount is required', {
         code: SwapErrorTypes.RESPONSE_ERROR,
       })
     }
-    const { tradeFee, rate, buyAmount } = await getRateInfo(
+    const { buyAssetTradeFeeUsd, rate, buyAmount } = await getRateInfo(
       sellAsset.symbol,
       buyAsset.symbol,
       sellAmount !== '0' ? sellAmount : '1',
@@ -224,10 +231,16 @@ export class OsmosisSwapper implements Swapper<ChainId> {
 
     return {
       buyAsset,
-      feeData: { fee, tradeFee },
+      feeData: {
+        fee,
+        tradeFee: buyAssetTradeFeeUsd,
+        networkFee: fee,
+        sellAssetTradeFeeUsd: '0',
+        buyAssetTradeFeeUsd,
+      },
       maximum,
       minimum,
-      sellAssetAccountNumber: 0,
+      bip44Params,
       rate,
       sellAsset,
       sellAmount,
@@ -238,7 +251,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
   }
 
   async executeTrade({ trade, wallet }: ExecuteTradeInput<ChainId>): Promise<OsmosisTradeResult> {
-    const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, receiveAddress } = trade
+    const { sellAsset, buyAsset, sellAmount, bip44Params, receiveAddress } = trade
 
     const isFromOsmo = sellAsset.assetId === osmosisAssetId
     const sellAssetDenom = symbolDenomMapping[sellAsset.symbol as keyof SymbolDenomMapping]
@@ -266,11 +279,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     let cosmosIbcTradeId = ''
 
     if (!isFromOsmo) {
-      const sellBip44Params = cosmosAdapter.buildBIP44Params({
-        accountNumber: Number(sellAssetAccountNumber),
-      })
-
-      sellAddress = await cosmosAdapter.getAddress({ wallet, bip44Params: sellBip44Params })
+      sellAddress = await cosmosAdapter.getAddress({ wallet, bip44Params })
 
       if (!sellAddress)
         throw new SwapError('Failed to get address', {
@@ -316,10 +325,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       // seeing intermittent bugs that suggest the balances and sequence numbers were sometimes off
       await new Promise((resolve) => setTimeout(resolve, 5000))
     } else {
-      const sellBip44Params = osmosisAdapter.buildBIP44Params({
-        accountNumber: Number(sellAssetAccountNumber),
-      })
-      sellAddress = await osmosisAdapter.getAddress({ wallet, bip44Params: sellBip44Params })
+      sellAddress = await osmosisAdapter.getAddress({ wallet, bip44Params })
 
       if (!sellAddress)
         throw new SwapError('failed to get osmoAddress', {

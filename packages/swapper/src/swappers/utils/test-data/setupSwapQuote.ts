@@ -14,10 +14,17 @@ export const setupQuote = () => {
     sellAsset,
     buyAsset,
     allowanceContract: 'allowanceContractAddress',
-    sellAssetAccountNumber: 0,
+    bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
     minimum: '0',
     maximum: '999999999999',
-    feeData: { fee: '0', tradeFee: '0', chainSpecific: {} },
+    feeData: {
+      fee: '0', // TODO: remove once web has been updated
+      tradeFee: '0', // TODO: remove once web has been updated
+      chainSpecific: {},
+      sellAssetTradeFeeUsd: '0',
+      networkFee: '0',
+      buyAssetTradeFeeUsd: '0',
+    },
     rate: '1',
     sources: [],
   }
@@ -27,7 +34,7 @@ export const setupQuote = () => {
     sellAmount: '1000000000000000000',
     sellAsset,
     buyAsset,
-    sellAssetAccountNumber: 0,
+    bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
     sendMax: false,
     receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
   }
@@ -42,7 +49,7 @@ export const setupBuildTrade = () => {
     sellAmount: '1000000000000000000',
     buyAsset,
     sendMax: false,
-    sellAssetAccountNumber: 0,
+    bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
     sellAsset,
     wallet: <HDWallet>{},
     receiveAddress: '',

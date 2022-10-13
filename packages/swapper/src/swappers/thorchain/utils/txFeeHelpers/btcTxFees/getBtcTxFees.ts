@@ -4,26 +4,31 @@ import { KnownChainIds } from '@shapeshiftoss/types'
 import { QuoteFeeData, SwapError, SwapErrorTypes, UtxoSupportedChainIds } from '../../../../../api'
 import { bn } from '../../../../utils/bignumber'
 
+type GetBtcTxFeesInput = {
+  opReturnData: string
+  vault: string
+  sellAmount: string
+  sellAdapter: UtxoBaseAdapter<UtxoSupportedChainIds>
+  pubkey: string
+  buyAssetTradeFeeUsd: string
+  sendMax: boolean
+}
+
 export const getBtcTxFees = async ({
   opReturnData,
   vault,
   sellAmount,
   sellAdapter,
   pubkey,
-  tradeFee,
-}: {
-  opReturnData: string
-  vault: string
-  sellAmount: string
-  sellAdapter: UtxoBaseAdapter<UtxoSupportedChainIds>
-  pubkey: string
-  tradeFee: string
-}): Promise<QuoteFeeData<UtxoSupportedChainIds>> => {
+  buyAssetTradeFeeUsd,
+  sendMax,
+}: GetBtcTxFeesInput): Promise<QuoteFeeData<UtxoSupportedChainIds>> => {
   try {
     const feeDataOptions = await sellAdapter.getFeeData({
       to: vault,
       value: sellAmount,
       chainSpecific: { pubkey, opReturnData },
+      sendMax,
     })
 
     const feeData = feeDataOptions['fast']
@@ -36,12 +41,15 @@ export const getBtcTxFees = async ({
     const isFromBch = sellAdapter.getChainId() === KnownChainIds.BitcoinCashMainnet
     const feeMultiplier = isFromBch ? bn(1.5) : bn(1)
 
-    const fee = feeMultiplier.times(feeData.txFee).dp(0).toString()
+    const networkFee = feeMultiplier.times(feeData.txFee).dp(0).toString()
     const satsPerByte = feeMultiplier.times(feeData.chainSpecific.satoshiPerByte).dp(0).toString()
 
     return {
-      fee,
-      tradeFee,
+      fee: networkFee,
+      networkFee,
+      tradeFee: buyAssetTradeFeeUsd,
+      buyAssetTradeFeeUsd,
+      sellAssetTradeFeeUsd: '0',
       chainSpecific: {
         satsPerByte,
         byteCount: bn(feeData.txFee)

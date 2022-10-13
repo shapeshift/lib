@@ -2,31 +2,41 @@ import { Asset } from '@shapeshiftoss/asset-service'
 import { adapters, AssetId } from '@shapeshiftoss/caip'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
-import { BN, bn, bnOrZero } from '../../../utils/bignumber'
-import { fromBaseUnit, toBaseUnit } from '../../../utils/bignumber'
-import { PoolResponse, ThorchainSwapperDeps } from '../../types'
+import { BN, bn, bnOrZero, fromBaseUnit, toBaseUnit } from '../../../utils/bignumber'
+import { ThorchainSwapperDeps, ThornodePoolResponse } from '../../types'
 import { getPriceRatio } from '../getPriceRatio/getPriceRatio'
+import { isRune } from '../isRune/isRune'
 import { thorService } from '../thorService'
 
 const THOR_PRECISION = 8
 
-type PoolData = {
-  assetBalance: BN
-  runeBalance: BN
-}
-
-const getSwapOutput = (inputAmount: BN, poolData: PoolData, toRune: boolean): BN => {
+const getSwapOutput = (inputAmount: BN, pool: ThornodePoolResponse, toRune: boolean): BN => {
   const x = inputAmount
-  const X = toRune ? poolData.assetBalance : poolData.runeBalance
-  const Y = toRune ? poolData.runeBalance : poolData.assetBalance
-  const numerator = x.times(X).times(Y)
-  const denominator = x.plus(X).pow(2)
+  const X = toRune ? pool.balance_asset : pool.balance_rune
+  const Y = toRune ? pool.balance_rune : pool.balance_asset
+  const numerator = bn(x).times(X).times(Y)
+  const denominator = bn(x).plus(X).pow(2)
   return numerator.div(denominator)
 }
 
-const getDoubleSwapOutput = (input: BN, inputPool: PoolData, outputPool: PoolData): BN => {
-  const runeToOutput = getSwapOutput(input, inputPool, true)
-  return getSwapOutput(runeToOutput, outputPool, false)
+const getDoubleSwapOutput = (
+  input: BN,
+  inputPool: ThornodePoolResponse | null | undefined,
+  outputPool: ThornodePoolResponse | null | undefined,
+): BN => {
+  if (inputPool && outputPool) {
+    const runeToOutput = getSwapOutput(input, inputPool, true)
+    return getSwapOutput(runeToOutput, outputPool, false)
+  }
+  if (inputPool && !outputPool) {
+    return getSwapOutput(input, inputPool, true)
+  }
+
+  if (!inputPool && outputPool) {
+    return getSwapOutput(input, outputPool, false)
+  }
+
+  return bn(0) // We should never reach this, but this makes tsc happy
 }
 
 // https://docs.thorchain.org/how-it-works/prices
@@ -49,40 +59,51 @@ export const getTradeRate = async (
   const buyPoolId = adapters.assetIdToPoolAssetId({ assetId: buyAssetId })
   const sellPoolId = adapters.assetIdToPoolAssetId({ assetId: sellAsset.assetId })
 
-  if (!buyPoolId || !sellPoolId)
-    throw new SwapError(`[getPriceRatio]: No thorchain pool found`, {
+  if (!buyPoolId && !isRune(buyAssetId)) {
+    throw new SwapError(`[getTradeRate]: No buyPoolId for asset ${buyAssetId}`, {
       code: SwapErrorTypes.POOL_NOT_FOUND,
-      fn: 'getPriceRatio',
+      fn: 'getTradeRate',
+      details: { buyAssetId },
+    })
+  }
+
+  if (!sellPoolId && !isRune(sellAsset.assetId)) {
+    throw new SwapError(`[getTradeRate]: No sellPoolId for asset ${sellAsset.assetId}`, {
+      code: SwapErrorTypes.POOL_NOT_FOUND,
+      fn: 'getTradeRate',
+      details: { sellAsset: sellAsset.assetId },
+    })
+  }
+
+  const { data } = await thorService.get<ThornodePoolResponse[]>(
+    `${deps.daemonUrl}/lcd/thorchain/pools`,
+  )
+
+  const buyPool = buyPoolId ? data.find((response) => response.asset === buyPoolId) : null
+  const sellPool = sellPoolId ? data.find((response) => response.asset === sellPoolId) : null
+
+  if (!buyPool && !isRune(buyAssetId)) {
+    throw new SwapError(`[getTradeRate]: no pools found`, {
+      code: SwapErrorTypes.POOL_NOT_FOUND,
+      fn: 'getTradeRate',
       details: { buyPoolId, sellPoolId },
     })
+  }
 
-  const { data: responseData } = await thorService.get<PoolResponse[]>(`${deps.midgardUrl}/pools`)
-
-  const buyPool = responseData.find((response) => response.asset === buyPoolId)
-  const sellPool = responseData.find((response) => response.asset === sellPoolId)
-
-  if (!buyPool || !sellPool)
-    throw new SwapError(`[getPriceRatio]: no pools found for`, {
+  if (!sellPool && !isRune(sellAsset.assetId)) {
+    throw new SwapError(`[getTradeRate]: no pools found`, {
       code: SwapErrorTypes.POOL_NOT_FOUND,
-      fn: 'getPriceRatio',
+      fn: 'getTradeRate',
       details: { buyPoolId, sellPoolId },
     })
+  }
 
   // All thorchain pool amounts are base 8 regardless of token precision
   const sellBaseAmount = bn(
     toBaseUnit(fromBaseUnit(sellAmount, sellAsset.precision), THOR_PRECISION),
   )
 
-  const sellAssetPoolData = {
-    assetBalance: bn(sellPool.assetDepth),
-    runeBalance: bn(sellPool.runeDepth),
-  }
-  const buyAssetPoolData = {
-    assetBalance: bn(buyPool.assetDepth),
-    runeBalance: bn(buyPool.runeDepth),
-  }
-  const outputAmountBase8 = getDoubleSwapOutput(sellBaseAmount, sellAssetPoolData, buyAssetPoolData)
-
+  const outputAmountBase8 = getDoubleSwapOutput(sellBaseAmount, sellPool, buyPool)
   const outputAmount = fromBaseUnit(outputAmountBase8, THOR_PRECISION)
 
   return bn(outputAmount).div(fromBaseUnit(sellAmount, sellAsset.precision)).toString()
