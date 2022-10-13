@@ -451,7 +451,7 @@ export class IdleOpportunity
     feePriority?: FeePriority
     bip44Params: BIP44Params
   }): Promise<string> {
-    const { wallet, tx, feePriority } = input
+    const { wallet, tx, feePriority, bip44Params } = input
     const feeSpeed: FeePriority = feePriority ? feePriority : 'fast'
     const chainAdapter = this.#internals.chainAdapter
 
@@ -463,7 +463,7 @@ export class IdleOpportunity
       gasLimit: numberToHex(tx.estimatedGas.times(1.5).integerValue().toString()),
       nonce: numberToHex(tx.nonce),
       value: numberToHex(tx.value),
-      addressNList: toAddressNList(chainAdapter.buildBIP44Params({ accountNumber: 0 })),
+      addressNList: toAddressNList(bip44Params),
     }
 
     // console.log('signAndBroadcast', txToSign)
