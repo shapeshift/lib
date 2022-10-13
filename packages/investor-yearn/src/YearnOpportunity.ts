@@ -40,7 +40,7 @@ export type PreparedTransaction = {
   value: '0'
 }
 
-const feeMultipier: Record<FeePriority, number> = Object.freeze({
+const feeMultiplier: Record<FeePriority, number> = Object.freeze({
   fast: 1,
   average: 0.8,
   slow: 0.5,
@@ -185,7 +185,7 @@ export class YearnOpportunity
     const feeSpeed: FeePriority = feePriority ? feePriority : 'fast'
     const chainAdapter = this.#internals.chainAdapter
 
-    const gasPrice = numberToHex(bnOrZero(tx.gasPrice).times(feeMultipier[feeSpeed]).toString())
+    const gasPrice = numberToHex(bnOrZero(tx.gasPrice).times(feeMultiplier[feeSpeed]).toString())
     const txToSign: ETHSignTx = {
       ...tx,
       gasPrice,
