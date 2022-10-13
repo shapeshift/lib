@@ -8,7 +8,7 @@ import {
   InvestorOpportunity,
 } from '@shapeshiftoss/investor'
 import { Logger } from '@shapeshiftoss/logger'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import type { BigNumber } from 'bignumber.js'
 import toLower from 'lodash/toLower'
 import Web3 from 'web3'
@@ -449,6 +449,7 @@ export class IdleOpportunity
     wallet: HDWallet
     tx: PreparedTransaction
     feePriority?: FeePriority
+    bip44Params: BIP44Params
   }): Promise<string> {
     const { wallet, tx, feePriority } = input
     const feeSpeed: FeePriority = feePriority ? feePriority : 'fast'
