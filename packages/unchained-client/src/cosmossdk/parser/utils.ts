@@ -44,21 +44,29 @@ export const metaData = (
 ): TxMetadata | undefined => {
   switch (msg.type) {
     case 'delegate':
+      return {
+        parser: 'staking',
+        method: msg.type,
+        value: msg.value.amount,
+        assetId: getAssetIdByDenom(msg.value.denom, assetId) ?? assetId,
+        delegator: msg.origin,
+        destinationValidator: msg.to,
+      }
     case 'begin_unbonding':
       return {
         parser: 'staking',
         method: msg.type,
         value: msg.value.amount,
-        assetId,
+        assetId: getAssetIdByDenom(msg.value.denom, assetId) ?? assetId,
         delegator: msg.origin,
-        destinationValidator: msg.to,
+        destinationValidator: msg.from,
       }
     case 'begin_redelegate':
       return {
         parser: 'staking',
         method: msg.type,
         value: msg.value.amount,
-        assetId,
+        assetId: getAssetIdByDenom(msg.value.denom, assetId) ?? assetId,
         delegator: msg.origin,
         sourceValidator: msg.from,
         destinationValidator: msg.to,
@@ -68,7 +76,7 @@ export const metaData = (
         parser: 'staking',
         method: msg.type,
         value: msg.value.amount,
-        assetId,
+        assetId: getAssetIdByDenom(msg.value.denom, assetId) ?? assetId,
         delegator: msg.origin,
         destinationValidator: msg.to,
       }
@@ -78,7 +86,7 @@ export const metaData = (
         parser: 'ibc',
         method: msg.type,
         value: msg.value.amount,
-        assetId,
+        assetId: getAssetIdByDenom(msg.value.denom, assetId) ?? assetId,
         ibcSource: msg.origin,
         ibcDestination: msg.to,
       }
