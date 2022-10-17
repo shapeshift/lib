@@ -316,7 +316,8 @@ describe('parseTx', () => {
         method: 'transfer',
         ibcDestination: 'cosmos1wrk4vlk03unephl72ntttcd80lnf7a2ywtzrvu',
         ibcSource: address,
-        assetId: 'cosmos:osmosis-1/ibc:27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2',
+        assetId:
+          'cosmos:osmosis-1/ibc:27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2',
         value: '2898071',
       },
     }
@@ -361,7 +362,8 @@ describe('parseTx', () => {
         method: 'recv_packet',
         ibcDestination: address,
         ibcSource: 'evmos1mmxzd4c4kap3x60eu2rvnfrac264sjgxwu930y',
-        assetId: 'cosmos:osmosis-1/ibc:6AE98883D4D5D5FF9E50D7130F1305DA2FFA0C652D1DD9C123657C6B4EB2DF8A',
+        assetId:
+          'cosmos:osmosis-1/ibc:6AE98883D4D5D5FF9E50D7130F1305DA2FFA0C652D1DD9C123657C6B4EB2DF8A',
         value: '4190000000000000000',
       },
     }
