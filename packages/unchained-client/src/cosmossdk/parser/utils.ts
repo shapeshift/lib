@@ -48,7 +48,7 @@ export const metaData = (
         parser: 'staking',
         method: msg.type,
         value: msg.value.amount,
-        assetId: getAssetIdByDenom(msg.value.denom, assetId) ?? assetId,
+        assetId: getAssetIdByDenom(msg.value.denom, assetId) ?? '',
         delegator: msg.origin,
         destinationValidator: msg.to,
       }
@@ -57,7 +57,7 @@ export const metaData = (
         parser: 'staking',
         method: msg.type,
         value: msg.value.amount,
-        assetId: getAssetIdByDenom(msg.value.denom, assetId) ?? assetId,
+        assetId: getAssetIdByDenom(msg.value.denom, assetId) ?? '',
         delegator: msg.origin,
         destinationValidator: msg.from,
       }
@@ -66,7 +66,7 @@ export const metaData = (
         parser: 'staking',
         method: msg.type,
         value: msg.value.amount,
-        assetId: getAssetIdByDenom(msg.value.denom, assetId) ?? assetId,
+        assetId: getAssetIdByDenom(msg.value.denom, assetId) ?? '',
         delegator: msg.origin,
         sourceValidator: msg.from,
         destinationValidator: msg.to,
@@ -76,7 +76,7 @@ export const metaData = (
         parser: 'staking',
         method: msg.type,
         value: msg.value.amount,
-        assetId: getAssetIdByDenom(msg.value.denom, assetId) ?? assetId,
+        assetId: getAssetIdByDenom(msg.value.denom, assetId) ?? '',
         delegator: msg.origin,
         destinationValidator: msg.to,
       }
@@ -86,7 +86,7 @@ export const metaData = (
         parser: 'ibc',
         method: msg.type,
         value: msg.value.amount,
-        assetId: getAssetIdByDenom(msg.value.denom, assetId) ?? assetId,
+        assetId: getAssetIdByDenom(msg.value.denom, assetId) ?? '',
         ibcSource: msg.origin,
         ibcDestination: msg.to,
       }
