@@ -2,5 +2,29 @@
 	"eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d": {
 		"color": "#3761F9",
 		"icon": "https://assets.coincap.io/assets/icons/256/fox.png"
+	},
+	"eip155:1/erc20:0x1cdd2eab61112697626f7b4bb0e23da4febf7b7c": {
+		"explorer": "https://etherscan.io",
+		"explorerAddressLink": "https://etherscan.io/address/",
+		"explorerTxLink": "https://etherscan.io/tx/",
+		"color": "#55AD96",
+		"icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0x1CDD2EaB61112697626F7b4bB0e23Da4FeBF7B7C/logo.png",
+		"name": "USDTso Wormhole",
+		"precision": 6,
+		"symbol": "USDTso",
+		"chainId": "eip155:1",
+		"assetId": "eip155:1/erc20:0x1cdd2eab61112697626f7b4bb0e23da4febf7b7c"
+	},
+	"eip155:1/erc20:0xde60adfddaabaaac3dafa57b26acc91cb63728c4": {
+		"explorer": "https://etherscan.io",
+		"explorerAddressLink": "https://etherscan.io/address/",
+		"explorerTxLink": "https://etherscan.io/tx/",
+		"color": "#55AC94",
+		"icon": "https://rawcdn.githack.com/trustwallet/assets/master/blockchains/ethereum/assets/0xDe60aDfDdAAbaAAC3dAFa57B26AcC91Cb63728c4/logo.png",
+		"name": "USDTbs Wormhole",
+		"precision": 18,
+		"symbol": "USDTbs",
+		"chainId": "eip155:1",
+		"assetId": "eip155:1/erc20:0xde60adfddaabaaac3dafa57b26acc91cb63728c4"
 	}
 }
