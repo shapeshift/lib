@@ -69,6 +69,8 @@ export class Parser implements SubParser<Tx> {
     // failed to decode input data
     if (!decoded) return
 
+    // Unconfirmed Txs are the edge case here, we augment them with transfers
+    // For confirmed Tx, the metadata is all we actually need
     if (tx.confirmations)
       return {
         data: {
