@@ -69,6 +69,14 @@ export class Parser implements SubParser<Tx> {
     // failed to decode input data
     if (!decoded) return
 
+    if (tx.confirmations)
+      return {
+        data: {
+          parser: 'uniV2',
+          method: decoded.name,
+        },
+      }
+
     const tokenAddress = ethers.utils.getAddress(decoded.args.token.toLowerCase())
     const lpTokenAddress = Parser.pairFor(tokenAddress, this.wethContract)
 
