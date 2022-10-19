@@ -59,7 +59,6 @@ export class Parser implements SubParser<Tx> {
 
   async parseUniV2(tx: Tx): Promise<TxSpecific | undefined> {
     if (!tx.inputData) return
-    if (tx.confirmations) return
 
     const txSigHash = getSigHash(tx.inputData)
 
