@@ -15,7 +15,7 @@ import { MAX_ALLOWANCE } from '../../cow/utils/constants'
 import { erc20Abi as erc20AbiImported } from '../abi/erc20-abi'
 import { BN, bn, bnOrZero } from '../bignumber'
 
-export type isApprovalRequiredArgs = {
+export type IsApprovalRequiredArgs = {
   adapter: EvmSupportedChainAdapters
   receiveAddress: string
   allowanceContract: string
@@ -66,7 +66,7 @@ export const isApprovalRequired = async ({
   sellAmount,
   web3,
   erc20AllowanceAbi,
-}: isApprovalRequiredArgs): Promise<boolean> => {
+}: IsApprovalRequiredArgs): Promise<boolean> => {
   try {
     if (sellAsset.assetId === adapter.getFeeAssetId()) {
       return false

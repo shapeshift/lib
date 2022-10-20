@@ -5,7 +5,7 @@ import { KnownChainIds } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
 import { BuildTradeInput } from '../../../api'
-import { isApprovalRequiredArgs } from '../../utils/helpers/helpers'
+import { IsApprovalRequiredArgs } from '../../utils/helpers/helpers'
 import { ETH, FOX, WBTC, WETH } from '../../utils/test-data/assets'
 import { CowSwapperDeps } from '../CowSwapper'
 import { CowTrade } from '../types'
@@ -37,7 +37,7 @@ jest.mock('../utils/helpers/helpers', () => {
 jest.mock('../../utils/helpers/helpers', () => {
   return {
     ...jest.requireActual('../../utils/helpers/helpers'),
-    isApprovalRequired: (args: isApprovalRequiredArgs) => {
+    isApprovalRequired: (args: IsApprovalRequiredArgs) => {
       if (args.sellAsset.assetId === WBTC.assetId) {
         return true
       }

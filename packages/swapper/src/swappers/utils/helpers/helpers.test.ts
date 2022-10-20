@@ -9,7 +9,7 @@ import { setupQuote } from '../test-data/setupSwapQuote'
 import {
   grantAllowance,
   isApprovalRequired,
-  isApprovalRequiredArgs,
+  IsApprovalRequiredArgs,
   normalizeAmount,
   normalizeIntegerAmount,
 } from './helpers'
@@ -34,7 +34,7 @@ describe('utils', () => {
   const { web3, adapter } = setupDeps()
 
   describe('isApprovalRequired', () => {
-    const getAllowanceInput: isApprovalRequiredArgs = {
+    const getAllowanceInput: IsApprovalRequiredArgs = {
       adapter,
       receiveAddress: '0x0',
       web3,
