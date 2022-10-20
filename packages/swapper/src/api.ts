@@ -71,9 +71,6 @@ type CommonTradeInput = {
   sendMax: boolean
   receiveAddress: string
   bip44Params: BIP44Params
-
-  /** @deprecated Use sellAmountCryptoPrecision instead */
-  sellAmount?: string
 }
 
 export type EvmSupportedChainIds = KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
@@ -127,11 +124,6 @@ interface TradeBase<C extends ChainId> {
   buyAsset: Asset
   sellAsset: Asset
   bip44Params: BIP44Params
-
-  /** @deprecated Use buyAmountCryptoPrecision instead */
-  buyAmount?: string
-  /** @deprecated Use sellAmountCryptoPrecision instead */
-  sellAmount?: string
 }
 
 export interface TradeQuote<C extends ChainId> extends TradeBase<C> {
