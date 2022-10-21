@@ -72,7 +72,7 @@ export async function zrxBuildTrade<T extends EvmSupportedChainIds>(
         params: {
           buyToken,
           sellToken,
-          sellAmountCryptoPrecision: normalizeAmount(sellAmountCryptoPrecision),
+          sellAmount: normalizeAmount(sellAmountCryptoPrecision),
           takerAddress: receiveAddress,
           slippagePercentage,
           skipValidation: false,
