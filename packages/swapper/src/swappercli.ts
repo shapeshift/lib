@@ -194,7 +194,8 @@ const main = async (): Promise<void> => {
   const buyAmount = fromBaseUnit(quote.buyAmountCryptoPrecision || '0', buyAsset.precision)
 
   const answer = readline.question(
-    `Swap ${sellAmount} ${sellAsset.symbol} for ${buyAmount} ${buyAsset.symbol
+    `Swap ${sellAmount} ${sellAsset.symbol} for ${buyAmount} ${
+      buyAsset.symbol
     } on ${swapper.getType()}? (y/n): `,
   )
   if (answer === 'y') {

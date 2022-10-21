@@ -161,7 +161,7 @@ export async function getCowSwapTradeQuote(
       axios.isAxiosError(e) &&
       e.response?.status === 400 &&
       (e as AxiosError<{ errorType: string }>).response?.data.errorType ===
-      'SellAmountDoesNotCoverFee'
+        'SellAmountDoesNotCoverFee'
     ) {
       throw new SwapError('[getCowSwapTradeQuote]', {
         cause: e,
