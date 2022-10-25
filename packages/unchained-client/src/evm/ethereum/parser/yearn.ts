@@ -1,5 +1,6 @@
 import { ChainId, toAssetId } from '@shapeshiftoss/caip'
-import { ChainId as YearnChainId, Yearn } from '@yfi/sdk'
+import { ChainId as YearnChainId, Vault, Yearn } from '@yfi/sdk'
+import axios from 'axios'
 import { BigNumber, ethers } from 'ethers'
 
 import { Tx } from '../../../generated/ethereum'
@@ -69,8 +70,8 @@ export class Parser implements SubParser<Tx> {
     if (!abiInterface) return
 
     if (!this.yearnTokenVaultAddresses) {
-      const vaults = await this.yearnSdk?.vaults.get()
-      this.yearnTokenVaultAddresses = vaults?.map((vault) => vault.address)
+      const vaults = await axios.get<Vault[]>(`https://api.yearn.finance/v1/chains/1/vaults/all`)
+      this.yearnTokenVaultAddresses = vaults.data.map((vault) => vault.address)
     }
 
     const decoded = abiInterface.parseTransaction({ data: tx.inputData })

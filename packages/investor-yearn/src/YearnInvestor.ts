@@ -2,7 +2,8 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import type { ChainAdapter } from '@shapeshiftoss/chain-adapters'
 import { Investor } from '@shapeshiftoss/investor'
 import { KnownChainIds } from '@shapeshiftoss/types'
-import { type ChainId, type VaultMetadata, Yearn } from '@yfi/sdk'
+import { type ChainId, type VaultMetadata, Vault, Yearn } from '@yfi/sdk'
+import axios from 'axios'
 import { find } from 'lodash'
 import filter from 'lodash/filter'
 import Web3 from 'web3'
@@ -45,9 +46,8 @@ export class YearnInvestor implements Investor<PreparedTransaction, VaultMetadat
 
   async initialize() {
     await this.#deps.yearnSdk.ready
-    this.#opportunities = (await this.#deps.yearnSdk.vaults.get()).map(
-      (vault) => new YearnOpportunity(this.#deps, vault),
-    )
+    const vaults = await axios.get<Vault[]>(`https://api.yearn.finance/v1/chains/1/vaults/all`)
+    this.#opportunities = vaults.data.map((vault) => new YearnOpportunity(this.#deps, vault))
   }
 
   async findAll() {

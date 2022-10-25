@@ -1,7 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { ethChainId as chainId, toAssetId } from '@shapeshiftoss/caip'
-import { Token, Vault } from '@yfi/sdk'
-import { Yearn } from '@yfi/sdk'
+import { Token, Vault, Yearn } from '@yfi/sdk'
+import axios from 'axios'
 import toLower from 'lodash/toLower'
 
 import { Asset } from '../../service/AssetService'
@@ -19,9 +19,9 @@ const explorerData = {
 }
 
 export const getYearnVaults = async (): Promise<Asset[]> => {
-  const vaults: Vault[] = await yearnSdk.vaults.get()
+  const vaults = await axios.get<Vault[]>(`https://api.yearn.finance/v1/chains/1/vaults/all`)
 
-  return vaults.map((vault: Vault) => {
+  return vaults.data.map((vault: Vault) => {
     const assetId = toAssetId({ chainId, assetNamespace: 'erc20', assetReference: vault.address })
     return {
       color: colorMap[assetId] ?? '#FFFFFF',
