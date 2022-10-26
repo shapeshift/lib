@@ -50,16 +50,7 @@ const transformValidator = (validator: unchained.cosmossdk.types.Validator): Val
 })
 
 const parsedTxToTransaction = (parsedTx: unchained.cosmossdk.ParsedTx): Transaction => ({
-  address: parsedTx.address,
-  blockHash: parsedTx.blockHash,
-  blockHeight: parsedTx.blockHeight,
-  blockTime: parsedTx.blockTime,
-  chainId: parsedTx.chainId,
-  txid: parsedTx.txid,
-  confirmations: parsedTx.confirmations,
-  fee: parsedTx.fee,
-  status: parsedTx.status,
-  trade: parsedTx.trade,
+  ...parsedTx,
   transfers: parsedTx.transfers.map((transfer) => ({
     assetId: transfer.assetId,
     from: transfer.from,
@@ -67,7 +58,6 @@ const parsedTxToTransaction = (parsedTx: unchained.cosmossdk.ParsedTx): Transact
     type: transfer.type,
     value: transfer.totalValue,
   })),
-  data: parsedTx.data,
 })
 
 export const cosmosSdkChainIds = [
