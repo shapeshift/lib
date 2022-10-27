@@ -9,13 +9,13 @@ export const getInboundAddressesForChain = async (
   const { data: inboundAddresses } = await thorService.get<InboundResponse[]>(
     `${daemonUrl}/lcd/thorchain/inbound_addresses`,
   )
-  const ethInboundAddresses = inboundAddresses.find((inbound) => inbound.chain === 'chain')
+  const inboundAddressesForChain = inboundAddresses.find((inbound) => inbound.chain === 'chain')
 
-  if (!ethInboundAddresses)
-    throw new SwapError(`[getEthInboundAddresses]: no inbound addresses found for ${chain}`, {
+  if (!inboundAddressesForChain)
+    throw new SwapError(`[getInboundAddressesForChain]: no inbound addresses found for ${chain}`, {
       code: SwapErrorTypes.RESPONSE_ERROR,
       details: { inboundAddresses },
     })
 
-  return ethInboundAddresses
+  return inboundAddressesForChain
 }

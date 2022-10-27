@@ -10,7 +10,7 @@ import { ThorchainSwapperDeps } from '../../types'
 import { getLimit } from '../getLimit/getLimit'
 import { makeSwapMemo } from '../makeSwapMemo/makeSwapMemo'
 
-export const getCosmosTxData = async (input: {
+type GetCosmosTxDataInput = {
   bip44Params: BIP44Params
   destinationAddress: string
   deps: ThorchainSwapperDeps
@@ -22,7 +22,9 @@ export const getCosmosTxData = async (input: {
   quote: TradeQuote<KnownChainIds.CosmosMainnet>
   chainId: ChainId
   sellAdapter: ChainAdapter<KnownChainIds.CosmosMainnet>
-}) => {
+}
+
+export const getCosmosTxData = async (input: GetCosmosTxDataInput) => {
   const {
     bip44Params,
     deps,

@@ -17,11 +17,13 @@ type GetBtcThorTxInfoArgs = {
   destinationAddress: string
   buyAssetTradeFeeUsd: string
 }
+
 type GetBtcThorTxInfoReturn = Promise<{
   data: string
   memo: string
   router: string
 }>
+
 type GetBtcThorTxInfo = (args: GetBtcThorTxInfoArgs) => GetBtcThorTxInfoReturn
 
 export const getThorTxInfo: GetBtcThorTxInfo = async ({
