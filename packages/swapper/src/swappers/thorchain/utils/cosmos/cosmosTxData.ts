@@ -66,40 +66,39 @@ export const cosmosTxData = async (input: {
     limit,
   })
 
-  if (fromThorAsset) {
-    const buildTxResponse = await (
-      sellAdapter as unknown as thorchain.ChainAdapter
-    ).buildDepositTransaction({
-      bip44Params,
-      value: sellAmountCryptoPrecision,
-      wallet,
-      memo,
-      gas: (quote as TradeQuote<KnownChainIds.CosmosMainnet>).feeData.chainSpecific.estimatedGas,
-      fee: quote.feeData.networkFee,
-    })
-    return buildTxResponse.txToSign
-  }
+  const builtTxResponse = await (async () => {
+    switch (true) {
+      case fromThorAsset:
+        return await (sellAdapter as unknown as thorchain.ChainAdapter).buildDepositTransaction({
+          bip44Params,
+          value: sellAmountCryptoPrecision,
+          wallet,
+          memo,
+          gas: (quote as TradeQuote<KnownChainIds.CosmosMainnet>).feeData.chainSpecific
+            .estimatedGas,
+          fee: quote.feeData.networkFee,
+        })
+      default:
+        if (!vault)
+          throw new SwapError('[buildTrade]: no vault for chain', {
+            code: SwapErrorTypes.BUILD_TRADE_FAILED,
+            fn: 'buildTrade',
+            details: { chainId: input.chainId },
+          })
+        return await (sellAdapter as unknown as cosmos.ChainAdapter).buildSendTransaction({
+          bip44Params,
+          value: sellAmountCryptoPrecision,
+          wallet,
+          to: vault,
+          memo,
+          chainSpecific: {
+            gas: (quote as TradeQuote<KnownChainIds.CosmosMainnet>).feeData.chainSpecific
+              .estimatedGas,
+            fee: quote.feeData.networkFee,
+          },
+        })
+    }
+  })()
 
-  if (!vault)
-    throw new SwapError('[buildTrade]: no vault for chain', {
-      code: SwapErrorTypes.BUILD_TRADE_FAILED,
-      fn: 'buildTrade',
-      details: { chainId: input.chainId },
-    })
-
-  const buildTxResponse = await (
-    sellAdapter as unknown as cosmos.ChainAdapter
-  ).buildSendTransaction({
-    bip44Params,
-    value: sellAmountCryptoPrecision,
-    wallet,
-    to: vault,
-    memo,
-    chainSpecific: {
-      gas: (quote as TradeQuote<KnownChainIds.CosmosMainnet>).feeData.chainSpecific.estimatedGas,
-      fee: quote.feeData.networkFee,
-    },
-  })
-
-  return buildTxResponse.txToSign
+  return builtTxResponse.txToSign
 }
