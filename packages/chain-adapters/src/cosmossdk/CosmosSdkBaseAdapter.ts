@@ -1,5 +1,4 @@
 import { AssetId, ChainId } from '@shapeshiftoss/caip'
-import { CosmosSignTx } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import { bech32 } from 'bech32'
@@ -9,11 +8,11 @@ import { ErrorHandler } from '../error/ErrorHandler'
 import {
   Account,
   BuildSendTxInput,
-  ChainTxType,
   FeeDataEstimate,
   GetAddressInput,
   GetBIP44ParamsInput,
   GetFeeDataInput,
+  SignTx,
   SignTxInput,
   SubscribeError,
   SubscribeTxsInput,
@@ -23,8 +22,10 @@ import {
   ValidAddressResult,
   ValidAddressResultType,
 } from '../types'
-import { toRootDerivationPath } from '../utils'
+import { toAddressNList, toRootDerivationPath } from '../utils'
+import { bnOrZero } from '../utils/bignumber'
 import {
+  BuildTransactionInput,
   Delegation,
   Redelegation,
   RedelegationEntry,
@@ -35,10 +36,22 @@ import {
   ValidatorReward,
 } from './types'
 
-const CHAIN_TO_BECH32_PREFIX_MAPPING = {
+const CHAIN_ID_TO_BECH32_ADDR_PREFIX = {
   [KnownChainIds.CosmosMainnet]: 'cosmos',
   [KnownChainIds.OsmosisMainnet]: 'osmo',
   [KnownChainIds.ThorchainMainnet]: 'thor',
+}
+
+const CHAIN_ID_TO_BECH32_VAL_PREFIX = {
+  [KnownChainIds.CosmosMainnet]: 'cosmosvaloper',
+  [KnownChainIds.OsmosisMainnet]: 'osmovaloper',
+  [KnownChainIds.ThorchainMainnet]: 'thorv',
+}
+
+export const assertIsValidatorAddress = (validator: string, chainId: CosmosSdkChainId) => {
+  if (CHAIN_ID_TO_BECH32_VAL_PREFIX[chainId] !== bech32.decode(validator).prefix) {
+    throw new Error(`CosmosSdkBaseAdapter: invalid validator address ${validator}`)
+  }
 }
 
 const transformValidator = (validator: unchained.cosmossdk.types.Validator): Validator => ({
@@ -68,6 +81,8 @@ export const cosmosSdkChainIds = [
 
 export type CosmosSdkChainId = typeof cosmosSdkChainIds[number]
 
+type Denom = 'uatom' | 'uosmo' | 'rune'
+
 export interface ChainAdapterArgs {
   chainId?: CosmosSdkChainId
   coinName: string
@@ -78,9 +93,10 @@ export interface ChainAdapterArgs {
 }
 
 export interface CosmosSdkBaseAdapterArgs extends ChainAdapterArgs {
+  chainId: CosmosSdkChainId
+  denom: Denom
   defaultBIP44Params: BIP44Params
   supportedChainIds: ChainId[]
-  chainId: CosmosSdkChainId
 }
 
 export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implements IChainAdapter<T> {
@@ -94,11 +110,13 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
   }
 
   protected assetId: AssetId
+  protected denom: string
   protected parser: unchained.cosmossdk.BaseTransactionParser<unchained.cosmossdk.Tx>
 
   protected constructor(args: CosmosSdkBaseAdapterArgs) {
     this.chainId = args.chainId
     this.coinName = args.coinName
+    this.denom = args.denom
     this.defaultBIP44Params = args.defaultBIP44Params
     this.supportedChainIds = args.supportedChainIds
     this.providers = args.providers
@@ -111,11 +129,11 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
   abstract getType(): T
   abstract getFeeAssetId(): AssetId
   abstract getDisplayName(): string
-  abstract buildSendTransaction(tx: BuildSendTxInput<T>): Promise<{ txToSign: ChainTxType<T> }>
+  abstract buildSendTransaction(tx: BuildSendTxInput<T>): Promise<{ txToSign: SignTx<T> }>
   abstract getAddress(input: GetAddressInput): Promise<string>
   abstract getFeeData(input: Partial<GetFeeDataInput<T>>): Promise<FeeDataEstimate<T>>
-  abstract signTransaction(signTxInput: SignTxInput<ChainTxType<T>>): Promise<string>
-  abstract signAndBroadcastTransaction(signTxInput: SignTxInput<CosmosSignTx>): Promise<string>
+  abstract signTransaction(signTxInput: SignTxInput<SignTx<T>>): Promise<string>
+  abstract signAndBroadcastTransaction(signTxInput: SignTxInput<SignTx<T>>): Promise<string>
 
   getChainId(): ChainId {
     return this.chainId
@@ -223,6 +241,54 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
     }
   }
 
+  protected async buildTransaction<U extends CosmosSdkChainId>(
+    tx: BuildTransactionInput<CosmosSdkChainId>,
+  ): Promise<{ txToSign: SignTx<U> }> {
+    const {
+      from,
+      bip44Params = this.defaultBIP44Params,
+      chainSpecific: { gas, fee },
+      value,
+      msg,
+      sendMax = false,
+      memo = '',
+    } = tx
+
+    const account = await this.getAccount(from)
+
+    const amount = (() => {
+      if (!value) return
+      if (!sendMax) return [{ amount: value, denom: this.denom }]
+
+      const availableBalance = bnOrZero(account.balance).minus(fee)
+
+      if (!availableBalance.isFinite() || availableBalance.lte(0)) {
+        throw new Error(
+          `CosmosSdkBaseAdapter: not enough balance to send: ${availableBalance.toString()}`,
+        )
+      }
+
+      return [{ amount: availableBalance.toString(), denom: this.denom }]
+    })()
+
+    const unsignedTx = {
+      fee: { amount: [{ amount: bnOrZero(fee).toString(), denom: this.denom }], gas },
+      msg: [{ type: msg.type, value: { ...msg.value, amount } }],
+      signatures: [],
+      memo,
+    }
+
+    const txToSign = {
+      addressNList: toAddressNList(bip44Params),
+      tx: unsignedTx,
+      chain_id: this.getType(),
+      account_number: account.chainSpecific.accountNumber,
+      sequence: account.chainSpecific.sequence,
+    } as unknown as SignTx<U>
+
+    return { txToSign }
+  }
+
   async broadcastTransaction(hex: string): Promise<string> {
     try {
       return this.providers.http.sendTx({ body: { rawTx: hex } })
@@ -236,7 +302,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
     try {
       const { prefix } = bech32.decode(address)
 
-      if (CHAIN_TO_BECH32_PREFIX_MAPPING[chain] !== prefix) {
+      if (CHAIN_ID_TO_BECH32_ADDR_PREFIX[chain] !== prefix) {
         throw new Error(`Invalid address ${address} for ChainId: ${chain}`)
       }
 

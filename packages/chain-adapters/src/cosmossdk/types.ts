@@ -1,4 +1,9 @@
+import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { BIP44Params } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
+
+import { ChainSpecificBuildTxData } from '../types'
+import { CosmosSdkChainId } from './CosmosSdkBaseAdapter'
 
 export type Account = {
   sequence: string
@@ -8,6 +13,21 @@ export type Account = {
   undelegations: Undelegation[]
   rewards: ValidatorReward[]
 }
+
+export type Message = {
+  type: string
+  value: Record<string, unknown>
+}
+
+export type BuildTransactionInput<T extends CosmosSdkChainId> = {
+  from: string
+  value?: string
+  wallet: HDWallet
+  bip44Params: BIP44Params
+  msg: Message
+  sendMax?: boolean
+  memo?: string
+} & ChainSpecificBuildTxData<T>
 
 export type BuildTxInput = {
   gas: string
