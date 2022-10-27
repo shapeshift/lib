@@ -7,25 +7,26 @@ import { THORCHAIN_FIXED_PRECISION } from '../constants'
 import { getTradeRate } from '../getTradeRate/getTradeRate'
 import { getUsdRate } from '../getUsdRate/getUsdRate'
 
-export const getLimit = async ({
-  sellAsset,
-  buyAsset,
-  sellAmountCryptoPrecision,
-  deps,
-  slippageTolerance,
-  buyAssetTradeFeeUsd,
-}: {
+type GetLimitArgs = {
   buyAssetId: string
   destinationAddress: string
   sellAsset: Asset
-  buyAsset: Asset
   sellAmountCryptoPrecision: string
   deps: ThorchainSwapperDeps
   slippageTolerance: string
   buyAssetTradeFeeUsd: string
-}): Promise<string> => {
-  const tradeRate = await getTradeRate(sellAsset, buyAsset.assetId, sellAmountCryptoPrecision, deps)
-  const buyAssetUsdRate = await getUsdRate({ deps, input: { assetId: buyAsset.assetId } })
+}
+
+export const getLimit = async ({
+  sellAsset,
+  buyAssetId,
+  sellAmountCryptoPrecision,
+  deps,
+  slippageTolerance,
+  buyAssetTradeFeeUsd,
+}: GetLimitArgs): Promise<string> => {
+  const tradeRate = await getTradeRate(sellAsset, buyAssetId, sellAmountCryptoPrecision, deps)
+  const buyAssetUsdRate = await getUsdRate({ deps, input: { assetId: buyAssetId } })
   const expectedBuyAmountCryptoPrecision8 = toBaseUnit(
     fromBaseUnit(bnOrZero(sellAmountCryptoPrecision).times(tradeRate), sellAsset.precision),
     THORCHAIN_FIXED_PRECISION,

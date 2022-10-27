@@ -55,7 +55,6 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
       destinationAddress,
       sellAmountCryptoPrecision,
       sellAsset,
-      buyAsset,
       slippageTolerance,
       deps,
       buyAssetTradeFeeUsd,

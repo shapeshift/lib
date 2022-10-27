@@ -54,7 +54,6 @@ export const cosmosTxData = async (input: {
     destinationAddress,
     sellAmountCryptoPrecision,
     sellAsset,
-    buyAsset,
     slippageTolerance,
     deps,
     buyAssetTradeFeeUsd: quote.feeData.buyAssetTradeFeeUsd,
