@@ -61,7 +61,13 @@ export type InboundResponse = {
   address: string
   halted: boolean
   gas_rate: string
+  gas_rate_units: string
   router?: string
+  global_trading_paused: boolean
+  chain_trading_paused: boolean
+  chain_lp_actions_paused: boolean
+  outbound_tx_size: string
+  outbound_fee: string
 }
 
 export type ThorchainSwapperDeps = {
