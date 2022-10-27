@@ -3,12 +3,12 @@ import { ChainId } from '@shapeshiftoss/caip'
 import { ChainAdapter, cosmos, thorchain } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
+import { getInboundAddressesForChain } from 'packages/swapper/src/swappers/thorchain/utils/getInboundAddressesForChain'
 
 import { SwapError, SwapErrorTypes, TradeQuote } from '../../../../api'
-import { InboundResponse, ThorchainSwapperDeps } from '../../types'
+import { ThorchainSwapperDeps } from '../../types'
 import { getLimit } from '../getLimit/getLimit'
 import { makeSwapMemo } from '../makeSwapMemo/makeSwapMemo'
-import { thorService } from '../thorService'
 
 export const getCosmosTxData = async (input: {
   bip44Params: BIP44Params
@@ -36,11 +36,7 @@ export const getCosmosTxData = async (input: {
     sellAdapter,
   } = input
   const fromThorAsset = sellAsset.chainId == KnownChainIds.ThorchainMainnet
-  const { data: inboundAddresses } = await thorService.get<InboundResponse[]>(
-    `${deps.daemonUrl}/lcd/thorchain/inbound_addresses`,
-  )
-  const atomInboundAddresses = inboundAddresses.find((inbound) => inbound.chain === 'GAIA')
-  const vault = atomInboundAddresses?.address
+  const { address: vault } = await getInboundAddressesForChain(deps.daemonUrl, 'GAIA')
 
   if (!vault && !fromThorAsset)
     throw new SwapError('[buildTrade]: no vault for chain', {

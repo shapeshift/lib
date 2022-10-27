@@ -1,6 +1,7 @@
 import { CHAIN_NAMESPACE, ChainId, fromAssetId } from '@shapeshiftoss/caip'
 import { ChainAdapter, UtxoBaseAdapter } from '@shapeshiftoss/chain-adapters'
 import { KnownChainIds } from '@shapeshiftoss/types'
+import { getInboundAddressesForChain } from 'packages/swapper/src/swappers/thorchain/utils/getInboundAddressesForChain'
 
 import {
   GetTradeQuoteInput,
@@ -21,7 +22,6 @@ import { ThorchainSwapperDeps } from '../types'
 import { getThorTxInfo as getBtcThorTxInfo } from '../utils/bitcoin/utils/getThorTxData'
 import { MAX_THORCHAIN_TRADE, THOR_MINIMUM_PADDING } from '../utils/constants'
 import { estimateBuyAssetTradeFeeCrypto } from '../utils/estimateBuyAssetTradeFeeCrypto/estimateBuyAssetTradeFeeCrypto'
-import { getThorTxInfo as getEthThorTxInfo } from '../utils/ethereum/utils/getThorTxData'
 import { getTradeRate } from '../utils/getTradeRate/getTradeRate'
 import { getUsdRate } from '../utils/getUsdRate/getUsdRate'
 import { isRune } from '../utils/isRune/isRune'
@@ -123,15 +123,9 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
     switch (chainNamespace) {
       case CHAIN_NAMESPACE.Evm:
         return (async (): Promise<TradeQuote<KnownChainIds.EthereumMainnet>> => {
-          const { router } = await getEthThorTxInfo({
-            deps,
-            sellAsset,
-            buyAsset,
-            sellAmountCryptoPrecision,
-            slippageTolerance: DEFAULT_SLIPPAGE,
-            destinationAddress: receiveAddress,
-            buyAssetTradeFeeUsd: estimatedBuyAssetTradeFeeUsd,
-          })
+          const { router } = await getInboundAddressesForChain(deps.daemonUrl, 'ETH')
+          if (!router) throw new SwapError('[getThorTradeQuote] No router address found for ETH')
+
           const feeData = await getEthTxFees({
             adapterManager: deps.adapterManager,
             sellAssetReference,

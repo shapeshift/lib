@@ -1,13 +1,13 @@
 import { Asset } from '@shapeshiftoss/asset-service'
 import { adapters, fromAssetId } from '@shapeshiftoss/caip'
+import { getInboundAddressesForChain } from 'packages/swapper/src/swappers/thorchain/utils/getInboundAddressesForChain'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { RUNE_OUTBOUND_TRANSACTION_FEE_CRYPTO_HUMAN } from '../../constants'
-import { InboundResponse, ThorchainSwapperDeps } from '../../types'
+import { ThorchainSwapperDeps } from '../../types'
 import { THOR_TRADE_FEE_MULTIPLIERS } from '../constants'
 import { getPriceRatio } from '../getPriceRatio/getPriceRatio'
 import { isRune } from '../isRune/isRune'
-import { thorService } from '../thorService'
 
 export const estimateBuyAssetTradeFeeCrypto = async (
   deps: ThorchainSwapperDeps,
@@ -27,12 +27,7 @@ export const estimateBuyAssetTradeFeeCrypto = async (
     )
 
   const thorPoolChainId = thorId.slice(0, thorId.indexOf('.'))
-
-  const { data: inboundAddresses } = await thorService.get<InboundResponse[]>(
-    `${deps.daemonUrl}/lcd/thorchain/inbound_addresses`,
-  )
-
-  const inboundInfo = inboundAddresses.find((inbound) => inbound.chain === thorPoolChainId)
+  const inboundInfo = await getInboundAddressesForChain(deps.daemonUrl, thorPoolChainId)
 
   if (!inboundInfo)
     throw new SwapError('[estimateBuyAssetTradeFeeCrypto] - unable to locate inbound pool info', {

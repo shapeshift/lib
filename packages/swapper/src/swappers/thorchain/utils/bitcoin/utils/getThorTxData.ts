@@ -1,10 +1,10 @@
 import { Asset } from '@shapeshiftoss/asset-service'
+import { getInboundAddressesForChain } from 'packages/swapper/src/swappers/thorchain/utils/getInboundAddressesForChain'
 
 import { SwapError, SwapErrorTypes } from '../../../../../api'
-import { InboundResponse, ThorchainSwapperDeps } from '../../../types'
+import { ThorchainSwapperDeps } from '../../../types'
 import { getLimit } from '../../getLimit/getLimit'
 import { makeSwapMemo } from '../../makeSwapMemo/makeSwapMemo'
-import { thorService } from '../../thorService'
 
 type GetBtcThorTxInfoArgs = {
   deps: ThorchainSwapperDeps
@@ -34,15 +34,12 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
   buyAssetTradeFeeUsd,
 }) => {
   try {
-    const { data: inboundAddresses } = await thorService.get<InboundResponse[]>(
-      `${deps.daemonUrl}/lcd/thorchain/inbound_addresses`,
+    const inboundAddresses = await getInboundAddressesForChain(
+      deps.daemonUrl,
+      sellAsset.symbol.toUpperCase(),
     )
 
-    const sellAssetInboundAddresses = inboundAddresses.find(
-      (inbound) => inbound.chain === sellAsset.symbol.toUpperCase(),
-    )
-
-    const vault = sellAssetInboundAddresses?.address
+    const vault = inboundAddresses.address
 
     if (!vault)
       throw new SwapError(`[getThorTxInfo]: vault not found for asset`, {

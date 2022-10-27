@@ -1,11 +1,11 @@
 import { Asset } from '@shapeshiftoss/asset-service'
 import { fromAssetId } from '@shapeshiftoss/caip'
+import { getInboundAddressesForChain } from 'packages/swapper/src/swappers/thorchain/utils/getInboundAddressesForChain'
 
 import { SwapError, SwapErrorTypes } from '../../../../../api'
-import { InboundResponse, ThorchainSwapperDeps } from '../../../types'
+import { ThorchainSwapperDeps } from '../../../types'
 import { getLimit } from '../../getLimit/getLimit'
 import { makeSwapMemo } from '../../makeSwapMemo/makeSwapMemo'
-import { thorService } from '../../thorService'
 import { deposit } from '../routerCalldata'
 
 type GetBtcThorTxInfoArgs = {
@@ -35,16 +35,9 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
 }) => {
   try {
     const { assetReference, assetNamespace } = fromAssetId(sellAsset.assetId)
-
     const isErc20Trade = assetNamespace === 'erc20'
-    const { data: inboundAddresses } = await thorService.get<InboundResponse[]>(
-      `${deps.daemonUrl}/lcd/thorchain/inbound_addresses`,
-    )
-
-    const ethInboundAddresses = inboundAddresses.find((inbound) => inbound.chain === 'ETH')
-
-    const vault = ethInboundAddresses?.address
-    const router = ethInboundAddresses?.router
+    const inboundAddresses = await getInboundAddressesForChain(deps.daemonUrl, 'ETH')
+    const { address: vault, router } = inboundAddresses
 
     if (!vault || !router)
       throw new SwapError(`[getPriceRatio]: router or vault found for ETH`, {
