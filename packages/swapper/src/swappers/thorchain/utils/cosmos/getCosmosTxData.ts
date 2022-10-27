@@ -10,7 +10,7 @@ import { getLimit } from '../getLimit/getLimit'
 import { makeSwapMemo } from '../makeSwapMemo/makeSwapMemo'
 import { thorService } from '../thorService'
 
-export const cosmosTxData = async (input: {
+export const getCosmosTxData = async (input: {
   bip44Params: BIP44Params
   destinationAddress: string
   deps: ThorchainSwapperDeps
