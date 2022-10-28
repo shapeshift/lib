@@ -3,7 +3,7 @@ import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 import Web3 from 'web3'
 
 import { BTC, ETH, FOX, UNSUPPORTED } from '../../../utils/test-data/assets'
-import { ethThornodePool, foxThornodePool, mockInboundAdresses } from '../test-data/responses'
+import { ethThornodePool, foxThornodePool, mockInboundAddresses } from '../test-data/responses'
 import { thorService } from '../thorService'
 import { estimateBuyAssetTradeFeeCrypto } from './estimateBuyAssetTradeFeeCrypto'
 
@@ -21,7 +21,7 @@ describe('estimateBuyAssetTradeFeeCrypto', () => {
   }
   it('should correctly estimate a trade fee for bitcoin as buy asset', async () => {
     ;(thorService.get as jest.Mock<unknown>).mockReturnValue(
-      Promise.resolve({ data: mockInboundAdresses }),
+      Promise.resolve({ data: mockInboundAddresses }),
     )
     const estimatedTradeFee = await estimateBuyAssetTradeFeeCrypto(deps, BTC)
 
@@ -30,7 +30,7 @@ describe('estimateBuyAssetTradeFeeCrypto', () => {
   })
   it('should correctly estimate a trade fee for ethereum as buy asset', async () => {
     ;(thorService.get as jest.Mock<unknown>).mockReturnValue(
-      Promise.resolve({ data: mockInboundAdresses }),
+      Promise.resolve({ data: mockInboundAddresses }),
     )
     const estimatedTradeFee = await estimateBuyAssetTradeFeeCrypto(deps, ETH)
 
@@ -39,7 +39,7 @@ describe('estimateBuyAssetTradeFeeCrypto', () => {
   })
   it('should correctly estimate a trade fee for an ethereum erc20 asset as a buy asset', async () => {
     ;(thorService.get as jest.Mock<unknown>)
-      .mockReturnValueOnce(Promise.resolve({ data: mockInboundAdresses }))
+      .mockReturnValueOnce(Promise.resolve({ data: mockInboundAddresses }))
       .mockReturnValueOnce(Promise.resolve({ data: [foxThornodePool, ethThornodePool] }))
     const estimatedTradeFee = await estimateBuyAssetTradeFeeCrypto(deps, FOX)
 
@@ -48,7 +48,7 @@ describe('estimateBuyAssetTradeFeeCrypto', () => {
   })
   it('should throw if trying to get fee data for an unsupported buy asset', async () => {
     ;(thorService.get as jest.Mock<unknown>).mockReturnValue(
-      Promise.resolve({ data: mockInboundAdresses }),
+      Promise.resolve({ data: mockInboundAddresses }),
     )
 
     return expect(estimateBuyAssetTradeFeeCrypto(deps, UNSUPPORTED)).rejects.toThrow(

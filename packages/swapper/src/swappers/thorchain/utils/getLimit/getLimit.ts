@@ -7,7 +7,7 @@ import { THORCHAIN_FIXED_PRECISION } from '../constants'
 import { getTradeRate } from '../getTradeRate/getTradeRate'
 import { getUsdRate } from '../getUsdRate/getUsdRate'
 
-type GetLimitArgs = {
+export type GetLimitArgs = {
   buyAssetId: string
   destinationAddress: string
   sellAsset: Asset
@@ -40,14 +40,14 @@ export const getLimit = async ({
       details: { expectedBuyAmountCryptoPrecision8, slippageTolerance },
     })
 
-  const tradeFeeCryptoPrecision8 = toBaseUnit(
+  const buyAssetTradeFeeCryptoPrecision8 = toBaseUnit(
     bnOrZero(buyAssetTradeFeeUsd).div(buyAssetUsdRate),
     THORCHAIN_FIXED_PRECISION,
   )
 
   return bnOrZero(expectedBuyAmountCryptoPrecision8)
     .times(bn(1).minus(slippageTolerance))
-    .minus(bnOrZero(tradeFeeCryptoPrecision8))
+    .minus(bnOrZero(buyAssetTradeFeeCryptoPrecision8))
     .decimalPlaces(0)
     .toString()
 }
