@@ -159,8 +159,10 @@ type BuildValidatorTxInput<T extends ChainId> = Omit<BuildSendTxInput<T>, 'to'> 
 }
 
 export type BuildDelegateTxInput<T extends ChainId> = BuildValidatorTxInput<T>
+
 export type BuildUndelegateTxInput<T extends ChainId> = BuildValidatorTxInput<T>
-export type BuildClaimRewardsTxInput<T extends ChainId> = BuildValidatorTxInput<T>
+
+export type BuildClaimRewardsTxInput<T extends ChainId> = Omit<BuildValidatorTxInput<T>, 'value'>
 
 export type BuildRedelegateTxInput<T extends ChainId> = Omit<BuildSendTxInput<T>, 'to'> & {
   fromValidator: string

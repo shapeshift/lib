@@ -21,7 +21,7 @@ import {
   ChainAdapterArgs,
   CosmosSdkBaseAdapter,
 } from '../CosmosSdkBaseAdapter'
-import { Message } from '../types'
+import { Message, ValidatorAction } from '../types'
 
 const SUPPORTED_CHAIN_IDS = [KnownChainIds.CosmosMainnet]
 const DEFAULT_CHAIN_ID = KnownChainIds.CosmosMainnet
@@ -83,22 +83,29 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.CosmosMainn
     tx: BuildSendTxInput<KnownChainIds.CosmosMainnet>,
   ): Promise<{ txToSign: CosmosSignTx }> {
     try {
-      const { to, wallet, bip44Params = this.defaultBIP44Params, value } = tx
-
-      if (!to) throw new Error('CosmosChainAdapter: to is required')
-      if (!value) throw new Error('CosmosChainAdapter: value is required')
+      const {
+        bip44Params = this.defaultBIP44Params,
+        chainSpecific: { fee },
+        sendMax,
+        to,
+        value,
+        wallet,
+      } = tx
 
       const from = await this.getAddress({ bip44Params, wallet })
+      const account = await this.getAccount(from)
+      const amount = this.getAmount({ account, value, fee, sendMax })
 
       const msg: Message = {
         type: 'cosmos-sdk/MsgSend',
         value: {
+          amount: [{ amount, denom: this.denom }],
           from_address: from,
           to_address: to,
         },
       }
 
-      return this.buildTransaction({ ...tx, from, msg })
+      return this.buildTransaction({ ...tx, account, msg })
     } catch (err) {
       return ErrorHandler(err)
     }
@@ -108,24 +115,32 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.CosmosMainn
     tx: BuildDelegateTxInput<KnownChainIds.CosmosMainnet>,
   ): Promise<{ txToSign: CosmosSignTx }> {
     try {
-      const { validator, wallet, bip44Params = this.defaultBIP44Params, value } = tx
-
-      if (!value) throw new Error('CosmosChainAdapter: value is required')
-      if (!validator) throw new Error('CosmosChainAdapter: validator is required')
+      const {
+        bip44Params = this.defaultBIP44Params,
+        chainSpecific: { fee },
+        sendMax,
+        validator,
+        value,
+        wallet,
+      } = tx
 
       assertIsValidatorAddress(validator, this.getType())
 
       const from = await this.getAddress({ bip44Params, wallet })
+      const account = await this.getAccount(from)
+      const validatorAction: ValidatorAction = { address: validator, type: 'delegate' }
+      const amount = this.getAmount({ account, value, fee, sendMax, validatorAction })
 
       const msg: Message = {
         type: 'cosmos-sdk/MsgDelegate',
         value: {
+          amount: { amount, denom: this.denom },
           delegator_address: from,
           validator_address: validator,
         },
       }
 
-      return this.buildTransaction({ ...tx, from, msg })
+      return this.buildTransaction({ ...tx, account, msg })
     } catch (err) {
       return ErrorHandler(err)
     }
@@ -135,24 +150,32 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.CosmosMainn
     tx: BuildUndelegateTxInput<KnownChainIds.CosmosMainnet>,
   ): Promise<{ txToSign: CosmosSignTx }> {
     try {
-      const { validator, wallet, bip44Params = this.defaultBIP44Params, value } = tx
-
-      if (!value) throw new Error('CosmosChainAdapter: value is required')
-      if (!validator) throw new Error('CosmosChainAdapter: validator is required')
+      const {
+        bip44Params = this.defaultBIP44Params,
+        chainSpecific: { fee },
+        sendMax,
+        validator,
+        value,
+        wallet,
+      } = tx
 
       assertIsValidatorAddress(validator, this.getType())
 
       const from = await this.getAddress({ bip44Params, wallet })
+      const account = await this.getAccount(from)
+      const validatorAction: ValidatorAction = { address: validator, type: 'undelegate' }
+      const amount = this.getAmount({ account, value, fee, sendMax, validatorAction })
 
       const msg: Message = {
         type: 'cosmos-sdk/MsgUndelegate',
         value: {
+          amount: { amount, denom: this.denom },
           delegator_address: from,
           validator_address: validator,
         },
       }
 
-      return this.buildTransaction({ ...tx, from, msg })
+      return this.buildTransaction({ ...tx, account, msg })
     } catch (err) {
       return ErrorHandler(err)
     }
@@ -163,32 +186,34 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.CosmosMainn
   ): Promise<{ txToSign: CosmosSignTx }> {
     try {
       const {
-        wallet,
         bip44Params = this.defaultBIP44Params,
-        value,
+        chainSpecific: { fee },
         fromValidator,
+        sendMax,
         toValidator,
+        value,
+        wallet,
       } = tx
-
-      if (!value) throw new Error('CosmosChainAdapter: value is required')
-      if (!toValidator) throw new Error('CosmosChainAdapter: toValidator is required')
-      if (!fromValidator) throw new Error('CosmosChainAdapter: fromValidator is required')
 
       assertIsValidatorAddress(toValidator, this.getType())
       assertIsValidatorAddress(fromValidator, this.getType())
 
       const from = await this.getAddress({ bip44Params, wallet })
+      const account = await this.getAccount(from)
+      const validatorAction: ValidatorAction = { address: fromValidator, type: 'redelegate' }
+      const amount = this.getAmount({ account, value, fee, sendMax, validatorAction })
 
       const msg: Message = {
         type: 'cosmos-sdk/MsgBeginRedelegate',
         value: {
+          amount: { amount, denom: this.denom },
           delegator_address: from,
           validator_src_address: fromValidator,
           validator_dst_address: toValidator,
         },
       }
 
-      return this.buildTransaction({ ...tx, from, msg })
+      return this.buildTransaction({ ...tx, account, msg })
     } catch (err) {
       return ErrorHandler(err)
     }
@@ -198,13 +223,12 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.CosmosMainn
     tx: BuildClaimRewardsTxInput<KnownChainIds.CosmosMainnet>,
   ): Promise<{ txToSign: CosmosSignTx }> {
     try {
-      const { validator, wallet, bip44Params = this.defaultBIP44Params } = tx
-
-      if (!validator) throw new Error('CosmosChainAdapter: validator is required')
+      const { bip44Params = this.defaultBIP44Params, validator, wallet } = tx
 
       assertIsValidatorAddress(validator, this.getType())
 
       const from = await this.getAddress({ bip44Params, wallet })
+      const account = await this.getAccount(from)
 
       const msg: Message = {
         type: 'cosmos-sdk/MsgWithdrawDelegationReward',
@@ -214,7 +238,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.CosmosMainn
         },
       }
 
-      return this.buildTransaction({ ...tx, from, msg })
+      return this.buildTransaction({ ...tx, account, msg })
     } catch (err) {
       return ErrorHandler(err)
     }

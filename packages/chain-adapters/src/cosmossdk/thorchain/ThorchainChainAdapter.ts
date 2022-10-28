@@ -109,17 +109,23 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
     tx: BuildSendTxInput<KnownChainIds.ThorchainMainnet>,
   ): Promise<{ txToSign: ThorchainSignTx }> {
     try {
-      const { to, wallet, bip44Params, value } = tx
-
-      if (!to) throw new Error('ThorchainChainAdapter: to is required')
-      if (!value) throw new Error('ThorchainChainAdapter: value is required')
-      if (!bip44Params) throw new Error('ThorchainChainAdapter: bip44Params are required')
+      const {
+        bip44Params,
+        chainSpecific: { fee },
+        sendMax,
+        to,
+        value,
+        wallet,
+      } = tx
 
       const from = await this.getAddress({ bip44Params, wallet })
+      const account = await this.getAccount(from)
+      const amount = this.getAmount({ account, value, fee, sendMax })
 
       const msg: Message = {
         type: 'thorchain/MsgSend',
         value: {
+          amount: [{ amount, denom: this.denom }],
           from_address: from,
           to_address: to,
         },
@@ -127,7 +133,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
 
       tx.chainSpecific.fee = calculateFee(tx.chainSpecific.fee)
 
-      return this.buildTransaction<KnownChainIds.ThorchainMainnet>({ ...tx, from, msg })
+      return this.buildTransaction<KnownChainIds.ThorchainMainnet>({ ...tx, account, msg })
     } catch (err) {
       return ErrorHandler(err)
     }
@@ -138,24 +144,16 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
     tx: BuildDepositTxInput<KnownChainIds.ThorchainMainnet>,
   ): Promise<{ txToSign: ThorchainSignTx }> {
     try {
+      // TODO memo validation
       const { wallet, bip44Params, value, memo } = tx
 
-      // TODO memo validation
-      if (!memo) throw new Error('ThorchainChainAdapter: memo is required')
-      if (!value) throw new Error('ThorchainChainAdapter: value is required')
-      if (!bip44Params) throw new Error('ThorchainChainAdapter: bip44Params are required')
-
       const from = await this.getAddress({ bip44Params, wallet })
+      const account = await this.getAccount(from)
 
       const msg: Message = {
         type: 'thorchain/MsgDeposit',
         value: {
-          coins: [
-            {
-              asset: 'rune',
-              amount: bnOrZero(value).toString(),
-            },
-          ],
+          coins: [{ asset: 'rune', amount: bnOrZero(value).toString() }],
           memo,
           signer: from,
         },
@@ -163,7 +161,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
 
       tx.chainSpecific.fee = calculateFee(tx.chainSpecific.fee)
 
-      return this.buildTransaction<KnownChainIds.ThorchainMainnet>({ ...tx, from, msg })
+      return this.buildTransaction<KnownChainIds.ThorchainMainnet>({ ...tx, account, msg })
     } catch (err) {
       return ErrorHandler(err)
     }

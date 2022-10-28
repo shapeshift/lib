@@ -33,6 +33,7 @@ import {
   Undelegation,
   UndelegationEntry,
   Validator,
+  ValidatorAction,
   ValidatorReward,
 } from './types'
 
@@ -241,39 +242,58 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
     }
   }
 
+  protected getAmount({
+    account,
+    value,
+    fee,
+    sendMax,
+    validatorAction,
+  }: {
+    account: Account<T>
+    value: string
+    fee: string
+    sendMax?: boolean
+    validatorAction?: ValidatorAction
+  }) {
+    if (!sendMax) return value
+
+    const availableBalance = (() => {
+      switch (validatorAction?.type) {
+        case 'undelegate':
+        case 'redelegate':
+          return bnOrZero(
+            account.chainSpecific.delegations.find(
+              (delegation) => delegation.validator.address === validatorAction.address,
+            )?.amount,
+          )
+        default:
+          return bnOrZero(account.balance)
+      }
+    })().minus(fee)
+
+    if (!availableBalance.isFinite() || availableBalance.lte(0)) {
+      throw new Error(
+        `CosmosSdkBaseAdapter: not enough balance to send: ${availableBalance.toString()}`,
+      )
+    }
+
+    return availableBalance.toString()
+  }
+
   protected async buildTransaction<U extends CosmosSdkChainId>(
     tx: BuildTransactionInput<CosmosSdkChainId>,
   ): Promise<{ txToSign: SignTx<U> }> {
     const {
-      from,
-      bip44Params = this.defaultBIP44Params,
+      account,
+      bip44Params,
       chainSpecific: { gas, fee },
-      value,
       msg,
-      sendMax = false,
       memo = '',
     } = tx
 
-    const account = await this.getAccount(from)
-
-    const amount = (() => {
-      if (!value) return
-      if (!sendMax) return [{ amount: value, denom: this.denom }]
-
-      const availableBalance = bnOrZero(account.balance).minus(fee)
-
-      if (!availableBalance.isFinite() || availableBalance.lte(0)) {
-        throw new Error(
-          `CosmosSdkBaseAdapter: not enough balance to send: ${availableBalance.toString()}`,
-        )
-      }
-
-      return [{ amount: availableBalance.toString(), denom: this.denom }]
-    })()
-
     const unsignedTx = {
       fee: { amount: [{ amount: bnOrZero(fee).toString(), denom: this.denom }], gas },
-      msg: [{ type: msg.type, value: { ...msg.value, amount } }],
+      msg: [msg],
       signatures: [],
       memo,
     }
