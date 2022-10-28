@@ -9,7 +9,7 @@ export const getInboundAddressesForChain = async (
   const { data: inboundAddresses } = await thorService.get<InboundResponse[]>(
     `${daemonUrl}/lcd/thorchain/inbound_addresses`,
   )
-  const inboundAddressesForChain = inboundAddresses.find((inbound) => inbound.chain === 'chain')
+  const inboundAddressesForChain = inboundAddresses.find((inbound) => inbound.chain === chain)
 
   if (!inboundAddressesForChain)
     throw new SwapError(`[getInboundAddressesForChain]: no inbound addresses found for ${chain}`, {
