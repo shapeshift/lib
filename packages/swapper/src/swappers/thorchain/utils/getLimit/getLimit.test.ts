@@ -52,7 +52,6 @@ describe('getLimit', () => {
       deps: thorchainSwapperDeps,
       slippageTolerance: DEFAULT_SLIPPAGE,
       buyAssetTradeFeeUsd: '10',
-      destinationAddress: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
     }
     const limit = await getLimit(getLimitArgs)
     // FIXME: work out what this should be once THORChain is back online
@@ -70,7 +69,6 @@ describe('getLimit', () => {
       deps: thorchainSwapperDeps,
       slippageTolerance: DEFAULT_SLIPPAGE,
       buyAssetTradeFeeUsd: '10',
-      destinationAddress: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
     }
     const limit = await getLimit(getLimitArgs)
     // FIXME: work out what this should be once THORChain is back online
@@ -88,7 +86,6 @@ describe('getLimit', () => {
       deps: thorchainSwapperDeps,
       slippageTolerance: DEFAULT_SLIPPAGE,
       buyAssetTradeFeeUsd: '10',
-      destinationAddress: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
     }
     const limit = await getLimit(getLimitArgs)
     // FIXME: work out what this should be once THORChain is back online

@@ -49,7 +49,6 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
 
     const limit = await getLimit({
       buyAssetId: buyAsset.assetId,
-      destinationAddress,
       sellAmountCryptoPrecision,
       sellAsset,
       slippageTolerance,

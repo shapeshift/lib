@@ -13,7 +13,6 @@ import { thorService } from '../thorService'
 
 export type GetLimitArgs = {
   buyAssetId: string
-  destinationAddress: string
   sellAsset: Asset
   sellAmountCryptoPrecision: string
   deps: ThorchainSwapperDeps

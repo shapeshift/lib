@@ -49,7 +49,6 @@ export const getCosmosTxData = async (input: GetCosmosTxDataInput) => {
 
   const limit = await getLimit({
     buyAssetId: buyAsset.assetId,
-    destinationAddress,
     sellAmountCryptoPrecision,
     sellAsset,
     slippageTolerance,
