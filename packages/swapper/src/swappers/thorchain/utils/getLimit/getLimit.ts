@@ -1,9 +1,10 @@
 import { Asset } from '@shapeshiftoss/asset-service'
-import { adapters } from '@shapeshiftoss/caip'
+import { adapters, thorchainAssetId } from '@shapeshiftoss/caip'
 import max from 'lodash/max'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { bn, bnOrZero, fromBaseUnit, toBaseUnit } from '../../../utils/bignumber'
+import { RUNE_OUTBOUND_TRANSACTION_FEE_CRYPTO_HUMAN } from '../../constants'
 import { InboundResponse, ThorchainSwapperDeps } from '../../types'
 import { THORCHAIN_FIXED_PRECISION } from '../constants'
 import { getTradeRate } from '../getTradeRate/getTradeRate'
@@ -28,20 +29,29 @@ export const getLimit = async ({
   slippageTolerance,
   buyAssetTradeFeeUsd,
 }: GetLimitArgs): Promise<string> => {
+  console.log('xxx getLimit args', {
+    sellAsset,
+    buyAssetId,
+    sellAmountCryptoPrecision,
+    deps,
+    slippageTolerance,
+    buyAssetTradeFeeUsd,
+  })
   const tradeRate = await getTradeRate(sellAsset, buyAssetId, sellAmountCryptoPrecision, deps)
-  const sellAssetChainFeeAsset = deps.adapterManager.get(sellAsset.chainId)?.getFeeAssetId()
-  if (!sellAssetChainFeeAsset) {
+  const sellAssetChainFeeAssetId = deps.adapterManager.get(sellAsset.chainId)?.getFeeAssetId()
+  if (!sellAssetChainFeeAssetId) {
     throw new SwapError('[getLimit]: no sellAssetChainFeeAsset for buy asset', {
       code: SwapErrorTypes.BUILD_TRADE_FAILED,
-      details: { sellAssetChainFeeAsset, buyAssetId },
+      details: { sellAssetChainFeeAssetId, buyAssetId },
     })
   }
 
-  const sellAssetChainFeeAssetRate = await getUsdRate({
+  const sellFeeAssetUsdRate = await getUsdRate({
     deps,
-    input: { assetId: sellAssetChainFeeAsset },
+    input: { assetId: sellAssetChainFeeAssetId },
   })
   const buyAssetUsdRate = await getUsdRate({ deps, input: { assetId: buyAssetId } })
+  const runeAssetUsdRate = await getUsdRate({ deps, input: { assetId: thorchainAssetId } })
   const expectedBuyAmountCryptoPrecision8 = toBaseUnit(
     fromBaseUnit(bnOrZero(sellAmountCryptoPrecision).times(tradeRate), sellAsset.precision),
     THORCHAIN_FIXED_PRECISION,
@@ -55,7 +65,7 @@ export const getLimit = async ({
       details: { expectedBuyAmountCryptoPrecision8, slippageTolerance },
     })
 
-  // FIXME: is this really just  buyAssetAddressData?.outbound_fee? Confirm once THORChain back online
+  // FIXME: is this really just buyAssetAddressData?.outbound_fee? Confirm once THORChain back online
   const buyAssetTradeFeeCryptoPrecision8 = toBaseUnit(
     bnOrZero(buyAssetTradeFeeUsd).div(buyAssetUsdRate),
     THORCHAIN_FIXED_PRECISION,
@@ -71,23 +81,41 @@ export const getLimit = async ({
     (inbound) => inbound.chain === sellAssetChainSymbol,
   )
 
-  const refundFeeCryptoPrecision8 = (() => {
+  // fixme: for logging only
+  const buyAssetPoolId = adapters.assetIdToPoolAssetId({ assetId: buyAssetId })
+  const buyAssetChainSymbol = buyAssetPoolId?.slice(0, buyAssetPoolId.indexOf('.'))
+  const buyAssetAddressData = inboundAddresses.find(
+    (inbound) => inbound.chain === buyAssetChainSymbol,
+  )
+
+  // We want this in the buy asset crypto precision
+  const refundFeeBuyAssetCryptoPrecision8 = (() => {
     switch (true) {
       // If the sell asset is on THOR the return fee is fixed at 0.02 RUNE
-      case isRune(sellAsset.assetId):
-        return '2000000'
+      case isRune(sellAsset.assetId): {
+        const runeFeeUsd = RUNE_OUTBOUND_TRANSACTION_FEE_CRYPTO_HUMAN.times(runeAssetUsdRate)
+        return toBaseUnit(bnOrZero(runeFeeUsd).div(buyAssetUsdRate), THORCHAIN_FIXED_PRECISION)
+      }
       // Else the return fee is the outbound fee of the sell asset's chain
-      default:
-        return bnOrZero(sellAssetAddressData?.outbound_fee)
-          .times(sellAssetChainFeeAssetRate)
-          .div(bn(buyAssetUsdRate) ?? bn(1))
-          .toString()
+      default: {
+        const sellAssetTradeFeeCryptoHuman = fromBaseUnit(
+          bnOrZero(sellAssetAddressData?.outbound_fee),
+          THORCHAIN_FIXED_PRECISION,
+        )
+        const sellAssetTradeFeeUsd = bnOrZero(sellAssetTradeFeeCryptoHuman).times(
+          sellFeeAssetUsdRate,
+        )
+        return toBaseUnit(
+          bnOrZero(sellAssetTradeFeeUsd).div(buyAssetUsdRate),
+          THORCHAIN_FIXED_PRECISION,
+        )
+      }
     }
   })()
 
   const highestPossibleFeeCryptoPrecision8 = max([
     buyAssetTradeFeeCryptoPrecision8,
-    refundFeeCryptoPrecision8,
+    refundFeeBuyAssetCryptoPrecision8,
   ])
 
   return bnOrZero(expectedBuyAmountCryptoPrecision8)

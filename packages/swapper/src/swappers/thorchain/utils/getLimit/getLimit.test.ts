@@ -20,9 +20,7 @@ import { getLimit, GetLimitArgs } from './getLimit'
 
 jest.mock('../getUsdRate/getUsdRate')
 jest.mock('../thorService')
-jest.mock('../getTradeRate/getTradeRate', () => ({
-  getTradeRate: jest.fn().mockReturnValue('0.000078'),
-}))
+jest.mock('../getTradeRate/getTradeRate')
 
 const thorchainSwapperDeps: ThorchainSwapperDeps = {
   midgardUrl: '',
@@ -41,50 +39,77 @@ describe('getLimit', () => {
       Promise.resolve({ data: mockInboundAddresses }),
     )
   })
-  it('should get limit when buy asset is EVM and sell asset is a UTXO', async () => {
-    ;(getUsdRate as jest.Mock<unknown>).mockReturnValue(Promise.resolve('20683.172635960644'))
+  it('should get limit when buy asset is EVM fee asset and sell asset is a UTXO', async () => {
+    ;(getUsdRate as jest.Mock<unknown>)
+      .mockReturnValueOnce(Promise.resolve('1595')) // sellFeeAssetUsdRate (ETH)
+      .mockReturnValueOnce(Promise.resolve('20683')) // buyAssetUsdRate (BTC)
+      .mockReturnValueOnce(Promise.resolve('14.51')) // runeAssetUsdRate (RUNE)
     ;(getTradeRate as jest.Mock<unknown>).mockReturnValue(Promise.resolve('0.07714399680893498205'))
     const getLimitArgs: GetLimitArgs = {
       sellAsset: ETH,
       buyAssetId: BTC.assetId,
-      sellAmountCryptoPrecision: '12535000000000000',
+      sellAmountCryptoPrecision: '82535000000000000',
       deps: thorchainSwapperDeps,
       slippageTolerance: DEFAULT_SLIPPAGE,
       buyAssetTradeFeeUsd: '6.2049517907881932',
     }
     const limit = await getLimit(getLimitArgs)
-    expect(limit).toBe('63799')
+    expect(limit).toBe('580583')
+  })
+
+  it('should get limit when buy asset is EVM non-fee asset and sell asset is a UTXO', async () => {
+    ;(getUsdRate as jest.Mock<unknown>)
+      .mockReturnValueOnce(Promise.resolve('1595')) // sellFeeAssetUsdRate (ETH)
+      .mockReturnValueOnce(Promise.resolve('20683')) // buyAssetUsdRate (BTC)
+      .mockReturnValueOnce(Promise.resolve('14.51')) // runeAssetUsdRate (RUNE)
+    ;(getTradeRate as jest.Mock<unknown>).mockReturnValue(Promise.resolve('0.00000199048641810579'))
+    const getLimitArgs: GetLimitArgs = {
+      sellAsset: FOX,
+      buyAssetId: BTC.assetId,
+      sellAmountCryptoPrecision: '489830019000000000000',
+      deps: thorchainSwapperDeps,
+      slippageTolerance: DEFAULT_SLIPPAGE,
+      buyAssetTradeFeeUsd: '6.2049517907881932',
+    }
+    const limit = await getLimit(getLimitArgs)
+    expect(limit).toBe('57559')
   })
 
   it('should get limit when buy asset is RUNE and sell asset is not', async () => {
-    ;(getUsdRate as jest.Mock<unknown>).mockReturnValue(Promise.resolve('1.59114285'))
+    ;(getUsdRate as jest.Mock<unknown>)
+      .mockReturnValueOnce(Promise.resolve('1595')) // sellFeeAssetUsdRate (ETH)
+      .mockReturnValueOnce(Promise.resolve('14.51')) // buyAssetUsdRate (RUNE)
+      .mockReturnValueOnce(Promise.resolve('14.51')) // runeAssetUsdRate (RUNE)
     ;(getTradeRate as jest.Mock<unknown>).mockReturnValue(Promise.resolve('0.02583433052665346349'))
     const getLimitArgs: GetLimitArgs = {
       sellAsset: FOX,
       buyAssetId: RUNE.assetId,
-      sellAmountCryptoPrecision: '484229076000000000000',
+      sellAmountCryptoPrecision: '984229076000000000000',
       deps: thorchainSwapperDeps,
       slippageTolerance: DEFAULT_SLIPPAGE,
       buyAssetTradeFeeUsd: '0.0318228582',
     }
     const limit = await getLimit(getLimitArgs)
-    expect(limit).toBe('1211444101')
+    expect(limit).toBe('2413645592')
   })
 
   it('should get limit when sell asset is RUNE and buy asset is not', async () => {
-    ;(getUsdRate as jest.Mock<unknown>).mockReturnValue(Promise.resolve('0.04136988645923189'))
+    ;(getUsdRate as jest.Mock<unknown>)
+      .mockReturnValueOnce(Promise.resolve('14.51')) // sellFeeAssetUsdRate (RUNE)
+      .mockReturnValueOnce(Promise.resolve('0.04')) // buyAssetUsdRate (FOX)
+      .mockReturnValueOnce(Promise.resolve('14.51')) // runeAssetUsdRate (RUNE)
     ;(getTradeRate as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve('38.68447363336979738738'),
     )
     const getLimitArgs: GetLimitArgs = {
       sellAsset: RUNE,
       buyAssetId: FOX.assetId,
-      sellAmountCryptoPrecision: '628381400',
+      sellAmountCryptoPrecision: '988381400',
       deps: thorchainSwapperDeps,
       slippageTolerance: DEFAULT_SLIPPAGE,
       buyAssetTradeFeeUsd: '0.0000000026',
     }
     const limit = await getLimit(getLimitArgs)
-    expect(limit).toBe('23579345486')
+    expect(limit).toBe('36362463774')
   })
 })
