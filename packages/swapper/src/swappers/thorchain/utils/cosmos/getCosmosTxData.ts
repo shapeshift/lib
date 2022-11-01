@@ -3,10 +3,10 @@ import { ChainId } from '@shapeshiftoss/caip'
 import { ChainAdapter, cosmos, thorchain } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
-import { getInboundAddressesForChain } from 'packages/swapper/src/swappers/thorchain/utils/getInboundAddressesForChain'
 
 import { SwapError, SwapErrorTypes, TradeQuote } from '../../../../api'
 import { ThorchainSwapperDeps } from '../../types'
+import { getInboundAddressesForChain } from '../getInboundAddressesForChain'
 import { getLimit } from '../getLimit/getLimit'
 import { makeSwapMemo } from '../makeSwapMemo/makeSwapMemo'
 

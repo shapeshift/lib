@@ -1,7 +1,6 @@
 import { CHAIN_NAMESPACE, ChainId, fromAssetId } from '@shapeshiftoss/caip'
 import { cosmos, ethereum, UtxoBaseAdapter } from '@shapeshiftoss/chain-adapters'
 import { KnownChainIds } from '@shapeshiftoss/types'
-import { getCosmosTxData } from 'packages/swapper/src/swappers/thorchain/utils/cosmos/getCosmosTxData'
 
 import {
   BuildTradeInput,
@@ -15,6 +14,7 @@ import { DEFAULT_SLIPPAGE } from '../../utils/constants'
 import { getThorTradeQuote } from '../getThorTradeQuote/getTradeQuote'
 import { ThorchainSwapperDeps, ThorTrade } from '../types'
 import { getThorTxInfo as getBtcThorTxInfo } from '../utils/bitcoin/utils/getThorTxData'
+import { getCosmosTxData } from '../utils/cosmos/getCosmosTxData'
 import { makeTradeTx } from '../utils/ethereum/makeTradeTx'
 
 export const buildTrade = async ({

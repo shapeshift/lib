@@ -1,11 +1,11 @@
 import { Asset } from '@shapeshiftoss/asset-service'
 import { adapters, fromAssetId } from '@shapeshiftoss/caip'
-import { getInboundAddressesForChain } from 'packages/swapper/src/swappers/thorchain/utils/getInboundAddressesForChain'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { RUNE_OUTBOUND_TRANSACTION_FEE_CRYPTO_HUMAN } from '../../constants'
 import { ThorchainSwapperDeps } from '../../types'
 import { THOR_TRADE_FEE_MULTIPLIERS } from '../constants'
+import { getInboundAddressesForChain } from '../getInboundAddressesForChain'
 import { getPriceRatio } from '../getPriceRatio/getPriceRatio'
 import { isRune } from '../isRune/isRune'
 

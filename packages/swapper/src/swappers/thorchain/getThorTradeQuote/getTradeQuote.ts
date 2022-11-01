@@ -1,7 +1,6 @@
 import { CHAIN_NAMESPACE, ChainId, fromAssetId } from '@shapeshiftoss/caip'
 import { ChainAdapter, UtxoBaseAdapter } from '@shapeshiftoss/chain-adapters'
 import { KnownChainIds } from '@shapeshiftoss/types'
-import { getInboundAddressesForChain } from 'packages/swapper/src/swappers/thorchain/utils/getInboundAddressesForChain'
 
 import {
   GetTradeQuoteInput,
@@ -22,6 +21,7 @@ import { ThorchainSwapperDeps } from '../types'
 import { getThorTxInfo as getBtcThorTxInfo } from '../utils/bitcoin/utils/getThorTxData'
 import { MAX_THORCHAIN_TRADE, THOR_MINIMUM_PADDING } from '../utils/constants'
 import { estimateBuyAssetTradeFeeCrypto } from '../utils/estimateBuyAssetTradeFeeCrypto/estimateBuyAssetTradeFeeCrypto'
+import { getInboundAddressesForChain } from '../utils/getInboundAddressesForChain'
 import { getTradeRate } from '../utils/getTradeRate/getTradeRate'
 import { getUsdRate } from '../utils/getUsdRate/getUsdRate'
 import { isRune } from '../utils/isRune/isRune'
