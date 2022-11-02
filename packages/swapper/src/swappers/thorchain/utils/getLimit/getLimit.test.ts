@@ -43,7 +43,7 @@ describe('getLimit', () => {
     ;(getUsdRate as jest.Mock<unknown>)
       .mockReturnValueOnce(Promise.resolve('1595')) // sellFeeAssetUsdRate (ETH)
       .mockReturnValueOnce(Promise.resolve('20683')) // buyAssetUsdRate (BTC)
-      .mockReturnValueOnce(Promise.resolve('14.51')) // runeAssetUsdRate (RUNE)
+      .mockReturnValueOnce(Promise.resolve('20683')) // buyFeeAssetUsdRate (BTC)
     ;(getTradeRate as jest.Mock<unknown>).mockReturnValue(Promise.resolve('0.07714399680893498205'))
     const getLimitArgs: GetLimitArgs = {
       sellAsset: ETH,
@@ -61,7 +61,7 @@ describe('getLimit', () => {
     ;(getUsdRate as jest.Mock<unknown>)
       .mockReturnValueOnce(Promise.resolve('1595')) // sellFeeAssetUsdRate (ETH)
       .mockReturnValueOnce(Promise.resolve('20683')) // buyAssetUsdRate (BTC)
-      .mockReturnValueOnce(Promise.resolve('14.51')) // runeAssetUsdRate (RUNE)
+      .mockReturnValueOnce(Promise.resolve('20683')) // buyFeeAssetUsdRate (BTC)
     ;(getTradeRate as jest.Mock<unknown>).mockReturnValue(Promise.resolve('0.00000199048641810579'))
     const getLimitArgs: GetLimitArgs = {
       sellAsset: FOX,
@@ -79,7 +79,7 @@ describe('getLimit', () => {
     ;(getUsdRate as jest.Mock<unknown>)
       .mockReturnValueOnce(Promise.resolve('1595')) // sellFeeAssetUsdRate (ETH)
       .mockReturnValueOnce(Promise.resolve('14.51')) // buyAssetUsdRate (RUNE)
-      .mockReturnValueOnce(Promise.resolve('14.51')) // runeAssetUsdRate (RUNE)
+      .mockReturnValueOnce(Promise.resolve('14.51')) // buyFeeAssetUsdRate (RUNE)
     ;(getTradeRate as jest.Mock<unknown>).mockReturnValue(Promise.resolve('0.02583433052665346349'))
     const getLimitArgs: GetLimitArgs = {
       sellAsset: FOX,
@@ -97,7 +97,7 @@ describe('getLimit', () => {
     ;(getUsdRate as jest.Mock<unknown>)
       .mockReturnValueOnce(Promise.resolve('14.51')) // sellFeeAssetUsdRate (RUNE)
       .mockReturnValueOnce(Promise.resolve('0.04')) // buyAssetUsdRate (FOX)
-      .mockReturnValueOnce(Promise.resolve('14.51')) // runeAssetUsdRate (RUNE)
+      .mockReturnValueOnce(Promise.resolve('1595')) // buyFeeAssetUsdRate (ETH)
     ;(getTradeRate as jest.Mock<unknown>).mockReturnValue(
       Promise.resolve('38.68447363336979738738'),
     )
