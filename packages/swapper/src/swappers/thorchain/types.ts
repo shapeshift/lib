@@ -55,7 +55,7 @@ export type MidgardActionsResponse = {
   actions: MidgardAction[]
 }
 
-export type InboundResponse = {
+export type InboundAddressResponse = {
   chain: string
   pub_key: string
   address: string

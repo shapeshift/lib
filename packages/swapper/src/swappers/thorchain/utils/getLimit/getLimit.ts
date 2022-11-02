@@ -5,12 +5,12 @@ import max from 'lodash/max'
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { bn, bnOrZero, fromBaseUnit, toBaseUnit } from '../../../utils/bignumber'
 import { RUNE_OUTBOUND_TRANSACTION_FEE_CRYPTO_HUMAN } from '../../constants'
-import { InboundResponse, ThorchainSwapperDeps } from '../../types'
+import { ThorchainSwapperDeps } from '../../types'
 import { THORCHAIN_FIXED_PRECISION } from '../constants'
+import { getInboundAddressDataForChain } from '../getInboundAddressDataForChain'
 import { getTradeRate } from '../getTradeRate/getTradeRate'
 import { getUsdRate } from '../getUsdRate/getUsdRate'
 import { isRune } from '../isRune/isRune'
-import { thorService } from '../thorService'
 
 export type GetLimitArgs = {
   buyAssetId: string
@@ -59,20 +59,16 @@ export const getLimit = async ({
       details: { expectedBuyAmountCryptoPrecision8, slippageTolerance },
     })
 
-  // FIXME: is this really just buyAssetAddressData?.outbound_fee? Confirm once THORChain back online
   const buyAssetTradeFeeCryptoPrecision8 = toBaseUnit(
     bnOrZero(buyAssetTradeFeeUsd).div(buyAssetUsdRate),
     THORCHAIN_FIXED_PRECISION,
   )
 
-  const { data: inboundAddresses } = await thorService.get<InboundResponse[]>(
-    `${deps.daemonUrl}/lcd/thorchain/inbound_addresses`,
-  )
-
   const sellAssetPoolId = adapters.assetIdToPoolAssetId({ assetId: sellAsset.assetId })
   const sellAssetChainSymbol = sellAssetPoolId?.slice(0, sellAssetPoolId.indexOf('.'))
-  const sellAssetAddressData = inboundAddresses.find(
-    (inbound) => inbound.chain === sellAssetChainSymbol,
+  const sellAssetAddressData = await getInboundAddressDataForChain(
+    deps.daemonUrl,
+    sellAssetChainSymbol,
   )
 
   // We want this in the buy asset crypto precision

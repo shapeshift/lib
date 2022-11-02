@@ -13,18 +13,17 @@ import {
 import { bn, bnOrZero, fromBaseUnit, toBaseUnit } from '../../utils/bignumber'
 import { DEFAULT_SLIPPAGE } from '../../utils/constants'
 import { RUNE_OUTBOUND_TRANSACTION_FEE_CRYPTO_HUMAN } from '../constants'
-import { InboundResponse, ThorchainSwapperDeps } from '../types'
+import { ThorchainSwapperDeps } from '../types'
 import { getThorTxInfo as getBtcThorTxInfo } from '../utils/bitcoin/utils/getThorTxData'
 import {
   MAX_THORCHAIN_TRADE,
   THOR_MINIMUM_PADDING,
   THORCHAIN_FIXED_PRECISION,
 } from '../utils/constants'
-import { getInboundAddressesForChain } from '../utils/getInboundAddressesForChain'
+import { getInboundAddressDataForChain } from '../utils/getInboundAddressDataForChain'
 import { getTradeRate } from '../utils/getTradeRate/getTradeRate'
 import { getUsdRate } from '../utils/getUsdRate/getUsdRate'
 import { isRune } from '../utils/isRune/isRune'
-import { thorService } from '../utils/thorService'
 import { getBtcTxFees } from '../utils/txFeeHelpers/btcTxFees/getBtcTxFees'
 import { getEthTxFees } from '../utils/txFeeHelpers/ethTxFees/getEthTxFees'
 
@@ -76,13 +75,11 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       buyAsset.precision,
     )
 
-    const { data: inboundAddresses } = await thorService.get<InboundResponse[]>(
-      `${deps.daemonUrl}/lcd/thorchain/inbound_addresses`,
-    )
     const buyAssetPoolId = adapters.assetIdToPoolAssetId({ assetId: buyAsset.assetId })
     const buyAssetChainSymbol = buyAssetPoolId?.slice(0, buyAssetPoolId.indexOf('.'))
-    const buyAssetAddressData = inboundAddresses.find(
-      (inbound) => inbound.chain === buyAssetChainSymbol,
+    const buyAssetAddressData = await getInboundAddressDataForChain(
+      deps.daemonUrl,
+      buyAssetChainSymbol,
     )
 
     const estimatedBuyAssetTradeFeeFeeAssetCryptoHuman = isRune(buyAsset.assetId)
@@ -125,7 +122,8 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
     switch (chainNamespace) {
       case CHAIN_NAMESPACE.Evm:
         return (async (): Promise<TradeQuote<KnownChainIds.EthereumMainnet>> => {
-          const { router } = await getInboundAddressesForChain(deps.daemonUrl, 'ETH')
+          const ethAddressData = await getInboundAddressDataForChain(deps.daemonUrl, 'ETH')
+          const router = ethAddressData?.router
           if (!router) throw new SwapError('[getThorTradeQuote] No router address found for ETH')
 
           const feeData = await getEthTxFees({

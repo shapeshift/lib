@@ -6,7 +6,7 @@ import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 
 import { SwapError, SwapErrorTypes, TradeQuote } from '../../../../api'
 import { ThorchainSwapperDeps } from '../../types'
-import { getInboundAddressesForChain } from '../getInboundAddressesForChain'
+import { getInboundAddressDataForChain } from '../getInboundAddressDataForChain'
 import { getLimit } from '../getLimit/getLimit'
 import { makeSwapMemo } from '../makeSwapMemo/makeSwapMemo'
 
@@ -38,7 +38,8 @@ export const getCosmosTxData = async (input: GetCosmosTxDataInput) => {
     sellAdapter,
   } = input
   const fromThorAsset = sellAsset.chainId == KnownChainIds.ThorchainMainnet
-  const { address: vault } = await getInboundAddressesForChain(deps.daemonUrl, 'GAIA')
+  const gaiaAddressData = await getInboundAddressDataForChain(deps.daemonUrl, 'GAIA')
+  const vault = gaiaAddressData?.address
 
   if (!vault && !fromThorAsset)
     throw new SwapError('[buildTrade]: no vault for chain', {

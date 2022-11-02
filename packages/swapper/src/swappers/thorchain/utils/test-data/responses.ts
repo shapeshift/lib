@@ -1,4 +1,4 @@
-import { InboundResponse, MidgardPoolResponse, ThornodePoolResponse } from '../../types'
+import { InboundAddressResponse, MidgardPoolResponse, ThornodePoolResponse } from '../../types'
 
 export const btcMidgardPool: MidgardPoolResponse = {
   asset: 'BTC.BTC',
@@ -84,7 +84,7 @@ export const foxThornodePool: ThornodePoolResponse = {
   synth_units: '552604585625',
 }
 
-export const mockInboundAddresses: InboundResponse[] = [
+export const mockInboundAddresses: InboundAddressResponse[] = [
   {
     chain: 'BCH',
     pub_key: 'thorpub1addwnpepqfyppkehky2hn2gy26y8jqyj9fz0rnvau2r7yueawzvc662w0x9s7n4ypra',
