@@ -1,5 +1,5 @@
 import { Asset } from '@shapeshiftoss/asset-service'
-import { adapters, fromAssetId } from '@shapeshiftoss/caip'
+import { fromAssetId } from '@shapeshiftoss/caip'
 import max from 'lodash/max'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
@@ -64,14 +64,11 @@ export const getLimit = async ({
     THORCHAIN_FIXED_PRECISION,
   )
 
-  const sellAssetPoolId = adapters.assetIdToPoolAssetId({ assetId: sellAsset.assetId })
-  const sellAssetChainSymbol = sellAssetPoolId?.slice(0, sellAssetPoolId.indexOf('.'))
   const sellAssetAddressData = await getInboundAddressDataForChain(
     deps.daemonUrl,
-    sellAssetChainSymbol,
+    sellAsset.assetId,
   )
 
-  // We want this in the buy asset crypto precision
   const refundFeeBuyAssetCryptoPrecision8 = (() => {
     switch (true) {
       // If the sell asset is on THOR the return fee is fixed at 0.02 RUNE

@@ -1,5 +1,5 @@
 import { Asset } from '@shapeshiftoss/asset-service'
-import { ChainId } from '@shapeshiftoss/caip'
+import { ChainId, cosmosAssetId } from '@shapeshiftoss/caip'
 import { ChainAdapter, cosmos, thorchain } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
@@ -38,7 +38,7 @@ export const getCosmosTxData = async (input: GetCosmosTxDataInput) => {
     sellAdapter,
   } = input
   const fromThorAsset = sellAsset.chainId == KnownChainIds.ThorchainMainnet
-  const gaiaAddressData = await getInboundAddressDataForChain(deps.daemonUrl, 'GAIA')
+  const gaiaAddressData = await getInboundAddressDataForChain(deps.daemonUrl, cosmosAssetId)
   const vault = gaiaAddressData?.address
 
   if (!vault && !fromThorAsset)

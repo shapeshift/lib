@@ -1,21 +1,17 @@
-import { SwapError, SwapErrorTypes } from '../../../api'
+import { adapters, AssetId } from '@shapeshiftoss/caip'
+
 import type { InboundAddressResponse } from '../types'
 import { thorService } from './thorService'
 
 export const getInboundAddressDataForChain = async (
   daemonUrl: string,
-  chain: string | undefined,
+  assetId: AssetId | undefined,
 ): Promise<InboundAddressResponse | undefined> => {
+  if (!assetId) return undefined
+  const assetPoolId = adapters.assetIdToPoolAssetId({ assetId })
+  const assetChainSymbol = assetPoolId?.slice(0, assetPoolId.indexOf('.'))
   const { data: inboundAddresses } = await thorService.get<InboundAddressResponse[]>(
     `${daemonUrl}/lcd/thorchain/inbound_addresses`,
   )
-  const inboundAddressDataForChain = inboundAddresses.find((inbound) => inbound.chain === chain)
-
-  if (!inboundAddressDataForChain)
-    throw new SwapError(`[getInboundAddressForChain]: no inbound addresses found for ${chain}`, {
-      code: SwapErrorTypes.RESPONSE_ERROR,
-      details: { inboundAddress: inboundAddresses },
-    })
-
-  return inboundAddressDataForChain
+  return inboundAddresses.find((inbound) => inbound.chain === assetChainSymbol)
 }

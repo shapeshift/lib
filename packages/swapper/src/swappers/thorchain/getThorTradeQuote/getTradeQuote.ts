@@ -1,4 +1,4 @@
-import { adapters, CHAIN_NAMESPACE, ChainId, fromAssetId } from '@shapeshiftoss/caip'
+import { CHAIN_NAMESPACE, ChainId, ethAssetId, fromAssetId } from '@shapeshiftoss/caip'
 import { ChainAdapter, UtxoBaseAdapter } from '@shapeshiftoss/chain-adapters'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
@@ -75,11 +75,9 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       buyAsset.precision,
     )
 
-    const buyAssetPoolId = adapters.assetIdToPoolAssetId({ assetId: buyAsset.assetId })
-    const buyAssetChainSymbol = buyAssetPoolId?.slice(0, buyAssetPoolId.indexOf('.'))
     const buyAssetAddressData = await getInboundAddressDataForChain(
       deps.daemonUrl,
-      buyAssetChainSymbol,
+      buyAsset.assetId,
     )
 
     const estimatedBuyAssetTradeFeeFeeAssetCryptoHuman = isRune(buyAsset.assetId)
@@ -122,7 +120,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
     switch (chainNamespace) {
       case CHAIN_NAMESPACE.Evm:
         return (async (): Promise<TradeQuote<KnownChainIds.EthereumMainnet>> => {
-          const ethAddressData = await getInboundAddressDataForChain(deps.daemonUrl, 'ETH')
+          const ethAddressData = await getInboundAddressDataForChain(deps.daemonUrl, ethAssetId)
           const router = ethAddressData?.router
           if (!router) throw new SwapError('[getThorTradeQuote] No router address found for ETH')
 

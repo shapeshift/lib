@@ -34,11 +34,7 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
   buyAssetTradeFeeUsd,
 }) => {
   try {
-    const inboundAddress = await getInboundAddressDataForChain(
-      deps.daemonUrl,
-      sellAsset.symbol.toUpperCase(),
-    )
-
+    const inboundAddress = await getInboundAddressDataForChain(deps.daemonUrl, sellAsset.assetId)
     const vault = inboundAddress?.address
 
     if (!vault)
