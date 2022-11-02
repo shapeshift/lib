@@ -29,14 +29,6 @@ export const getLimit = async ({
   slippageTolerance,
   buyAssetTradeFeeUsd,
 }: GetLimitArgs): Promise<string> => {
-  console.log('xxx getLimit args', {
-    sellAsset,
-    buyAssetId,
-    sellAmountCryptoPrecision,
-    deps,
-    slippageTolerance,
-    buyAssetTradeFeeUsd,
-  })
   const tradeRate = await getTradeRate(sellAsset, buyAssetId, sellAmountCryptoPrecision, deps)
   const sellAssetChainFeeAssetId = deps.adapterManager.get(sellAsset.chainId)?.getFeeAssetId()
   const buyAssetChainFeeAssetId = deps.adapterManager
@@ -54,7 +46,6 @@ export const getLimit = async ({
     input: { assetId: sellAssetChainFeeAssetId },
   })
   const buyAssetUsdRate = await getUsdRate({ deps, input: { assetId: buyAssetId } })
-  const buyFeeAssetUsdRate = await getUsdRate({ deps, input: { assetId: buyAssetChainFeeAssetId } })
   const expectedBuyAmountCryptoPrecision8 = toBaseUnit(
     fromBaseUnit(bnOrZero(sellAmountCryptoPrecision).times(tradeRate), sellAsset.precision),
     THORCHAIN_FIXED_PRECISION,
@@ -83,15 +74,6 @@ export const getLimit = async ({
   const sellAssetAddressData = inboundAddresses.find(
     (inbound) => inbound.chain === sellAssetChainSymbol,
   )
-
-  // fixme: for logging only
-  const buyAssetPoolId = adapters.assetIdToPoolAssetId({ assetId: buyAssetId })
-  const buyAssetChainSymbol = buyAssetPoolId?.slice(0, buyAssetPoolId.indexOf('.'))
-  const buyAssetAddressData = inboundAddresses.find(
-    (inbound) => inbound.chain === buyAssetChainSymbol,
-  )
-
-  console.log('buyAssetAddressData', { buyAssetAddressData, buyFeeAssetUsdRate })
 
   // We want this in the buy asset crypto precision
   const refundFeeBuyAssetCryptoPrecision8 = (() => {

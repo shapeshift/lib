@@ -32,7 +32,7 @@ export const ethMidgardPool: MidgardPoolResponse = {
   asset: 'ETH.ETH',
   assetDepth: '915018987646',
   assetPrice: '676.2118757936507',
-  assetPriceUSD: '1963.4172247490626',
+  assetPriceUSD: '1595',
   liquidityUnits: '273709963437801',
   poolAPY: '0.10532151323548256',
   runeDepth: '618746706022909',
