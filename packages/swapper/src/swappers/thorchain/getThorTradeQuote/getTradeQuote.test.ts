@@ -1,10 +1,10 @@
 import { KnownChainIds } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
-import { GetTradeQuoteInput, TradeQuote } from '../../../api'
+import type { GetTradeQuoteInput, TradeQuote } from '../../../api'
 import { ETH, FOX } from '../../utils/test-data/assets'
 import { setupQuote } from '../../utils/test-data/setupSwapQuote'
-import { ThorchainSwapperDeps } from '../types'
+import type { ThorchainSwapperDeps } from '../types'
 import {
   ethMidgardPool,
   ethThornodePool,

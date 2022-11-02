@@ -1,7 +1,7 @@
 import { Asset } from '@shapeshiftoss/asset-service'
 
 import { SwapError, SwapErrorTypes } from '../../../../../api'
-import { ThorchainSwapperDeps } from '../../../types'
+import type { ThorchainSwapperDeps } from '../../../types'
 import { getInboundAddressDataForChain } from '../../getInboundAddressDataForChain'
 import { getLimit } from '../../getLimit/getLimit'
 import { makeSwapMemo } from '../../makeSwapMemo/makeSwapMemo'
