@@ -13,5 +13,6 @@ export const getInboundAddressDataForChain = async (
   const { data: inboundAddresses } = await thorService.get<InboundAddressResponse[]>(
     `${daemonUrl}/lcd/thorchain/inbound_addresses`,
   )
-  return inboundAddresses.find((inbound) => inbound.chain === assetChainSymbol)
+  const activeInboundAddresses = inboundAddresses.filter((a) => !a.halted)
+  return activeInboundAddresses.find((inbound) => inbound.chain === assetChainSymbol)
 }
