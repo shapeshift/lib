@@ -20,7 +20,6 @@ type GetBtcThorTxInfoArgs = {
 
 type GetBtcThorTxInfoReturn = Promise<{
   data: string
-  memo: string
   router: string
 }>
 
@@ -69,11 +68,7 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
       memo,
     )
 
-    return {
-      data,
-      memo,
-      router,
-    }
+    return { data, router }
   } catch (e) {
     if (e instanceof SwapError) throw e
     throw new SwapError('[getThorTxInfo]', { cause: e, code: SwapErrorTypes.TRADE_QUOTE_FAILED })
