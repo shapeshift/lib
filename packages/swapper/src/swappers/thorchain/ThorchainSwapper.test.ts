@@ -1,4 +1,4 @@
-import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+import { ChainAdapterManager } from '@keepkey/chain-adapters'
 import axios from 'axios'
 import Web3 from 'web3'
 

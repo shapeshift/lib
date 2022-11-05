@@ -1,4 +1,4 @@
-import * as unchained from '@shapeshiftoss/unchained-client'
+import * as unchained from '@keepkey/unchained-client'
 import coinSelect from 'coinselect'
 import split from 'coinselect/split'
 

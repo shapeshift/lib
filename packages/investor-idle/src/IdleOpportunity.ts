@@ -1,14 +1,14 @@
-import { toAssetId } from '@shapeshiftoss/caip'
-import { ChainAdapter, toAddressNList } from '@shapeshiftoss/chain-adapters'
+import { toAssetId } from '@keepkey/caip'
+import { ChainAdapter, toAddressNList } from '@keepkey/chain-adapters'
 import { ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import {
   ApprovalRequired,
   DepositWithdrawArgs,
   FeePriority,
   InvestorOpportunity,
-} from '@shapeshiftoss/investor'
-import { Logger } from '@shapeshiftoss/logger'
-import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
+} from '@keepkey/investor'
+import { Logger } from '@keepkey/logger'
+import { BIP44Params, KnownChainIds } from '@keepkey/types'
 import type { BigNumber } from 'bignumber.js'
 import toLower from 'lodash/toLower'
 import Web3 from 'web3'

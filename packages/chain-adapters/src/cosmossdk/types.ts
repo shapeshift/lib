@@ -1,5 +1,5 @@
-import { BIP44Params } from '@shapeshiftoss/types'
-import * as unchained from '@shapeshiftoss/unchained-client'
+import { BIP44Params } from '@keepkey/types'
+import * as unchained from '@keepkey/unchained-client'
 
 import * as types from '../types'
 import { CosmosSdkChainId } from './CosmosSdkBaseAdapter'

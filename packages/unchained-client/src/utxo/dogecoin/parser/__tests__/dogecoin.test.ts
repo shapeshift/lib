@@ -1,4 +1,4 @@
-import { dogeAssetId, dogeChainId } from '@shapeshiftoss/caip'
+import { dogeAssetId, dogeChainId } from '@keepkey/caip'
 
 import { ParsedTx, TransferType, TxStatus } from '../../../../types'
 import { TransactionParser } from '../index'

@@ -1,4 +1,4 @@
-import { adapters, AssetId, ChainId } from '@shapeshiftoss/caip'
+import { adapters, AssetId, ChainId } from '@keepkey/caip'
 import axios from 'axios'
 import Polyglot from 'node-polyglot'
 

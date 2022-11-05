@@ -4,18 +4,18 @@
     "baseUrl": ".",
     // Configure imports and their directory resolution
     "paths": {
-      "@shapeshiftoss/asset-service/*": ["packages/asset-service"],
-      "@shapeshiftoss/caip/*": ["packages/caip"],
-      "@shapeshiftoss/chain-adapters/*": ["packages/chain-adapters"],
-      "@shapeshiftoss/investory-foxy/*": ["packages/investory-foxy"],
-      "@shapeshiftoss/investory-yearn/*": ["packages/investory-yearn"],
-      "@shapeshiftoss/investory-idle/*": ["packages/investory-idle"],
-      "@shapeshiftoss/logger/*": ["packages/logger"],
-      "@shapeshiftoss/errors/*": ["packages/errors"],
-      "@shapeshiftoss/market-service/*": ["packages/market-service"],
-      "@shapeshiftoss/swapper/*": ["packages/swapper"],
-      "@shapeshiftoss/types/*": ["packages/types"],
-      "@shapeshiftoss/unchained-client/*": ["packages/unchained-client"]
+      "@keepkey/asset-service/*": ["packages/asset-service"],
+      "@keepkey/caip/*": ["packages/caip"],
+      "@keepkey/chain-adapters/*": ["packages/chain-adapters"],
+      "@keepkey/investory-foxy/*": ["packages/investory-foxy"],
+      "@keepkey/investory-yearn/*": ["packages/investory-yearn"],
+      "@keepkey/investory-idle/*": ["packages/investory-idle"],
+      "@keepkey/logger/*": ["packages/logger"],
+      "@keepkey/errors/*": ["packages/errors"],
+      "@keepkey/market-service/*": ["packages/market-service"],
+      "@keepkey/swapper/*": ["packages/swapper"],
+      "@keepkey/types/*": ["packages/types"],
+      "@keepkey/unchained-client/*": ["packages/unchained-client"]
     },
     "noEmit": true
   },

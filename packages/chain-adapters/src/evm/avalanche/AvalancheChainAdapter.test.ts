@@ -9,11 +9,11 @@ import {
   avalancheAssetId,
   avalancheChainId,
   fromChainId,
-} from '@shapeshiftoss/caip'
+} from '@keepkey/caip'
 import { ETHSignMessage, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
-import unchained from '@shapeshiftoss/unchained-client'
+import { BIP44Params, KnownChainIds } from '@keepkey/types'
+import unchained from '@keepkey/unchained-client'
 import { merge } from 'lodash'
 import { numberToHex } from 'web3-utils'
 

@@ -1,4 +1,4 @@
-import { cosmosAssetId } from '@shapeshiftoss/caip'
+import { cosmosAssetId } from '@keepkey/caip'
 
 import { Tx } from '../../../generated/cosmos'
 import { BaseTransactionParser, BaseTransactionParserArgs } from '../../parser'

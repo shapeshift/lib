@@ -1,4 +1,4 @@
-import { adapters } from '@shapeshiftoss/caip'
+import { adapters } from '@keepkey/caip'
 import {
   FindAllMarketArgs,
   HistoryData,
@@ -7,7 +7,7 @@ import {
   MarketData,
   MarketDataArgs,
   PriceHistoryArgs,
-} from '@shapeshiftoss/types'
+} from '@keepkey/types'
 import dayjs from 'dayjs'
 import omit from 'lodash/omit'
 

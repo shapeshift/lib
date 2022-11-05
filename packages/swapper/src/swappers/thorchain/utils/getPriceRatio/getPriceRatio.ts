@@ -1,4 +1,4 @@
-import { adapters, AssetId } from '@shapeshiftoss/caip'
+import { adapters, AssetId } from '@keepkey/caip'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { bn, bnOrZero } from '../../../utils/bignumber'

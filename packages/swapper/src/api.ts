@@ -1,9 +1,9 @@
-import { Asset } from '@shapeshiftoss/asset-service'
-import { AssetId, ChainId } from '@shapeshiftoss/caip'
-import { avalanche, cosmos, ethereum, osmosis } from '@shapeshiftoss/chain-adapters'
-import { createErrorClass } from '@shapeshiftoss/errors'
+import { Asset } from '@keepkey/asset-service'
+import { AssetId, ChainId } from '@keepkey/caip'
+import { avalanche, cosmos, ethereum, osmosis } from '@keepkey/chain-adapters'
+import { createErrorClass } from '@keepkey/errors'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, ChainSpecific, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
+import { BIP44Params, ChainSpecific, KnownChainIds, UtxoAccountType } from '@keepkey/types'
 
 export const SwapError = createErrorClass('SwapError')
 

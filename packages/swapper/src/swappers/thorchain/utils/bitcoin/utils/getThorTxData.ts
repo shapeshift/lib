@@ -1,4 +1,4 @@
-import { Asset } from '@shapeshiftoss/asset-service'
+import { Asset } from '@keepkey/asset-service'
 
 import { SwapError, SwapErrorTypes } from '../../../../../api'
 import type { ThorchainSwapperDeps } from '../../../types'

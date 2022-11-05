@@ -22,7 +22,7 @@ function isError(value: unknown): value is Error {
 
 /**
  * Support errors with additional properties
- * @shapeshiftoss/errors implement these additional properties
+ * @keepkey/errors implement these additional properties
  */
 function isErrorWithDetails(value: unknown): value is Error & {
   code?: string

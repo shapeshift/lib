@@ -1,4 +1,4 @@
-import { dogeAssetId } from '@shapeshiftoss/caip'
+import { dogeAssetId } from '@keepkey/caip'
 
 import { Tx } from '../../../generated/dogecoin'
 import { BaseTransactionParser, BaseTransactionParserArgs } from '../../parser'

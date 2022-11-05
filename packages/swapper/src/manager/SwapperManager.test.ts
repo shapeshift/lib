@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { ChainId } from '@shapeshiftoss/caip'
-import { ChainAdapterManager, ethereum } from '@shapeshiftoss/chain-adapters'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { ChainId } from '@keepkey/caip'
+import { ChainAdapterManager, ethereum } from '@keepkey/chain-adapters'
+import { KnownChainIds } from '@keepkey/types'
 import Web3 from 'web3'
 
 import { Swapper, SwapperType } from '../api'

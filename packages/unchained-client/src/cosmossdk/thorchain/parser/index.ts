@@ -1,4 +1,4 @@
-import { thorchainAssetId } from '@shapeshiftoss/caip'
+import { thorchainAssetId } from '@keepkey/caip'
 
 import { Tx } from '../../../generated/thorchain'
 import { BaseTransactionParser, BaseTransactionParserArgs } from '../../parser'

@@ -5,8 +5,8 @@ import {
   ethChainId,
   thorchainAssetId,
   thorchainChainId,
-} from '@shapeshiftoss/caip'
-import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+} from '@keepkey/caip'
+import { ChainAdapterManager } from '@keepkey/chain-adapters'
 import Web3 from 'web3'
 
 import { DEFAULT_SLIPPAGE } from '../../../utils/constants'

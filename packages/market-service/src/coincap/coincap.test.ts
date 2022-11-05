@@ -1,5 +1,5 @@
-import { adapters } from '@shapeshiftoss/caip'
-import { HistoryTimeframe } from '@shapeshiftoss/types'
+import { adapters } from '@keepkey/caip'
+import { HistoryTimeframe } from '@keepkey/types'
 import axios from 'axios'
 
 import { CoinCapMarketService } from './coincap'

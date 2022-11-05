@@ -1,6 +1,6 @@
-import { Asset } from '@shapeshiftoss/asset-service'
-import { AssetId, avalancheAssetId, ethAssetId, fromAssetId } from '@shapeshiftoss/caip'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { Asset } from '@keepkey/asset-service'
+import { AssetId, avalancheAssetId, ethAssetId, fromAssetId } from '@keepkey/caip'
+import { KnownChainIds } from '@keepkey/types'
 import { AxiosResponse } from 'axios'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'

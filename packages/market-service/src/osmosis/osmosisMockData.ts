@@ -1,4 +1,4 @@
-import { MarketData } from '@shapeshiftoss/types'
+import { MarketData } from '@keepkey/types'
 
 import { OsmosisMarketCap } from './osmosis-types'
 

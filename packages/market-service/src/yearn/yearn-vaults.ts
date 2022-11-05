@@ -1,4 +1,4 @@
-import { adapters, CHAIN_NAMESPACE, CHAIN_REFERENCE, toAssetId } from '@shapeshiftoss/caip'
+import { adapters, CHAIN_NAMESPACE, CHAIN_REFERENCE, toAssetId } from '@keepkey/caip'
 import {
   FindAllMarketArgs,
   HistoryData,
@@ -7,7 +7,7 @@ import {
   MarketData,
   MarketDataArgs,
   PriceHistoryArgs,
-} from '@shapeshiftoss/types'
+} from '@keepkey/types'
 import { ChainId, Yearn } from '@yfi/sdk'
 import head from 'lodash/head'
 

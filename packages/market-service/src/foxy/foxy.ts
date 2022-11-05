@@ -1,13 +1,13 @@
-import { ethereum } from '@shapeshiftoss/chain-adapters'
-import { foxyAddresses, FoxyApi } from '@shapeshiftoss/investor-foxy'
+import { ethereum } from '@keepkey/chain-adapters'
+import { foxyAddresses, FoxyApi } from '@keepkey/investor-foxy'
 import {
   HistoryData,
   MarketCapResult,
   MarketData,
   MarketDataArgs,
   PriceHistoryArgs,
-} from '@shapeshiftoss/types'
-import * as unchained from '@shapeshiftoss/unchained-client'
+} from '@keepkey/types'
+import * as unchained from '@keepkey/unchained-client'
 
 import { MarketService } from '../api'
 import { CoinGeckoMarketService } from '../coingecko/coingecko'

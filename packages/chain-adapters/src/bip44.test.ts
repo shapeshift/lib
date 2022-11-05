@@ -1,4 +1,4 @@
-import { BIP44Params } from '@shapeshiftoss/types'
+import { BIP44Params } from '@keepkey/types'
 
 import { fromAddressNList, fromPath, toAddressNList, toPath } from './utils/bip44'
 

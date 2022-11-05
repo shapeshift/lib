@@ -1,4 +1,4 @@
-import { ASSET_REFERENCE, osmosisChainId } from '@shapeshiftoss/caip'
+import { ASSET_REFERENCE, osmosisChainId } from '@keepkey/caip'
 import axios from 'axios'
 
 import { Asset } from '../../service/AssetService'

@@ -1,4 +1,4 @@
-import { AssetId, ChainId } from '@shapeshiftoss/caip'
+import { AssetId, ChainId } from '@keepkey/caip'
 import {
   bip32ToAddressNList,
   BTCOutputAddressType,
@@ -8,8 +8,8 @@ import {
   PublicKey,
   supportsBTC,
 } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
-import * as unchained from '@shapeshiftoss/unchained-client'
+import { BIP44Params, KnownChainIds, UtxoAccountType } from '@keepkey/types'
+import * as unchained from '@keepkey/unchained-client'
 import WAValidator from 'multicoin-address-validator'
 
 import { ChainAdapter as IChainAdapter } from '../api'

@@ -1,4 +1,4 @@
-import { ChainId, toAssetId } from '@shapeshiftoss/caip'
+import { ChainId, toAssetId } from '@keepkey/caip'
 import { ChainId as YearnChainId, Yearn } from '@yfi/sdk'
 import { BigNumber, ethers } from 'ethers'
 

@@ -1,4 +1,4 @@
-import { ltcAssetId } from '@shapeshiftoss/caip'
+import { ltcAssetId } from '@keepkey/caip'
 
 import { Tx } from '../../../generated/litecoin'
 import { BaseTransactionParser, BaseTransactionParserArgs } from '../../parser'

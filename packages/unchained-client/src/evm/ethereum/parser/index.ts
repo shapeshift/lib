@@ -1,4 +1,4 @@
-import { ethAssetId } from '@shapeshiftoss/caip'
+import { ethAssetId } from '@keepkey/caip'
 
 import { Tx } from '../../../generated/ethereum'
 import { BaseTransactionParser, TransactionParserArgs } from '../../parser'

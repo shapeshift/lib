@@ -1,4 +1,4 @@
-import { ChainId } from '@shapeshiftoss/caip'
+import { ChainId } from '@keepkey/caip'
 import uniq from 'lodash/uniq'
 
 import { BuyAssetBySellIdInput, ByPairInput, SupportedSellAssetsInput, Swapper } from '..'

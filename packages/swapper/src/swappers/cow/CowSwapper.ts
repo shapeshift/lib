@@ -1,7 +1,7 @@
-import { Asset } from '@shapeshiftoss/asset-service'
-import { AssetId, fromAssetId } from '@shapeshiftoss/caip'
-import { ethereum } from '@shapeshiftoss/chain-adapters'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { Asset } from '@keepkey/asset-service'
+import { AssetId, fromAssetId } from '@keepkey/caip'
+import { ethereum } from '@keepkey/chain-adapters'
+import { KnownChainIds } from '@keepkey/types'
 import Web3 from 'web3'
 
 import {

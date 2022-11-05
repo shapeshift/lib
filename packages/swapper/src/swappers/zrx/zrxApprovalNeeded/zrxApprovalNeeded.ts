@@ -1,4 +1,4 @@
-import { fromAssetId } from '@shapeshiftoss/caip'
+import { fromAssetId } from '@keepkey/caip'
 
 import {
   ApprovalNeededInput,

@@ -1,6 +1,6 @@
-import { AssetId } from '@shapeshiftoss/caip'
+import { AssetId } from '@keepkey/caip'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, WithdrawType } from '@shapeshiftoss/types'
+import { BIP44Params, WithdrawType } from '@keepkey/types'
 import { BigNumber } from 'bignumber.js'
 import { Contract } from 'web3-eth-contract'
 

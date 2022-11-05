@@ -1,5 +1,5 @@
-import { CHAIN_NAMESPACE, fromAssetId, fromChainId } from '@shapeshiftoss/caip'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { CHAIN_NAMESPACE, fromAssetId, fromChainId } from '@keepkey/caip'
+import { KnownChainIds } from '@keepkey/types'
 
 import { ApprovalNeededInput, ApprovalNeededOutput, SwapError, SwapErrorTypes } from '../../../api'
 import { erc20AllowanceAbi } from '../../utils/abi/erc20Allowance-abi'

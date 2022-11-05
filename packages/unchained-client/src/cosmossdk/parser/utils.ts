@@ -5,8 +5,8 @@ import {
   osmosisAssetId,
   thorchainAssetId,
   toAssetId,
-} from '@shapeshiftoss/caip'
-import { Logger } from '@shapeshiftoss/logger'
+} from '@keepkey/caip'
+import { Logger } from '@keepkey/logger'
 
 import { Message } from '../types'
 import { TxMetadata } from './types'

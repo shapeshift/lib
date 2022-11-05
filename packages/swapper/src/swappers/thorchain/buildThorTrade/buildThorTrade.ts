@@ -1,6 +1,6 @@
-import { CHAIN_NAMESPACE, ChainId, fromAssetId } from '@shapeshiftoss/caip'
-import { cosmos, ethereum, UtxoBaseAdapter } from '@shapeshiftoss/chain-adapters'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { CHAIN_NAMESPACE, ChainId, fromAssetId } from '@keepkey/caip'
+import { cosmos, ethereum, UtxoBaseAdapter } from '@keepkey/chain-adapters'
+import { KnownChainIds } from '@keepkey/types'
 
 import {
   BuildTradeInput,

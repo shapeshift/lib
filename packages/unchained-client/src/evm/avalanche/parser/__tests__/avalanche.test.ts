@@ -1,4 +1,4 @@
-import { avalancheAssetId, avalancheChainId } from '@shapeshiftoss/caip'
+import { avalancheAssetId, avalancheChainId } from '@keepkey/caip'
 
 import { Dex, Trade, TradeType, Transfer, TransferType, TxStatus } from '../../../../types'
 import { ParsedTx, ParsedTx as Tx } from '../../../parser'

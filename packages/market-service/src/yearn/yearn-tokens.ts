@@ -1,11 +1,11 @@
-import { adapters, CHAIN_NAMESPACE, CHAIN_REFERENCE, toAssetId } from '@shapeshiftoss/caip'
+import { adapters, CHAIN_NAMESPACE, CHAIN_REFERENCE, toAssetId } from '@keepkey/caip'
 import {
   FindAllMarketArgs,
   HistoryData,
   MarketCapResult,
   MarketData,
   MarketDataArgs,
-} from '@shapeshiftoss/types'
+} from '@keepkey/types'
 import { ChainId, Token, Yearn } from '@yfi/sdk'
 import uniqBy from 'lodash/uniqBy'
 

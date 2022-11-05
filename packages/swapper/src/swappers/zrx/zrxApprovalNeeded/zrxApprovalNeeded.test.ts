@@ -1,5 +1,5 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { KnownChainIds } from '@keepkey/types'
 import Web3 from 'web3'
 
 import { ApprovalNeededInput } from '../../../api'

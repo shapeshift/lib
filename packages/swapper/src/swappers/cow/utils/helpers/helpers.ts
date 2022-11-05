@@ -1,6 +1,6 @@
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
-import { Asset, AssetService } from '@shapeshiftoss/asset-service'
-import { ethAssetId, fromAssetId } from '@shapeshiftoss/caip'
+import { Asset, AssetService } from '@keepkey/asset-service'
+import { ethAssetId, fromAssetId } from '@keepkey/caip'
 import { AxiosResponse } from 'axios'
 import { ethers } from 'ethers'
 

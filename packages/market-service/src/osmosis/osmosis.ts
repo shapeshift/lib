@@ -1,4 +1,4 @@
-import { adapters } from '@shapeshiftoss/caip'
+import { adapters } from '@keepkey/caip'
 import {
   HistoryData,
   HistoryTimeframe,
@@ -6,7 +6,7 @@ import {
   MarketData,
   MarketDataArgs,
   PriceHistoryArgs,
-} from '@shapeshiftoss/types'
+} from '@keepkey/types'
 import axios from 'axios'
 
 import { MarketService } from '../api'

@@ -1,5 +1,5 @@
-import { Asset } from '@shapeshiftoss/asset-service'
-import { fromAssetId } from '@shapeshiftoss/caip'
+import { Asset } from '@keepkey/asset-service'
+import { fromAssetId } from '@keepkey/caip'
 import max from 'lodash/max'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'

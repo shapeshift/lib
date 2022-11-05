@@ -1,4 +1,4 @@
-import { Asset } from '@shapeshiftoss/asset-service'
+import { Asset } from '@keepkey/asset-service'
 
 import { FOX, WETH } from '../../../utils/test-data/assets'
 import { ZrxQuoteResponse } from '../../types'

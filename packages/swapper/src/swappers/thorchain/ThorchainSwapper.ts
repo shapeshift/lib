@@ -1,4 +1,4 @@
-import { Asset } from '@shapeshiftoss/asset-service'
+import { Asset } from '@keepkey/asset-service'
 import {
   adapters,
   AssetId,
@@ -6,10 +6,10 @@ import {
   ChainId,
   fromAssetId,
   thorchainAssetId,
-} from '@shapeshiftoss/caip'
-import { cosmos, EvmBaseAdapter, UtxoBaseAdapter } from '@shapeshiftoss/chain-adapters'
+} from '@keepkey/caip'
+import { cosmos, EvmBaseAdapter, UtxoBaseAdapter } from '@keepkey/chain-adapters'
 import { BTCSignTx, CosmosSignTx, ETHSignTx } from '@shapeshiftoss/hdwallet-core'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { KnownChainIds } from '@keepkey/types'
 
 import type {
   ApprovalNeededInput,

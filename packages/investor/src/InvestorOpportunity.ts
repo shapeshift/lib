@@ -1,5 +1,5 @@
+import { BIP44Params } from '@keepkey/types'
 import type { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params } from '@shapeshiftoss/types'
 import type { BigNumber } from 'bignumber.js'
 
 import { FeePriority } from './Extensions'

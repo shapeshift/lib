@@ -1,4 +1,4 @@
-import { avalancheChainId } from '@shapeshiftoss/caip'
+import { avalancheChainId } from '@keepkey/caip'
 
 import { avax } from '../baseAssets'
 import * as coingecko from '../coingecko'

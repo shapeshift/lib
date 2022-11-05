@@ -1,6 +1,6 @@
-import { ethAssetId } from '@shapeshiftoss/caip'
-import { ChainAdapter, FeeDataKey, GasFeeDataEstimate } from '@shapeshiftoss/chain-adapters'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { ethAssetId } from '@keepkey/caip'
+import { ChainAdapter, FeeDataKey, GasFeeDataEstimate } from '@keepkey/chain-adapters'
+import { KnownChainIds } from '@keepkey/types'
 import Web3 from 'web3'
 
 import { ThorchainSwapperDeps } from '../../types'

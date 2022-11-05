@@ -1,4 +1,4 @@
-import { ethChainId as chainId, toAssetId } from '@shapeshiftoss/caip'
+import { ethChainId as chainId, toAssetId } from '@keepkey/caip'
 import axios from 'axios'
 
 import { Asset } from '../../service/AssetService'

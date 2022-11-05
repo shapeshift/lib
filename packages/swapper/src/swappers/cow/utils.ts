@@ -1,4 +1,4 @@
-import { ChainId } from '@shapeshiftoss/caip'
+import { ChainId } from '@keepkey/caip'
 
 import { Trade } from '../../api'
 import { CowTrade } from './types'

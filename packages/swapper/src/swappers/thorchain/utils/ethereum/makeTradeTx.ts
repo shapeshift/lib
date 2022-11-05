@@ -1,8 +1,8 @@
-import { Asset } from '@shapeshiftoss/asset-service'
-import { fromAssetId } from '@shapeshiftoss/caip'
-import { ethereum } from '@shapeshiftoss/chain-adapters'
+import { Asset } from '@keepkey/asset-service'
+import { fromAssetId } from '@keepkey/caip'
+import { ethereum } from '@keepkey/chain-adapters'
 import { ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params } from '@shapeshiftoss/types'
+import { BIP44Params } from '@keepkey/types'
 import { numberToHex } from 'web3-utils'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'

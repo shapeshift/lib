@@ -1,11 +1,11 @@
-import { ethAssetId } from '@shapeshiftoss/caip'
-import { ethereum } from '@shapeshiftoss/chain-adapters'
-import * as unchained from '@shapeshiftoss/unchained-client'
+import { ethAssetId } from '@keepkey/caip'
+import { ethereum } from '@keepkey/chain-adapters'
+import * as unchained from '@keepkey/unchained-client'
 import Web3 from 'web3'
 
 import { WETH } from './assets'
 
-jest.mock('@shapeshiftoss/chain-adapters')
+jest.mock('@keepkey/chain-adapters')
 jest.mock('web3')
 
 export const setupDeps = () => {

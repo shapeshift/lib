@@ -1,6 +1,6 @@
 import 'dotenv/config'
 
-import { AssetId } from '@shapeshiftoss/caip'
+import { AssetId } from '@keepkey/caip'
 import fs from 'fs'
 import orderBy from 'lodash/orderBy'
 

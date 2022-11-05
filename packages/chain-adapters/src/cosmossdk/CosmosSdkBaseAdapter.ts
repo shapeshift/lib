@@ -1,6 +1,6 @@
-import { AssetId, ChainId, fromChainId } from '@shapeshiftoss/caip'
-import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
-import * as unchained from '@shapeshiftoss/unchained-client'
+import { AssetId, ChainId, fromChainId } from '@keepkey/caip'
+import { BIP44Params, KnownChainIds } from '@keepkey/types'
+import * as unchained from '@keepkey/unchained-client'
 import { bech32 } from 'bech32'
 
 import { ChainAdapter as IChainAdapter } from '../api'

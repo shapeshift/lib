@@ -1,6 +1,6 @@
-import { CHAIN_NAMESPACE, ChainId, ethAssetId, fromAssetId } from '@shapeshiftoss/caip'
-import { ChainAdapter, UtxoBaseAdapter } from '@shapeshiftoss/chain-adapters'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { CHAIN_NAMESPACE, ChainId, ethAssetId, fromAssetId } from '@keepkey/caip'
+import { ChainAdapter, UtxoBaseAdapter } from '@keepkey/chain-adapters'
+import { KnownChainIds } from '@keepkey/types'
 
 import {
   GetTradeQuoteInput,

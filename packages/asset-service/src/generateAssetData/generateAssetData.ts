@@ -1,6 +1,6 @@
 import 'dotenv/config'
 
-import { AssetId, CHAIN_REFERENCE, fromAssetId } from '@shapeshiftoss/caip'
+import { AssetId, CHAIN_REFERENCE, fromAssetId } from '@keepkey/caip'
 import fs from 'fs'
 import merge from 'lodash/merge'
 import orderBy from 'lodash/orderBy'

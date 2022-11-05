@@ -1,4 +1,4 @@
-import { AssetId, ChainId } from '@shapeshiftoss/caip'
+import { AssetId, ChainId } from '@keepkey/caip'
 import { BigNumber } from 'bignumber.js'
 
 import { TransferType, TxStatus } from '../../types'

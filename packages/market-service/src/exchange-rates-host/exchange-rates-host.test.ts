@@ -1,4 +1,4 @@
-import { HistoryTimeframe } from '@shapeshiftoss/types'
+import { HistoryTimeframe } from '@keepkey/types'
 import axios from 'axios'
 import dayjs from 'dayjs'
 

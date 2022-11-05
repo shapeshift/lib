@@ -1,4 +1,4 @@
-import { AssetId } from '@shapeshiftoss/caip'
+import { AssetId } from '@keepkey/caip'
 
 import { Asset } from '../service/AssetService'
 

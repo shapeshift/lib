@@ -1,5 +1,5 @@
 jest.mock('../thorService')
-import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+import { ChainAdapterManager } from '@keepkey/chain-adapters'
 import Web3 from 'web3'
 
 import { BTC, ETH, FOX, UNSUPPORTED } from '../../../utils/test-data/assets'

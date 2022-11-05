@@ -1,4 +1,4 @@
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { KnownChainIds } from '@keepkey/types'
 
 import { ApproveAmountInput, ApproveInfiniteInput, SwapError, SwapErrorTypes } from '../../../api'
 import { erc20Abi } from '../../utils/abi/erc20-abi'

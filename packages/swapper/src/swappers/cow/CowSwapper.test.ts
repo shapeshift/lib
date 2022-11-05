@@ -1,6 +1,6 @@
-import { ethereum } from '@shapeshiftoss/chain-adapters'
+import { ethereum } from '@keepkey/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { KnownChainIds } from '@keepkey/types'
 import Web3 from 'web3'
 
 import { SwapperType, TradeResult } from '../../api'

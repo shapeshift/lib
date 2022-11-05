@@ -1,5 +1,5 @@
-import { Asset } from '@shapeshiftoss/asset-service'
-import { adapters } from '@shapeshiftoss/caip'
+import { Asset } from '@keepkey/asset-service'
+import { adapters } from '@keepkey/caip'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { bn, bnOrZero } from '../../../utils/bignumber'

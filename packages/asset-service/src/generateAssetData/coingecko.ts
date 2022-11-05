@@ -1,4 +1,4 @@
-import { adapters, avalancheChainId, ChainId, ethChainId, toAssetId } from '@shapeshiftoss/caip'
+import { adapters, avalancheChainId, ChainId, ethChainId, toAssetId } from '@keepkey/caip'
 import axios from 'axios'
 
 import { Asset } from '../service/AssetService'

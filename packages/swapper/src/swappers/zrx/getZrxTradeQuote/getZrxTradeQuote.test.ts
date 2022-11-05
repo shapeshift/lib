@@ -1,5 +1,5 @@
-import { ethereum } from '@shapeshiftoss/chain-adapters'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { ethereum } from '@keepkey/chain-adapters'
+import { KnownChainIds } from '@keepkey/types'
 import { AxiosStatic } from 'axios'
 import Web3 from 'web3'
 

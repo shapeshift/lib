@@ -1,5 +1,5 @@
-import { adapters } from '@shapeshiftoss/caip'
-import { Logger } from '@shapeshiftoss/logger'
+import { adapters } from '@keepkey/caip'
+import { Logger } from '@keepkey/logger'
 import {
   FindAllMarketArgs,
   HistoryData,
@@ -8,7 +8,7 @@ import {
   MarketData,
   MarketDataArgs,
   PriceHistoryArgs,
-} from '@shapeshiftoss/types'
+} from '@keepkey/types'
 import dayjs from 'dayjs'
 
 import { MarketService } from '../api'

@@ -1,6 +1,6 @@
-import { ASSET_REFERENCE, AssetId, bchAssetId } from '@shapeshiftoss/caip'
-import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
-import * as unchained from '@shapeshiftoss/unchained-client'
+import { ASSET_REFERENCE, AssetId, bchAssetId } from '@keepkey/caip'
+import { BIP44Params, KnownChainIds, UtxoAccountType } from '@keepkey/types'
+import * as unchained from '@keepkey/unchained-client'
 
 import { ChainAdapterArgs, UtxoBaseAdapter } from '../UtxoBaseAdapter'
 

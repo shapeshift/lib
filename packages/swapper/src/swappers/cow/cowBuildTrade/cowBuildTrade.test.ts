@@ -1,7 +1,7 @@
-import { Asset } from '@shapeshiftoss/asset-service'
-import { ethereum, FeeDataEstimate } from '@shapeshiftoss/chain-adapters'
+import { Asset } from '@keepkey/asset-service'
+import { ethereum, FeeDataEstimate } from '@keepkey/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { KnownChainIds } from '@keepkey/types'
 import Web3 from 'web3'
 
 import { BuildTradeInput } from '../../../api'
@@ -14,7 +14,7 @@ import { cowService } from '../utils/cowService'
 import { CowSwapSellQuoteApiInput } from '../utils/helpers/helpers'
 import { cowBuildTrade } from './cowBuildTrade'
 
-jest.mock('@shapeshiftoss/chain-adapters')
+jest.mock('@keepkey/chain-adapters')
 jest.mock('../utils/cowService')
 jest.mock('../utils/helpers/helpers', () => {
   return {

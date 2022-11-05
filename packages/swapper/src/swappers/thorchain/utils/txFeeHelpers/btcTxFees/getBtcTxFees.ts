@@ -1,5 +1,5 @@
-import { UtxoBaseAdapter } from '@shapeshiftoss/chain-adapters'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { UtxoBaseAdapter } from '@keepkey/chain-adapters'
+import { KnownChainIds } from '@keepkey/types'
 
 import { QuoteFeeData, SwapError, SwapErrorTypes, UtxoSupportedChainIds } from '../../../../../api'
 import { bn } from '../../../../utils/bignumber'

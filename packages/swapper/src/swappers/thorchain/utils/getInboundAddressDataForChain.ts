@@ -1,4 +1,4 @@
-import { adapters, AssetId } from '@shapeshiftoss/caip'
+import { adapters, AssetId } from '@keepkey/caip'
 
 import type { InboundAddressResponse } from '../types'
 import { thorService } from './thorService'

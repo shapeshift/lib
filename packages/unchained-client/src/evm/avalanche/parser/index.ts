@@ -1,4 +1,4 @@
-import { avalancheAssetId } from '@shapeshiftoss/caip'
+import { avalancheAssetId } from '@keepkey/caip'
 
 import { Tx } from '../../../generated/avalanche'
 import { BaseTransactionParser, TransactionParserArgs } from '../../parser'

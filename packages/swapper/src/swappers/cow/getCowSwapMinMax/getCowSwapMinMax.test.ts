@@ -1,4 +1,4 @@
-import { ethereum } from '@shapeshiftoss/chain-adapters'
+import { ethereum } from '@keepkey/chain-adapters'
 import Web3 from 'web3'
 
 import { BTC, ETH, FOX, WETH } from '../../utils/test-data/assets'

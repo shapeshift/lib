@@ -1,6 +1,6 @@
-import { Asset } from '@shapeshiftoss/asset-service'
+import { Asset } from '@keepkey/asset-service'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { KnownChainIds } from '@keepkey/types'
 
 import { BuildTradeInput, GetTradeQuoteInput, TradeQuote } from '../../../api'
 import { FOX, WETH } from './assets'

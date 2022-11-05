@@ -8,7 +8,7 @@
 
 import { BTCWallet, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
+import { BIP44Params, KnownChainIds, UtxoAccountType } from '@keepkey/types'
 
 import { Account, BuildSendTxInput } from '../../types'
 import { ChainAdapterArgs } from '../UtxoBaseAdapter'

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { BIP44Params, UtxoAccountType } from '@shapeshiftoss/types'
-import * as unchained from '@shapeshiftoss/unchained-client'
+import { BIP44Params, UtxoAccountType } from '@keepkey/types'
+import * as unchained from '@keepkey/unchained-client'
 import dotenv from 'dotenv'
 
 import { ChainAdapter as CosmosChainAdapter } from './cosmossdk/cosmos'

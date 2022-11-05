@@ -1,5 +1,5 @@
-import { adapters } from '@shapeshiftoss/caip'
-import { HistoryTimeframe, MarketData } from '@shapeshiftoss/types'
+import { adapters } from '@keepkey/caip'
+import { HistoryTimeframe, MarketData } from '@keepkey/types'
 import axios from 'axios'
 
 import { CoinGeckoMarketService } from './coingecko'

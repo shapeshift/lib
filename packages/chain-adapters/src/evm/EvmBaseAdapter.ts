@@ -1,12 +1,12 @@
-import { AssetId, ChainId, fromAssetId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
+import { AssetId, ChainId, fromAssetId, fromChainId, toAssetId } from '@keepkey/caip'
 import {
   ETHSignMessage,
   ETHSignTx,
   ETHWallet,
   supportsEthSwitchChain,
 } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
-import * as unchained from '@shapeshiftoss/unchained-client'
+import { BIP44Params, KnownChainIds } from '@keepkey/types'
+import * as unchained from '@keepkey/unchained-client'
 import WAValidator from 'multicoin-address-validator'
 import { numberToHex } from 'web3-utils'
 

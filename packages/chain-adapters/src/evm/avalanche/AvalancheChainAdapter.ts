@@ -1,6 +1,6 @@
-import { ASSET_REFERENCE, AssetId, avalancheAssetId, fromAssetId } from '@shapeshiftoss/caip'
-import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
-import * as unchained from '@shapeshiftoss/unchained-client'
+import { ASSET_REFERENCE, AssetId, avalancheAssetId, fromAssetId } from '@keepkey/caip'
+import { BIP44Params, KnownChainIds } from '@keepkey/types'
+import * as unchained from '@keepkey/unchained-client'
 import BigNumber from 'bignumber.js'
 
 import { FeeDataEstimate, GasFeeDataEstimate, GetFeeDataInput } from '../../types'

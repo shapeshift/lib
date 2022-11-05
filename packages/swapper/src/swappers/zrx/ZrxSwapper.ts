@@ -1,6 +1,6 @@
-import { Asset } from '@shapeshiftoss/asset-service'
-import { AssetId, ChainId } from '@shapeshiftoss/caip'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { Asset } from '@keepkey/asset-service'
+import { AssetId, ChainId } from '@keepkey/caip'
+import { KnownChainIds } from '@keepkey/types'
 
 import {
   ApprovalNeededInput,

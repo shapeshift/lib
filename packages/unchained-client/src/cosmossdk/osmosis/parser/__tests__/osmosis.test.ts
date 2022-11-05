@@ -1,4 +1,4 @@
-import { osmosisAssetId, osmosisChainId } from '@shapeshiftoss/caip'
+import { osmosisAssetId, osmosisChainId } from '@keepkey/caip'
 
 import { Fee, TransferType, TxStatus } from '../../../../types'
 import { ParsedTx } from '../../../parser/types'

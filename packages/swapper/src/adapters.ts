@@ -1,4 +1,4 @@
-import { ChainId } from '@shapeshiftoss/caip'
+import { ChainId } from '@keepkey/caip'
 import {
   bitcoin,
   ChainAdapter,
@@ -6,9 +6,9 @@ import {
   cosmos,
   ethereum,
   thorchain,
-} from '@shapeshiftoss/chain-adapters'
-import { KnownChainIds } from '@shapeshiftoss/types'
-import * as unchained from '@shapeshiftoss/unchained-client'
+} from '@keepkey/chain-adapters'
+import { KnownChainIds } from '@keepkey/types'
+import * as unchained from '@keepkey/unchained-client'
 import dotenv from 'dotenv'
 
 dotenv.config()

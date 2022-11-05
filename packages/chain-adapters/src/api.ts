@@ -1,5 +1,5 @@
-import { AssetId, ChainId } from '@shapeshiftoss/caip'
-import { BIP44Params, UtxoAccountType } from '@shapeshiftoss/types'
+import { AssetId, ChainId } from '@keepkey/caip'
+import { BIP44Params, UtxoAccountType } from '@keepkey/types'
 
 import {
   Account,

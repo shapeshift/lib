@@ -1,4 +1,4 @@
-import { adapters, thorchainAssetId } from '@shapeshiftoss/caip'
+import { adapters, thorchainAssetId } from '@keepkey/caip'
 
 import { SwapError, SwapErrorTypes } from '../../../../api'
 import { THORCHAIN_AFFILIATE_BIPS, THORCHAIN_AFFILIATE_NAME } from '../constants'

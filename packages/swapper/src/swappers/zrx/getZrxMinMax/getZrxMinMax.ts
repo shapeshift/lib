@@ -1,5 +1,5 @@
-import { Asset } from '@shapeshiftoss/asset-service'
-import { isEvmChainId } from '@shapeshiftoss/chain-adapters'
+import { Asset } from '@keepkey/asset-service'
+import { isEvmChainId } from '@keepkey/chain-adapters'
 
 import { MinMaxOutput, SwapError, SwapErrorTypes } from '../../../api'
 import { bn, bnOrZero } from '../../utils/bignumber'

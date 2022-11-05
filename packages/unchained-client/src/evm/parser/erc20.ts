@@ -1,4 +1,4 @@
-import { ChainId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
+import { ChainId, fromChainId, toAssetId } from '@keepkey/caip'
 import { BigNumber, ethers } from 'ethers'
 
 import { BaseTxMetadata } from '../../types'

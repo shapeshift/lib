@@ -4,7 +4,7 @@ import {
   CHAIN_REFERENCE,
   ChainId,
   fromChainId,
-} from '@shapeshiftoss/caip'
+} from '@keepkey/caip'
 
 export * from './bip44'
 export * from './utxoUtils'

@@ -1,4 +1,4 @@
-import { AssetId, CHAIN_NAMESPACE, ChainNamespace, fromAssetId } from '@shapeshiftoss/caip'
+import { AssetId, CHAIN_NAMESPACE, ChainNamespace, fromAssetId } from '@keepkey/caip'
 import Web3 from 'web3'
 
 export const generateTrustWalletUrl = (assetId: AssetId) => {

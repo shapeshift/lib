@@ -1,7 +1,7 @@
-import { ethereum } from '@shapeshiftoss/chain-adapters'
+import { ethereum } from '@keepkey/chain-adapters'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { WithdrawType } from '@shapeshiftoss/types'
-import * as unchained from '@shapeshiftoss/unchained-client'
+import { WithdrawType } from '@keepkey/types'
+import * as unchained from '@keepkey/unchained-client'
 import dotenv from 'dotenv'
 import readline from 'readline-sync'
 

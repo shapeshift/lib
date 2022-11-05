@@ -1,4 +1,4 @@
-import { bchAssetId } from '@shapeshiftoss/caip'
+import { bchAssetId } from '@keepkey/caip'
 
 import { Tx } from '../../../generated/bitcoincash'
 import { BaseTransactionParser, BaseTransactionParserArgs } from '../../parser'

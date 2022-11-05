@@ -1,4 +1,4 @@
-import { ChainId } from '@shapeshiftoss/caip'
+import { ChainId } from '@keepkey/caip'
 import {
   BTCSignTx,
   CosmosSignTx,
@@ -7,8 +7,8 @@ import {
   OsmosisSignTx,
   ThorchainSignTx,
 } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, ChainSpecific, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
-import * as unchained from '@shapeshiftoss/unchained-client'
+import { BIP44Params, ChainSpecific, KnownChainIds, UtxoAccountType } from '@keepkey/types'
+import * as unchained from '@keepkey/unchained-client'
 
 import * as cosmossdk from './cosmossdk/types'
 import * as evm from './evm/types'

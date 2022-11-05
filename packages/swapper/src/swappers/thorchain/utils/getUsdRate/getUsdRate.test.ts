@@ -1,4 +1,4 @@
-import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+import { ChainAdapterManager } from '@keepkey/chain-adapters'
 import Web3 from 'web3'
 
 import { foxMidgardPool } from '../test-data/responses'

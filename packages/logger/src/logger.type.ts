@@ -73,7 +73,7 @@ export interface FormattedError {
   message: string
   stack?: string
   kind: string
-  // Additional properties supported by @shapeshiftoss/errors ErrorWithDetails
+  // Additional properties supported by @keepkey/errors ErrorWithDetails
   code?: string
   details?: Record<string, unknown>
   cause?: unknown

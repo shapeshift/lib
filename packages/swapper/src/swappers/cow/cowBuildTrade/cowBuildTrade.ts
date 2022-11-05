@@ -1,5 +1,5 @@
-import { ethAssetId, fromAssetId } from '@shapeshiftoss/caip'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { ethAssetId, fromAssetId } from '@keepkey/caip'
+import { KnownChainIds } from '@keepkey/types'
 import { AxiosResponse } from 'axios'
 
 import { BuildTradeInput, SwapError, SwapErrorTypes } from '../../../api'

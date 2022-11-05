@@ -1,6 +1,6 @@
-import { Asset } from '@shapeshiftoss/asset-service'
-import { fromAssetId } from '@shapeshiftoss/caip'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { Asset } from '@keepkey/asset-service'
+import { fromAssetId } from '@keepkey/caip'
+import { KnownChainIds } from '@keepkey/types'
 
 import { MinMaxOutput, SwapError, SwapErrorTypes } from '../../../api'
 import { bn, bnOrZero } from '../../utils/bignumber'

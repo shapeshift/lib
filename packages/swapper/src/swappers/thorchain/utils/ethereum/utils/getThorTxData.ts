@@ -1,5 +1,5 @@
-import { Asset } from '@shapeshiftoss/asset-service'
-import { ethAssetId, fromAssetId } from '@shapeshiftoss/caip'
+import { Asset } from '@keepkey/asset-service'
+import { ethAssetId, fromAssetId } from '@keepkey/caip'
 
 import { SwapError, SwapErrorTypes } from '../../../../../api'
 import type { ThorchainSwapperDeps } from '../../../types'

@@ -1,5 +1,5 @@
-import { ethChainId as chainId, toAssetId } from '@shapeshiftoss/caip'
-import { IdleSdk, IdleVault } from '@shapeshiftoss/investor-idle'
+import { ethChainId as chainId, toAssetId } from '@keepkey/caip'
+import { IdleSdk, IdleVault } from '@keepkey/investor-idle'
 import toLower from 'lodash/toLower'
 
 import { Asset } from '../../service/AssetService'

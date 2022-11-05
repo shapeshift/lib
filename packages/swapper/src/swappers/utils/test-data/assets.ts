@@ -1,4 +1,4 @@
-import { Asset } from '@shapeshiftoss/asset-service'
+import { Asset } from '@keepkey/asset-service'
 import {
   avalancheAssetId,
   avalancheChainId,
@@ -7,7 +7,7 @@ import {
   foxAssetId,
   thorchainAssetId,
   thorchainChainId,
-} from '@shapeshiftoss/caip'
+} from '@keepkey/caip'
 
 export const BTC: Asset = {
   assetId: 'bip122:000000000019d6689c085ae165831e93/slip44:0',

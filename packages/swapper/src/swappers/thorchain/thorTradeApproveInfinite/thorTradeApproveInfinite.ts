@@ -1,5 +1,5 @@
-import { ethereum } from '@shapeshiftoss/chain-adapters'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { ethereum } from '@keepkey/chain-adapters'
+import { KnownChainIds } from '@keepkey/types'
 
 import { ApproveInfiniteInput, SwapError, SwapErrorTypes } from '../../../api'
 import { erc20Abi } from '../../utils/abi/erc20-abi'

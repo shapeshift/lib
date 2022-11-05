@@ -1,4 +1,4 @@
-import { HistoryData, HistoryTimeframe, MarketData } from '@shapeshiftoss/types'
+import { HistoryData, HistoryTimeframe, MarketData } from '@keepkey/types'
 import dayjs, { Dayjs } from 'dayjs'
 
 import { FiatMarketService } from '../api'

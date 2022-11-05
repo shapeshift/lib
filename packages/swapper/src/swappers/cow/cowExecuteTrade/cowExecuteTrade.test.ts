@@ -1,6 +1,6 @@
-import { ethereum } from '@shapeshiftoss/chain-adapters'
+import { ethereum } from '@keepkey/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { KnownChainIds } from '@keepkey/types'
 import { ethers } from 'ethers'
 import Web3 from 'web3'
 
@@ -22,8 +22,8 @@ const OrderDigest = '0xaf1d4f80d997d0cefa325dd6e003e5b5940247694eaba507b793c7ec6
 const Signature =
   '0x521ff65fd1e679b15b3ded234c89a30c0a4af1b190466a2dae0e14b7f935ce2c260cf3c0e4a5d81e340b8e615c095cbd65d0920387bea32cf09ccf3d624bf8251b'
 
-jest.mock('@shapeshiftoss/chain-adapters', () => {
-  const actualChainAdapters = jest.requireActual('@shapeshiftoss/chain-adapters')
+jest.mock('@keepkey/chain-adapters', () => {
+  const actualChainAdapters = jest.requireActual('@keepkey/chain-adapters')
   return {
     ...actualChainAdapters,
     ethereum: {

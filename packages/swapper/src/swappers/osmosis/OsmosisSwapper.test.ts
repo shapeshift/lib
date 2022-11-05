@@ -1,4 +1,4 @@
-import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
+import { ChainAdapterManager } from '@keepkey/chain-adapters'
 
 import { SwapperName } from '../../api'
 import { OsmosisSwapper } from './OsmosisSwapper'

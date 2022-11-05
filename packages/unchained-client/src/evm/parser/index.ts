@@ -1,4 +1,4 @@
-import { AssetId, ChainId, ethChainId, toAssetId } from '@shapeshiftoss/caip'
+import { AssetId, ChainId, ethChainId, toAssetId } from '@keepkey/caip'
 import { BigNumber } from 'bignumber.js'
 import { ethers } from 'ethers'
 

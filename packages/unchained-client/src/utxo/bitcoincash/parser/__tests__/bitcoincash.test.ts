@@ -1,4 +1,4 @@
-import { bchAssetId, bchChainId } from '@shapeshiftoss/caip'
+import { bchAssetId, bchChainId } from '@keepkey/caip'
 
 import { ParsedTx, TransferType, TxStatus } from '../../../../types'
 import { TransactionParser } from '../index'

@@ -1,8 +1,8 @@
-import { Asset } from '@shapeshiftoss/asset-service'
-import { ChainId, cosmosAssetId } from '@shapeshiftoss/caip'
-import { ChainAdapter, cosmos, thorchain } from '@shapeshiftoss/chain-adapters'
+import { Asset } from '@keepkey/asset-service'
+import { ChainId, cosmosAssetId } from '@keepkey/caip'
+import { ChainAdapter, cosmos, thorchain } from '@keepkey/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
+import { BIP44Params, KnownChainIds } from '@keepkey/types'
 
 import { SwapError, SwapErrorTypes, TradeQuote } from '../../../../api'
 import type { ThorchainSwapperDeps } from '../../types'

@@ -6,7 +6,7 @@ import {
   MarketData,
   MarketDataArgs,
   PriceHistoryArgs,
-} from '@shapeshiftoss/types'
+} from '@keepkey/types'
 import { Yearn } from '@yfi/sdk'
 
 import { MarketService } from './api'

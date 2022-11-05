@@ -1,5 +1,5 @@
-import { CHAIN_REFERENCE } from '@shapeshiftoss/caip'
-import { osmosis, toAddressNList } from '@shapeshiftoss/chain-adapters'
+import { CHAIN_REFERENCE } from '@keepkey/caip'
+import { osmosis, toAddressNList } from '@keepkey/chain-adapters'
 import { HDWallet, Osmosis } from '@shapeshiftoss/hdwallet-core'
 import axios from 'axios'
 import { find } from 'lodash'

@@ -1,5 +1,5 @@
 {
-  "name": "@shapeshiftoss/chain-adapters",
+  "name": "@keepkey/chain-adapters",
   "version": "10.2.1",
   "description": "> TODO: description",
   "homepage": "",
@@ -37,19 +37,19 @@
     "web3-utils": "1.7.4"
   },
   "peerDependencies": {
-    "@shapeshiftoss/caip": "^8.0.0",
+    "@keepkey/caip": "^8.0.0",
     "@shapeshiftoss/hdwallet-core": "^1.36.0",
     "@shapeshiftoss/hdwallet-native": "^1.36.0",
-    "@shapeshiftoss/types": "^8.1.0",
-    "@shapeshiftoss/unchained-client": "^10.0.1",
+    "@keepkey/types": "^8.1.0",
+    "@keepkey/unchained-client": "^10.0.1",
     "bs58check": "^2.0.2"
   },
   "devDependencies": {
-    "@shapeshiftoss/caip": "^8.0.0",
+    "@keepkey/caip": "^8.0.0",
     "@shapeshiftoss/hdwallet-core": "^1.36.0",
     "@shapeshiftoss/hdwallet-native": "^1.36.0",
-    "@shapeshiftoss/types": "^8.1.0",
-    "@shapeshiftoss/unchained-client": "^10.0.1",
+    "@keepkey/types": "^8.1.0",
+    "@keepkey/unchained-client": "^10.0.1",
     "@types/bs58check": "^2.1.0",
     "@types/multicoin-address-validator": "^0.5.0"
   }
