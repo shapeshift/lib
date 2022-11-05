@@ -29,7 +29,7 @@ export class AssetService {
   private readonly assets: AssetsById
 
   constructor() {
-    this.assets = localAssetData as AssetsById
+    this.assets = localAssetData as any
   }
 
   getAll(): AssetsById {
