@@ -2,10 +2,12 @@ import entries from 'lodash/entries'
 
 import {
   avalancheAssetId,
+  bchAssetId,
   btcAssetId,
   cosmosAssetId,
   dogeAssetId,
   ethAssetId,
+  ltcAssetId,
 } from '../../constants'
 import { AssetId } from './../../assetId/assetId'
 
@@ -17,6 +19,8 @@ export const AssetIdToOnRamperIdMap: Record<AssetId, OnRamperTokenId[]> = {
   [ethAssetId]: ['ETH'],
   [avalancheAssetId]: ['AVAX'],
   [dogeAssetId]: ['DOGE'],
+  [ltcAssetId]: ['LTC'],
+  [bchAssetId]: ['BCH'],
   'eip155:1/erc20:0x111111111117dc0aa78b770fa6a738034120c302': ['1INCH'],
   'eip155:1/erc20:0xbcca60bb61934080951369a648fb03df4f96263c': ['AUSDC'],
   'eip155:1/erc20:0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9': ['AAVE_ECR20'],
@@ -24,7 +28,6 @@ export const AssetIdToOnRamperIdMap: Record<AssetId, OnRamperTokenId[]> = {
   'eip155:1/erc20:0x4d224452801aced8b2f0aebe155379bb5d594381': ['APE'],
   'eip155:1/erc20:0x0d8775f648430679a709e98d2b0cb6250d2887ef': ['BAT_ERC20'],
   'eip155:1/erc20:0x4fabb145d64652a948d72533023f6e7a623c7c53': ['BUSD'],
-  'bip122:000000000000000000651ef99cb9fcbe/slip44:145': ['BCH'],
   'eip155:1/erc20:0x3506424f91fd33084466f402d5d97f05f8e3b4af': ['CHZ'],
   'eip155:1/erc20:0xc00e94cb662c3520282e6f5717214004a7f26888': ['COMP'],
   'eip155:1/erc20:0x6b175474e89094c44da98b954eedeac495271d0f': ['DAI', 'DAI_ERC20'],
@@ -32,7 +35,6 @@ export const AssetIdToOnRamperIdMap: Record<AssetId, OnRamperTokenId[]> = {
   'eip155:1/erc20:0x4e15361fd6b4bb609fa63c81a2be19d873717870': ['FTM'],
   'eip155:1/erc20:0xf57e7e7c23978c3caec3c3548e3d615c346e79ff': ['IMX'],
   'eip155:1/erc20:0x514910771af9ca656af840dff83e8264ecf986ca': ['LINK'],
-  'bip122:12a765e31ffd4059bada1e25190f6e98/slip44:2': ['LTC'],
   'eip155:1/erc20:0x5f98805a4e8be255a32880fdec7f6728c6568ba0': ['LUSD_ERC20'],
   'eip155:1/erc20:0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2': ['MKR', 'MKR_ERC20'],
   'eip155:1/erc20:0x0f5d2fb29fb7d3cfee444a200298f468908cc942': ['MANA', 'MANA_ERC20'],
