@@ -258,7 +258,8 @@ export const performIbcTransfer = async (
     txToSign: {
       tx,
       addressNList: toAddressNList(adapter.buildBIP44Params({ accountNumber: 0 })), // TODO: dynamic account numbers
-      chain_id: CHAIN_REFERENCE.OsmosisMainnet,
+      chain_id:
+        feeDenom === 'uosmo' ? CHAIN_REFERENCE.OsmosisMainnet : CHAIN_REFERENCE.CosmosHubMainnet,
       account_number: accountNumber,
       sequence,
     },
