@@ -1,4 +1,4 @@
-import { CHAIN_REFERENCE } from '@shapeshiftoss/caip'
+import { CHAIN_REFERENCE, fromChainId } from '@shapeshiftoss/caip'
 import { osmosis, toAddressNList } from '@shapeshiftoss/chain-adapters'
 import { HDWallet, Osmosis } from '@shapeshiftoss/hdwallet-core'
 import axios from 'axios'
@@ -258,8 +258,7 @@ export const performIbcTransfer = async (
     txToSign: {
       tx,
       addressNList: toAddressNList(adapter.buildBIP44Params({ accountNumber: 0 })), // TODO: dynamic account numbers
-      chain_id:
-        feeDenom === 'uosmo' ? CHAIN_REFERENCE.OsmosisMainnet : CHAIN_REFERENCE.CosmosHubMainnet,
+      chain_id: fromChainId(adapter.getType()).chainReference,
       account_number: accountNumber,
       sequence,
     },
