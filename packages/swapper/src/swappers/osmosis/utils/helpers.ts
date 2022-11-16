@@ -258,7 +258,7 @@ export const performIbcTransfer = async (
     txToSign: {
       tx,
       addressNList: toAddressNList(adapter.buildBIP44Params({ accountNumber: 0 })), // TODO: dynamic account numbers
-      chain_id: fromChainId(adapter.getType()).chainReference,
+      chain_id: fromChainId(adapter.getChainId()).chainReference,
       account_number: accountNumber,
       sequence,
     },
