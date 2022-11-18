@@ -7,6 +7,8 @@ import { ThornodePoolResponse } from '../../types'
 import { isRune } from '../isRune/isRune'
 import { thorService } from '../thorService'
 
+const PRECISION = 18
+
 const usdPools = [
   'AVAX.USDC-0XB97EF9EF8734C71904D8002F8B6BC66DD9C48A6E',
   'BNB.BUSD-BD1',
@@ -54,7 +56,7 @@ export const getUsdRate = async (daemonUrl: string, assetId: AssetId): Promise<s
   try {
     if (isRune(assetId)) {
       const runeUsdPrice = await getRuneUsdPrice(daemonUrl)
-      return runeUsdPrice.toFixed(18)
+      return runeUsdPrice.toFixed(PRECISION)
     }
 
     const poolId = adapters.assetIdToPoolAssetId({ assetId })
@@ -89,7 +91,7 @@ export const getUsdRate = async (daemonUrl: string, assetId: AssetId): Promise<s
     const assetPriceInRune = runeBalance.div(assetBalance)
 
     // runeUsdPrice * assetPriceInRune = assetUsdPrice
-    return runeUsdPrice.times(assetPriceInRune).toFixed(18)
+    return runeUsdPrice.times(assetPriceInRune).toFixed(PRECISION)
   } catch (e) {
     if (e instanceof SwapError) throw e
     throw new SwapError('[getUsdRate]: Thorchain getUsdRate failed', {
