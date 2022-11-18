@@ -72,16 +72,29 @@ export const foxMidgardPool: MidgardPoolResponse = {
 }
 
 export const foxThornodePool: ThornodePoolResponse = {
-  LP_units: '10015457121887',
+  LP_units: '8390841787338',
   asset: 'ETH.FOX-0XC770EEFAD204B5180DF6A14EE197D99D808EE52D',
-  balance_asset: '166650912393467',
-  balance_rune: '8838681437152',
-  pending_inbound_asset: '0',
+  balance_asset: '198462384531118',
+  balance_rune: '5527241281451',
+  pending_inbound_asset: '1977802886683',
   pending_inbound_rune: '0',
-  pool_units: '10568061707512',
+  pool_units: '8527754475445',
   status: 'Available',
-  synth_supply: '17428372569375',
-  synth_units: '552604585625',
+  synth_supply: '6372608084012',
+  synth_units: '136912688107',
+}
+
+export const usdcThornodePool: ThornodePoolResponse = {
+  LP_units: '30018075345020',
+  asset: 'ETH.USDC-0XA0B86991C6218B36C1D19D4A2E9EB0CE3606EB48',
+  balance_asset: '211213037604537',
+  balance_rune: '177718190965958',
+  pending_inbound_asset: '22020062300',
+  pending_inbound_rune: '0',
+  pool_units: '31954495292990',
+  status: 'Available',
+  synth_supply: '25598723155460',
+  synth_units: '1936419947970',
 }
 
 export const mockInboundAddresses: InboundAddressResponse[] = [
