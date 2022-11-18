@@ -15,7 +15,7 @@ describe('getUsdRate', () => {
 
     const assetId = 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
     const rate = await getUsdRate('', assetId)
-    expect(rate).toEqual('0.033099318877753425')
+    expect(rate).toEqual('0.153996052603362160')
   })
 
   it('should throw if no poolAssetId is found for specified assetId', async () => {

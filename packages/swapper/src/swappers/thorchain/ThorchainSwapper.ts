@@ -7,10 +7,14 @@ import {
   fromAssetId,
   thorchainAssetId,
 } from '@shapeshiftoss/caip'
-import { cosmos, EvmBaseAdapter, UtxoBaseAdapter } from '@shapeshiftoss/chain-adapters'
+import {
+  ChainAdapterManager,
+  cosmos,
+  EvmBaseAdapter,
+  UtxoBaseAdapter,
+} from '@shapeshiftoss/chain-adapters'
 import { BTCSignTx, CosmosSignTx, ETHSignTx } from '@shapeshiftoss/hdwallet-core'
 import { KnownChainIds } from '@shapeshiftoss/types'
-import { ChainAdapterManager } from 'packages/chain-adapters'
 import Web3 from 'web3'
 
 import type {
