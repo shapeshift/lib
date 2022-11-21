@@ -62,7 +62,7 @@ const thorPoolIdAssetIdSymbolMap: Record<string, AssetId> = {
   'BCH.BCH': bchAssetId,
   'AVAX:AVAX': avalancheAssetId,
   'AVAX.USDC-0XB97EF9EF8734C71904D8002F8B6BC66DD9C48A6E':
-    'eip155:43114/erc20:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+    'eip155:43114/erc20:0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e',
 }
 
 const invert = <T extends Record<string, string>>(data: T) =>
