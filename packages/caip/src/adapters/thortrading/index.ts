@@ -1,4 +1,5 @@
 import {
+  avalancheAssetId,
   bchAssetId,
   btcAssetId,
   cosmosAssetId,
@@ -59,6 +60,9 @@ const thorPoolIdAssetIdSymbolMap: Record<string, AssetId> = {
   'DOGE.DOGE': dogeAssetId,
   'GAIA.ATOM': cosmosAssetId,
   'BCH.BCH': bchAssetId,
+  'AVAX:AVAX': avalancheAssetId,
+  'AVAX.USDC-0XB97EF9EF8734C71904D8002F8B6BC66DD9C48A6E':
+    'eip155:43114/erc20:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
 }
 
 const invert = <T extends Record<string, string>>(data: T) =>
