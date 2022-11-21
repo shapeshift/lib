@@ -53,6 +53,7 @@ export class ThorchainSwapper implements Swapper<ChainId> {
     [KnownChainIds.BitcoinCashMainnet]: true,
     [KnownChainIds.CosmosMainnet]: true,
     [KnownChainIds.ThorchainMainnet]: true,
+    [KnownChainIds.AvalancheMainnet]: true,
   }
 
   private buySupportedChainIds: Record<ChainId, boolean> = {
@@ -63,6 +64,7 @@ export class ThorchainSwapper implements Swapper<ChainId> {
     [KnownChainIds.BitcoinCashMainnet]: true,
     [KnownChainIds.CosmosMainnet]: true,
     [KnownChainIds.ThorchainMainnet]: true,
+    [KnownChainIds.AvalancheMainnet]: true,
   }
 
   private supportedSellAssetIds: AssetId[] = []
@@ -113,14 +115,12 @@ export class ThorchainSwapper implements Swapper<ChainId> {
   }
 
   async approvalNeeded(
-    input: ApprovalNeededInput<KnownChainIds.EthereumMainnet>,
+    input: ApprovalNeededInput<EvmSupportedChainIds>,
   ): Promise<ApprovalNeededOutput> {
     return thorTradeApprovalNeeded({ deps: this.deps, input })
   }
 
-  async approveInfinite(
-    input: ApproveInfiniteInput<KnownChainIds.EthereumMainnet>,
-  ): Promise<string> {
+  async approveInfinite(input: ApproveInfiniteInput<EvmSupportedChainIds>): Promise<string> {
     return thorTradeApproveInfinite({ deps: this.deps, input })
   }
 
@@ -166,7 +166,7 @@ export class ThorchainSwapper implements Swapper<ChainId> {
 
       if (chainNamespace === CHAIN_NAMESPACE.Evm) {
         const evmAdapter = adapter as unknown as EvmBaseAdapter<EvmSupportedChainIds>
-        const txToSign = (trade as ThorTrade<KnownChainIds.EthereumMainnet>).txData as ETHSignTx
+        const txToSign = (trade as ThorTrade<EvmSupportedChainIds>).txData as ETHSignTx
         if (wallet.supportsBroadcast()) {
           const tradeId = await evmAdapter.signAndBroadcastTransaction({ txToSign, wallet })
           return { tradeId }
@@ -230,13 +230,15 @@ export class ThorchainSwapper implements Swapper<ChainId> {
           cause: data,
         })
 
-      const standardBuyTxid = data?.actions[0]?.out[0]?.coins[0]?.asset.startsWith('ETH.')
-        ? `0x${buyTxid}`
-        : buyTxid
+      const standardBuyTxid = (() => {
+        const outCoinAsset = data?.actions[0]?.out[0]?.coins[0]?.asset
+        const isEvmCoinAsset = outCoinAsset?.startsWith('ETH.') || outCoinAsset?.startsWith('AVAX.')
+        return isEvmCoinAsset ? `0x${buyTxid}` : buyTxid
+      })().toLowerCase()
 
       return {
         sellTxid: tradeResult.tradeId,
-        buyTxid: standardBuyTxid.toLowerCase(),
+        buyTxid: standardBuyTxid,
       }
     } catch (e) {
       if (e instanceof SwapError) throw e

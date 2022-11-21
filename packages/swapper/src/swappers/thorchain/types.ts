@@ -82,8 +82,8 @@ export interface BtcThorTrade<C extends ChainId> extends Trade<C> {
   txData: BTCSignTx
 }
 
-export interface EthThorTrade<C extends ChainId> extends Trade<C> {
-  chainId: KnownChainIds.EthereumMainnet
+export interface EvmThorTrade<C extends ChainId> extends Trade<C> {
+  chainId: KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
   txData: ETHSignTx
 }
 
@@ -92,4 +92,4 @@ export interface CosmosThorTrade<C extends ChainId> extends Trade<C> {
   txData: CosmosSignTx
 }
 
-export type ThorTrade<C extends ChainId> = BtcThorTrade<C> | EthThorTrade<C> | CosmosThorTrade<C>
+export type ThorTrade<C extends ChainId> = BtcThorTrade<C> | EvmThorTrade<C> | CosmosThorTrade<C>
