@@ -94,15 +94,16 @@ export const getLimit = async ({
   })()
 
   const highestPossibleFeeCryptoPrecision8 = max([
-    buyAssetTradeFeeCryptoPrecision8,
-    refundFeeBuyAssetCryptoPrecision8,
+    // both fees are denominated in buy asset crypto precision 8
+    bnOrZero(buyAssetTradeFeeCryptoPrecision8).toNumber(),
+    bnOrZero(refundFeeBuyAssetCryptoPrecision8).toNumber(),
   ])
 
   const expectedBuyAmountAfterHighestFeeCryptoPrecision8 = bnOrZero(
     expectedBuyAmountCryptoPrecision8,
   )
     .times(bn(1).minus(slippageTolerance))
-    .minus(bnOrZero(highestPossibleFeeCryptoPrecision8))
+    .minus(highestPossibleFeeCryptoPrecision8 ?? 0)
     .decimalPlaces(0)
 
   // expectedBuyAmountAfterHighestFeeCryptoPrecision8 can be negative if the sell asset has a higher inbound_fee
