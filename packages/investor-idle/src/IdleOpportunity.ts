@@ -489,7 +489,7 @@ export class IdleOpportunity
       positionAsset: {
         balance: this.positionAsset.balance.toString(),
         assetId: this.positionAsset.assetId,
-        price: this.positionAsset.underlyingPerPosition.toString(),
+        price: this.positionAsset.underlyingPerPosition.toFixed(),
       },
     }
   }

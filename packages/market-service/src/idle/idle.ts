@@ -36,7 +36,13 @@ export class IdleMarketService implements MarketService {
   }
 
   async findAll() {
-    const idleOpportunities = await this.idleInvestor.findAll()
+    const idleOpportunities = await (async () => {
+      const maybeOpportunities = await this.idleInvestor.findAll()
+      if (maybeOpportunities.length) return maybeOpportunities
+
+      await this.idleInvestor.initialize()
+      return await this.idleInvestor.findAll()
+    })()
 
     const marketDataById = idleOpportunities.reduce((acc, opportunity) => {
       const assetId = toAssetId({
@@ -59,7 +65,13 @@ export class IdleMarketService implements MarketService {
   }
 
   async findByAssetId({ assetId }: MarketDataArgs): Promise<MarketData | null> {
-    const opportunity = await this.idleInvestor.findByOpportunityId(assetId)
+    const opportunity = await (async () => {
+      const maybeOpportunities = await this.idleInvestor.findAll()
+      if (maybeOpportunities.length) return await this.idleInvestor.findByOpportunityId(assetId)
+
+      await this.idleInvestor.initialize()
+      return await this.idleInvestor.findByOpportunityId(assetId)
+    })()
 
     if (!opportunity) return null
 
