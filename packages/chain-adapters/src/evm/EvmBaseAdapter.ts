@@ -383,16 +383,13 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
       const from = await this.getAddress({ bip44Params, wallet })
       const account = await this.getAccount(from)
 
-      const fees = ((): Fees => {
-        if (tx.maxFeePerGas && tx.maxPriorityFeePerGas) {
-          return {
-            maxFeePerGas: numberToHex(tx.maxFeePerGas),
-            maxPriorityFeePerGas: numberToHex(tx.maxPriorityFeePerGas),
-          }
-        }
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return { gasPrice: numberToHex(tx.gasPrice!) }
-      })()
+      const fees: Fees =
+        tx.maxFeePerGas && tx.maxPriorityFeePerGas
+          ? {
+              maxFeePerGas: numberToHex(tx.maxFeePerGas),
+              maxPriorityFeePerGas: numberToHex(tx.maxPriorityFeePerGas),
+            }
+          : { gasPrice: numberToHex(tx.gasPrice ?? '0') }
 
       const txToSign: ETHSignTx = {
         addressNList: toAddressNList(bip44Params),
