@@ -181,7 +181,7 @@ export class IdleOpportunity
         assetNamespace: 'erc20',
         assetReference: vault.address,
       }),
-      underlyingPerPosition: bnOrZero(vault.pricePerShare).div('1e+18'),
+      underlyingPerPosition: bnOrZero(vault.pricePerShare),
     }
     this.feeAsset = {
       assetId: 'eip155:1/slip44:60',

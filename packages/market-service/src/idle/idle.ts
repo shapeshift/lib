@@ -52,7 +52,7 @@ export class IdleMarketService implements MarketService {
       })
 
       acc[assetId] = {
-        price: opportunity.positionAsset.underlyingPerPosition.toFixed(),
+        price: opportunity.tvl.balanceUsdc.div(opportunity.tvl.balance).toFixed(),
         marketCap: opportunity.tvl.balanceUsdc.toFixed(), // For Idle, TVL and marketCap are effectively the same
         volume: '0', // TODO:
         changePercent24Hr: 0, // TODO
@@ -76,7 +76,7 @@ export class IdleMarketService implements MarketService {
     if (!opportunity) return null
 
     return {
-      price: opportunity.positionAsset.underlyingPerPosition.toFixed(),
+      price: opportunity.tvl.balanceUsdc.div(opportunity.tvl.balance).toFixed(),
       marketCap: '0', // TODO,
       volume: '0', // TODO:
       changePercent24Hr: 0, // TODO
