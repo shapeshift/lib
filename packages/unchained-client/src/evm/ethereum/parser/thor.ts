@@ -1,11 +1,15 @@
-import { ChainId } from '@shapeshiftoss/caip'
+import { avalancheChainId, ChainId, ethChainId } from '@shapeshiftoss/caip'
 import { ethers } from 'ethers'
 
 import { Tx } from '../../../generated/ethereum'
 import { BaseTxMetadata, Dex, TradeType } from '../../../types'
 import { getSigHash, SubParser, txInteractsWithContract, TxSpecific } from '../../parser'
 import THOR_ABI from './abi/thor'
-import { THOR_ROUTER_CONTRACT_MAINNET, THOR_ROUTER_CONTRACT_ROPSTEN } from './constants'
+import {
+  THOR_ROUTER_CONTRACT_AVAX_MAINNET,
+  THOR_ROUTER_CONTRACT_ETH_MAINNET,
+  THOR_ROUTER_CONTRACT_ROPSTEN,
+} from './constants'
 
 const SWAP_TYPES = ['SWAP', '=', 's']
 
@@ -32,12 +36,16 @@ export class Parser implements SubParser<Tx> {
     // We will also need to know all past router contract addresses if we intend on using receive address as the means for detection
     this.routerContract = (() => {
       switch (args.chainId) {
-        case 'eip155:1':
-          return THOR_ROUTER_CONTRACT_MAINNET
+        case ethChainId:
+          return THOR_ROUTER_CONTRACT_ETH_MAINNET
+        case avalancheChainId:
+          return THOR_ROUTER_CONTRACT_AVAX_MAINNET
         case 'eip155:3':
           return THOR_ROUTER_CONTRACT_ROPSTEN
         default:
-          throw new Error('chainId is not supported. (supported chainIds: eip155:1, eip155:3)')
+          throw new Error(
+            `chainId is not supported. (supported chainIds: ${ethChainId}, ${avalancheChainId}, eip155:3)`,
+          )
       }
     })()
   }
