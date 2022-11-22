@@ -98,9 +98,17 @@ export const getLimit = async ({
     refundFeeBuyAssetCryptoPrecision8,
   ])
 
-  return bnOrZero(expectedBuyAmountCryptoPrecision8)
+  const expectedBuyAmountAfterHighestFeeCryptoPrecision8 = bnOrZero(
+    expectedBuyAmountCryptoPrecision8,
+  )
     .times(bn(1).minus(slippageTolerance))
     .minus(bnOrZero(highestPossibleFeeCryptoPrecision8))
     .decimalPlaces(0)
-    .toString()
+
+  // expectedBuyAmountAfterHighestFeeCryptoPrecision8 can be negative if the sell asset has a higher inbound_fee
+  // (a refund) than the buy asset's inbound_fee + buy amount.
+  // I.e. we've come this far - we don't have enough to refund, so the limit can slide all the way to 0.
+  return expectedBuyAmountAfterHighestFeeCryptoPrecision8.isPositive()
+    ? expectedBuyAmountAfterHighestFeeCryptoPrecision8.toString()
+    : '0'
 }
