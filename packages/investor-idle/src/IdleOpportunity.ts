@@ -181,7 +181,7 @@ export class IdleOpportunity
         assetNamespace: 'erc20',
         assetReference: vault.address,
       }),
-      underlyingPerPosition: bnOrZero(vault.pricePerShare),
+      underlyingPerPosition: bnOrZero(vault.pricePerShare).div('1e+18'),
     }
     this.feeAsset = {
       assetId: 'eip155:1/slip44:60',
@@ -276,7 +276,7 @@ export class IdleOpportunity
     let methodParams: string[]
     let vaultContract: Contract
 
-    // Handle Tranche Withdraw
+    // Handle Tranche Deposit
     if (this.metadata.cdoAddress) {
       vaultContract = this.#internals.routerContract
       const trancheType = /senior/i.test(this.metadata.strategy) ? 'AA' : 'BB'
