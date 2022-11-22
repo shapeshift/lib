@@ -4,7 +4,8 @@ import { ethers } from 'ethers'
 import { Tx } from '../../../generated/ethereum'
 import { BaseTxMetadata, Dex, TradeType } from '../../../types'
 import { getSigHash, SubParser, txInteractsWithContract, TxSpecific } from '../../parser'
-import THOR_ABI from './abi/thor'
+import THOR_AVALANCHE_ABI from './abi/thorAvalanche'
+import THOR_ETHEREUM_ABI from './abi/thorEthereum'
 import {
   THOR_ROUTER_CONTRACT_AVAX_MAINNET,
   THOR_ROUTER_CONTRACT_ETH_MAINNET,
@@ -22,16 +23,36 @@ export interface ParserArgs {
   rpcUrl: string
 }
 
+interface SupportedFunctions {
+  depositSigHash: string
+  transferOutSigHash: string
+}
+
 export class Parser implements SubParser<Tx> {
   readonly routerContract: string
-  readonly abiInterface = new ethers.utils.Interface(THOR_ABI)
-
-  readonly supportedFunctions = {
-    depositSigHash: this.abiInterface.getSighash('deposit'),
-    transferOutSigHash: this.abiInterface.getSighash('transferOut'),
-  }
+  readonly abiInterface: ethers.utils.Interface
+  readonly supportedFunctions: SupportedFunctions
 
   constructor(args: ParserArgs) {
+    this.abiInterface = (() => {
+      switch (args.chainId) {
+        case ethChainId:
+        case 'eip155:3':
+          return new ethers.utils.Interface(THOR_ETHEREUM_ABI)
+        case avalancheChainId:
+          return new ethers.utils.Interface(THOR_AVALANCHE_ABI)
+        default:
+          throw new Error(
+            `chainId is not supported. (supported chainIds: ${ethChainId}, ${avalancheChainId}, eip155:3)`,
+          )
+      }
+    })()
+
+    this.supportedFunctions = {
+      depositSigHash: this.abiInterface.getSighash('deposit'),
+      transferOutSigHash: this.abiInterface.getSighash('transferOut'),
+    }
+
     // TODO: Router contract can change, use /inbound_addresses endpoint to determine current router contract.
     // We will also need to know all past router contract addresses if we intend on using receive address as the means for detection
     this.routerContract = (() => {
