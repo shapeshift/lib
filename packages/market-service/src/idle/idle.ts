@@ -30,9 +30,6 @@ export class IdleMarketService implements MarketService {
       }),
       providerUrl: this.providerUrls.jsonRpcProviderUrl,
     })
-    ;(async () => {
-      await this.idleInvestor.initialize()
-    })()
   }
 
   async findAll() {
@@ -54,8 +51,8 @@ export class IdleMarketService implements MarketService {
       acc[assetId] = {
         price: opportunity.tvl.balanceUsdc.div(opportunity.tvl.balance).toFixed(),
         marketCap: opportunity.tvl.balanceUsdc.toFixed(), // For Idle, TVL and marketCap are effectively the same
-        volume: '0', // TODO:
-        changePercent24Hr: 0, // TODO
+        volume: '0',
+        changePercent24Hr: 0,
       }
 
       return acc
@@ -78,8 +75,8 @@ export class IdleMarketService implements MarketService {
     return {
       price: opportunity.tvl.balanceUsdc.div(opportunity.tvl.balance).toFixed(),
       marketCap: opportunity.tvl.balanceUsdc.toFixed(), // For Idle, TVL and marketCap are effectively the same
-      volume: '0', // TODO:
-      changePercent24Hr: 0, // TODO
+      volume: '0',
+      changePercent24Hr: 0,
     }
   }
 
