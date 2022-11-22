@@ -25,7 +25,7 @@ import {
   referralAddress,
   ssRouterContractAddress,
 } from './constants'
-import { bn, bnOrZero, normalizeAmount } from './utils'
+import { bn, bnOrZero } from './utils'
 
 export type PreparedTransaction = {
   chainId: number
@@ -158,8 +158,8 @@ export class IdleOpportunity
     this.expired = false
     this.apy = bnOrZero(vault.apr).div(100)
     this.tvl = {
-      balanceUsdc: normalizeAmount(vault.tvl, 6),
-      balance: normalizeAmount(vault.underlyingTVL),
+      balanceUsdc: vault.tvl,
+      balance: vault.underlyingTVL,
       assetId: toAssetId({
         chainId: 'eip155:1',
         assetNamespace: 'erc20',
@@ -181,7 +181,7 @@ export class IdleOpportunity
         assetNamespace: 'erc20',
         assetReference: vault.address,
       }),
-      underlyingPerPosition: normalizeAmount(vault.pricePerShare),
+      underlyingPerPosition: vault.pricePerShare,
     }
     this.feeAsset = {
       assetId: 'eip155:1/slip44:60',
