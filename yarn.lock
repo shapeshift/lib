@@ -3178,18 +3178,6 @@
     tiny-secp256k1 "^1.1.6"
     web-encoding "^1.1.0"
 
-"@shapeshiftoss/investor-idle@^2.3.1":
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/@shapeshiftoss/investor-idle/-/investor-idle-2.3.1.tgz#41c5191354dc5f530d647958939b66887f5dc79a"
-  integrity sha512-WPeUUkIA/41tkX77TYD7I21aQvE0HBw2xAxTkxmIJvGj76MkEWgOidcwLVTlYS1Bc62ax+5Cwih4MDDY3Pnp1A==
-  dependencies:
-    "@ethersproject/providers" "^5.5.3"
-    bignumber.js "^9.0.2"
-    lodash "^4.17.21"
-    web3 "1.7.4"
-    web3-core "1.7.4"
-    web3-utils "1.7.4"
-
 "@shapeshiftoss/proto-tx-builder@^0.4.0":
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/proto-tx-builder/-/proto-tx-builder-0.4.0.tgz#970eadcd098e5851bc1938d227faa543c619c6a2"
