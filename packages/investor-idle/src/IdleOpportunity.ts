@@ -158,8 +158,8 @@ export class IdleOpportunity
     this.expired = false
     this.apy = bnOrZero(vault.apr).div(100)
     this.tvl = {
-      balanceUsdc: vault.tvl,
-      balance: vault.underlyingTVL,
+      balanceUsdc: bnOrZero(vault.tvl),
+      balance: bnOrZero(vault.underlyingTVL),
       assetId: toAssetId({
         chainId: 'eip155:1',
         assetNamespace: 'erc20',
@@ -181,7 +181,7 @@ export class IdleOpportunity
         assetNamespace: 'erc20',
         assetReference: vault.address,
       }),
-      underlyingPerPosition: vault.pricePerShare,
+      underlyingPerPosition: bnOrZero(vault.pricePerShare),
     }
     this.feeAsset = {
       assetId: 'eip155:1/slip44:60',
