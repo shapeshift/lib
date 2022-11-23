@@ -9,19 +9,19 @@ import { thorService } from '../thorService'
 
 const PRECISION = 18
 
-const usdPools = [
+const USD_POOLS = Object.freeze([
   'AVAX.USDC-0XB97EF9EF8734C71904D8002F8B6BC66DD9C48A6E',
   'BNB.BUSD-BD1',
   'ETH.USDC-0XA0B86991C6218B36C1D19D4A2E9EB0CE3606EB48',
   'ETH.USDT-0XDAC17F958D2EE523A2206206994597C13D831EC7',
-]
+])
 
 // calculate rune usd price from a usd pool (ex. USDC_POOL)
 const getRuneUsdPrice = async (daemonUrl: string): Promise<BigNumber> => {
   const { data } = await thorService.get<ThornodePoolResponse[]>(`${daemonUrl}/lcd/thorchain/pools`)
 
   const availableUsdPools = data.filter(
-    (pool) => pool.status === 'Available' && usdPools.includes(pool.asset),
+    (pool) => pool.status === 'Available' && USD_POOLS.includes(pool.asset),
   )
 
   const { aggregatedRuneUsdPrice, numPools } = availableUsdPools.reduce(
