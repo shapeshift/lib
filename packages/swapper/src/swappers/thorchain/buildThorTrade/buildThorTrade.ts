@@ -4,7 +4,7 @@ import { KnownChainIds } from '@shapeshiftoss/types'
 
 import {
   BuildTradeInput,
-  EvmSupportedChainAdapters,
+  EvmSupportedChainAdapter,
   EvmSupportedChainIds,
   GetUtxoTradeQuoteInput,
   SwapError,
@@ -56,7 +56,7 @@ export const buildTrade = async ({ deps, input }: BuildTradeArgs): Promise<ThorT
         bip44Params,
         sellAsset,
         buyAsset,
-        adapter: sellAdapter as unknown as EvmSupportedChainAdapters,
+        adapter: sellAdapter as unknown as EvmSupportedChainAdapter,
         sellAmountCryptoPrecision,
         destinationAddress,
         deps,
