@@ -25,7 +25,7 @@ import {
   referralAddress,
   ssRouterContractAddress,
 } from './constants'
-import { bn, bnOrZero, normalizeAmount } from './utils'
+import { bn, bnOrZero } from './utils'
 
 export type PreparedTransaction = {
   chainId: number
@@ -158,8 +158,8 @@ export class IdleOpportunity
     this.expired = false
     this.apy = bnOrZero(vault.apr).div(100)
     this.tvl = {
-      balanceUsdc: normalizeAmount(vault.tvl, 6),
-      balance: normalizeAmount(vault.underlyingTVL),
+      balanceUsdc: bnOrZero(vault.tvl),
+      balance: bnOrZero(vault.underlyingTVL),
       assetId: toAssetId({
         chainId: 'eip155:1',
         assetNamespace: 'erc20',
@@ -181,7 +181,7 @@ export class IdleOpportunity
         assetNamespace: 'erc20',
         assetReference: vault.address,
       }),
-      underlyingPerPosition: normalizeAmount(vault.pricePerShare),
+      underlyingPerPosition: bnOrZero(vault.pricePerShare),
     }
     this.feeAsset = {
       assetId: 'eip155:1/slip44:60',
@@ -276,7 +276,7 @@ export class IdleOpportunity
     let methodParams: string[]
     let vaultContract: Contract
 
-    // Handle Tranche Withdraw
+    // Handle Tranche Deposit
     if (this.metadata.cdoAddress) {
       vaultContract = this.#internals.routerContract
       const trancheType = /senior/i.test(this.metadata.strategy) ? 'AA' : 'BB'
@@ -489,7 +489,7 @@ export class IdleOpportunity
       positionAsset: {
         balance: this.positionAsset.balance.toString(),
         assetId: this.positionAsset.assetId,
-        price: this.positionAsset.underlyingPerPosition.toString(),
+        price: this.positionAsset.underlyingPerPosition.toFixed(),
       },
     }
   }
