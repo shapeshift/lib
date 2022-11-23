@@ -1,5 +1,5 @@
 import { Asset } from '@shapeshiftoss/asset-service'
-import { fromAssetId } from '@shapeshiftoss/caip'
+import { fromAssetId, fromChainId } from '@shapeshiftoss/caip'
 import { ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params } from '@shapeshiftoss/types'
 import { numberToHex } from 'web3-utils'
@@ -52,6 +52,7 @@ export const makeTradeTx = async ({
   txToSign: ETHSignTx
 }> => {
   try {
+    const chainReference = fromChainId(adapter.getChainId()).chainReference
     const { assetNamespace } = fromAssetId(sellAsset.assetId)
     const isErc20Trade = assetNamespace === 'erc20'
 
@@ -73,6 +74,7 @@ export const makeTradeTx = async ({
       ...(gasPrice !== undefined ? { gasPrice } : { maxFeePerGas, maxPriorityFeePerGas }),
       value: isErc20Trade ? '0x0' : numberToHex(sellAmountCryptoPrecision),
       data,
+      chainReference,
     })
   } catch (e) {
     if (e instanceof SwapError) throw e

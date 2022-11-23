@@ -374,31 +374,40 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
     this.providers.ws.close('txs')
   }
 
-  async buildCustomTx(tx: BuildCustomTxInput): Promise<{
+  async buildCustomTx({
+    maxFeePerGas,
+    maxPriorityFeePerGas,
+    gasPrice,
+    value,
+    data,
+    gasLimit,
+    to,
+    wallet,
+    bip44Params = this.defaultBIP44Params,
+    chainReference,
+  }: BuildCustomTxInput): Promise<{
     txToSign: ETHSignTx
   }> {
     try {
-      const { wallet, bip44Params = this.defaultBIP44Params } = tx
-
       const from = await this.getAddress({ bip44Params, wallet })
       const account = await this.getAccount(from)
 
       const fees: Fees =
-        tx.maxFeePerGas && tx.maxPriorityFeePerGas
+        maxFeePerGas && maxPriorityFeePerGas
           ? {
-              maxFeePerGas: numberToHex(tx.maxFeePerGas),
-              maxPriorityFeePerGas: numberToHex(tx.maxPriorityFeePerGas),
+              maxFeePerGas: numberToHex(maxFeePerGas),
+              maxPriorityFeePerGas: numberToHex(maxPriorityFeePerGas),
             }
-          : { gasPrice: numberToHex(tx.gasPrice ?? '0') }
+          : { gasPrice: numberToHex(gasPrice ?? '0') }
 
       const txToSign: ETHSignTx = {
         addressNList: toAddressNList(bip44Params),
-        value: tx.value,
-        to: tx.to,
-        chainId: 1,
-        data: tx.data,
+        value,
+        to,
+        chainId: Number(chainReference),
+        data,
         nonce: numberToHex(account.chainSpecific.nonce),
-        gasLimit: numberToHex(tx.gasLimit),
+        gasLimit: numberToHex(gasLimit),
         ...fees,
       }
 

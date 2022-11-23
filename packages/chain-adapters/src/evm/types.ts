@@ -1,3 +1,4 @@
+import { ChainReference } from '@shapeshiftoss/caip'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
@@ -46,6 +47,7 @@ export type BuildCustomTxInput = {
   data: string
   value: string
   gasLimit: string
+  chainReference: ChainReference
 } & Fees
 
 export type TransactionMetadata = unchained.evm.TxMetadata
