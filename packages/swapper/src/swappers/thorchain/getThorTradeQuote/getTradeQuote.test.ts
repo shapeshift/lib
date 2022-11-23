@@ -51,10 +51,9 @@ describe('getTradeQuote', () => {
 
   it('should get a thorchain quote for a thorchain trade', async () => {
     mockedAxios.get.mockImplementation((url) => {
-      if (url.includes('lcd/thorchain/pools')) {
-        return Promise.resolve({ data: [foxThornodePool, ethThornodePool] })
-      }
-      return Promise.resolve({ data: mockInboundAddresses })
+      return url.includes('lcd/thorchain/pools')
+        ? Promise.resolve({ data: [foxThornodePool, ethThornodePool] })
+        : Promise.resolve({ data: mockInboundAddresses })
     })
     ;(getUsdRate as jest.Mock<unknown>)
       .mockReturnValueOnce(Promise.resolve('0.15399605260336216')) // sellAsset
