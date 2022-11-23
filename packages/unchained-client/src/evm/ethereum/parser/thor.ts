@@ -6,11 +6,7 @@ import { BaseTxMetadata, Dex, TradeType } from '../../../types'
 import { getSigHash, SubParser, txInteractsWithContract, TxSpecific } from '../../parser'
 import THOR_AVALANCHE_ABI from './abi/thorAvalanche'
 import THOR_ETHEREUM_ABI from './abi/thorEthereum'
-import {
-  THOR_ROUTER_CONTRACT_AVAX_MAINNET,
-  THOR_ROUTER_CONTRACT_ETH_MAINNET,
-  THOR_ROUTER_CONTRACT_ROPSTEN,
-} from './constants'
+import { THOR_ROUTER_CONTRACT_AVAX_MAINNET, THOR_ROUTER_CONTRACT_ETH_MAINNET } from './constants'
 
 const SWAP_TYPES = ['SWAP', '=', 's']
 
@@ -37,13 +33,12 @@ export class Parser implements SubParser<Tx> {
     this.abiInterface = (() => {
       switch (args.chainId) {
         case ethChainId:
-        case 'eip155:3':
           return new ethers.utils.Interface(THOR_ETHEREUM_ABI)
         case avalancheChainId:
           return new ethers.utils.Interface(THOR_AVALANCHE_ABI)
         default:
           throw new Error(
-            `chainId is not supported. (supported chainIds: ${ethChainId}, ${avalancheChainId}, eip155:3)`,
+            `chainId is not supported. (supported chainIds: ${ethChainId}, ${avalancheChainId})`,
           )
       }
     })()
@@ -61,11 +56,9 @@ export class Parser implements SubParser<Tx> {
           return THOR_ROUTER_CONTRACT_ETH_MAINNET
         case avalancheChainId:
           return THOR_ROUTER_CONTRACT_AVAX_MAINNET
-        case 'eip155:3':
-          return THOR_ROUTER_CONTRACT_ROPSTEN
         default:
           throw new Error(
-            `chainId is not supported. (supported chainIds: ${ethChainId}, ${avalancheChainId}, eip155:3)`,
+            `chainId is not supported. (supported chainIds: ${ethChainId}, ${avalancheChainId})`,
           )
       }
     })()
