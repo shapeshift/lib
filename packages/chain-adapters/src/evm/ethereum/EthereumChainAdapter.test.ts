@@ -718,7 +718,6 @@ describe('EthereumChainAdapter', () => {
         value: '123',
         gasPrice: '123',
         gasLimit: '456',
-        chainReference: CHAIN_REFERENCE.EthereumMainnet,
       }
 
       const output = await adapter.buildCustomTx(txArgs)
@@ -760,7 +759,6 @@ describe('EthereumChainAdapter', () => {
         gasLimit: '456',
         maxFeePerGas: '421',
         maxPriorityFeePerGas: '422',
-        chainReference: CHAIN_REFERENCE.EthereumMainnet,
       }
 
       const output = await adapter.buildCustomTx(txArgs)

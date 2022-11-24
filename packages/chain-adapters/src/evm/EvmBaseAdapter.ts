@@ -384,11 +384,11 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
     to,
     wallet,
     bip44Params = this.defaultBIP44Params,
-    chainReference,
   }: BuildCustomTxInput): Promise<{
     txToSign: ETHSignTx
   }> {
     try {
+      const chainReference = fromChainId(this.chainId).chainReference
       const from = await this.getAddress({ bip44Params, wallet })
       const account = await this.getAccount(from)
 
