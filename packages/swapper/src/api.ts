@@ -284,5 +284,8 @@ export interface Swapper<T extends ChainId> {
    */
   filterAssetIdsBySellable(assetIds: AssetId[]): AssetId[]
 
+  /**
+   * Get transactions related to a trade
+   */
   getTradeTxs(tradeResult: TradeResult): Promise<TradeTxs>
 }
