@@ -130,6 +130,7 @@ export interface TradeQuote<C extends ChainId> extends TradeBase<C> {
   allowanceContract: string
   minimumCryptoHuman: string
   maximum: string
+  recommendedSlippage?: string
 
   /** @deprecated Use minimumCryptoHuman instead */
   minimum?: string

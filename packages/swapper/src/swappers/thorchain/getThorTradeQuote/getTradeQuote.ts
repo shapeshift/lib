@@ -28,6 +28,7 @@ import { getUsdRate } from '../utils/getUsdRate/getUsdRate'
 import { isRune } from '../utils/isRune/isRune'
 import { getEvmTxFees } from '../utils/txFeeHelpers/evmTxFees/getEvmTxFees'
 import { getUtxoTxFees } from '../utils/txFeeHelpers/utxoTxFees/getUtxoTxFees'
+import { getSlippage } from './getSlippage'
 
 type CommonQuoteFields = Omit<TradeQuote<ChainId>, 'allowanceContract' | 'feeData'>
 
@@ -82,6 +83,13 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       buyAsset.assetId,
     )
 
+    const recommendedSlippage = await getSlippage({
+      inputAmount: bn(sellAmountCryptoPrecision),
+      daemonUrl: deps.daemonUrl,
+      buyAssetId: buyAsset.assetId,
+      sellAssetId: sellAsset.assetId,
+    })
+
     const estimatedBuyAssetTradeFeeFeeAssetCryptoHuman = isRune(buyAsset.assetId)
       ? RUNE_OUTBOUND_TRANSACTION_FEE_CRYPTO_HUMAN.toString()
       : fromBaseUnit(bnOrZero(buyAssetAddressData?.outbound_fee), THORCHAIN_FIXED_PRECISION)
@@ -115,6 +123,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       sellAsset,
       bip44Params,
       minimumCryptoHuman: minimumSellAssetAmountPaddedCryptoHuman,
+      recommendedSlippage: recommendedSlippage.toString(),
     }
 
     const { chainNamespace } = fromAssetId(sellAsset.assetId)
