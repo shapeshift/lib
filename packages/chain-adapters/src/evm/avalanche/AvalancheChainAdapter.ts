@@ -2,6 +2,7 @@ import { ASSET_REFERENCE, AssetId, avalancheAssetId, fromAssetId } from '@shapes
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import BigNumber from 'bignumber.js'
+import { ChainAdapterName } from 'packages/chain-adapters/src/cosmossdk/types'
 
 import { FeeDataEstimate, GasFeeDataEstimate, GetFeeDataInput } from '../../types'
 import { bn, bnOrZero } from '../../utils/bignumber'
@@ -34,7 +35,7 @@ export class ChainAdapter extends EvmBaseAdapter<KnownChainIds.AvalancheMainnet>
   }
 
   getDisplayName() {
-    return 'Avalanche'
+    return ChainAdapterName.Avalanche
   }
 
   getType(): KnownChainIds.AvalancheMainnet {

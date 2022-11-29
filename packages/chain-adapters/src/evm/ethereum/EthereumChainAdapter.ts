@@ -3,6 +3,7 @@ import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
+import { ChainAdapterName } from 'packages/chain-adapters/src/cosmossdk/types'
 
 import {
   FeeDataEstimate,
@@ -42,7 +43,7 @@ export class ChainAdapter extends EvmBaseAdapter<KnownChainIds.EthereumMainnet> 
   }
 
   getDisplayName() {
-    return 'Ethereum'
+    return ChainAdapterName.Ethereum
   }
 
   getType(): KnownChainIds.EthereumMainnet {

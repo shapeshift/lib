@@ -1,6 +1,7 @@
 import { ASSET_REFERENCE, AssetId, dogeAssetId } from '@shapeshiftoss/caip'
 import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
+import { ChainAdapterName } from 'packages/chain-adapters/src/cosmossdk/types'
 
 import { ChainAdapterArgs, UtxoBaseAdapter } from '../UtxoBaseAdapter'
 
@@ -33,7 +34,7 @@ export class ChainAdapter extends UtxoBaseAdapter<KnownChainIds.DogecoinMainnet>
   }
 
   getDisplayName() {
-    return 'Dogecoin'
+    return ChainAdapterName.Dogecoin
   }
 
   getType(): KnownChainIds.DogecoinMainnet {
