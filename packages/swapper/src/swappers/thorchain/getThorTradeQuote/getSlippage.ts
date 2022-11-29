@@ -14,7 +14,11 @@ type GetSingleSwapSlippageArgs = {
 }
 
 // Calculate swap slippage
-const getSingleSwapSlippage = ({ inputAmount, pool, toRune }: GetSingleSwapSlippageArgs): BN => {
+export const getSingleSwapSlippage = ({
+  inputAmount,
+  pool,
+  toRune,
+}: GetSingleSwapSlippageArgs): BN => {
   // formula: (inputAmount) / (inputAmount + inputBalance)
   const inputBalance = toRune ? pool.balance_asset : pool.balance_rune // input is asset if toRune
   const denominator = inputAmount.plus(inputBalance)
@@ -28,7 +32,7 @@ type GetDoubleSwapSlippageArgs = {
 }
 
 // Calculate swap slippage for double swap
-const getDoubleSwapSlippage = ({
+export const getDoubleSwapSlippage = ({
   inputAmount,
   sellPool,
   buyPool,
