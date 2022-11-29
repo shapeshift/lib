@@ -16,8 +16,8 @@ jest.mock('../utils/thorService')
 const mockedAxios = jest.mocked(thorService, true)
 
 describe('getSlippage', () => {
-  const expectedBtcRuneSlippage = 0.0010973599869752281
-  const expectedRuneEthSlippage = 0.001655144396331673
+  const expectedBtcRuneSlippage = bn('0.00109735998697522801')
+  const expectedRuneEthSlippage = bn('0.00165514439633167301')
 
   beforeEach(() => {
     mockedAxios.get.mockImplementation((url) => {
@@ -38,8 +38,8 @@ describe('getSlippage', () => {
         inputAmountThorPrecision: bn(100000000), // 1 BTC
         pool: btcThornodePool,
         toRune: true,
-      }).toNumber()
-      expect(slippage).toEqual(expectedBtcRuneSlippage)
+      }).toPrecision()
+      expect(slippage).toEqual(expectedBtcRuneSlippage.toPrecision())
     })
 
     it('should return slippage for RUNE -> ETH single swap', async () => {
@@ -48,8 +48,8 @@ describe('getSlippage', () => {
         inputAmountThorPrecision: firstSwapOutput,
         pool: ethThornodePool,
         toRune: false,
-      }).toNumber()
-      expect(slippage).toEqual(expectedRuneEthSlippage)
+      }).toPrecision()
+      expect(slippage).toEqual(expectedRuneEthSlippage.toPrecision())
     })
   })
 
@@ -59,8 +59,8 @@ describe('getSlippage', () => {
         inputAmountThorPrecision: bn(100000000), // 1 ETH
         sellPool: btcThornodePool,
         buyPool: ethThornodePool,
-      }).toNumber()
-      expect(slippage).toEqual(expectedBtcRuneSlippage + expectedRuneEthSlippage)
+      }).toPrecision()
+      expect(slippage).toEqual(expectedBtcRuneSlippage.plus(expectedRuneEthSlippage).toPrecision())
     })
   })
 
@@ -72,7 +72,9 @@ describe('getSlippage', () => {
         buyAssetId: ethAssetId,
         sellAssetId: btcAssetId,
       })
-      expect(slippage.toNumber()).toEqual(expectedBtcRuneSlippage + expectedRuneEthSlippage)
+      expect(slippage.toPrecision()).toEqual(
+        expectedBtcRuneSlippage.plus(expectedRuneEthSlippage).toPrecision(),
+      )
     })
 
     it('should return slippage for RUNE -> ETH single swap', async () => {
@@ -82,7 +84,7 @@ describe('getSlippage', () => {
         buyAssetId: ethAssetId,
         sellAssetId: thorchainAssetId,
       })
-      expect(slippage.toNumber()).toEqual(0.00000016161699588038)
+      expect(slippage.toPrecision()).toEqual('1.6161699588038e-7')
     })
 
     it('should return slippage for ETH -> RUNE single swap', async () => {
@@ -92,7 +94,7 @@ describe('getSlippage', () => {
         buyAssetId: thorchainAssetId,
         sellAssetId: ethAssetId,
       })
-      expect(slippage.toNumber()).toEqual(0.00010927540718746784)
+      expect(slippage.toPrecision()).toEqual('0.00010927540718746784')
     })
   })
 })

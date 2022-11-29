@@ -128,7 +128,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       sellAsset,
       bip44Params,
       minimumCryptoHuman: minimumSellAssetAmountPaddedCryptoHuman,
-      recommendedSlippage: recommendedSlippage.toString(),
+      recommendedSlippage: recommendedSlippage.toPrecision(),
     }
 
     const { chainNamespace } = fromAssetId(sellAsset.assetId)
