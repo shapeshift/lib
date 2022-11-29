@@ -1,6 +1,6 @@
 import { adapters, AssetId } from '@shapeshiftoss/caip'
-import { AssertionError } from 'assert'
 
+import { assertIsDefined } from '../../../utils'
 import { BN } from '../../utils/bignumber'
 import { ThornodePoolResponse } from '../types'
 import { getSwapOutput } from '../utils/getTradeRate/getTradeRate'
@@ -13,7 +13,6 @@ type GetSingleSwapSlippageArgs = {
   toRune: boolean
 }
 
-// Calculate swap slippage
 export const getSingleSwapSlippage = ({
   inputAmountThorPrecision,
   pool,
@@ -31,13 +30,12 @@ type GetDoubleSwapSlippageArgs = {
   buyPool: ThornodePoolResponse
 }
 
-// Calculate swap slippage for double swap
 export const getDoubleSwapSlippage = ({
   inputAmountThorPrecision,
   sellPool,
   buyPool,
 }: GetDoubleSwapSlippageArgs): BN => {
-  // formula: calcSwapSlip1(input1) + calcSwapSlip2(calcSwapOutput1 => input2)
+  // formula: getSwapOutput(input1) + getSingleSwapSlippage(getSwapOutput(input1) => input2)
   const firstSwapSlippage = getSingleSwapSlippage({
     inputAmountThorPrecision,
     pool: sellPool,
@@ -75,13 +73,6 @@ export const getSlippage = async ({
   const sellPool = sellPoolId ? poolData.find((response) => response.asset === sellPoolId) : null
   const toRune = isRune(buyAssetId)
   const fromRune = isRune(sellAssetId)
-
-  // asserts x is type doesn't work when using arrow functions
-  function assertIsDefined<T>(val: T): asserts val is NonNullable<T> {
-    if (val === undefined || val === null) {
-      throw new AssertionError({ message: `Expected 'val' to be defined, but received ${val}` })
-    }
-  }
 
   switch (true) {
     case toRune: {
