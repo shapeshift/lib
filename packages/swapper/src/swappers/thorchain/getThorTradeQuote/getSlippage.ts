@@ -63,38 +63,42 @@ export const getSlippage = async ({
   buyAssetId,
   sellAssetId,
 }: GetSlippageArgs): Promise<BN> => {
-  const { data: poolData } = await thorService.get<ThornodePoolResponse[]>(
-    `${daemonUrl}/lcd/thorchain/pools`,
-  )
+  try {
+    const { data: poolData } = await thorService.get<ThornodePoolResponse[]>(
+      `${daemonUrl}/lcd/thorchain/pools`,
+    )
 
-  const buyPoolId = adapters.assetIdToPoolAssetId({ assetId: buyAssetId })
-  const sellPoolId = adapters.assetIdToPoolAssetId({ assetId: sellAssetId })
-  const buyPool = buyPoolId ? poolData.find((response) => response.asset === buyPoolId) : null
-  const sellPool = sellPoolId ? poolData.find((response) => response.asset === sellPoolId) : null
-  const toRune = isRune(buyAssetId)
-  const fromRune = isRune(sellAssetId)
+    const buyPoolId = adapters.assetIdToPoolAssetId({ assetId: buyAssetId })
+    const sellPoolId = adapters.assetIdToPoolAssetId({ assetId: sellAssetId })
+    const buyPool = buyPoolId ? poolData.find((response) => response.asset === buyPoolId) : null
+    const sellPool = sellPoolId ? poolData.find((response) => response.asset === sellPoolId) : null
+    const toRune = isRune(buyAssetId)
+    const fromRune = isRune(sellAssetId)
 
-  switch (true) {
-    case toRune: {
-      assertIsDefined(sellPool)
-      return getSingleSwapSlippage({
-        inputAmountThorPrecision,
-        pool: sellPool,
-        toRune,
-      })
+    switch (true) {
+      case toRune: {
+        assertIsDefined(sellPool)
+        return getSingleSwapSlippage({
+          inputAmountThorPrecision,
+          pool: sellPool,
+          toRune,
+        })
+      }
+      case fromRune: {
+        assertIsDefined(buyPool)
+        return getSingleSwapSlippage({
+          inputAmountThorPrecision,
+          pool: buyPool,
+          toRune,
+        })
+      }
+      default: {
+        assertIsDefined(sellPool)
+        assertIsDefined(buyPool)
+        return getDoubleSwapSlippage({ inputAmountThorPrecision, sellPool, buyPool })
+      }
     }
-    case fromRune: {
-      assertIsDefined(buyPool)
-      return getSingleSwapSlippage({
-        inputAmountThorPrecision,
-        pool: buyPool,
-        toRune,
-      })
-    }
-    default: {
-      assertIsDefined(sellPool)
-      assertIsDefined(buyPool)
-      return getDoubleSwapSlippage({ inputAmountThorPrecision, sellPool, buyPool })
-    }
+  } catch (e) {
+    throw new Error(`Failed to get pool data: ${e}`)
   }
 }
