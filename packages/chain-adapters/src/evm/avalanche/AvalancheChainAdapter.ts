@@ -2,8 +2,8 @@ import { ASSET_REFERENCE, AssetId, avalancheAssetId, fromAssetId } from '@shapes
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import BigNumber from 'bignumber.js'
-import { ChainAdapterName } from 'packages/chain-adapters/src/cosmossdk/types'
 
+import { ChainAdapterName } from '../../cosmossdk/types'
 import { FeeDataEstimate, GasFeeDataEstimate, GetFeeDataInput } from '../../types'
 import { bn, bnOrZero } from '../../utils/bignumber'
 import { ChainAdapterArgs, EvmBaseAdapter } from '../EvmBaseAdapter'
