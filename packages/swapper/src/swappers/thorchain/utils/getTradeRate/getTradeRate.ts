@@ -13,8 +13,8 @@ const THOR_PRECISION = 8
 export const getSwapOutput = (inputAmount: BN, pool: ThornodePoolResponse, toRune: boolean): BN => {
   const inputBalance = toRune ? pool.balance_asset : pool.balance_rune
   const outputBalance = toRune ? pool.balance_rune : pool.balance_asset
-  const numerator = bn(inputAmount).times(inputBalance).times(outputBalance)
-  const denominator = bn(inputAmount).plus(inputBalance).pow(2)
+  const numerator = inputAmount.times(inputBalance).times(outputBalance)
+  const denominator = inputAmount.plus(inputBalance).pow(2)
   return numerator.div(denominator)
 }
 
