@@ -8,40 +8,44 @@ import { isRune } from '../utils/isRune/isRune'
 import { thorService } from '../utils/thorService'
 
 type GetSingleSwapSlippageArgs = {
-  inputAmount: BN
+  inputAmountThorPrecision: BN
   pool: ThornodePoolResponse
   toRune: boolean
 }
 
 // Calculate swap slippage
 export const getSingleSwapSlippage = ({
-  inputAmount,
+  inputAmountThorPrecision,
   pool,
   toRune,
 }: GetSingleSwapSlippageArgs): BN => {
   // formula: (inputAmount) / (inputAmount + inputBalance)
   const inputBalance = toRune ? pool.balance_asset : pool.balance_rune // input is asset if toRune
-  const denominator = inputAmount.plus(inputBalance)
-  return inputAmount.div(denominator)
+  const denominator = inputAmountThorPrecision.plus(inputBalance)
+  return inputAmountThorPrecision.div(denominator)
 }
 
 type GetDoubleSwapSlippageArgs = {
-  inputAmount: BN
+  inputAmountThorPrecision: BN
   sellPool: ThornodePoolResponse
   buyPool: ThornodePoolResponse
 }
 
 // Calculate swap slippage for double swap
 export const getDoubleSwapSlippage = ({
-  inputAmount,
+  inputAmountThorPrecision,
   sellPool,
   buyPool,
 }: GetDoubleSwapSlippageArgs): BN => {
   // formula: calcSwapSlip1(input1) + calcSwapSlip2(calcSwapOutput1 => input2)
-  const firstSwapSlippage = getSingleSwapSlippage({ inputAmount, pool: sellPool, toRune: true })
-  const firstSwapOutput = getSwapOutput(inputAmount, sellPool, true)
+  const firstSwapSlippage = getSingleSwapSlippage({
+    inputAmountThorPrecision,
+    pool: sellPool,
+    toRune: true,
+  })
+  const firstSwapOutput = getSwapOutput(inputAmountThorPrecision, sellPool, true)
   const secondSwapSlippage = getSingleSwapSlippage({
-    inputAmount: firstSwapOutput,
+    inputAmountThorPrecision: firstSwapOutput,
     pool: buyPool,
     toRune: false,
   })
@@ -49,14 +53,14 @@ export const getDoubleSwapSlippage = ({
 }
 
 type GetSlippageArgs = {
-  inputAmount: BN
+  inputAmountThorPrecision: BN
   daemonUrl: string
   buyAssetId: AssetId
   sellAssetId: AssetId
 }
 
 export const getSlippage = async ({
-  inputAmount,
+  inputAmountThorPrecision,
   daemonUrl,
   buyAssetId,
   sellAssetId,
@@ -82,16 +86,24 @@ export const getSlippage = async ({
   switch (true) {
     case toRune: {
       assertIsDefined(sellPool)
-      return getSingleSwapSlippage({ inputAmount, pool: sellPool, toRune })
+      return getSingleSwapSlippage({
+        inputAmountThorPrecision,
+        pool: sellPool,
+        toRune,
+      })
     }
     case fromRune: {
       assertIsDefined(buyPool)
-      return getSingleSwapSlippage({ inputAmount, pool: buyPool, toRune })
+      return getSingleSwapSlippage({
+        inputAmountThorPrecision,
+        pool: buyPool,
+        toRune,
+      })
     }
     default: {
       assertIsDefined(sellPool)
       assertIsDefined(buyPool)
-      return getDoubleSwapSlippage({ inputAmount, sellPool, buyPool })
+      return getDoubleSwapSlippage({ inputAmountThorPrecision, sellPool, buyPool })
     }
   }
 }

@@ -35,7 +35,7 @@ describe('getSlippage', () => {
   describe('getSingleSwapSlippage', () => {
     it('should return slippage for BTC -> RUNE single swap', async () => {
       const slippage = await getSingleSwapSlippage({
-        inputAmount: bn(100000000), // 1 BTC
+        inputAmountThorPrecision: bn(100000000), // 1 BTC
         pool: btcThornodePool,
         toRune: true,
       }).toNumber()
@@ -45,7 +45,7 @@ describe('getSlippage', () => {
     it('should return slippage for RUNE -> ETH single swap', async () => {
       const firstSwapOutput = getSwapOutput(bn(100000000), btcThornodePool, true)
       const slippage = await getSingleSwapSlippage({
-        inputAmount: firstSwapOutput,
+        inputAmountThorPrecision: firstSwapOutput,
         pool: ethThornodePool,
         toRune: false,
       }).toNumber()
@@ -56,7 +56,7 @@ describe('getSlippage', () => {
   describe('getDoubleSwapSlippage', () => {
     it('should return slippage for BTC -> RUNE -> ETH double swap', async () => {
       const slippage = await getDoubleSwapSlippage({
-        inputAmount: bn(100000000), // 1 ETH
+        inputAmountThorPrecision: bn(100000000), // 1 ETH
         sellPool: btcThornodePool,
         buyPool: ethThornodePool,
       }).toNumber()
@@ -67,7 +67,7 @@ describe('getSlippage', () => {
   describe('getSlippage', () => {
     it('should return slippage for BTC -> RUNE -> ETH double swap', async () => {
       const slippage = await getSlippage({
-        inputAmount: bn(100000000), // 1 ETH
+        inputAmountThorPrecision: bn(100000000), // 1 ETH
         daemonUrl: '',
         buyAssetId: ethAssetId,
         sellAssetId: btcAssetId,
@@ -77,7 +77,7 @@ describe('getSlippage', () => {
 
     it('should return slippage for RUNE -> ETH single swap', async () => {
       const slippage = await getSlippage({
-        inputAmount: bn(100000000), // 1 RUNE
+        inputAmountThorPrecision: bn(100000000), // 1 RUNE
         daemonUrl: '',
         buyAssetId: ethAssetId,
         sellAssetId: thorchainAssetId,
@@ -87,7 +87,7 @@ describe('getSlippage', () => {
 
     it('should return slippage for ETH -> RUNE single swap', async () => {
       const slippage = await getSlippage({
-        inputAmount: bn(100000000), // 1 ETH
+        inputAmountThorPrecision: bn(100000000), // 1 ETH
         daemonUrl: '',
         buyAssetId: thorchainAssetId,
         sellAssetId: ethAssetId,

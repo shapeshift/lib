@@ -83,8 +83,13 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       buyAsset.assetId,
     )
 
+    const sellAmountThorPrecision = toBaseUnit(
+      fromBaseUnit(sellAmountCryptoPrecision, sellAsset.precision),
+      THORCHAIN_FIXED_PRECISION,
+    )
+
     const recommendedSlippage = await getSlippage({
-      inputAmount: bn(sellAmountCryptoPrecision),
+      inputAmountThorPrecision: bn(sellAmountThorPrecision),
       daemonUrl: deps.daemonUrl,
       buyAssetId: buyAsset.assetId,
       sellAssetId: sellAsset.assetId,
