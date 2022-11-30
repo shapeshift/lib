@@ -4,7 +4,7 @@ import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { KnownChainIds } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
-import { BuildTradeInput } from '../../../api'
+import { BuildTradeInput, SwapperName } from '../../../api'
 import { IsApprovalRequiredArgs } from '../../utils/helpers/helpers'
 import { ETH, FOX, WBTC, WETH } from '../../utils/test-data/assets'
 import { CowSwapperDeps } from '../CowSwapper'
@@ -37,12 +37,7 @@ jest.mock('../utils/helpers/helpers', () => {
 jest.mock('../../utils/helpers/helpers', () => {
   return {
     ...jest.requireActual('../../utils/helpers/helpers'),
-    isApprovalRequired: (args: IsApprovalRequiredArgs) => {
-      if (args.sellAsset.assetId === WBTC.assetId) {
-        return true
-      }
-      return false
-    },
+    isApprovalRequired: (args: IsApprovalRequiredArgs) => args.sellAsset.assetId === WBTC.assetId,
     getApproveContractData: () => '0xABCDEFGHIJ',
   }
 })
@@ -126,7 +121,7 @@ const expectedTradeWethToFox: CowTrade<KnownChainIds.EthereumMainnet> = {
   },
   sellAmountCryptoPrecision: '1000000000000000000',
   buyAmountCryptoPrecision: '14501811818247595090576', // 14501 FOX
-  sources: [{ name: 'CowSwap', proportion: '1' }],
+  sources: [{ name: SwapperName.CowSwap, proportion: '1' }],
   buyAsset: FOX,
   sellAsset: WETH,
   bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
@@ -149,7 +144,7 @@ const expectedTradeQuoteWbtcToWethWithApprovalFee: CowTrade<KnownChainIds.Ethere
   },
   sellAmountCryptoPrecision: '100000000',
   buyAmountCryptoPrecision: '19136098853078932263', // 19.13 WETH
-  sources: [{ name: 'CowSwap', proportion: '1' }],
+  sources: [{ name: SwapperName.CowSwap, proportion: '1' }],
   buyAsset: WETH,
   sellAsset: WBTC,
   bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
@@ -171,7 +166,7 @@ const expectedTradeQuoteFoxToEth: CowTrade<KnownChainIds.EthereumMainnet> = {
   },
   sellAmountCryptoPrecision: '1000000000000000000000',
   buyAmountCryptoPrecision: '46868859830863283',
-  sources: [{ name: 'CowSwap', proportion: '1' }],
+  sources: [{ name: SwapperName.CowSwap, proportion: '1' }],
   buyAsset: ETH,
   sellAsset: FOX,
   bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },

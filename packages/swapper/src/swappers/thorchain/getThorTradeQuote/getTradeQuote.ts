@@ -9,6 +9,7 @@ import {
   GetUtxoTradeQuoteInput,
   SwapError,
   SwapErrorTypes,
+  SwapperName,
   TradeQuote,
   UtxoSupportedChainIds,
 } from '../../../api'
@@ -28,6 +29,7 @@ import { getUsdRate } from '../utils/getUsdRate/getUsdRate'
 import { isRune } from '../utils/isRune/isRune'
 import { getEvmTxFees } from '../utils/txFeeHelpers/evmTxFees/getEvmTxFees'
 import { getUtxoTxFees } from '../utils/txFeeHelpers/utxoTxFees/getUtxoTxFees'
+import { getSlippage } from './getSlippage'
 
 type CommonQuoteFields = Omit<TradeQuote<ChainId>, 'allowanceContract' | 'feeData'>
 
@@ -82,6 +84,18 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       buyAsset.assetId,
     )
 
+    const sellAmountThorPrecision = toBaseUnit(
+      fromBaseUnit(sellAmountCryptoPrecision, sellAsset.precision),
+      THORCHAIN_FIXED_PRECISION,
+    )
+
+    const recommendedSlippage = await getSlippage({
+      inputAmountThorPrecision: bn(sellAmountThorPrecision),
+      daemonUrl: deps.daemonUrl,
+      buyAssetId: buyAsset.assetId,
+      sellAssetId: sellAsset.assetId,
+    })
+
     const estimatedBuyAssetTradeFeeFeeAssetCryptoHuman = isRune(buyAsset.assetId)
       ? RUNE_OUTBOUND_TRANSACTION_FEE_CRYPTO_HUMAN.toString()
       : fromBaseUnit(bnOrZero(buyAssetAddressData?.outbound_fee), THORCHAIN_FIXED_PRECISION)
@@ -110,11 +124,12 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       maximum: MAX_THORCHAIN_TRADE,
       sellAmountCryptoPrecision,
       buyAmountCryptoPrecision,
-      sources: [{ name: 'thorchain', proportion: '1' }],
+      sources: [{ name: SwapperName.Thorchain, proportion: '1' }],
       buyAsset,
       sellAsset,
       bip44Params,
       minimumCryptoHuman: minimumSellAssetAmountPaddedCryptoHuman,
+      recommendedSlippage: recommendedSlippage.toPrecision(),
     }
 
     const { chainNamespace } = fromAssetId(sellAsset.assetId)
