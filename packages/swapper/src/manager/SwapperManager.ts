@@ -1,7 +1,14 @@
 import { ChainId } from '@shapeshiftoss/caip'
 import uniq from 'lodash/uniq'
 
-import { BuyAssetBySellIdInput, ByPairInput, SupportedSellAssetsInput, Swapper } from '..'
+import {
+  BuyAssetBySellIdInput,
+  ByPairInput,
+  GetBestSwapperInput,
+  SupportedSellAssetsInput,
+  Swapper,
+  TradeQuote,
+} from '..'
 import { SwapError, SwapErrorTypes, SwapperType } from '../api'
 
 function validateSwapper(swapper: Swapper<ChainId>) {
@@ -62,10 +69,21 @@ export class SwapperManager {
     return this
   }
 
-  async getBestSwapper(args: ByPairInput): Promise<Swapper<ChainId> | undefined> {
-    // TODO: This will eventually have logic to determine the best swapper.
-    // For now we return the first swapper we get from getSwappersByPair
-    return this.getSwappersByPair(args)[0]
+  async getBestSwapper(args: GetBestSwapperInput): Promise<Swapper<ChainId> | undefined> {
+    const { sellAsset, buyAsset } = args
+    // Get all swappers that support the pair
+    const supportedSwappers: Swapper<ChainId>[] = this.getSwappersByPair({
+      sellAssetId: sellAsset.assetId,
+      buyAssetId: buyAsset.assetId,
+    })
+    // Get quotes from all swappers that support the pair
+    const quotePromises: Promise<readonly [Swapper<ChainId>, TradeQuote<ChainId>]>[] =
+      supportedSwappers.map(
+        async (swapper) => [swapper, await swapper.getTradeQuote(args)] as const,
+      )
+    const quotes = await Promise.allSettled(quotePromises)
+    // For each swapper, get output amount(input amount + gas fee), where all values are in fiat
+    // The best swapper is the one with the highest ratio above
   }
 
   /**

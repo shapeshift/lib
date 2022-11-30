@@ -55,6 +55,8 @@ export type ByPairInput = {
   buyAssetId: AssetId
 }
 
+export type GetBestSwapperInput = GetTradeQuoteInput
+
 export type BuyAssetBySellIdInput = {
   sellAssetId: AssetId
   assetIds: AssetId[]
