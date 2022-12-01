@@ -29,7 +29,7 @@ export interface Token {
 export interface Trade {
   dexName: Dex
   memo?: string
-  type: TradeType
+  type?: TradeType
 }
 
 // these are user facing values, and should be rendered as such

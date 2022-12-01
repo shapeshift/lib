@@ -1,7 +1,7 @@
 import { AssetId, ChainId } from '@shapeshiftoss/caip'
 import { BigNumber } from 'bignumber.js'
 
-import { TransferType, TxStatus } from '../../types'
+import { Dex, TransferType, TxStatus } from '../../types'
 import { aggregateTransfer } from '../../utils'
 import { ParsedTx, Tx } from './types'
 import { getAssetIdByDenom, metaData } from './utils'
@@ -31,6 +31,7 @@ export class BaseTransactionParser<T extends Tx> {
       status: tx.confirmations > 0 ? TxStatus.Confirmed : TxStatus.Pending, // TODO: handle failed case
       transfers: [],
       txid: tx.txid,
+      trade: { dexName: Dex.Thor },
     }
 
     tx.messages.forEach((msg, i) => {
