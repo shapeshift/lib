@@ -57,7 +57,7 @@ describe('CowSwapper', () => {
 
   describe('name', () => {
     it('returns the correct human readable swapper name', () => {
-      expect(swapper.name).toEqual('CowSwap')
+      expect(swapper.name).toEqual('CoW Swap')
     })
   })
 
