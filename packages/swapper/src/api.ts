@@ -130,8 +130,9 @@ export interface TradeQuote<C extends ChainId> extends TradeBase<C> {
   allowanceContract: string
   minimumCryptoHuman: string
   maximum: string
+  recommendedSlippage?: string
 
-  /** @deprecated Use sellAmountCryptoHuman instead */
+  /** @deprecated Use minimumCryptoHuman instead */
   minimum?: string
 }
 
@@ -165,7 +166,7 @@ export type ApprovalNeededInput<C extends ChainId> = {
 }
 
 export type SwapSource = {
-  name: string
+  name: SwapperName | string
   proportion: string
 }
 
@@ -230,7 +231,7 @@ export enum SwapErrorTypes {
 }
 export interface Swapper<T extends ChainId> {
   /** Human-readable swapper name */
-  readonly name: string
+  readonly name: SwapperName
 
   /** perform any necessary async initialization */
   initialize?(): Promise<void>
@@ -284,5 +285,8 @@ export interface Swapper<T extends ChainId> {
    */
   filterAssetIdsBySellable(assetIds: AssetId[]): AssetId[]
 
+  /**
+   * Get transactions related to a trade
+   */
   getTradeTxs(tradeResult: TradeResult): Promise<TradeTxs>
 }

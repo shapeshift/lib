@@ -1,3 +1,14 @@
+# [@shapeshiftoss/swapper-v14.5.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v14.5.1...@shapeshiftoss/swapper-v14.5.2) (2022-11-30)
+
+# [@shapeshiftoss/swapper-v14.5.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v14.5.0...@shapeshiftoss/swapper-v14.5.1) (2022-11-29)
+
+# [@shapeshiftoss/swapper-v14.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v14.4.1...@shapeshiftoss/swapper-v14.5.0) (2022-11-29)
+
+
+### Features
+
+* **swapper:** add dynamic slippage ([#1102](https://github.com/shapeshift/lib/issues/1102)) ([98e1566](https://github.com/shapeshift/lib/commit/98e15663a0ccecca451547fbbc64fd6a19a97ef7))
+
 # [@shapeshiftoss/swapper-v14.4.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v14.4.0...@shapeshiftoss/swapper-v14.4.1) (2022-11-28)
 
 # [@shapeshiftoss/swapper-v14.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v14.3.0...@shapeshiftoss/swapper-v14.4.0) (2022-11-25)
