@@ -1,4 +1,6 @@
-import { BaseTxMetadata, Dex, TradeType } from '../../types'
+import { SwapperName } from '@shapeshiftoss/swapper'
+
+import { BaseTxMetadata, TradeType } from '../../types'
 import { type Tx } from '../parser/types'
 import { type SubParser, type TxSpecific, txInteractsWithContract } from '.'
 import { ZRX_PROXY_CONTRACT } from './constants'
@@ -14,7 +16,7 @@ export class Parser implements SubParser<Tx> {
 
     return {
       trade: {
-        dexName: Dex.Zrx,
+        dexName: SwapperName.Zrx,
         type: TradeType.Trade,
       },
       data: {

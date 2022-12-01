@@ -1,8 +1,9 @@
 import { avalancheChainId, ChainId, ethChainId } from '@shapeshiftoss/caip'
+import { SwapperName } from '@shapeshiftoss/swapper'
 import { ethers } from 'ethers'
 
 import { Tx } from '../../../generated/ethereum'
-import { BaseTxMetadata, Dex, TradeType } from '../../../types'
+import { BaseTxMetadata, TradeType } from '../../../types'
 import { getSigHash, SubParser, txInteractsWithContract, TxSpecific } from '../../parser'
 import THOR_AVALANCHE_ABI from './abi/thorAvalanche'
 import THOR_ETHEREUM_ABI from './abi/thorEthereum'
@@ -85,11 +86,17 @@ export class Parser implements SubParser<Tx> {
     const [type] = decoded.args.memo.split(':')
 
     if (SWAP_TYPES.includes(type) || type === 'OUT') {
-      return { trade: { dexName: Dex.Thor, type: TradeType.Trade, memo: decoded.args.memo }, data }
+      return {
+        trade: { dexName: SwapperName.Thorchain, type: TradeType.Trade, memo: decoded.args.memo },
+        data,
+      }
     }
 
     if (type === 'REFUND') {
-      return { trade: { dexName: Dex.Thor, type: TradeType.Refund, memo: decoded.args.memo }, data }
+      return {
+        trade: { dexName: SwapperName.Thorchain, type: TradeType.Refund, memo: decoded.args.memo },
+        data,
+      }
     }
 
     // memo type not supported

@@ -1,4 +1,6 @@
-import { Dex, Trade, TradeType, TransferType, TxStatus } from '../../../../types'
+import { SwapperName } from '@shapeshiftoss/swapper'
+
+import { Trade, TradeType, TransferType, TxStatus } from '../../../../types'
 import { ParsedTx as Tx } from '../../../parser'
 import {
   FOXY_STAKING_CONTRACT,
@@ -104,7 +106,7 @@ describe('parseTx', () => {
       const { tx } = thorSwapDepositEth
       const address = '0xCeb660E7623E8f8312B3379Df747c35f2217b595'
       const trade: Trade = {
-        dexName: Dex.Thor,
+        dexName: SwapperName.Thorchain,
         memo: 'SWAP:THOR.RUNE:thor19f3dsgetxzssvdmqnplfep5fe42fsrvq9u87ax:',
         type: TradeType.Trade,
       }
@@ -147,7 +149,7 @@ describe('parseTx', () => {
       const { tx } = thorSwapDepositUsdc
       const address = '0x5a8C5afbCC1A58cCbe17542957b587F46828B38E'
       const trade: Trade = {
-        dexName: Dex.Thor,
+        dexName: SwapperName.Thorchain,
         memo: 'SWAP:THOR.RUNE:thor1hhjupkzy3t6ccelhz7qw8epyx4rm8a06nlm5ce:110928642111',
         type: TradeType.Trade,
       }
@@ -191,7 +193,7 @@ describe('parseTx', () => {
       const { tx } = thorSwapTransferOutEth
       const address = '0x5a8C5afbCC1A58cCbe17542957b587F46828B38E'
       const trade: Trade = {
-        dexName: Dex.Thor,
+        dexName: SwapperName.Thorchain,
         memo: 'OUT:8C859BA50BC2351797F52F954971E1C6BA1F0A77610AC197BD99C4EEC6A3692A',
         type: TradeType.Trade,
       }
@@ -231,7 +233,7 @@ describe('parseTx', () => {
       const { tx } = thorSwapTransferOutUsdc
       const address = '0x5a8C5afbCC1A58cCbe17542957b587F46828B38E'
       const trade: Trade = {
-        dexName: Dex.Thor,
+        dexName: SwapperName.Thorchain,
         memo: 'OUT:F3AC4E90AB5951AB9FEB1715B481422B904A40B0F6753CC844E326B1213CF70E',
         type: TradeType.Trade,
       }
@@ -271,7 +273,7 @@ describe('parseTx', () => {
       const { tx } = thorSwapRefundEth
       const address = '0xfc0Cc6E85dFf3D75e3985e0CB83B090cfD498dd1'
       const trade: Trade = {
-        dexName: Dex.Thor,
+        dexName: SwapperName.Thorchain,
         memo: 'REFUND:851B4997CF8F9FBA806B3780E0C178CCB173AE78E3FD5056F7375B059B22BD3A',
         type: TradeType.Refund,
       }
@@ -313,7 +315,7 @@ describe('parseTx', () => {
       const { tx } = zrxTradeTribeToEth
       const address = '0x5bb96c35a68Cba037D0F261C67477416db137F03'
       const trade: Trade = {
-        dexName: Dex.Zrx,
+        dexName: SwapperName.Zrx,
         type: TradeType.Trade,
       }
       const buyTransfer = {
@@ -374,7 +376,7 @@ describe('parseTx', () => {
       const { tx } = zrxTradeEthToMatic
       const address = '0x564BcA365D62BCC22dB53d032F8dbD35439C9206'
       const trade: Trade = {
-        dexName: Dex.Zrx,
+        dexName: SwapperName.Zrx,
         type: TradeType.Trade,
       }
 
@@ -436,7 +438,7 @@ describe('parseTx', () => {
       const { tx } = zrxTradeTetherToKishu
       const address = '0xb8b19c048296E086DaF69F54d48dE2Da444dB047'
       const trade: Trade = {
-        dexName: Dex.Zrx,
+        dexName: SwapperName.Zrx,
         type: TradeType.Trade,
       }
 
@@ -490,7 +492,7 @@ describe('parseTx', () => {
       const { tx } = zrxTradeBondToUni
       const address = '0x986bB494db49E6f1CDC1be098e3157f8DDC5a821'
       const trade: Trade = {
-        dexName: Dex.Zrx,
+        dexName: SwapperName.Zrx,
         type: TradeType.Trade,
       }
 

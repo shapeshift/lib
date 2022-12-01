@@ -1,6 +1,7 @@
 import { avalancheAssetId, avalancheChainId } from '@shapeshiftoss/caip'
+import { SwapperName } from '@shapeshiftoss/swapper'
 
-import { Dex, Trade, TradeType, Transfer, TransferType, TxStatus } from '../../../../types'
+import { Trade, TradeType, Transfer, TransferType, TxStatus } from '../../../../types'
 import { ParsedTx, ParsedTx as Tx } from '../../../parser'
 import { TransactionParser } from '../index'
 import avaxSelfSend from './mockData/avaxSelfSend'
@@ -455,7 +456,7 @@ describe('parseTx', () => {
       const { tx } = zrxTradeWethToAvax
       const address = '0xc2090e54B0Db09a1515f203aEA6Ed62A115548eC'
       const trade: Trade = {
-        dexName: Dex.Zrx,
+        dexName: SwapperName.Zrx,
         type: TradeType.Trade,
       }
       const buyTransfer: Transfer = {
@@ -516,7 +517,7 @@ describe('parseTx', () => {
       const { tx } = zrxTradeAvaxToWeth
       const address = '0xc2090e54B0Db09a1515f203aEA6Ed62A115548eC'
       const trade: Trade = {
-        dexName: Dex.Zrx,
+        dexName: SwapperName.Zrx,
         type: TradeType.Trade,
       }
 
@@ -578,7 +579,7 @@ describe('parseTx', () => {
       const { tx } = zrxTradeWethToWbtc
       const address = '0xc2090e54B0Db09a1515f203aEA6Ed62A115548eC'
       const trade: Trade = {
-        dexName: Dex.Zrx,
+        dexName: SwapperName.Zrx,
         type: TradeType.Trade,
       }
 

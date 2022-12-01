@@ -1,9 +1,5 @@
 // these are user facing values, and should be rendered as such
-export enum Dex {
-  Thor = 'THORChain',
-  Zrx = '0x',
-  CowSwap = 'CowSwap',
-}
+import { SwapperName } from '@shapeshiftoss/swapper'
 
 export interface Fee {
   assetId: string
@@ -26,7 +22,7 @@ export interface Token {
 }
 
 export interface Trade {
-  dexName: Dex
+  dexName: SwapperName
   memo?: string
   type: TradeType
 }
