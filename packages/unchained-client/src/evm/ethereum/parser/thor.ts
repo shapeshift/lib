@@ -84,15 +84,20 @@ export class Parser implements SubParser<Tx> {
 
     const [type] = decoded.args.memo.split(':')
 
-    if (SWAP_TYPES.includes(type) || type === 'OUT') {
-      return { trade: { dexName: Dex.Thor, type: TradeType.Trade, memo: decoded.args.memo }, data }
+    switch (true) {
+      case SWAP_TYPES.includes(type) || type === 'OUT':
+        return {
+          trade: { dexName: Dex.Thor, type: TradeType.Trade, memo: decoded.args.memo },
+          data,
+        }
+      case type === 'REFUND':
+        return {
+          trade: { dexName: Dex.Thor, type: TradeType.Refund, memo: decoded.args.memo },
+          data,
+        }
+      default:
+        // memo type not supported
+        return undefined
     }
-
-    if (type === 'REFUND') {
-      return { trade: { dexName: Dex.Thor, type: TradeType.Refund, memo: decoded.args.memo }, data }
-    }
-
-    // memo type not supported
-    return
   }
 }
