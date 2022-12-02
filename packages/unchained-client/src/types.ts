@@ -2,7 +2,8 @@
 export enum Dex {
   Thor = 'THORChain',
   Zrx = '0x',
-  CowSwap = 'CowSwap',
+  CowSwap = 'CoW Swap',
+  Osmosis = 'Osmosis',
 }
 
 export interface Fee {
