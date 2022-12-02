@@ -1,3 +1,17 @@
+# [@shapeshiftoss/unchained-client-v10.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v10.6.0...@shapeshiftoss/unchained-client-v10.7.0) (2022-12-02)
+
+
+### Features
+
+* **osmosis:** handle swap_exact_amount_in message ([#1108](https://github.com/shapeshift/lib/issues/1108)) ([29c1bff](https://github.com/shapeshift/lib/commit/29c1bff8eb53f5158f9f6aa72e6df73300b41eff))
+
+# [@shapeshiftoss/unchained-client-v10.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v10.5.0...@shapeshiftoss/unchained-client-v10.6.0) (2022-12-01)
+
+
+### Features
+
+* rename CowSwap -> CoW Swap ([#1111](https://github.com/shapeshift/lib/issues/1111)) ([5ca7439](https://github.com/shapeshift/lib/commit/5ca7439311da4b6d069cb9f28b10c7dffd083eba))
+
 # [@shapeshiftoss/unchained-client-v10.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v10.4.1...@shapeshiftoss/unchained-client-v10.5.0) (2022-12-01)
 
 
