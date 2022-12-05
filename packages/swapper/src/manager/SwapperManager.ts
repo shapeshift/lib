@@ -1,15 +1,19 @@
 import { ChainId } from '@shapeshiftoss/caip'
 import uniq from 'lodash/uniq'
+import { getRatioFromQuote } from 'packages/swapper/src/manager/utils'
+import { isFulfilled } from 'packages/swapper/src/typeGuards'
 
 import {
   BuyAssetBySellIdInput,
   ByPairInput,
-  GetBestSwapperInput,
+  GetBestSwapperArgs,
   SupportedSellAssetsInput,
   Swapper,
   TradeQuote,
 } from '..'
 import { SwapError, SwapErrorTypes, SwapperType } from '../api'
+
+type SwapperQuoteTuple = readonly [swapper: Swapper<ChainId>, quote: TradeQuote<ChainId>]
 
 function validateSwapper(swapper: Swapper<ChainId>) {
   if (!(typeof swapper === 'object' && typeof swapper.getType === 'function'))
@@ -69,21 +73,40 @@ export class SwapperManager {
     return this
   }
 
-  async getBestSwapper(args: GetBestSwapperInput): Promise<Swapper<ChainId> | undefined> {
-    const { sellAsset, buyAsset } = args
+  async getBestSwapper(args: GetBestSwapperArgs): Promise<Swapper<ChainId> | undefined> {
+    const { sellAsset, buyAsset, feeAsset } = args
+
     // Get all swappers that support the pair
     const supportedSwappers: Swapper<ChainId>[] = this.getSwappersByPair({
       sellAssetId: sellAsset.assetId,
       buyAssetId: buyAsset.assetId,
     })
+
     // Get quotes from all swappers that support the pair
-    const quotePromises: Promise<readonly [Swapper<ChainId>, TradeQuote<ChainId>]>[] =
-      supportedSwappers.map(
-        async (swapper) => [swapper, await swapper.getTradeQuote(args)] as const,
-      )
-    const quotes = await Promise.allSettled(quotePromises)
-    // For each swapper, get output amount(input amount + gas fee), where all values are in fiat
+    const quotePromises: Promise<SwapperQuoteTuple>[] = supportedSwappers.map(
+      async (swapper) => [swapper, await swapper.getTradeQuote(args)] as const,
+    )
+    const settledQuoteRequests = await Promise.allSettled(quotePromises)
+    // For each swapper, get output amount/(input amount + gas fee), where all values are in fiat
+    const fulfilledQuoteTuples = settledQuoteRequests
+      .filter(isFulfilled)
+      .map((quoteRequest) => quoteRequest.value)
+
     // The best swapper is the one with the highest ratio above
+    const bestQuoteTuple = await fulfilledQuoteTuples.reduce<
+      Promise<[...SwapperQuoteTuple, ...[ratio: number]] | undefined>
+    >(async (acc, currentQuoteTuple) => {
+      const resolvedAcc = await acc
+      const [currentSwapper, currentQuote] = currentQuoteTuple
+      const currentRatio = await getRatioFromQuote(currentQuote, currentSwapper, feeAsset)
+      if (!resolvedAcc) return Promise.resolve([...currentQuoteTuple, currentRatio])
+
+      const [, , bestRatio] = resolvedAcc
+      const isCurrentBest = bestRatio < currentRatio
+      return Promise.resolve(isCurrentBest ? [...currentQuoteTuple, currentRatio] : resolvedAcc)
+    }, Promise.resolve(undefined))
+
+    return bestQuoteTuple?.[0]
   }
 
   /**
