@@ -143,7 +143,9 @@ export async function cowBuildTrade(
     })
 
     if (approvalRequired) {
-      trade.feeData.chainSpecific.approvalFee = bnOrZero(feeData.chainSpecific.gasLimit)
+      trade.feeData.chainSpecific.approvalFeeCryptoBaseUnit = bnOrZero(
+        feeData.chainSpecific.gasLimit,
+      )
         .multipliedBy(bnOrZero(feeData.chainSpecific.gasPrice))
         .toString()
     }

@@ -89,7 +89,11 @@ describe('zrxBuildTrade', () => {
     txData: quoteResponse.data,
     rate: quoteResponse.price,
     feeData: {
-      chainSpecific: { approvalFee: '123600000', estimatedGas: '1235', gasPrice: '1236' },
+      chainSpecific: {
+        approvalFeeCryptoBaseUnit: '123600000',
+        estimatedGas: '1235',
+        gasPrice: '1236',
+      },
       networkFeeBaseUnit: (Number(quoteResponse.gas) * Number(quoteResponse.gasPrice)).toString(),
       sellAssetTradeFeeUsd: '0',
       buyAssetTradeFeeUsd: '0',
@@ -153,7 +157,7 @@ describe('zrxBuildTrade', () => {
 
     const expectedFeeData: QuoteFeeData<EvmSupportedChainIds> = {
       chainSpecific: {
-        approvalFee: bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(gasPrice).toString(),
+        approvalFeeCryptoBaseUnit: bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(gasPrice).toString(),
         gasPrice,
         estimatedGas,
       },

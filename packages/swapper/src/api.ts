@@ -13,13 +13,13 @@ type ChainSpecificQuoteFeeData<T extends ChainId> = ChainSpecific<
     [KnownChainIds.EthereumMainnet]: {
       estimatedGas?: string
       gasPrice?: string
-      approvalFee?: string
+      approvalFeeCryptoBaseUnit?: string
       totalFee?: string
     }
     [KnownChainIds.AvalancheMainnet]: {
       estimatedGas?: string
       gasPrice?: string
-      approvalFee?: string
+      approvalFeeCryptoBaseUnit?: string
       totalFee?: string
     }
     [KnownChainIds.BitcoinMainnet]: {

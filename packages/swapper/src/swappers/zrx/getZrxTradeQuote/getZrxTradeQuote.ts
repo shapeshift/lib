@@ -93,7 +93,7 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
     const fee = bnOrZero(estimatedGas).multipliedBy(bnOrZero(gasPrice)).toString()
     // 0x approvals are cheaper than trades, but we don't have dynamic quote data for them.
     // Instead, we use a hardcoded gasLimit estimate in place of the estimatedGas in the 0x quote response.
-    const approvalFee =
+    const approvalFeeCryptoBaseUnit =
       sellAssetErc20Address &&
       bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(bnOrZero(gasPrice)).toString()
 
@@ -105,7 +105,7 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
         chainSpecific: {
           estimatedGas: estimatedGas.toString(),
           gasPrice,
-          approvalFee,
+          approvalFeeCryptoBaseUnit,
         },
         networkFeeBaseUnit: fee,
         buyAssetTradeFeeUsd: '0',

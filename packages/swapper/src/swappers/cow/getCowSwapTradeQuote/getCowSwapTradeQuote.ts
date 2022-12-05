@@ -141,7 +141,7 @@ export async function getCowSwapTradeQuote(
         chainSpecific: {
           estimatedGas: feeData.chainSpecific.gasLimit,
           gasPrice: feeData.chainSpecific.gasPrice,
-          approvalFee: bnOrZero(feeData.chainSpecific.gasLimit)
+          approvalFeeCryptoBaseUnit: bnOrZero(feeData.chainSpecific.gasLimit)
             .multipliedBy(bnOrZero(feeData.chainSpecific.gasPrice))
             .toString(),
         },

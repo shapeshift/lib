@@ -130,28 +130,29 @@ const expectedTradeWethToFox: CowTrade<KnownChainIds.EthereumMainnet> = {
   sellAmountWithoutFee: '985442057341242012',
 }
 
-const expectedTradeQuoteWbtcToWethWithApprovalFee: CowTrade<KnownChainIds.EthereumMainnet> = {
-  rate: '19.13939810252384532346', // 19.14 WETH per WBTC
-  feeData: {
-    chainSpecific: {
-      estimatedGas: '100000',
-      gasPrice: '79036500000',
-      approvalFee: '7903650000000000',
+const expectedTradeQuoteWbtcToWethWithapprovalFeeCryptoBaseUnit: CowTrade<KnownChainIds.EthereumMainnet> =
+  {
+    rate: '19.13939810252384532346', // 19.14 WETH per WBTC
+    feeData: {
+      chainSpecific: {
+        estimatedGas: '100000',
+        gasPrice: '79036500000',
+        approvalFeeCryptoBaseUnit: '7903650000000000',
+      },
+      buyAssetTradeFeeUsd: '0',
+      networkFeeBaseUnit: '0',
+      sellAssetTradeFeeUsd: '3.6162531444',
     },
-    buyAssetTradeFeeUsd: '0',
-    networkFeeBaseUnit: '0',
-    sellAssetTradeFeeUsd: '3.6162531444',
-  },
-  sellAmountCryptoPrecision: '100000000',
-  buyAmountCryptoPrecision: '19136098853078932263', // 19.13 WETH
-  sources: [{ name: SwapperName.CowSwap, proportion: '1' }],
-  buyAsset: WETH,
-  sellAsset: WBTC,
-  bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
-  receiveAddress: 'address11',
-  feeAmountInSellToken: '17238',
-  sellAmountWithoutFee: '99982762',
-}
+    sellAmountCryptoPrecision: '100000000',
+    buyAmountCryptoPrecision: '19136098853078932263', // 19.13 WETH
+    sources: [{ name: SwapperName.CowSwap, proportion: '1' }],
+    buyAsset: WETH,
+    sellAsset: WBTC,
+    bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
+    receiveAddress: 'address11',
+    feeAmountInSellToken: '17238',
+    sellAmountWithoutFee: '99982762',
+  }
 
 const expectedTradeQuoteFoxToEth: CowTrade<KnownChainIds.EthereumMainnet> = {
   rate: '0.00004995640398295996',
@@ -269,7 +270,7 @@ describe('cowBuildTrade', () => {
 
     const trade = await cowBuildTrade(deps, tradeInput)
 
-    expect(trade).toEqual(expectedTradeQuoteWbtcToWethWithApprovalFee)
+    expect(trade).toEqual(expectedTradeQuoteWbtcToWethWithapprovalFeeCryptoBaseUnit)
     expect(cowService.post).toHaveBeenCalledWith(
       'https://api.cow.fi/mainnet/api/v1/quote/',
       expectedApiInputWbtcToWeth,

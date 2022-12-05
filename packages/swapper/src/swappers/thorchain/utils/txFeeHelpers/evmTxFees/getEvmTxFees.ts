@@ -48,7 +48,7 @@ export const getEvmTxFees = async ({
       chainSpecific: {
         estimatedGas: feeData.chainSpecific.gasLimit,
         gasPrice: feeData.chainSpecific.gasPrice,
-        approvalFee:
+        approvalFeeCryptoBaseUnit:
           sellAssetReference &&
           bnOrZero(APPROVAL_GAS_LIMIT)
             .multipliedBy(bnOrZero(feeData.chainSpecific.gasPrice))

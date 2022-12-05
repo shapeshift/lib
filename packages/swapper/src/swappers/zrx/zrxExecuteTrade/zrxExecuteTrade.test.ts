@@ -34,7 +34,11 @@ describe('ZrxExecuteTrade', () => {
     txData: '0x123',
     rate: '1',
     feeData: {
-      chainSpecific: { approvalFee: '123600000', estimatedGas: '1235', gasPrice: '1236' },
+      chainSpecific: {
+        approvalFeeCryptoBaseUnit: '123600000',
+        estimatedGas: '1235',
+        gasPrice: '1236',
+      },
       buyAssetTradeFeeUsd: '0',
       sellAssetTradeFeeUsd: '0',
       networkFeeBaseUnit: '0',
