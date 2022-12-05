@@ -137,7 +137,7 @@ export async function getCowSwapTradeQuote(
       minimumCryptoHuman: minimum,
       maximum,
       feeData: {
-        networkFee: '0', // no miner fee for CowSwap
+        networkFeeBaseUnit: '0', // no miner fee for CowSwap
         chainSpecific: {
           estimatedGas: feeData.chainSpecific.gasLimit,
           gasPrice: feeData.chainSpecific.gasPrice,

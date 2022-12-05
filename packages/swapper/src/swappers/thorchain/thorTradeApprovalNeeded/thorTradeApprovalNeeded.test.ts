@@ -35,7 +35,7 @@ describe('thorTradeApprovalNeeded', () => {
         sellAmountCryptoPrecision: '10',
         feeData: {
           chainSpecific: { gasPrice: '1000' },
-          networkFee: '0',
+          networkFeeBaseUnit: '0',
           sellAssetTradeFeeUsd: '0',
           buyAssetTradeFeeUsd: '0',
         },
@@ -57,7 +57,7 @@ describe('thorTradeApprovalNeeded', () => {
         sellAmount: '10',
         feeData: {
           chainSpecific: { gasPrice: '1000' },
-          networkFee: '0',
+          networkFeeBaseUnit: '0',
           sellAssetTradeFeeUsd: '0',
           buyAssetTradeFeeUsd: '0',
         },

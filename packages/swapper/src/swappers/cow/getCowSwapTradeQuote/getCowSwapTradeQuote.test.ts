@@ -127,7 +127,7 @@ const expectedTradeQuoteWethToFox: TradeQuote<KnownChainIds.EthereumMainnet> = {
     },
     buyAssetTradeFeeUsd: '0',
     sellAssetTradeFeeUsd: '17.95954294012756741283729339486489192096',
-    networkFee: '0',
+    networkFeeBaseUnit: '0',
   },
   sellAmountCryptoPrecision: '1000000000000000000',
   buyAmountCryptoPrecision: '14501811818247595090576', // 14501 FOX
@@ -150,7 +150,7 @@ const expectedTradeQuoteFoxToEth: TradeQuote<KnownChainIds.EthereumMainnet> = {
     },
     buyAssetTradeFeeUsd: '0',
     sellAssetTradeFeeUsd: '5.3955565850972847808512',
-    networkFee: '0',
+    networkFeeBaseUnit: '0',
   },
   sellAmountCryptoPrecision: '1000000000000000000000',
   buyAmountCryptoPrecision: '46868859830863283',
@@ -173,7 +173,7 @@ const expectedTradeQuoteSmallAmountWethToFox: TradeQuote<KnownChainIds.EthereumM
     },
     buyAssetTradeFeeUsd: '0',
     sellAssetTradeFeeUsd: '1.79595429401274711874033728120645035672',
-    networkFee: '0',
+    networkFeeBaseUnit: '0',
   },
   sellAmountCryptoPrecision: '1000000000000',
   buyAmountCryptoPrecision: '145018118182475950905', // 14501 FOX

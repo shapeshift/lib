@@ -45,7 +45,7 @@ export const getUtxoTxFees = async ({
     const satsPerByte = feeMultiplier.times(feeData.chainSpecific.satoshiPerByte).dp(0).toString()
 
     return {
-      networkFee,
+      networkFeeBaseUnit: networkFee,
       buyAssetTradeFeeUsd,
       sellAssetTradeFeeUsd: '0',
       chainSpecific: {

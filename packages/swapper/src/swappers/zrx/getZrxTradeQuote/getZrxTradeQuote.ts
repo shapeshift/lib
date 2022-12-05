@@ -107,7 +107,7 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
           gasPrice,
           approvalFee,
         },
-        networkFee: fee,
+        networkFeeBaseUnit: fee,
         buyAssetTradeFeeUsd: '0',
         sellAssetTradeFeeUsd: '0',
       },

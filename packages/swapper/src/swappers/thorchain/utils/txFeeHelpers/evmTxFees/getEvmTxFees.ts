@@ -44,7 +44,7 @@ export const getEvmTxFees = async ({
     const feeData = feeDataOptions['fast']
 
     return {
-      networkFee: feeData.txFee,
+      networkFeeBaseUnit: feeData.txFee,
       chainSpecific: {
         estimatedGas: feeData.chainSpecific.gasLimit,
         gasPrice: feeData.chainSpecific.gasPrice,
