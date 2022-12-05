@@ -32681,18 +32681,6 @@
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
   },
-  "eip155:1/erc20:0x77f9cf0bd8c500cffdf420e72343893aecc2ec0b": {
-    "assetId": "eip155:1/erc20:0x77f9cf0bd8c500cffdf420e72343893aecc2ec0b",
-    "chainId": "eip155:1",
-    "name": "Laika",
-    "precision": 18,
-    "color": "#A3968F",
-    "icon": "https://assets.coingecko.com/coins/images/26717/thumb/Laikacmcfinal.png?1659857807",
-    "symbol": "LAIKA",
-    "explorer": "https://etherscan.io",
-    "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/"
-  },
   "eip155:1/erc20:0x77fba179c79de5b7653f68b5039af940ada60ce0": {
     "assetId": "eip155:1/erc20:0x77fba179c79de5b7653f68b5039af940ada60ce0",
     "chainId": "eip155:1",
@@ -46986,6 +46974,18 @@
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
   },
+  "eip155:1/erc20:0xb045f7f363fe4949954811b113bd56d208c67b23": {
+    "assetId": "eip155:1/erc20:0xb045f7f363fe4949954811b113bd56d208c67b23",
+    "chainId": "eip155:1",
+    "name": "Spider Tanks",
+    "precision": 8,
+    "color": "#EC761A",
+    "icon": "https://assets.coingecko.com/coins/images/28057/thumb/SILK_Logo.png?1667295996",
+    "symbol": "SILK",
+    "explorer": "https://etherscan.io",
+    "explorerAddressLink": "https://etherscan.io/address/",
+    "explorerTxLink": "https://etherscan.io/tx/"
+  },
   "eip155:1/erc20:0xb04dfdb8271ed2d5e13858562c44a77d3ceb9e57": {
     "assetId": "eip155:1/erc20:0xb04dfdb8271ed2d5e13858562c44a77d3ceb9e57",
     "chainId": "eip155:1",
@@ -47440,18 +47440,6 @@
     "color": "#070808",
     "icon": "https://assets.coingecko.com/coins/images/13533/thumb/FLASH.png?1615182275",
     "symbol": "FLASH",
-    "explorer": "https://etherscan.io",
-    "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/"
-  },
-  "eip155:1/erc20:0xb1f136a74e18e4e2921febbf25820d1bb65b5647": {
-    "assetId": "eip155:1/erc20:0xb1f136a74e18e4e2921febbf25820d1bb65b5647",
-    "chainId": "eip155:1",
-    "name": "hiPunks",
-    "precision": 18,
-    "color": "#885044",
-    "icon": "https://assets.coingecko.com/coins/images/26739/thumb/hipunks.png?1659946062",
-    "symbol": "HIPUNKS",
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
@@ -58436,18 +58424,6 @@
     "explorerAddressLink": "https://etherscan.io/address/",
     "explorerTxLink": "https://etherscan.io/tx/"
   },
-  "eip155:1/erc20:0xde16ce60804a881e9f8c4ebb3824646edecd478d": {
-    "assetId": "eip155:1/erc20:0xde16ce60804a881e9f8c4ebb3824646edecd478d",
-    "chainId": "eip155:1",
-    "name": "MagicCraft",
-    "precision": 9,
-    "color": "#CDC7DE",
-    "icon": "https://assets.coingecko.com/coins/images/21318/thumb/mcrt.png?1638932009",
-    "symbol": "MCRT",
-    "explorer": "https://etherscan.io",
-    "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/"
-  },
   "eip155:1/erc20:0xde1e0ae6101b46520cf66fdc0b1059c5cc3d106c": {
     "assetId": "eip155:1/erc20:0xde1e0ae6101b46520cf66fdc0b1059c5cc3d106c",
     "chainId": "eip155:1",
@@ -58629,16 +58605,16 @@
     "assetId": "eip155:1/erc20:0xdea67845a51e24461d5fed8084e69b426af3d5db"
   },
   "eip155:1/erc20:0xdec41db0c33f3f6f3cb615449c311ba22d418a8d": {
+    "assetId": "eip155:1/erc20:0xdec41db0c33f3f6f3cb615449c311ba22d418a8d",
+    "chainId": "eip155:1",
+    "name": "Lobis",
+    "precision": 9,
+    "color": "#040404",
+    "icon": "https://assets.coingecko.com/coins/images/20813/thumb/0tOZIQ0B_400x400.jpg?1637718276",
+    "symbol": "LOBI",
     "explorer": "https://etherscan.io",
     "explorerAddressLink": "https://etherscan.io/address/",
-    "explorerTxLink": "https://etherscan.io/tx/",
-    "color": "#040404",
-    "icon": "https://assets.yearn.network/tokens/ethereum/0xdec41db0c33f3f6f3cb615449c311ba22d418a8d.png",
-    "name": "LOBI",
-    "precision": 9,
-    "symbol": "LOBI",
-    "chainId": "eip155:1",
-    "assetId": "eip155:1/erc20:0xdec41db0c33f3f6f3cb615449c311ba22d418a8d"
+    "explorerTxLink": "https://etherscan.io/tx/"
   },
   "eip155:1/erc20:0xdecade1c6bf2cd9fb89afad73e4a519c867adcf5": {
     "assetId": "eip155:1/erc20:0xdecade1c6bf2cd9fb89afad73e4a519c867adcf5",
