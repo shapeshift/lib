@@ -20,7 +20,7 @@ export const setupQuote = () => {
     feeData: {
       chainSpecific: {},
       sellAssetTradeFeeUsd: '0',
-      networkFeeBaseUnit: '0',
+      networkFeeCryptoBaseUnit: '0',
       buyAssetTradeFeeUsd: '0',
     },
     rate: '1',

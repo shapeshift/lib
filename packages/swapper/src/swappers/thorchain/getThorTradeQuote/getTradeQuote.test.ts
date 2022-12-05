@@ -27,7 +27,7 @@ const expectedQuoteResponse: TradeQuote<KnownChainIds.EthereumMainnet> = {
     chainSpecific: { estimatedGas: '100000', approvalFeeCryptoBaseUnit: '700000', gasPrice: '7' },
     buyAssetTradeFeeUsd: '7.656',
     sellAssetTradeFeeUsd: '0',
-    networkFeeBaseUnit: '700000',
+    networkFeeCryptoBaseUnit: '700000',
   },
   rate: '0.0000784',
   sources: [{ name: SwapperName.Thorchain, proportion: '1' }],

@@ -94,7 +94,9 @@ describe('zrxBuildTrade', () => {
         estimatedGas: '1235',
         gasPrice: '1236',
       },
-      networkFeeBaseUnit: (Number(quoteResponse.gas) * Number(quoteResponse.gasPrice)).toString(),
+      networkFeeCryptoBaseUnit: (
+        Number(quoteResponse.gas) * Number(quoteResponse.gasPrice)
+      ).toString(),
       sellAssetTradeFeeUsd: '0',
       buyAssetTradeFeeUsd: '0',
     },
@@ -163,7 +165,7 @@ describe('zrxBuildTrade', () => {
       },
       buyAssetTradeFeeUsd: '0',
       sellAssetTradeFeeUsd: '0',
-      networkFeeBaseUnit: bnOrZero(gasPrice).multipliedBy(estimatedGas).toString(),
+      networkFeeCryptoBaseUnit: bnOrZero(gasPrice).multipliedBy(estimatedGas).toString(),
     }
 
     expect(await zrxBuildTrade(deps, { ...buildTradeInput, wallet })).toEqual({

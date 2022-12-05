@@ -45,7 +45,7 @@ type ChainSpecificQuoteFeeData<T extends ChainId> = ChainSpecific<
 >
 
 export type QuoteFeeData<T extends ChainId> = {
-  networkFeeBaseUnit: string // fee paid to the network from the fee asset
+  networkFeeCryptoBaseUnit: string // fee paid to the network from the fee asset
   buyAssetTradeFeeUsd: string // fee taken out of the trade from the buyAsset
   sellAssetTradeFeeUsd?: string // fee taken out of the trade from the sellAsset
 } & ChainSpecificQuoteFeeData<T>

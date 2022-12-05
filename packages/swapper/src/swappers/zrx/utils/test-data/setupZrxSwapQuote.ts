@@ -42,7 +42,7 @@ export const setupExecuteTrade = () => {
       chainSpecific: {},
       buyAssetTradeFeeUsd: '0',
       sellAssetTradeFeeUsd: '0',
-      networkFeeBaseUnit: '0',
+      networkFeeCryptoBaseUnit: '0',
     },
     rate: '0',
     sources: [],

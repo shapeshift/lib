@@ -186,7 +186,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       buyAmountCryptoPrecision: buyAmount,
       buyAsset,
       feeData: {
-        networkFeeBaseUnit: fee,
+        networkFeeCryptoBaseUnit: fee,
         sellAssetTradeFeeUsd: '0',
         buyAssetTradeFeeUsd,
       },
@@ -230,7 +230,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     return {
       buyAsset,
       feeData: {
-        networkFeeBaseUnit: fee,
+        networkFeeCryptoBaseUnit: fee,
         sellAssetTradeFeeUsd: '0',
         buyAssetTradeFeeUsd,
       },

@@ -41,7 +41,7 @@ describe('ZrxExecuteTrade', () => {
       },
       buyAssetTradeFeeUsd: '0',
       sellAssetTradeFeeUsd: '0',
-      networkFeeBaseUnit: '0',
+      networkFeeCryptoBaseUnit: '0',
     },
     sources: [],
   }
