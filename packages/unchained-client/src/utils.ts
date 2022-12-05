@@ -4,7 +4,7 @@ import { Token, Transfer, TransferType } from './types'
 
 export async function findAsyncSequential<T, U>(
   array: T[],
-  predicate: (element: T) => Promise<U | undefined>
+  predicate: (element: T) => Promise<U | undefined>,
 ): Promise<U | undefined> {
   for (const element of array) {
     const result = await predicate(element)
@@ -17,18 +17,18 @@ export async function findAsyncSequential<T, U>(
 
 // keep track of all individual tx components and add up the total value transferred
 export function aggregateTransfer(
-  transfers: Array<Transfer>,
+  transfers: Transfer[],
   type: TransferType,
   assetId: string,
   from: string,
   to: string,
   value: string,
-  token?: Token
-): Array<Transfer> {
+  token?: Token,
+): Transfer[] {
   if (!new BigNumber(value).gt(0)) return transfers
 
   const index = transfers?.findIndex(
-    (t) => t.type === type && t.assetId === assetId && t.from === from && t.to === to
+    (t) => t.type === type && t.assetId === assetId && t.from === from && t.to === to,
   )
   const transfer = transfers?.[index]
 
@@ -46,8 +46,8 @@ export function aggregateTransfer(
         to,
         totalValue: value,
         components: [{ value }],
-        token
-      }
+        token,
+      },
     ]
   }
 

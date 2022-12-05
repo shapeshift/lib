@@ -1,3 +1,82 @@
+# [@shapeshiftoss/asset-service-v8.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v8.1.5...@shapeshiftoss/asset-service-v8.2.0) (2022-11-30)
+
+
+### Features
+
+* **asset-service:** fetch idle asset symbols with Alchemy API ([#1106](https://github.com/shapeshift/lib/issues/1106)) ([3deb86e](https://github.com/shapeshift/lib/commit/3deb86e01234c68671968be53a7dba46bf7dd56c))
+
+# [@shapeshiftoss/asset-service-v8.1.5](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v8.1.4...@shapeshiftoss/asset-service-v8.1.5) (2022-10-24)
+
+# [@shapeshiftoss/asset-service-v8.1.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v8.1.3...@shapeshiftoss/asset-service-v8.1.4) (2022-10-24)
+
+
+### Bug Fixes
+
+* avax asset ref and upgrade yearn sdk ([#1074](https://github.com/shapeshift/lib/issues/1074)) ([315095a](https://github.com/shapeshift/lib/commit/315095a1c21922b329126ffa643db944a4f31bce))
+
+# [@shapeshiftoss/asset-service-v8.1.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v8.1.2...@shapeshiftoss/asset-service-v8.1.3) (2022-10-20)
+
+
+### Bug Fixes
+
+* improve asset generation and filter or blacklist all known wormhole assets ([#1072](https://github.com/shapeshift/lib/issues/1072)) ([b37bdef](https://github.com/shapeshift/lib/commit/b37bdef4e378937527bb16973d3042e3ae72757e))
+
+# [@shapeshiftoss/asset-service-v8.1.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v8.1.1...@shapeshiftoss/asset-service-v8.1.2) (2022-10-06)
+
+# [@shapeshiftoss/asset-service-v8.1.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v8.1.0...@shapeshiftoss/asset-service-v8.1.1) (2022-09-14)
+
+# [@shapeshiftoss/asset-service-v8.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v8.0.2...@shapeshiftoss/asset-service-v8.1.0) (2022-09-12)
+
+
+### Features
+
+* add THORChain support ([#1010](https://github.com/shapeshift/lib/issues/1010)) ([d7c3b72](https://github.com/shapeshift/lib/commit/d7c3b72bbda9795f87fa8f73c35926c95026a3c2))
+
+# [@shapeshiftoss/asset-service-v8.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v8.0.1...@shapeshiftoss/asset-service-v8.0.2) (2022-09-09)
+
+# [@shapeshiftoss/asset-service-v8.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v8.0.0...@shapeshiftoss/asset-service-v8.0.1) (2022-09-02)
+
+# [@shapeshiftoss/asset-service-v8.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v7.5.0...@shapeshiftoss/asset-service-v8.0.0) (2022-09-02)
+
+
+### Features
+
+* use CHAIN_NAMESPACE.Evm & CHAIN_NAMESPACE.CosmosSdk ([#1007](https://github.com/shapeshift/lib/issues/1007)) ([b6c5490](https://github.com/shapeshift/lib/commit/b6c54902c9e84fd628e917e4747acdb6faf3405d)), closes [#1008](https://github.com/shapeshift/lib/issues/1008)
+
+
+### BREAKING CHANGES
+
+* CHAIN_NAMESPACE.Ethereum is now CHAIN_NAMESPACE.Evm
+* CHAIN_NAMESPACE.Cosmos is now CHAIN_NAMESPACE.CosmosSdk
+
+* chore: trigger CI
+
+* chore: trigger ci
+
+* fix: internally bump caip
+
+Co-authored-by: Apotheosis <97164662+0xApotheosis@users.noreply.github.com>
+
+# [@shapeshiftoss/asset-service-v7.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v7.4.3...@shapeshiftoss/asset-service-v7.5.0) (2022-08-23)
+
+
+### Features
+
+* asset service overrides ([#985](https://github.com/shapeshift/lib/issues/985)) ([f655235](https://github.com/shapeshift/lib/commit/f65523540b553a360bbdf72448e0367f38da4f36))
+
+# [@shapeshiftoss/asset-service-v7.4.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v7.4.2...@shapeshiftoss/asset-service-v7.4.3) (2022-08-16)
+
+# [@shapeshiftoss/asset-service-v7.4.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v7.4.1...@shapeshiftoss/asset-service-v7.4.2) (2022-08-15)
+
+# [@shapeshiftoss/asset-service-v7.4.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v7.4.0...@shapeshiftoss/asset-service-v7.4.1) (2022-08-15)
+
+# [@shapeshiftoss/asset-service-v7.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v7.3.0...@shapeshiftoss/asset-service-v7.4.0) (2022-08-09)
+
+
+### Features
+
+* idle-investor final ([#955](https://github.com/shapeshift/lib/issues/955)) ([564ba23](https://github.com/shapeshift/lib/commit/564ba23a92ce4086917bac366e1bd6d419de3306))
+
 # [@shapeshiftoss/asset-service-v7.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v7.2.2...@shapeshiftoss/asset-service-v7.3.0) (2022-08-04)
 
 

@@ -3,9 +3,10 @@ import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import { AxiosStatic } from 'axios'
+import { ZrxTrade } from 'packages/swapper/src/swappers/zrx/types'
 import Web3 from 'web3'
 
-import { BuildTradeInput } from '../../../api'
+import { BuildTradeInput, EvmSupportedChainIds, QuoteFeeData } from '../../../api'
 import { bnOrZero } from '../../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../../utils/constants'
 import { setupZrxTradeQuoteResponse } from '../utils/test-data/setupZrxSwapQuote'
@@ -18,7 +19,7 @@ const axios: AxiosStatic = jest.createMockFromModule('axios')
 axios.create = jest.fn(() => axios)
 
 jest.mock('../utils/zrxService', () => ({
-  zrxServiceFactory: () => axios.create()
+  zrxServiceFactory: () => axios.create(),
 }))
 
 // @ts-ignore
@@ -27,11 +28,11 @@ Web3.mockImplementation(() => ({
     Contract: jest.fn(() => ({
       methods: {
         allowance: jest.fn(() => ({
-          call: jest.fn()
-        }))
-      }
-    }))
-  }
+          call: jest.fn(),
+        })),
+      },
+    })),
+  },
 }))
 
 const setup = () => {
@@ -43,11 +44,11 @@ const setup = () => {
       ws: new unchained.ws.Client<unchained.ethereum.Tx>('ws://localhost:31300'),
       http: new unchained.ethereum.V1Api(
         new unchained.ethereum.Configuration({
-          basePath: 'http://localhost:31300'
-        })
-      )
+          basePath: 'http://localhost:31300',
+        }),
+      ),
     },
-    rpcUrl: ethNodeUrl
+    rpcUrl: ethNodeUrl,
   })
   const zrxService = zrxServiceFactory('https://api.0x.org/')
 
@@ -59,11 +60,11 @@ describe('zrxBuildTrade', () => {
   const { web3Instance, adapter, zrxService } = setup()
   const walletAddress = '0xc770eefad204b5180df6a14ee197d99d808ee52d'
   const wallet = {
-    ethGetAddress: jest.fn(() => Promise.resolve(walletAddress))
+    ethGetAddress: jest.fn(() => Promise.resolve(walletAddress)),
   } as unknown as HDWallet
   const deps = {
     adapter,
-    web3: web3Instance
+    web3: web3Instance,
   }
 
   const buildTradeInput: BuildTradeInput = {
@@ -71,46 +72,48 @@ describe('zrxBuildTrade', () => {
     sendMax: false,
     sellAsset,
     buyAsset,
-    sellAmount: '1000000000000000000',
-    sellAssetAccountNumber: 0,
+    sellAmountCryptoPrecision: '1000000000000000000',
+    bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
     wallet,
-    receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
+    receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
   }
 
-  const buildTradeResponse = {
+  const buildTradeResponse: ZrxTrade<EvmSupportedChainIds> = {
     sellAsset,
-    sellAmount: quoteResponse.sellAmount,
-    buyAmount: '',
+    buyAsset,
+    sellAmountCryptoPrecision: quoteResponse.sellAmount,
+    buyAmountCryptoPrecision: '',
     depositAddress: quoteResponse.to,
     receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
-    sellAssetAccountNumber: 0,
+    bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
     txData: quoteResponse.data,
     rate: quoteResponse.price,
     feeData: {
-      fee: (Number(quoteResponse.gas) * Number(quoteResponse.gasPrice)).toString(),
       chainSpecific: { approvalFee: '123600000', estimatedGas: '1235', gasPrice: '1236' },
-      tradeFee: '0'
+      networkFee: (Number(quoteResponse.gas) * Number(quoteResponse.gasPrice)).toString(),
+      sellAssetTradeFeeUsd: '0',
+      buyAssetTradeFeeUsd: '0',
     },
-    sources: []
+    sources: [],
   }
 
   it('should return a quote response', async () => {
     const allowanceOnChain = '1000'
     const data = {
-      ...quoteResponse
+      ...quoteResponse,
     }
     ;(web3Instance.eth.Contract as jest.Mock<unknown>).mockImplementation(() => ({
       methods: {
         allowance: jest.fn(() => ({
-          call: jest.fn(() => allowanceOnChain)
-        }))
-      }
+          call: jest.fn(() => allowanceOnChain),
+        })),
+      },
     }))
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data }))
 
     expect(await zrxBuildTrade(deps, { ...buildTradeInput })).toEqual({
       ...buildTradeResponse,
-      buyAsset
+      buyAsset,
     })
   })
 
@@ -119,21 +122,21 @@ describe('zrxBuildTrade', () => {
     const price = '1000'
     const data = {
       ...quoteResponse,
-      price
+      price,
     }
     ;(web3Instance.eth.Contract as jest.Mock<unknown>).mockImplementation(() => ({
       methods: {
         allowance: jest.fn(() => ({
-          call: jest.fn(() => allowanceOnChain)
-        }))
-      }
+          call: jest.fn(() => allowanceOnChain),
+        })),
+      },
     }))
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data }))
 
     expect(await zrxBuildTrade(deps, { ...buildTradeInput })).toEqual({
       ...buildTradeResponse,
       rate: price,
-      buyAsset
+      buyAsset,
     })
   })
 
@@ -144,22 +147,25 @@ describe('zrxBuildTrade', () => {
       ...quoteResponse,
       allowanceTarget: 'allowanceTargetAddress',
       gas: estimatedGas,
-      gasPrice
+      gasPrice,
     }
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data }))
 
+    const expectedFeeData: QuoteFeeData<EvmSupportedChainIds> = {
+      chainSpecific: {
+        approvalFee: bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(gasPrice).toString(),
+        gasPrice,
+        estimatedGas,
+      },
+      buyAssetTradeFeeUsd: '0',
+      sellAssetTradeFeeUsd: '0',
+      networkFee: bnOrZero(gasPrice).multipliedBy(estimatedGas).toString(),
+    }
+
     expect(await zrxBuildTrade(deps, { ...buildTradeInput, wallet })).toEqual({
       ...buildTradeResponse,
-      feeData: {
-        chainSpecific: {
-          approvalFee: bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(gasPrice).toString(),
-          gasPrice,
-          estimatedGas
-        },
-        fee: bnOrZero(gasPrice).multipliedBy(estimatedGas).toString(),
-        tradeFee: '0'
-      },
-      buyAsset
+      feeData: expectedFeeData,
+      buyAsset,
     })
   })
 })

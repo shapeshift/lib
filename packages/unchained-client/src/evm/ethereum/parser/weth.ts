@@ -2,10 +2,14 @@ import { ChainId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
 import { ethers } from 'ethers'
 
 import { Tx } from '../../../generated/ethereum'
-import { TransferType } from '../../../types'
+import { BaseTxMetadata, TransferType } from '../../../types'
 import { getSigHash, SubParser, txInteractsWithContract, TxSpecific } from '../../parser'
 import WETH_ABI from './abi/weth'
 import { WETH_CONTRACT_MAINNET, WETH_CONTRACT_ROPSTEN } from './constants'
+
+export interface TxMetadata extends BaseTxMetadata {
+  parser: 'weth'
+}
 
 export interface ParserArgs {
   chainId: ChainId
@@ -21,7 +25,7 @@ export class Parser implements SubParser<Tx> {
 
   readonly supportedFunctions = {
     depositSigHash: this.abiInterface.getSighash('deposit'),
-    withdrawalSigHash: this.abiInterface.getSighash('withdraw')
+    withdrawalSigHash: this.abiInterface.getSighash('withdraw'),
   }
 
   constructor(args: ParserArgs) {
@@ -56,14 +60,14 @@ export class Parser implements SubParser<Tx> {
     const assetId = toAssetId({
       ...fromChainId(this.chainId),
       assetNamespace: 'erc20',
-      assetReference: this.wethContract
+      assetReference: this.wethContract,
     })
 
     const token = {
       contract: this.wethContract,
       decimals: 18,
       name: 'Wrapped Ether',
-      symbol: 'WETH'
+      symbol: 'WETH',
     }
 
     const transfers = (() => {
@@ -77,8 +81,8 @@ export class Parser implements SubParser<Tx> {
               assetId,
               totalValue: tx.value,
               components: [{ value: tx.value }],
-              token
-            }
+              token,
+            },
           ]
         }
         case this.supportedFunctions.withdrawalSigHash:
@@ -90,8 +94,8 @@ export class Parser implements SubParser<Tx> {
               assetId,
               totalValue: decoded.args.wad.toString(),
               components: [{ value: decoded.args.wad.toString() }],
-              token
-            }
+              token,
+            },
           ]
         default:
           return
@@ -105,8 +109,8 @@ export class Parser implements SubParser<Tx> {
       transfers,
       data: {
         parser: 'weth',
-        method: decoded.name
-      }
+        method: decoded.name,
+      },
     }
   }
 }

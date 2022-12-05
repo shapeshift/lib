@@ -1,31 +1,40 @@
-import { ChainId } from '@shapeshiftoss/caip'
-import { bitcoin, cosmos, ethereum } from '@shapeshiftoss/chain-adapters'
+import { CHAIN_NAMESPACE, ChainId, fromAssetId } from '@shapeshiftoss/caip'
+import { cosmos, UtxoBaseAdapter } from '@shapeshiftoss/chain-adapters'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
-import { BuildTradeInput, SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
+import {
+  BuildTradeInput,
+  EvmSupportedChainAdapter,
+  EvmSupportedChainIds,
+  GetUtxoTradeQuoteInput,
+  SwapError,
+  SwapErrorTypes,
+  TradeQuote,
+  UtxoSupportedChainIds,
+} from '../../../api'
 import { DEFAULT_SLIPPAGE } from '../../utils/constants'
 import { getThorTradeQuote } from '../getThorTradeQuote/getTradeQuote'
 import { ThorchainSwapperDeps, ThorTrade } from '../types'
 import { getThorTxInfo as getBtcThorTxInfo } from '../utils/bitcoin/utils/getThorTxData'
-import { cosmosTxData } from '../utils/cosmos/cosmosTxData'
-import { makeTradeTx } from '../utils/ethereum/makeTradeTx'
+import { getCosmosTxData } from '../utils/cosmos/getCosmosTxData'
+import { makeTradeTx } from '../utils/evm/makeTradeTx'
 
-export const buildTrade = async ({
-  deps,
-  input
-}: {
+type BuildTradeArgs = {
   deps: ThorchainSwapperDeps
   input: BuildTradeInput
-}): Promise<ThorTrade<ChainId>> => {
+}
+
+export const buildTrade = async ({ deps, input }: BuildTradeArgs): Promise<ThorTrade<ChainId>> => {
   try {
     const {
       buyAsset,
+      receiveAddress: destinationAddress,
+      sellAmountCryptoPrecision,
       sellAsset,
-      sellAssetAccountNumber,
-      sellAmount,
-      wallet,
+      bip44Params,
       slippage: slippageTolerance = DEFAULT_SLIPPAGE,
-      receiveAddress: destinationAddress
+      wallet,
+      sendMax,
     } = input
 
     const quote = await getThorTradeQuote({ deps, input })
@@ -35,104 +44,107 @@ export const buildTrade = async ({
       throw new SwapError('[buildTrade]: unsupported sell asset', {
         code: SwapErrorTypes.BUILD_TRADE_FAILED,
         fn: 'buildTrade',
-        details: { sellAsset }
+        details: { sellAsset },
       })
-    const sellAssetBip44Params = sellAdapter.buildBIP44Params({
-      accountNumber: sellAssetAccountNumber
-    })
 
-    if (input.chainId === KnownChainIds.EthereumMainnet) {
+    const { chainNamespace } = fromAssetId(sellAsset.assetId)
+
+    if (chainNamespace === CHAIN_NAMESPACE.Evm) {
       const ethTradeTx = await makeTradeTx({
         wallet,
         slippageTolerance,
-        bip44Params: sellAssetBip44Params,
+        bip44Params,
         sellAsset,
         buyAsset,
-        adapter: sellAdapter as unknown as ethereum.ChainAdapter,
-        sellAmount,
+        adapter: sellAdapter as unknown as EvmSupportedChainAdapter,
+        sellAmountCryptoPrecision,
         destinationAddress,
         deps,
         gasPrice:
-          (quote as TradeQuote<KnownChainIds.EthereumMainnet>).feeData.chainSpecific?.gasPrice ??
-          '0',
+          (quote as TradeQuote<EvmSupportedChainIds>).feeData.chainSpecific?.gasPrice ?? '0',
         gasLimit:
-          (quote as TradeQuote<KnownChainIds.EthereumMainnet>).feeData.chainSpecific
-            ?.estimatedGas ?? '0',
-        tradeFee: quote.feeData.tradeFee
+          (quote as TradeQuote<EvmSupportedChainIds>).feeData.chainSpecific?.estimatedGas ?? '0',
+        buyAssetTradeFeeUsd: quote.feeData.buyAssetTradeFeeUsd,
       })
 
       return {
-        chainId: KnownChainIds.EthereumMainnet,
+        chainId: sellAsset.chainId as EvmSupportedChainIds,
         ...quote,
         receiveAddress: destinationAddress,
-        txData: ethTradeTx.txToSign
+        txData: ethTradeTx.txToSign,
       }
-    } else if (input.chainId === KnownChainIds.BitcoinMainnet) {
+    } else if (chainNamespace === CHAIN_NAMESPACE.Utxo) {
       const { vault, opReturnData } = await getBtcThorTxInfo({
         deps,
         sellAsset,
         buyAsset,
-        sellAmount,
+        sellAmountCryptoPrecision,
         slippageTolerance,
         destinationAddress,
-        wallet,
-        bip44Params: sellAssetBip44Params,
-        accountType: input.accountType,
-        tradeFee: quote.feeData.tradeFee
+        xpub: (input as GetUtxoTradeQuoteInput).xpub,
+        buyAssetTradeFeeUsd: quote.feeData.buyAssetTradeFeeUsd,
       })
 
       const buildTxResponse = await (
-        sellAdapter as unknown as bitcoin.ChainAdapter
+        sellAdapter as unknown as UtxoBaseAdapter<UtxoSupportedChainIds>
       ).buildSendTransaction({
-        value: sellAmount,
+        value: sellAmountCryptoPrecision,
         wallet,
         to: vault,
+        bip44Params: (input as GetUtxoTradeQuoteInput).bip44Params,
         chainSpecific: {
-          accountType: input.accountType,
-          satoshiPerByte: (quote as TradeQuote<KnownChainIds.BitcoinMainnet>).feeData.chainSpecific
+          accountType: (input as GetUtxoTradeQuoteInput).accountType,
+          satoshiPerByte: (quote as TradeQuote<UtxoSupportedChainIds>).feeData.chainSpecific
             .satsPerByte,
-          opReturnData
-        }
+          opReturnData,
+        },
+        sendMax,
       })
 
       return {
-        chainId: KnownChainIds.BitcoinMainnet,
+        chainId: sellAsset.chainId as UtxoSupportedChainIds,
         ...quote,
         receiveAddress: destinationAddress,
-        txData: buildTxResponse.txToSign
+        txData: buildTxResponse.txToSign,
       }
-    } else if (input.chainId === KnownChainIds.CosmosMainnet) {
-      const txData = await cosmosTxData({
+    } else if (chainNamespace === CHAIN_NAMESPACE.CosmosSdk) {
+      if (!bip44Params) {
+        throw new Error('bip44Params required as input')
+      }
+
+      const txData = await getCosmosTxData({
+        bip44Params,
         deps,
         sellAdapter: sellAdapter as unknown as cosmos.ChainAdapter,
-        sellAmount,
+        sellAmountCryptoPrecision,
         sellAsset,
         slippageTolerance,
         chainId: input.chainId,
         buyAsset,
         wallet,
         destinationAddress,
-        quote: quote as TradeQuote<KnownChainIds.CosmosMainnet>
+        quote: quote as TradeQuote<KnownChainIds.CosmosMainnet>,
       })
 
       return {
         chainId: KnownChainIds.CosmosMainnet,
         ...quote,
         receiveAddress: destinationAddress,
-        txData
+        txData,
       }
     } else {
       throw new SwapError('[buildTrade]: unsupported chain id', {
         code: SwapErrorTypes.BUILD_TRADE_FAILED,
         fn: 'buildTrade',
-        details: { sellAsset }
+        details: { sellAsset },
       })
     }
   } catch (e) {
     if (e instanceof SwapError) throw e
     throw new SwapError('[buildTrade]: error building trade', {
       code: SwapErrorTypes.BUILD_TRADE_FAILED,
-      fn: 'buildTrade'
+      fn: 'buildTrade',
+      cause: e,
     })
   }
 }

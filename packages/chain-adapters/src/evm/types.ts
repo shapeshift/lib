@@ -1,10 +1,12 @@
+import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { BIP44Params } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 
 import { AssetBalance } from '../types'
 
 export type Account = {
   nonce: number
-  tokens?: Array<AssetBalance>
+  tokens?: AssetBalance[]
 }
 
 export type FeeData = {
@@ -37,4 +39,13 @@ export type GetFeeDataInput = {
   contractData?: string
 }
 
-export type TransactionMetadata = unchained.evm.ERC20TxMetadata
+export type BuildCustomTxInput = {
+  wallet: HDWallet
+  bip44Params: BIP44Params
+  to: string
+  data: string
+  value: string
+  gasLimit: string
+} & Fees
+
+export type TransactionMetadata = unchained.evm.TxMetadata

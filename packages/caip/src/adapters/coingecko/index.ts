@@ -11,7 +11,8 @@ export enum CoingeckoAssetPlatform {
   Ethereum = 'ethereum',
   Cosmos = 'cosmos',
   Osmosis = 'osmosis',
-  Avalanche = 'avalanche'
+  Avalanche = 'avalanche',
+  Thorchain = 'thorchain',
 }
 
 type CoinGeckoId = string
@@ -24,11 +25,11 @@ const assetIdToCoinGeckoIdMapByChain: Record<AssetId, CoinGeckoId>[] = Object.va
 
 const generatedAssetIdToCoingeckoMap = assetIdToCoinGeckoIdMapByChain.reduce((acc, cur) => ({
   ...acc,
-  ...cur
+  ...cur,
 })) as Record<string, string>
 
 const generatedCoingeckoToAssetIdsMap: Record<CoinGeckoId, AssetId[]> = invertBy(
-  generatedAssetIdToCoingeckoMap
+  generatedAssetIdToCoingeckoMap,
 )
 
 export const coingeckoToAssetIds = (id: CoinGeckoId): AssetId[] =>
@@ -41,7 +42,7 @@ export const assetIdToCoingecko = (assetId: AssetId): CoinGeckoId | undefined =>
 export const chainIdToCoingeckoAssetPlatform = (chainId: ChainId): string => {
   const { chainNamespace, chainReference } = fromChainId(chainId)
   switch (chainNamespace) {
-    case CHAIN_NAMESPACE.Ethereum:
+    case CHAIN_NAMESPACE.Evm:
       switch (chainReference) {
         case CHAIN_REFERENCE.EthereumMainnet:
           return CoingeckoAssetPlatform.Ethereum
@@ -49,29 +50,31 @@ export const chainIdToCoingeckoAssetPlatform = (chainId: ChainId): string => {
           return CoingeckoAssetPlatform.Avalanche
         default:
           throw new Error(
-            `chainNamespace ${chainNamespace}, chainReference ${chainReference} not supported.`
+            `chainNamespace ${chainNamespace}, chainReference ${chainReference} not supported.`,
           )
       }
-    case CHAIN_NAMESPACE.Cosmos:
+    case CHAIN_NAMESPACE.CosmosSdk:
       switch (chainReference) {
         case CHAIN_REFERENCE.CosmosHubMainnet:
           return CoingeckoAssetPlatform.Cosmos
         case CHAIN_REFERENCE.OsmosisMainnet:
           return CoingeckoAssetPlatform.Osmosis
+        case CHAIN_REFERENCE.ThorchainMainnet:
+          return CoingeckoAssetPlatform.Thorchain
         default:
           throw new Error(
-            `chainNamespace ${chainNamespace}, chainReference ${chainReference} not supported.`
+            `chainNamespace ${chainNamespace}, chainReference ${chainReference} not supported.`,
           )
       }
     // No valid asset platform: https://api.coingecko.com/api/v3/asset_platforms
-    case CHAIN_NAMESPACE.Bitcoin:
+    case CHAIN_NAMESPACE.Utxo:
     default:
       throw new Error(`chainNamespace ${chainNamespace} not supported.`)
   }
 }
 
 export const makeCoingeckoUrlParts = (
-  apiKey?: string
+  apiKey?: string,
 ): { baseUrl: string; maybeApiKeyQueryParam: string } => {
   const baseUrl = apiKey ? coingeckoProBaseUrl : coingeckoBaseUrl
   const maybeApiKeyQueryParam = apiKey ? `&x_cg_pro_api_key=${apiKey}` : ''
@@ -89,7 +92,7 @@ export const makeCoingeckoAssetUrl = (assetId: AssetId, apiKey?: string): string
 
   if (assetNamespace === 'erc20') {
     const assetPlatform = chainIdToCoingeckoAssetPlatform(
-      toChainId({ chainNamespace, chainReference })
+      toChainId({ chainNamespace, chainReference }),
     )
 
     return `${baseUrl}/coins/${assetPlatform}/contract/${assetReference}?${maybeApiKeyQueryParam}`

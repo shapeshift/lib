@@ -4,17 +4,18 @@ import { BIP44Params, UtxoAccountType } from '@shapeshiftoss/types'
 import {
   Account,
   BuildSendTxInput,
-  ChainTxType,
   FeeDataEstimate,
   GetAddressInput,
+  GetBIP44ParamsInput,
   GetFeeDataInput,
+  SignTx,
   SignTxInput,
   SubscribeError,
   SubscribeTxsInput,
   Transaction,
   TxHistoryInput,
   TxHistoryResponse,
-  ValidAddressResult
+  ValidAddressResult,
 } from './types'
 
 /**
@@ -39,7 +40,7 @@ export type ChainAdapter<T extends ChainId> = {
    * For UTXO coins, that's the list of UTXO account types
    * For other networks, this is unimplemented, and left as a responsibility of the consumer.
    */
-  getSupportedAccountTypes?(): Array<UtxoAccountType>
+  getSupportedAccountTypes?(): UtxoAccountType[]
   /**
    * Get the balance of an address
    */
@@ -47,17 +48,22 @@ export type ChainAdapter<T extends ChainId> = {
 
   buildBIP44Params(params: Partial<BIP44Params>): BIP44Params
 
+  /**
+   * Get BIP44Params for the given accountNumber and optional accountType
+   */
+  getBIP44Params(params: GetBIP44ParamsInput): BIP44Params
+
   getTxHistory(input: TxHistoryInput): Promise<TxHistoryResponse>
 
   buildSendTransaction(input: BuildSendTxInput<T>): Promise<{
-    txToSign: ChainTxType<T>
+    txToSign: SignTx<T>
   }>
 
   getAddress(input: GetAddressInput): Promise<string>
 
-  signTransaction(signTxInput: SignTxInput<ChainTxType<T>>): Promise<string>
+  signTransaction(signTxInput: SignTxInput<SignTx<T>>): Promise<string>
 
-  signAndBroadcastTransaction?(signTxInput: SignTxInput<ChainTxType<T>>): Promise<string>
+  signAndBroadcastTransaction?(signTxInput: SignTxInput<SignTx<T>>): Promise<string>
 
   getFeeData(input: Partial<GetFeeDataInput<T>>): Promise<FeeDataEstimate<T>>
 
@@ -68,7 +74,7 @@ export type ChainAdapter<T extends ChainId> = {
   subscribeTxs(
     input: SubscribeTxsInput,
     onMessage: (msg: Transaction) => void,
-    onError?: (err: SubscribeError) => void
+    onError?: (err: SubscribeError) => void,
   ): Promise<void>
 
   unsubscribeTxs(input?: SubscribeTxsInput): void

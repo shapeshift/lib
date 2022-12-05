@@ -1,3 +1,62 @@
+# [@shapeshiftoss/market-service-v7.2.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v7.2.1...@shapeshiftoss/market-service-v7.2.2) (2022-11-29)
+
+
+### Bug Fixes
+
+* idle market-service price ([#1100](https://github.com/shapeshift/lib/issues/1100)) ([21bf256](https://github.com/shapeshift/lib/commit/21bf256beacb70fcff46f3d4620d11c0bb6971d0))
+
+# [@shapeshiftoss/market-service-v7.2.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v7.2.0...@shapeshiftoss/market-service-v7.2.1) (2022-11-23)
+
+# [@shapeshiftoss/market-service-v7.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v7.1.3...@shapeshiftoss/market-service-v7.2.0) (2022-11-22)
+
+
+### Features
+
+* **market-service:** idle market service ([#1097](https://github.com/shapeshift/lib/issues/1097)) ([610a600](https://github.com/shapeshift/lib/commit/610a60065767da7b20ce19dae0c464c11c100d96))
+
+# [@shapeshiftoss/market-service-v7.1.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v7.1.2...@shapeshiftoss/market-service-v7.1.3) (2022-10-24)
+
+# [@shapeshiftoss/market-service-v7.1.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v7.1.1...@shapeshiftoss/market-service-v7.1.2) (2022-10-24)
+
+
+### Bug Fixes
+
+* avax asset ref and upgrade yearn sdk ([#1074](https://github.com/shapeshift/lib/issues/1074)) ([315095a](https://github.com/shapeshift/lib/commit/315095a1c21922b329126ffa643db944a4f31bce))
+
+# [@shapeshiftoss/market-service-v7.1.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v7.1.0...@shapeshiftoss/market-service-v7.1.1) (2022-10-12)
+
+# [@shapeshiftoss/market-service-v7.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v7.0.1...@shapeshiftoss/market-service-v7.1.0) (2022-09-12)
+
+
+### Features
+
+* add THORChain support ([#1010](https://github.com/shapeshift/lib/issues/1010)) ([d7c3b72](https://github.com/shapeshift/lib/commit/d7c3b72bbda9795f87fa8f73c35926c95026a3c2))
+
+# [@shapeshiftoss/market-service-v7.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v7.0.0...@shapeshiftoss/market-service-v7.0.1) (2022-09-02)
+
+# [@shapeshiftoss/market-service-v7.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v6.5.1...@shapeshiftoss/market-service-v7.0.0) (2022-09-02)
+
+
+### Features
+
+* use CHAIN_NAMESPACE.Evm & CHAIN_NAMESPACE.CosmosSdk ([#1007](https://github.com/shapeshift/lib/issues/1007)) ([b6c5490](https://github.com/shapeshift/lib/commit/b6c54902c9e84fd628e917e4747acdb6faf3405d)), closes [#1008](https://github.com/shapeshift/lib/issues/1008)
+
+
+### BREAKING CHANGES
+
+* CHAIN_NAMESPACE.Ethereum is now CHAIN_NAMESPACE.Evm
+* CHAIN_NAMESPACE.Cosmos is now CHAIN_NAMESPACE.CosmosSdk
+
+* chore: trigger CI
+
+* chore: trigger ci
+
+* fix: internally bump caip
+
+Co-authored-by: Apotheosis <97164662+0xApotheosis@users.noreply.github.com>
+
+# [@shapeshiftoss/market-service-v6.5.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v6.5.0...@shapeshiftoss/market-service-v6.5.1) (2022-08-15)
+
 # [@shapeshiftoss/market-service-v6.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v6.4.6...@shapeshiftoss/market-service-v6.5.0) (2022-08-01)
 
 

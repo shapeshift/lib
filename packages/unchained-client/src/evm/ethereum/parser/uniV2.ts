@@ -2,17 +2,21 @@ import { ChainId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
 import { ethers } from 'ethers'
 
 import { Tx } from '../../../generated/ethereum'
-import { TransferType } from '../../../types'
+import { BaseTxMetadata, TransferType } from '../../../types'
 import { getSigHash, SubParser, txInteractsWithContract, TxSpecific } from '../../parser'
 import ERC20_ABI from '../../parser/abi/erc20'
 import UNIV2_ABI from './abi/uniV2'
 import UNIV2_STAKING_REWARDS_ABI from './abi/uniV2StakingRewards'
 import {
-  UNI_V2_FOX_STAKING_REWARDS_V3,
+  UNI_V2_FOX_STAKING_REWARDS_CONTRACTS,
   UNI_V2_ROUTER_CONTRACT,
   WETH_CONTRACT_MAINNET,
-  WETH_CONTRACT_ROPSTEN
+  WETH_CONTRACT_ROPSTEN,
 } from './constants'
+
+export interface TxMetadata extends BaseTxMetadata {
+  parser: 'uniV2'
+}
 
 export interface ParserArgs {
   chainId: ChainId
@@ -29,12 +33,12 @@ export class Parser implements SubParser<Tx> {
 
   readonly supportedFunctions = {
     addLiquidityEthSigHash: this.abiInterface.getSighash('addLiquidityETH'),
-    removeLiquidityEthSigHash: this.abiInterface.getSighash('removeLiquidityETH')
+    removeLiquidityEthSigHash: this.abiInterface.getSighash('removeLiquidityETH'),
   }
 
   readonly supportedStakingRewardsFunctions = {
     stakeSigHash: this.stakingRewardsInterface.getSighash('stake'),
-    exitSigHash: this.stakingRewardsInterface.getSighash('exit')
+    exitSigHash: this.stakingRewardsInterface.getSighash('exit'),
   }
 
   constructor(args: ParserArgs) {
@@ -55,7 +59,6 @@ export class Parser implements SubParser<Tx> {
 
   async parseUniV2(tx: Tx): Promise<TxSpecific | undefined> {
     if (!tx.inputData) return
-    if (tx.confirmations) return
 
     const txSigHash = getSigHash(tx.inputData)
 
@@ -65,6 +68,16 @@ export class Parser implements SubParser<Tx> {
 
     // failed to decode input data
     if (!decoded) return
+
+    // Unconfirmed Txs are the edge case here, we augment them with transfers
+    // For confirmed Tx, the metadata is all we actually need
+    if (tx.confirmations)
+      return {
+        data: {
+          parser: 'uniV2',
+          method: decoded.name,
+        },
+      }
 
     const tokenAddress = ethers.utils.getAddress(decoded.args.token.toLowerCase())
     const lpTokenAddress = Parser.pairFor(tokenAddress, this.wethContract)
@@ -81,7 +94,7 @@ export class Parser implements SubParser<Tx> {
           const assetId = toAssetId({
             ...fromChainId(this.chainId),
             assetNamespace: 'erc20',
-            assetReference: tokenAddress
+            assetReference: tokenAddress,
           })
 
           return [
@@ -92,8 +105,8 @@ export class Parser implements SubParser<Tx> {
               assetId,
               totalValue: value,
               components: [{ value }],
-              token: { contract: tokenAddress, decimals, name, symbol }
-            }
+              token: { contract: tokenAddress, decimals, name, symbol },
+            },
           ]
         }
         case this.supportedFunctions.removeLiquidityEthSigHash: {
@@ -106,7 +119,7 @@ export class Parser implements SubParser<Tx> {
           const assetId = toAssetId({
             ...fromChainId(this.chainId),
             assetNamespace: 'erc20',
-            assetReference: lpTokenAddress
+            assetReference: lpTokenAddress,
           })
 
           return [
@@ -117,8 +130,8 @@ export class Parser implements SubParser<Tx> {
               assetId,
               totalValue: value,
               components: [{ value }],
-              token: { contract: lpTokenAddress, decimals, name, symbol }
-            }
+              token: { contract: lpTokenAddress, decimals, name, symbol },
+            },
           ]
         }
         default:
@@ -133,8 +146,8 @@ export class Parser implements SubParser<Tx> {
       transfers,
       data: {
         parser: 'uniV2',
-        method: decoded.name
-      }
+        method: decoded.name,
+      },
     }
   }
 
@@ -154,15 +167,17 @@ export class Parser implements SubParser<Tx> {
     return {
       data: {
         parser: 'uniV2',
-        method: decoded.name
-      }
+        method: decoded.name,
+      },
     }
   }
 
   async parse(tx: Tx): Promise<TxSpecific | undefined> {
     if (txInteractsWithContract(tx, UNI_V2_ROUTER_CONTRACT)) return this.parseUniV2(tx)
     // TODO: parse any transaction that has input data that is able to be decoded using the `stakingRewardsInterface`
-    if (txInteractsWithContract(tx, UNI_V2_FOX_STAKING_REWARDS_V3))
+    if (
+      UNI_V2_FOX_STAKING_REWARDS_CONTRACTS.some((contract) => txInteractsWithContract(tx, contract))
+    )
       return this.parseStakingRewards(tx)
     return
   }

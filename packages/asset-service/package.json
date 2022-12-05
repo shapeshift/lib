@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/asset-service",
-  "version": "7.3.0",
+  "version": "8.2.0",
   "description": "Service to return supported asset details",
   "homepage": "",
   "license": "MIT",
@@ -23,8 +23,8 @@
     "clean": "rm -rf dist && rm -rf tsconfig.build.tsbuildinfo",
     "compile": "tsc -p tsconfig.build.json",
     "dev": "tsc --watch",
-    "generate": "yarn build && node ./dist/generateAssetData/generateAssetData.js",
-    "generate-color-map": "yarn build && node ./dist/generateAssetData/generateColorMap.js",
+    "generate": "yarn build && node ./dist/generateAssetData/generateAssetData.js && yarn build",
+    "generate-color-map": "yarn build && node ./dist/generateAssetData/generateColorMap.js && yarn build",
     "prepare": "yarn build",
     "test": "jest test",
     "type-check": "tsc --project ./tsconfig.build.json --noEmit"
@@ -37,16 +37,16 @@
     "node-polyglot": "^2.4.2"
   },
   "peerDependencies": {
-    "@shapeshiftoss/caip": "^6.7.0",
+    "@shapeshiftoss/caip": "^8.0.0",
     "@shapeshiftoss/types": "^8.1.0"
   },
   "devDependencies": {
     "@ethersproject/providers": "^5.5.3",
-    "@shapeshiftoss/caip": "^6.7.0",
+    "@shapeshiftoss/caip": "^8.0.0",
     "@shapeshiftoss/types": "^8.1.0",
-    "@shapeshiftoss/investor-idle": "^1.0.0",
+    "@shapeshiftoss/investor-idle": "^2.0.1",
     "@types/node-polyglot": "^2.4.2",
-    "@yfi/sdk": "^1.0.30",
+    "@yfi/sdk": "^1.2.0",
     "colorthief": "^2.3.2",
     "dotenv": "^14.3.0",
     "web3": "1.7.4"

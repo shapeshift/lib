@@ -1,3 +1,80 @@
+# [@shapeshiftoss/investor-yearn-v6.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v6.1.7...@shapeshiftoss/investor-yearn-v6.2.0) (2022-11-30)
+
+
+### Features
+
+* **asset-service:** fetch idle asset symbols with Alchemy API ([#1106](https://github.com/shapeshift/lib/issues/1106)) ([3deb86e](https://github.com/shapeshift/lib/commit/3deb86e01234c68671968be53a7dba46bf7dd56c))
+
+# [@shapeshiftoss/investor-yearn-v6.1.7](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v6.1.6...@shapeshiftoss/investor-yearn-v6.1.7) (2022-10-24)
+
+# [@shapeshiftoss/investor-yearn-v6.1.6](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v6.1.5...@shapeshiftoss/investor-yearn-v6.1.6) (2022-10-24)
+
+
+### Bug Fixes
+
+* avax asset ref and upgrade yearn sdk ([#1074](https://github.com/shapeshift/lib/issues/1074)) ([315095a](https://github.com/shapeshift/lib/commit/315095a1c21922b329126ffa643db944a4f31bce))
+
+# [@shapeshiftoss/investor-yearn-v6.1.5](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v6.1.4...@shapeshiftoss/investor-yearn-v6.1.5) (2022-10-19)
+
+# [@shapeshiftoss/investor-yearn-v6.1.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v6.1.3...@shapeshiftoss/investor-yearn-v6.1.4) (2022-10-13)
+
+# [@shapeshiftoss/investor-yearn-v6.1.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v6.1.2...@shapeshiftoss/investor-yearn-v6.1.3) (2022-10-12)
+
+# [@shapeshiftoss/investor-yearn-v6.1.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v6.1.1...@shapeshiftoss/investor-yearn-v6.1.2) (2022-09-16)
+
+# [@shapeshiftoss/investor-yearn-v6.1.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v6.1.0...@shapeshiftoss/investor-yearn-v6.1.1) (2022-09-16)
+
+# [@shapeshiftoss/investor-yearn-v6.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v6.0.0...@shapeshiftoss/investor-yearn-v6.1.0) (2022-09-12)
+
+
+### Features
+
+* add THORChain support ([#1010](https://github.com/shapeshift/lib/issues/1010)) ([d7c3b72](https://github.com/shapeshift/lib/commit/d7c3b72bbda9795f87fa8f73c35926c95026a3c2))
+
+# [@shapeshiftoss/investor-yearn-v6.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v5.0.1...@shapeshiftoss/investor-yearn-v6.0.0) (2022-09-08)
+
+
+### Features
+
+* **investor-yearn:** accept bip44Params in signAndBroadcast input ([#1014](https://github.com/shapeshift/lib/issues/1014)) ([dc65033](https://github.com/shapeshift/lib/commit/dc65033851000a476db4f3ac073d26c40094969c))
+
+
+### BREAKING CHANGES
+
+* **investor-yearn:** signAndBroadcast now accepts an optional bip44Params property and will throw if not passed.
+
+# [@shapeshiftoss/investor-yearn-v5.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v5.0.0...@shapeshiftoss/investor-yearn-v5.0.1) (2022-09-02)
+
+# [@shapeshiftoss/investor-yearn-v5.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v4.1.1...@shapeshiftoss/investor-yearn-v5.0.0) (2022-09-02)
+
+
+### Features
+
+* use CHAIN_NAMESPACE.Evm & CHAIN_NAMESPACE.CosmosSdk ([#1007](https://github.com/shapeshift/lib/issues/1007)) ([b6c5490](https://github.com/shapeshift/lib/commit/b6c54902c9e84fd628e917e4747acdb6faf3405d)), closes [#1008](https://github.com/shapeshift/lib/issues/1008)
+
+
+### BREAKING CHANGES
+
+* CHAIN_NAMESPACE.Ethereum is now CHAIN_NAMESPACE.Evm
+* CHAIN_NAMESPACE.Cosmos is now CHAIN_NAMESPACE.CosmosSdk
+
+* chore: trigger CI
+
+* chore: trigger ci
+
+* fix: internally bump caip
+
+Co-authored-by: Apotheosis <97164662+0xApotheosis@users.noreply.github.com>
+
+# [@shapeshiftoss/investor-yearn-v4.1.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v4.1.0...@shapeshiftoss/investor-yearn-v4.1.1) (2022-08-15)
+
+# [@shapeshiftoss/investor-yearn-v4.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v4.0.7...@shapeshiftoss/investor-yearn-v4.1.0) (2022-08-14)
+
+
+### Features
+
+* **swapper:** add approveAmount swapper API method ([#962](https://github.com/shapeshift/lib/issues/962)) ([8bf11b1](https://github.com/shapeshift/lib/commit/8bf11b15939d437b4fdd5668e75407d5ede931c8))
+
 # [@shapeshiftoss/investor-yearn-v4.0.7](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v4.0.6...@shapeshiftoss/investor-yearn-v4.0.7) (2022-07-29)
 
 # [@shapeshiftoss/investor-yearn-v4.0.6](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v4.0.5...@shapeshiftoss/investor-yearn-v4.0.6) (2022-07-26)

@@ -7,7 +7,7 @@ import {
   SwapError,
   SwapErrorTypes,
   SwapSource,
-  TradeQuote
+  TradeQuote,
 } from '../../../api'
 import { bn, bnOrZero } from '../../utils/bignumber'
 import { APPROVAL_GAS_LIMIT } from '../../utils/constants'
@@ -19,34 +19,38 @@ import { baseUrlFromChainId } from '../utils/helpers/helpers'
 import { zrxServiceFactory } from '../utils/zrxService'
 
 export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
-  input: GetEvmTradeQuoteInput
+  input: GetEvmTradeQuoteInput,
 ): Promise<TradeQuote<T>> {
   try {
-    const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber } = input
+    const { sellAsset, buyAsset, sellAmountCryptoPrecision, bip44Params } = input
     if (buyAsset.chainId !== input.chainId || sellAsset.chainId !== input.chainId) {
       throw new SwapError(
         '[getZrxTradeQuote] - Both assets need to be on the same supported EVM chain to use Zrx',
         {
           code: SwapErrorTypes.UNSUPPORTED_PAIR,
-          details: { buyAssetChainId: buyAsset.chainId, sellAssetChainId: sellAsset.chainId }
-        }
+          details: { buyAssetChainId: buyAsset.chainId, sellAssetChainId: sellAsset.chainId },
+        },
       )
     }
 
     const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
       fromAssetId(sellAsset.assetId)
     const { assetReference: buyAssetErc20Address, assetNamespace: buyAssetNamespace } = fromAssetId(
-      buyAsset.assetId
+      buyAsset.assetId,
     )
 
-    const useSellAmount = !!sellAmount
+    const useSellAmount = !!sellAmountCryptoPrecision
     const buyToken = buyAssetNamespace === 'erc20' ? buyAssetErc20Address : buyAsset.symbol
     const sellToken = sellAssetNamespace === 'erc20' ? sellAssetErc20Address : sellAsset.symbol
     const { minimum, maximum } = await getZrxMinMax(sellAsset, buyAsset)
-    const minQuoteSellAmount = bnOrZero(minimum).times(bn(10).exponentiatedBy(sellAsset.precision))
+    const minQuotesellAmountCryptoPrecision = bnOrZero(minimum).times(
+      bn(10).exponentiatedBy(sellAsset.precision),
+    )
 
     const normalizedSellAmount = normalizeAmount(
-      bnOrZero(sellAmount).eq(0) ? minQuoteSellAmount : sellAmount
+      bnOrZero(sellAmountCryptoPrecision).eq(0)
+        ? minQuotesellAmountCryptoPrecision
+        : sellAmountCryptoPrecision,
     )
     const baseUrl = baseUrlFromChainId(buyAsset.chainId)
     const zrxService = zrxServiceFactory(baseUrl)
@@ -66,9 +70,9 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
         params: {
           sellToken,
           buyToken,
-          sellAmount: normalizedSellAmount
-        }
-      }
+          sellAmount: normalizedSellAmount,
+        },
+      },
     )
 
     const {
@@ -79,8 +83,8 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
         sellAmount: sellAmountResponse,
         buyAmount,
         sources,
-        allowanceTarget
-      }
+        allowanceTarget,
+      },
     } = quoteResponse
 
     const estimatedGas = bnOrZero(estimatedGasResponse).times(1.5)
@@ -93,27 +97,29 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
       sellAssetErc20Address &&
       bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(bnOrZero(gasPrice)).toString()
 
-    return {
+    const tradeQuote: TradeQuote<EvmSupportedChainIds> = {
       rate,
-      minimum,
+      minimumCryptoHuman: minimum,
       maximum,
       feeData: {
-        fee,
         chainSpecific: {
           estimatedGas: estimatedGas.toString(),
           gasPrice,
-          approvalFee
+          approvalFee,
         },
-        tradeFee: '0'
+        networkFee: fee,
+        buyAssetTradeFeeUsd: '0',
+        sellAssetTradeFeeUsd: '0',
       },
-      sellAmount: sellAmountResponse,
-      buyAmount,
+      sellAmountCryptoPrecision: sellAmountResponse,
+      buyAmountCryptoPrecision: buyAmount,
       sources: sources?.filter((s: SwapSource) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE,
       allowanceContract: allowanceTarget,
       buyAsset,
       sellAsset,
-      sellAssetAccountNumber
-    } as TradeQuote<T>
+      bip44Params,
+    }
+    return tradeQuote as TradeQuote<T>
   } catch (e) {
     if (e instanceof SwapError) throw e
     throw new SwapError('[getZrxTradeQuote]', { cause: e, code: SwapErrorTypes.TRADE_QUOTE_FAILED })

@@ -6,7 +6,7 @@ import orderBy from 'lodash/orderBy'
 
 import { Asset } from '../service/AssetService'
 import * as avalanche from './avalanche'
-import { atom, bitcoin, bitcoincash, dogecoin, litecoin } from './baseAssets'
+import { atom, bitcoin, bitcoincash, dogecoin, litecoin, thorchain } from './baseAssets'
 import * as ethereum from './ethereum'
 import * as osmosis from './osmosis'
 import { setColors } from './setColors'
@@ -26,9 +26,10 @@ const generateColorMap = async () => {
     dogecoin,
     litecoin,
     atom,
+    thorchain,
     ...ethAssets,
     ...osmosisAssets,
-    ...avalancheAssets
+    ...avalancheAssets,
   ]
   // remove blacklisted assets
   const filteredAssetData = filterOutBlacklistedAssets(unfilteredAssetData)
@@ -49,7 +50,7 @@ const generateColorMap = async () => {
   await fs.promises.writeFile(
     `./src/generateAssetData/colorMap/color-map.json`,
     // beautify the file for github diff.
-    JSON.stringify(colorMap, null, 2)
+    JSON.stringify(colorMap, null, 2),
   )
 }
 

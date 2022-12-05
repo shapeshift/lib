@@ -3,7 +3,7 @@ import {
   CHAIN_NAMESPACE,
   CHAIN_REFERENCE,
   ChainId,
-  fromChainId
+  fromChainId,
 } from '@shapeshiftoss/caip'
 
 export * from './bip44'
@@ -19,7 +19,7 @@ export const chainIdToChainLabel = (chainId: ChainId): string => {
   const { chainNamespace, chainReference } = fromChainId(chainId)
 
   switch (chainNamespace) {
-    case CHAIN_NAMESPACE.Bitcoin:
+    case CHAIN_NAMESPACE.Utxo:
       switch (chainReference) {
         case CHAIN_REFERENCE.BitcoinMainnet:
           return 'bitcoin'
@@ -31,10 +31,10 @@ export const chainIdToChainLabel = (chainId: ChainId): string => {
           return 'litecoin'
         default:
           throw new Error(
-            `chainReference: ${chainReference}, not supported for chainNamespace: ${chainNamespace}`
+            `chainReference: ${chainReference}, not supported for chainNamespace: ${chainNamespace}`,
           )
       }
-    case CHAIN_NAMESPACE.Ethereum:
+    case CHAIN_NAMESPACE.Evm:
       switch (chainReference) {
         case CHAIN_REFERENCE.EthereumMainnet:
         case CHAIN_REFERENCE.EthereumRinkeby:
@@ -44,10 +44,10 @@ export const chainIdToChainLabel = (chainId: ChainId): string => {
           return 'avalanche'
         default:
           throw new Error(
-            `chainReference: ${chainReference}, not supported for chainNamespace: ${chainNamespace}`
+            `chainReference: ${chainReference}, not supported for chainNamespace: ${chainNamespace}`,
           )
       }
-    case CHAIN_NAMESPACE.Cosmos:
+    case CHAIN_NAMESPACE.CosmosSdk:
       switch (chainReference) {
         case CHAIN_REFERENCE.CosmosHubMainnet:
         case CHAIN_REFERENCE.CosmosHubVega:
@@ -55,9 +55,11 @@ export const chainIdToChainLabel = (chainId: ChainId): string => {
         case CHAIN_REFERENCE.OsmosisMainnet:
         case CHAIN_REFERENCE.OsmosisTestnet:
           return 'osmosis'
+        case CHAIN_REFERENCE.ThorchainMainnet:
+          return 'thorchain'
         default:
           throw new Error(
-            `chainReference: ${chainReference}, not supported for chainNamespace: ${chainNamespace}`
+            `chainReference: ${chainReference}, not supported for chainNamespace: ${chainNamespace}`,
           )
       }
     default:

@@ -1,7 +1,11 @@
-import { Dex, TradeType } from '../../types'
-import { type Tx } from '../parser/types'
+import { BaseTxMetadata, Dex, TradeType } from '../../types'
 import { type SubParser, type TxSpecific, txInteractsWithContract } from '.'
 import { ZRX_PROXY_CONTRACT } from './constants'
+import { type Tx } from './types'
+
+export interface TxMetadata extends BaseTxMetadata {
+  parser: 'zrx'
+}
 
 export class Parser implements SubParser<Tx> {
   async parse(tx: Tx): Promise<TxSpecific | undefined> {
@@ -11,12 +15,12 @@ export class Parser implements SubParser<Tx> {
     return {
       trade: {
         dexName: Dex.Zrx,
-        type: TradeType.Trade
+        type: TradeType.Trade,
       },
       data: {
         method: undefined, // TODO - add zrx ABI and decode
-        parser: 'zrx'
-      }
+        parser: 'zrx',
+      },
     }
   }
 }

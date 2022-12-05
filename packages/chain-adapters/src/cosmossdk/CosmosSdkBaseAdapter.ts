@@ -1,5 +1,4 @@
-import { AssetId, ChainId } from '@shapeshiftoss/caip'
-import { CosmosSignTx } from '@shapeshiftoss/hdwallet-core'
+import { AssetId, ChainId, fromChainId } from '@shapeshiftoss/caip'
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import { bech32 } from 'bech32'
@@ -9,10 +8,11 @@ import { ErrorHandler } from '../error/ErrorHandler'
 import {
   Account,
   BuildSendTxInput,
-  ChainTxType,
   FeeDataEstimate,
   GetAddressInput,
+  GetBIP44ParamsInput,
   GetFeeDataInput,
+  SignTx,
   SignTxInput,
   SubscribeError,
   SubscribeTxsInput,
@@ -20,62 +20,104 @@ import {
   TxHistoryInput,
   TxHistoryResponse,
   ValidAddressResult,
-  ValidAddressResultType
+  ValidAddressResultType,
 } from '../types'
-import { toRootDerivationPath } from '../utils'
-import { cosmos } from './'
+import { toAddressNList, toRootDerivationPath } from '../utils'
+import { bnOrZero } from '../utils/bignumber'
+import {
+  BuildTransactionInput,
+  Delegation,
+  Redelegation,
+  RedelegationEntry,
+  Reward,
+  Undelegation,
+  UndelegationEntry,
+  Validator,
+  ValidatorAction,
+  ValidatorReward,
+} from './types'
 
-const CHAIN_TO_BECH32_PREFIX_MAPPING = {
+const CHAIN_ID_TO_BECH32_ADDR_PREFIX = {
   [KnownChainIds.CosmosMainnet]: 'cosmos',
-  [KnownChainIds.OsmosisMainnet]: 'osmo'
+  [KnownChainIds.OsmosisMainnet]: 'osmo',
+  [KnownChainIds.ThorchainMainnet]: 'thor',
 }
 
-const transformValidator = (validator: unchained.cosmos.Validator): cosmos.Validator => ({
+const CHAIN_ID_TO_BECH32_VAL_PREFIX = {
+  [KnownChainIds.CosmosMainnet]: 'cosmosvaloper',
+  [KnownChainIds.OsmosisMainnet]: 'osmovaloper',
+  [KnownChainIds.ThorchainMainnet]: 'thorv',
+}
+
+export const assertIsValidatorAddress = (validator: string, chainId: CosmosSdkChainId) => {
+  if (CHAIN_ID_TO_BECH32_VAL_PREFIX[chainId] !== bech32.decode(validator).prefix) {
+    throw new Error(`CosmosSdkBaseAdapter: invalid validator address ${validator}`)
+  }
+}
+
+const transformValidator = (validator: unchained.cosmossdk.types.Validator): Validator => ({
   address: validator.address,
   moniker: validator.moniker,
   tokens: validator.tokens,
   commission: validator.commission.rate,
-  apr: validator.apr
+  apr: validator.apr,
+})
+
+const parsedTxToTransaction = (parsedTx: unchained.cosmossdk.ParsedTx): Transaction => ({
+  ...parsedTx,
+  transfers: parsedTx.transfers.map((transfer) => ({
+    assetId: transfer.assetId,
+    from: transfer.from,
+    to: transfer.to,
+    type: transfer.type,
+    value: transfer.totalValue,
+  })),
 })
 
 export const cosmosSdkChainIds = [
   KnownChainIds.CosmosMainnet,
-  KnownChainIds.OsmosisMainnet
+  KnownChainIds.OsmosisMainnet,
+  KnownChainIds.ThorchainMainnet,
 ] as const
 
 export type CosmosSdkChainId = typeof cosmosSdkChainIds[number]
+
+type Denom = 'uatom' | 'uosmo' | 'rune'
 
 export interface ChainAdapterArgs {
   chainId?: CosmosSdkChainId
   coinName: string
   providers: {
-    http: unchained.cosmos.V1Api | unchained.osmosis.V1Api
-    ws: unchained.ws.Client<unchained.cosmos.Tx> | unchained.ws.Client<unchained.osmosis.Tx>
+    http: unchained.cosmos.V1Api | unchained.osmosis.V1Api | unchained.thorchain.V1Api
+    ws: unchained.ws.Client<unchained.cosmossdk.Tx>
   }
 }
 
 export interface CosmosSdkBaseAdapterArgs extends ChainAdapterArgs {
-  defaultBIP44Params: BIP44Params
-  supportedChainIds: Array<ChainId>
   chainId: CosmosSdkChainId
+  denom: Denom
+  defaultBIP44Params: BIP44Params
+  supportedChainIds: ChainId[]
 }
 
 export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implements IChainAdapter<T> {
   protected readonly chainId: CosmosSdkChainId
   protected readonly coinName: string
   protected readonly defaultBIP44Params: BIP44Params
-  protected readonly supportedChainIds: Array<ChainId>
+  protected readonly supportedChainIds: ChainId[]
   protected readonly providers: {
-    http: unchained.cosmos.V1Api | unchained.osmosis.V1Api
-    ws: unchained.ws.Client<unchained.cosmos.Tx> | unchained.ws.Client<unchained.osmosis.Tx>
+    http: unchained.cosmos.V1Api | unchained.osmosis.V1Api | unchained.thorchain.V1Api
+    ws: unchained.ws.Client<unchained.cosmossdk.Tx>
   }
 
   protected assetId: AssetId
-  protected parser: unchained.cosmos.TransactionParser
+  protected denom: string
+  protected parser: unchained.cosmossdk.BaseTransactionParser<unchained.cosmossdk.Tx>
 
   protected constructor(args: CosmosSdkBaseAdapterArgs) {
     this.chainId = args.chainId
     this.coinName = args.coinName
+    this.denom = args.denom
     this.defaultBIP44Params = args.defaultBIP44Params
     this.supportedChainIds = args.supportedChainIds
     this.providers = args.providers
@@ -88,11 +130,11 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
   abstract getType(): T
   abstract getFeeAssetId(): AssetId
   abstract getDisplayName(): string
-  abstract buildSendTransaction(tx: BuildSendTxInput<T>): Promise<{ txToSign: ChainTxType<T> }>
+  abstract buildSendTransaction(tx: BuildSendTxInput<T>): Promise<{ txToSign: SignTx<T> }>
   abstract getAddress(input: GetAddressInput): Promise<string>
   abstract getFeeData(input: Partial<GetFeeDataInput<T>>): Promise<FeeDataEstimate<T>>
-  abstract signTransaction(signTxInput: SignTxInput<ChainTxType<T>>): Promise<string>
-  abstract signAndBroadcastTransaction(signTxInput: SignTxInput<CosmosSignTx>): Promise<string>
+  abstract signTransaction(signTxInput: SignTxInput<SignTx<T>>): Promise<string>
+  abstract signAndBroadcastTransaction(signTxInput: SignTxInput<SignTx<T>>): Promise<string>
 
   getChainId(): ChainId {
     return this.chainId
@@ -102,60 +144,73 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
     return { ...this.defaultBIP44Params, ...params }
   }
 
+  getBIP44Params({ accountNumber }: GetBIP44ParamsInput): BIP44Params {
+    if (accountNumber < 0) {
+      throw new Error('accountNumber must be >= 0')
+    }
+    return { ...this.defaultBIP44Params, accountNumber }
+  }
+
   async getAccount(pubkey: string): Promise<Account<T>> {
     try {
-      const { data } = await this.providers.http.getAccount({ pubkey })
+      const account = await (async () => {
+        if (this.providers.http instanceof unchained.thorchain.V1Api) {
+          const data = await this.providers.http.getAccount({ pubkey })
+          return { ...data, delegations: [], redelegations: [], undelegations: [], rewards: [] }
+        }
 
-      const delegations = data.delegations.map<cosmos.Delegation>((delegation) => ({
-        assetId: this.assetId,
-        amount: delegation.balance.amount,
-        validator: transformValidator(delegation.validator)
-      }))
+        const data = await this.providers.http.getAccount({ pubkey })
 
-      const redelegations = data.redelegations.map<cosmos.Redelegation>((redelegation) => ({
-        destinationValidator: transformValidator(redelegation.destinationValidator),
-        sourceValidator: transformValidator(redelegation.sourceValidator),
-        entries: redelegation.entries.map<cosmos.RedelegationEntry>((entry) => ({
+        const delegations = data.delegations.map<Delegation>((delegation) => ({
           assetId: this.assetId,
-          completionTime: Number(entry.completionTime),
-          amount: entry.balance
+          amount: delegation.balance.amount,
+          validator: transformValidator(delegation.validator),
         }))
-      }))
 
-      const undelegations = data.unbondings.map<cosmos.Undelegation>((undelegation) => ({
-        validator: transformValidator(undelegation.validator),
-        entries: undelegation.entries.map<cosmos.UndelegationEntry>((entry) => ({
-          assetId: this.assetId,
-          completionTime: Number(entry.completionTime),
-          amount: entry.balance.amount
+        const redelegations = data.redelegations.map<Redelegation>((redelegation) => ({
+          destinationValidator: transformValidator(redelegation.destinationValidator),
+          sourceValidator: transformValidator(redelegation.sourceValidator),
+          entries: redelegation.entries.map<RedelegationEntry>((entry) => ({
+            assetId: this.assetId,
+            completionTime: Number(entry.completionTime),
+            amount: entry.balance,
+          })),
         }))
-      }))
 
-      const rewards = data.rewards.map<cosmos.ValidatorReward>((validatorReward) => ({
-        validator: transformValidator(validatorReward.validator),
-        rewards: validatorReward.rewards.map<cosmos.Reward>((reward) => ({
-          assetId: this.assetId,
-          amount: reward.amount
+        const undelegations = data.unbondings.map<Undelegation>((undelegation) => ({
+          validator: transformValidator(undelegation.validator),
+          entries: undelegation.entries.map<UndelegationEntry>((entry) => ({
+            assetId: this.assetId,
+            completionTime: Number(entry.completionTime),
+            amount: entry.balance.amount,
+          })),
         }))
-      }))
+
+        const rewards = data.rewards.map<ValidatorReward>((validatorReward) => ({
+          validator: transformValidator(validatorReward.validator),
+          rewards: validatorReward.rewards.map<Reward>((reward) => ({
+            assetId: this.assetId,
+            amount: reward.amount,
+          })),
+        }))
+
+        return { ...data, delegations, redelegations, undelegations, rewards }
+      })()
 
       return {
-        balance: data.balance,
+        balance: account.balance,
         chainId: this.chainId,
         assetId: this.assetId,
         chain: this.getType(),
         chainSpecific: {
-          accountNumber: data.accountNumber.toString(),
-          delegations,
-          redelegations,
-          undelegations,
-          rewards,
-          sequence: data.sequence.toString()
+          accountNumber: account.accountNumber.toString(),
+          sequence: account.sequence.toString(),
+          delegations: account.delegations,
+          redelegations: account.redelegations,
+          undelegations: account.undelegations,
+          rewards: account.rewards,
         },
-        pubkey: data.pubkey
-        /* TypeScript can't guarantee the correct type for the chainSpecific field because of the generic return type.
-           It is preferable to define and type the return instead of applying the cast below, but that's left as an exercise
-           for the reader. */
+        pubkey: account.pubkey,
       } as Account<T>
     } catch (err) {
       return ErrorHandler(err)
@@ -164,54 +219,99 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
 
   async getTxHistory(input: TxHistoryInput): Promise<TxHistoryResponse> {
     try {
-      const { data } = await this.providers.http.getTxHistory({
+      const data = await this.providers.http.getTxHistory({
         pubkey: input.pubkey,
         pageSize: input.pageSize,
-        cursor: input.cursor
+        cursor: input.cursor,
       })
 
       const txs = await Promise.all(
         data.txs.map(async (tx) => {
           const parsedTx = await this.parser.parse(tx, input.pubkey)
-
-          return {
-            address: input.pubkey,
-            blockHash: parsedTx.blockHash,
-            blockHeight: parsedTx.blockHeight,
-            blockTime: parsedTx.blockTime,
-            chainId: parsedTx.chainId,
-            chain: this.getType(),
-            confirmations: parsedTx.confirmations,
-            txid: parsedTx.txid,
-            fee: parsedTx.fee,
-            status: parsedTx.status,
-            trade: parsedTx.trade,
-            transfers: parsedTx.transfers.map((transfer) => ({
-              assetId: transfer.assetId,
-              from: transfer.from,
-              to: transfer.to,
-              type: transfer.type,
-              value: transfer.totalValue
-            })),
-            data: parsedTx.data
-          }
-        })
+          return parsedTxToTransaction(parsedTx)
+        }),
       )
 
       return {
         cursor: data.cursor,
         pubkey: input.pubkey,
-        transactions: txs
+        transactions: txs,
       }
     } catch (err) {
       return ErrorHandler(err)
     }
   }
 
+  protected getAmount({
+    account,
+    value,
+    fee,
+    sendMax,
+    validatorAction,
+  }: {
+    account: Account<T>
+    value: string
+    fee: string
+    sendMax?: boolean
+    validatorAction?: ValidatorAction
+  }) {
+    if (!sendMax) return value
+
+    const availableBalance = (() => {
+      switch (validatorAction?.type) {
+        case 'undelegate':
+        case 'redelegate':
+          return bnOrZero(
+            account.chainSpecific.delegations.find(
+              (delegation) => delegation.validator.address === validatorAction.address,
+            )?.amount,
+          )
+        default:
+          return bnOrZero(account.balance)
+      }
+    })().minus(fee)
+
+    if (!availableBalance.isFinite() || availableBalance.lte(0)) {
+      throw new Error(
+        `CosmosSdkBaseAdapter: not enough balance to send: ${availableBalance.toString()}`,
+      )
+    }
+
+    return availableBalance.toString()
+  }
+
+  protected async buildTransaction<U extends CosmosSdkChainId>(
+    tx: BuildTransactionInput<CosmosSdkChainId>,
+  ): Promise<{ txToSign: SignTx<U> }> {
+    const {
+      account,
+      bip44Params,
+      chainSpecific: { gas, fee },
+      msg,
+      memo = '',
+    } = tx
+
+    const unsignedTx = {
+      fee: { amount: [{ amount: bnOrZero(fee).toString(), denom: this.denom }], gas },
+      msg: [msg],
+      signatures: [],
+      memo,
+    }
+
+    const txToSign = {
+      addressNList: toAddressNList(bip44Params),
+      tx: unsignedTx,
+      chain_id: fromChainId(this.getType()).chainReference,
+      account_number: account.chainSpecific.accountNumber,
+      sequence: account.chainSpecific.sequence,
+    } as unknown as SignTx<U>
+
+    return { txToSign }
+  }
+
   async broadcastTransaction(hex: string): Promise<string> {
     try {
-      const { data } = await this.providers.http.sendTx({ body: { rawTx: hex } })
-      return data
+      return this.providers.http.sendTx({ body: { rawTx: hex } })
     } catch (err) {
       return ErrorHandler(err)
     }
@@ -222,13 +322,13 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
     try {
       const { prefix } = bech32.decode(address)
 
-      if (CHAIN_TO_BECH32_PREFIX_MAPPING[chain] !== prefix) {
+      if (CHAIN_ID_TO_BECH32_ADDR_PREFIX[chain] !== prefix) {
         throw new Error(`Invalid address ${address} for ChainId: ${chain}`)
       }
 
       return {
         valid: true,
-        result: ValidAddressResultType.Valid
+        result: ValidAddressResultType.Valid,
       }
     } catch (err) {
       console.error(err)
@@ -239,7 +339,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
   async subscribeTxs(
     input: SubscribeTxsInput,
     onMessage: (msg: Transaction) => void,
-    onError: (err: SubscribeError) => void
+    onError: (err: SubscribeError) => void,
   ): Promise<void> {
     const { wallet, bip44Params = this.defaultBIP44Params } = input
 
@@ -250,29 +350,10 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
       subscriptionId,
       { topic: 'txs', addresses: [address] },
       async (msg) => {
-        const tx = await this.parser.parse(msg.data, msg.address)
-
-        onMessage({
-          address: tx.address,
-          blockHash: tx.blockHash,
-          blockHeight: tx.blockHeight,
-          blockTime: tx.blockTime,
-          chainId: tx.chainId,
-          confirmations: tx.confirmations,
-          fee: tx.fee,
-          status: tx.status,
-          trade: tx.trade,
-          transfers: tx.transfers.map((transfer) => ({
-            assetId: transfer.assetId,
-            from: transfer.from,
-            to: transfer.to,
-            type: transfer.type,
-            value: transfer.totalValue
-          })),
-          txid: tx.txid
-        })
+        const parsedTx = await this.parser.parse(msg.data, msg.address)
+        onMessage(parsedTxToTransaction(parsedTx))
       },
-      (err) => onError({ message: err.message })
+      (err) => onError({ message: err.message }),
     )
   }
 
@@ -289,18 +370,22 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
     this.providers.ws.close('txs')
   }
 
-  async getValidators(): Promise<Array<cosmos.Validator>> {
+  async getValidators(): Promise<Validator[]> {
+    if (this.providers.http instanceof unchained.thorchain.V1Api) return []
+
     try {
-      const { data } = await this.providers.http.getValidators()
-      return data.validators.map<cosmos.Validator>((validator) => transformValidator(validator))
+      const data = await this.providers.http.getValidators()
+      return data.validators.map<Validator>((validator) => transformValidator(validator))
     } catch (err) {
       return ErrorHandler(err)
     }
   }
 
-  async getValidator(address: string): Promise<cosmos.Validator> {
+  async getValidator(address: string): Promise<Validator | undefined> {
+    if (this.providers.http instanceof unchained.thorchain.V1Api) return
+
     try {
-      const { data: validator } = await this.providers.http.getValidator({ pubkey: address })
+      const validator = await this.providers.http.getValidator({ pubkey: address })
       return transformValidator(validator)
     } catch (err) {
       return ErrorHandler(err)

@@ -1,10 +1,9 @@
 import { AssetId, ChainId, fromAssetId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
 import {
-  bip32ToAddressNList,
   ETHSignMessage,
   ETHSignTx,
   ETHWallet,
-  supportsEthSwitchChain
+  supportsEthSwitchChain,
 } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
@@ -16,11 +15,13 @@ import { ErrorHandler } from '../error/ErrorHandler'
 import {
   Account,
   BuildSendTxInput,
-  ChainTxType,
   FeeDataEstimate,
+  GasFeeDataEstimate,
   GetAddressInput,
+  GetBIP44ParamsInput,
   GetFeeDataInput,
   SignMessageInput,
+  SignTx,
   SignTxInput,
   SubscribeError,
   SubscribeTxsInput,
@@ -28,11 +29,16 @@ import {
   TxHistoryInput,
   TxHistoryResponse,
   ValidAddressResult,
-  ValidAddressResultType
+  ValidAddressResultType,
 } from '../types'
-import { chainIdToChainLabel, getAssetNamespace, toPath, toRootDerivationPath } from '../utils'
+import {
+  chainIdToChainLabel,
+  getAssetNamespace,
+  toAddressNList,
+  toRootDerivationPath,
+} from '../utils'
 import { bnOrZero } from '../utils/bignumber'
-import { Fees } from './types'
+import { BuildCustomTxInput, Fees } from './types'
 import { getErc20Data } from './utils'
 
 export const evmChainIds = [KnownChainIds.EthereumMainnet, KnownChainIds.AvalancheMainnet] as const
@@ -40,7 +46,7 @@ export const evmChainIds = [KnownChainIds.EthereumMainnet, KnownChainIds.Avalanc
 export type EvmChainId = typeof evmChainIds[number]
 
 export const isEvmChainId = (
-  maybeEvmChainId: string | EvmChainId
+  maybeEvmChainId: string | EvmChainId,
 ): maybeEvmChainId is EvmChainId => {
   return evmChainIds.includes(maybeEvmChainId as EvmChainId)
 }
@@ -56,14 +62,14 @@ export interface ChainAdapterArgs {
 
 export interface EvmBaseAdapterArgs extends ChainAdapterArgs {
   defaultBIP44Params: BIP44Params
-  supportedChainIds: Array<ChainId>
+  supportedChainIds: ChainId[]
   chainId: EvmChainId
 }
 
 export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdapter<T> {
   protected readonly chainId: EvmChainId
   protected readonly defaultBIP44Params: BIP44Params
-  protected readonly supportedChainIds: Array<ChainId>
+  protected readonly supportedChainIds: ChainId[]
   protected readonly providers: {
     http: unchained.ethereum.V1Api | unchained.avalanche.V1Api
     ws: unchained.ws.Client<unchained.evm.types.Tx>
@@ -89,6 +95,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
   abstract getFeeAssetId(): AssetId
   abstract getFeeData(input: Partial<GetFeeDataInput<T>>): Promise<FeeDataEstimate<T>>
   abstract getDisplayName(): string
+  abstract getGasFeeData(): Promise<GasFeeDataEstimate>
 
   getChainId(): ChainId {
     return this.chainId
@@ -102,8 +109,15 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
     return { ...this.defaultBIP44Params, ...params }
   }
 
+  getBIP44Params({ accountNumber }: GetBIP44ParamsInput): BIP44Params {
+    if (accountNumber < 0) {
+      throw new Error('accountNumber must be >= 0')
+    }
+    return { ...this.defaultBIP44Params, accountNumber }
+  }
+
   async buildSendTransaction(tx: BuildSendTxInput<T>): Promise<{
-    txToSign: ChainTxType<T>
+    txToSign: SignTx<T>
   }> {
     try {
       const { to, wallet, bip44Params = this.defaultBIP44Params, sendMax = false } = tx
@@ -151,7 +165,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
         if (maxFeePerGas && maxPriorityFeePerGas) {
           return {
             maxFeePerGas: numberToHex(maxFeePerGas),
-            maxPriorityFeePerGas: numberToHex(maxPriorityFeePerGas)
+            maxPriorityFeePerGas: numberToHex(maxPriorityFeePerGas),
           }
         }
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -159,15 +173,15 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
       })()
 
       const txToSign = {
-        addressNList: bip32ToAddressNList(toPath(bip44Params)),
+        addressNList: toAddressNList(bip44Params),
         value: numberToHex(isErc20Send ? '0' : tx.value),
         to: destAddress,
         chainId: Number(fromChainId(this.chainId).chainReference),
         data,
         nonce: numberToHex(account.chainSpecific.nonce),
         gasLimit: numberToHex(gasLimit),
-        ...fees
-      } as ChainTxType<T>
+        ...fees,
+      } as SignTx<T>
       return { txToSign }
     } catch (err) {
       return ErrorHandler(err)
@@ -176,7 +190,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
 
   async getAccount(pubkey: string): Promise<Account<T>> {
     try {
-      const { data } = await this.providers.http.getAccount({ pubkey })
+      const data = await this.providers.http.getAccount({ pubkey })
 
       const balance = bnOrZero(data.balance).plus(bnOrZero(data.unconfirmedBalance))
 
@@ -192,11 +206,11 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
             assetId: toAssetId({
               chainId: this.chainId,
               assetNamespace: getAssetNamespace(token.type),
-              assetReference: token.contract
-            })
-          }))
+              assetReference: token.contract,
+            }),
+          })),
         },
-        pubkey: data.pubkey
+        pubkey: data.pubkey,
       } as Account<T>
     } catch (err) {
       return ErrorHandler(err)
@@ -204,10 +218,10 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
   }
 
   async getTxHistory(input: TxHistoryInput): Promise<TxHistoryResponse> {
-    const { data } = await this.providers.http.getTxHistory({
+    const data = await this.providers.http.getTxHistory({
       pubkey: input.pubkey,
       pageSize: input.pageSize,
-      cursor: input.cursor
+      cursor: input.cursor,
     })
 
     const txs = await Promise.all(
@@ -231,17 +245,17 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
             from: transfer.from,
             to: transfer.to,
             type: transfer.type,
-            value: transfer.totalValue
+            value: transfer.totalValue,
           })),
-          data: parsedTx.data
+          data: parsedTx.data,
         }
-      })
+      }),
     )
 
     return {
       cursor: data.cursor ?? '',
       pubkey: input.pubkey,
-      transactions: txs
+      transactions: txs,
     }
   }
 
@@ -271,8 +285,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
   }
 
   async broadcastTransaction(hex: string) {
-    const { data } = await this.providers.http.sendTx({ sendTxBody: { hex } })
-    return data
+    return this.providers.http.sendTx({ sendTxBody: { hex } })
   }
 
   async signMessage(signMessageInput: SignMessageInput<ETHSignMessage>): Promise<string> {
@@ -291,8 +304,8 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
   async getAddress(input: GetAddressInput): Promise<string> {
     const { wallet, bip44Params = this.defaultBIP44Params, showOnDevice = false } = input
     const address = await (wallet as ETHWallet).ethGetAddress({
-      addressNList: bip32ToAddressNList(toPath(bip44Params)),
-      showDisplay: showOnDevice
+      addressNList: toAddressNList(bip44Params),
+      showDisplay: showOnDevice,
     })
 
     if (!address) throw new Error('EvmBaseAdapter: no address available from wallet')
@@ -310,7 +323,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
   async subscribeTxs(
     input: SubscribeTxsInput,
     onMessage: (msg: Transaction) => void,
-    onError: (err: SubscribeError) => void
+    onError: (err: SubscribeError) => void,
   ): Promise<void> {
     const { wallet, bip44Params = this.defaultBIP44Params } = input
 
@@ -338,13 +351,13 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
             from: transfer.from,
             to: transfer.to,
             type: transfer.type,
-            value: transfer.totalValue
+            value: transfer.totalValue,
           })),
           txid: tx.txid,
-          data: tx.data
+          data: tx.data,
         })
       },
-      (err) => onError({ message: err.message })
+      (err) => onError({ message: err.message }),
     )
   }
 
@@ -359,5 +372,48 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
 
   closeTxs(): void {
     this.providers.ws.close('txs')
+  }
+
+  async buildCustomTx({
+    maxFeePerGas,
+    maxPriorityFeePerGas,
+    gasPrice,
+    value,
+    data,
+    gasLimit,
+    to,
+    wallet,
+    bip44Params = this.defaultBIP44Params,
+  }: BuildCustomTxInput): Promise<{
+    txToSign: ETHSignTx
+  }> {
+    try {
+      const chainReference = fromChainId(this.chainId).chainReference
+      const from = await this.getAddress({ bip44Params, wallet })
+      const account = await this.getAccount(from)
+
+      const fees: Fees =
+        maxFeePerGas && maxPriorityFeePerGas
+          ? {
+              maxFeePerGas: numberToHex(maxFeePerGas),
+              maxPriorityFeePerGas: numberToHex(maxPriorityFeePerGas),
+            }
+          : { gasPrice: numberToHex(gasPrice ?? '0') }
+
+      const txToSign: ETHSignTx = {
+        addressNList: toAddressNList(bip44Params),
+        value,
+        to,
+        chainId: Number(chainReference),
+        data,
+        nonce: numberToHex(account.chainSpecific.nonce),
+        gasLimit: numberToHex(gasLimit),
+        ...fees,
+      }
+
+      return { txToSign }
+    } catch (err) {
+      return ErrorHandler(err)
+    }
   }
 }

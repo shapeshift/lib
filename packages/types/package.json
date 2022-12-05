@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/types",
-  "version": "8.2.0",
+  "version": "8.3.2",
   "description": "Common types shared across packages",
   "repository": "https://github.com/shapeshift/lib",
   "license": "MIT",
@@ -20,8 +20,5 @@
     "prepare": "yarn build",
     "test": "jest test",
     "type-check": "tsc --project ./tsconfig.build.json --noEmit"
-  },
-  "devDependencies": {
-    "@shapeshiftoss/hdwallet-core": "^1.23.0"
   }
 }

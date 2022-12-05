@@ -9,13 +9,13 @@ import { ethereum } from '../baseAssets'
 import { colorMap } from '../colorMap'
 
 const network = 1 // 1 for mainnet
-const provider = new JsonRpcProvider(process.env.REACT_APP_ETHEREUM_NODE_URL)
+const provider = new JsonRpcProvider(process.env.ETHEREUM_NODE_URL)
 export const yearnSdk = new Yearn(network, { provider })
 
 const explorerData = {
   explorer: ethereum.explorer,
   explorerAddressLink: ethereum.explorerAddressLink,
-  explorerTxLink: ethereum.explorerTxLink
+  explorerTxLink: ethereum.explorerTxLink,
 }
 
 export const getYearnVaults = async (): Promise<Asset[]> => {
@@ -32,25 +32,7 @@ export const getYearnVaults = async (): Promise<Asset[]> => {
       tokenId: toLower(vault.address),
       chainId,
       assetId,
-      ...explorerData
-    }
-  })
-}
-
-export const getIronBankTokens = async (): Promise<Asset[]> => {
-  const ironBankTokens: Token[] = await yearnSdk.ironBank.tokens()
-  return ironBankTokens.map((token: Token) => {
-    const assetId = toAssetId({ chainId, assetNamespace: 'erc20', assetReference: token.address })
-
-    return {
       ...explorerData,
-      color: colorMap[assetId] ?? '#FFFFFF',
-      icon: token.icon ?? '',
-      name: token.name,
-      precision: Number(token.decimals),
-      symbol: token.symbol,
-      chainId,
-      assetId
     }
   })
 }
@@ -68,7 +50,7 @@ export const getZapperTokens = async (): Promise<Asset[]> => {
       precision: Number(token.decimals),
       symbol: token.symbol,
       chainId,
-      assetId
+      assetId,
     }
   })
 }
@@ -86,7 +68,7 @@ export const getUnderlyingVaultTokens = async (): Promise<Asset[]> => {
       precision: Number(token.decimals),
       symbol: token.symbol,
       chainId,
-      assetId
+      assetId,
     }
   })
 }

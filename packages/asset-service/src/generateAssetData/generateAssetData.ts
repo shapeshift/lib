@@ -2,13 +2,15 @@ import 'dotenv/config'
 
 import { CHAIN_REFERENCE, fromAssetId } from '@shapeshiftoss/caip'
 import fs from 'fs'
+import merge from 'lodash/merge'
 import orderBy from 'lodash/orderBy'
 
 import { Asset, AssetsById } from '../service/AssetService'
 import * as avalanche from './avalanche'
-import { atom, bitcoin, bitcoincash, dogecoin, litecoin } from './baseAssets'
+import { atom, bitcoin, bitcoincash, dogecoin, litecoin, thorchain } from './baseAssets'
 import * as ethereum from './ethereum'
 import * as osmosis from './osmosis'
+import { overrideAssets } from './overrides'
 import { setColors } from './setColors'
 import { filterOutBlacklistedAssets } from './utils'
 
@@ -24,9 +26,10 @@ const generateAssetData = async () => {
     dogecoin,
     litecoin,
     atom,
+    thorchain,
     ...ethAssets,
     ...osmosisAssets,
-    ...avalancheAssets
+    ...avalancheAssets,
   ]
   // remove blacklisted assets
   const filteredAssetData = filterOutBlacklistedAssets(unfilteredAssetData)
@@ -50,10 +53,19 @@ const generateAssetData = async () => {
     return acc
   }, {})
 
+  // do this last such that manual overrides take priority
+  const assetsWithOverridesApplied = Object.entries(overrideAssets).reduce<AssetsById>(
+    (prev, [assetId, asset]) => {
+      if (prev[assetId]) prev[assetId] = merge(prev[assetId], asset)
+      return prev
+    },
+    generatedAssetData,
+  )
+
   await fs.promises.writeFile(
     `./src/service/generatedAssetData.json`,
     // beautify the file for github diff.
-    JSON.stringify(generatedAssetData, null, 2)
+    JSON.stringify(assetsWithOverridesApplied, null, 2),
   )
 }
 

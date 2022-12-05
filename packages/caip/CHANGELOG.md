@@ -1,3 +1,127 @@
+# [@shapeshiftoss/caip-v8.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.4.5...@shapeshiftoss/caip-v8.5.0) (2022-11-25)
+
+
+### Features
+
+* **swapper:** add AVAX pools to Thorchain swapper ([#1091](https://github.com/shapeshift/lib/issues/1091)) ([4acbeac](https://github.com/shapeshift/lib/commit/4acbeac8f921f0544154bbe92652a0ba5d2c339b))
+
+# [@shapeshiftoss/caip-v8.4.5](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.4.4...@shapeshiftoss/caip-v8.4.5) (2022-11-11)
+
+
+### Bug Fixes
+
+* add more coins to onramper mapping ([#1085](https://github.com/shapeshift/lib/issues/1085)) ([60db022](https://github.com/shapeshift/lib/commit/60db022ba2b8d3d2eb103607626f776e15a7e406))
+
+# [@shapeshiftoss/caip-v8.4.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.4.3...@shapeshiftoss/caip-v8.4.4) (2022-10-24)
+
+# [@shapeshiftoss/caip-v8.4.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.4.2...@shapeshiftoss/caip-v8.4.3) (2022-10-24)
+
+
+### Bug Fixes
+
+* avax asset ref and upgrade yearn sdk ([#1074](https://github.com/shapeshift/lib/issues/1074)) ([315095a](https://github.com/shapeshift/lib/commit/315095a1c21922b329126ffa643db944a4f31bce))
+
+# [@shapeshiftoss/caip-v8.4.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.4.1...@shapeshiftoss/caip-v8.4.2) (2022-10-05)
+
+
+### Bug Fixes
+
+* add support for EUROC, LUSD, XCHF ([#1048](https://github.com/shapeshift/lib/issues/1048)) ([a2fc8b7](https://github.com/shapeshift/lib/commit/a2fc8b7508ace45f36bd25d3ef8e4799c9442455))
+
+# [@shapeshiftoss/caip-v8.4.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.4.0...@shapeshiftoss/caip-v8.4.1) (2022-09-29)
+
+
+### Bug Fixes
+
+* remove HEGIC from thor pools ([#1044](https://github.com/shapeshift/lib/issues/1044)) ([fe5e52a](https://github.com/shapeshift/lib/commit/fe5e52a730c693aa2ab321c6108dd1b7407f49f9))
+
+# [@shapeshiftoss/caip-v8.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.3.0...@shapeshiftoss/caip-v8.4.0) (2022-09-20)
+
+
+### Features
+
+* **caip:** add caip data for binance, kava, terra, secret ([#1033](https://github.com/shapeshift/lib/issues/1033)) ([fcfd859](https://github.com/shapeshift/lib/commit/fcfd85910b7b16047746857908d075a07341d081))
+
+# [@shapeshiftoss/caip-v8.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.2.0...@shapeshiftoss/caip-v8.3.0) (2022-09-12)
+
+
+### Features
+
+* add THORChain support ([#1010](https://github.com/shapeshift/lib/issues/1010)) ([d7c3b72](https://github.com/shapeshift/lib/commit/d7c3b72bbda9795f87fa8f73c35926c95026a3c2))
+
+# [@shapeshiftoss/caip-v8.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.1.0...@shapeshiftoss/caip-v8.2.0) (2022-09-07)
+
+
+### Features
+
+* **caip:** onramper support ([#1004](https://github.com/shapeshift/lib/issues/1004)) ([a41ef44](https://github.com/shapeshift/lib/commit/a41ef4450d5365f647f92656e0c59334bc7dfe5b))
+
+# [@shapeshiftoss/caip-v8.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.0.0...@shapeshiftoss/caip-v8.1.0) (2022-09-06)
+
+
+### Features
+
+* **caip:** add FOX & FOXy assetIds to constants ([#1013](https://github.com/shapeshift/lib/issues/1013)) ([e38b623](https://github.com/shapeshift/lib/commit/e38b62396d2170f03efe863262b2d565df2725d7))
+
+# [@shapeshiftoss/caip-v8.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v7.0.0...@shapeshiftoss/caip-v8.0.0) (2022-09-02)
+
+
+### Features
+
+* use CHAIN_NAMESPACE.Evm & CHAIN_NAMESPACE.CosmosSdk ([#1007](https://github.com/shapeshift/lib/issues/1007)) ([b6c5490](https://github.com/shapeshift/lib/commit/b6c54902c9e84fd628e917e4747acdb6faf3405d)), closes [#1008](https://github.com/shapeshift/lib/issues/1008)
+
+
+### BREAKING CHANGES
+
+* CHAIN_NAMESPACE.Ethereum is now CHAIN_NAMESPACE.Evm
+* CHAIN_NAMESPACE.Cosmos is now CHAIN_NAMESPACE.CosmosSdk
+
+* chore: trigger CI
+
+* chore: trigger ci
+
+* fix: internally bump caip
+
+Co-authored-by: Apotheosis <97164662+0xApotheosis@users.noreply.github.com>
+
+# [@shapeshiftoss/caip-v7.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.16.0...@shapeshiftoss/caip-v7.0.0) (2022-09-01)
+
+
+### Features
+
+* rename CHAIN_NAMESPACE.Bitcoin -> CHAIN_NAMESPACE.Utxo ([#1006](https://github.com/shapeshift/lib/issues/1006)) ([cbb1fbf](https://github.com/shapeshift/lib/commit/cbb1fbfbb30ec81b96f65dab1f8748f07a3d98fd))
+
+
+### BREAKING CHANGES
+
+* CHAIN_NAMESPACE.Bitcoin is now CHAIN_NAMESPACE.Utxo
+
+This renames CHAIN_NAMESPACE.Bitcoin to CHAIN_NAMESPACE.Utxo since it
+now refers to any UTXO chain
+
+# [@shapeshiftoss/caip-v6.16.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.15.1...@shapeshiftoss/caip-v6.16.0) (2022-08-23)
+
+
+### Features
+
+* **caip:** add mt pelerin asset map ([#986](https://github.com/shapeshift/lib/issues/986)) ([c0d73bb](https://github.com/shapeshift/lib/commit/c0d73bbdb97e0fe96aa4c3b6da3778412e8c5016))
+
+# [@shapeshiftoss/caip-v6.15.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.15.0...@shapeshiftoss/caip-v6.15.1) (2022-08-15)
+
+# [@shapeshiftoss/caip-v6.15.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.14.0...@shapeshiftoss/caip-v6.15.0) (2022-08-12)
+
+
+### Features
+
+* support avax via banxa ([#966](https://github.com/shapeshift/lib/issues/966)) ([108762e](https://github.com/shapeshift/lib/commit/108762e8248a7e1741c5fbd378d86b7e8a348ded))
+
+# [@shapeshiftoss/caip-v6.14.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.13.0...@shapeshiftoss/caip-v6.14.0) (2022-08-09)
+
+
+### Features
+
+* idle-investor final ([#955](https://github.com/shapeshift/lib/issues/955)) ([564ba23](https://github.com/shapeshift/lib/commit/564ba23a92ce4086917bac366e1bd6d419de3306))
+
 # [@shapeshiftoss/caip-v6.13.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.12.0...@shapeshiftoss/caip-v6.13.0) (2022-08-04)
 
 

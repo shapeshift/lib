@@ -10,7 +10,7 @@ import { COW_SWAP_VAULT_RELAYER_ADDRESS } from '../utils/constants'
 
 export async function cowApprovalNeeded(
   { adapter, web3 }: CowSwapperDeps,
-  { quote, wallet }: ApprovalNeededInput<KnownChainIds.EthereumMainnet>
+  { quote, wallet }: ApprovalNeededInput<KnownChainIds.EthereumMainnet>,
 ): Promise<ApprovalNeededOutput> {
   const { sellAsset } = quote
 
@@ -20,30 +20,30 @@ export async function cowApprovalNeeded(
     if (assetNamespace !== 'erc20') {
       throw new SwapError('[cowApprovalNeeded] - unsupported asset namespace', {
         code: SwapErrorTypes.UNSUPPORTED_NAMESPACE,
-        details: { assetNamespace }
+        details: { assetNamespace },
       })
     }
 
-    const receiveAddress = await adapter.getAddress({ wallet })
+    const receiveAddress = await adapter.getAddress({ wallet, bip44Params: quote.bip44Params })
 
     const allowanceResult = await getERC20Allowance({
       web3,
       erc20AllowanceAbi,
       sellAssetErc20Address,
       spenderAddress: COW_SWAP_VAULT_RELAYER_ADDRESS,
-      ownerAddress: receiveAddress
+      ownerAddress: receiveAddress,
     })
 
     const allowanceOnChain = bnOrZero(allowanceResult)
 
     return {
-      approvalNeeded: allowanceOnChain.lte(bnOrZero(quote.sellAmount))
+      approvalNeeded: allowanceOnChain.lt(bnOrZero(quote.sellAmountCryptoPrecision)),
     }
   } catch (e) {
     if (e instanceof SwapError) throw e
     throw new SwapError('[cowApprovalNeeded]', {
       cause: e,
-      code: SwapErrorTypes.CHECK_APPROVAL_FAILED
+      code: SwapErrorTypes.CHECK_APPROVAL_FAILED,
     })
   }
 }

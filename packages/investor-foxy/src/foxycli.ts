@@ -19,7 +19,7 @@ const getWallet = async (): Promise<NativeHDWallet> => {
   }
   const nativeAdapterArgs: NativeAdapterArgs = {
     mnemonic: MNEMONIC,
-    deviceId: DEVICE_ID
+    deviceId: DEVICE_ID,
   }
   const wallet = new NativeHDWallet(nativeAdapterArgs)
   await wallet.initialize()
@@ -35,11 +35,11 @@ const main = async (): Promise<void> => {
       ws: new unchained.ws.Client<unchained.ethereum.Tx>('wss://dev-api.ethereum.shapeshift.com'),
       http: new unchained.ethereum.V1Api(
         new unchained.ethereum.Configuration({
-          basePath: 'https://dev-api.ethereum.shapeshift.com'
-        })
-      )
+          basePath: 'https://dev-api.ethereum.shapeshift.com',
+        }),
+      ),
     },
-    rpcUrl: 'https://mainnet.infura.io/v3/d734c7eebcdf400185d7eb67322a7e57'
+    rpcUrl: 'https://mainnet.infura.io/v3/d734c7eebcdf400185d7eb67322a7e57',
   })
 
   // using 0 value array since only one contract subset exists
@@ -51,10 +51,11 @@ const main = async (): Promise<void> => {
   const api = new FoxyApi({
     adapter: ethChainAdapter,
     providerUrl: process.env.ARCHIVE_NODE || 'http://127.0.0.1:8545/',
-    foxyAddresses
+    foxyAddresses,
   })
 
-  const userAddress = await api.adapter.getAddress({ wallet })
+  const bip44Params = api.adapter.getBIP44Params({ accountNumber: 0 })
+  const userAddress = await api.adapter.getAddress({ wallet, bip44Params })
   console.info('current user address ', userAddress)
 
   const circulatingSupply = async () => {
@@ -79,7 +80,7 @@ const main = async (): Promise<void> => {
     try {
       const balance = await api.balance({
         tokenContractAddress: foxContractAddress,
-        userAddress
+        userAddress,
       })
       console.info('Staking Balance', balance.toString())
     } catch (e) {
@@ -91,7 +92,7 @@ const main = async (): Promise<void> => {
     try {
       const balance = await api.balance({
         tokenContractAddress: foxyContractAddress,
-        userAddress
+        userAddress,
       })
       console.info('Reward Balance', balance.toString())
     } catch (e) {
@@ -105,7 +106,12 @@ const main = async (): Promise<void> => {
         tokenContractAddress,
         contractAddress,
         userAddress,
-        wallet
+        wallet,
+        bip44Params: {
+          accountNumber: 0,
+          coinType: 60,
+          purpose: 44,
+        },
       })
       console.info('approve', response)
     } catch (e) {
@@ -120,7 +126,12 @@ const main = async (): Promise<void> => {
         contractAddress: foxyStakingContractAddress,
         amountDesired: bnOrZero(amount),
         userAddress,
-        wallet
+        wallet,
+        bip44Params: {
+          accountNumber: 0,
+          coinType: 60,
+          purpose: 44,
+        },
       })
       console.info('stake', response)
     } catch (e) {
@@ -136,7 +147,12 @@ const main = async (): Promise<void> => {
         amountDesired: bnOrZero(amount),
         type: WithdrawType.DELAYED,
         userAddress,
-        wallet
+        wallet,
+        bip44Params: {
+          accountNumber: 0,
+          coinType: 60,
+          purpose: 44,
+        },
       })
       console.info('unstake', response)
     } catch (e) {
@@ -151,7 +167,12 @@ const main = async (): Promise<void> => {
         contractAddress: foxyStakingContractAddress,
         type: WithdrawType.INSTANT,
         userAddress,
-        wallet
+        wallet,
+        bip44Params: {
+          accountNumber: 0,
+          coinType: 60,
+          purpose: 44,
+        },
       })
       console.info('instantUnstake', response)
     } catch (e) {
@@ -166,7 +187,12 @@ const main = async (): Promise<void> => {
         contractAddress: foxyStakingContractAddress,
         claimAddress,
         userAddress,
-        wallet
+        wallet,
+        bip44Params: {
+          accountNumber: 0,
+          coinType: 60,
+          purpose: 44,
+        },
       })
       console.info('claimWithdraw', response)
     } catch (e) {
@@ -181,7 +207,12 @@ const main = async (): Promise<void> => {
         contractAddress: liquidityReserveContractAddress,
         userAddress,
         amountDesired: bnOrZero(amount),
-        wallet
+        wallet,
+        bip44Params: {
+          accountNumber: 0,
+          coinType: 60,
+          purpose: 44,
+        },
       })
       console.info('addLiquidity', response)
     } catch (e) {
@@ -196,7 +227,12 @@ const main = async (): Promise<void> => {
         contractAddress: liquidityReserveContractAddress,
         userAddress,
         amountDesired: bnOrZero(amount),
-        wallet
+        wallet,
+        bip44Params: {
+          accountNumber: 0,
+          coinType: 60,
+          purpose: 44,
+        },
       })
       console.info('removeLiquidity', response)
     } catch (e) {
@@ -208,7 +244,7 @@ const main = async (): Promise<void> => {
     try {
       console.info('Getting claimFromTokemak arguments...')
       const response = await api.getClaimFromTokemakArgs({
-        contractAddress: foxyStakingContractAddress
+        contractAddress: foxyStakingContractAddress,
       })
       console.info('claimFromTokemak: ', response)
     } catch (e) {
@@ -221,7 +257,12 @@ const main = async (): Promise<void> => {
       console.info('getting time until claim...')
       const response = await api.getTimeUntilClaimable({
         contractAddress: foxyStakingContractAddress,
-        userAddress
+        userAddress,
+        bip44Params: {
+          accountNumber: 0,
+          coinType: 60,
+          purpose: 44,
+        },
       })
       console.info('getTimeUntilClaim', response)
     } catch (e) {
@@ -243,7 +284,7 @@ const main = async (): Promise<void> => {
     'Cool Down Info',
     'Add Liquidity',
     'Remove Liquidity',
-    'Claim From Tokemak'
+    'Claim From Tokemak',
   ]
   const contracts = ['Staking Token', 'Reward Token']
   const addresses = ['User Address', 'Liquidity Reserve Address']

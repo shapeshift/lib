@@ -1,10 +1,8 @@
-import { ethChainId as chainId, fromAssetId, toAssetId } from '@shapeshiftoss/caip'
+import { ethChainId as chainId, toAssetId } from '@shapeshiftoss/caip'
 import axios from 'axios'
-import lodash from 'lodash'
 
 import { Asset } from '../../service/AssetService'
 import { colorMap } from '../colorMap'
-import { overrideTokens } from '../ethereum/overrides'
 
 type UniswapToken = {
   chainId: number
@@ -25,20 +23,10 @@ type UniswapTokenData = {
 
 export async function getUniswapTokens(): Promise<Asset[]> {
   const { data: uniswapTokenData } = await axios.get<UniswapTokenData>(
-    'https://tokens.coingecko.com/uniswap/all.json'
+    'https://tokens.coingecko.com/uniswap/all.json',
   )
 
   return uniswapTokenData.tokens.reduce<Asset[]>((acc, token) => {
-    const overrideToken: Asset | undefined = lodash.find(
-      overrideTokens,
-      (override: Asset) => fromAssetId(override.assetId).assetReference === token.address
-    )
-
-    if (overrideToken) {
-      acc.push(overrideToken)
-      return acc
-    }
-
     const assetReference = token.address.toLowerCase()
 
     // if no token address, we can't deal with this asset.
@@ -56,7 +44,7 @@ export async function getUniswapTokens(): Promise<Asset[]> {
       symbol: token.symbol,
       explorer: 'https://etherscan.io',
       explorerAddressLink: 'https://etherscan.io/address/',
-      explorerTxLink: 'https://etherscan.io/tx/'
+      explorerTxLink: 'https://etherscan.io/tx/',
     }
     acc.push(result)
     return acc

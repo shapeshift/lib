@@ -4,13 +4,13 @@ import {
   CosmosSignTx,
   ETHSignTx,
   HDWallet,
-  OsmosisSignTx
+  OsmosisSignTx,
+  ThorchainSignTx,
 } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, ChainSpecific, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 
-import * as cosmos from './cosmossdk/cosmos'
-import * as osmosis from './cosmossdk/osmosis'
+import * as cosmossdk from './cosmossdk/types'
 import * as evm from './evm/types'
 import * as utxo from './utxo/types'
 
@@ -23,8 +23,9 @@ type ChainSpecificAccount<T> = ChainSpecific<
     [KnownChainIds.BitcoinCashMainnet]: utxo.Account
     [KnownChainIds.DogecoinMainnet]: utxo.Account
     [KnownChainIds.LitecoinMainnet]: utxo.Account
-    [KnownChainIds.CosmosMainnet]: cosmos.Account
-    [KnownChainIds.OsmosisMainnet]: osmosis.Account
+    [KnownChainIds.CosmosMainnet]: cosmossdk.Account
+    [KnownChainIds.OsmosisMainnet]: cosmossdk.Account
+    [KnownChainIds.ThorchainMainnet]: cosmossdk.Account
   }
 >
 
@@ -44,7 +45,7 @@ export type AssetBalance = {
 export enum FeeDataKey {
   Slow = 'slow',
   Average = 'average',
-  Fast = 'fast'
+  Fast = 'fast',
 }
 
 type ChainSpecificFeeData<T> = ChainSpecific<
@@ -56,8 +57,9 @@ type ChainSpecificFeeData<T> = ChainSpecific<
     [KnownChainIds.BitcoinCashMainnet]: utxo.FeeData
     [KnownChainIds.DogecoinMainnet]: utxo.FeeData
     [KnownChainIds.LitecoinMainnet]: utxo.FeeData
-    [KnownChainIds.CosmosMainnet]: cosmos.FeeData
-    [KnownChainIds.OsmosisMainnet]: osmosis.FeeData
+    [KnownChainIds.CosmosMainnet]: cosmossdk.FeeData
+    [KnownChainIds.OsmosisMainnet]: cosmossdk.FeeData
+    [KnownChainIds.ThorchainMainnet]: cosmossdk.FeeData
   }
 >
 
@@ -81,24 +83,24 @@ export type FeeDataEstimate<T extends ChainId> = {
 
 export type SubscribeTxsInput = {
   wallet: HDWallet
-  bip44Params?: BIP44Params
+  bip44Params: BIP44Params
+  accountType?: UtxoAccountType
+}
+
+export type GetBIP44ParamsInput = {
+  accountNumber: number
   accountType?: UtxoAccountType
 }
 
 export type TransferType = unchained.TransferType
 export type TradeType = unchained.TradeType
 
-type TransactionData =
-  | unchained.StandardTxMetadata
-  | unchained.evm.TxMetadata
-  | unchained.cosmos.TxMetadata
+export type TxMetadata = unchained.evm.TxMetadata | unchained.cosmossdk.TxMetadata
 
 export type Transaction = Omit<unchained.StandardTx, 'transfers'> & {
-  transfers: Array<TxTransfer>
-  data?: TransactionData
+  transfers: TxTransfer[]
+  data?: TxMetadata
 }
-
-export type TransactionMetadata = unchained.StandardTxMetadata
 
 export type TxTransfer = Omit<unchained.Transfer, 'components' | 'totalValue' | 'token'> & {
   value: string
@@ -111,10 +113,10 @@ export type SubscribeError = {
 export type TxHistoryResponse = {
   cursor: string
   pubkey: string
-  transactions: Array<Transaction>
+  transactions: Transaction[]
 }
 
-type ChainTxTypeInner = {
+type ChainSignTx = {
   [KnownChainIds.EthereumMainnet]: ETHSignTx
   [KnownChainIds.AvalancheMainnet]: ETHSignTx
   [KnownChainIds.BitcoinMainnet]: BTCSignTx
@@ -123,52 +125,21 @@ type ChainTxTypeInner = {
   [KnownChainIds.LitecoinMainnet]: BTCSignTx
   [KnownChainIds.CosmosMainnet]: CosmosSignTx
   [KnownChainIds.OsmosisMainnet]: OsmosisSignTx
+  [KnownChainIds.ThorchainMainnet]: ThorchainSignTx
 }
 
-export type ChainTxType<T> = T extends keyof ChainTxTypeInner ? ChainTxTypeInner[T] : never
-
-export type BuildDelegateTxInput<T extends ChainId> = {
-  validator: string
-  value: string
-  wallet: HDWallet
-  bip44Params?: BIP44Params
-  memo?: string
-} & ChainSpecificBuildTxData<T>
-
-export type BuildUndelegateTxInput<T extends ChainId> = {
-  validator: string
-  value: string
-  wallet: HDWallet
-  bip44Params?: BIP44Params
-  memo?: string
-} & ChainSpecificBuildTxData<T>
-
-export type BuildRedelegateTxInput<T extends ChainId> = {
-  fromValidator: string
-  toValidator: string
-  value: string
-  wallet: HDWallet
-  bip44Params?: BIP44Params
-  memo?: string
-} & ChainSpecificBuildTxData<T>
-
-export type BuildClaimRewardsTxInput<T extends ChainId> = {
-  validator: string
-  wallet: HDWallet
-  bip44Params?: BIP44Params
-  memo?: string
-} & ChainSpecificBuildTxData<T>
+export type SignTx<T extends ChainId> = T extends keyof ChainSignTx ? ChainSignTx[T] : never
 
 export type BuildSendTxInput<T extends ChainId> = {
   to: string
   value: string
   wallet: HDWallet
-  bip44Params?: BIP44Params // TODO maybe these shouldnt be optional
+  bip44Params: BIP44Params
   sendMax?: boolean
   memo?: string
 } & ChainSpecificBuildTxData<T>
 
-type ChainSpecificBuildTxData<T> = ChainSpecific<
+export type ChainSpecificBuildTxData<T> = ChainSpecific<
   T,
   {
     [KnownChainIds.EthereumMainnet]: evm.BuildTxInput
@@ -177,10 +148,30 @@ type ChainSpecificBuildTxData<T> = ChainSpecific<
     [KnownChainIds.BitcoinCashMainnet]: utxo.BuildTxInput
     [KnownChainIds.DogecoinMainnet]: utxo.BuildTxInput
     [KnownChainIds.LitecoinMainnet]: utxo.BuildTxInput
-    [KnownChainIds.CosmosMainnet]: cosmos.BuildTxInput
-    [KnownChainIds.OsmosisMainnet]: cosmos.BuildTxInput
+    [KnownChainIds.CosmosMainnet]: cosmossdk.BuildTxInput
+    [KnownChainIds.OsmosisMainnet]: cosmossdk.BuildTxInput
+    [KnownChainIds.ThorchainMainnet]: cosmossdk.BuildTxInput
   }
 >
+
+type BuildValidatorTxInput<T extends ChainId> = Omit<BuildSendTxInput<T>, 'to'> & {
+  validator: string
+}
+
+export type BuildDelegateTxInput<T extends ChainId> = BuildValidatorTxInput<T>
+
+export type BuildUndelegateTxInput<T extends ChainId> = BuildValidatorTxInput<T>
+
+export type BuildClaimRewardsTxInput<T extends ChainId> = Omit<BuildValidatorTxInput<T>, 'value'>
+
+export type BuildRedelegateTxInput<T extends ChainId> = Omit<BuildSendTxInput<T>, 'to'> & {
+  fromValidator: string
+  toValidator: string
+}
+
+export type BuildDepositTxInput<T extends ChainId> = Omit<BuildSendTxInput<T>, 'to'> & {
+  memo: string
+}
 
 export type SignTxInput<TxType> = {
   txToSign: TxType
@@ -200,7 +191,7 @@ export interface TxHistoryInput {
 
 export type GetAddressInputBase = {
   wallet: HDWallet
-  bip44Params?: BIP44Params
+  bip44Params: BIP44Params
   /**
    * Request that the address be shown to the user by the device, if supported
    */
@@ -228,7 +219,7 @@ export type GetFeeDataInput<T extends ChainId> = {
 
 export enum ValidAddressResultType {
   Valid = 'valid',
-  Invalid = 'invalid'
+  Invalid = 'invalid',
 }
 
 export type ValidAddressResult = {

@@ -1,14 +1,14 @@
-import { toAssetId } from '@shapeshiftoss/caip'
-import type { ChainAdapter } from '@shapeshiftoss/chain-adapters'
-import { bip32ToAddressNList, ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { AssetId, ethChainId, toAssetId } from '@shapeshiftoss/caip'
+import { ChainAdapter, toAddressNList } from '@shapeshiftoss/chain-adapters'
+import { ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import {
   ApprovalRequired,
   DepositWithdrawArgs,
   FeePriority,
-  InvestorOpportunity
+  InvestorOpportunity,
 } from '@shapeshiftoss/investor'
 import { Logger } from '@shapeshiftoss/logger'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import type { BigNumber } from 'bignumber.js'
 import toLower from 'lodash/toLower'
 import Web3 from 'web3'
@@ -18,13 +18,14 @@ import { numberToHex } from 'web3-utils'
 import {
   erc20Abi,
   idleCdoAbi,
+  idleStrategyAbi,
   idleTokenV4Abi,
   IdleVault,
   MAX_ALLOWANCE,
   referralAddress,
-  ssRouterContractAddress
+  ssRouterContractAddress,
 } from './constants'
-import { bnOrZero, normalizeAmount, toPath } from './utils'
+import { bn, bnOrZero } from './utils'
 
 export type PreparedTransaction = {
   chainId: number
@@ -36,10 +37,10 @@ export type PreparedTransaction = {
   value: '0'
 }
 
-const feeMultipier: Record<FeePriority, number> = Object.freeze({
+const feeMultiplier: Record<FeePriority, number> = Object.freeze({
   fast: 1,
   average: 0.8,
-  slow: 0.5
+  slow: 0.5,
 })
 
 type IdleOpportunityDeps = {
@@ -139,7 +140,7 @@ export class IdleOpportunity
       logger: deps.logger ?? new Logger({ name: 'Idle Opportunity' }),
       routerContract: deps.contract,
       web3: deps.web3,
-      network: deps.network
+      network: deps.network,
     }
 
     // this.metadata = vault.metadata
@@ -147,8 +148,8 @@ export class IdleOpportunity
     this.metadata = {
       ...vault,
       apy: {
-        net_apy: parseFloat(bnOrZero(vault.apr).div(100).toFixed())
-      }
+        net_apy: parseFloat(bnOrZero(vault.apr).div(100).toFixed()),
+      },
     }
     this.version = `${vault.protocolName} ${vault.strategy}`.trim()
     this.name = vault.poolName
@@ -157,33 +158,33 @@ export class IdleOpportunity
     this.expired = false
     this.apy = bnOrZero(vault.apr).div(100)
     this.tvl = {
-      balanceUsdc: normalizeAmount(vault.tvl, 6),
-      balance: normalizeAmount(vault.underlyingTVL),
+      balanceUsdc: bnOrZero(vault.tvl),
+      balance: bnOrZero(vault.underlyingTVL),
       assetId: toAssetId({
         chainId: 'eip155:1',
         assetNamespace: 'erc20',
-        assetReference: vault.address
-      })
+        assetReference: vault.address,
+      }),
     }
     this.underlyingAsset = {
-      balance: bnOrZero(0),
+      balance: bn(0),
       assetId: toAssetId({
         chainId: 'eip155:1',
         assetNamespace: 'erc20',
-        assetReference: vault.underlyingAddress
-      })
+        assetReference: vault.underlyingAddress,
+      }),
     }
     this.positionAsset = {
-      balance: bnOrZero(0),
+      balance: bn(0),
       assetId: toAssetId({
         chainId: 'eip155:1',
         assetNamespace: 'erc20',
-        assetReference: vault.address
+        assetReference: vault.address,
       }),
-      underlyingPerPosition: normalizeAmount(vault.pricePerShare)
+      underlyingPerPosition: bnOrZero(vault.pricePerShare),
     }
     this.feeAsset = {
-      assetId: 'eip155:1/slip44:60'
+      assetId: 'eip155:1/slip44:60',
     }
   }
 
@@ -213,27 +214,15 @@ export class IdleOpportunity
       methodName = `redeemIdleToken`
     }
 
-    // console.log('prepareWithdrawal', methodName, address, amount.toFixed())
-
     const preWithdraw = await vaultContract.methods[methodName](amount.toFixed())
-
-    // console.log('prepareWithdrawal - preWithdraw', preWithdraw)
 
     const data = await preWithdraw.encodeABI({ from: address })
 
-    // console.log('prepareWithdrawal - data', data)
-
     const estimatedGas = bnOrZero(await preWithdraw.estimateGas({ from: address }))
-
-    // console.log('prepareWithdrawal - estimatedGas', estimatedGas)
 
     const nonce = await this.#internals.web3.eth.getTransactionCount(address)
 
-    // console.log('prepareWithdrawal - nonce', nonce)
-
     const gasPrice = bnOrZero(await this.#internals.web3.eth.getGasPrice())
-
-    // console.log('prepareWithdrawal - gasPrice', gasPrice)
 
     return {
       chainId: 1,
@@ -242,34 +231,22 @@ export class IdleOpportunity
       gasPrice,
       nonce: String(nonce),
       to: vaultContract.options.address,
-      value: '0'
+      value: '0',
     }
   }
 
   public async prepareClaimTokens(address: string): Promise<PreparedTransaction> {
     const vaultContract = new this.#internals.web3.eth.Contract(idleTokenV4Abi, this.id)
 
-    // console.log('prepareWithdrawal', address)
-
     const preWithdraw = await vaultContract.methods.redeemIdleToken(0)
-
-    // console.log('prepareWithdrawal - preWithdraw', preWithdraw)
 
     const data = await preWithdraw.encodeABI({ from: address })
 
-    // console.log('prepareWithdrawal - data', data)
-
     const estimatedGas = bnOrZero(await preWithdraw.estimateGas({ from: address }))
-
-    // console.log('prepareWithdrawal - estimatedGas', estimatedGas)
 
     const nonce = await this.#internals.web3.eth.getTransactionCount(address)
 
-    // console.log('prepareWithdrawal - nonce', nonce)
-
     const gasPrice = bnOrZero(await this.#internals.web3.eth.getGasPrice())
-
-    // console.log('prepareWithdrawal - gasPrice', gasPrice)
 
     return {
       chainId: 1,
@@ -278,7 +255,7 @@ export class IdleOpportunity
       gasPrice,
       nonce: String(nonce),
       to: vaultContract.options.address,
-      value: '0'
+      value: '0',
     }
   }
 
@@ -299,7 +276,7 @@ export class IdleOpportunity
     let methodParams: string[]
     let vaultContract: Contract
 
-    // Handle Tranche Withdraw
+    // Handle Tranche Deposit
     if (this.metadata.cdoAddress) {
       vaultContract = this.#internals.routerContract
       const trancheType = /senior/i.test(this.metadata.strategy) ? 'AA' : 'BB'
@@ -313,23 +290,13 @@ export class IdleOpportunity
 
     const preDeposit = await vaultContract.methods[methodName](...methodParams)
 
-    // console.log('prepareDeposit - routerContract.deposit', preDeposit)
-
     const data = await preDeposit.encodeABI({ from: address })
-
-    // console.log('prepareDeposit - data', data)
 
     const estimatedGas = bnOrZero(await preDeposit.estimateGas({ from: address }))
 
-    // console.log('prepareDeposit - estimatedGas', estimatedGas)
-
     const nonce = await this.#internals.web3.eth.getTransactionCount(address)
 
-    // console.log('prepareDeposit - nonce', nonce)
-
     const gasPrice = bnOrZero(await this.#internals.web3.eth.getGasPrice())
-
-    // console.log('prepareDeposit - gasPrice', gasPrice)
 
     return {
       chainId: 1,
@@ -338,48 +305,69 @@ export class IdleOpportunity
       gasPrice,
       nonce: String(nonce),
       to: vaultContract.options.address,
-      value: '0'
+      value: '0',
     }
+  }
+
+  async getRewardAssetIds(): Promise<AssetId[]> {
+    let govTokens = []
+
+    if (this.metadata.cdoAddress) {
+      const cdoContract: Contract = new this.#internals.web3.eth.Contract(
+        idleCdoAbi,
+        this.metadata.cdoAddress,
+      )
+      const strategyContractAddress: string = await cdoContract.methods.strategy().call()
+      const strategyContract = new this.#internals.web3.eth.Contract(
+        idleStrategyAbi,
+        strategyContractAddress,
+      )
+      govTokens = await strategyContract.methods.getRewardTokens().call()
+    } else {
+      const vaultContract: Contract = new this.#internals.web3.eth.Contract(idleTokenV4Abi, this.id)
+      govTokens = await vaultContract.methods.getGovTokens().call()
+    }
+
+    const rewardAssetIds = govTokens.map((token: string) =>
+      toAssetId({
+        assetNamespace: 'erc20',
+        assetReference: token,
+        chainId: ethChainId,
+      }),
+    )
+
+    return rewardAssetIds
   }
 
   /**
    * Prepare an unsigned deposit transaction
    *
-   * @param input.address - The user's wallet address where the funds are
+   * @param address - The user's wallet address where the funds are
    */
   async getClaimableTokens(address: string): Promise<ClaimableToken[]> {
     if (this.metadata.cdoAddress) {
       return []
     }
 
-    // console.log('getClaimableTokens - address', address)
-    // console.log('getClaimableTokens - vaultId', this.id)
-
     const claimableTokens: ClaimableToken[] = []
     const vaultContract: Contract = new this.#internals.web3.eth.Contract(idleTokenV4Abi, this.id)
     const govTokensAmounts = await vaultContract.methods.getGovTokensAmounts(address).call()
 
-    // console.log('getClaimableTokens - govTokensAmounts', govTokensAmounts)
-
     for (let i = 0; i < govTokensAmounts.length; i++) {
       const govTokenAddress = await vaultContract.methods.govTokens(i).call()
-
-      // console.log(`getClaimableTokens - govTokenAddress(${i})`, govTokenAddress)
 
       if (govTokenAddress) {
         claimableTokens.push({
           assetId: toAssetId({
             chainId: 'eip155:1',
             assetNamespace: 'erc20',
-            assetReference: govTokenAddress
+            assetReference: govTokenAddress,
           }),
           address: govTokenAddress,
-          amount: govTokensAmounts[i]
+          amount: govTokensAmounts[i],
         })
       }
     }
-
-    // console.log('getClaimableTokens - claimableTokens', claimableTokens)
 
     return claimableTokens
   }
@@ -387,7 +375,7 @@ export class IdleOpportunity
   public async allowance(address: string): Promise<BigNumber> {
     const depositTokenContract: Contract = new this.#internals.web3.eth.Contract(
       erc20Abi,
-      this.metadata.underlyingAddress
+      this.metadata.underlyingAddress,
     )
 
     let vaultContract: Contract
@@ -409,7 +397,7 @@ export class IdleOpportunity
   async prepareApprove(address: string): Promise<PreparedTransaction> {
     const depositTokenContract = new this.#internals.web3.eth.Contract(
       erc20Abi,
-      this.metadata.underlyingAddress
+      this.metadata.underlyingAddress,
     )
 
     let vaultContractAddress: string
@@ -423,7 +411,7 @@ export class IdleOpportunity
 
     const preApprove = await depositTokenContract.methods.approve(
       vaultContractAddress,
-      MAX_ALLOWANCE
+      MAX_ALLOWANCE,
     )
     const data = await preApprove.encodeABI({ from: address })
     const estimatedGas = bnOrZero(await preApprove.estimateGas({ from: address }))
@@ -438,7 +426,7 @@ export class IdleOpportunity
       gasPrice,
       nonce: String(nonce),
       to: this.metadata.underlyingAddress,
-      value: '0'
+      value: '0',
     }
   }
 
@@ -449,14 +437,13 @@ export class IdleOpportunity
     wallet: HDWallet
     tx: PreparedTransaction
     feePriority?: FeePriority
+    bip44Params: BIP44Params
   }): Promise<string> {
-    const { wallet, tx, feePriority } = input
+    const { wallet, tx, feePriority, bip44Params } = input
     const feeSpeed: FeePriority = feePriority ? feePriority : 'fast'
     const chainAdapter = this.#internals.chainAdapter
 
-    const path = toPath(chainAdapter.buildBIP44Params({ accountNumber: 0 }))
-    const addressNList = bip32ToAddressNList(path)
-    const gasPrice = numberToHex(bnOrZero(tx.gasPrice).times(feeMultipier[feeSpeed]).toString())
+    const gasPrice = numberToHex(bnOrZero(tx.gasPrice).times(feeMultiplier[feeSpeed]).toString())
     const txToSign: ETHSignTx = {
       ...tx,
       gasPrice,
@@ -464,10 +451,8 @@ export class IdleOpportunity
       gasLimit: numberToHex(tx.estimatedGas.times(1.5).integerValue().toString()),
       nonce: numberToHex(tx.nonce),
       value: numberToHex(tx.value),
-      addressNList
+      addressNList: toAddressNList(bip44Params),
     }
-
-    // console.log('signAndBroadcast', txToSign)
 
     if (wallet.supportsOfflineSigning()) {
       const signedTx = await chainAdapter.signTransaction({ txToSign, wallet })
@@ -495,17 +480,17 @@ export class IdleOpportunity
       apy: this.apy.toString(),
       tvl: {
         assetId: this.tvl.assetId,
-        balance: this.tvl.balance.toString()
+        balance: this.tvl.balance.toString(),
       },
       underlyingAsset: {
         balance: this.underlyingAsset.balance.toString(),
-        assetId: this.underlyingAsset.assetId
+        assetId: this.underlyingAsset.assetId,
       },
       positionAsset: {
         balance: this.positionAsset.balance.toString(),
         assetId: this.positionAsset.assetId,
-        price: this.positionAsset.underlyingPerPosition.toString()
-      }
+        price: this.positionAsset.underlyingPerPosition.toFixed(),
+      },
     }
   }
 }

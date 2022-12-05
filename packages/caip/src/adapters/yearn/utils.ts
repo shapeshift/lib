@@ -22,19 +22,18 @@ export const writeFiles = async (data: Record<string, Record<string, string>>) =
 }
 
 export const fetchData = async () => {
-  const [vaults, ironBankTokens, zapperTokens, underlyingVaultTokens] = await Promise.all([
+  const [vaults, zapperTokens, underlyingVaultTokens] = await Promise.all([
     yearnSdk.vaults.get(),
-    yearnSdk.ironBank.tokens(),
     yearnSdk.tokens.supported(),
-    yearnSdk.vaults.tokens()
+    yearnSdk.vaults.tokens(),
   ])
-  const tokens = [...vaults, ...ironBankTokens, ...zapperTokens, ...underlyingVaultTokens]
+  const tokens = [...vaults, ...zapperTokens, ...underlyingVaultTokens]
   return uniqBy(tokens, 'address')
 }
 
 export const parseEthData = (data: (Token | Vault)[]) => {
   const assetNamespace = 'erc20'
-  const chainNamespace = CHAIN_NAMESPACE.Ethereum
+  const chainNamespace = CHAIN_NAMESPACE.Evm
   const chainReference = CHAIN_REFERENCE.EthereumMainnet
 
   return data.reduce((acc, datum) => {
@@ -45,7 +44,7 @@ export const parseEthData = (data: (Token | Vault)[]) => {
       chainNamespace,
       chainReference,
       assetNamespace,
-      assetReference
+      assetReference,
     })
     acc[assetId] = id
     return acc
@@ -54,8 +53,8 @@ export const parseEthData = (data: (Token | Vault)[]) => {
 
 export const parseData = (d: (Token | Vault)[]) => {
   const ethMainnet = toChainId({
-    chainNamespace: CHAIN_NAMESPACE.Ethereum,
-    chainReference: CHAIN_REFERENCE.EthereumMainnet
+    chainNamespace: CHAIN_NAMESPACE.Evm,
+    chainReference: CHAIN_REFERENCE.EthereumMainnet,
   })
   return { [ethMainnet]: parseEthData(d) }
 }

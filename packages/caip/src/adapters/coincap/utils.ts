@@ -12,7 +12,8 @@ import {
   dogeChainId,
   ethChainId,
   ltcChainId,
-  osmosisChainId
+  osmosisChainId,
+  thorchainChainId,
 } from '../../constants'
 import {
   bitcoinAssetMap,
@@ -20,7 +21,8 @@ import {
   cosmosAssetMap,
   dogecoinAssetMap,
   litecoinAssetMap,
-  osmosisAssetMap
+  osmosisAssetMap,
+  thorchainAssetMap,
 } from '../../utils'
 
 export type CoinCapCoin = {
@@ -53,11 +55,11 @@ export const fetchData = async (URL: string) =>
 export const parseEthData = (data: CoinCapCoin[]) => {
   const ethCoins = data.filter(
     ({ id, explorer }) =>
-      (explorer && explorer.startsWith('https://etherscan.io/token/0x')) || id === 'ethereum'
+      (explorer && explorer.startsWith('https://etherscan.io/token/0x')) || id === 'ethereum',
   )
 
   return ethCoins.reduce((acc, { id, explorer }) => {
-    const chainNamespace = CHAIN_NAMESPACE.Ethereum
+    const chainNamespace = CHAIN_NAMESPACE.Evm
     const chainReference = CHAIN_REFERENCE.EthereumMainnet
     let assetReference: string = ASSET_REFERENCE.Ethereum
     const assetNamespace = id === 'ethereum' ? 'slip44' : 'erc20'
@@ -80,5 +82,6 @@ export const parseData = (d: CoinCapCoin[]) => ({
   [dogeChainId]: dogecoinAssetMap,
   [ltcChainId]: litecoinAssetMap,
   [cosmosChainId]: cosmosAssetMap,
-  [osmosisChainId]: osmosisAssetMap
+  [osmosisChainId]: osmosisAssetMap,
+  [thorchainChainId]: thorchainAssetMap,
 })

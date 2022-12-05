@@ -1,6 +1,8 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
+import { KnownChainIds } from '@shapeshiftoss/types'
 import Web3 from 'web3'
 
+import { ApprovalNeededInput } from '../../../api'
 import { BTC, ETH } from '../../utils/test-data/assets'
 import { setupDeps } from '../../utils/test-data/setupDeps'
 import { setupQuote } from '../../utils/test-data/setupSwapQuote'
@@ -14,11 +16,11 @@ Web3.mockImplementation(() => ({
     Contract: jest.fn(() => ({
       methods: {
         allowance: jest.fn(() => ({
-          call: jest.fn()
-        }))
-      }
-    }))
-  }
+          call: jest.fn(),
+        })),
+      },
+    })),
+  },
 }))
 
 describe('cowApprovalNeeded', () => {
@@ -30,47 +32,47 @@ describe('cowApprovalNeeded', () => {
   it('returns false if sellAsset assetId is ETH / non ERC-20', async () => {
     const input1 = {
       quote: { ...tradeQuote, sellAsset: ETH },
-      wallet: <HDWallet>{}
+      wallet: <HDWallet>{},
     }
 
     const input2 = {
       quote: { ...tradeQuote, sellAsset: BTC },
-      wallet: <HDWallet>{}
+      wallet: <HDWallet>{},
     }
 
     await expect(cowApprovalNeeded(args, input1)).rejects.toThrow(
-      '[cowApprovalNeeded] - unsupported asset namespace'
+      '[cowApprovalNeeded] - unsupported asset namespace',
     )
     await expect(cowApprovalNeeded(args, input2)).rejects.toThrow(
-      '[cowApprovalNeeded] - unsupported asset namespace'
+      '[cowApprovalNeeded] - unsupported asset namespace',
     )
   })
 
   it('returns false if allowanceOnChain is greater than quote.sellAmount', async () => {
     const allowanceOnChain = '50'
-    const input = {
+    const input: ApprovalNeededInput<KnownChainIds.EthereumMainnet> = {
       quote: {
         ...tradeQuote,
-        sellAmount: '10'
+        sellAmountCryptoPrecision: '10',
       },
-      wallet: <HDWallet>{}
+      wallet: <HDWallet>{},
     }
     const mockedAllowance = jest.fn(() => ({
-      call: jest.fn(() => allowanceOnChain)
+      call: jest.fn(() => allowanceOnChain),
     }))
     ;(web3.eth.Contract as jest.Mock<unknown>).mockImplementation(() => ({
       methods: {
-        allowance: mockedAllowance
-      }
+        allowance: mockedAllowance,
+      },
     }))
 
     expect(await cowApprovalNeeded(args, input)).toEqual({
-      approvalNeeded: false
+      approvalNeeded: false,
     })
     expect(mockedAllowance).toHaveBeenCalledTimes(1)
     expect(mockedAllowance).toHaveBeenCalledWith(
       '0xc770eefad204b5180df6a14ee197d99d808ee52d',
-      '0xc92e8bdf79f0507f65a392b0ab4667716bfe0110'
+      '0xc92e8bdf79f0507f65a392b0ab4667716bfe0110',
     )
   })
 
@@ -79,27 +81,27 @@ describe('cowApprovalNeeded', () => {
     const input = {
       quote: {
         ...tradeQuote,
-        sellAmount: '10'
+        sellAmount: '10',
       },
-      wallet: <HDWallet>{}
+      wallet: <HDWallet>{},
     }
 
     const mockedAllowance = jest.fn(() => ({
-      call: jest.fn(() => allowanceOnChain)
+      call: jest.fn(() => allowanceOnChain),
     }))
     ;(web3.eth.Contract as jest.Mock<unknown>).mockImplementation(() => ({
       methods: {
-        allowance: mockedAllowance
-      }
+        allowance: mockedAllowance,
+      },
     }))
 
     expect(await cowApprovalNeeded(args, input)).toEqual({
-      approvalNeeded: true
+      approvalNeeded: true,
     })
     expect(mockedAllowance).toHaveBeenCalledTimes(1)
     expect(mockedAllowance).toHaveBeenCalledWith(
       '0xc770eefad204b5180df6a14ee197d99d808ee52d',
-      '0xc92e8bdf79f0507f65a392b0ab4667716bfe0110'
+      '0xc92e8bdf79f0507f65a392b0ab4667716bfe0110',
     )
   })
 })

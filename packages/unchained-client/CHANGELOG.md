@@ -1,3 +1,136 @@
+# [@shapeshiftoss/unchained-client-v10.8.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v10.7.0...@shapeshiftoss/unchained-client-v10.8.0) (2022-12-02)
+
+
+### Features
+
+* **unchained-client:** detect failed transaction for cosmossdk chains ([#1113](https://github.com/shapeshift/lib/issues/1113)) ([50a9b74](https://github.com/shapeshift/lib/commit/50a9b74e5ca532f796794c0cd1f9daed9d5d6700))
+
+# [@shapeshiftoss/unchained-client-v10.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v10.6.0...@shapeshiftoss/unchained-client-v10.7.0) (2022-12-02)
+
+
+### Features
+
+* **osmosis:** handle swap_exact_amount_in message ([#1108](https://github.com/shapeshift/lib/issues/1108)) ([29c1bff](https://github.com/shapeshift/lib/commit/29c1bff8eb53f5158f9f6aa72e6df73300b41eff))
+
+# [@shapeshiftoss/unchained-client-v10.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v10.5.0...@shapeshiftoss/unchained-client-v10.6.0) (2022-12-01)
+
+
+### Features
+
+* rename CowSwap -> CoW Swap ([#1111](https://github.com/shapeshift/lib/issues/1111)) ([5ca7439](https://github.com/shapeshift/lib/commit/5ca7439311da4b6d069cb9f28b10c7dffd083eba))
+
+# [@shapeshiftoss/unchained-client-v10.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v10.4.1...@shapeshiftoss/unchained-client-v10.5.0) (2022-12-01)
+
+
+### Features
+
+* detect all active fox staking contracts ([#1112](https://github.com/shapeshift/lib/issues/1112)) ([03f08e2](https://github.com/shapeshift/lib/commit/03f08e2deaf3bba358d022beb67ff0701289f951))
+
+# [@shapeshiftoss/unchained-client-v10.4.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v10.4.0...@shapeshiftoss/unchained-client-v10.4.1) (2022-12-01)
+
+# [@shapeshiftoss/unchained-client-v10.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v10.3.0...@shapeshiftoss/unchained-client-v10.4.0) (2022-11-25)
+
+
+### Features
+
+* **swapper:** add AVAX pools to Thorchain swapper ([#1091](https://github.com/shapeshift/lib/issues/1091)) ([4acbeac](https://github.com/shapeshift/lib/commit/4acbeac8f921f0544154bbe92652a0ba5d2c339b))
+
+# [@shapeshiftoss/unchained-client-v10.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v10.2.5...@shapeshiftoss/unchained-client-v10.3.0) (2022-11-03)
+
+
+### Features
+
+* **swapper:** use refund fee in limit calculation & use `outbound_fee` ([#1080](https://github.com/shapeshift/lib/issues/1080)) ([a4d6d6f](https://github.com/shapeshift/lib/commit/a4d6d6f36e1ad803a5328c0536701f142e2f97f2))
+
+# [@shapeshiftoss/unchained-client-v10.2.5](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v10.2.4...@shapeshiftoss/unchained-client-v10.2.5) (2022-10-31)
+
+# [@shapeshiftoss/unchained-client-v10.2.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v10.2.3...@shapeshiftoss/unchained-client-v10.2.4) (2022-10-25)
+
+
+### Bug Fixes
+
+* parse eth txs without yearn vaults ([#1078](https://github.com/shapeshift/lib/issues/1078)) ([8661eb5](https://github.com/shapeshift/lib/commit/8661eb5ca98810f6b63468f2b468a23546317b7b))
+
+# [@shapeshiftoss/unchained-client-v10.2.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v10.2.2...@shapeshiftoss/unchained-client-v10.2.3) (2022-10-24)
+
+# [@shapeshiftoss/unchained-client-v10.2.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v10.2.1...@shapeshiftoss/unchained-client-v10.2.2) (2022-10-24)
+
+
+### Bug Fixes
+
+* avax asset ref and upgrade yearn sdk ([#1074](https://github.com/shapeshift/lib/issues/1074)) ([315095a](https://github.com/shapeshift/lib/commit/315095a1c21922b329126ffa643db944a4f31bce))
+
+# [@shapeshiftoss/unchained-client-v10.2.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v10.2.0...@shapeshiftoss/unchained-client-v10.2.1) (2022-10-20)
+
+
+### Bug Fixes
+
+* parse confirmed Txs with univ2 parser ([#1070](https://github.com/shapeshift/lib/issues/1070)) ([a72b7ac](https://github.com/shapeshift/lib/commit/a72b7ac3c27b6286f1f600c799575efb0d61f397))
+
+# [@shapeshiftoss/unchained-client-v10.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v10.1.2...@shapeshiftoss/unchained-client-v10.2.0) (2022-10-17)
+
+
+### Features
+
+* explicit metadata and support new message types ([#1063](https://github.com/shapeshift/lib/issues/1063)) ([4259cce](https://github.com/shapeshift/lib/commit/4259cce24092f5be5e549c2035f16511d5c4c6ec))
+
+# [@shapeshiftoss/unchained-client-v10.1.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v10.1.1...@shapeshiftoss/unchained-client-v10.1.2) (2022-09-20)
+
+
+### Bug Fixes
+
+* use json response instead of text response for generated fetch api ([#1035](https://github.com/shapeshift/lib/issues/1035)) ([ba725de](https://github.com/shapeshift/lib/commit/ba725dee6eb8811827075e90dadb2c369d642d4c))
+
+# [@shapeshiftoss/unchained-client-v10.1.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v10.1.0...@shapeshiftoss/unchained-client-v10.1.1) (2022-09-16)
+
+# [@shapeshiftoss/unchained-client-v10.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v10.0.2...@shapeshiftoss/unchained-client-v10.1.0) (2022-09-12)
+
+
+### Features
+
+* add THORChain support ([#1010](https://github.com/shapeshift/lib/issues/1010)) ([d7c3b72](https://github.com/shapeshift/lib/commit/d7c3b72bbda9795f87fa8f73c35926c95026a3c2))
+
+# [@shapeshiftoss/unchained-client-v10.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v10.0.1...@shapeshiftoss/unchained-client-v10.0.2) (2022-09-09)
+
+# [@shapeshiftoss/unchained-client-v10.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v10.0.0...@shapeshiftoss/unchained-client-v10.0.1) (2022-09-02)
+
+# [@shapeshiftoss/unchained-client-v10.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v9.9.0...@shapeshiftoss/unchained-client-v10.0.0) (2022-09-02)
+
+
+### Features
+
+* use CHAIN_NAMESPACE.Evm & CHAIN_NAMESPACE.CosmosSdk ([#1007](https://github.com/shapeshift/lib/issues/1007)) ([b6c5490](https://github.com/shapeshift/lib/commit/b6c54902c9e84fd628e917e4747acdb6faf3405d)), closes [#1008](https://github.com/shapeshift/lib/issues/1008)
+
+
+### BREAKING CHANGES
+
+* CHAIN_NAMESPACE.Ethereum is now CHAIN_NAMESPACE.Evm
+* CHAIN_NAMESPACE.Cosmos is now CHAIN_NAMESPACE.CosmosSdk
+
+* chore: trigger CI
+
+* chore: trigger ci
+
+* fix: internally bump caip
+
+Co-authored-by: Apotheosis <97164662+0xApotheosis@users.noreply.github.com>
+
+# [@shapeshiftoss/unchained-client-v9.9.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v9.8.3...@shapeshiftoss/unchained-client-v9.9.0) (2022-08-18)
+
+
+### Features
+
+* **unchained-client:** parse approval amount ([#971](https://github.com/shapeshift/lib/issues/971)) ([27b5a51](https://github.com/shapeshift/lib/commit/27b5a5168edb92aecd863b678152cb2164fcc10e))
+
+# [@shapeshiftoss/unchained-client-v9.8.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v9.8.2...@shapeshiftoss/unchained-client-v9.8.3) (2022-08-15)
+
+# [@shapeshiftoss/unchained-client-v9.8.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v9.8.1...@shapeshiftoss/unchained-client-v9.8.2) (2022-08-11)
+
+
+### Bug Fixes
+
+* osmo parser fixes ([#948](https://github.com/shapeshift/lib/issues/948)) ([cd1db39](https://github.com/shapeshift/lib/commit/cd1db3942a55e01e674bdededbcede2b0b787863))
+
 # [@shapeshiftoss/unchained-client-v9.8.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v9.8.0...@shapeshiftoss/unchained-client-v9.8.1) (2022-08-08)
 
 # [@shapeshiftoss/unchained-client-v9.8.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/unchained-client-v9.7.0...@shapeshiftoss/unchained-client-v9.8.0) (2022-08-08)

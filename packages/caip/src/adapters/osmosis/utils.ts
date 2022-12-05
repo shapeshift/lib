@@ -45,7 +45,7 @@ export const parseOsmosisData = (data: OsmosisCoin[]) => {
       assetNamespace = 'ibc'
     }
 
-    const chainNamespace = CHAIN_NAMESPACE.Cosmos
+    const chainNamespace = CHAIN_NAMESPACE.CosmosSdk
     const chainReference = CHAIN_REFERENCE.OsmosisMainnet
     const assetId = toAssetId({ chainNamespace, chainReference, assetNamespace, assetReference })
 
@@ -58,11 +58,11 @@ export const parseOsmosisData = (data: OsmosisCoin[]) => {
 
 export const parseData = (d: OsmosisCoin[]) => {
   const osmosisMainnet = toChainId({
-    chainNamespace: CHAIN_NAMESPACE.Cosmos,
-    chainReference: CHAIN_REFERENCE.OsmosisMainnet
+    chainNamespace: CHAIN_NAMESPACE.CosmosSdk,
+    chainReference: CHAIN_REFERENCE.OsmosisMainnet,
   })
 
   return {
-    [osmosisMainnet]: parseOsmosisData(d)
+    [osmosisMainnet]: parseOsmosisData(d),
   }
 }

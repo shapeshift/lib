@@ -1,5 +1,7 @@
 import { ChainAdapterManager } from '@shapeshiftoss/chain-adapters'
 
+import { TradeResult } from '../../../api'
+
 export type OsmoSwapperDeps = {
   adapterManager: ChainAdapterManager
   osmoUrl: string
@@ -13,9 +15,9 @@ export type IbcTransferInput = {
 }
 
 export type PoolInfo = {
-  poolAssets: PoolAssetInfo[]
-  poolParams: {
-    swapFee: string
+  pool_assets: PoolAssetInfo[]
+  pool_params: {
+    swap_fee: string
   }
 }
 
@@ -23,4 +25,9 @@ export type PoolAssetInfo = {
   token: {
     amount: string
   }
+}
+
+export interface OsmosisTradeResult extends TradeResult {
+  previousCosmosTxid: string
+  cosmosAddress?: string
 }

@@ -1,7 +1,7 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import type Web3 from 'web3'
 
-import { EvmSupportedChainAdapters, EvmSupportedChainIds, SwapSource, Trade } from '../../api'
+import { EvmSupportedChainAdapter, EvmSupportedChainIds, SwapSource, Trade } from '../../api'
 
 export type ZrxCommonResponse = {
   price: string
@@ -9,7 +9,7 @@ export type ZrxCommonResponse = {
   buyAmount: string
   sellAmount: string
   allowanceTarget: string
-  sources: Array<SwapSource>
+  sources: SwapSource[]
 }
 
 export type ZrxPriceResponse = ZrxCommonResponse & {
@@ -33,6 +33,6 @@ export type ZrxExecuteTradeInput<T extends EvmSupportedChainIds> = {
 }
 
 export type ZrxSwapperDeps = {
-  adapter: EvmSupportedChainAdapters
+  adapter: EvmSupportedChainAdapter
   web3: Web3
 }

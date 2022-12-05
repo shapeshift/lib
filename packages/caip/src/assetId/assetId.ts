@@ -1,21 +1,20 @@
 // https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-19.md
-import toLower from 'lodash/toLower'
 
 import { ChainId, ChainNamespace, ChainReference, fromChainId, toChainId } from '../chainId/chainId'
-import { ASSET_NAMESPACE_STRINGS, ASSET_REFERENCE, VALID_ASSET_NAMESPACE } from '../constants'
+import { ASSET_NAMESPACE, ASSET_REFERENCE, VALID_ASSET_NAMESPACE } from '../constants'
 import {
   assertIsAssetNamespace,
   assertIsChainNamespace,
   assertIsChainReference,
   assertValidChainPartsPair,
   isAssetId,
-  isAssetNamespace
+  isAssetNamespace,
 } from '../typeGuards'
 import { Nominal, parseAssetIdRegExp } from '../utils'
 
 export type AssetId = Nominal<string, 'AssetId'>
 
-export type AssetNamespace = typeof ASSET_NAMESPACE_STRINGS[number]
+export type AssetNamespace = typeof ASSET_NAMESPACE[keyof typeof ASSET_NAMESPACE]
 
 export type AssetReference = typeof ASSET_REFERENCE[keyof typeof ASSET_REFERENCE]
 
@@ -64,16 +63,16 @@ export const toAssetId: ToAssetId = (args: ToAssetIdArgs): AssetId => {
       return {
         chainId: args.chainId,
         chainNamespace: fromChainIdResult.chainNamespace,
-        chainReference: fromChainIdResult.chainReference
+        chainReference: fromChainIdResult.chainReference,
       }
     } else
       return {
         chainId: toChainId({
           chainNamespace: args.chainNamespace,
-          chainReference: args.chainReference
+          chainReference: args.chainReference,
         }),
         chainNamespace: args.chainNamespace,
-        chainReference: args.chainReference
+        chainReference: args.chainReference,
       }
   })()
 
@@ -88,7 +87,7 @@ export const toAssetId: ToAssetId = (args: ToAssetIdArgs): AssetId => {
     !isAssetNamespace(assetNamespace)
   )
     throw new Error(
-      `toAssetId: AssetNamespace ${assetNamespace} not supported for Chain Namespace ${chainNamespace}`
+      `toAssetId: AssetNamespace ${assetNamespace} not supported for Chain Namespace ${chainNamespace}`,
     )
 
   if (assetNamespace === 'slip44' && !isValidSlip44(String(assetReference))) {
@@ -100,7 +99,7 @@ export const toAssetId: ToAssetId = (args: ToAssetIdArgs): AssetId => {
       throw new Error(`toAssetId: assetReference must start with 0x: ${assetReference}`)
     if (assetReference.length !== 42)
       throw new Error(
-        `toAssetId: assetReference length must be 42, length: ${assetReference.length}`
+        `toAssetId: assetReference length must be 42, length: ${assetReference.length}`,
       )
   }
 
@@ -124,30 +123,28 @@ export type FromAssetId = (assetId: AssetId) => FromAssetIdReturn
 
 export const fromAssetId: FromAssetId = (assetId) => {
   if (!isAssetId(assetId)) throw new Error(`fromAssetId: invalid AssetId: ${assetId}`)
-  const matches = parseAssetIdRegExp.exec(assetId)?.groups
+  const matches = parseAssetIdRegExp.exec(assetId)
   if (!matches) throw new Error(`fromAssetId: could not parse AssetId: ${assetId}`)
 
+  const { 1: chainNamespace, 2: chainReference, 3: assetNamespace, 4: assetReference } = matches
+
   // These should never throw because isAssetId() would have already caught it, but they help with type inference
-  assertIsChainNamespace(matches.chainNamespace)
-  assertIsChainReference(matches.chainReference)
-  assertIsAssetNamespace(matches.assetNamespace)
-
-  const chainNamespace = matches.chainNamespace
-  const chainReference = matches.chainReference
-  const assetNamespace = matches.assetNamespace
-
-  const shouldLowercaseAssetReference =
-    assetNamespace && ['erc20', 'erc721'].includes(assetNamespace)
-
-  const assetReference = shouldLowercaseAssetReference
-    ? toLower(matches.assetReference)
-    : matches.assetReference
-  assertIsChainReference(chainReference)
   assertIsChainNamespace(chainNamespace)
+  assertIsChainReference(chainReference)
+  assertIsAssetNamespace(assetNamespace)
+
   const chainId = toChainId({ chainNamespace, chainReference })
 
   if (assetNamespace && assetReference && chainId) {
-    return { chainId, chainReference, chainNamespace, assetNamespace, assetReference }
+    return {
+      chainId,
+      chainReference,
+      chainNamespace,
+      assetNamespace,
+      assetReference: ['erc20', 'erc721'].includes(assetNamespace)
+        ? assetReference.toLowerCase()
+        : assetReference,
+    }
   } else {
     throw new Error(`fromAssetId: invalid AssetId: ${assetId}`)
   }

@@ -9,28 +9,32 @@ export const setupQuote = () => {
   const sellAsset: Asset = { ...FOX }
   const buyAsset: Asset = { ...WETH }
   const tradeQuote: TradeQuote<KnownChainIds.EthereumMainnet> = {
-    buyAmount: '',
-    sellAmount: '1000000000000000000',
+    buyAmountCryptoPrecision: '',
+    sellAmountCryptoPrecision: '1000000000000000000',
     sellAsset,
     buyAsset,
     allowanceContract: 'allowanceContractAddress',
-    sellAssetAccountNumber: 0,
-    minimum: '0',
+    bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
+    minimumCryptoHuman: '0',
     maximum: '999999999999',
-    feeData: { fee: '0', tradeFee: '0', chainSpecific: {} },
+    feeData: {
+      chainSpecific: {},
+      sellAssetTradeFeeUsd: '0',
+      networkFee: '0',
+      buyAssetTradeFeeUsd: '0',
+    },
     rate: '1',
-    sources: []
+    sources: [],
   }
 
   const quoteInput: GetTradeQuoteInput = {
     chainId: KnownChainIds.EthereumMainnet,
-    sellAmount: '1000000000000000000',
+    sellAmountCryptoPrecision: '1000000000000000000',
     sellAsset,
     buyAsset,
-    sellAssetAccountNumber: 0,
+    bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
     sendMax: false,
     receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
-    wallet: {} as HDWallet
   }
   return { quoteInput, tradeQuote, buyAsset, sellAsset }
 }
@@ -40,13 +44,13 @@ export const setupBuildTrade = () => {
   const buyAsset: Asset = { ...WETH }
   const buildTradeInput: BuildTradeInput = {
     chainId: KnownChainIds.EthereumMainnet,
-    sellAmount: '1000000000000000000',
+    sellAmountCryptoPrecision: '1000000000000000000',
     buyAsset,
     sendMax: false,
-    sellAssetAccountNumber: 0,
+    bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
     sellAsset,
     wallet: <HDWallet>{},
-    receiveAddress: ''
+    receiveAddress: '',
   }
   return { buildTradeInput, buyAsset, sellAsset }
 }

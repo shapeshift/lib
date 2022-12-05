@@ -1,6 +1,6 @@
 import { ethAssetId, fromAssetId } from '@shapeshiftoss/caip'
 import { KnownChainIds } from '@shapeshiftoss/types'
-import { AxiosResponse } from 'axios'
+import axios, { AxiosError, AxiosResponse } from 'axios'
 
 import { GetTradeQuoteInput, SwapError, SwapErrorTypes, TradeQuote } from '../../../api'
 import { bn, bnOrZero } from '../../utils/bignumber'
@@ -14,33 +14,33 @@ import {
   DEFAULT_ADDRESS,
   DEFAULT_APP_DATA,
   DEFAULT_SOURCE,
-  ORDER_KIND_SELL
+  ORDER_KIND_SELL,
 } from '../utils/constants'
 import { cowService } from '../utils/cowService'
 import {
   CowSwapSellQuoteApiInput,
   getNowPlusThirtyMinutesTimestamp,
-  getUsdRate
+  getUsdRate,
 } from '../utils/helpers/helpers'
 
 export async function getCowSwapTradeQuote(
   deps: CowSwapperDeps,
-  input: GetTradeQuoteInput
+  input: GetTradeQuoteInput,
 ): Promise<TradeQuote<KnownChainIds.EthereumMainnet>> {
   try {
-    const { sellAsset, buyAsset, sellAmount, sellAssetAccountNumber, wallet } = input
+    const { sellAsset, buyAsset, sellAmountCryptoPrecision, bip44Params, receiveAddress } = input
     const { adapter, web3 } = deps
 
     const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
       fromAssetId(sellAsset.assetId)
     const { assetReference: buyAssetErc20Address, chainId: buyAssetChainId } = fromAssetId(
-      buyAsset.assetId
+      buyAsset.assetId,
     )
 
     if (sellAssetNamespace !== 'erc20') {
       throw new SwapError('[getCowSwapTradeQuote] - Sell asset needs to be ERC-20 to use CowSwap', {
         code: SwapErrorTypes.UNSUPPORTED_PAIR,
-        details: { sellAssetNamespace }
+        details: { sellAssetNamespace },
       })
     }
 
@@ -49,8 +49,8 @@ export async function getCowSwapTradeQuote(
         '[getCowSwapTradeQuote] - Buy asset needs to be on ETH mainnet to use CowSwap',
         {
           code: SwapErrorTypes.UNSUPPORTED_PAIR,
-          details: { buyAssetChainId }
-        }
+          details: { buyAssetChainId },
+        },
       )
     }
 
@@ -62,7 +62,9 @@ export async function getCowSwapTradeQuote(
 
     // making sure we do not have decimals for cowswap api (can happen at least from minQuoteSellAmount)
     const normalizedSellAmount = normalizeIntegerAmount(
-      bnOrZero(sellAmount).lt(minQuoteSellAmount) ? minQuoteSellAmount : sellAmount
+      bnOrZero(sellAmountCryptoPrecision).lt(minQuoteSellAmount)
+        ? minQuoteSellAmount
+        : sellAmountCryptoPrecision,
     )
 
     const apiInput: CowSwapSellQuoteApiInput = {
@@ -74,7 +76,7 @@ export async function getCowSwapTradeQuote(
       partiallyFillable: false,
       from: DEFAULT_ADDRESS,
       kind: ORDER_KIND_SELL,
-      sellAmountBeforeFee: normalizedSellAmount
+      sellAmountBeforeFee: normalizedSellAmount,
     }
 
     /**
@@ -95,72 +97,81 @@ export async function getCowSwapTradeQuote(
       await cowService.post<CowSwapQuoteResponse>(`${deps.apiUrl}/v1/quote/`, apiInput)
 
     const {
-      data: { quote }
+      data: { quote },
     } = quoteResponse
 
     const buyCryptoAmount = bn(quote.buyAmount).div(bn(10).exponentiatedBy(buyAsset.precision))
     const sellCryptoAmount = bn(quote.sellAmount).div(bn(10).exponentiatedBy(sellAsset.precision))
     const rate = buyCryptoAmount.div(sellCryptoAmount).toString()
 
-    const receiveAddress = wallet ? await adapter.getAddress({ wallet }) : DEFAULT_ADDRESS
-
     const data = getApproveContractData({
       web3,
       spenderAddress: COW_SWAP_VAULT_RELAYER_ADDRESS,
-      contractAddress: sellAssetErc20Address
+      contractAddress: sellAssetErc20Address,
     })
 
     const [feeDataOptions, sellAssetUsdRate] = await Promise.all([
       adapter.getFeeData({
         to: sellAssetErc20Address,
         value: '0',
-        chainSpecific: { from: receiveAddress, contractData: data }
+        chainSpecific: { from: receiveAddress, contractData: data },
       }),
-      getUsdRate(deps, sellAsset)
+      getUsdRate(deps, sellAsset),
     ])
 
-    const feeData = feeDataOptions['fast']
-
-    // calculating trade fee in USD
-    const tradeFeeFiat = bnOrZero(quote.feeAmount)
+    const sellAssetTradeFeeUsd = bnOrZero(quote.feeAmount)
       .div(bn(10).exponentiatedBy(sellAsset.precision))
       .multipliedBy(bnOrZero(sellAssetUsdRate))
       .toString()
 
+    const feeData = feeDataOptions['fast']
+
     // If original sellAmount is < minQuoteSellAmount, we don't want to replace it with normalizedSellAmount
     // The purpose of this was to get a quote from CowSwap even with small amounts
-    const quoteSellAmount = bnOrZero(sellAmount).lt(minQuoteSellAmount)
-      ? sellAmount
+    const quoteSellAmount = bnOrZero(sellAmountCryptoPrecision).lt(minQuoteSellAmount)
+      ? sellAmountCryptoPrecision
       : normalizedSellAmount
 
     return {
       rate,
-      minimum,
+      minimumCryptoHuman: minimum,
       maximum,
       feeData: {
-        fee: '0', // no miner fee for CowSwap
+        networkFee: '0', // no miner fee for CowSwap
         chainSpecific: {
           estimatedGas: feeData.chainSpecific.gasLimit,
           gasPrice: feeData.chainSpecific.gasPrice,
           approvalFee: bnOrZero(feeData.chainSpecific.gasLimit)
             .multipliedBy(bnOrZero(feeData.chainSpecific.gasPrice))
-            .toString()
+            .toString(),
         },
-        tradeFee: tradeFeeFiat
+        buyAssetTradeFeeUsd: '0', // Trade fees for buy Asset are always 0 since trade fees are subtracted from sell asset
+        sellAssetTradeFeeUsd,
       },
-      sellAmount: quoteSellAmount,
-      buyAmount: quote.buyAmount,
+      sellAmountCryptoPrecision: quoteSellAmount,
+      buyAmountCryptoPrecision: quote.buyAmount,
       sources: DEFAULT_SOURCE,
       allowanceContract: COW_SWAP_VAULT_RELAYER_ADDRESS,
       buyAsset,
       sellAsset,
-      sellAssetAccountNumber
+      bip44Params,
     }
   } catch (e) {
+    if (
+      axios.isAxiosError(e) &&
+      e.response?.status === 400 &&
+      (e as AxiosError<{ errorType: string }>).response?.data.errorType ===
+        'SellAmountDoesNotCoverFee'
+    ) {
+      throw new SwapError('[getCowSwapTradeQuote]', {
+        cause: e,
+        code: SwapErrorTypes.TRADE_QUOTE_INPUT_LOWER_THAN_FEES,
+      })
+    }
     if (e instanceof SwapError) throw e
     throw new SwapError('[getCowSwapTradeQuote]', {
       cause: e,
-      code: SwapErrorTypes.TRADE_QUOTE_FAILED
+      code: SwapErrorTypes.TRADE_QUOTE_FAILED,
     })
   }
 }

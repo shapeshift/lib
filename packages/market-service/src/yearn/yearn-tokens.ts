@@ -4,7 +4,7 @@ import {
   HistoryData,
   MarketCapResult,
   MarketData,
-  MarketDataArgs
+  MarketDataArgs,
 } from '@shapeshiftoss/types'
 import { ChainId, Token, Yearn } from '@yfi/sdk'
 import uniqBy from 'lodash/uniqBy'
@@ -27,7 +27,7 @@ export class YearnTokenMarketCapService implements MarketService {
   yearnSdk: Yearn<ChainId>
 
   private readonly defaultGetByMarketCapArgs: FindAllMarketArgs = {
-    count: 2500
+    count: 2500,
   }
 
   constructor(args: YearnTokenMarketCapServiceArgs) {
@@ -38,34 +38,32 @@ export class YearnTokenMarketCapService implements MarketService {
     try {
       const argsToUse = { ...this.defaultGetByMarketCapArgs, ...args }
       const response = await Promise.allSettled([
-        rateLimiter(() => this.yearnSdk.ironBank.tokens()),
         rateLimiter(() => this.yearnSdk.tokens.supported()),
-        rateLimiter(() => this.yearnSdk.vaults.tokens())
+        rateLimiter(() => this.yearnSdk.vaults.tokens()),
       ])
-      const [ironBankResponse, zapperResponse, underlyingTokensResponse] = response
+      const [zapperResponse, underlyingTokensResponse] = response
 
       // Ignore rejected promises, return successful responses.
       const responseTokens = [
-        ...(ironBankResponse.status === 'fulfilled' ? ironBankResponse.value : []),
         ...(zapperResponse.status === 'fulfilled' ? zapperResponse.value : []),
-        ...(underlyingTokensResponse.status === 'fulfilled' ? underlyingTokensResponse.value : [])
+        ...(underlyingTokensResponse.status === 'fulfilled' ? underlyingTokensResponse.value : []),
       ]
       const uniqueTokens: Token[] = uniqBy(responseTokens, 'address')
       const tokens = uniqueTokens.slice(0, argsToUse.count)
 
       return tokens.reduce((acc, token) => {
         const _assetId: string = toAssetId({
-          chainNamespace: CHAIN_NAMESPACE.Ethereum,
+          chainNamespace: CHAIN_NAMESPACE.Evm,
           chainReference: CHAIN_REFERENCE.EthereumMainnet,
           assetNamespace: 'erc20',
-          assetReference: token.address
+          assetReference: token.address,
         })
         acc[_assetId] = {
           price: bnOrZero(token.priceUsdc).div(`1e+${USDC_PRECISION}`).toString(),
           // TODO: figure out how to get these values.
           marketCap: '0',
           volume: '0',
-          changePercent24Hr: 0
+          changePercent24Hr: 0,
         }
 
         return acc
@@ -86,17 +84,15 @@ export class YearnTokenMarketCapService implements MarketService {
       // the price to web. Doing allSettled so that one rejection does not interfere with the other
       // calls.
       const response = await Promise.allSettled([
-        rateLimiter(() => this.yearnSdk.ironBank.tokens()),
         rateLimiter(() => this.yearnSdk.tokens.supported()),
-        rateLimiter(() => this.yearnSdk.vaults.tokens())
+        rateLimiter(() => this.yearnSdk.vaults.tokens()),
       ])
-      const [ironBankResponse, zapperResponse, underlyingTokensResponse] = response
+      const [zapperResponse, underlyingTokensResponse] = response
 
       // Ignore rejected promises, return successful responses.
       const responseTokens = [
-        ...(ironBankResponse.status === 'fulfilled' ? ironBankResponse.value : []),
         ...(zapperResponse.status === 'fulfilled' ? zapperResponse.value : []),
-        ...(underlyingTokensResponse.status === 'fulfilled' ? underlyingTokensResponse.value : [])
+        ...(underlyingTokensResponse.status === 'fulfilled' ? underlyingTokensResponse.value : []),
       ]
       const token = responseTokens.find((tok: Token) => tok.address === address)
       if (!token) return null
@@ -105,7 +101,7 @@ export class YearnTokenMarketCapService implements MarketService {
         price: bnOrZero(token.priceUsdc).div(`1e+${USDC_PRECISION}`).toString(),
         marketCap: '0',
         volume: '0',
-        changePercent24Hr: 0
+        changePercent24Hr: 0,
       }
     } catch (e) {
       console.warn(e)
@@ -114,7 +110,7 @@ export class YearnTokenMarketCapService implements MarketService {
   }
 
   async findPriceHistoryByAssetId(): Promise<HistoryData[]> {
-    // TODO: figure out a way to get zapper, ironbank and underlying token historical data.
+    // TODO: figure out a way to get zapper and underlying token historical data.
     return []
   }
 }

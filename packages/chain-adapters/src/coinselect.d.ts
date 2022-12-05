@@ -11,15 +11,15 @@ type Output = {
 
 type CoinSelectResult<T> = {
   fee: number
-  inputs?: Array<T>
-  outputs?: Array<Output>
+  inputs?: T[]
+  outputs?: Output[]
 }
 
 declare module 'coinselect' {
   declare function coinSelect<T = unknown>(
-    utxos: Array<Utxo>,
-    outputs: Array<Output>,
-    feeRate: number
+    utxos: Utxo[],
+    outputs: Output[],
+    feeRate: number,
   ): CoinSelectResult<Omit<T, 'value'> & { value: number }>
 
   export = coinSelect
@@ -27,9 +27,9 @@ declare module 'coinselect' {
 
 declare module 'coinselect/split' {
   declare function split<T = unknown>(
-    utxos: Array<Utxo>,
-    outputs: Array<Output>,
-    feeRate: number
+    utxos: Utxo[],
+    outputs: Output[],
+    feeRate: number,
   ): CoinSelectResult<Omit<T, 'value'> & { value: number }>
 
   export = split

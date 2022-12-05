@@ -1,12 +1,13 @@
+import { AssetId } from '../../assetId/assetId'
 import {
+  avalancheAssetId,
   bchAssetId,
   btcAssetId,
   cosmosAssetId,
   dogeAssetId,
   ethAssetId,
-  ltcAssetId
+  ltcAssetId,
 } from '../../constants'
-import { AssetId } from './../../assetId/assetId'
 
 // derived from https://midgard.thorchain.info/v2/pools
 // Rarely changes. Will need to be updated as we add additional assets to thor swapper
@@ -41,8 +42,6 @@ const thorPoolIdAssetIdSymbolMap: Record<string, AssetId> = {
     'eip155:1/erc20:0x67b6d479c7bb412c54e03dca8e1bc6740ce6b99c',
   'ETH.HOT-0X6C6EE5E31D828DE241282B9606C8E98EA48526E2':
     'eip155:1/erc20:0x6c6ee5e31d828de241282b9606c8e98ea48526e2',
-  'ETH.HEGIC-0X584BC13C7D411C00C01A62E8019472DE68768430':
-    'eip155:1/erc20:0x584bc13c7d411c00c01a62e8019472de68768430',
   'ETH.FOX-0XC770EEFAD204B5180DF6A14EE197D99D808EE52D':
     'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
   'ETH.DAI-0X6B175474E89094C44DA98B954EEDEAC495271D0F':
@@ -60,7 +59,10 @@ const thorPoolIdAssetIdSymbolMap: Record<string, AssetId> = {
   'LTC.LTC': ltcAssetId,
   'DOGE.DOGE': dogeAssetId,
   'GAIA.ATOM': cosmosAssetId,
-  'BCH.BCH': bchAssetId
+  'BCH.BCH': bchAssetId,
+  'AVAX.AVAX': avalancheAssetId,
+  'AVAX.USDC-0XB97EF9EF8734C71904D8002F8B6BC66DD9C48A6E':
+    'eip155:43114/erc20:0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e',
 }
 
 const invert = <T extends Record<string, string>>(data: T) =>

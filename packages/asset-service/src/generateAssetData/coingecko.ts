@@ -1,6 +1,5 @@
 import { adapters, avalancheChainId, ChainId, ethChainId, toAssetId } from '@shapeshiftoss/caip'
 import axios from 'axios'
-import lodash from 'lodash'
 
 import { Asset } from '../service/AssetService'
 import { avax, ethereum } from './baseAssets'
@@ -20,12 +19,9 @@ type TokenList = {
   logoURI: string
   keywords: string[]
   timestamp: string
-  tokens: Array<Token>
+  tokens: Token[]
 }
-export async function getAssets(
-  chainId: ChainId,
-  overrideAssets: Array<Asset> = []
-): Promise<Asset[]> {
+export async function getAssets(chainId: ChainId): Promise<Asset[]> {
   const { category, explorer, explorerAddressLink, explorerTxLink } = (() => {
     switch (chainId) {
       case ethChainId:
@@ -33,14 +29,14 @@ export async function getAssets(
           category: adapters.chainIdToCoingeckoAssetPlatform(chainId),
           explorer: ethereum.explorer,
           explorerAddressLink: ethereum.explorerAddressLink,
-          explorerTxLink: ethereum.explorerTxLink
+          explorerTxLink: ethereum.explorerTxLink,
         }
       case avalancheChainId:
         return {
           category: adapters.chainIdToCoingeckoAssetPlatform(chainId),
           explorer: avax.explorer,
           explorerAddressLink: avax.explorerAddressLink,
-          explorerTxLink: avax.explorerTxLink
+          explorerTxLink: avax.explorerTxLink,
         }
       default:
         throw new Error(`no coingecko token support for chainId: ${chainId}`)
@@ -49,19 +45,9 @@ export async function getAssets(
 
   const { data } = await axios.get<TokenList>(`https://tokens.coingecko.com/${category}/all.json`)
 
-  return data.tokens.reduce<Array<Asset>>((prev, token) => {
+  return data.tokens.reduce<Asset[]>((prev, token) => {
     try {
-      // blacklist wormhole assets - users can't hold a balance and we don't support wormholes
-      if (token.name.toLowerCase().includes('wormhole')) return prev
-
       const assetId = toAssetId({ chainId, assetNamespace: 'erc20', assetReference: token.address })
-
-      const overrideAsset = lodash.find(overrideAssets, (override) => override.assetId == assetId)
-
-      if (overrideAsset) {
-        prev.push(overrideAsset)
-        return prev
-      }
 
       const asset: Asset = {
         assetId,
@@ -73,7 +59,7 @@ export async function getAssets(
         symbol: token.symbol,
         explorer,
         explorerAddressLink,
-        explorerTxLink
+        explorerTxLink,
       }
       prev.push(asset)
     } catch {

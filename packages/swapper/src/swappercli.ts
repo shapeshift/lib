@@ -1,24 +1,25 @@
 import { AssetService } from '@shapeshiftoss/asset-service'
-import { ethereum } from '@shapeshiftoss/chain-adapters'
+import { CHAIN_NAMESPACE, ethChainId, fromAssetId } from '@shapeshiftoss/caip'
+import { bitcoin, ethereum, UtxoBaseAdapter, UtxoChainId } from '@shapeshiftoss/chain-adapters'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
-import { KnownChainIds } from '@shapeshiftoss/types'
-import * as unchained from '@shapeshiftoss/unchained-client'
+import { UtxoAccountType } from '@shapeshiftoss/types'
 import BigNumber from 'bignumber.js'
 import dotenv from 'dotenv'
 import readline from 'readline-sync'
 import Web3 from 'web3'
 
-import { SwapperManager } from './manager/SwapperManager'
-import { ZrxSwapper } from './swappers/zrx/ZrxSwapper'
+import { UtxoSupportedChainIds } from '.'
+import { getAdapterManager } from './adapters'
+import { SwapperManager } from './manager'
+import { ThorchainSwapper, ThorchainSwapperDeps, ZrxSwapper } from './swappers'
 
 dotenv.config()
 
 const {
-  UNCHAINED_HTTP_API = 'http://localhost:31300',
-  UNCHAINED_WS_API = 'wss://localhost:31300',
   ETH_NODE_URL = 'http://localhost:3000',
+  MIDGARD_URL = 'https://dev-indexer.thorchain.shapeshift.com/v2',
   DEVICE_ID = 'device123',
-  MNEMONIC = 'all all all all all all all all all all all all'
+  MNEMONIC = 'all all all all all all all all all all all all',
 } = process.env
 
 const toBaseUnit = (amount: BigNumber | string, precision: number): string => {
@@ -37,7 +38,7 @@ const getWallet = async (): Promise<NativeHDWallet> => {
   }
   const nativeAdapterArgs: NativeAdapterArgs = {
     mnemonic: MNEMONIC,
-    deviceId: DEVICE_ID
+    deviceId: DEVICE_ID,
   }
   const wallet = new NativeHDWallet(nativeAdapterArgs)
   await wallet.initialize()
@@ -49,7 +50,7 @@ const main = async (): Promise<void> => {
   const [, , ...args] = process.argv
   const [sellSymbol, buySymbol, sellAmount] = args
 
-  console.info(`sellSymbol: sell ${sellAmount} of ${sellSymbol} to ${buySymbol}`)
+  console.info(`sell ${sellAmount} of ${sellSymbol} to ${buySymbol}`)
 
   if (!sellAmount || !sellSymbol || !buySymbol) {
     console.error(`
@@ -74,78 +75,144 @@ const main = async (): Promise<void> => {
     return
   }
 
+  const adapterManager = getAdapterManager()
+  const ethAdapter = adapterManager.get(ethChainId) as unknown as ethereum.ChainAdapter
+  if (!ethAdapter) {
+    throw new Error('no ethAdapter')
+  }
+
+  const sellAdapter = adapterManager.get(sellAsset.chainId)
+  if (!sellAdapter) {
+    throw new Error(`no sellAdapter ${sellAsset.chainId}`)
+  }
+
+  const buyAdapter = adapterManager.get(buyAsset.chainId)
+  if (!buyAdapter) {
+    throw new Error(`no buyAdapter ${buyAsset.chainId}`)
+  }
+
   // Swapper Deps
   const wallet = await getWallet()
 
-  const ethChainAdapter = new ethereum.ChainAdapter({
-    providers: {
-      ws: new unchained.ws.Client<unchained.ethereum.Tx>(UNCHAINED_WS_API),
-      http: new unchained.ethereum.V1Api(
-        new unchained.ethereum.Configuration({
-          basePath: UNCHAINED_HTTP_API
-        })
-      )
-    },
-    rpcUrl: 'https://mainnet.infura.io/v3/d734c7eebcdf400185d7eb67322a7e57'
-  })
-
   const web3Provider = new Web3.providers.HttpProvider(ETH_NODE_URL)
   const web3 = new Web3(web3Provider)
-  const zrxSwapperDeps = { wallet, adapter: ethChainAdapter, web3 }
-
-  const manager = new SwapperManager()
+  const zrxSwapperDeps = {
+    wallet,
+    adapter: ethAdapter,
+    web3,
+  }
+  const swapManager = new SwapperManager()
   const zrxSwapper = new ZrxSwapper(zrxSwapperDeps)
-  manager.addSwapper(zrxSwapper)
-  const swapper = await manager.getBestSwapper({
-    sellAssetId: 'eip155:1/slip44:60',
-    buyAssetId: 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
+  swapManager.addSwapper(zrxSwapper)
+
+  const tcDeps: ThorchainSwapperDeps = {
+    midgardUrl: MIDGARD_URL,
+    daemonUrl: '',
+    web3,
+    adapterManager,
+  }
+  const tc = new ThorchainSwapper(tcDeps)
+  await tc.initialize()
+  swapManager.addSwapper(tc)
+
+  const swapper = await swapManager.getBestSwapper({
+    sellAssetId: sellAsset.assetId,
+    buyAssetId: buyAsset.assetId,
   })
 
-  if (!swapper) return
-  const sellAmountBase = toBaseUnit(sellAmount, sellAsset.precision)
-
-  let quote
-  try {
-    quote = await swapper.getTradeQuote({
-      chainId: KnownChainIds.EthereumMainnet,
-      sellAsset,
-      buyAsset,
-      sellAmount: sellAmountBase,
-      sellAssetAccountNumber: 0,
-      sendMax: false,
-      receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
-      wallet
-    })
-  } catch (e) {
-    console.error(e)
-  }
-
-  if (!quote) {
+  console.info(`using swapper ${swapper?.getType()}`)
+  if (!swapper) {
+    console.warn(`no swapper found for specified assets`)
     return
   }
 
-  console.info('quote = ', JSON.stringify(quote))
+  if (sellAdapter == undefined || sellAdapter == null) {
+    throw new Error('huh')
+  }
 
-  const buyAmount = fromBaseUnit(quote.buyAmount || '0', buyAsset.precision)
+  let utxoAccountType: UtxoAccountType | undefined
+  if (sellAdapter.getSupportedAccountTypes) {
+    utxoAccountType = bitcoin.ChainAdapter.defaultUtxoAccountType
+  }
+
+  const bip44Params = sellAdapter.getBIP44Params({
+    accountNumber: 0,
+    accountType: utxoAccountType,
+  })
+  if (!bip44Params) {
+    throw new Error('falsy bip44Params')
+  }
+
+  const { chainNamespace: sellChainNamespace } = fromAssetId(sellAsset.assetId)
+  switch (sellChainNamespace) {
+    case CHAIN_NAMESPACE.Evm:
+    case CHAIN_NAMESPACE.Utxo:
+    case CHAIN_NAMESPACE.CosmosSdk:
+  }
+  let publicKey
+  if (sellChainNamespace == CHAIN_NAMESPACE.Utxo) {
+    if (!utxoAccountType) {
+      throw new Error('utxoAccountType must be defined')
+    }
+    publicKey = await (sellAdapter as unknown as UtxoBaseAdapter<UtxoChainId>).getPublicKey(
+      wallet,
+      bip44Params,
+      utxoAccountType,
+    )
+  }
+  const sellAmountBase = toBaseUnit(sellAmount, sellAsset.precision)
+  const buyAssetReceiveAddr = await buyAdapter.getAddress({
+    wallet,
+    accountType: utxoAccountType,
+    bip44Params,
+  })
+  console.info(`${buyAsset.name} using receive addr ${buyAssetReceiveAddr}`)
+  let quote
+  try {
+    quote = await swapper.getTradeQuote({
+      chainId: sellAsset.chainId as UtxoSupportedChainIds,
+      sellAsset,
+      buyAsset,
+      sellAmountCryptoPrecision: sellAmountBase,
+      sendMax: false,
+      accountType: utxoAccountType || bitcoin.ChainAdapter.defaultUtxoAccountType,
+      bip44Params,
+      xpub: publicKey?.xpub || '',
+      receiveAddress: buyAssetReceiveAddr,
+    })
+  } catch (e) {
+    console.error(e)
+    return
+  }
+
+  if (!quote) {
+    console.warn('no quote returned')
+    return
+  }
+
+  const buyAmount = fromBaseUnit(quote.buyAmountCryptoPrecision || '0', buyAsset.precision)
 
   const answer = readline.question(
     `Swap ${sellAmount} ${sellAsset.symbol} for ${buyAmount} ${
       buyAsset.symbol
-    } on ${swapper.getType()}? (y/n): `
+    } on ${swapper.getType()}? (y/n): `,
   )
   if (answer === 'y') {
     const trade = await swapper.buildTrade({
-      chainId: KnownChainIds.EthereumMainnet,
+      chainId: sellAsset.chainId as UtxoChainId,
       wallet,
       buyAsset,
       sendMax: false,
-      sellAmount: sellAmountBase,
+      sellAmountCryptoPrecision: sellAmountBase,
       sellAsset,
-      sellAssetAccountNumber: 0,
-      receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d'
+      receiveAddress: buyAssetReceiveAddr,
+      accountType: utxoAccountType || bitcoin.ChainAdapter.defaultUtxoAccountType,
+      bip44Params,
+      xpub: publicKey?.xpub || '',
     })
-    const txid = await swapper.executeTrade({ trade, wallet })
-    console.info('broadcast tx with id: ', txid)
+
+    const tradeResult = await swapper.executeTrade({ trade, wallet })
+    console.info('broadcast tx with id: ', tradeResult.tradeId)
   }
 }
 

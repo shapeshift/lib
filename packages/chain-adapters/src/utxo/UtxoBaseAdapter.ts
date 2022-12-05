@@ -6,7 +6,7 @@ import {
   BTCSignTxOutput,
   HDWallet,
   PublicKey,
-  supportsBTC
+  supportsBTC,
 } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
@@ -17,9 +17,10 @@ import { ErrorHandler } from '../error/ErrorHandler'
 import {
   Account,
   BuildSendTxInput,
-  ChainTxType,
   FeeDataEstimate,
+  GetBIP44ParamsInput,
   GetFeeDataInput,
+  SignTx,
   SignTxInput,
   SubscribeError,
   SubscribeTxsInput,
@@ -27,15 +28,15 @@ import {
   TxHistoryInput,
   TxHistoryResponse,
   ValidAddressResult,
-  ValidAddressResultType
+  ValidAddressResultType,
 } from '../types'
 import {
   accountTypeToOutputScriptType,
   accountTypeToScriptType,
   chainIdToChainLabel,
   convertXpubVersion,
-  toPath,
-  toRootDerivationPath
+  toAddressNList,
+  toRootDerivationPath,
 } from '../utils'
 import { bnOrZero } from '../utils/bignumber'
 import { GetAddressInput } from './types'
@@ -45,7 +46,7 @@ export const utxoChainIds = [
   KnownChainIds.BitcoinMainnet,
   KnownChainIds.BitcoinCashMainnet,
   KnownChainIds.DogecoinMainnet,
-  KnownChainIds.LitecoinMainnet
+  KnownChainIds.LitecoinMainnet,
 ] as const
 
 export type UtxoChainId = typeof utxoChainIds[number]
@@ -66,8 +67,8 @@ export interface ChainAdapterArgs {
 export interface UtxoBaseAdapterArgs extends ChainAdapterArgs {
   defaultBIP44Params: BIP44Params
   defaultUtxoAccountType: UtxoAccountType
-  supportedChainIds: Array<ChainId>
-  supportedAccountTypes: Array<UtxoAccountType>
+  supportedChainIds: ChainId[]
+  supportedAccountTypes: UtxoAccountType[]
   chainId: UtxoChainId
 }
 
@@ -76,8 +77,8 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
   protected readonly coinName: string
   protected readonly defaultBIP44Params: BIP44Params
   protected readonly defaultUtxoAccountType: UtxoAccountType
-  protected readonly supportedChainIds: Array<ChainId>
-  protected readonly supportedAccountTypes: Array<UtxoAccountType>
+  protected readonly supportedChainIds: ChainId[]
+  protected readonly supportedAccountTypes: UtxoAccountType[]
   protected readonly providers: {
     http:
       | unchained.bitcoin.V1Api
@@ -88,7 +89,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
   }
 
   protected assetId: AssetId
-  protected accountAddresses: Record<string, Array<string>> = {}
+  protected accountAddresses: Record<string, string[]> = {}
   protected parser: unchained.utxo.BaseTransactionParser<unchained.utxo.types.Tx>
 
   protected constructor(args: UtxoBaseAdapterArgs) {
@@ -112,7 +113,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
   private assertIsAccountTypeSupported(accountType: UtxoAccountType) {
     if (!this.supportedAccountTypes.includes(accountType))
       throw new Error(
-        `UtxoBaseAdapter: ${accountType} not supported. (supported: ${this.supportedAccountTypes})`
+        `UtxoBaseAdapter: ${accountType} not supported. (supported: ${this.supportedAccountTypes})`,
       )
   }
 
@@ -120,7 +121,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
     return this.chainId
   }
 
-  getSupportedAccountTypes(): Array<UtxoAccountType> {
+  getSupportedAccountTypes(): UtxoAccountType[] {
     return this.supportedAccountTypes
   }
 
@@ -132,15 +133,34 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
     return { ...this.defaultBIP44Params, ...params }
   }
 
+  getBIP44Params({ accountNumber, accountType }: GetBIP44ParamsInput): BIP44Params {
+    if (accountNumber < 0) {
+      throw new Error('accountNumber must be >= 0')
+    }
+    const purpose = (() => {
+      switch (accountType) {
+        case UtxoAccountType.SegwitNative:
+          return 84
+        case UtxoAccountType.SegwitP2sh:
+          return 49
+        case UtxoAccountType.P2pkh:
+          return 44
+        default:
+          throw new Error(`not a supported accountType ${accountType}`)
+      }
+    })()
+    return { ...this.defaultBIP44Params, accountNumber, purpose }
+  }
+
   async getAccount(pubkey: string): Promise<Account<T>> {
     try {
-      const { data } = await this.providers.http.getAccount({ pubkey })
+      const data = await this.providers.http.getAccount({ pubkey })
 
       const balance = bnOrZero(data.balance).plus(bnOrZero(data.unconfirmedBalance))
 
       // cache addresses for getTxHistory to use without needing to make extra requests
       this.accountAddresses[data.pubkey] = data.addresses?.map((address) => address.pubkey) ?? [
-        data.pubkey
+        data.pubkey,
       ]
 
       return {
@@ -151,9 +171,9 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
         chainSpecific: {
           addresses: data.addresses,
           nextChangeAddressIndex: data.nextChangeAddressIndex,
-          nextReceiveAddressIndex: data.nextReceiveAddressIndex
+          nextReceiveAddressIndex: data.nextReceiveAddressIndex,
         },
-        pubkey: data.pubkey
+        pubkey: data.pubkey,
       } as Account<T>
     } catch (err) {
       return ErrorHandler(err)
@@ -164,7 +184,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
     wallet,
     bip44Params = this.defaultBIP44Params,
     accountType = this.defaultUtxoAccountType,
-    showOnDevice = false
+    showOnDevice = false,
   }: GetAddressInput): Promise<string> {
     try {
       this.assertIsAccountTypeSupported(accountType)
@@ -183,10 +203,10 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
 
       const index = bip44Params.index ?? (await getNextIndex())
       const address = await wallet.btcGetAddress({
-        addressNList: bip32ToAddressNList(toPath({ ...bip44Params, index })),
+        addressNList: toAddressNList({ ...bip44Params, index }),
         coin: this.coinName,
         scriptType: accountTypeToScriptType[accountType],
-        showDisplay: showOnDevice
+        showDisplay: showOnDevice,
       })
 
       if (!address) throw new Error('UtxoBaseAdapter: no address available from wallet')
@@ -203,8 +223,8 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
     wallet,
     bip44Params = this.defaultBIP44Params,
     chainSpecific: { satoshiPerByte, accountType, opReturnData },
-    sendMax = false
-  }: BuildSendTxInput<T>): Promise<{ txToSign: ChainTxType<T> }> {
+    sendMax = false,
+  }: BuildSendTxInput<T>): Promise<{ txToSign: SignTx<T> }> {
     try {
       this.assertIsAccountTypeSupported(accountType)
 
@@ -216,7 +236,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
       }
 
       const { xpub } = await this.getPublicKey(wallet, bip44Params, accountType)
-      const { data: utxos } = await this.providers.http.getUtxos({ pubkey: xpub })
+      const utxos = await this.providers.http.getUtxos({ pubkey: xpub })
 
       const coinSelectResult = utxoSelect({
         utxos,
@@ -224,7 +244,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
         satoshiPerByte,
         sendMax,
         value,
-        opReturnData
+        opReturnData,
       })
 
       if (!coinSelectResult?.inputs || !coinSelectResult?.outputs) {
@@ -233,11 +253,11 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
 
       const { inputs, outputs } = coinSelectResult
 
-      const signTxInputs: Array<BTCSignTxInput> = []
+      const signTxInputs: BTCSignTxInput[] = []
       for (const input of inputs) {
         if (!input.path) continue
 
-        const { data } = await this.providers.http.getTransaction({ txid: input.txid })
+        const data = await this.providers.http.getTransaction({ txid: input.txid })
 
         signTxInputs.push({
           addressNList: bip32ToAddressNList(input.path),
@@ -245,29 +265,29 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
           amount: String(input.value),
           vout: input.vout,
           txid: input.txid,
-          hex: data.hex
+          hex: data.hex,
         })
       }
 
       const { chainSpecific } = await this.getAccount(xpub)
-      const { nextChangeAddressIndex } = chainSpecific
-      const changePath = toPath({ ...bip44Params, isChange: true, index: nextChangeAddressIndex })
+      const index = chainSpecific.nextChangeAddressIndex
+      const addressNList = toAddressNList({ ...bip44Params, isChange: true, index })
 
       const signTxOutputs = outputs.map<BTCSignTxOutput>((output) => {
         if (output.address) {
           return {
             addressType: BTCOutputAddressType.Spend,
             amount: String(output.value),
-            address: output.address
+            address: output.address,
           }
         }
 
         return {
           addressType: BTCOutputAddressType.Change,
           amount: String(output.value),
-          addressNList: bip32ToAddressNList(changePath),
+          addressNList,
           scriptType: accountTypeToOutputScriptType[accountType],
-          isChange: true
+          isChange: true,
         }
       })
 
@@ -275,8 +295,8 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
         coin: this.coinName,
         inputs: signTxInputs,
         outputs: signTxOutputs,
-        opReturnData
-      } as ChainTxType<T>
+        opReturnData,
+      } as SignTx<T>
 
       return { txToSign }
     } catch (err) {
@@ -288,13 +308,13 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
     to,
     value,
     chainSpecific: { pubkey, opReturnData },
-    sendMax = false
+    sendMax = false,
   }: GetFeeDataInput<T>): Promise<FeeDataEstimate<T>> {
     if (!to) throw new Error('to is required')
     if (!value) throw new Error('value is required')
     if (!pubkey) throw new Error('pubkey is required')
 
-    const { data } = await this.providers.http.getNetworkFees()
+    const data = await this.providers.http.getNetworkFees()
 
     if (
       !(data.fast?.satsPerKiloByte && data.average?.satsPerKiloByte && data.slow?.satsPerKiloByte)
@@ -307,7 +327,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
       data.fast = data.average
     }
 
-    const { data: utxos } = await this.providers.http.getUtxos({ pubkey })
+    const utxos = await this.providers.http.getUtxos({ pubkey })
 
     const utxoSelectInput = { to, value, opReturnData, utxos, sendMax }
 
@@ -323,11 +343,11 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
     return {
       fast: { txFee: String(fastFee), chainSpecific: { satoshiPerByte: fastPerByte } },
       average: { txFee: String(averageFee), chainSpecific: { satoshiPerByte: averagePerByte } },
-      slow: { txFee: String(slowFee), chainSpecific: { satoshiPerByte: slowPerByte } }
+      slow: { txFee: String(slowFee), chainSpecific: { satoshiPerByte: slowPerByte } },
     } as FeeDataEstimate<T>
   }
 
-  async signTransaction({ txToSign, wallet }: SignTxInput<ChainTxType<T>>): Promise<string> {
+  async signTransaction({ txToSign, wallet }: SignTxInput<SignTx<T>>): Promise<string> {
     try {
       if (!supportsBTC(wallet)) {
         throw new Error(`UtxoBaseAdapter: wallet does not support ${this.coinName}`)
@@ -348,14 +368,14 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
       await this.getAccount(input.pubkey)
     }
 
-    const { data } = await this.providers.http.getTxHistory({
+    const data = await this.providers.http.getTxHistory({
       pubkey: input.pubkey,
       pageSize: input.pageSize,
-      cursor: input.cursor
+      cursor: input.cursor,
     })
 
-    const getAddresses = (tx: unchained.utxo.types.Tx): Array<string> => {
-      const addresses: Array<string> = []
+    const getAddresses = (tx: unchained.utxo.types.Tx): string[] => {
+      const addresses: string[] = []
 
       tx.vin?.forEach((vin) => {
         if (!vin.addresses) return
@@ -373,7 +393,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
     const txs = await Promise.all(
       (data.txs ?? []).map(async (tx) => {
         const addresses = getAddresses(tx).filter((addr) =>
-          this.accountAddresses[input.pubkey].includes(addr)
+          this.accountAddresses[input.pubkey].includes(addr),
         )
 
         return await Promise.all(
@@ -397,35 +417,34 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
                 from: transfer.from,
                 to: transfer.to,
                 type: transfer.type,
-                value: transfer.totalValue
-              }))
+                value: transfer.totalValue,
+              })),
             }
-          })
+          }),
         )
-      })
+      }),
     )
 
     return {
       cursor: data.cursor ?? '',
       pubkey: input.pubkey,
-      transactions: txs.flat()
+      transactions: txs.flat(),
     }
   }
 
   async broadcastTransaction(hex: string): Promise<string> {
-    const { data } = await this.providers.http.sendTx({ sendTxBody: { hex } })
-    return data
+    return this.providers.http.sendTx({ sendTxBody: { hex } })
   }
 
   async subscribeTxs(
     input: SubscribeTxsInput,
     onMessage: (msg: Transaction) => void,
-    onError: (err: SubscribeError) => void
+    onError: (err: SubscribeError) => void,
   ): Promise<void> {
     const {
       wallet,
       bip44Params = this.defaultBIP44Params,
-      accountType = this.defaultUtxoAccountType
+      accountType = this.defaultUtxoAccountType,
     } = input
 
     const { xpub } = await this.getPublicKey(wallet, bip44Params, accountType)
@@ -454,12 +473,12 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
             from: transfer.from,
             to: transfer.to,
             type: transfer.type,
-            value: transfer.totalValue
+            value: transfer.totalValue,
           })),
-          txid: tx.txid
+          txid: tx.txid,
         })
       },
-      (err) => onError({ message: err.message })
+      (err) => onError({ message: err.message }),
     )
   }
 
@@ -488,7 +507,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
   async getPublicKey(
     wallet: HDWallet,
     bip44Params: BIP44Params,
-    accountType: UtxoAccountType
+    accountType: UtxoAccountType,
   ): Promise<PublicKey> {
     this.assertIsAccountTypeSupported(accountType)
 
@@ -498,8 +517,8 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
         coin: this.coinName,
         addressNList: bip32ToAddressNList(path),
         curve: 'secp256k1', // TODO(0xdef1cafe): from constant?
-        scriptType: accountTypeToScriptType[accountType]
-      }
+        scriptType: accountTypeToScriptType[accountType],
+      },
     ])
 
     if (!publicKeys?.[0]) throw new Error("couldn't get public key")

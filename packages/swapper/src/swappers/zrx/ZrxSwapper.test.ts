@@ -11,40 +11,41 @@ import { getZrxTradeQuote } from './getZrxTradeQuote/getZrxTradeQuote'
 import { getUsdRate } from './utils/helpers/helpers'
 import { setupExecuteTrade } from './utils/test-data/setupZrxSwapQuote'
 import { zrxApprovalNeeded } from './zrxApprovalNeeded/zrxApprovalNeeded'
-import { zrxApproveInfinite } from './zrxApproveInfinite/zrxApproveInfinite'
+import { zrxApproveAmount, zrxApproveInfinite } from './zrxApprove/zrxApprove'
 import { zrxBuildTrade } from './zrxBuildTrade/zrxBuildTrade'
 import { zrxExecuteTrade } from './zrxExecuteTrade/zrxExecuteTrade'
 
 jest.mock('./utils/helpers/helpers')
 jest.mock('../zrx/zrxExecuteTrade/zrxExecuteTrade', () => ({
-  zrxExecuteTrade: jest.fn()
+  zrxExecuteTrade: jest.fn(),
 }))
 
 jest.mock('../zrx/zrxBuildTrade/zrxBuildTrade', () => ({
-  zrxBuildTrade: jest.fn()
+  zrxBuildTrade: jest.fn(),
 }))
 
 jest.mock('./getZrxTradeQuote/getZrxTradeQuote', () => ({
-  getZrxTradeQuote: jest.fn()
+  getZrxTradeQuote: jest.fn(),
 }))
 
 jest.mock('./getZrxMinMax/getZrxMinMax', () => ({
-  getZrxMinMax: jest.fn()
+  getZrxMinMax: jest.fn(),
 }))
 
 jest.mock('./zrxApprovalNeeded/zrxApprovalNeeded', () => ({
-  zrxApprovalNeeded: jest.fn()
+  zrxApprovalNeeded: jest.fn(),
 }))
 
-jest.mock('./zrxApproveInfinite/zrxApproveInfinite', () => ({
-  zrxApproveInfinite: jest.fn()
+jest.mock('./zrxApprove/zrxApprove', () => ({
+  zrxApproveInfinite: jest.fn(),
+  zrxApproveAmount: jest.fn(),
 }))
 
 describe('ZrxSwapper', () => {
   const wallet = <HDWallet>{}
   const web3 = <Web3>{}
   const adapter = <ethereum.ChainAdapter>{
-    getChainId: () => KnownChainIds.EthereumMainnet
+    getChainId: () => KnownChainIds.EthereumMainnet,
   }
   const zrxEthereumSwapperDeps = { web3, adapter }
 
@@ -96,5 +97,13 @@ describe('ZrxSwapper', () => {
     const args = { quote: tradeQuote, wallet }
     await swapper.approveInfinite(args)
     expect(zrxApproveInfinite).toHaveBeenCalled()
+  })
+
+  it('calls zrxApproveAmount on swapper.approveAmount', async () => {
+    const swapper = new ZrxSwapper(zrxEthereumSwapperDeps)
+    const { tradeQuote } = setupQuote()
+    const args = { quote: tradeQuote, wallet }
+    await swapper.approveAmount(args)
+    expect(zrxApproveAmount).toHaveBeenCalled()
   })
 })
