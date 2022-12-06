@@ -100,9 +100,13 @@ export async function getCowSwapTradeQuote(
       data: { quote },
     } = quoteResponse
 
-    const buyCryptoAmount = bn(quote.buyAmount).div(bn(10).exponentiatedBy(buyAsset.precision))
-    const sellCryptoAmount = bn(quote.sellAmount).div(bn(10).exponentiatedBy(sellAsset.precision))
-    const rate = buyCryptoAmount.div(sellCryptoAmount).toString()
+    const buyAmountCryptoPrecision = bn(quote.buyAmount).div(
+      bn(10).exponentiatedBy(buyAsset.precision),
+    )
+    const quoteSellAmountCryptoPrecision = bn(quote.sellAmount).div(
+      bn(10).exponentiatedBy(sellAsset.precision),
+    )
+    const rate = buyAmountCryptoPrecision.div(quoteSellAmountCryptoPrecision).toString()
 
     const data = getApproveContractData({
       web3,
