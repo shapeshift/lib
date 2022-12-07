@@ -21,7 +21,7 @@ import {
   ChainAdapterArgs,
   CosmosSdkBaseAdapter,
 } from '../CosmosSdkBaseAdapter'
-import { ChainAdapterName, Message, ValidatorAction } from '../types'
+import { ChainAdapterDisplayName, Message, ValidatorAction } from '../types'
 
 const SUPPORTED_CHAIN_IDS = [KnownChainIds.CosmosMainnet]
 const DEFAULT_CHAIN_ID = KnownChainIds.CosmosMainnet
@@ -47,7 +47,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.CosmosMainn
   }
 
   getDisplayName() {
-    return ChainAdapterName.Cosmos
+    return ChainAdapterDisplayName.Cosmos
   }
 
   getType(): KnownChainIds.CosmosMainnet {
