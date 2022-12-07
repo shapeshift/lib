@@ -1,7 +1,8 @@
 import { Asset } from '@shapeshiftoss/asset-service'
 import { ChainId } from '@shapeshiftoss/caip'
-import { Swapper, TradeQuote } from 'packages/swapper/src/api'
-import { bnOrZero, fromBaseUnit } from 'packages/swapper/src/swappers/utils/bignumber'
+
+import { Swapper, TradeQuote } from '../api'
+import { bnOrZero, fromBaseUnit } from '../swappers/utils/bignumber'
 
 export const getRatioFromQuote = async (
   quote: TradeQuote<ChainId>,

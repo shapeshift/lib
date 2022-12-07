@@ -1,7 +1,5 @@
 import { ChainId } from '@shapeshiftoss/caip'
 import uniq from 'lodash/uniq'
-import { getRatioFromQuote } from 'packages/swapper/src/manager/utils'
-import { isFulfilled } from 'packages/swapper/src/typeGuards'
 
 import {
   BuyAssetBySellIdInput,
@@ -12,6 +10,8 @@ import {
   TradeQuote,
 } from '..'
 import { SwapError, SwapErrorTypes, SwapperType } from '../api'
+import { isFulfilled } from '../typeGuards'
+import { getRatioFromQuote } from './utils'
 
 type SwapperQuoteTuple = readonly [swapper: Swapper<ChainId>, quote: TradeQuote<ChainId>]
 
