@@ -8,7 +8,7 @@ export enum ChainAdapterName {
   Thorchain = 'THORChain',
   Osmosis = 'Osmosis',
   Ethereum = 'Ethereum',
-  Avalanche = 'Avalanche',
+  Avalanche = 'Avalanche C-Chain',
   Cosmos = 'Cosmos',
   Bitcoin = 'Bitcoin',
   BitcoinCash = 'Bitcoin Cash',
