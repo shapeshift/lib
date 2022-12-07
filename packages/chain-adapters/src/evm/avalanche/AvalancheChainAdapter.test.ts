@@ -406,7 +406,7 @@ describe('AvalancheChainAdapter', () => {
       } as unknown as BuildSendTxInput<KnownChainIds.AvalancheMainnet>
 
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow(
-        'AvalancheChainAdapter: to is required',
+        'Avalanche C-Chain ChainAdapter: to is required',
       )
     })
 
@@ -420,7 +420,7 @@ describe('AvalancheChainAdapter', () => {
       } as unknown as BuildSendTxInput<KnownChainIds.AvalancheMainnet>
 
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow(
-        'AvalancheChainAdapter: value is required',
+        'Avalanche C-Chain ChainAdapter: value is required',
       )
     })
 

@@ -466,7 +466,7 @@ describe('EthereumChainAdapter', () => {
       } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
 
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow(
-        'EthereumChainAdapter: to is required',
+        'Ethereum ChainAdapter: to is required',
       )
     })
 
@@ -504,7 +504,7 @@ describe('EthereumChainAdapter', () => {
       } as unknown as BuildSendTxInput<KnownChainIds.EthereumMainnet>
 
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow(
-        'EthereumChainAdapter: value is required',
+        'Ethereum ChainAdapter: value is required',
       )
     })
 
