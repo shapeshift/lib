@@ -18,6 +18,7 @@ export const getRatioFromQuote = async (
   )
     .times(sellAssetUsdRate)
     .plus(bnOrZero(quote.feeData.sellAssetTradeFeeUsd))
+
   const totalReceiveAmountFiat = bnOrZero(
     fromBaseUnit(quote.buyAmountCryptoPrecision, quote.buyAsset.precision),
   )
