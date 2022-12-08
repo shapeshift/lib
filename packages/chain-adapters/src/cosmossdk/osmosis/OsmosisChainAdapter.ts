@@ -10,6 +10,7 @@ import {
   BuildRedelegateTxInput,
   BuildSendTxInput,
   BuildUndelegateTxInput,
+  ChainAdapterDisplayName,
   FeeDataEstimate,
   GetAddressInput,
   GetFeeDataInput,
@@ -21,7 +22,7 @@ import {
   ChainAdapterArgs,
   CosmosSdkBaseAdapter,
 } from '../CosmosSdkBaseAdapter'
-import { ChainAdapterDisplayName, Message, ValidatorAction } from '../types'
+import { Message, ValidatorAction } from '../types'
 
 const SUPPORTED_CHAIN_IDS = [KnownChainIds.OsmosisMainnet]
 const DEFAULT_CHAIN_ID = KnownChainIds.OsmosisMainnet
