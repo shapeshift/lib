@@ -93,18 +93,24 @@ export class SwapperManager {
       .map((quoteRequest) => quoteRequest.value)
 
     // The best swapper is the one with the highest ratio above
-    const bestQuoteTuple = await fulfilledQuoteTuples.reduce<
-      Promise<[...SwapperQuoteTuple, ...[ratio: number]] | undefined>
-    >(async (acc, currentQuoteTuple) => {
-      const resolvedAcc = await acc
-      const [currentSwapper, currentQuote] = currentQuoteTuple
-      const currentRatio = await getRatioFromQuote(currentQuote, currentSwapper, feeAsset)
-      if (!resolvedAcc) return Promise.resolve([...currentQuoteTuple, currentRatio])
+    const bestQuoteTuple = await fulfilledQuoteTuples.reduce(
+      async (
+        acc: Promise<readonly [Swapper<ChainId>, number]> | undefined,
+        currentQuoteTuple: SwapperQuoteTuple,
+      ) => {
+        const resolvedAcc = await acc
+        const [currentSwapper, currentQuote] = currentQuoteTuple
+        const currentRatio = await getRatioFromQuote(currentQuote, currentSwapper, feeAsset)
+        if (!resolvedAcc) return Promise.resolve([currentSwapper, currentRatio] as const)
 
-      const [, , bestRatio] = resolvedAcc
-      const isCurrentBest = bestRatio < currentRatio
-      return Promise.resolve(isCurrentBest ? [...currentQuoteTuple, currentRatio] : resolvedAcc)
-    }, Promise.resolve(undefined))
+        const [, bestRatio] = resolvedAcc
+        const isCurrentBest = bestRatio < currentRatio
+        return Promise.resolve(
+          isCurrentBest ? ([currentSwapper, currentRatio] as const) : resolvedAcc,
+        )
+      },
+      undefined,
+    )
 
     return bestQuoteTuple?.[0]
   }

@@ -1,58 +1,21 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ChainId } from '@shapeshiftoss/caip'
-import { ChainAdapterManager, ethereum } from '@shapeshiftoss/chain-adapters'
-import { KnownChainIds } from '@shapeshiftoss/types'
-import Web3 from 'web3'
 
 import { Swapper, SwapperType } from '../api'
-import {
-  CowSwapper,
-  CowSwapperDeps,
-  ThorchainSwapper,
-  ThorchainSwapperDeps,
-  ZrxSwapper,
-} from '../swappers'
-import { ZrxSwapperDeps } from '../swappers/zrx/types'
+import { CowSwapper, ThorchainSwapper, ZrxSwapper } from '../swappers'
+import { ETH } from '../swappers/utils/test-data/assets'
+import { setupQuote } from '../swappers/utils/test-data/setupSwapQuote'
 import { SwapperManager } from './SwapperManager'
+import {
+  badTradeQuote,
+  cowSwapper,
+  goodTradeQuote,
+  thorchainSwapper,
+  zrxAvalancheSwapper,
+  zrxEthereumSwapper,
+} from './testData'
 
 describe('SwapperManager', () => {
-  const zrxEthereumSwapperDeps: ZrxSwapperDeps = {
-    web3: <Web3>{},
-    adapter: <ethereum.ChainAdapter>{
-      getChainId: () => KnownChainIds.EthereumMainnet,
-    },
-  }
-
-  const zrxEthereumSwapper = new ZrxSwapper(zrxEthereumSwapperDeps)
-
-  const zrxAvalancheSwapperDeps: ZrxSwapperDeps = {
-    web3: <Web3>{},
-    adapter: <ethereum.ChainAdapter>{
-      getChainId: () => KnownChainIds.AvalancheMainnet,
-    },
-  }
-
-  const zrxAvalancheSwapper = new ZrxSwapper(zrxAvalancheSwapperDeps)
-
-  const cowSwapperDeps: CowSwapperDeps = {
-    apiUrl: 'https://api.cow.fi/mainnet/api/',
-    adapter: <ethereum.ChainAdapter>{
-      getChainId: () => KnownChainIds.EthereumMainnet,
-    },
-    web3: <Web3>{},
-  }
-
-  const cowSwapper = new CowSwapper(cowSwapperDeps)
-
-  const thorchainSwapperDeps: ThorchainSwapperDeps = {
-    midgardUrl: '',
-    daemonUrl: '',
-    adapterManager: <ChainAdapterManager>{},
-    web3: <Web3>{},
-  }
-
-  const thorchainSwapper = new ThorchainSwapper(thorchainSwapperDeps)
-
   describe('constructor', () => {
     it('should return an instance', () => {
       const manager = new SwapperManager()
@@ -222,6 +185,55 @@ describe('SwapperManager', () => {
       expect(swapperManager.getSupportedSellableAssetIds({ assetIds })).toStrictEqual(
         assetIds.slice(1, 3),
       )
+    })
+  })
+
+  describe('getBestSwapper', () => {
+    const zrxEthereumSwapperGetUsdRateMock = jest
+      .spyOn(zrxEthereumSwapper, 'getUsdRate')
+      .mockImplementation(
+        jest
+          .fn()
+          .mockResolvedValueOnce(0.04)
+          .mockResolvedValueOnce(1300)
+          .mockResolvedValueOnce(1300),
+      )
+
+    const zrxAvalancheSwapperGetUsdRateMock = jest
+      .spyOn(zrxAvalancheSwapper, 'getUsdRate')
+      .mockImplementation(
+        jest
+          .fn()
+          .mockResolvedValueOnce(0.04)
+          .mockResolvedValueOnce(1300)
+          .mockResolvedValueOnce(1300),
+      )
+
+    const zrxEthereumSwapperGetUsdTradeQuoteMock = jest
+      .spyOn(zrxEthereumSwapper, 'getTradeQuote')
+      .mockImplementation(jest.fn().mockResolvedValueOnce(badTradeQuote))
+
+    const zrxAvalancheSwapperGetUsdTradeQuoteMock = jest
+      .spyOn(zrxAvalancheSwapper, 'getTradeQuote')
+      .mockImplementation(jest.fn().mockResolvedValueOnce(goodTradeQuote))
+
+    const swapperManagerMock = jest
+      .spyOn(SwapperManager.prototype, 'getSwappersByPair')
+      .mockImplementation(() => [zrxEthereumSwapper, zrxAvalancheSwapper])
+
+    it('should return the swapper with the best rate', async () => {
+      const swapperManager = new SwapperManager()
+
+      swapperManager.addSwapper(zrxEthereumSwapper).addSwapper(zrxAvalancheSwapper)
+      const { quoteInput } = setupQuote()
+      const bestSwapper = await swapperManager.getBestSwapper({ ...quoteInput, feeAsset: ETH })
+      expect(bestSwapper).toEqual(zrxAvalancheSwapper)
+
+      expect(swapperManagerMock).toHaveBeenCalledTimes(1)
+      expect(zrxEthereumSwapperGetUsdRateMock).toHaveBeenCalledTimes(3)
+      expect(zrxAvalancheSwapperGetUsdRateMock).toHaveBeenCalledTimes(3)
+      expect(zrxEthereumSwapperGetUsdTradeQuoteMock).toHaveBeenCalledTimes(1)
+      expect(zrxAvalancheSwapperGetUsdTradeQuoteMock).toHaveBeenCalledTimes(1)
     })
   })
 })
