@@ -42,19 +42,22 @@ export type TxInput = {
   userAddress: string
   contractAddress: string
   wallet: HDWallet
-  amountDesired: BigNumber
+  amountDesiredCryptoBaseUnit: BigNumber
 }
 
-export type TxInputWithoutAmount = Pick<TxInput, Exclude<keyof TxInput, 'amountDesired'>>
+export type TxInputWithoutAmount = Pick<
+  TxInput,
+  Exclude<keyof TxInput, 'amountDesiredCryptoBaseUnit'>
+>
 
 export type TxInputWithoutAmountAndWallet = Pick<
   TxInputWithoutAmount,
   Exclude<keyof TxInputWithoutAmount, 'wallet'>
 >
 
-export type WithdrawInput = Omit<TxInput, 'amountDesired'> & {
+export type WithdrawInput = Omit<TxInput, 'amountDesiredCryptoBaseUnit'> & {
   type: WithdrawType
-  amountDesired?: BigNumber
+  amountDesiredCryptoBaseUnit?: BigNumber
 }
 
 export type WithdrawEstimateGasInput = Omit<WithdrawInput, 'wallet'>
@@ -71,7 +74,7 @@ export type FoxyOpportunityInputData = {
 
 export type EstimateGasTxInput = Pick<
   TxInput,
-  'tokenContractAddress' | 'contractAddress' | 'userAddress' | 'amountDesired'
+  'tokenContractAddress' | 'contractAddress' | 'userAddress' | 'amountDesiredCryptoBaseUnit'
 >
 
 export type BalanceInput = {
