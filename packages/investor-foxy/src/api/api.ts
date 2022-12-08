@@ -455,7 +455,6 @@ export class FoxyApi {
     }
 
     const stakingContract = this.getStakingContract(contractAddress)
-    // const userChecksum = ethers.utils.getAddress(userAddress)
 
     const data = stakingContract.interface.encodeFunctionData('stake(uint256,address)', [
       this.normalizeAmount(amountDesired),
