@@ -117,7 +117,7 @@ export class FoxyApi {
    * to exponential notation ('1.6e+21') in javascript.
    * @param amount
    */
-  private normalizeAmount(amount: BigNumber) {
+  private normalizeAmount(amount: BigNumber): ethers.BigNumber {
     return ethers.BigNumber.from(amount.toFixed())
   }
 
