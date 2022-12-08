@@ -182,7 +182,7 @@ export class FoxyApi {
   ): Promise<{ nonce: string; gasPrice: string }> {
     let nonce
     try {
-      nonce = await this.provider.getTransactionCount(userAddress)
+      nonce = (await this.provider.getTransactionCount(userAddress)).toString()
     } catch (e) {
       throw new Error(`Get nonce Error: ${e}`)
     }
@@ -192,7 +192,7 @@ export class FoxyApi {
     } catch (e) {
       throw new Error(`Get gasPrice Error: ${e}`)
     }
-    return { nonce: nonce.toString(), gasPrice }
+    return { nonce, gasPrice }
   }
 
   async getFoxyOpportunities() {
