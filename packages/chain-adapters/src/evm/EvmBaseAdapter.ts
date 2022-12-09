@@ -1,3 +1,4 @@
+import { AssetService } from '@shapeshiftoss/asset-service'
 import { AssetId, ChainId, fromAssetId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
 import {
   ETHSignMessage,
@@ -7,6 +8,7 @@ import {
 } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
+import { utils } from 'ethers'
 import WAValidator from 'multicoin-address-validator'
 import { numberToHex } from 'web3-utils'
 
@@ -125,10 +127,24 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
       // If there is a mismatch between the current wallet's EVM chain ID and the adapter's chainId?
       // Switch the chain on wallet before building/sending the Tx
       if (supportsEthSwitchChain(wallet)) {
+        const assetService = new AssetService()
+        const assets = assetService.getAll()
+        const feeAsset = assets[this.getFeeAssetId()]
+
         const walletEvmChainId = await (wallet as ETHWallet).ethGetChainId?.()
         const adapterEvmChainId = fromChainId(this.chainId).chainReference
         if (!bnOrZero(walletEvmChainId).isEqualTo(adapterEvmChainId)) {
-          await (wallet as ETHWallet).ethSwitchChain?.(bnOrZero(adapterEvmChainId).toNumber())
+          await (wallet as ETHWallet).ethSwitchChain?.({
+            chainId: utils.hexValue(Number(adapterEvmChainId)),
+            chainName: this.getDisplayName(),
+            nativeCurrency: {
+              name: feeAsset.name,
+              symbol: feeAsset.symbol,
+              decimals: 18,
+            },
+            rpcUrls: [this.getRpcUrl()],
+            blockExplorerUrls: [feeAsset.explorer],
+          })
         }
       }
       const { erc20ContractAddress, gasPrice, gasLimit, maxFeePerGas, maxPriorityFeePerGas } =
@@ -276,6 +292,28 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
   async signAndBroadcastTransaction(signTxInput: SignTxInput<ETHSignTx>): Promise<string> {
     try {
       const { txToSign, wallet } = signTxInput
+      const assetService = new AssetService()
+      const assets = assetService.getAll()
+      const feeAsset = assets[this.getFeeAssetId()]
+      // If there is a mismatch between the current wallet's EVM chain ID and the adapter's chainId?
+      // Switch the chain on wallet before building/sending the Tx
+      if (supportsEthSwitchChain(wallet)) {
+        const walletEvmChainId = await (wallet as ETHWallet).ethGetChainId?.()
+        const adapterEvmChainId = fromChainId(this.chainId).chainReference
+        if (!bnOrZero(walletEvmChainId).isEqualTo(Number(adapterEvmChainId))) {
+          await (wallet as ETHWallet).ethSwitchChain?.({
+            chainId: utils.hexValue(Number(adapterEvmChainId)),
+            chainName: this.getDisplayName(),
+            nativeCurrency: {
+              name: feeAsset.name,
+              symbol: feeAsset.symbol,
+              decimals: 18,
+            },
+            rpcUrls: [this.getRpcUrl()],
+            blockExplorerUrls: [feeAsset.explorer],
+          })
+        }
+      }
       const txHash = await (wallet as ETHWallet)?.ethSendTx?.(txToSign)
 
       if (!txHash) throw new Error('Error signing & broadcasting tx')
