@@ -45,7 +45,6 @@
     "bs58check": "^2.0.2"
   },
   "devDependencies": {
-    "@shapeshiftoss/asset-service": "^8.4.0",
     "@shapeshiftoss/caip": "^8.0.0",
     "@shapeshiftoss/hdwallet-core": "^1.41.0",
     "@shapeshiftoss/hdwallet-native": "^1.36.0",

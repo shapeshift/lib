@@ -1,4 +1,3 @@
-import { AssetService } from '@shapeshiftoss/asset-service'
 import { AssetId, ChainId, fromAssetId, fromChainId, toAssetId } from '@shapeshiftoss/caip'
 import {
   ETHSignMessage,
@@ -41,7 +40,7 @@ import {
 } from '../utils'
 import { bnOrZero } from '../utils/bignumber'
 import { BuildCustomTxInput, Fees } from './types'
-import { getErc20Data } from './utils'
+import { getErc20Data, getGeneratedAssetData } from './utils'
 
 export const evmChainIds = [KnownChainIds.EthereumMainnet, KnownChainIds.AvalancheMainnet] as const
 
@@ -127,8 +126,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
       // If there is a mismatch between the current wallet's EVM chain ID and the adapter's chainId?
       // Switch the chain on wallet before building/sending the Tx
       if (supportsEthSwitchChain(wallet)) {
-        const assetService = new AssetService()
-        const assets = assetService.getAll()
+        const assets = await getGeneratedAssetData()
         const feeAsset = assets[this.getFeeAssetId()]
 
         const walletEvmChainId = await (wallet as ETHWallet).ethGetChainId?.()
@@ -292,8 +290,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
   async signAndBroadcastTransaction(signTxInput: SignTxInput<ETHSignTx>): Promise<string> {
     try {
       const { txToSign, wallet } = signTxInput
-      const assetService = new AssetService()
-      const assets = assetService.getAll()
+      const assets = await getGeneratedAssetData()
       const feeAsset = assets[this.getFeeAssetId()]
       // If there is a mismatch between the current wallet's EVM chain ID and the adapter's chainId?
       // Switch the chain on wallet before building/sending the Tx
