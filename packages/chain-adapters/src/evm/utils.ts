@@ -35,7 +35,7 @@ export const getGeneratedAssetData = async () => {
   if (_generatedAssetData?.length) return _generatedAssetData
 
   const { data: maybeGeneratedAssetData } = await axios.get<Record<AssetId, Asset>>(
-    'https://raw.githubusercontent.com/shapeshift/lib/main/packages/asset-service/src/service/generatedAssetData.json',
+    'https://raw.githack.com/shapeshift/lib/main/packages/asset-service/src/service/generatedAssetData.json',
   )
 
   if (!maybeGeneratedAssetData) return {}
