@@ -152,7 +152,13 @@ export class OsmosisSwapper implements Swapper<ChainId> {
   }
 
   async buildTrade(args: BuildTradeInput): Promise<Trade<ChainId>> {
-    const { sellAsset, buyAsset, sellAmountCryptoBaseUnit, receiveAddress, bip44Params } = args
+    const {
+      sellAsset,
+      buyAsset,
+      sellAmountExcludeFeeCryptoBaseUnit: sellAmountCryptoBaseUnit,
+      receiveAddress,
+      bip44Params,
+    } = args
 
     if (!sellAmountCryptoBaseUnit) {
       throw new SwapError('sellAmountCryptoPrecision is required', {
@@ -200,7 +206,12 @@ export class OsmosisSwapper implements Swapper<ChainId> {
   }
 
   async getTradeQuote(input: GetTradeQuoteInput): Promise<TradeQuote<ChainId>> {
-    const { bip44Params, sellAsset, buyAsset, sellAmountCryptoBaseUnit } = input
+    const {
+      bip44Params,
+      sellAsset,
+      buyAsset,
+      sellAmountExcludeFeeCryptoBaseUnit: sellAmountCryptoBaseUnit,
+    } = input
     if (!sellAmountCryptoBaseUnit) {
       throw new SwapError('sellAmount is required', {
         code: SwapErrorTypes.RESPONSE_ERROR,

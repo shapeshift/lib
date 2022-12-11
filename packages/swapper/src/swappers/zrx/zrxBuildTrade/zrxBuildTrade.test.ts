@@ -72,7 +72,7 @@ describe('zrxBuildTrade', () => {
     sendMax: false,
     sellAsset,
     buyAsset,
-    sellAmountCryptoBaseUnit: '1000000000000000000',
+    sellAmountExcludeFeeCryptoBaseUnit: '1000000000000000000',
     bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
     wallet,
     receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',

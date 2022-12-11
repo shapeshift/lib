@@ -68,7 +68,7 @@ describe('getTradeQuote', () => {
 
     const input: GetTradeQuoteInput = {
       ...quoteInput,
-      sellAmountCryptoBaseUnit: '10000000000000000000', // 10 FOX
+      sellAmountExcludeFeeCryptoBaseUnit: '10000000000000000000', // 10 FOX
       buyAsset: ETH,
       sellAsset: FOX,
     }

@@ -67,7 +67,7 @@ export type SupportedSellAssetsInput = {
 type CommonTradeInput = {
   sellAsset: Asset
   buyAsset: Asset
-  sellAmountCryptoBaseUnit: string
+  sellAmountExcludeFeeCryptoBaseUnit: string
   sendMax: boolean
   receiveAddress: string
   bip44Params: BIP44Params

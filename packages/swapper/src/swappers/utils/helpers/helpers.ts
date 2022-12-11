@@ -20,7 +20,7 @@ export type IsApprovalRequiredArgs = {
   receiveAddress: string
   allowanceContract: string
   sellAsset: Asset
-  sellAmount: string
+  sellAmountExcludeFeeCryptoBaseUnit: string
   web3: Web3
   erc20AllowanceAbi: AbiItem[]
 }
@@ -63,7 +63,7 @@ export const isApprovalRequired = async ({
   receiveAddress,
   allowanceContract,
   sellAsset,
-  sellAmount,
+  sellAmountExcludeFeeCryptoBaseUnit,
   web3,
   erc20AllowanceAbi,
 }: IsApprovalRequiredArgs): Promise<boolean> => {
@@ -93,7 +93,7 @@ export const isApprovalRequired = async ({
 
     if (bn(allowanceOnChain).isZero()) return true
 
-    const allowanceRequired = bnOrZero(sellAmount).minus(allowanceOnChain)
+    const allowanceRequired = bnOrZero(sellAmountExcludeFeeCryptoBaseUnit).minus(allowanceOnChain)
     return allowanceRequired.gt(0)
   } catch (e) {
     if (e instanceof SwapError) throw e

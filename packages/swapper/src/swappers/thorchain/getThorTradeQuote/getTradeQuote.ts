@@ -46,7 +46,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
   const {
     sellAsset,
     buyAsset,
-    sellAmountCryptoBaseUnit,
+    sellAmountExcludeFeeCryptoBaseUnit: sellAmountCryptoBaseUnit,
     bip44Params,
     chainId,
     receiveAddress,

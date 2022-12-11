@@ -127,10 +127,12 @@ export const getUsdRate = async ({ apiUrl }: CowSwapperDeps, input: Asset): Prom
       await cowService.post<CowSwapQuoteResponse>(`${apiUrl}/v1/quote/`, apiInput)
 
     const {
-      data: { quote },
+      data: {
+        quote: { sellAmount: sellAmountCryptoBaseUnit },
+      },
     } = quoteResponse
 
-    const sellAmountCryptoPrecision = bn(quote.sellAmountCryptoBaseUnit).div(
+    const sellAmountCryptoPrecision = bn(sellAmountCryptoBaseUnit).div(
       bn(10).exponentiatedBy(asset.precision),
     )
 

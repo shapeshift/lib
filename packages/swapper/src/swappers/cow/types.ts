@@ -7,8 +7,8 @@ export type CowSwapQuoteResponse = {
     sellToken: string
     buyToken: string
     receiver: string
-    sellAmountCryptoBaseUnit: string
-    buyAmountCryptoBaseUnit: string
+    sellAmount: string
+    buyAmount: string
     validTo: number
     appData: string
     feeAmount: string

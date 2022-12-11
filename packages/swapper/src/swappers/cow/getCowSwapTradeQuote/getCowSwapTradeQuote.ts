@@ -28,7 +28,13 @@ export async function getCowSwapTradeQuote(
   input: GetTradeQuoteInput,
 ): Promise<TradeQuote<KnownChainIds.EthereumMainnet>> {
   try {
-    const { sellAsset, buyAsset, sellAmountCryptoBaseUnit, bip44Params, receiveAddress } = input
+    const {
+      sellAsset,
+      buyAsset,
+      sellAmountExcludeFeeCryptoBaseUnit: _sellAmountCryptoBaseUnit,
+      bip44Params,
+      receiveAddress,
+    } = input
     const { adapter, web3 } = deps
 
     const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
@@ -62,9 +68,9 @@ export async function getCowSwapTradeQuote(
 
     // making sure we do not have decimals for cowswap api (can happen at least from minQuoteSellAmount)
     const normalizedSellAmount = normalizeIntegerAmount(
-      bnOrZero(sellAmountCryptoBaseUnit).lt(minQuoteSellAmount)
+      bnOrZero(_sellAmountCryptoBaseUnit).lt(minQuoteSellAmount)
         ? minQuoteSellAmount
-        : sellAmountCryptoBaseUnit,
+        : _sellAmountCryptoBaseUnit,
     )
 
     const apiInput: CowSwapSellQuoteApiInput = {
@@ -97,13 +103,19 @@ export async function getCowSwapTradeQuote(
       await cowService.post<CowSwapQuoteResponse>(`${deps.apiUrl}/v1/quote/`, apiInput)
 
     const {
-      data: { quote },
+      data: {
+        quote: {
+          buyAmount: buyAmountCryptoBaseUnit,
+          sellAmount: sellAmountCryptoBaseUnit,
+          feeAmount: feeAmountInSellTokenCryptoBaseUnit,
+        },
+      },
     } = quoteResponse
 
-    const buyAmountCryptoPrecision = bn(quote.buyAmountCryptoBaseUnit).div(
+    const buyAmountCryptoPrecision = bn(buyAmountCryptoBaseUnit).div(
       bn(10).exponentiatedBy(buyAsset.precision),
     )
-    const quoteSellAmountCryptoPrecision = bn(quote.sellAmountCryptoBaseUnit).div(
+    const quoteSellAmountCryptoPrecision = bn(sellAmountCryptoBaseUnit).div(
       bn(10).exponentiatedBy(sellAsset.precision),
     )
     const rate = buyAmountCryptoPrecision.div(quoteSellAmountCryptoPrecision).toString()
@@ -123,7 +135,7 @@ export async function getCowSwapTradeQuote(
       getUsdRate(deps, sellAsset),
     ])
 
-    const sellAssetTradeFeeUsd = bnOrZero(quote.feeAmount)
+    const sellAssetTradeFeeUsd = bnOrZero(feeAmountInSellTokenCryptoBaseUnit)
       .div(bn(10).exponentiatedBy(sellAsset.precision))
       .multipliedBy(bnOrZero(sellAssetUsdRate))
       .toString()
@@ -153,7 +165,7 @@ export async function getCowSwapTradeQuote(
         sellAssetTradeFeeUsd,
       },
       sellAmountCryptoBaseUnit: quoteSellAmount,
-      buyAmountCryptoBaseUnit: quote.buyAmountCryptoBaseUnit,
+      buyAmountCryptoBaseUnit,
       sources: DEFAULT_SOURCE,
       allowanceContract: COW_SWAP_VAULT_RELAYER_ADDRESS,
       buyAsset,
