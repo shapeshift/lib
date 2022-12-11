@@ -17,7 +17,7 @@ export async function zrxBuildTrade<T extends EvmSupportedChainIds>(
   { adapter, web3 }: ZrxSwapperDeps,
   input: BuildTradeInput,
 ): Promise<ZrxTrade<T>> {
-  const { sellAsset, buyAsset, sellAmountCryptoPrecision, slippage, bip44Params, receiveAddress } =
+  const { sellAsset, buyAsset, sellAmountCryptoBaseUnit, slippage, bip44Params, receiveAddress } =
     input
   try {
     const { assetReference: buyAssetErc20Address, assetNamespace: buyAssetNamespace } = fromAssetId(
@@ -72,7 +72,7 @@ export async function zrxBuildTrade<T extends EvmSupportedChainIds>(
         params: {
           buyToken,
           sellToken,
-          sellAmount: normalizeAmount(sellAmountCryptoPrecision),
+          sellAmount: normalizeAmount(sellAmountCryptoBaseUnit),
           takerAddress: receiveAddress,
           slippagePercentage,
           skipValidation: false,
@@ -81,23 +81,37 @@ export async function zrxBuildTrade<T extends EvmSupportedChainIds>(
       },
     )
 
-    const { data } = quoteResponse
+    const {
+      data: {
+        allowanceTarget,
+        sellAmount,
+        gasPrice: gasPriceCryptoBaseUnit,
+        gas: gasCryptoBaseUnit,
+        price,
+        to,
+        buyAmount: buyAmountCryptoBaseUnit,
+        data: txData,
+        sources,
+      },
+    } = quoteResponse
 
-    const estimatedGas = bnOrZero(data.gas || 0)
-    const networkFee = bnOrZero(estimatedGas).multipliedBy(bnOrZero(data.gasPrice)).toString()
+    const estimatedGas = bnOrZero(gasCryptoBaseUnit || 0)
+    const networkFee = bnOrZero(estimatedGas)
+      .multipliedBy(bnOrZero(gasPriceCryptoBaseUnit))
+      .toString()
 
     const approvalRequired = await isApprovalRequired({
       adapter,
       sellAsset,
-      allowanceContract: data.allowanceTarget,
+      allowanceContract: allowanceTarget,
       receiveAddress,
-      sellAmount: data.sellAmount,
+      sellAmount,
       web3,
       erc20AllowanceAbi,
     })
 
     const approvalFee = bnOrZero(APPROVAL_GAS_LIMIT)
-      .multipliedBy(bnOrZero(data.gasPrice))
+      .multipliedBy(bnOrZero(gasPriceCryptoBaseUnit))
       .toString()
 
     const trade: ZrxTrade<EvmSupportedChainIds> = {
@@ -105,22 +119,22 @@ export async function zrxBuildTrade<T extends EvmSupportedChainIds>(
       buyAsset,
       bip44Params,
       receiveAddress,
-      rate: data.price,
-      depositAddress: data.to,
+      rate: price,
+      depositAddress: to,
       feeData: {
         chainSpecific: {
           estimatedGas: estimatedGas.toString(),
-          gasPrice: data.gasPrice,
+          gasPriceCryptoBaseUnit,
           approvalFeeCryptoBaseUnit: approvalRequired ? approvalFee : undefined,
         },
         networkFeeCryptoBaseUnit: networkFee,
         buyAssetTradeFeeUsd: '0',
         sellAssetTradeFeeUsd: '0',
       },
-      txData: data.data,
-      sellAmountCryptoPrecision: data.sellAmount,
-      buyAmountCryptoPrecision: data.buyAmount,
-      sources: data.sources?.filter((s) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE,
+      txData,
+      sellAmountCryptoBaseUnit: sellAmount,
+      buyAmountCryptoBaseUnit,
+      sources: sources?.filter((s) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE,
     }
     return trade as ZrxTrade<T>
   } catch (e) {

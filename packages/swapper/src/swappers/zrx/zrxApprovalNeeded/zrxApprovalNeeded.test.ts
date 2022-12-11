@@ -64,9 +64,9 @@ describe('zrxApprovalNeeded', () => {
     const input: ApprovalNeededInput<KnownChainIds.EthereumMainnet> = {
       quote: {
         ...tradeQuote,
-        sellAmountCryptoPrecision: '10',
+        sellAmountCryptoBaseUnit: '10',
         feeData: {
-          chainSpecific: { gasPrice: '1000' },
+          chainSpecific: { gasPriceCryptoBaseUnit: '1000' },
           buyAssetTradeFeeUsd: '0',
           sellAssetTradeFeeUsd: '0',
           networkFeeCryptoBaseUnit: '0',
@@ -96,7 +96,7 @@ describe('zrxApprovalNeeded', () => {
         ...tradeQuote,
         sellAmount: '10',
         feeData: {
-          chainSpecific: { gasPrice: '1000' },
+          chainSpecific: { gasPriceCryptoBaseUnit: '1000' },
           buyAssetTradeFeeUsd: '0',
           sellAssetTradeFeeUsd: '0',
           networkFeeCryptoBaseUnit: '0',

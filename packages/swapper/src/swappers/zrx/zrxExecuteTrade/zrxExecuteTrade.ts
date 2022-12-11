@@ -12,14 +12,14 @@ export async function zrxExecuteTrade<T extends EvmSupportedChainIds>(
 
   try {
     // value is 0 for erc20s
-    const value = isNativeEvmAsset(sellAsset.assetId) ? trade.sellAmountCryptoPrecision : '0'
+    const value = isNativeEvmAsset(sellAsset.assetId) ? trade.sellAmountCryptoBaseUnit : '0'
 
     const buildTxResponse = await adapter.buildSendTransaction({
       value,
       wallet,
       to: trade.depositAddress,
       chainSpecific: {
-        gasPrice: numberToHex(trade.feeData?.chainSpecific?.gasPrice || 0),
+        gasPrice: numberToHex(trade.feeData?.chainSpecific?.gasPriceCryptoBaseUnit || 0),
         gasLimit: numberToHex(trade.feeData?.chainSpecific?.estimatedGas || 0),
       },
       bip44Params,

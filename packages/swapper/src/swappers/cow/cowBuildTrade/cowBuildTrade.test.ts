@@ -113,45 +113,45 @@ const expectedTradeWethToFox: CowTrade<KnownChainIds.EthereumMainnet> = {
   feeData: {
     chainSpecific: {
       estimatedGas: '100000',
-      gasPrice: '79036500000',
+      gasPriceCryptoBaseUnit: '79036500000',
     },
     buyAssetTradeFeeUsd: '0',
     networkFeeCryptoBaseUnit: '0',
     sellAssetTradeFeeUsd: '17.95954294012756741283729339486489192096',
   },
-  sellAmountCryptoPrecision: '1000000000000000000',
-  buyAmountCryptoPrecision: '14501811818247595090576', // 14501 FOX
+  sellAmountCryptoBaseUnit: '1000000000000000000',
+  buyAmountCryptoBaseUnit: '14501811818247595090576', // 14501 FOX
   sources: [{ name: SwapperName.CowSwap, proportion: '1' }],
   buyAsset: FOX,
   sellAsset: WETH,
   bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
   receiveAddress: 'address11',
-  feeAmountInSellToken: '14557942658757988',
-  sellAmountWithoutFee: '985442057341242012',
+  feeAmountInSellTokenCryptoBaseUnit: '14557942658757988',
+  sellAmountExcludeFeeCryptoBaseUnit: '985442057341242012',
 }
 
-const expectedTradeQuoteWbtcToWethWithapprovalFeeCryptoBaseUnit: CowTrade<KnownChainIds.EthereumMainnet> =
+const expectedTradeQuoteWbtcToWethWithApprovalFeeCryptoBaseUnit: CowTrade<KnownChainIds.EthereumMainnet> =
   {
     rate: '19.13939810252384532346', // 19.14 WETH per WBTC
     feeData: {
       chainSpecific: {
         estimatedGas: '100000',
-        gasPrice: '79036500000',
+        gasPriceCryptoBaseUnit: '79036500000',
         approvalFeeCryptoBaseUnit: '7903650000000000',
       },
       buyAssetTradeFeeUsd: '0',
       networkFeeCryptoBaseUnit: '0',
       sellAssetTradeFeeUsd: '3.6162531444',
     },
-    sellAmountCryptoPrecision: '100000000',
-    buyAmountCryptoPrecision: '19136098853078932263', // 19.13 WETH
+    sellAmountCryptoBaseUnit: '100000000',
+    buyAmountCryptoBaseUnit: '19136098853078932263', // 19.13 WETH
     sources: [{ name: SwapperName.CowSwap, proportion: '1' }],
     buyAsset: WETH,
     sellAsset: WBTC,
     bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
     receiveAddress: 'address11',
-    feeAmountInSellToken: '17238',
-    sellAmountWithoutFee: '99982762',
+    feeAmountInSellTokenCryptoBaseUnit: '17238',
+    sellAmountExcludeFeeCryptoBaseUnit: '99982762',
   }
 
 const expectedTradeQuoteFoxToEth: CowTrade<KnownChainIds.EthereumMainnet> = {
@@ -159,21 +159,21 @@ const expectedTradeQuoteFoxToEth: CowTrade<KnownChainIds.EthereumMainnet> = {
   feeData: {
     chainSpecific: {
       estimatedGas: '100000',
-      gasPrice: '79036500000',
+      gasPriceCryptoBaseUnit: '79036500000',
     },
     buyAssetTradeFeeUsd: '0',
     networkFeeCryptoBaseUnit: '0',
     sellAssetTradeFeeUsd: '5.3955565850972847808512',
   },
-  sellAmountCryptoPrecision: '1000000000000000000000',
-  buyAmountCryptoPrecision: '46868859830863283',
+  sellAmountCryptoBaseUnit: '1000000000000000000000',
+  buyAmountCryptoBaseUnit: '46868859830863283',
   sources: [{ name: SwapperName.CowSwap, proportion: '1' }],
   buyAsset: ETH,
   sellAsset: FOX,
   bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
   receiveAddress: 'address11',
-  feeAmountInSellToken: '61804771879693983744',
-  sellAmountWithoutFee: '938195228120306016256',
+  feeAmountInSellTokenCryptoBaseUnit: '61804771879693983744',
+  sellAmountExcludeFeeCryptoBaseUnit: '938195228120306016256',
 }
 
 const deps: CowSwapperDeps = {
@@ -191,7 +191,7 @@ describe('cowBuildTrade', () => {
       chainId: KnownChainIds.EthereumMainnet,
       sellAsset: ETH,
       buyAsset: FOX,
-      sellAmountCryptoPrecision: '11111',
+      sellAmountCryptoBaseUnit: '11111',
       sendMax: true,
       bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
       wallet: <HDWallet>{},
@@ -208,7 +208,7 @@ describe('cowBuildTrade', () => {
       chainId: KnownChainIds.EthereumMainnet,
       sellAsset: WETH,
       buyAsset: FOX,
-      sellAmountCryptoPrecision: '1000000000000000000',
+      sellAmountCryptoBaseUnit: '1000000000000000000',
       sendMax: true,
       bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
       wallet: <HDWallet>{},
@@ -245,7 +245,7 @@ describe('cowBuildTrade', () => {
       chainId: KnownChainIds.EthereumMainnet,
       sellAsset: WBTC,
       buyAsset: WETH,
-      sellAmountCryptoPrecision: '100000000',
+      sellAmountCryptoBaseUnit: '100000000',
       sendMax: true,
       bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
       wallet: <HDWallet>{},
@@ -270,7 +270,7 @@ describe('cowBuildTrade', () => {
 
     const trade = await cowBuildTrade(deps, tradeInput)
 
-    expect(trade).toEqual(expectedTradeQuoteWbtcToWethWithapprovalFeeCryptoBaseUnit)
+    expect(trade).toEqual(expectedTradeQuoteWbtcToWethWithApprovalFeeCryptoBaseUnit)
     expect(cowService.post).toHaveBeenCalledWith(
       'https://api.cow.fi/mainnet/api/v1/quote/',
       expectedApiInputWbtcToWeth,
@@ -282,7 +282,7 @@ describe('cowBuildTrade', () => {
       chainId: KnownChainIds.EthereumMainnet,
       sellAsset: FOX,
       buyAsset: ETH,
-      sellAmountCryptoPrecision: '1000000000000000000000',
+      sellAmountCryptoBaseUnit: '1000000000000000000000',
       sendMax: true,
       bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
       wallet: <HDWallet>{},

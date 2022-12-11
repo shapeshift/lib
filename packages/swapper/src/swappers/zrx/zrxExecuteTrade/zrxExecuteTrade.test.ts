@@ -26,8 +26,8 @@ describe('ZrxExecuteTrade', () => {
   const trade: ZrxTrade<KnownChainIds.EthereumMainnet> = {
     buyAsset,
     sellAsset,
-    sellAmountCryptoPrecision: '1',
-    buyAmountCryptoPrecision: '',
+    sellAmountCryptoBaseUnit: '1',
+    buyAmountCryptoBaseUnit: '',
     depositAddress: '0x123',
     receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',
     bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
@@ -37,7 +37,7 @@ describe('ZrxExecuteTrade', () => {
       chainSpecific: {
         approvalFeeCryptoBaseUnit: '123600000',
         estimatedGas: '1235',
-        gasPrice: '1236',
+        gasPriceCryptoBaseUnit: '1236',
       },
       buyAssetTradeFeeUsd: '0',
       sellAssetTradeFeeUsd: '0',

@@ -7,8 +7,8 @@ export type CowSwapQuoteResponse = {
     sellToken: string
     buyToken: string
     receiver: string
-    sellAmount: string
-    buyAmount: string
+    sellAmountCryptoBaseUnit: string
+    buyAmountCryptoBaseUnit: string
     validTo: number
     appData: string
     feeAmount: string
@@ -30,6 +30,6 @@ export type CowSwapGetTradesElement = {
 export type CowSwapGetTradesResponse = CowSwapGetTradesElement[]
 
 export interface CowTrade<C extends ChainId> extends Trade<C> {
-  feeAmountInSellToken: string
-  sellAmountWithoutFee: string
+  feeAmountInSellTokenCryptoBaseUnit: string
+  sellAmountExcludeFeeCryptoBaseUnit: string
 }

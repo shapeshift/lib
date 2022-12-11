@@ -28,7 +28,7 @@ export async function getCowSwapTradeQuote(
   input: GetTradeQuoteInput,
 ): Promise<TradeQuote<KnownChainIds.EthereumMainnet>> {
   try {
-    const { sellAsset, buyAsset, sellAmountCryptoPrecision, bip44Params, receiveAddress } = input
+    const { sellAsset, buyAsset, sellAmountCryptoBaseUnit, bip44Params, receiveAddress } = input
     const { adapter, web3 } = deps
 
     const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
@@ -62,9 +62,9 @@ export async function getCowSwapTradeQuote(
 
     // making sure we do not have decimals for cowswap api (can happen at least from minQuoteSellAmount)
     const normalizedSellAmount = normalizeIntegerAmount(
-      bnOrZero(sellAmountCryptoPrecision).lt(minQuoteSellAmount)
+      bnOrZero(sellAmountCryptoBaseUnit).lt(minQuoteSellAmount)
         ? minQuoteSellAmount
-        : sellAmountCryptoPrecision,
+        : sellAmountCryptoBaseUnit,
     )
 
     const apiInput: CowSwapSellQuoteApiInput = {
@@ -100,10 +100,10 @@ export async function getCowSwapTradeQuote(
       data: { quote },
     } = quoteResponse
 
-    const buyAmountCryptoPrecision = bn(quote.buyAmount).div(
+    const buyAmountCryptoPrecision = bn(quote.buyAmountCryptoBaseUnit).div(
       bn(10).exponentiatedBy(buyAsset.precision),
     )
-    const quoteSellAmountCryptoPrecision = bn(quote.sellAmount).div(
+    const quoteSellAmountCryptoPrecision = bn(quote.sellAmountCryptoBaseUnit).div(
       bn(10).exponentiatedBy(sellAsset.precision),
     )
     const rate = buyAmountCryptoPrecision.div(quoteSellAmountCryptoPrecision).toString()
@@ -132,8 +132,8 @@ export async function getCowSwapTradeQuote(
 
     // If original sellAmount is < minQuoteSellAmount, we don't want to replace it with normalizedSellAmount
     // The purpose of this was to get a quote from CowSwap even with small amounts
-    const quoteSellAmount = bnOrZero(sellAmountCryptoPrecision).lt(minQuoteSellAmount)
-      ? sellAmountCryptoPrecision
+    const quoteSellAmount = bnOrZero(sellAmountCryptoBaseUnit).lt(minQuoteSellAmount)
+      ? sellAmountCryptoBaseUnit
       : normalizedSellAmount
 
     return {
@@ -144,7 +144,7 @@ export async function getCowSwapTradeQuote(
         networkFeeCryptoBaseUnit: '0', // no miner fee for CowSwap
         chainSpecific: {
           estimatedGas: feeData.chainSpecific.gasLimit,
-          gasPrice: feeData.chainSpecific.gasPrice,
+          gasPriceCryptoBaseUnit: feeData.chainSpecific.gasPrice,
           approvalFeeCryptoBaseUnit: bnOrZero(feeData.chainSpecific.gasLimit)
             .multipliedBy(bnOrZero(feeData.chainSpecific.gasPrice))
             .toString(),
@@ -152,8 +152,8 @@ export async function getCowSwapTradeQuote(
         buyAssetTradeFeeUsd: '0', // Trade fees for buy Asset are always 0 since trade fees are subtracted from sell asset
         sellAssetTradeFeeUsd,
       },
-      sellAmountCryptoPrecision: quoteSellAmount,
-      buyAmountCryptoPrecision: quote.buyAmount,
+      sellAmountCryptoBaseUnit: quoteSellAmount,
+      buyAmountCryptoBaseUnit: quote.buyAmountCryptoBaseUnit,
       sources: DEFAULT_SOURCE,
       allowanceContract: COW_SWAP_VAULT_RELAYER_ADDRESS,
       buyAsset,

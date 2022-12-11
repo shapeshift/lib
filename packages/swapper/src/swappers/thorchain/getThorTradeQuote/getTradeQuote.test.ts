@@ -20,11 +20,15 @@ const mockedAxios = jest.mocked(thorService, true)
 const expectedQuoteResponse: TradeQuote<KnownChainIds.EthereumMainnet> = {
   minimumCryptoHuman: '59.658672054814851787728',
   maximum: '100000000000000000000000000',
-  sellAmountCryptoPrecision: '10000000000000000000', // 1000 FOX
+  sellAmountCryptoBaseUnit: '10000000000000000000', // 1000 FOX
   allowanceContract: '0x3624525075b88B24ecc29CE226b0CEc1fFcB6976',
-  buyAmountCryptoPrecision: '784000000000000',
+  buyAmountCryptoBaseUnit: '784000000000000',
   feeData: {
-    chainSpecific: { estimatedGas: '100000', approvalFeeCryptoBaseUnit: '700000', gasPrice: '7' },
+    chainSpecific: {
+      estimatedGas: '100000',
+      approvalFeeCryptoBaseUnit: '700000',
+      gasPriceCryptoBaseUnit: '7',
+    },
     buyAssetTradeFeeUsd: '7.656',
     sellAssetTradeFeeUsd: '0',
     networkFeeCryptoBaseUnit: '700000',
@@ -64,7 +68,7 @@ describe('getTradeQuote', () => {
 
     const input: GetTradeQuoteInput = {
       ...quoteInput,
-      sellAmountCryptoPrecision: '10000000000000000000', // 10 FOX
+      sellAmountCryptoBaseUnit: '10000000000000000000', // 10 FOX
       buyAsset: ETH,
       sellAsset: FOX,
     }

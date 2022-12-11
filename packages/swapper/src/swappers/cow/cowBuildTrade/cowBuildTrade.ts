@@ -27,7 +27,7 @@ export async function cowBuildTrade(
   input: BuildTradeInput,
 ): Promise<CowTrade<KnownChainIds.EthereumMainnet>> {
   try {
-    const { sellAsset, buyAsset, sellAmountCryptoPrecision, bip44Params, wallet } = input
+    const { sellAsset, buyAsset, sellAmountCryptoBaseUnit, bip44Params, wallet } = input
     const { adapter, web3 } = deps
 
     const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
@@ -53,7 +53,7 @@ export async function cowBuildTrade(
     const buyToken =
       buyAsset.assetId !== ethAssetId ? buyAssetErc20Address : COW_SWAP_ETH_MARKER_ADDRESS
     const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
-    const normalizedSellAmount = normalizeAmount(sellAmountCryptoPrecision)
+    const normalizedSellAmount = normalizeAmount(sellAmountCryptoBaseUnit)
 
     /**
      * /v1/quote
@@ -92,13 +92,13 @@ export async function cowBuildTrade(
       .multipliedBy(bnOrZero(sellAssetUsdRate))
       .toString()
 
-    const buyAmountCryptoPrecision = bn(quote.buyAmount).div(
+    const buyAmountCryptoPrecision = bn(quote.buyAmountCryptoBaseUnit).div(
       bn(10).exponentiatedBy(buyAsset.precision),
     )
-    const quoteSellAmountCryptoPrecision = bn(quote.sellAmount).div(
+    const quotesellAmountCryptoBaseUnit = bn(quote.sellAmountCryptoBaseUnit).div(
       bn(10).exponentiatedBy(sellAsset.precision),
     )
-    const rate = buyAmountCryptoPrecision.div(quoteSellAmountCryptoPrecision).toString()
+    const rate = buyAmountCryptoPrecision.div(quotesellAmountCryptoBaseUnit).toString()
 
     const data = getApproveContractData({
       web3,
@@ -120,20 +120,20 @@ export async function cowBuildTrade(
         networkFeeCryptoBaseUnit: '0', // no miner fee for CowSwap
         chainSpecific: {
           estimatedGas: feeData.chainSpecific.gasLimit,
-          gasPrice: feeData.chainSpecific.gasPrice,
+          gasPriceCryptoBaseUnit: feeData.chainSpecific.gasPrice,
         },
         buyAssetTradeFeeUsd: '0', // Trade fees for buy Asset are always 0 since trade fees are subtracted from sell asset
         sellAssetTradeFeeUsd,
       },
-      sellAmountCryptoPrecision: normalizedSellAmount,
-      buyAmountCryptoPrecision: quote.buyAmount,
+      sellAmountCryptoBaseUnit: normalizedSellAmount,
+      buyAmountCryptoBaseUnit: quote.buyAmountCryptoBaseUnit,
       sources: DEFAULT_SOURCE,
       buyAsset,
       sellAsset,
       bip44Params,
       receiveAddress,
-      feeAmountInSellToken: quote.feeAmount,
-      sellAmountWithoutFee: quote.sellAmount,
+      feeAmountInSellTokenCryptoBaseUnit: quote.feeAmount,
+      sellAmountExcludeFeeCryptoBaseUnit: quote.sellAmountCryptoBaseUnit,
     }
 
     const approvalRequired = await isApprovalRequired({
@@ -141,7 +141,7 @@ export async function cowBuildTrade(
       sellAsset,
       allowanceContract: COW_SWAP_VAULT_RELAYER_ADDRESS,
       receiveAddress,
-      sellAmount: quote.sellAmount,
+      sellAmount: quote.sellAmountCryptoBaseUnit,
       web3: deps.web3,
       erc20AllowanceAbi,
     })

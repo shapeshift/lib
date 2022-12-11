@@ -116,7 +116,7 @@ export const grantAllowance = async <T extends EvmSupportedChainIds>({
 
     const erc20Contract = new web3.eth.Contract(erc20Abi, sellAssetErc20Address)
     const approveTx = erc20Contract.methods
-      .approve(quote.allowanceContract, quote.sellAmountCryptoPrecision)
+      .approve(quote.allowanceContract, quote.sellAmountCryptoBaseUnit)
       .encodeABI()
 
     const { bip44Params } = quote
@@ -128,7 +128,7 @@ export const grantAllowance = async <T extends EvmSupportedChainIds>({
       value: '0',
       chainSpecific: {
         erc20ContractAddress: sellAssetErc20Address,
-        gasPrice: numberToHex(quote.feeData?.chainSpecific?.gasPrice || 0),
+        gasPrice: numberToHex(quote.feeData?.chainSpecific?.gasPriceCryptoBaseUnit || 0),
         gasLimit: numberToHex(quote.feeData?.chainSpecific?.estimatedGas || 0),
       },
     })
