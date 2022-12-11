@@ -153,7 +153,7 @@ describe('zrxBuildTrade', () => {
       ...quoteResponse,
       allowanceTarget: 'allowanceTargetAddress',
       gas: estimatedGas,
-      gasPriceCryptoBaseUnit,
+      gasPrice: gasPriceCryptoBaseUnit,
     }
     ;(zrxService.get as jest.Mock<unknown>).mockReturnValue(Promise.resolve({ data }))
 

@@ -27,7 +27,7 @@ export async function cowBuildTrade(
   input: BuildTradeInput,
 ): Promise<CowTrade<KnownChainIds.EthereumMainnet>> {
   try {
-    const { sellAsset, buyAsset, sellAmountExcludeFeeCryptoBaseUnit: sellAmountCryptoBaseUnit, bip44Params, wallet } = input
+    const { sellAsset, buyAsset, sellAmountExcludeFeeCryptoBaseUnit, bip44Params, wallet } = input
     const { adapter, web3 } = deps
 
     const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } =
@@ -53,7 +53,7 @@ export async function cowBuildTrade(
     const buyToken =
       buyAsset.assetId !== ethAssetId ? buyAssetErc20Address : COW_SWAP_ETH_MARKER_ADDRESS
     const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
-    const normalizedSellAmount = normalizeAmount(sellAmountCryptoBaseUnit)
+    const normalizedSellAmount = normalizeAmount(sellAmountExcludeFeeCryptoBaseUnit)
 
     /**
      * /v1/quote
@@ -86,7 +86,7 @@ export async function cowBuildTrade(
       data: {
         quote: {
           buyAmount: buyAmountCryptoBaseUnit,
-          sellAmount: sellAmountExcludeFeeCryptoBaseUnit,
+          sellAmount: quoteSellAmountExcludeFeeCryptoBaseUnit,
           feeAmount: feeAmountInSellTokenCryptoBaseUnit,
         },
       },
@@ -101,10 +101,10 @@ export async function cowBuildTrade(
     const buyAmountCryptoPrecision = bn(buyAmountCryptoBaseUnit).div(
       bn(10).exponentiatedBy(buyAsset.precision),
     )
-    const quotesellAmountCryptoBaseUnit = bn(sellAmountCryptoBaseUnit).div(
+    const quoteSellAmountCryptoBaseUnit = bn(quoteSellAmountExcludeFeeCryptoBaseUnit).div(
       bn(10).exponentiatedBy(sellAsset.precision),
     )
-    const rate = buyAmountCryptoPrecision.div(quotesellAmountCryptoBaseUnit).toString()
+    const rate = buyAmountCryptoPrecision.div(quoteSellAmountCryptoBaseUnit).toString()
 
     const data = getApproveContractData({
       web3,
