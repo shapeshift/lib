@@ -130,10 +130,11 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
         const feeAsset = assets[this.getFeeAssetId()]
 
         const walletEthNetwork = await (wallet as ETHWallet).ethGetChainId?.()
-        const adapterEthNetwork = fromChainId(this.chainId).chainReference
+        const adapterEthNetwork = Number(fromChainId(this.chainId).chainReference)
+
         if (!bnOrZero(walletEthNetwork).isEqualTo(adapterEthNetwork)) {
           await (wallet as ETHWallet).ethSwitchChain?.({
-            chainId: utils.hexValue(Number(adapterEthNetwork)),
+            chainId: utils.hexValue(adapterEthNetwork),
             chainName: this.getDisplayName(),
             nativeCurrency: {
               name: feeAsset.name,
@@ -296,10 +297,15 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
       // Switch the chain on wallet before building/sending the Tx
       if (supportsEthSwitchChain(wallet)) {
         const walletEthNetwork = await (wallet as ETHWallet).ethGetChainId?.()
-        const adapterEthNetwork = fromChainId(this.chainId).chainReference
-        if (!bnOrZero(walletEthNetwork).isEqualTo(Number(adapterEthNetwork))) {
+        const adapterEthNetwork = Number(fromChainId(this.chainId).chainReference)
+
+        if (typeof walletEthNetwork !== 'number') {
+          throw new Error('Error getting wallet ethNetwork')
+        }
+
+        if (!(walletEthNetwork === adapterEthNetwork)) {
           await (wallet as ETHWallet).ethSwitchChain?.({
-            chainId: utils.hexValue(Number(adapterEthNetwork)),
+            chainId: utils.hexValue(adapterEthNetwork),
             chainName: this.getDisplayName(),
             nativeCurrency: {
               name: feeAsset.name,
