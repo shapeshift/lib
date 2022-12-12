@@ -98,9 +98,11 @@ export class SwapperManager {
         acc: Promise<readonly [Swapper<ChainId>, number]> | undefined,
         currentQuoteTuple: SwapperQuoteTuple,
       ) => {
+        console.log('xxx getBestSwapper: checking swapper and quote', { currentQuoteTuple })
         const resolvedAcc = await acc
         const [currentSwapper, currentQuote] = currentQuoteTuple
         const currentRatio = await getRatioFromQuote(currentQuote, currentSwapper, feeAsset)
+        console.log('xxx getBestSwapper: got ratio', { currentRatio })
         if (!resolvedAcc) return Promise.resolve([currentSwapper, currentRatio] as const)
 
         const [, bestRatio] = resolvedAcc
@@ -112,7 +114,9 @@ export class SwapperManager {
       undefined,
     )
 
-    return bestQuoteTuple?.[0]
+    const bestSwapper = bestQuoteTuple?.[0]
+    console.log('xxx getBestSwapper: bestSwapper', { bestSwapper })
+    return bestSwapper
   }
 
   /**
