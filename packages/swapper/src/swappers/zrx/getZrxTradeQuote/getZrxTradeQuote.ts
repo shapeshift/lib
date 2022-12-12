@@ -25,7 +25,7 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
     const {
       sellAsset,
       buyAsset,
-      sellAmountExcludeFeeCryptoBaseUnit: sellAmountCryptoBaseUnit,
+      sellAmountBeforeFeesCryptoBaseUnit: sellAmountCryptoBaseUnit,
       bip44Params,
     } = input
     if (buyAsset.chainId !== input.chainId || sellAsset.chainId !== input.chainId) {
@@ -57,12 +57,6 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
         ? minQuotesellAmountCryptoBaseUnit
         : sellAmountCryptoBaseUnit,
     )
-    console.log({
-      minimum,
-      normalizedSellAmount,
-      sellAmountCryptoBaseUnit,
-      minQuotesellAmountCryptoBaseUnit: minQuotesellAmountCryptoBaseUnit.toFixed(),
-    })
     const baseUrl = baseUrlFromChainId(buyAsset.chainId)
     const zrxService = zrxServiceFactory(baseUrl)
 
@@ -122,7 +116,7 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
         buyAssetTradeFeeUsd: '0',
         sellAssetTradeFeeUsd: '0',
       },
-      sellAmountCryptoBaseUnit: sellAmountResponse,
+      sellAmountBeforeFeesCryptoBaseUnit: sellAmountResponse,
       buyAmountCryptoBaseUnit: buyAmount,
       sources: sources?.filter((s: SwapSource) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE,
       allowanceContract: allowanceTarget,

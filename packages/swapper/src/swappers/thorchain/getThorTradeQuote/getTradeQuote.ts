@@ -46,7 +46,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
   const {
     sellAsset,
     buyAsset,
-    sellAmountExcludeFeeCryptoBaseUnit: sellAmountCryptoBaseUnit,
+    sellAmountBeforeFeesCryptoBaseUnit: sellAmountCryptoBaseUnit,
     bip44Params,
     chainId,
     receiveAddress,
@@ -122,7 +122,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
     const commonQuoteFields: CommonQuoteFields = {
       rate,
       maximum: MAX_THORCHAIN_TRADE,
-      sellAmountCryptoBaseUnit,
+      sellAmountBeforeFeesCryptoBaseUnit: sellAmountCryptoBaseUnit,
       buyAmountCryptoBaseUnit,
       sources: [{ name: SwapperName.Thorchain, proportion: '1' }],
       buyAsset,

@@ -119,7 +119,7 @@ const expectedTradeWethToFox: CowTrade<KnownChainIds.EthereumMainnet> = {
     networkFeeCryptoBaseUnit: '0',
     sellAssetTradeFeeUsd: '17.95954294012756741283729339486489192096',
   },
-  sellAmountCryptoBaseUnit: '1000000000000000000',
+  sellAmountBeforeFeesCryptoBaseUnit: '1000000000000000000',
   buyAmountCryptoBaseUnit: '14501811818247595090576', // 14501 FOX
   sources: [{ name: SwapperName.CowSwap, proportion: '1' }],
   buyAsset: FOX,
@@ -127,7 +127,7 @@ const expectedTradeWethToFox: CowTrade<KnownChainIds.EthereumMainnet> = {
   bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
   receiveAddress: 'address11',
   feeAmountInSellTokenCryptoBaseUnit: '14557942658757988',
-  sellAmountExcludeFeeCryptoBaseUnit: '985442057341242012',
+  sellAmountDeductFeeCryptoBaseUnit: '985442057341242012',
 }
 
 const expectedTradeQuoteWbtcToWethWithApprovalFeeCryptoBaseUnit: CowTrade<KnownChainIds.EthereumMainnet> =
@@ -143,7 +143,7 @@ const expectedTradeQuoteWbtcToWethWithApprovalFeeCryptoBaseUnit: CowTrade<KnownC
       networkFeeCryptoBaseUnit: '0',
       sellAssetTradeFeeUsd: '3.6162531444',
     },
-    sellAmountCryptoBaseUnit: '100000000',
+    sellAmountBeforeFeesCryptoBaseUnit: '100000000',
     buyAmountCryptoBaseUnit: '19136098853078932263', // 19.13 WETH
     sources: [{ name: SwapperName.CowSwap, proportion: '1' }],
     buyAsset: WETH,
@@ -151,7 +151,7 @@ const expectedTradeQuoteWbtcToWethWithApprovalFeeCryptoBaseUnit: CowTrade<KnownC
     bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
     receiveAddress: 'address11',
     feeAmountInSellTokenCryptoBaseUnit: '17238',
-    sellAmountExcludeFeeCryptoBaseUnit: '99982762',
+    sellAmountDeductFeeCryptoBaseUnit: '99982762',
   }
 
 const expectedTradeQuoteFoxToEth: CowTrade<KnownChainIds.EthereumMainnet> = {
@@ -165,7 +165,7 @@ const expectedTradeQuoteFoxToEth: CowTrade<KnownChainIds.EthereumMainnet> = {
     networkFeeCryptoBaseUnit: '0',
     sellAssetTradeFeeUsd: '5.3955565850972847808512',
   },
-  sellAmountCryptoBaseUnit: '1000000000000000000000',
+  sellAmountBeforeFeesCryptoBaseUnit: '1000000000000000000000',
   buyAmountCryptoBaseUnit: '46868859830863283',
   sources: [{ name: SwapperName.CowSwap, proportion: '1' }],
   buyAsset: ETH,
@@ -173,7 +173,7 @@ const expectedTradeQuoteFoxToEth: CowTrade<KnownChainIds.EthereumMainnet> = {
   bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
   receiveAddress: 'address11',
   feeAmountInSellTokenCryptoBaseUnit: '61804771879693983744',
-  sellAmountExcludeFeeCryptoBaseUnit: '938195228120306016256',
+  sellAmountDeductFeeCryptoBaseUnit: '938195228120306016256',
 }
 
 const deps: CowSwapperDeps = {
@@ -191,7 +191,7 @@ describe('cowBuildTrade', () => {
       chainId: KnownChainIds.EthereumMainnet,
       sellAsset: ETH,
       buyAsset: FOX,
-      sellAmountExcludeFeeCryptoBaseUnit: '11111',
+      sellAmountBeforeFeesCryptoBaseUnit: '11111',
       sendMax: true,
       bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
       wallet: <HDWallet>{},
@@ -208,7 +208,7 @@ describe('cowBuildTrade', () => {
       chainId: KnownChainIds.EthereumMainnet,
       sellAsset: WETH,
       buyAsset: FOX,
-      sellAmountExcludeFeeCryptoBaseUnit: '1000000000000000000',
+      sellAmountBeforeFeesCryptoBaseUnit: '1000000000000000000',
       sendMax: true,
       bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
       wallet: <HDWallet>{},
@@ -245,7 +245,7 @@ describe('cowBuildTrade', () => {
       chainId: KnownChainIds.EthereumMainnet,
       sellAsset: WBTC,
       buyAsset: WETH,
-      sellAmountExcludeFeeCryptoBaseUnit: '100000000',
+      sellAmountBeforeFeesCryptoBaseUnit: '100000000',
       sendMax: true,
       bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
       wallet: <HDWallet>{},
@@ -282,7 +282,7 @@ describe('cowBuildTrade', () => {
       chainId: KnownChainIds.EthereumMainnet,
       sellAsset: FOX,
       buyAsset: ETH,
-      sellAmountExcludeFeeCryptoBaseUnit: '1000000000000000000000',
+      sellAmountBeforeFeesCryptoBaseUnit: '1000000000000000000000',
       sendMax: true,
       bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
       wallet: <HDWallet>{},

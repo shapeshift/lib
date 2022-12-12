@@ -31,5 +31,5 @@ export type CowSwapGetTradesResponse = CowSwapGetTradesElement[]
 
 export interface CowTrade<C extends ChainId> extends Trade<C> {
   feeAmountInSellTokenCryptoBaseUnit: string
-  sellAmountExcludeFeeCryptoBaseUnit: string
+  sellAmountDeductFeeCryptoBaseUnit: string
 }

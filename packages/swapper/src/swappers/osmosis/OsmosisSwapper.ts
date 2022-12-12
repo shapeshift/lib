@@ -155,7 +155,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     const {
       sellAsset,
       buyAsset,
-      sellAmountExcludeFeeCryptoBaseUnit: sellAmountCryptoBaseUnit,
+      sellAmountBeforeFeesCryptoBaseUnit: sellAmountCryptoBaseUnit,
       receiveAddress,
       bip44Params,
     } = args
@@ -198,7 +198,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       },
       rate,
       receiveAddress,
-      sellAmountCryptoBaseUnit: sellAmountCryptoBase, // TODO(gomes): wat?
+      sellAmountBeforeFeesCryptoBaseUnit: sellAmountCryptoBase, // TODO(gomes): wat?
       sellAsset,
       bip44Params,
       sources: [{ name: SwapperName.Osmosis, proportion: '100' }],
@@ -210,7 +210,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       bip44Params,
       sellAsset,
       buyAsset,
-      sellAmountExcludeFeeCryptoBaseUnit: sellAmountCryptoBaseUnit,
+      sellAmountBeforeFeesCryptoBaseUnit: sellAmountCryptoBaseUnit,
     } = input
     if (!sellAmountCryptoBaseUnit) {
       throw new SwapError('sellAmount is required', {
@@ -250,7 +250,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       bip44Params,
       rate,
       sellAsset,
-      sellAmountCryptoBaseUnit,
+      sellAmountBeforeFeesCryptoBaseUnit: sellAmountCryptoBaseUnit,
       buyAmountCryptoBaseUnit,
       sources: DEFAULT_SOURCE,
       allowanceContract: '',
@@ -258,7 +258,13 @@ export class OsmosisSwapper implements Swapper<ChainId> {
   }
 
   async executeTrade({ trade, wallet }: ExecuteTradeInput<ChainId>): Promise<OsmosisTradeResult> {
-    const { sellAsset, buyAsset, sellAmountCryptoBaseUnit, bip44Params, receiveAddress } = trade
+    const {
+      sellAsset,
+      buyAsset,
+      sellAmountBeforeFeesCryptoBaseUnit: sellAmountCryptoBaseUnit,
+      bip44Params,
+      receiveAddress,
+    } = trade
 
     const isFromOsmo = sellAsset.assetId === osmosisAssetId
     const sellAssetDenom = symbolDenomMapping[sellAsset.symbol as keyof SymbolDenomMapping]

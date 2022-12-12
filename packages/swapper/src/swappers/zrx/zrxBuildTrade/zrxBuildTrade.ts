@@ -20,7 +20,7 @@ export async function zrxBuildTrade<T extends EvmSupportedChainIds>(
   const {
     sellAsset,
     buyAsset,
-    sellAmountExcludeFeeCryptoBaseUnit,
+    sellAmountBeforeFeesCryptoBaseUnit: sellAmountExcludeFeeCryptoBaseUnit,
     slippage,
     bip44Params,
     receiveAddress,
@@ -138,7 +138,7 @@ export async function zrxBuildTrade<T extends EvmSupportedChainIds>(
         sellAssetTradeFeeUsd: '0',
       },
       txData,
-      sellAmountCryptoBaseUnit: sellAmount,
+      sellAmountBeforeFeesCryptoBaseUnit: sellAmount,
       buyAmountCryptoBaseUnit,
       sources: sources?.filter((s) => parseFloat(s.proportion) > 0) || DEFAULT_SOURCE,
     }

@@ -29,7 +29,7 @@ export const buildTrade = async ({ deps, input }: BuildTradeArgs): Promise<ThorT
     const {
       buyAsset,
       receiveAddress: destinationAddress,
-      sellAmountExcludeFeeCryptoBaseUnit: sellAmountCryptoBaseUnit,
+      sellAmountBeforeFeesCryptoBaseUnit: sellAmountCryptoBaseUnit,
       sellAsset,
       bip44Params,
       slippage: slippageTolerance = DEFAULT_SLIPPAGE,

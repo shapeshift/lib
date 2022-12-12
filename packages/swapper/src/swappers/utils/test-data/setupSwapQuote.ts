@@ -10,7 +10,7 @@ export const setupQuote = () => {
   const buyAsset: Asset = { ...WETH }
   const tradeQuote: TradeQuote<KnownChainIds.EthereumMainnet> = {
     buyAmountCryptoBaseUnit: '',
-    sellAmountCryptoBaseUnit: '1000000000000000000',
+    sellAmountBeforeFeesCryptoBaseUnit: '1000000000000000000',
     sellAsset,
     buyAsset,
     allowanceContract: 'allowanceContractAddress',
@@ -29,7 +29,7 @@ export const setupQuote = () => {
 
   const quoteInput: GetTradeQuoteInput = {
     chainId: KnownChainIds.EthereumMainnet,
-    sellAmountExcludeFeeCryptoBaseUnit: '1000000000000000000',
+    sellAmountBeforeFeesCryptoBaseUnit: '1000000000000000000',
     sellAsset,
     buyAsset,
     bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
@@ -44,7 +44,7 @@ export const setupBuildTrade = () => {
   const buyAsset: Asset = { ...WETH }
   const buildTradeInput: BuildTradeInput = {
     chainId: KnownChainIds.EthereumMainnet,
-    sellAmountExcludeFeeCryptoBaseUnit: '1000000000000000000',
+    sellAmountBeforeFeesCryptoBaseUnit: '1000000000000000000',
     buyAsset,
     sendMax: false,
     bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },

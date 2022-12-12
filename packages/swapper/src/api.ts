@@ -67,7 +67,7 @@ export type SupportedSellAssetsInput = {
 type CommonTradeInput = {
   sellAsset: Asset
   buyAsset: Asset
-  sellAmountExcludeFeeCryptoBaseUnit: string
+  sellAmountBeforeFeesCryptoBaseUnit: string
   sendMax: boolean
   receiveAddress: string
   bip44Params: BIP44Params
@@ -117,7 +117,7 @@ export type BuildTradeInput = GetTradeQuoteInput & {
 
 interface TradeBase<C extends ChainId> {
   buyAmountCryptoBaseUnit: string
-  sellAmountCryptoBaseUnit: string
+  sellAmountBeforeFeesCryptoBaseUnit: string
   feeData: QuoteFeeData<C>
   rate: string
   sources: SwapSource[]

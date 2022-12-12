@@ -26,7 +26,7 @@ describe('ZrxExecuteTrade', () => {
   const trade: ZrxTrade<KnownChainIds.EthereumMainnet> = {
     buyAsset,
     sellAsset,
-    sellAmountCryptoBaseUnit: '1',
+    sellAmountBeforeFeesCryptoBaseUnit: '1',
     buyAmountCryptoBaseUnit: '',
     depositAddress: '0x123',
     receiveAddress: '0xc770eefad204b5180df6a14ee197d99d808ee52d',

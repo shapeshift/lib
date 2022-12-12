@@ -33,7 +33,7 @@ export async function cowExecuteTrade(
     sellAsset,
     buyAsset,
     feeAmountInSellTokenCryptoBaseUnit: feeAmountInSellToken,
-    sellAmountExcludeFeeCryptoBaseUnit: sellAmountWithoutFee,
+    sellAmountDeductFeeCryptoBaseUnit: sellAmountWithoutFee,
   } = cowTrade
 
   const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } = fromAssetId(

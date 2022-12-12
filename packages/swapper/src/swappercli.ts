@@ -28,10 +28,6 @@ const toBaseUnit = (amount: BigNumber | string, precision: number): string => {
     .toString()
 }
 
-const fromBaseUnit = (amount: BigNumber | string, precision: number): string => {
-  return new BigNumber(amount).times(new BigNumber(10).exponentiatedBy(precision * -1)).toString()
-}
-
 const getWallet = async (): Promise<NativeHDWallet> => {
   if (!MNEMONIC) {
     throw new Error('Cannot init native wallet without mnemonic')
@@ -173,4 +169,47 @@ const main = async (): Promise<void> => {
       chainId: sellAsset.chainId as UtxoSupportedChainIds,
       sellAsset,
       buyAsset,
-      sellAmountExcludeFeeCryptoBaseUnit: sellAmountBase,
+      sellAmountBeforeFeesCryptoBaseUnit: sellAmountBase,
+      sendMax: false,
+      accountType: utxoAccountType || bitcoin.ChainAdapter.defaultUtxoAccountType,
+      bip44Params,
+      xpub: publicKey?.xpub || '',
+      receiveAddress: buyAssetReceiveAddr,
+    })
+  } catch (e) {
+    console.error(e)
+    return
+  }
+
+  if (!quote) {
+    console.warn('no quote returned')
+    return
+  }
+
+  const buyAmount = quote.buyAmountCryptoBaseUnit || '0'
+
+  const answer = readline.question(
+    `Swap ${sellAmount} ${sellAsset.symbol} for ${buyAmount} ${
+      buyAsset.symbol
+    } on ${swapper.getType()}? (y/n): `,
+  )
+  if (answer === 'y') {
+    const trade = await swapper.buildTrade({
+      chainId: sellAsset.chainId as UtxoChainId,
+      wallet,
+      buyAsset,
+      sendMax: false,
+      sellAmountBeforeFeesCryptoBaseUnit: sellAmountBase,
+      sellAsset,
+      receiveAddress: buyAssetReceiveAddr,
+      accountType: utxoAccountType || bitcoin.ChainAdapter.defaultUtxoAccountType,
+      bip44Params,
+      xpub: publicKey?.xpub || '',
+    })
+
+    const tradeResult = await swapper.executeTrade({ trade, wallet })
+    console.info('broadcast tx with id: ', tradeResult.tradeId)
+  }
+}
+
+main().then(() => console.info('Done'))

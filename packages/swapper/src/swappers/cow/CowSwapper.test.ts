@@ -202,7 +202,7 @@ describe('CowSwapper', () => {
   describe('executeTrade', () => {
     it('calls executeTrade on swapper.buildTrade', async () => {
       const cowSwapTrade: CowTrade<KnownChainIds.EthereumMainnet> = {
-        sellAmountCryptoBaseUnit: '1000000000000000000',
+        sellAmountBeforeFeesCryptoBaseUnit: '1000000000000000000',
         buyAmountCryptoBaseUnit: '14501811818247595090576',
         sources: [{ name: SwapperName.CowSwap, proportion: '1' }],
         buyAsset: FOX,
@@ -220,7 +220,7 @@ describe('CowSwapper', () => {
           sellAssetTradeFeeUsd: '0',
           networkFeeCryptoBaseUnit: '14557942658757988',
         },
-        sellAmountExcludeFeeCryptoBaseUnit: '985442057341242012',
+        sellAmountDeductFeeCryptoBaseUnit: '985442057341242012',
       }
       const args = { trade: cowSwapTrade, wallet }
       await swapper.executeTrade(args)
