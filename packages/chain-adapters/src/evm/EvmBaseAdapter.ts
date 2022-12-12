@@ -129,11 +129,11 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
         const assets = await getGeneratedAssetData()
         const feeAsset = assets[this.getFeeAssetId()]
 
-        const walletEvmChainId = await (wallet as ETHWallet).ethGetChainId?.()
-        const adapterEvmChainId = fromChainId(this.chainId).chainReference
-        if (!bnOrZero(walletEvmChainId).isEqualTo(adapterEvmChainId)) {
+        const walletEthNetwork = await (wallet as ETHWallet).ethGetChainId?.()
+        const adapterEthNetwork = fromChainId(this.chainId).chainReference
+        if (!bnOrZero(walletEthNetwork).isEqualTo(adapterEthNetwork)) {
           await (wallet as ETHWallet).ethSwitchChain?.({
-            chainId: utils.hexValue(Number(adapterEvmChainId)),
+            chainId: utils.hexValue(Number(adapterEthNetwork)),
             chainName: this.getDisplayName(),
             nativeCurrency: {
               name: feeAsset.name,
@@ -295,11 +295,11 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
       // If there is a mismatch between the current wallet's EVM chain ID and the adapter's chainId?
       // Switch the chain on wallet before building/sending the Tx
       if (supportsEthSwitchChain(wallet)) {
-        const walletEvmChainId = await (wallet as ETHWallet).ethGetChainId?.()
-        const adapterEvmChainId = fromChainId(this.chainId).chainReference
-        if (!bnOrZero(walletEvmChainId).isEqualTo(Number(adapterEvmChainId))) {
+        const walletEthNetwork = await (wallet as ETHWallet).ethGetChainId?.()
+        const adapterEthNetwork = fromChainId(this.chainId).chainReference
+        if (!bnOrZero(walletEthNetwork).isEqualTo(Number(adapterEthNetwork))) {
           await (wallet as ETHWallet).ethSwitchChain?.({
-            chainId: utils.hexValue(Number(adapterEvmChainId)),
+            chainId: utils.hexValue(Number(adapterEthNetwork)),
             chainName: this.getDisplayName(),
             nativeCurrency: {
               name: feeAsset.name,
