@@ -4,6 +4,8 @@ import axios from 'axios'
 
 import erc20Abi from './erc20Abi.json'
 
+// TODO(gomes): copied from asset-service which we can't import because of something something circular deps
+// remove me after we go Web on MonoRails
 type Asset = {
   assetId: AssetId
   chainId: ChainId
