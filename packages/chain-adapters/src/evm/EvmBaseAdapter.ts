@@ -129,11 +129,11 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
         const assets = await getGeneratedAssetData()
         const feeAsset = assets[this.getFeeAssetId()]
 
-        const walletEthNetwork = await (wallet as ETHWallet).ethGetChainId?.()
+        const walletEthNetwork = await wallet.ethGetChainId?.()
         const adapterEthNetwork = Number(fromChainId(this.chainId).chainReference)
 
         if (!bnOrZero(walletEthNetwork).isEqualTo(adapterEthNetwork)) {
-          await (wallet as ETHWallet).ethSwitchChain?.({
+          await wallet.ethSwitchChain?.({
             chainId: utils.hexValue(adapterEthNetwork),
             chainName: this.getDisplayName(),
             nativeCurrency: {
