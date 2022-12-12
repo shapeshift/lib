@@ -88,7 +88,7 @@ export type FeeData = {
   gasLimit: string
 }
 
-export type Token = {
+export type CosmosSDKToken = {
   denom: string
   amount: string
 }
