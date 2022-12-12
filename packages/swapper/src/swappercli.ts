@@ -12,6 +12,7 @@ import { UtxoSupportedChainIds } from '.'
 import { getAdapterManager } from './adapters'
 import { SwapperManager } from './manager'
 import { ThorchainSwapper, ThorchainSwapperDeps, ZrxSwapper } from './swappers'
+import { fromBaseUnit } from './swappers/utils/bignumber'
 
 dotenv.config()
 
@@ -189,12 +190,14 @@ const main = async (): Promise<void> => {
     return
   }
 
-  const buyAmount = quote.buyAmountCryptoBaseUnit || '0'
-
+  const buyAmountCryptoPrecision = fromBaseUnit(
+    quote.buyAmountCryptoBaseUnit || '0',
+    buyAsset.precision,
+  )
   const answer = readline.question(
-    `Swap ${sellAmountBeforeFeesCryptoPrecision} ${sellAsset.symbol} for ${buyAmount} ${
-      buyAsset.symbol
-    } on ${swapper.getType()}? (y/n): `,
+    `Swap ${sellAmountBeforeFeesCryptoPrecision} ${
+      sellAsset.symbol
+    } for ${buyAmountCryptoPrecision} ${buyAsset.symbol} on ${swapper.getType()}? (y/n): `,
   )
   if (answer === 'y') {
     const trade = await swapper.buildTrade({
