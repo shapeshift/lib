@@ -296,7 +296,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
       // If there is a mismatch between the current wallet's EVM chain ID and the adapter's chainId?
       // Switch the chain on wallet before building/sending the Tx
       if (supportsEthSwitchChain(wallet)) {
-        const walletEthNetwork = await (wallet as ETHWallet).ethGetChainId?.()
+        const walletEthNetwork = await wallet.ethGetChainId?.()
         const adapterEthNetwork = Number(fromChainId(this.chainId).chainReference)
 
         if (typeof walletEthNetwork !== 'number') {
