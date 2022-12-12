@@ -317,7 +317,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
           })
         }
       }
-      const txHash = supportsEthSwitchChain(wallet) && (await wallet?.ethSendTx?.(txToSign))
+      const txHash = await (wallet as ETHWallet)?.ethSendTx?.(txToSign)
 
       if (!txHash) throw new Error('Error signing & broadcasting tx')
       return txHash.hash
