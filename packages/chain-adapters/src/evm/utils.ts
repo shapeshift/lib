@@ -33,7 +33,7 @@ export const getErc20Data = async (
 
 // TODO(gomes): can't use asset-service here because of circular deps, remove me after we go Mono on Rails
 let _generatedAssetData: Record<AssetId, Asset> | undefined = undefined
-export const getGeneratedAssetData = async () => {
+export const getGeneratedAssetData = async (): Promise<Record<AssetId, Asset>> => {
   if (_generatedAssetData?.length) return _generatedAssetData
 
   const { data: maybeGeneratedAssetData } = await axios.get<Record<AssetId, Asset>>(
