@@ -44,11 +44,11 @@ const getWallet = async (): Promise<NativeHDWallet> => {
 
 const main = async (): Promise<void> => {
   const [, , ...args] = process.argv
-  const [sellSymbol, buySymbol, sellAmount] = args
+  const [sellSymbol, buySymbol, sellAmountBeforeFeesCryptoPrecision] = args
 
-  console.info(`sell ${sellAmount} of ${sellSymbol} to ${buySymbol}`)
+  console.info(`sell ${sellAmountBeforeFeesCryptoPrecision} of ${sellSymbol} to ${buySymbol}`)
 
-  if (!sellAmount || !sellSymbol || !buySymbol) {
+  if (!sellAmountBeforeFeesCryptoPrecision || !sellSymbol || !buySymbol) {
     console.error(`
       Usage:
       swapcli [sellSymbol] [buySymbol] [sellAmount](denominated in sell asset, not wei)
@@ -156,7 +156,10 @@ const main = async (): Promise<void> => {
       utxoAccountType,
     )
   }
-  const sellAmountBase = toBaseUnit(sellAmount, sellAsset.precision)
+  const sellAmountBeforeFeesCryptoBaseUnit = toBaseUnit(
+    sellAmountBeforeFeesCryptoPrecision,
+    sellAsset.precision,
+  )
   const buyAssetReceiveAddr = await buyAdapter.getAddress({
     wallet,
     accountType: utxoAccountType,
@@ -169,7 +172,7 @@ const main = async (): Promise<void> => {
       chainId: sellAsset.chainId as UtxoSupportedChainIds,
       sellAsset,
       buyAsset,
-      sellAmountBeforeFeesCryptoBaseUnit: sellAmountBase,
+      sellAmountBeforeFeesCryptoBaseUnit,
       sendMax: false,
       accountType: utxoAccountType || bitcoin.ChainAdapter.defaultUtxoAccountType,
       bip44Params,
@@ -189,7 +192,7 @@ const main = async (): Promise<void> => {
   const buyAmount = quote.buyAmountCryptoBaseUnit || '0'
 
   const answer = readline.question(
-    `Swap ${sellAmount} ${sellAsset.symbol} for ${buyAmount} ${
+    `Swap ${sellAmountBeforeFeesCryptoPrecision} ${sellAsset.symbol} for ${buyAmount} ${
       buyAsset.symbol
     } on ${swapper.getType()}? (y/n): `,
   )
@@ -199,7 +202,7 @@ const main = async (): Promise<void> => {
       wallet,
       buyAsset,
       sendMax: false,
-      sellAmountBeforeFeesCryptoBaseUnit: sellAmountBase,
+      sellAmountBeforeFeesCryptoBaseUnit,
       sellAsset,
       receiveAddress: buyAssetReceiveAddr,
       accountType: utxoAccountType || bitcoin.ChainAdapter.defaultUtxoAccountType,
