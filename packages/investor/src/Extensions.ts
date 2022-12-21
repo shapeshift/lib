@@ -1,6 +1,9 @@
 import type { BigNumber } from 'bignumber.js'
 
-export type FeePriority = 'fast' | 'average' | 'slow'
+export type ETHFeePriority = 'fast' | 'average' | 'slow'
+export type OsmosisFeePriority = 'high' | 'medium' | 'low'
+
+export type FeePriority = ETHFeePriority | OsmosisFeePriority
 
 export interface ApprovalRequired<T> {
   isApprovalRequired: true

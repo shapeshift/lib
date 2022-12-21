@@ -4,7 +4,7 @@ import { ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import {
   ApprovalRequired,
   DepositWithdrawArgs,
-  FeePriority,
+  ETHFeePriority,
   InvestorOpportunity,
 } from '@shapeshiftoss/investor'
 import { Logger } from '@shapeshiftoss/logger'
@@ -173,14 +173,14 @@ export class YearnOpportunity
   async signAndBroadcast(input: {
     wallet: HDWallet
     tx: PreparedTransaction
-    feePriority?: FeePriority
+    feePriority?: ETHFeePriority
     bip44Params: BIP44Params
   }): Promise<string> {
     const { bip44Params, wallet, tx, feePriority } = input
 
     if (!bip44Params) throw new Error('bip44Params required for signAndBroadcast')
 
-    const feeSpeed: FeePriority = feePriority ? feePriority : 'fast'
+    const feeSpeed: ETHFeePriority = feePriority ? feePriority : 'fast'
     const chainAdapter = this.#internals.chainAdapter
 
     const gasPrice = numberToHex(bnOrZero(tx.gasPrice).times(feeMultiplier[feeSpeed]).toString())

@@ -1,30 +1,14 @@
 import { AssetId, ethChainId, toAssetId } from '@shapeshiftoss/caip'
 import { ChainAdapter, toAddressNList } from '@shapeshiftoss/chain-adapters'
 import { ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
-import {
-  ApprovalRequired,
-  DepositWithdrawArgs,
-  ETHFeePriority,
-  InvestorOpportunity,
-} from '@shapeshiftoss/investor'
+import { DepositWithdrawArgs, FeePriority, InvestorOpportunity } from '@shapeshiftoss/investor'
 import { Logger } from '@shapeshiftoss/logger'
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import type { BigNumber } from 'bignumber.js'
 import toLower from 'lodash/toLower'
-import Web3 from 'web3'
-import { Contract } from 'web3-eth-contract'
 import { numberToHex } from 'web3-utils'
 
-import {
-  erc20Abi,
-  idleCdoAbi,
-  idleStrategyAbi,
-  idleTokenV4Abi,
-  IdleVault,
-  MAX_ALLOWANCE,
-  referralAddress,
-  ssRouterContractAddress,
-} from './constants'
+import { OsmosisPool } from './constants'
 import { bn, bnOrZero } from './utils'
 
 export type PreparedTransaction = {
@@ -37,19 +21,16 @@ export type PreparedTransaction = {
   value: '0'
 }
 
-const feeMultiplier: Record<ETHFeePriority, number> = Object.freeze({
+const feeMultiplier: Record<FeePriority, number> = Object.freeze({
   fast: 1,
   average: 0.8,
   slow: 0.5,
 })
 
-type IdleOpportunityDeps = {
-  chainAdapter: ChainAdapter<KnownChainIds.EthereumMainnet>
+type OsmosisOpportunityDeps = {
+  chainAdapter: ChainAdapter<KnownChainIds.OsmosisMainnet>
   dryRun?: true
-  contract: Contract
-  network?: number
   logger?: Logger
-  web3: Web3
 }
 
 export type ClaimableToken = {
@@ -58,22 +39,17 @@ export type ClaimableToken = {
   amount: number
 }
 
-interface IdleClaimableOpportunity {
+interface OsmosisClaimableOpportunity {
   getClaimableTokens(address: string): Promise<ClaimableToken[]>
 }
 
-export class IdleOpportunity
-  implements
-    InvestorOpportunity<PreparedTransaction, IdleVault>,
-    ApprovalRequired<PreparedTransaction>,
-    IdleClaimableOpportunity
+export class OsmosisOpportunity
+  implements InvestorOpportunity<PreparedTransaction, OsmosisPool>, OsmosisClaimableOpportunity
 {
   readonly #internals: {
-    chainAdapter: ChainAdapter<KnownChainIds.EthereumMainnet>
+    chainAdapter: ChainAdapter<KnownChainIds.OsmosisMainnet>
     dryRun?: true
-    routerContract: Contract
     logger?: Logger
-    web3: Web3
     network?: number
   }
 
@@ -84,7 +60,6 @@ export class IdleOpportunity
   readonly version: string
   readonly name: string
   readonly displayName: string
-  readonly isApprovalRequired: true
   readonly underlyingAsset: { assetId: string; balance: BigNumber }
   readonly positionAsset: {
     /**
@@ -129,41 +104,38 @@ export class IdleOpportunity
   /**
    * Protocol specific information
    */
-  readonly metadata: IdleVault
+  readonly metadata: OsmosisPool
   readonly isNew: boolean
   readonly expired: boolean
 
-  constructor(deps: IdleOpportunityDeps, vault: IdleVault) {
+  constructor(deps: OsmosisOpportunityDeps, pool: OsmosisPool) {
     this.#internals = {
       chainAdapter: deps.chainAdapter,
       dryRun: deps.dryRun,
-      logger: deps.logger ?? new Logger({ name: 'Idle Opportunity' }),
-      routerContract: deps.contract,
-      web3: deps.web3,
-      network: deps.network,
+      logger: deps.logger ?? new Logger({ name: 'Osmosis Opportunity' }),
     }
 
-    // this.metadata = vault.metadata
-    this.id = toLower(vault.address)
+    // this.metadata = pool.metadata
+    this.id = toLower(pool.address)
     this.metadata = {
-      ...vault,
+      ...pool,
       apy: {
-        net_apy: parseFloat(bnOrZero(vault.apr).div(100).toFixed()),
+        net_apy: parseFloat(bnOrZero(pool.apr).div(100).toFixed()),
       },
     }
-    this.version = `${vault.protocolName} ${vault.strategy}`.trim()
-    this.name = vault.poolName
-    this.displayName = vault.poolName
+    this.version = `${pool.protocolName} ${pool.strategy}`.trim()
+    this.name = pool.poolName
+    this.displayName = pool.poolName
     this.isNew = false
     this.expired = false
-    this.apy = bnOrZero(vault.apr).div(100)
+    this.apy = bnOrZero(pool.apr).div(100)
     this.tvl = {
-      balanceUsdc: bnOrZero(vault.tvl),
-      balance: bnOrZero(vault.underlyingTVL),
+      balanceUsdc: bnOrZero(pool.tvl),
+      balance: bnOrZero(pool.underlyingTVL),
       assetId: toAssetId({
-        chainId: 'eip155:1',
+        chainId: 'cosmos:osmosis-1',
         assetNamespace: 'erc20',
-        assetReference: vault.address,
+        assetReference: pool.address,
       }),
     }
     this.underlyingAsset = {
@@ -171,7 +143,7 @@ export class IdleOpportunity
       assetId: toAssetId({
         chainId: 'eip155:1',
         assetNamespace: 'erc20',
-        assetReference: vault.underlyingAddress,
+        assetReference: pool.underlyingAddress,
       }),
     }
     this.positionAsset = {
@@ -179,9 +151,9 @@ export class IdleOpportunity
       assetId: toAssetId({
         chainId: 'eip155:1',
         assetNamespace: 'erc20',
-        assetReference: vault.address,
+        assetReference: pool.address,
       }),
-      underlyingPerPosition: bnOrZero(vault.pricePerShare),
+      underlyingPerPosition: bnOrZero(pool.pricePerShare),
     }
     this.feeAsset = {
       assetId: 'eip155:1/slip44:60',
@@ -196,25 +168,25 @@ export class IdleOpportunity
    */
   async prepareWithdrawal(input: DepositWithdrawArgs): Promise<PreparedTransaction> {
     const { address, amount } = input
-    // We use the vault directly to withdraw the vault tokens. There is no benefit to the DAO to use
+    // We use the pool directly to withdraw the pool tokens. There is no benefit to the DAO to use
     // the router to withdraw funds and there is an extra approval required for the user if we
-    // withdrew from the vault using the shapeshift router. Affiliate fees for SS are the same
-    // either way. For this reason, we simply withdraw from the vault directly.
+    // withdrew from the pool using the shapeshift router. Affiliate fees for SS are the same
+    // either way. For this reason, we simply withdraw from the pool directly.
 
     let methodName: string
-    let vaultContract: Contract
+    let poolContract: Contract
 
     // Handle Tranche Withdraw
     if (this.metadata.cdoAddress) {
-      vaultContract = new this.#internals.web3.eth.Contract(idleCdoAbi, this.metadata.cdoAddress)
+      poolContract = new this.#internals.web3.eth.Contract(osmosisCdoAbi, this.metadata.cdoAddress)
       const trancheType = /senior/i.test(this.metadata.strategy) ? 'AA' : 'BB'
       methodName = `withdraw${trancheType}`
     } else {
-      vaultContract = new this.#internals.web3.eth.Contract(idleTokenV4Abi, this.id)
-      methodName = `redeemIdleToken`
+      poolContract = new this.#internals.web3.eth.Contract(osmosisTokenV4Abi, this.id)
+      methodName = `redeemOsmosisToken`
     }
 
-    const preWithdraw = await vaultContract.methods[methodName](amount.toFixed())
+    const preWithdraw = await poolContract.methods[methodName](amount.toFixed())
 
     const data = await preWithdraw.encodeABI({ from: address })
 
@@ -230,15 +202,15 @@ export class IdleOpportunity
       estimatedGas,
       gasPrice,
       nonce: String(nonce),
-      to: vaultContract.options.address,
+      to: poolContract.options.address,
       value: '0',
     }
   }
 
   public async prepareClaimTokens(address: string): Promise<PreparedTransaction> {
-    const vaultContract = new this.#internals.web3.eth.Contract(idleTokenV4Abi, this.id)
+    const poolContract = new this.#internals.web3.eth.Contract(osmosisTokenV4Abi, this.id)
 
-    const preWithdraw = await vaultContract.methods.redeemIdleToken(0)
+    const preWithdraw = await poolContract.methods.redeemOsmosisToken(0)
 
     const data = await preWithdraw.encodeABI({ from: address })
 
@@ -254,7 +226,7 @@ export class IdleOpportunity
       estimatedGas,
       gasPrice,
       nonce: String(nonce),
-      to: vaultContract.options.address,
+      to: poolContract.options.address,
       value: '0',
     }
   }
@@ -268,27 +240,27 @@ export class IdleOpportunity
   async prepareDeposit(input: DepositWithdrawArgs): Promise<PreparedTransaction> {
     const { address, amount } = input
 
-    // In order to properly earn affiliate revenue, we must deposit to the vault through the SS
-    // router contract. This is not necessary for withdraws. We can withdraw directly from the vault
+    // In order to properly earn affiliate revenue, we must deposit to the pool through the SS
+    // router contract. This is not necessary for withdraws. We can withdraw directly from the pool
     // without affecting the DAOs affiliate revenue.
 
     let methodName: string
     let methodParams: string[]
-    let vaultContract: Contract
+    let poolContract: Contract
 
     // Handle Tranche Deposit
     if (this.metadata.cdoAddress) {
-      vaultContract = this.#internals.routerContract
+      poolContract = this.#internals.routerContract
       const trancheType = /senior/i.test(this.metadata.strategy) ? 'AA' : 'BB'
       methodName = `deposit${trancheType}`
       methodParams = [this.metadata.cdoAddress, amount.toFixed()]
     } else {
-      methodName = 'mintIdleToken'
+      methodName = 'mintOsmosisToken'
       methodParams = [amount.toFixed(), 'true', referralAddress]
-      vaultContract = new this.#internals.web3.eth.Contract(idleTokenV4Abi, this.id)
+      poolContract = new this.#internals.web3.eth.Contract(osmosisTokenV4Abi, this.id)
     }
 
-    const preDeposit = await vaultContract.methods[methodName](...methodParams)
+    const preDeposit = await poolContract.methods[methodName](...methodParams)
 
     const data = await preDeposit.encodeABI({ from: address })
 
@@ -304,7 +276,7 @@ export class IdleOpportunity
       estimatedGas,
       gasPrice,
       nonce: String(nonce),
-      to: vaultContract.options.address,
+      to: poolContract.options.address,
       value: '0',
     }
   }
@@ -314,18 +286,21 @@ export class IdleOpportunity
 
     if (this.metadata.cdoAddress) {
       const cdoContract: Contract = new this.#internals.web3.eth.Contract(
-        idleCdoAbi,
+        osmosisCdoAbi,
         this.metadata.cdoAddress,
       )
       const strategyContractAddress: string = await cdoContract.methods.strategy().call()
       const strategyContract = new this.#internals.web3.eth.Contract(
-        idleStrategyAbi,
+        osmosisStrategyAbi,
         strategyContractAddress,
       )
       govTokens = await strategyContract.methods.getRewardTokens().call()
     } else {
-      const vaultContract: Contract = new this.#internals.web3.eth.Contract(idleTokenV4Abi, this.id)
-      govTokens = await vaultContract.methods.getGovTokens().call()
+      const poolContract: Contract = new this.#internals.web3.eth.Contract(
+        osmosisTokenV4Abi,
+        this.id,
+      )
+      govTokens = await poolContract.methods.getGovTokens().call()
     }
 
     const rewardAssetIds = govTokens.map((token: string) =>
@@ -350,11 +325,11 @@ export class IdleOpportunity
     }
 
     const claimableTokens: ClaimableToken[] = []
-    const vaultContract: Contract = new this.#internals.web3.eth.Contract(idleTokenV4Abi, this.id)
-    const govTokensAmounts = await vaultContract.methods.getGovTokensAmounts(address).call()
+    const poolContract: Contract = new this.#internals.web3.eth.Contract(osmosisTokenV4Abi, this.id)
+    const govTokensAmounts = await poolContract.methods.getGovTokensAmounts(address).call()
 
     for (let i = 0; i < govTokensAmounts.length; i++) {
-      const govTokenAddress = await vaultContract.methods.govTokens(i).call()
+      const govTokenAddress = await poolContract.methods.govTokens(i).call()
 
       if (govTokenAddress) {
         claimableTokens.push({
@@ -372,75 +347,17 @@ export class IdleOpportunity
     return claimableTokens
   }
 
-  public async allowance(address: string): Promise<BigNumber> {
-    const depositTokenContract: Contract = new this.#internals.web3.eth.Contract(
-      erc20Abi,
-      this.metadata.underlyingAddress,
-    )
-
-    let vaultContract: Contract
-
-    // Handle Tranche Withdraw
-    if (this.metadata.cdoAddress) {
-      vaultContract = this.#internals.routerContract
-    } else {
-      vaultContract = new this.#internals.web3.eth.Contract(idleTokenV4Abi, this.id)
-    }
-
-    const allowance = await depositTokenContract.methods
-      .allowance(address, vaultContract.options.address)
-      .call()
-
-    return bnOrZero(allowance)
-  }
-
-  async prepareApprove(address: string): Promise<PreparedTransaction> {
-    const depositTokenContract = new this.#internals.web3.eth.Contract(
-      erc20Abi,
-      this.metadata.underlyingAddress,
-    )
-
-    let vaultContractAddress: string
-
-    // Handle Tranche Withdraw
-    if (this.metadata.cdoAddress) {
-      vaultContractAddress = ssRouterContractAddress
-    } else {
-      vaultContractAddress = this.id
-    }
-
-    const preApprove = await depositTokenContract.methods.approve(
-      vaultContractAddress,
-      MAX_ALLOWANCE,
-    )
-    const data = await preApprove.encodeABI({ from: address })
-    const estimatedGas = bnOrZero(await preApprove.estimateGas({ from: address }))
-
-    const nonce: number = await this.#internals.web3.eth.getTransactionCount(address)
-    const gasPrice = bnOrZero(await this.#internals.web3.eth.getGasPrice())
-
-    return {
-      chainId: 1,
-      data,
-      estimatedGas,
-      gasPrice,
-      nonce: String(nonce),
-      to: this.metadata.underlyingAddress,
-      value: '0',
-    }
-  }
-
   /**
    * Sign and broadcast a previously prepared transaction
    */
   async signAndBroadcast(input: {
     wallet: HDWallet
     tx: PreparedTransaction
-    feePriority?: ETHFeePriority
+    feePriority?: FeePriority
     bip44Params: BIP44Params
   }): Promise<string> {
     const { wallet, tx, feePriority, bip44Params } = input
-    const feeSpeed: ETHFeePriority = feePriority ? feePriority : 'fast'
+    const feeSpeed: FeePriority = feePriority ? feePriority : 'fast'
     const chainAdapter = this.#internals.chainAdapter
 
     const gasPrice = numberToHex(bnOrZero(tx.gasPrice).times(feeMultiplier[feeSpeed]).toString())
