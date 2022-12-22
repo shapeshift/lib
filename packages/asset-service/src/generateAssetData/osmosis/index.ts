@@ -109,8 +109,7 @@ export const getAssets = async (): Promise<Asset[]> => {
        Array.find() are both of complexity O(N), and this should also be faster than Set.has().
      */
     const lpTokenAlreadyAdded = (poolId: number): boolean => {
-      const lpAssetVector = new BitSet()
-      lpAssetVector.set(poolId, 1)
+      const lpAssetVector = new BitSet().set(poolId, 1)
       // Check if bit at position 1 << poolId is set
       if (lpAssetsAdded.and(lpAssetVector).equals(lpAssetVector)) {
         return true
