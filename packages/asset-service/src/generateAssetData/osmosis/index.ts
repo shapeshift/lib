@@ -103,9 +103,9 @@ export const getAssets = async (): Promise<Asset[]> => {
     // If liquidity pools are available for asset, generate assets representing LP tokens for each pool available.
 
     /* Osmosis pool IDs are guaranteed to be unique integers, so we can use a bit vector
-       to to look up which pools we've already seen in O(1). A lookup is necessary because the 
+       to look up which pools we've already seen in O(1). A lookup is necessary because the 
        Osmosis asset list contains duplicate entries for each pool, eg. ATOM/OSMO == OSMO/ATOM.
-       It's debateable whether this is worth the extra package import, but Array.includes() and
+       It's debatable whether this is worth the extra package import, but Array.includes() and
        Array.find() are both of complexity O(N), and this should also be faster than Set.has().
      */
     const lpTokenAlreadyAdded = (poolId: number): boolean => {
