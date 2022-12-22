@@ -130,7 +130,7 @@ export const getAssets = async (): Promise<Asset[]> => {
           chainId: osmosisChainId,
           symbol: `gamm/pool/${poolId}`,
           name: getLPTokenName(current.symbol, pairedToken),
-          precision: 6,
+          precision: osmosis.precision,
           color: osmosis.color,
           icon: osmosis.icon,
           explorer: osmosis.explorer,
