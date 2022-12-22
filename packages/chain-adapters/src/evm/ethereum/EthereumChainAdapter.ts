@@ -4,7 +4,7 @@ import * as unchained from '@shapeshiftoss/unchained-client'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
-import { ChainAdapterName } from '../../cosmossdk/types'
+import { ChainAdapterDisplayName } from '../../types'
 import {
   FeeDataEstimate,
   GasFeeDataEstimate,
@@ -43,7 +43,14 @@ export class ChainAdapter extends EvmBaseAdapter<KnownChainIds.EthereumMainnet> 
   }
 
   getDisplayName() {
-    return ChainAdapterName.Ethereum
+    return ChainAdapterDisplayName.Ethereum
+  }
+
+  getName() {
+    const enumIndex = Object.values(ChainAdapterDisplayName).indexOf(
+      ChainAdapterDisplayName.Ethereum,
+    )
+    return Object.keys(ChainAdapterDisplayName)[enumIndex]
   }
 
   getType(): KnownChainIds.EthereumMainnet {
