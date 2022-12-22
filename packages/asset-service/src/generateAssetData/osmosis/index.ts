@@ -1,5 +1,6 @@
 import { ASSET_REFERENCE, osmosisChainId } from '@shapeshiftoss/caip'
 import axios from 'axios'
+import { BitSet } from 'bitset'
 
 import { Asset } from '../../service/AssetService'
 import { getRenderedIdenticonBase64, IdenticonOptions } from '../../service/GenerateAssetIcon'
@@ -27,6 +28,9 @@ type OsmoAsset = {
     dst_channel: string
     source_denom: string
   }
+  pools?: {
+    [key: string]: number
+  }
 }
 
 type OsmosisAssetList = {
@@ -35,11 +39,13 @@ type OsmosisAssetList = {
 }
 
 export const getAssets = async (): Promise<Asset[]> => {
-  const { data } = await axios.get<OsmosisAssetList>(
+  const { data: assetData } = await axios.get<OsmosisAssetList>(
     'https://raw.githubusercontent.com/osmosis-labs/assetlists/main/osmosis-1/osmosis-1.assetlist.json',
   )
 
-  return data.assets.reduce<Asset[]>((acc, current) => {
+  const lpAssetsAdded = new BitSet()
+
+  return assetData.assets.reduce<Asset[]>((acc, current) => {
     if (!current) return acc
 
     const denom = current.denom_units.find((item) => item.denom === current.display)
@@ -58,7 +64,7 @@ export const getAssets = async (): Promise<Asset[]> => {
     })()
 
     // if an asset has an ibc object, it's bridged, so label it as e.g. ATOM on Osmosis
-    const getName = (a: OsmoAsset): string => (a.ibc ? `${a.name} on Osmosis` : a.name)
+    const getAssetName = (a: OsmoAsset): string => (a.ibc ? `${a.name} on Osmosis` : a.name)
 
     const assetId = `cosmos:osmosis-1/${assetNamespace}:${assetReference}`
 
@@ -66,7 +72,7 @@ export const getAssets = async (): Promise<Asset[]> => {
       assetId,
       chainId: osmosisChainId,
       symbol: current.symbol,
-      name: getName(current),
+      name: getAssetName(current),
       precision,
       color: colorMap[assetId] ?? '#FFFFFF',
       icon: current.logo_URIs.png,
@@ -92,8 +98,50 @@ export const getAssets = async (): Promise<Asset[]> => {
         options,
       )
     }
-
     acc.push(assetDatum)
+
+    // If liquidity pools are available for asset, generate assets representing LP tokens for each pool available.
+
+    /* Osmosis pool IDs are guaranteed to be unique integers, so we can use a bit vector
+       to to look up which pools we've already seen in O(1). A lookup is necessary because the 
+       Osmosis asset list contains duplicate entries for each pool, eg. ATOM/OSMO == OSMO/ATOM.
+       It's debateable whether this is worth the extra package import, but Array.includes() and
+       Array.find() are both of complexity O(N), and this should also be faster than Set.has().
+     */
+    const lpTokenAlreadyAdded = (poolId: number): boolean => {
+      const lpAssetVector = new BitSet()
+      lpAssetVector.set(poolId, 1)
+      // Check if bit at position 1 << poolId is set
+      if (lpAssetsAdded.and(lpAssetVector).equals(lpAssetVector)) {
+        return true
+      }
+      return false
+    }
+
+    const getLPTokenName = (asset1: string, asset2: string): string =>
+      `Osmosis ${asset1}/${asset2} LP Token`
+
+    if (current.pools) {
+      for (const [pairedToken, poolId] of Object.entries(current.pools)) {
+        if (lpTokenAlreadyAdded(poolId)) continue
+
+        const lpAssetDatum: Asset = {
+          assetId: `cosmos:osmosis-1/ibc:gamm/pool/${poolId}`,
+          chainId: osmosisChainId,
+          symbol: `gamm/pool/${poolId}`,
+          name: getLPTokenName(current.symbol, pairedToken),
+          precision: 6,
+          color: osmosis.color,
+          icon: osmosis.icon,
+          explorer: osmosis.explorer,
+          explorerAddressLink: osmosis.explorerAddressLink,
+          explorerTxLink: osmosis.explorerTxLink,
+        }
+        acc.push(lpAssetDatum)
+        lpAssetsAdded.set(poolId, 1)
+      }
+    }
+
     return acc
   }, [])
 }

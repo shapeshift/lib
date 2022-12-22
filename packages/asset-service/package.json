@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "axios": "^0.26.1",
+    "bitset": "^5.1.1",
     "identicon.js": "^2.3.3",
     "js-pixel-fonts": "^1.5.0",
     "lodash": "^4.17.21",
@@ -43,8 +44,8 @@
   "devDependencies": {
     "@ethersproject/providers": "^5.5.3",
     "@shapeshiftoss/caip": "^8.0.0",
-    "@shapeshiftoss/types": "^8.1.0",
     "@shapeshiftoss/investor-idle": "^2.4.1",
+    "@shapeshiftoss/types": "^8.1.0",
     "@types/node-polyglot": "^2.4.2",
     "@yfi/sdk": "^1.2.0",
     "colorthief": "^2.3.2",
