@@ -6,6 +6,7 @@ import { Asset } from '../../service/AssetService'
 import { getRenderedIdenticonBase64, IdenticonOptions } from '../../service/GenerateAssetIcon'
 import { osmosis } from '../baseAssets'
 import { colorMap } from '../colorMap'
+import { ALLOWABLE_UNDERLYING_ASSET_COUNT } from './constants'
 
 type OsmoAsset = {
   description: string
@@ -33,9 +34,64 @@ type OsmoAsset = {
   }
 }
 
+type OsmosisLiquidityPool = {
+  '@type': string
+  address: string
+  id: string
+  pool_params: {
+    swap_fee: string
+    exit_fee: string
+    smooth_weight_change_params: unknown
+  }
+  future_pool_governor: string
+  total_shares: {
+    denom: string
+    amount: string
+  }
+  pool_assets: [
+    {
+      token: {
+        denom: string
+        amount: string
+      }
+      weight: string
+    },
+    {
+      token: {
+        denom: string
+        amount: string
+      }
+      weight: string
+    },
+  ]
+  total_weight: string
+}
+
 type OsmosisAssetList = {
   chain_id: string
   assets: OsmoAsset[]
+}
+
+type OsmosisLiquidityPoolList = {
+  pools: OsmosisLiquidityPool[]
+  pagination: {
+    next_key: string | null
+    total: string
+  }
+}
+
+const generateCaipIdFromAssetName = (
+  assetName: string,
+): { assetNamespace: string; assetReference: string } => {
+  if (assetName.startsWith('u') && assetName !== 'uosmo') {
+    return { assetNamespace: 'native' as const, assetReference: assetName }
+  }
+
+  if (assetName.startsWith('ibc')) {
+    return { assetNamespace: 'ibc' as const, assetReference: assetName.split('/')[1] }
+  }
+
+  return { assetNamespace: 'slip44' as const, assetReference: ASSET_REFERENCE.Osmosis }
 }
 
 export const getAssets = async (): Promise<Asset[]> => {
@@ -43,25 +99,24 @@ export const getAssets = async (): Promise<Asset[]> => {
     'https://raw.githubusercontent.com/osmosis-labs/assetlists/main/osmosis-1/osmosis-1.assetlist.json',
   )
 
+  /**
+   * Fetch data to populate the underlying assets array for each LP asset in `assets`.
+   * We need to make a second request here because the data contained in the symbol generated
+   * for each LP asset in the assetData.assets.reduce() call below doesn't guarantee correct Asset0/Asset1 ordering.
+   */
+  const { data: liquidityPools } = await axios.get<OsmosisLiquidityPoolList>(
+    'https://lcd-osmosis.keplr.app/osmosis/gamm/v1beta1/pools?pagination.limit=1000',
+  )
+
   const lpAssetsAdded = new BitSet()
 
-  return assetData.assets.reduce<Asset[]>((acc, current) => {
+  const assets = assetData.assets.reduce<Asset[]>((acc, current) => {
     if (!current) return acc
 
     const denom = current.denom_units.find((item) => item.denom === current.display)
     const precision = denom?.exponent ?? 6
 
-    const { assetNamespace, assetReference } = (() => {
-      if (current.base.startsWith('u') && current.base !== 'uosmo') {
-        return { assetNamespace: 'native' as const, assetReference: current.base }
-      }
-
-      if (current.base.startsWith('ibc')) {
-        return { assetNamespace: 'ibc' as const, assetReference: current.base.split('/')[1] }
-      }
-
-      return { assetNamespace: 'slip44' as const, assetReference: ASSET_REFERENCE.Osmosis }
-    })()
+    const { assetNamespace, assetReference } = generateCaipIdFromAssetName(current.base)
 
     // if an asset has an ibc object, it's bridged, so label it as e.g. ATOM on Osmosis
     const getAssetName = (a: OsmoAsset): string => (a.ibc ? `${a.name} on Osmosis` : a.name)
@@ -100,13 +155,14 @@ export const getAssets = async (): Promise<Asset[]> => {
     }
     acc.push(assetDatum)
 
-    // If liquidity pools are available for asset, generate assets representing LP tokens for each pool available.
+    /* If liquidity pools are available for asset, generate assets representing LP tokens for each pool available. */
 
-    /* Osmosis pool IDs are guaranteed to be unique integers, so we can use a bit vector
-       to look up which pools we've already seen in O(1). A lookup is necessary because the 
-       Osmosis asset list contains duplicate entries for each pool, eg. ATOM/OSMO == OSMO/ATOM.
-       It's debatable whether this is worth the extra package import, but Array.includes() and
-       Array.find() are both of complexity O(N), and this should also be faster than Set.has().
+    /**
+     * Osmosis pool IDs are guaranteed to be unique integers, so we can use a bit vector
+     * to look up which pools we've already seen in O(1). A lookup is necessary because the
+     * Osmosis asset list contains duplicate entries for each pool, eg. ATOM/OSMO == OSMO/ATOM.
+     * It's debatable whether this is worth the extra package import, but Array.includes() and
+     * Array.find() are both of complexity O(N), and this should also be faster than Set.has().
      */
     const lpTokenAlreadyAdded = (poolId: number): boolean => {
       const lpAssetVector = new BitSet().set(poolId, 1)
@@ -117,8 +173,8 @@ export const getAssets = async (): Promise<Asset[]> => {
       return false
     }
 
-    const getLPTokenName = (asset1: string, asset2: string): string =>
-      `Osmosis ${asset1}/${asset2} LP Token`
+    const getLPTokenName = (asset0: string, asset1: string): string =>
+      `Osmosis ${asset0}/${asset1} LP Token`
 
     if (current.pools) {
       for (const [pairedToken, poolId] of Object.entries(current.pools)) {
@@ -143,4 +199,44 @@ export const getAssets = async (): Promise<Asset[]> => {
 
     return acc
   }, [])
+
+  for (const lpAsset of assets.filter((k) => k.symbol.startsWith('gamm/pool/'))) {
+    /* 1.) Get CAIP IDs for both underlying assets */
+    const poolId = lpAsset.symbol.split('/')[2] // Osmosis LP token symbols are all of the form `gamm/pool/pool_id`
+    /* Get the names of both underlying assets from the Osmosis liquidity pool list */
+    const underlyingAssetNames = ((id) => {
+      const pool = liquidityPools.pools.find((p) => p.id === id)
+      /* Make sure we found a match in the list */
+      if (pool === undefined || pool.pool_assets.length !== ALLOWABLE_UNDERLYING_ASSET_COUNT)
+        return undefined
+      const asset0Name = pool.pool_assets[0].token.denom
+      const asset1Name = pool.pool_assets[1].token.denom
+      return [asset0Name, asset1Name]
+    })(poolId)
+    if (underlyingAssetNames === undefined) continue
+    /* Generate CAIP IDs from the asset names */
+    const { assetNamespace: asset0Namespace, assetReference: asset0Reference } =
+      generateCaipIdFromAssetName(underlyingAssetNames[0])
+    const { assetNamespace: asset1Namespace, assetReference: asset1Reference } =
+      generateCaipIdFromAssetName(underlyingAssetNames[1])
+    const asset0Id = `cosmos:osmosis-1/${asset0Namespace}:${asset0Reference}`
+    const asset1Id = `cosmos:osmosis-1/${asset1Namespace}:${asset1Reference}`
+
+    /* 2.) Use the generated CAIP IDs to uniquely identify the asset's underlying assets in `assets` 😉 */
+    const underlyingAssets = ((asset0: string, asset1: string) => {
+      /* Get an array of assets without guarantee of correct ordering so that we don't have to call .filter() on `assets` twice. */
+      const uoAssets = assets.filter((k) => k.assetId === asset0 || k.assetId === asset1)
+      if (uoAssets === undefined || uoAssets.length !== ALLOWABLE_UNDERLYING_ASSET_COUNT)
+        return undefined
+
+      /* Swap the order of the assets if they are out of order and return */
+      if (uoAssets[0].assetId !== asset0) [uoAssets[0], uoAssets[1]] = [uoAssets[1], uoAssets[0]]
+      return uoAssets
+    })(asset0Id, asset1Id)
+
+    if (underlyingAssets === undefined) continue
+    lpAsset.underlyingAssets = underlyingAssets as [Asset, Asset]
+  }
+
+  return assets
 }
