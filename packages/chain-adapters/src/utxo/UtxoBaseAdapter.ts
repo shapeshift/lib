@@ -118,6 +118,28 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
       )
   }
 
+  private assertIsValidBip44Params(bip44Params: BIP44Params): boolean {
+    /**
+     * bip44Params take the form (in order)
+     *
+     * [purpose, coinType, accountNumber, isChangeNumber, index]
+     *
+     * when passing custom bip44Params, we only ever want to modify accountNumber, isChange, index
+     * we do not want to modify purpose or coinType, as this can generate non-standard addresses
+     * which are can lead to stuck or invisible funds.
+     */
+    if (
+      this.defaultBIP44Params.purpose !== bip44Params.purpose ||
+      this.defaultBIP44Params.coinType !== bip44Params.coinType
+    ) {
+      throw new Error(
+        `${this.chainId} chain adapter invalid bip44Params, valid default ${this.defaultBIP44Params}, invalid input ${bip44Params}`,
+      )
+    }
+
+    return true
+  }
+
   getChainId(): ChainId {
     return this.chainId
   }
