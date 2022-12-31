@@ -42,7 +42,6 @@ import {
   TokeClaimIpfs,
   TokenAddressInput,
   TxInput,
-  TxInputWithoutAmount,
   TxInputWithoutAmountAndWallet,
   TxReceipt,
   WithdrawEstimateGasInput,
@@ -256,22 +255,6 @@ export class FoxyApi {
 
     try {
       const estimatedGas = await stakingContract.estimateGas.claimWithdraw(addressToClaim, {
-        from: userAddress,
-      })
-      return estimatedGas.toString()
-    } catch (e) {
-      throw new Error(`Failed to get gas ${e}`)
-    }
-  }
-
-  async estimateSendWithdrawalRequestsGas(input: TxInputWithoutAmountAndWallet): Promise<string> {
-    const { userAddress, contractAddress } = input
-    this.verifyAddresses([userAddress, contractAddress])
-
-    const stakingContract = this.getStakingContract(contractAddress)
-
-    try {
-      const estimatedGas = await stakingContract.estimateGas.sendWithdrawalRequests([], {
         from: userAddress,
       })
       return estimatedGas.toString()
@@ -715,39 +698,6 @@ export class FoxyApi {
     const hasAmount = bnOrZero(requestWithdrawalAmount).gt(0)
 
     return isTimeToRequest && isCorrectIndex && hasAmount
-  }
-
-  async sendWithdrawalRequests(input: TxInputWithoutAmount): Promise<string> {
-    const { bip44Params, dryRun = false, contractAddress, userAddress, wallet } = input
-    this.verifyAddresses([userAddress, contractAddress])
-    if (!wallet || !contractAddress) throw new Error('Missing inputs')
-
-    let estimatedGas: string
-    try {
-      estimatedGas = await this.estimateSendWithdrawalRequestsGas(input)
-    } catch (e) {
-      throw new Error(`Estimate Gas Error: ${e}`)
-    }
-
-    const stakingContract = this.getStakingContract(contractAddress)
-
-    const canSendRequest = await this.canSendWithdrawalRequest({ stakingContract })
-    if (!canSendRequest) throw new Error('Not ready to send request')
-
-    const data: string = stakingContract.interface.encodeFunctionData('sendWithdrawalRequests')
-    const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
-    const chainReferenceAsNumber = Number(this.ethereumChainReference)
-    const payload = {
-      bip44Params,
-      chainId: chainReferenceAsNumber,
-      data,
-      estimatedGas,
-      gasPrice,
-      nonce,
-      to: contractAddress,
-      value: '0',
-    }
-    return this.signAndBroadcastTx({ payload, wallet, dryRun })
   }
 
   // not a user facing function
