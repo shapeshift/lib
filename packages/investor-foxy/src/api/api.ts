@@ -281,15 +281,15 @@ export class FoxyApi {
   }
 
   async estimateAddLiquidityGas(input: EstimateGasTxInput): Promise<string> {
-    const { amountDesired, userAddress, contractAddress } = input
+    const { amountDesiredCryptoBaseUnit, userAddress, contractAddress } = input
     this.verifyAddresses([userAddress, contractAddress])
-    if (!amountDesired.gt(0)) throw new Error('Must send valid amount')
+    if (!amountDesiredCryptoBaseUnit.gt(0)) throw new Error('Must send valid amount')
 
     const liquidityReserveContract = this.getLiquidityReserveContract(contractAddress)
 
     try {
       const estimatedGas = await liquidityReserveContract.estimateGas.addLiquidity(
-        this.normalizeAmount(amountDesired),
+        this.normalizeAmount(amountDesiredCryptoBaseUnit),
         { from: userAddress },
       )
       return estimatedGas.toString()
@@ -299,15 +299,15 @@ export class FoxyApi {
   }
 
   async estimateRemoveLiquidityGas(input: EstimateGasTxInput): Promise<string> {
-    const { amountDesired, userAddress, contractAddress } = input
+    const { amountDesiredCryptoBaseUnit, userAddress, contractAddress } = input
     this.verifyAddresses([userAddress, contractAddress])
-    if (!amountDesired.gt(0)) throw new Error('Must send valid amount')
+    if (!amountDesiredCryptoBaseUnit.gt(0)) throw new Error('Must send valid amount')
 
     const liquidityReserveContract = this.getLiquidityReserveContract(contractAddress)
 
     try {
       const estimatedGas = await liquidityReserveContract.estimateGas.removeLiquidity(
-        this.normalizeAmount(amountDesired),
+        this.normalizeAmount(amountDesiredCryptoBaseUnit),
         { from: userAddress },
       )
       return estimatedGas.toString()
@@ -317,18 +317,18 @@ export class FoxyApi {
   }
 
   async estimateWithdrawGas(input: WithdrawEstimateGasInput): Promise<string> {
-    const { amountDesired, userAddress, contractAddress, type } = input
+    const { amountDesiredCryptoBaseUnit, userAddress, contractAddress, type } = input
     this.verifyAddresses([userAddress, contractAddress])
 
     const stakingContract = this.getStakingContract(contractAddress)
 
-    const isDelayed = type === WithdrawType.DELAYED && amountDesired
-    if (isDelayed && !amountDesired.gt(0)) throw new Error('Must send valid amount')
+    const isDelayed = type === WithdrawType.DELAYED && amountDesiredCryptoBaseUnit
+    if (isDelayed && !amountDesiredCryptoBaseUnit.gt(0)) throw new Error('Must send valid amount')
 
     try {
       const estimatedGas = isDelayed
         ? await stakingContract.estimateGas['unstake(uint256,bool)'](
-            this.normalizeAmount(amountDesired),
+            this.normalizeAmount(amountDesiredCryptoBaseUnit),
             true,
             { from: userAddress },
           )
@@ -358,15 +358,15 @@ export class FoxyApi {
   }
 
   async estimateDepositGas(input: EstimateGasTxInput): Promise<string> {
-    const { amountDesired, userAddress, contractAddress } = input
+    const { amountDesiredCryptoBaseUnit, userAddress, contractAddress } = input
     this.verifyAddresses([userAddress, contractAddress])
-    if (!amountDesired.gt(0)) throw new Error('Must send valid amount')
+    if (!amountDesiredCryptoBaseUnit.gt(0)) throw new Error('Must send valid amount')
 
     const stakingContract = this.getStakingContract(contractAddress)
 
     try {
       const estimatedGas = await stakingContract.estimateGas['stake(uint256)'](
-        this.normalizeAmount(amountDesired),
+        this.normalizeAmount(amountDesiredCryptoBaseUnit),
         { from: userAddress },
       )
       return estimatedGas.toString()
@@ -436,7 +436,7 @@ export class FoxyApi {
 
   async deposit(input: TxInput): Promise<string> {
     const {
-      amountDesired,
+      amountDesiredCryptoBaseUnit,
       bip44Params,
       dryRun = false,
       contractAddress,
@@ -444,7 +444,7 @@ export class FoxyApi {
       wallet,
     } = input
     this.verifyAddresses([userAddress, contractAddress])
-    if (!amountDesired.gt(0)) throw new Error('Must send valid amount')
+    if (!amountDesiredCryptoBaseUnit.gt(0)) throw new Error('Must send valid amount')
     if (!wallet) throw new Error('Missing inputs')
 
     let estimatedGas: string
@@ -457,7 +457,7 @@ export class FoxyApi {
     const stakingContract = this.getStakingContract(contractAddress)
 
     const data = stakingContract.interface.encodeFunctionData('stake(uint256,address)', [
-      this.normalizeAmount(amountDesired),
+      this.normalizeAmount(amountDesiredCryptoBaseUnit),
       userAddress,
     ])
 
@@ -478,7 +478,7 @@ export class FoxyApi {
 
   async withdraw(input: WithdrawInput): Promise<string> {
     const {
-      amountDesired,
+      amountDesiredCryptoBaseUnit,
       bip44Params,
       dryRun = false,
       contractAddress,
@@ -498,13 +498,13 @@ export class FoxyApi {
 
     const stakingContract = this.getStakingContract(contractAddress)
 
-    const isDelayed = type === WithdrawType.DELAYED && amountDesired
-    if (isDelayed && !amountDesired.gt(0)) throw new Error('Must send valid amount')
+    const isDelayed = type === WithdrawType.DELAYED && amountDesiredCryptoBaseUnit
+    if (isDelayed && !amountDesiredCryptoBaseUnit.gt(0)) throw new Error('Must send valid amount')
 
     const stakingContractCallInput: Parameters<
       typeof stakingContract.interface.encodeFunctionData
     > = isDelayed
-      ? ['unstake(uint256,bool)', [this.normalizeAmount(amountDesired), true]]
+      ? ['unstake(uint256,bool)', [this.normalizeAmount(amountDesiredCryptoBaseUnit), true]]
       : ['instantUnstake', ['true']]
     const data: string = stakingContract.interface.encodeFunctionData(...stakingContractCallInput)
 
@@ -754,7 +754,7 @@ export class FoxyApi {
   // utility function for the dao to add liquidity to the lrContract for instantUnstaking
   async addLiquidity(input: TxInput): Promise<string> {
     const {
-      amountDesired,
+      amountDesiredCryptoBaseUnit,
       bip44Params,
       dryRun = false,
       contractAddress,
@@ -762,7 +762,7 @@ export class FoxyApi {
       wallet,
     } = input
     this.verifyAddresses([userAddress, contractAddress])
-    if (!amountDesired.gt(0)) throw new Error('Must send valid amount')
+    if (!amountDesiredCryptoBaseUnit.gt(0)) throw new Error('Must send valid amount')
 
     if (!wallet) throw new Error('Missing inputs')
 
@@ -776,7 +776,7 @@ export class FoxyApi {
     const liquidityReserveContract = this.getLiquidityReserveContract(contractAddress)
 
     const data: string = liquidityReserveContract.interface.encodeFunctionData('addLiquidity', [
-      this.normalizeAmount(amountDesired),
+      this.normalizeAmount(amountDesiredCryptoBaseUnit),
     ])
 
     const { nonce, gasPrice } = await this.getGasPriceAndNonce(userAddress)
@@ -798,7 +798,7 @@ export class FoxyApi {
   // utility function for the dao to remove liquidity to the lrContract for instantUnstaking
   async removeLiquidity(input: TxInput): Promise<string> {
     const {
-      amountDesired,
+      amountDesiredCryptoBaseUnit: amountDesired,
       bip44Params,
       dryRun = false,
       contractAddress,

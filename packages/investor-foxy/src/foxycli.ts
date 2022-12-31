@@ -124,7 +124,7 @@ const main = async (): Promise<void> => {
       console.info('staking...')
       const response = await api.deposit({
         contractAddress: foxyStakingContractAddress,
-        amountDesired: bnOrZero(amount),
+        amountDesiredCryptoBaseUnit: bnOrZero(amount),
         userAddress,
         wallet,
         bip44Params: {
@@ -144,7 +144,7 @@ const main = async (): Promise<void> => {
       console.info('unstaking...')
       const response = await api.withdraw({
         contractAddress: foxyStakingContractAddress,
-        amountDesired: bnOrZero(amount),
+        amountDesiredCryptoBaseUnit: bnOrZero(amount),
         type: WithdrawType.DELAYED,
         userAddress,
         wallet,
@@ -206,7 +206,7 @@ const main = async (): Promise<void> => {
       const response = await api.addLiquidity({
         contractAddress: liquidityReserveContractAddress,
         userAddress,
-        amountDesired: bnOrZero(amount),
+        amountDesiredCryptoBaseUnit: bnOrZero(amount),
         wallet,
         bip44Params: {
           accountNumber: 0,
@@ -226,7 +226,7 @@ const main = async (): Promise<void> => {
       const response = await api.removeLiquidity({
         contractAddress: liquidityReserveContractAddress,
         userAddress,
-        amountDesired: bnOrZero(amount),
+        amountDesiredCryptoBaseUnit: bnOrZero(amount),
         wallet,
         bip44Params: {
           accountNumber: 0,
