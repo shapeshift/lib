@@ -281,11 +281,7 @@ export class FoxyApi {
   }
 
   async estimateAddLiquidityGas(input: EstimateGasTxInput): Promise<string> {
-    const {
-      amountDesiredCryptoBaseUnit: amountDesiredCryptoBaseUnit,
-      userAddress,
-      contractAddress,
-    } = input
+    const { amountDesiredCryptoBaseUnit, userAddress, contractAddress } = input
     this.verifyAddresses([userAddress, contractAddress])
     if (!amountDesiredCryptoBaseUnit.gt(0)) throw new Error('Must send valid amount')
 
@@ -303,11 +299,7 @@ export class FoxyApi {
   }
 
   async estimateRemoveLiquidityGas(input: EstimateGasTxInput): Promise<string> {
-    const {
-      amountDesiredCryptoBaseUnit: amountDesiredCryptoBaseUnit,
-      userAddress,
-      contractAddress,
-    } = input
+    const { amountDesiredCryptoBaseUnit, userAddress, contractAddress } = input
     this.verifyAddresses([userAddress, contractAddress])
     if (!amountDesiredCryptoBaseUnit.gt(0)) throw new Error('Must send valid amount')
 
@@ -366,11 +358,7 @@ export class FoxyApi {
   }
 
   async estimateDepositGas(input: EstimateGasTxInput): Promise<string> {
-    const {
-      amountDesiredCryptoBaseUnit: amountDesiredCryptoBaseUnit,
-      userAddress,
-      contractAddress,
-    } = input
+    const { amountDesiredCryptoBaseUnit, userAddress, contractAddress } = input
     this.verifyAddresses([userAddress, contractAddress])
     if (!amountDesiredCryptoBaseUnit.gt(0)) throw new Error('Must send valid amount')
 
