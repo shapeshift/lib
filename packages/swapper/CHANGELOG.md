@@ -1,3 +1,17 @@
+# [@shapeshiftoss/swapper-v15.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.0.1...@shapeshiftoss/swapper-v15.0.2) (2022-12-23)
+
+
+### Bug Fixes
+
+* **swapper:** cowswap quote rate ([#1139](https://github.com/shapeshift/lib/issues/1139)) ([231d731](https://github.com/shapeshift/lib/commit/231d7313ea808ec205284784ceaca4e3f3909edc))
+
+# [@shapeshiftoss/swapper-v15.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.0.0...@shapeshiftoss/swapper-v15.0.1) (2022-12-22)
+
+
+### Bug Fixes
+
+* **chain-adapters:** switch chain on contract calls ([#1132](https://github.com/shapeshift/lib/issues/1132)) ([81d8857](https://github.com/shapeshift/lib/commit/81d8857dd6b148c4559e391526d4a28cc0cfc49f))
+
 # [@shapeshiftoss/swapper-v15.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v14.7.2...@shapeshiftoss/swapper-v15.0.0) (2022-12-20)
 
 
