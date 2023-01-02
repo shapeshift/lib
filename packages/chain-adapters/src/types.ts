@@ -222,6 +222,7 @@ type ChainSpecificGetFeeDataInput<T> = ChainSpecific<
     [KnownChainIds.BitcoinCashMainnet]: utxo.GetFeeDataInput
     [KnownChainIds.DogecoinMainnet]: utxo.GetFeeDataInput
     [KnownChainIds.LitecoinMainnet]: utxo.GetFeeDataInput
+    [KnownChainIds.OsmosisMainnet]: cosmossdk.GetFeeDataInput
   }
 >
 export type GetFeeDataInput<T extends ChainId> = {

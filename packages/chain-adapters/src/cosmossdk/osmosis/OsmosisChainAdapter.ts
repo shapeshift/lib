@@ -2,6 +2,7 @@ import { ASSET_REFERENCE, AssetId, osmosisAssetId } from '@shapeshiftoss/caip'
 import { OsmosisSignTx, supportsOsmosis } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
+import { FEES } from 'osmojs'
 
 import { ErrorHandler } from '../../error/ErrorHandler'
 import {
@@ -24,7 +25,7 @@ import {
   ChainAdapterArgs,
   CosmosSdkBaseAdapter,
 } from '../CosmosSdkBaseAdapter'
-import { Message, ValidatorAction } from '../types'
+import { Message, OsmosisTxType, ValidatorAction } from '../types'
 
 const SUPPORTED_CHAIN_IDS = [KnownChainIds.OsmosisMainnet]
 const DEFAULT_CHAIN_ID = KnownChainIds.OsmosisMainnet
@@ -323,17 +324,48 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.OsmosisMain
 
   // @ts-ignore - keep type signature with unimplemented state
   async getFeeData({
-    /* eslint-disable-next-line @typescript-eslint/no-unused-vars -- Disable no-unused-vars lint rule for unimplemented variable */
-    sendMax,
+    // @ts-ignore
+    sendMax, // eslint-disable-line @typescript-eslint/no-unused-vars
+    chainSpecific,
   }: Partial<GetFeeDataInput<KnownChainIds.OsmosisMainnet>>): Promise<
     FeeDataEstimate<KnownChainIds.OsmosisMainnet>
   > {
-    // We currently don't have a way to query validators to get dynamic fees, so they are hard coded.
-    // When we find a strategy to make this more dynamic, we can use 'sendMax' to define max amount.
+    const feeDataFast = { amount: [{ amount: '5000', denom: 'uosmo' }], gas: '300000' }
+    const feeDataAverage = { amount: [{ amount: '3500', denom: 'uosmo' }], gas: '300000' }
+    const feeDataSlow = { amount: [{ amount: '2500', denom: 'uosmo' }], gas: '300000' }
+
+    switch (chainSpecific?.txType) {
+      case OsmosisTxType.LPAdd:
+        Object.assign(feeDataFast, FEES.osmosis.joinPool('high'))
+        Object.assign(feeDataAverage, FEES.osmosis.joinPool('medium'))
+        Object.assign(feeDataSlow, FEES.osmosis.joinPool('low'))
+        break
+      case OsmosisTxType.LPRemove:
+        Object.assign(feeDataFast, FEES.osmosis.exitPool('high'))
+        Object.assign(feeDataAverage, FEES.osmosis.exitPool('medium'))
+        Object.assign(feeDataSlow, FEES.osmosis.exitPool('low'))
+        break
+    }
+
     return {
-      fast: { txFee: '5000', chainSpecific: { gasLimit: '300000' } },
-      average: { txFee: '3500', chainSpecific: { gasLimit: '300000' } },
-      slow: { txFee: '2500', chainSpecific: { gasLimit: '300000' } },
+      fast: {
+        txFee: feeDataFast.amount[0].amount,
+        chainSpecific: {
+          gasLimit: feeDataFast.gas,
+        },
+      },
+      average: {
+        txFee: feeDataAverage.amount[0].amount,
+        chainSpecific: {
+          gasLimit: feeDataAverage.gas,
+        },
+      },
+      slow: {
+        txFee: feeDataSlow.amount[0].amount,
+        chainSpecific: {
+          gasLimit: feeDataSlow.gas,
+        },
+      },
     }
   }
 

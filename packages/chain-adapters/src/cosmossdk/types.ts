@@ -94,3 +94,17 @@ export type CosmosSDKToken = {
 }
 
 export type TransactionMetadata = unchained.cosmossdk.TxMetadata
+
+export enum OsmosisTxType {
+  Send,
+  Delegate,
+  Undelegate,
+  Redelegate,
+  ClaimRewards,
+  LPAdd,
+  LPRemove,
+}
+
+export type GetFeeDataInput = {
+  txType?: OsmosisTxType
+}
