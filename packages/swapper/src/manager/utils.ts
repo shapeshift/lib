@@ -17,19 +17,19 @@ export const getRatioFromQuote = async (
   const feeAssetUsdRate = await swapper.getUsdRate(feeAsset)
 
   const totalSellAmountFiat = bnOrZero(
-    fromBaseUnit(quote.sellAmountCryptoPrecision, quote.sellAsset.precision),
+    fromBaseUnit(quote.sellAmountBeforeFeesCryptoBaseUnit, quote.sellAsset.precision),
   )
     .times(sellAssetUsdRate)
     .plus(bnOrZero(quote.feeData.sellAssetTradeFeeUsd))
 
   const totalReceiveAmountFiat = bnOrZero(
-    fromBaseUnit(quote.buyAmountCryptoPrecision, quote.buyAsset.precision),
+    fromBaseUnit(quote.buyAmountCryptoBaseUnit, quote.buyAsset.precision),
   )
     .times(buyAssetUsdRate)
     .plus(bnOrZero(quote.feeData.buyAssetTradeFeeUsd))
-  const networkFeeFiat = bnOrZero(fromBaseUnit(quote.feeData.networkFee, feeAsset.precision)).times(
-    feeAssetUsdRate,
-  )
+  const networkFeeFiat = bnOrZero(
+    fromBaseUnit(quote.feeData.networkFeeCryptoBaseUnit, feeAsset.precision),
+  ).times(feeAssetUsdRate)
 
   return totalReceiveAmountFiat.div(totalSellAmountFiat.plus(networkFeeFiat)).toNumber()
 }

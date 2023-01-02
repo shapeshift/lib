@@ -53,14 +53,18 @@ export const thorchainSwapper = new ThorchainSwapper(thorchainSwapperDeps)
 export const tradeQuote: TradeQuote<KnownChainIds.EthereumMainnet> = {
   minimumCryptoHuman: '60',
   maximum: '1000000000000000000000',
-  sellAmountCryptoPrecision: '1000000000000000000000', // 1000 FOX
+  sellAmountBeforeFeesCryptoBaseUnit: '1000000000000000000000', // 1000 FOX
   allowanceContract: '0x3624525075b88B24ecc29CE226b0CEc1fFcB6976',
-  buyAmountCryptoPrecision: '23448326921811747', // 0.023 ETH
+  buyAmountCryptoBaseUnit: '23448326921811747', // 0.023 ETH
   feeData: {
-    chainSpecific: { estimatedGas: '100000', approvalFee: '700000', gasPrice: '7' },
+    chainSpecific: {
+      estimatedGas: '100000',
+      approvalFeeCryptoBaseUnit: '700000',
+      gasPriceCryptoBaseUnit: '7',
+    },
     buyAssetTradeFeeUsd: '7.656',
     sellAssetTradeFeeUsd: '0',
-    networkFee: '3246750000000000',
+    networkFeeCryptoBaseUnit: '3246750000000000',
   },
   rate: '0.00002509060972289251',
   sources: [{ name: SwapperName.Thorchain, proportion: '1' }],
@@ -71,24 +75,32 @@ export const tradeQuote: TradeQuote<KnownChainIds.EthereumMainnet> = {
 
 export const goodTradeQuote: TradeQuote<KnownChainIds.EthereumMainnet> = {
   ...tradeQuote,
-  buyAmountCryptoPrecision: '23000000000000000', // 0.023 ETH
+  buyAmountCryptoBaseUnit: '23000000000000000', // 0.023 ETH
   feeData: {
-    chainSpecific: { estimatedGas: '100000', approvalFee: '700000', gasPrice: '7' },
+    chainSpecific: {
+      estimatedGas: '100000',
+      approvalFeeCryptoBaseUnit: '700000',
+      gasPriceCryptoBaseUnit: '7',
+    },
     buyAssetTradeFeeUsd: '7.656',
     sellAssetTradeFeeUsd: '0',
-    networkFee: '3246750000000000',
+    networkFeeCryptoBaseUnit: '3246750000000000',
   },
   buyAsset: WETH,
 }
 
 export const badTradeQuote: TradeQuote<KnownChainIds.EthereumMainnet> = {
   ...tradeQuote,
-  buyAmountCryptoPrecision: '21000000000000000', // 0.021 ETH
+  buyAmountCryptoBaseUnit: '21000000000000000', // 0.021 ETH
   feeData: {
-    chainSpecific: { estimatedGas: '100000', approvalFee: '700000', gasPrice: '7' },
+    chainSpecific: {
+      estimatedGas: '100000',
+      approvalFeeCryptoBaseUnit: '700000',
+      gasPriceCryptoBaseUnit: '7',
+    },
     buyAssetTradeFeeUsd: '10.656',
     sellAssetTradeFeeUsd: '4',
-    networkFee: '3446750000000000',
+    networkFeeCryptoBaseUnit: '3446750000000000',
   },
   buyAsset: WETH,
 }
