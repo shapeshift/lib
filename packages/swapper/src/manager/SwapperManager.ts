@@ -126,7 +126,8 @@ export class SwapperManager {
    */
   getSwappersByPair(pair: ByPairInput): Swapper<ChainId>[] {
     const { sellAssetId, buyAssetId } = pair
-    return Array.from(this.swappers.values()).filter(
+    const availableSwappers = Array.from(this.swappers.values())
+    return availableSwappers.filter(
       (swapper: Swapper<ChainId>) =>
         swapper.filterBuyAssetsBySellAssetId({ sellAssetId, assetIds: [buyAssetId] }).length,
     )

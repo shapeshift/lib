@@ -16,6 +16,11 @@ import {
 } from './testData'
 
 describe('SwapperManager', () => {
+  afterEach(() => {
+    jest.restoreAllMocks()
+    jest.useRealTimers()
+  })
+
   describe('constructor', () => {
     it('should return an instance', () => {
       const manager = new SwapperManager()
@@ -101,20 +106,19 @@ describe('SwapperManager', () => {
     it('should return swapper(s) that support all assets given', () => {
       const sellAssetId = 'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d' // FOX
       const buyAssetId = 'eip155:1/erc20:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' // USDC
-      const zrxSwapper = zrxEthereumSwapper
       const swapperManager = new SwapperManager()
 
-      swapperManager.addSwapper(zrxSwapper).addSwapper(thorchainSwapper)
-      expect(swapperManager.getSwappersByPair({ sellAssetId, buyAssetId })).toEqual([zrxSwapper])
+      swapperManager.addSwapper(zrxEthereumSwapper).addSwapper(thorchainSwapper)
+      const swappersSupportingPair = swapperManager.getSwappersByPair({ sellAssetId, buyAssetId })
+      expect(swappersSupportingPair).toEqual([zrxEthereumSwapper])
     })
 
     it('should return an empty array if no swapper is found', () => {
       const sellAssetId = 'randomAssetId'
       const buyAssetId = 'randomAssetId2'
-      const zrxSwapper = zrxEthereumSwapper
       const swapperManager = new SwapperManager()
 
-      swapperManager.addSwapper(zrxSwapper).addSwapper(thorchainSwapper)
+      swapperManager.addSwapper(zrxEthereumSwapper).addSwapper(thorchainSwapper)
 
       expect(swapperManager.getSwappersByPair({ sellAssetId, buyAssetId })).toEqual([])
     })
