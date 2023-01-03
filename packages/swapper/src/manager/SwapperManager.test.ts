@@ -16,11 +16,6 @@ import {
 } from './testData'
 
 describe('SwapperManager', () => {
-  afterEach(() => {
-    jest.restoreAllMocks()
-    jest.useRealTimers()
-  })
-
   describe('constructor', () => {
     it('should return an instance', () => {
       const manager = new SwapperManager()
@@ -193,39 +188,39 @@ describe('SwapperManager', () => {
   })
 
   describe('getBestSwapper', () => {
-    const zrxEthereumSwapperGetUsdRateMock = jest
-      .spyOn(zrxEthereumSwapper, 'getUsdRate')
-      .mockImplementation(
-        jest
-          .fn()
-          .mockResolvedValueOnce(0.04)
-          .mockResolvedValueOnce(1300)
-          .mockResolvedValueOnce(1300),
-      )
-
-    const zrxAvalancheSwapperGetUsdRateMock = jest
-      .spyOn(zrxAvalancheSwapper, 'getUsdRate')
-      .mockImplementation(
-        jest
-          .fn()
-          .mockResolvedValueOnce(0.04)
-          .mockResolvedValueOnce(1300)
-          .mockResolvedValueOnce(1300),
-      )
-
-    const zrxEthereumSwapperGetUsdTradeQuoteMock = jest
-      .spyOn(zrxEthereumSwapper, 'getTradeQuote')
-      .mockImplementation(jest.fn().mockResolvedValueOnce(badTradeQuote))
-
-    const zrxAvalancheSwapperGetUsdTradeQuoteMock = jest
-      .spyOn(zrxAvalancheSwapper, 'getTradeQuote')
-      .mockImplementation(jest.fn().mockResolvedValueOnce(goodTradeQuote))
-
-    const swapperManagerMock = jest
-      .spyOn(SwapperManager.prototype, 'getSwappersByPair')
-      .mockImplementation(() => [zrxEthereumSwapper, zrxAvalancheSwapper])
-
     it('should return the swapper with the best rate', async () => {
+      const zrxEthereumSwapperGetUsdRateMock = jest
+        .spyOn(zrxEthereumSwapper, 'getUsdRate')
+        .mockImplementation(
+          jest
+            .fn()
+            .mockResolvedValueOnce(0.04)
+            .mockResolvedValueOnce(1300)
+            .mockResolvedValueOnce(1300),
+        )
+
+      const zrxAvalancheSwapperGetUsdRateMock = jest
+        .spyOn(zrxAvalancheSwapper, 'getUsdRate')
+        .mockImplementation(
+          jest
+            .fn()
+            .mockResolvedValueOnce(0.04)
+            .mockResolvedValueOnce(1300)
+            .mockResolvedValueOnce(1300),
+        )
+
+      const zrxEthereumSwapperGetUsdTradeQuoteMock = jest
+        .spyOn(zrxEthereumSwapper, 'getTradeQuote')
+        .mockImplementation(jest.fn().mockResolvedValueOnce(badTradeQuote))
+
+      const zrxAvalancheSwapperGetUsdTradeQuoteMock = jest
+        .spyOn(zrxAvalancheSwapper, 'getTradeQuote')
+        .mockImplementation(jest.fn().mockResolvedValueOnce(goodTradeQuote))
+
+      const swapperManagerMock = jest
+        .spyOn(SwapperManager.prototype, 'getSwappersByPair')
+        .mockImplementation(() => [zrxEthereumSwapper, zrxAvalancheSwapper])
+
       const swapperManager = new SwapperManager()
 
       swapperManager.addSwapper(zrxEthereumSwapper).addSwapper(zrxAvalancheSwapper)
@@ -238,6 +233,10 @@ describe('SwapperManager', () => {
       expect(zrxAvalancheSwapperGetUsdRateMock).toHaveBeenCalledTimes(3)
       expect(zrxEthereumSwapperGetUsdTradeQuoteMock).toHaveBeenCalledTimes(1)
       expect(zrxAvalancheSwapperGetUsdTradeQuoteMock).toHaveBeenCalledTimes(1)
+
+      zrxEthereumSwapperGetUsdRateMock.mockRestore()
+      zrxAvalancheSwapperGetUsdRateMock.mockRestore()
+      swapperManagerMock.mockRestore()
     })
   })
 })
