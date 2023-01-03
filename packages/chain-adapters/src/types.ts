@@ -7,7 +7,7 @@ import {
   OsmosisSignTx,
   ThorchainSignTx,
 } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, ChainSpecific, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
+import { ChainSpecific, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 
 import * as cosmossdk from './cosmossdk/types'
@@ -83,7 +83,8 @@ export type FeeDataEstimate<T extends ChainId> = {
 
 export type SubscribeTxsInput = {
   wallet: HDWallet
-  bip44Params: BIP44Params
+  // bip44Params: BIP44Params
+  accountNumber: number
   accountType?: UtxoAccountType
 }
 
@@ -134,7 +135,7 @@ export type BuildSendTxInput<T extends ChainId> = {
   to: string
   value: string
   wallet: HDWallet
-  bip44Params: BIP44Params
+  accountNumber: number
   sendMax?: boolean
   memo?: string
 } & ChainSpecificBuildTxData<T>
@@ -204,7 +205,7 @@ export interface TxHistoryInput {
 
 export type GetAddressInputBase = {
   wallet: HDWallet
-  bip44Params: BIP44Params
+  accountNumber: number
   /**
    * Request that the address be shown to the user by the device, if supported
    */
