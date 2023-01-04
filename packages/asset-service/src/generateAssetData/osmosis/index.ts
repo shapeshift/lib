@@ -221,7 +221,21 @@ export const getAssets = async (): Promise<Asset[]> => {
       generateCaipIdFromAssetName(underlyingAssetNames[1])
     const asset0Id = `cosmos:osmosis-1/${asset0Namespace}:${asset0Reference}`
     const asset1Id = `cosmos:osmosis-1/${asset1Namespace}:${asset1Reference}`
-    lpAsset.underlyingAssets = [asset0Id, asset1Id]
+
+    /* 2.) Use the generated CAIP IDs to uniquely identify the asset's underlying assets in `assets` 😉 */
+    const underlyingAssets = ((asset0: string, asset1: string) => {
+      /* Get an array of assets without guarantee of correct ordering so that we don't have to call .filter() on `assets` twice. */
+      const uoAssets = assets.filter((k) => k.assetId === asset0 || k.assetId === asset1)
+      if (uoAssets === undefined || uoAssets.length !== ALLOWABLE_UNDERLYING_ASSET_COUNT)
+        return undefined
+
+      /* Swap the order of the assets if they are out of order and return */
+      if (uoAssets[0].assetId !== asset0) [uoAssets[0], uoAssets[1]] = [uoAssets[1], uoAssets[0]]
+      return uoAssets
+    })(asset0Id, asset1Id)
+
+    if (underlyingAssets === undefined) continue
+    lpAsset.underlyingAssets = underlyingAssets as [Asset, Asset]
   }
 
   return assets

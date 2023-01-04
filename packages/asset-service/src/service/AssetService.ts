@@ -20,7 +20,7 @@ export type Asset = {
   explorer: string
   explorerTxLink: string
   explorerAddressLink: string
-  underlyingAssets?: AssetId[]
+  underlyingAssets?: Omit<Asset, 'underlyingAssets'>[]
 }
 
 export type AssetsById = Record<AssetId, Asset>
@@ -28,7 +28,7 @@ export type AssetsById = Record<AssetId, Asset>
 export type LpAsset = Asset
 
 export const isLpAsset = (asset: Asset): asset is LpAsset => {
-  return asset.underlyingAssets !== undefined && asset.underlyingAssets.length > 0
+  return asset.underlyingAssets === undefined || asset.underlyingAssets.length === 2
 }
 
 export class AssetService {
