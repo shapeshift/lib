@@ -27,9 +27,10 @@
     "cli": "yarn build && node ./dist/foxycli.js"
   },
   "dependencies": {
-    "@ethersproject/providers": "^5.5.3",
+    "@ethersproject/providers": "^5.7.1",
     "axios": "^0.26.1",
     "bignumber.js": "^9.0.2",
+    "ethers": "^5.7.1",
     "lodash": "^4.17.21",
     "web3": "1.7.4",
     "web3-core": "1.7.4",
@@ -37,13 +38,13 @@
   },
   "peerDependencies": {
     "@shapeshiftoss/caip": "^8.0.0",
-    "@shapeshiftoss/chain-adapters": "^10.0.0",
+    "@shapeshiftoss/chain-adapters": "^10.5.0",
     "@shapeshiftoss/hdwallet-core": "^1.36.0",
     "@shapeshiftoss/types": "^8.1.0"
   },
   "devDependencies": {
     "@shapeshiftoss/caip": "^8.0.0",
-    "@shapeshiftoss/chain-adapters": "^10.0.0",
+    "@shapeshiftoss/chain-adapters": "^10.5.0",
     "@shapeshiftoss/hdwallet-core": "^1.36.0",
     "@shapeshiftoss/types": "^8.1.0",
     "@shapeshiftoss/unchained-client": "^10.0.1"
