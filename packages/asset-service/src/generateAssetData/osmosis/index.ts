@@ -1,6 +1,5 @@
 import { ASSET_REFERENCE, osmosisChainId } from '@shapeshiftoss/caip'
 import axios from 'axios'
-import { BitSet } from 'bitset'
 
 import { Asset } from '../../service/AssetService'
 import { getRenderedIdenticonBase64, IdenticonOptions } from '../../service/GenerateAssetIcon'
@@ -43,7 +42,11 @@ export const getAssets = async (): Promise<Asset[]> => {
     'https://raw.githubusercontent.com/osmosis-labs/assetlists/main/osmosis-1/osmosis-1.assetlist.json',
   )
 
-  const lpAssetsAdded = new BitSet()
+  /* Osmosis pool IDs are guaranteed to be unique integers, so we use a set to keep track of 
+    which pools we've already seen. A lookup is necessary because the Osmosis asset list 
+    contains duplicate entries for each pool, eg. ATOM/OSMO == OSMO/ATOM. 
+  */
+  const lpAssetsAdded = new Set()
 
   return assetData.assets.reduce<Asset[]>((acc, current) => {
     if (!current) return acc
@@ -102,27 +105,12 @@ export const getAssets = async (): Promise<Asset[]> => {
 
     // If liquidity pools are available for asset, generate assets representing LP tokens for each pool available.
 
-    /* Osmosis pool IDs are guaranteed to be unique integers, so we can use a bit vector
-       to look up which pools we've already seen in O(1). A lookup is necessary because the 
-       Osmosis asset list contains duplicate entries for each pool, eg. ATOM/OSMO == OSMO/ATOM.
-       It's debatable whether this is worth the extra package import, but Array.includes() and
-       Array.find() are both of complexity O(N), and this should also be faster than Set.has().
-     */
-    const lpTokenAlreadyAdded = (poolId: number): boolean => {
-      const lpAssetVector = new BitSet().set(poolId, 1)
-      // Check if bit at position 1 << poolId is set
-      if (lpAssetsAdded.and(lpAssetVector).equals(lpAssetVector)) {
-        return true
-      }
-      return false
-    }
-
     const getLPTokenName = (asset1: string, asset2: string): string =>
       `Osmosis ${asset1}/${asset2} LP Token`
 
     if (current.pools) {
       for (const [pairedToken, poolId] of Object.entries(current.pools)) {
-        if (lpTokenAlreadyAdded(poolId)) continue
+        if (lpAssetsAdded.has(poolId)) continue
 
         const lpAssetDatum: Asset = {
           assetId: `cosmos:osmosis-1/ibc:gamm/pool/${poolId}`,
@@ -137,7 +125,7 @@ export const getAssets = async (): Promise<Asset[]> => {
           explorerTxLink: osmosis.explorerTxLink,
         }
         acc.push(lpAssetDatum)
-        lpAssetsAdded.set(poolId, 1)
+        lpAssetsAdded.add(poolId)
       }
     }
 
