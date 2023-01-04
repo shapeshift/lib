@@ -1854,7 +1854,7 @@
     "name": "Osmosis OSMO/ATOM LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -1866,7 +1866,7 @@
     "name": "Osmosis XPRT/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -1878,7 +1878,7 @@
     "name": "Osmosis IOV/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -1890,7 +1890,7 @@
     "name": "Osmosis ION/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -1902,7 +1902,7 @@
     "name": "Osmosis AKT/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -1914,7 +1914,7 @@
     "name": "Osmosis REGEN/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -1926,7 +1926,7 @@
     "name": "Osmosis NGM/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -1938,7 +1938,7 @@
     "name": "Osmosis EEUR/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -1950,7 +1950,7 @@
     "name": "Osmosis JUNO/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -1962,7 +1962,7 @@
     "name": "Osmosis DVPN/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -1974,7 +1974,7 @@
     "name": "Osmosis TICK/ATOM LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -1986,7 +1986,7 @@
     "name": "Osmosis LIKE/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -1998,7 +1998,7 @@
     "name": "Osmosis IXO/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2010,7 +2010,7 @@
     "name": "Osmosis USTC/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2022,7 +2022,7 @@
     "name": "Osmosis BCNA/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2034,7 +2034,7 @@
     "name": "Osmosis BTSG/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2046,7 +2046,7 @@
     "name": "Osmosis XKI/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2058,7 +2058,7 @@
     "name": "Osmosis SCRT/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2070,7 +2070,7 @@
     "name": "Osmosis MED/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2082,7 +2082,7 @@
     "name": "Osmosis BOOT/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2094,7 +2094,7 @@
     "name": "Osmosis CMDX/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2106,7 +2106,7 @@
     "name": "Osmosis CHEQ/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2118,7 +2118,7 @@
     "name": "Osmosis STARS/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2130,7 +2130,7 @@
     "name": "Osmosis HUAHUA/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2142,7 +2142,7 @@
     "name": "Osmosis LUM/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2154,7 +2154,7 @@
     "name": "Osmosis VDL/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2166,7 +2166,7 @@
     "name": "Osmosis DSM/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2178,7 +2178,7 @@
     "name": "Osmosis DIG/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2190,7 +2190,7 @@
     "name": "Osmosis GRAV/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2202,7 +2202,7 @@
     "name": "Osmosis BAND/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2214,7 +2214,7 @@
     "name": "Osmosis SOMM/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2226,7 +2226,7 @@
     "name": "Osmosis ROWAN/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2238,7 +2238,7 @@
     "name": "Osmosis NETA/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2250,7 +2250,7 @@
     "name": "Osmosis USDC.grv/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2262,7 +2262,7 @@
     "name": "Osmosis WETH.grv/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2274,7 +2274,7 @@
     "name": "Osmosis DARC/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2286,7 +2286,7 @@
     "name": "Osmosis UMEE/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2298,7 +2298,7 @@
     "name": "Osmosis DEC/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2310,7 +2310,7 @@
     "name": "Osmosis PSTAKE/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2322,7 +2322,7 @@
     "name": "Osmosis MARBLE/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2334,7 +2334,7 @@
     "name": "Osmosis SWTH/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2346,7 +2346,7 @@
     "name": "Osmosis HOPE/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2358,7 +2358,7 @@
     "name": "Osmosis CRBRUS/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2370,7 +2370,7 @@
     "name": "Osmosis RAC/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2382,7 +2382,7 @@
     "name": "Osmosis DAI/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2394,7 +2394,7 @@
     "name": "Osmosis OSMO/USDC.axl LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2406,7 +2406,7 @@
     "name": "Osmosis FET/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2418,7 +2418,7 @@
     "name": "Osmosis MNTL/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2430,7 +2430,7 @@
     "name": "Osmosis BLOCK/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2442,7 +2442,7 @@
     "name": "Osmosis HASH/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2454,7 +2454,7 @@
     "name": "Osmosis DHK/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2466,7 +2466,7 @@
     "name": "Osmosis GLX/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2478,7 +2478,7 @@
     "name": "Osmosis IRIS/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2490,7 +2490,7 @@
     "name": "Osmosis RAW/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2502,7 +2502,7 @@
     "name": "Osmosis MEME/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2514,7 +2514,7 @@
     "name": "Osmosis WETH/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2526,7 +2526,7 @@
     "name": "Osmosis WBTC/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2538,7 +2538,7 @@
     "name": "Osmosis JOE/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2550,7 +2550,7 @@
     "name": "Osmosis EVMOS/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2562,7 +2562,7 @@
     "name": "Osmosis INJ/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2574,7 +2574,7 @@
     "name": "Osmosis LUNA/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2586,7 +2586,7 @@
     "name": "Osmosis KAVA/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2598,7 +2598,7 @@
     "name": "Osmosis LINK.axl/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2610,7 +2610,7 @@
     "name": "Osmosis L1/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2622,7 +2622,7 @@
     "name": "Osmosis MKR.axl/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2634,7 +2634,7 @@
     "name": "Osmosis KUJI/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2646,7 +2646,7 @@
     "name": "Osmosis TGD/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2658,7 +2658,7 @@
     "name": "Osmosis DOT.axl/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2670,7 +2670,7 @@
     "name": "Osmosis LVN/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2682,7 +2682,7 @@
     "name": "Osmosis ODIN/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2694,7 +2694,7 @@
     "name": "Osmosis GLTO/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2706,7 +2706,7 @@
     "name": "Osmosis CRE/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2718,7 +2718,7 @@
     "name": "Osmosis GEO/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2730,7 +2730,7 @@
     "name": "Osmosis LUMEN/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2742,7 +2742,7 @@
     "name": "Osmosis WMATIC.axl/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2754,7 +2754,7 @@
     "name": "Osmosis GKEY/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2766,7 +2766,7 @@
     "name": "Osmosis seJUNO/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2778,7 +2778,7 @@
     "name": "Osmosis BLD/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2790,7 +2790,7 @@
     "name": "Osmosis CUDOS/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2802,7 +2802,7 @@
     "name": "Osmosis LUNC/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2814,7 +2814,7 @@
     "name": "Osmosis stATOM/ATOM LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2826,7 +2826,7 @@
     "name": "Osmosis O9W/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2838,7 +2838,7 @@
     "name": "Osmosis STRD/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2850,7 +2850,7 @@
     "name": "Osmosis SEASY/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2862,7 +2862,7 @@
     "name": "Osmosis stSTARS/STARS LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2874,7 +2874,7 @@
     "name": "Osmosis AXL/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2886,7 +2886,7 @@
     "name": "Osmosis REBUS/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2898,7 +2898,7 @@
     "name": "Osmosis TORI/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2910,7 +2910,7 @@
     "name": "Osmosis stJUNO/JUNO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2922,7 +2922,7 @@
     "name": "Osmosis USDT.grv/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2934,7 +2934,7 @@
     "name": "Osmosis USK/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2946,7 +2946,7 @@
     "name": "Osmosis LAMB/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2958,7 +2958,7 @@
     "name": "Osmosis FUND/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2970,7 +2970,7 @@
     "name": "Osmosis JKL/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2982,7 +2982,7 @@
     "name": "Osmosis stOSMO/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -2994,7 +2994,7 @@
     "name": "Osmosis IST/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -3006,7 +3006,7 @@
     "name": "Osmosis WBNB.axl/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -3018,7 +3018,7 @@
     "name": "Osmosis ALTER/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -3030,7 +3030,7 @@
     "name": "Osmosis SHD/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -3042,7 +3042,7 @@
     "name": "Osmosis ECH/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -3054,7 +3054,7 @@
     "name": "Osmosis SIENNA/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -3066,7 +3066,7 @@
     "name": "Osmosis stkd-SCRT/SCRT LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -3078,7 +3078,7 @@
     "name": "Osmosis BZE/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -3090,7 +3090,7 @@
     "name": "Osmosis CMST/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -3102,7 +3102,7 @@
     "name": "Osmosis ACRE/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -3114,7 +3114,7 @@
     "name": "Osmosis MEDAS/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -3126,7 +3126,7 @@
     "name": "Osmosis IMV/USDC.axl LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -3138,7 +3138,7 @@
     "name": "Osmosis PHMN/ATOM LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -3150,7 +3150,7 @@
     "name": "Osmosis USDT.axl/USDC.axl LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
@@ -3162,7 +3162,7 @@
     "name": "Osmosis CRO/OSMO LP Token",
     "precision": 6,
     "color": "#750BBB",
-    "icon": "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+    "icon": "https://rawcdn.githack.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
     "explorer": "https://www.mintscan.io/osmosis",
     "explorerAddressLink": "https://www.mintscan.io/osmosis/account/",
     "explorerTxLink": "https://www.mintscan.io/osmosis/txs/"
