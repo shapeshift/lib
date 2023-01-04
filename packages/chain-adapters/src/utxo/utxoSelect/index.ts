@@ -4,6 +4,7 @@ import split from 'coinselect/split'
 
 export type UTXOSelectInput = {
   utxos: unchained.bitcoin.Utxo[]
+  from?: string
   to: string
   value: string
   satoshiPerByte: string
@@ -17,7 +18,11 @@ export type UTXOSelectInput = {
  * _opReturnData is filtered out of the return payload as it is added during transaction signing_
  */
 export const utxoSelect = (input: UTXOSelectInput) => {
-  const utxos = input.utxos.map((x) => ({ ...x, value: Number(x.value) }))
+  let utxos = input.utxos.map((x) => ({ ...x, value: Number(x.value) }))
+
+  if (input.from) {
+    utxos = utxos.filter((utxo) => utxo.address === input.from)
+  }
   const extraOutput = input.opReturnData ? [{ value: 0, script: input.opReturnData }] : []
 
   const result = (() => {

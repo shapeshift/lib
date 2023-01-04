@@ -220,6 +220,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
 
   async buildSendTransaction({
     value,
+    from,
     to,
     wallet,
     bip44Params = this.defaultBIP44Params,
@@ -241,6 +242,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
 
       const coinSelectResult = utxoSelect({
         utxos,
+        from,
         to,
         satoshiPerByte,
         sendMax,
@@ -306,6 +308,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
   }
 
   async getFeeData({
+    from,
     to,
     value,
     chainSpecific: { pubkey, opReturnData },
@@ -330,7 +333,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
 
     const utxos = await this.providers.http.getUtxos({ pubkey })
 
-    const utxoSelectInput = { to, value, opReturnData, utxos, sendMax }
+    const utxoSelectInput = { from, to, value, opReturnData, utxos, sendMax }
 
     // We have to round because coinselect library uses sats per byte which cant be decimals
     const fastPerByte = String(Math.round(data.fast.satsPerKiloByte / 1024))
