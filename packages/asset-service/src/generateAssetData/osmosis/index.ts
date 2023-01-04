@@ -1,4 +1,4 @@
-import { ASSET_REFERENCE, osmosisChainId } from '@shapeshiftoss/caip'
+import { ASSET_REFERENCE, osmosisChainId, toAssetId } from '@shapeshiftoss/caip'
 import axios from 'axios'
 
 import { Asset } from '../../service/AssetService'
@@ -113,7 +113,11 @@ export const getAssets = async (): Promise<Asset[]> => {
         if (lpAssetsAdded.has(poolId)) continue
 
         const lpAssetDatum: Asset = {
-          assetId: `cosmos:osmosis-1/ibc:gamm/pool/${poolId}`,
+          assetId: toAssetId({
+            chainId: osmosisChainId,
+            assetNamespace: 'ibc',
+            assetReference: `gamm/pool/${poolId}`,
+          }),
           chainId: osmosisChainId,
           symbol: `gamm/pool/${poolId}`,
           name: getLPTokenName(current.symbol, pairedToken),
