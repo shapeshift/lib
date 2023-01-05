@@ -147,8 +147,9 @@ const main = async (): Promise<void> => {
     utxoAccountType = bitcoin.ChainAdapter.defaultUtxoAccountType
   }
 
+  const accountNumber = 0
   const bip44Params = sellAdapter.getBIP44Params({
-    accountNumber: 0,
+    accountNumber,
     accountType: utxoAccountType,
   })
   if (!bip44Params) {
@@ -168,7 +169,7 @@ const main = async (): Promise<void> => {
     }
     publicKey = await (sellAdapter as unknown as UtxoBaseAdapter<UtxoChainId>).getPublicKey(
       wallet,
-      bip44Params,
+      accountNumber,
       utxoAccountType,
     )
   }
@@ -179,7 +180,7 @@ const main = async (): Promise<void> => {
   const buyAssetReceiveAddr = await buyAdapter.getAddress({
     wallet,
     accountType: utxoAccountType,
-    bip44Params,
+    accountNumber,
   })
   console.info(`${buyAsset.name} using receive addr ${buyAssetReceiveAddr}`)
   let quote
@@ -191,7 +192,7 @@ const main = async (): Promise<void> => {
       sellAmountBeforeFeesCryptoBaseUnit,
       sendMax: false,
       accountType: utxoAccountType || bitcoin.ChainAdapter.defaultUtxoAccountType,
-      bip44Params,
+      accountNumber,
       xpub: publicKey?.xpub || '',
       receiveAddress: buyAssetReceiveAddr,
     })
@@ -224,7 +225,7 @@ const main = async (): Promise<void> => {
       sellAsset,
       receiveAddress: buyAssetReceiveAddr,
       accountType: utxoAccountType || bitcoin.ChainAdapter.defaultUtxoAccountType,
-      bip44Params,
+      accountNumber,
       xpub: publicKey?.xpub || '',
     })
 
