@@ -2,6 +2,7 @@ import { AssetId } from '../../assetId/assetId'
 import {
   avalancheAssetId,
   bchAssetId,
+  binanceAssetId,
   btcAssetId,
   cosmosAssetId,
   dogeAssetId,
@@ -11,7 +12,7 @@ import {
 
 // derived from https://midgard.thorchain.info/v2/pools
 // Rarely changes. Will need to be updated as we add additional assets to thor swapper
-const thorPoolIdAssetIdSymbolMap: Record<string, AssetId> = {
+export const thorPoolIdAssetIdSymbolMap: Record<string, AssetId> = {
   'ETH.YFI-0X0BC529C00C6401AEF6D220BE8C6EA1667F6AD93E':
     'eip155:1/erc20:0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e',
   'ETH.XRUNE-0X69FA0FEE221AD11012BAB0FDB45D444D3D2CE71C':
@@ -61,6 +62,7 @@ const thorPoolIdAssetIdSymbolMap: Record<string, AssetId> = {
   'GAIA.ATOM': cosmosAssetId,
   'BCH.BCH': bchAssetId,
   'AVAX.AVAX': avalancheAssetId,
+  'BNB.BNB': binanceAssetId,
   'AVAX.USDC-0XB97EF9EF8734C71904D8002F8B6BC66DD9C48A6E':
     'eip155:43114/erc20:0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e',
 }
