@@ -404,7 +404,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         gas,
         'uosmo',
       )
-      return { tradeId, previousCosmosTxid: cosmosTxHistory.transactions[0].txid, cosmosAddress }
+      return { tradeId, previousCosmosTxid: cosmosTxHistory.transactions[0]?.txid, cosmosAddress }
     }
 
     return { tradeId, previousCosmosTxid: cosmosIbcTradeId }
