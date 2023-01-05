@@ -26,7 +26,10 @@ export const utxoSelect = (input: UTXOSelectInput) => {
     // If input contains a `from` param, the intent is to only keep the UTXOs from that address
     // so we can ensure the send address is the one we want
     // This doesn't do any further checks, so error-handling should be done by the caller e.g `buildSendTransaction` callsites
-    return [...acc, ...(input.from && utxo.address !== input.from ? [] : [sanitizedUtxo])]
+    if (!input.from || (input.from && utxo.address === input.from)) {
+      acc.push(sanitizedUtxo)
+    }
+    return acc
   }, [])
 
   const extraOutput = input.opReturnData ? [{ value: 0, script: input.opReturnData }] : []
