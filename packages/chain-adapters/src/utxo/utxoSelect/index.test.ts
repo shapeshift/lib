@@ -43,7 +43,7 @@ const utxoSelectInputAdditionalUtxo = {
   ],
   to: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4',
   satoshiPerByte: '1',
-  value: '35559',
+  value: '1000',
 }
 
 const utxoSelectInputOpReturn = {
@@ -202,10 +202,10 @@ describe('utxoSelect', () => {
       outputs: [
         {
           address: 'bc1qppzsgs9pt63cx9x994wf4e3qrpta0nm6htk9v4',
-          value: 35559,
+          value: 1000,
         },
         {
-          value: 64215,
+          value: 98774,
         },
       ],
       fee: 226,
