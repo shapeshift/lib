@@ -11,8 +11,13 @@ export function assertIsDefined<T>(val: T): asserts val is NonNullable<T> {
 const getRequestFilter = (cachedUrls: string[]) => (request: Request) =>
   !cachedUrls.some((url) => request.url.includes(url))
 
-export const createCache = (maxAge: number, cachedUrls: string[]) =>
-  setupCache({
+export const createCache = (maxAge: number, cachedUrls: string[]) => {
+  const filter = getRequestFilter(cachedUrls)
+  return setupCache({
     maxAge,
-    exclude: { filter: getRequestFilter(cachedUrls) },
+    exclude: { filter, query: false },
+    clearOnStale: true,
+    readOnError: false,
+    readHeaders: false,
   })
+}
