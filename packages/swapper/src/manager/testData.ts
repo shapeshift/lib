@@ -70,7 +70,7 @@ export const tradeQuote: TradeQuote<KnownChainIds.EthereumMainnet> = {
   sources: [{ name: SwapperName.Thorchain, proportion: '1' }],
   buyAsset: ETH,
   sellAsset: FOX,
-  bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
+  accountNumber: 0,
 }
 
 export const goodTradeQuote: TradeQuote<KnownChainIds.EthereumMainnet> = {
