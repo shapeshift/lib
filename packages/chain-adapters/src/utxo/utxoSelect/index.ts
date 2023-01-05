@@ -20,14 +20,14 @@ type SanitizedUTXO = Omit<unchained.bitcoin.Utxo, 'value'> & { value: number }
  * _opReturnData is filtered out of the return payload as it is added during transaction signing_
  */
 export const utxoSelect = (input: UTXOSelectInput) => {
-  const utxos = input.utxos.reduce((acc, utxo) => {
+  const utxos = input.utxos.reduce<SanitizedUTXO[]>((acc, utxo) => {
     const sanitizedUtxo = { ...utxo, value: Number(utxo.value) }
 
     // If input contains a `from` param, the intent is to only keep the UTXOs from that address
     // so we can ensure the send address is the one we want
     // This doesn't do any further checks, so error-handling should be done by the caller e.g `buildSendTransaction` callsites
     return [...acc, ...(input.from && utxo.address !== input.from ? [] : [sanitizedUtxo])]
-  }, [] as SanitizedUTXO[])
+  }, [])
 
   const extraOutput = input.opReturnData ? [{ value: 0, script: input.opReturnData }] : []
 
