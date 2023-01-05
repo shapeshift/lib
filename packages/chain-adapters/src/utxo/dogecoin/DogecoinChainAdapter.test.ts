@@ -435,8 +435,6 @@ describe('DogecoinChainAdapter', () => {
         const r = adapter.getBIP44Params({
           accountNumber: 0,
           accountType,
-          isChange: false,
-          index: 0,
         })
         expect(r.coinType).toStrictEqual(3)
       }
