@@ -234,7 +234,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
     to,
     wallet,
     accountNumber,
-    chainSpecific: { satoshiPerByte, accountType, opReturnData },
+    chainSpecific: { from, satoshiPerByte, accountType, opReturnData },
     sendMax = false,
   }: BuildSendTxInput<T>): Promise<{ txToSign: SignTx<T> }> {
     try {
@@ -253,6 +253,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
 
       const coinSelectResult = utxoSelect({
         utxos,
+        from,
         to,
         satoshiPerByte,
         sendMax,
@@ -320,7 +321,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
   async getFeeData({
     to,
     value,
-    chainSpecific: { pubkey, opReturnData },
+    chainSpecific: { from, pubkey, opReturnData },
     sendMax = false,
   }: GetFeeDataInput<T>): Promise<FeeDataEstimate<T>> {
     if (!to) throw new Error('to is required')
@@ -342,7 +343,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
 
     const utxos = await this.providers.http.getUtxos({ pubkey })
 
-    const utxoSelectInput = { to, value, opReturnData, utxos, sendMax }
+    const utxoSelectInput = { from, to, value, opReturnData, utxos, sendMax }
 
     // We have to round because coinselect library uses sats per byte which cant be decimals
     const fastPerByte = String(Math.round(data.fast.satsPerKiloByte / 1024))
