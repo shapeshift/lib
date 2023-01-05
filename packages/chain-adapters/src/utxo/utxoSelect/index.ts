@@ -12,17 +12,20 @@ export type UTXOSelectInput = {
   sendMax: boolean
 }
 
+type SanitizedUTXO = Omit<unchained.bitcoin.Utxo, 'value'> & { value: number }
+
 /**
  * Returns necessary utxo inputs & outputs for a desired tx at a given fee with OP_RETURN data considered if provided
  *
  * _opReturnData is filtered out of the return payload as it is added during transaction signing_
  */
 export const utxoSelect = (input: UTXOSelectInput) => {
-  let utxos = input.utxos.map((x) => ({ ...x, value: Number(x.value) }))
+  const utxos = input.utxos.reduce((acc, utxo) => {
+    const sanitizedUtxo = { ...utxo, value: Number(utxo.value) }
 
-  if (input.from) {
-    utxos = utxos.filter((utxo) => utxo.address === input.from)
-  }
+    return [...acc, ...(input.from ? [] : [sanitizedUtxo])]
+  }, [] as SanitizedUTXO[])
+
   const extraOutput = input.opReturnData ? [{ value: 0, script: input.opReturnData }] : []
 
   const result = (() => {
