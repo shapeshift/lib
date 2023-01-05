@@ -21,7 +21,7 @@ export const getRatioFromQuote = async (
   quote: TradeQuote<ChainId>,
   swapper: Swapper<ChainId>,
   feeAsset: Asset,
-): Promise<number> => {
+): Promise<number | undefined> => {
   /*
     We make an assumption here that swappers return comparable asset rates.
     If a swapper were to undervalue the outbound asset and overvalue the inbound asset
@@ -50,5 +50,8 @@ export const getRatioFromQuote = async (
     fromBaseUnit(quote.feeData.networkFeeCryptoBaseUnit, feeAsset.precision),
   ).times(feeAssetUsdRate)
 
-  return totalReceiveAmountFiat.div(totalSellAmountFiat.plus(networkFeeFiat)).toNumber()
+  const totalSendAmountFiat = totalSellAmountFiat.plus(networkFeeFiat)
+  const ratio = totalReceiveAmountFiat.div(totalSendAmountFiat)
+
+  return ratio.isInteger() ? ratio.toNumber() : undefined
 }

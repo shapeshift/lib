@@ -1,4 +1,5 @@
 import { ChainId } from '@shapeshiftoss/caip'
+import { isUndefined } from 'lodash'
 import uniq from 'lodash/uniq'
 
 import {
@@ -14,7 +15,7 @@ import { isFulfilled } from '../typeGuards'
 import { getRatioFromQuote } from './utils'
 
 type SwapperQuoteTuple = readonly [swapper: Swapper<ChainId>, quote: TradeQuote<ChainId>]
-type SwapperRatioTuple = readonly [swapper: Swapper<ChainId>, ratio: number]
+type SwapperRatioTuple = readonly [swapper: Swapper<ChainId>, ratio: number | undefined]
 
 function validateSwapper(swapper: Swapper<ChainId>) {
   if (!(typeof swapper === 'object' && typeof swapper.getType === 'function'))
@@ -104,10 +105,20 @@ export class SwapperManager {
         const resolvedAcc = await acc
         const [currentSwapper, currentQuote] = currentQuoteTuple
         const currentRatio = await getRatioFromQuote(currentQuote, currentSwapper, feeAsset)
+
+        // It's our first iteration, so we just return the current SwapperQuoteTuple
         if (!resolvedAcc) return Promise.resolve([currentSwapper, currentRatio])
 
         const [, bestRatio] = resolvedAcc
-        const isCurrentSwapperBestSwapper = bestRatio < currentRatio
+        const isCurrentSwapperBestSwapper = (() => {
+          // Happy path - no div by 0's in getRatioFromQuote evaluations so we have both ratios
+          if (!isUndefined(currentRatio) && !isUndefined(bestRatio)) return currentRatio > bestRatio
+          // We don't know, neither has a ratio, so we can't compare (big edge case div by 0 scenario)
+          if (isUndefined(currentRatio) && isUndefined(bestRatio)) return false
+          // We don't have a best, but we do have a current, so current is the new best
+          return !isUndefined(currentRatio)
+        })()
+
         const currentSwapperRatioTuple = [currentSwapper, currentRatio] as const
         return Promise.resolve(isCurrentSwapperBestSwapper ? currentSwapperRatioTuple : resolvedAcc)
       },
