@@ -313,6 +313,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         transfer,
         cosmosAdapter,
         wallet,
+        bip44Params,
         this.deps.osmoUrl,
         'uatom',
         COSMO_OSMO_CHANNEL,
@@ -351,6 +352,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     const signTxInput = await buildTradeTx({
       osmoAddress,
       adapter: osmosisAdapter,
+      bip44Params,
       buyAssetDenom,
       sellAssetDenom,
       sellAmount: ibcSellAmount ?? sellAmountCryptoBaseUnit,
@@ -392,6 +394,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         transfer,
         osmosisAdapter,
         wallet,
+        bip44Params,
         this.deps.cosmosUrl,
         buyAssetDenom,
         OSMO_COSMO_CHANNEL,

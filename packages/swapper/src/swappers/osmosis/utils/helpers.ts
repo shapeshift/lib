@@ -1,6 +1,7 @@
 import { CHAIN_REFERENCE, fromChainId } from '@shapeshiftoss/caip'
 import { osmosis, toAddressNList } from '@shapeshiftoss/chain-adapters'
 import { HDWallet, Osmosis } from '@shapeshiftoss/hdwallet-core'
+import { BIP44Params } from '@shapeshiftoss/types'
 import axios from 'axios'
 import { find } from 'lodash'
 
@@ -199,6 +200,7 @@ export const performIbcTransfer = async (
   input: IbcTransferInput,
   adapter: CosmosSdkSupportedChainAdapters,
   wallet: HDWallet,
+  bip44Params: BIP44Params,
   blockBaseUrl: string,
   denom: string,
   sourceChannel: string,
@@ -257,7 +259,7 @@ export const performIbcTransfer = async (
   const signed = await adapter.signTransaction({
     txToSign: {
       tx,
-      addressNList: toAddressNList(adapter.buildBIP44Params({ accountNumber: 0 })), // TODO: dynamic account numbers
+      addressNList: toAddressNList(bip44Params),
       chain_id: fromChainId(adapter.getChainId()).chainReference,
       account_number: accountNumber,
       sequence,
@@ -275,6 +277,7 @@ export const performIbcTransfer = async (
 export const buildTradeTx = async ({
   osmoAddress,
   adapter,
+  bip44Params,
   buyAssetDenom,
   sellAssetDenom,
   sellAmount,
@@ -283,6 +286,7 @@ export const buildTradeTx = async ({
 }: {
   osmoAddress: string
   adapter: osmosis.ChainAdapter
+  bip44Params: BIP44Params
   buyAssetDenom: string
   sellAssetDenom: string
   sellAmount: string
@@ -330,7 +334,7 @@ export const buildTradeTx = async ({
   return {
     txToSign: {
       tx,
-      addressNList: toAddressNList(adapter.buildBIP44Params({ accountNumber: 0 })), // TODO: dynamic account numbers
+      addressNList: toAddressNList(bip44Params),
       chain_id: CHAIN_REFERENCE.OsmosisMainnet,
       account_number: accountNumber,
       sequence,
