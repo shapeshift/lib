@@ -130,10 +130,20 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
     return this.coinName
   }
 
-  getBIP44Params({ accountNumber, accountType }: GetBIP44ParamsInput): BIP44Params {
+  getBIP44Params({
+    accountNumber,
+    accountType,
+    index = 0,
+    isChange = false,
+  }: GetBIP44ParamsInput): BIP44Params {
     if (accountNumber < 0) {
       throw new Error('accountNumber must be >= 0')
     }
+
+    if (index < 0) {
+      throw new Error('index must be >= 0')
+    }
+
     const purpose = (() => {
       switch (accountType) {
         case UtxoAccountType.SegwitNative:
@@ -146,7 +156,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
           throw new Error(`not a supported accountType ${accountType}`)
       }
     })()
-    return { ...this.defaultBIP44Params, accountNumber, purpose }
+    return { ...this.defaultBIP44Params, accountNumber, purpose, isChange, index }
   }
 
   async getAccount(pubkey: string): Promise<Account<T>> {
@@ -181,6 +191,8 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
     wallet,
     accountNumber,
     accountType = this.defaultUtxoAccountType,
+    index = 0,
+    isChange = false,
     showOnDevice = false,
   }: GetAddressInput): Promise<string> {
     try {
@@ -190,7 +202,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
         throw new Error(`UtxoBaseAdapter: wallet does not support ${this.coinName}`)
       }
 
-      const bip44Params = this.getBIP44Params({ accountNumber })
+      const bip44Params = this.getBIP44Params({ accountNumber, accountType, isChange, index })
 
       const getNextIndex = async () => {
         const { xpub } = await this.getPublicKey(wallet, accountNumber, accountType)
@@ -201,9 +213,9 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
           : account.chainSpecific.nextReceiveAddressIndex
       }
 
-      const index = bip44Params.index ?? (await getNextIndex())
+      const maybeNextIndex = bip44Params.index ?? (await getNextIndex())
       const address = await wallet.btcGetAddress({
-        addressNList: toAddressNList({ ...bip44Params, index }),
+        addressNList: toAddressNList({ ...bip44Params, index: maybeNextIndex }),
         coin: this.coinName,
         scriptType: accountTypeToScriptType[accountType],
         showDisplay: showOnDevice,

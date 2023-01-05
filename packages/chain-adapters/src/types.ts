@@ -91,6 +91,8 @@ export type SubscribeTxsInput = {
 export type GetBIP44ParamsInput = {
   accountNumber: number
   accountType?: UtxoAccountType
+  index?: number
+  isChange?: boolean
 }
 
 export type TransferType = unchained.TransferType
@@ -206,6 +208,8 @@ export interface TxHistoryInput {
 export type GetAddressInputBase = {
   wallet: HDWallet
   accountNumber: number
+  isChange?: boolean
+  index?: number
   /**
    * Request that the address be shown to the user by the device, if supported
    */
