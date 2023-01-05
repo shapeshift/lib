@@ -20,7 +20,7 @@ const zrxEthereumSwapperDeps: ZrxSwapperDeps = {
   },
 }
 
-export const zrxEthereumSwapper = new ZrxSwapper(zrxEthereumSwapperDeps)
+export const getZrxEthereumSwapper = () => new ZrxSwapper(zrxEthereumSwapperDeps)
 
 const zrxAvalancheSwapperDeps: ZrxSwapperDeps = {
   web3: <Web3>{},
@@ -29,7 +29,7 @@ const zrxAvalancheSwapperDeps: ZrxSwapperDeps = {
   },
 }
 
-export const zrxAvalancheSwapper = new ZrxSwapper(zrxAvalancheSwapperDeps)
+export const getZrxAvalancheSwapper = () => new ZrxSwapper(zrxAvalancheSwapperDeps)
 
 const cowSwapperDeps: CowSwapperDeps = {
   apiUrl: 'https://api.cow.fi/mainnet/api/',
@@ -39,7 +39,7 @@ const cowSwapperDeps: CowSwapperDeps = {
   web3: <Web3>{},
 }
 
-export const cowSwapper = new CowSwapper(cowSwapperDeps)
+export const getCowSwapper = () => new CowSwapper(cowSwapperDeps)
 
 const thorchainSwapperDeps: ThorchainSwapperDeps = {
   midgardUrl: '',
@@ -48,7 +48,7 @@ const thorchainSwapperDeps: ThorchainSwapperDeps = {
   web3: <Web3>{},
 }
 
-export const thorchainSwapper = new ThorchainSwapper(thorchainSwapperDeps)
+export const getThorchainSwapper = () => new ThorchainSwapper(thorchainSwapperDeps)
 
 export const tradeQuote: TradeQuote<KnownChainIds.EthereumMainnet> = {
   minimumCryptoHuman: '60',

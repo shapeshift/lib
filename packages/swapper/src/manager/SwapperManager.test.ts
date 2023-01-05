@@ -7,12 +7,17 @@ import { setupQuote } from '../swappers/utils/test-data/setupSwapQuote'
 import { SwapperManager } from './SwapperManager'
 import {
   badTradeQuote,
-  cowSwapper,
+  getCowSwapper,
+  getThorchainSwapper,
+  getZrxAvalancheSwapper,
+  getZrxEthereumSwapper,
   goodTradeQuote,
-  thorchainSwapper,
-  zrxAvalancheSwapper,
-  zrxEthereumSwapper,
 } from './testData'
+
+const zrxEthereumSwapper = getZrxEthereumSwapper()
+const zrxAvalancheSwapper = getZrxAvalancheSwapper()
+const cowSwapper = getCowSwapper()
+const thorchainSwapper = getThorchainSwapper()
 
 describe('SwapperManager', () => {
   describe('constructor', () => {
