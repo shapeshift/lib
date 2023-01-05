@@ -83,7 +83,6 @@ export type FeeDataEstimate<T extends ChainId> = {
 
 export type SubscribeTxsInput = {
   wallet: HDWallet
-  // bip44Params: BIP44Params
   accountNumber: number
   accountType?: UtxoAccountType
 }
