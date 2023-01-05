@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ChainId } from '@shapeshiftoss/caip'
 
 import { Swapper, SwapperType } from '../api'
@@ -25,9 +24,9 @@ describe('SwapperManager', () => {
 
   describe('addSwapper', () => {
     it('should add swapper', () => {
-      const managerManager = new SwapperManager()
-      managerManager.addSwapper(thorchainSwapper)
-      expect(managerManager.getSwapper(SwapperType.Thorchain)).toBeInstanceOf(ThorchainSwapper)
+      const swapperManager = new SwapperManager()
+      swapperManager.addSwapper(thorchainSwapper)
+      expect(swapperManager.getSwapper(SwapperType.Thorchain)).toBeInstanceOf(ThorchainSwapper)
     })
 
     it('should be chainable', async () => {
@@ -72,9 +71,9 @@ describe('SwapperManager', () => {
     })
 
     it('should throw an error if an invalid Swapper instance is passed', () => {
-      const managerManager = new SwapperManager()
+      const swapperManager = new SwapperManager()
       const invalidSwapper = {} as Swapper<ChainId>
-      expect(() => managerManager.addSwapper(invalidSwapper)).toThrow(
+      expect(() => swapperManager.addSwapper(invalidSwapper)).toThrow(
         '[validateSwapper] - invalid swapper instance',
       )
     })

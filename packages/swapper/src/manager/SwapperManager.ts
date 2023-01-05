@@ -14,6 +14,7 @@ import { isFulfilled } from '../typeGuards'
 import { getRatioFromQuote } from './utils'
 
 type SwapperQuoteTuple = readonly [swapper: Swapper<ChainId>, quote: TradeQuote<ChainId>]
+type SwapperRatioTuple = readonly [swapper: Swapper<ChainId>, ratio: number]
 
 function validateSwapper(swapper: Swapper<ChainId>) {
   if (!(typeof swapper === 'object' && typeof swapper.getType === 'function'))
@@ -73,6 +74,11 @@ export class SwapperManager {
     return this
   }
 
+  /**
+   *
+   * @param args {GetBestSwapperArgs}
+   * @returns {Promise<Swapper<ChainId> | undefined>}
+   */
   async getBestSwapper(args: GetBestSwapperArgs): Promise<Swapper<ChainId> | undefined> {
     const { sellAsset, buyAsset, feeAsset } = args
 
@@ -87,35 +93,28 @@ export class SwapperManager {
       async (swapper) => [swapper, await swapper.getTradeQuote(args)] as const,
     )
     const settledQuoteRequests = await Promise.allSettled(quotePromises)
-    // For each swapper, get output amount/(input amount + gas fee), where all values are in fiat
+    // For each swapper, get receive amount/(input amount + gas fee), where all values are in fiat
     const fulfilledQuoteTuples = settledQuoteRequests
       .filter(isFulfilled)
       .map((quoteRequest) => quoteRequest.value)
 
-    // The best swapper is the one with the highest ratio above
+    // The best swapper is the one with the highest ratio
     const bestQuoteTuple = await fulfilledQuoteTuples.reduce(
-      async (
-        acc: Promise<readonly [Swapper<ChainId>, number]> | undefined,
-        currentQuoteTuple: SwapperQuoteTuple,
-      ) => {
-        console.log('xxx getBestSwapper: checking swapper and quote', { currentQuoteTuple })
+      async (acc: Promise<SwapperRatioTuple> | undefined, currentQuoteTuple: SwapperQuoteTuple) => {
         const resolvedAcc = await acc
         const [currentSwapper, currentQuote] = currentQuoteTuple
         const currentRatio = await getRatioFromQuote(currentQuote, currentSwapper, feeAsset)
-        console.log('xxx getBestSwapper: got ratio', { currentRatio })
-        if (!resolvedAcc) return Promise.resolve([currentSwapper, currentRatio] as const)
+        if (!resolvedAcc) return Promise.resolve([currentSwapper, currentRatio])
 
         const [, bestRatio] = resolvedAcc
-        const isCurrentBest = bestRatio < currentRatio
-        return Promise.resolve(
-          isCurrentBest ? ([currentSwapper, currentRatio] as const) : resolvedAcc,
-        )
+        const isCurrentSwapperBestSwapper = bestRatio < currentRatio
+        const currentSwapperRatioTuple = [currentSwapper, currentRatio] as const
+        return Promise.resolve(isCurrentSwapperBestSwapper ? currentSwapperRatioTuple : resolvedAcc)
       },
       undefined,
     )
 
     const bestSwapper = bestQuoteTuple?.[0]
-    console.log('xxx getBestSwapper: bestSwapper', { bestSwapper })
     return bestSwapper
   }
 
