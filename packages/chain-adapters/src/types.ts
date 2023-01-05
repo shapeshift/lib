@@ -131,7 +131,6 @@ type ChainSignTx = {
 export type SignTx<T extends ChainId> = T extends keyof ChainSignTx ? ChainSignTx[T] : never
 
 export type BuildSendTxInput<T extends ChainId> = {
-  from?: string
   to: string
   value: string
   wallet: HDWallet
@@ -226,7 +225,6 @@ type ChainSpecificGetFeeDataInput<T> = ChainSpecific<
   }
 >
 export type GetFeeDataInput<T extends ChainId> = {
-  from?: string
   to: string
   value: string
   sendMax?: boolean

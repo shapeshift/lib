@@ -220,11 +220,10 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
 
   async buildSendTransaction({
     value,
-    from,
     to,
     wallet,
     bip44Params = this.defaultBIP44Params,
-    chainSpecific: { satoshiPerByte, accountType, opReturnData },
+    chainSpecific: { from, satoshiPerByte, accountType, opReturnData },
     sendMax = false,
   }: BuildSendTxInput<T>): Promise<{ txToSign: SignTx<T> }> {
     try {
@@ -308,10 +307,9 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
   }
 
   async getFeeData({
-    from,
     to,
     value,
-    chainSpecific: { pubkey, opReturnData },
+    chainSpecific: { from, pubkey, opReturnData },
     sendMax = false,
   }: GetFeeDataInput<T>): Promise<FeeDataEstimate<T>> {
     if (!to) throw new Error('to is required')
