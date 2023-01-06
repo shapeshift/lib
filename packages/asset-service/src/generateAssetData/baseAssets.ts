@@ -118,3 +118,16 @@ export const thorchain: Asset = {
   explorerAddressLink: 'https://v2.viewblock.io/thorchain/address/',
   explorerTxLink: 'https://v2.viewblock.io/thorchain/tx/',
 }
+
+export const optimism: Asset = {
+  assetId: caip.optimismAssetId,
+  chainId: caip.optimismChainId,
+  name: 'Ethereum on Optimism',
+  symbol: 'ETH',
+  precision: 18,
+  color: '#5C6BC0',
+  icon: 'https://assets.coincap.io/assets/icons/256/eth.png',
+  explorer: 'https://optimistic.etherscan.io',
+  explorerAddressLink: 'https://optimistic.etherscan.io/address/',
+  explorerTxLink: 'https://optimistic.etherscan.io/tx/',
+}
