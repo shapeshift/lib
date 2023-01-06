@@ -3,7 +3,7 @@ import { AssetId, ChainId } from '@shapeshiftoss/caip'
 import { avalanche, cosmos, ethereum, osmosis } from '@shapeshiftoss/chain-adapters'
 import { createErrorClass } from '@shapeshiftoss/errors'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, ChainSpecific, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
+import { ChainSpecific, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 
 export const SwapError = createErrorClass('SwapError')
 
@@ -55,6 +55,8 @@ export type ByPairInput = {
   buyAssetId: AssetId
 }
 
+export type GetBestSwapperArgs = GetTradeQuoteInput & { feeAsset: Asset }
+
 export type BuyAssetBySellIdInput = {
   sellAssetId: AssetId
   assetIds: AssetId[]
@@ -70,7 +72,7 @@ type CommonTradeInput = {
   sellAmountBeforeFeesCryptoBaseUnit: string
   sendMax: boolean
   receiveAddress: string
-  bip44Params: BIP44Params
+  accountNumber: number
 }
 
 export type EvmSupportedChainIds = KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
@@ -101,7 +103,7 @@ export type GetCosmosSdkTradeQuoteInput = CommonTradeInput & {
 export type GetUtxoTradeQuoteInput = CommonTradeInput & {
   chainId: UtxoSupportedChainIds
   accountType: UtxoAccountType
-  bip44Params: BIP44Params
+  accountNumber: number
   xpub: string
 }
 
@@ -123,7 +125,7 @@ interface TradeBase<C extends ChainId> {
   sources: SwapSource[]
   buyAsset: Asset
   sellAsset: Asset
-  bip44Params: BIP44Params
+  accountNumber: number
 }
 
 export interface TradeQuote<C extends ChainId> extends TradeBase<C> {

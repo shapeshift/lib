@@ -20,7 +20,7 @@ const mockedAxios = jest.mocked(thorService, true)
 const expectedQuoteResponse: TradeQuote<KnownChainIds.EthereumMainnet> = {
   minimumCryptoHuman: '59.658672054814851787728',
   maximum: '100000000000000000000000000',
-  sellAmountBeforeFeesCryptoBaseUnit: '10000000000000000000', // 1000 FOX
+  sellAmountBeforeFeesCryptoBaseUnit: '10000000000000000000', // 10 FOX
   allowanceContract: '0x3624525075b88B24ecc29CE226b0CEc1fFcB6976',
   buyAmountCryptoBaseUnit: '784000000000000',
   feeData: {
@@ -37,7 +37,7 @@ const expectedQuoteResponse: TradeQuote<KnownChainIds.EthereumMainnet> = {
   sources: [{ name: SwapperName.Thorchain, proportion: '1' }],
   buyAsset: ETH,
   sellAsset: FOX,
-  bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
+  accountNumber: 0,
   recommendedSlippage: '0.00000608624714961082',
 }
 
