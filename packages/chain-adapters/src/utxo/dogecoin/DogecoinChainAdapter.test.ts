@@ -347,13 +347,6 @@ describe('DogecoinChainAdapter', () => {
   })
 
   describe('getAddress', () => {
-    beforeEach(() => {
-      args.providers = {} as any
-      args.providers.http = {
-        getAccount: jest.fn().mockResolvedValue(getAccountMockResponse),
-      } as any
-    })
-
     it("should return a p2pkh address for valid first receive index (m/44'/3'/0'/0/0)", async () => {
       const wallet: HDWallet = await getWallet()
       const adapter = new dogecoin.ChainAdapter(args)
@@ -389,6 +382,7 @@ describe('DogecoinChainAdapter', () => {
       const wallet: HDWallet = await getWallet()
       const adapter = new dogecoin.ChainAdapter(args)
       const accountNumber = 0
+      const index = 0
       const isChange = true
 
       const addr: string | undefined = await adapter.getAddress({
@@ -396,6 +390,7 @@ describe('DogecoinChainAdapter', () => {
         accountNumber,
         accountType: UtxoAccountType.P2pkh,
         isChange,
+        index,
       })
       expect(addr).toStrictEqual('DPCPWrTEMLXhP8o57jH3i6ZbwAQwNHNFdq')
     })

@@ -140,7 +140,7 @@ export abstract class UtxoBaseAdapter<T extends UtxoChainId> implements IChainAd
       throw new Error('accountNumber must be >= 0')
     }
 
-    if (index && index < 0) {
+    if (index !== undefined && index < 0) {
       throw new Error('index must be >= 0')
     }
 

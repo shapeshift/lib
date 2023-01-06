@@ -344,13 +344,6 @@ describe('LitecoinChainAdapter', () => {
   })
 
   describe('getAddress', () => {
-    beforeEach(() => {
-      args.providers = {} as any
-      args.providers.http = {
-        getAccount: jest.fn().mockResolvedValue(getAccountMockResponse),
-      } as any
-    })
-
     it("should return a p2pkh address for valid first receive index (m/44'/2'/0'/0/0)", async () => {
       const wallet: HDWallet = await getWallet()
       const adapter = new litecoin.ChainAdapter(args)
@@ -385,6 +378,7 @@ describe('LitecoinChainAdapter', () => {
       const wallet: HDWallet = await getWallet()
       const adapter = new litecoin.ChainAdapter(args)
       const accountNumber = 0
+      const index = 0
       const isChange = true
 
       const addr: string | undefined = await adapter.getAddress({
@@ -392,6 +386,7 @@ describe('LitecoinChainAdapter', () => {
         wallet,
         accountType: UtxoAccountType.P2pkh,
         isChange,
+        index,
       })
       expect(addr).toStrictEqual('LfYSvfC3L9XyFGL42zjodCiwTSoh772XD9')
     })

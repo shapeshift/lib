@@ -360,13 +360,6 @@ describe('BitcoinCashChainAdapter', () => {
   })
 
   describe('getAddress', () => {
-    beforeEach(() => {
-      args.providers = {} as any
-      args.providers.http = {
-        getAccount: jest.fn().mockResolvedValue(getAccountMockResponse),
-      } as any
-    })
-
     it("should return a p2pkh address for valid derivation root path parameters (m/44'/145'/0'/0/0)", async () => {
       const wallet: HDWallet = await getWallet()
       const adapter = new bitcoincash.ChainAdapter(args)
@@ -401,6 +394,7 @@ describe('BitcoinCashChainAdapter', () => {
       const wallet: HDWallet = await getWallet()
       const adapter = new bitcoincash.ChainAdapter(args)
       const accountNumber = 0
+      const index = 0
       const isChange = true
 
       const addr: string | undefined = await adapter.getAddress({
@@ -408,6 +402,7 @@ describe('BitcoinCashChainAdapter', () => {
         wallet,
         accountType: UtxoAccountType.P2pkh,
         isChange,
+        index,
       })
       expect(addr).toStrictEqual('bitcoincash:qzh9hc7v8qa2dgx59pylharhp02ps96rputhg7w79h')
     })
