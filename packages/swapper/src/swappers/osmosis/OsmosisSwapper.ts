@@ -312,12 +312,11 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         transfer,
         cosmosAdapter,
         wallet,
-        bip44Params,
         this.deps.osmoUrl,
         'uatom',
         COSMO_OSMO_CHANNEL,
         feeData.fast.txFee,
-        accountNumber.toString(),
+        accountNumber,
         sequence,
         gas,
         'uatom',
@@ -350,8 +349,8 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     const cosmosAddress = isFromOsmo ? receiveAddress : sellAddress
     const signTxInput = await buildTradeTx({
       osmoAddress,
+      accountNumber,
       adapter: osmosisAdapter,
-      bip44Params,
       buyAssetDenom,
       sellAssetDenom,
       sellAmount: ibcSellAmount ?? sellAmountCryptoBaseUnit,
@@ -377,7 +376,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       }
 
       const ibcResponseAccount = await osmosisAdapter.getAccount(sellAddress)
-      const ibcAccountNumber = ibcResponseAccount.chainSpecific.accountNumber || '0'
+      const ibcAccountNumber = Number(ibcResponseAccount.chainSpecific.accountNumber)
       const ibcSequence = ibcResponseAccount.chainSpecific.sequence || '0'
 
       // delay to ensure all nodes we interact with are up to date at this point
@@ -393,7 +392,6 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         transfer,
         osmosisAdapter,
         wallet,
-        bip44Params,
         this.deps.cosmosUrl,
         buyAssetDenom,
         OSMO_COSMO_CHANNEL,

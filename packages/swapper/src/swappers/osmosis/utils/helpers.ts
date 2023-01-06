@@ -1,7 +1,6 @@
 import { CHAIN_REFERENCE, fromChainId } from '@shapeshiftoss/caip'
 import { osmosis, toAddressNList } from '@shapeshiftoss/chain-adapters'
 import { HDWallet, Osmosis } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params } from '@shapeshiftoss/types'
 import axios from 'axios'
 import { find } from 'lodash'
 
@@ -200,12 +199,11 @@ export const performIbcTransfer = async (
   input: IbcTransferInput,
   adapter: CosmosSdkSupportedChainAdapters,
   wallet: HDWallet,
-  bip44Params: BIP44Params,
   blockBaseUrl: string,
   denom: string,
   sourceChannel: string,
   feeAmount: string,
-  accountNumber: string,
+  accountNumber: number,
   sequence: string,
   gas: string,
   feeDenom: string,
@@ -256,12 +254,14 @@ export const performIbcTransfer = async (
     ],
   }
 
+  const bip44Params = adapter.getBIP44Params({ accountNumber: Number(accountNumber) })
+
   const signed = await adapter.signTransaction({
     txToSign: {
       tx,
       addressNList: toAddressNList(bip44Params),
       chain_id: fromChainId(adapter.getChainId()).chainReference,
-      account_number: accountNumber,
+      account_number: accountNumber.toString(),
       sequence,
     },
     wallet,
@@ -277,7 +277,7 @@ export const performIbcTransfer = async (
 export const buildTradeTx = async ({
   osmoAddress,
   adapter,
-  bip44Params,
+  accountNumber,
   buyAssetDenom,
   sellAssetDenom,
   sellAmount,
@@ -286,7 +286,7 @@ export const buildTradeTx = async ({
 }: {
   osmoAddress: string
   adapter: osmosis.ChainAdapter
-  bip44Params: BIP44Params
+  accountNumber: number
   buyAssetDenom: string
   sellAssetDenom: string
   sellAmount: string
@@ -295,7 +295,6 @@ export const buildTradeTx = async ({
 }) => {
   const responseAccount = await adapter.getAccount(osmoAddress)
 
-  const accountNumber = responseAccount.chainSpecific.accountNumber || '0'
   const sequence = responseAccount.chainSpecific.sequence || '0'
 
   const tx: Osmosis.StdTx = {
@@ -331,12 +330,14 @@ export const buildTradeTx = async ({
     ],
   }
 
+  const bip44Params = adapter.getBIP44Params({ accountNumber })
+
   return {
     txToSign: {
       tx,
       addressNList: toAddressNList(bip44Params),
       chain_id: CHAIN_REFERENCE.OsmosisMainnet,
-      account_number: accountNumber,
+      account_number: accountNumber.toString(),
       sequence,
     },
     wallet,
