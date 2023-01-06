@@ -254,7 +254,7 @@ export const performIbcTransfer = async (
     ],
   }
 
-  const bip44Params = adapter.getBIP44Params({ accountNumber: Number(accountNumber) })
+  const bip44Params = adapter.getBIP44Params({ accountNumber })
 
   const signed = await adapter.signTransaction({
     txToSign: {
