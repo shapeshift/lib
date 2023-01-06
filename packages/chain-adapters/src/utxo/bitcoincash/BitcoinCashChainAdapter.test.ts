@@ -360,15 +360,24 @@ describe('BitcoinCashChainAdapter', () => {
   })
 
   describe('getAddress', () => {
+    beforeEach(() => {
+      args.providers = {} as any
+      args.providers.http = {
+        getAccount: jest.fn().mockResolvedValue(getAccountMockResponse),
+      } as any
+    })
+
     it("should return a p2pkh address for valid derivation root path parameters (m/44'/145'/0'/0/0)", async () => {
       const wallet: HDWallet = await getWallet()
       const adapter = new bitcoincash.ChainAdapter(args)
       const accountNumber = 0
+      const index = 0
 
       const addr: string | undefined = await adapter.getAddress({
         accountNumber,
         wallet,
         accountType: UtxoAccountType.P2pkh,
+        index,
       })
       expect(addr).toStrictEqual('bitcoincash:qzqxk2q6rhy3j9fnnc00m08g4n5dm827xv2dmtjzzp')
     })
@@ -407,11 +416,13 @@ describe('BitcoinCashChainAdapter', () => {
       const wallet: HDWallet = await getWallet()
       const adapter = new bitcoincash.ChainAdapter(args)
       const accountNumber = 1
+      const index = 0
 
       const addr: string | undefined = await adapter.getAddress({
         accountNumber,
         wallet,
         accountType: UtxoAccountType.P2pkh,
+        index,
       })
       expect(addr).toStrictEqual('bitcoincash:qz62eyfnv6lec8wwd3zg2ml4cvm4wr4caq4n3kdz56')
     })
@@ -422,8 +433,9 @@ describe('BitcoinCashChainAdapter', () => {
 
       const adapter = new bitcoincash.ChainAdapter(args)
       const accountNumber = 1
+      const index = 0
 
-      await adapter.getAddress({ accountNumber, wallet, accountType: UtxoAccountType.P2pkh })
+      await adapter.getAddress({ accountNumber, wallet, accountType: UtxoAccountType.P2pkh, index })
 
       expect(wallet.btcGetAddress).toHaveBeenCalledWith({
         addressNList: [2147483692, 2147483793, 2147483649, 0, 0],
@@ -467,7 +479,13 @@ describe('BitcoinCashChainAdapter', () => {
     })
     it('should properly map account types to purposes', async () => {
       const expected: BIP44Params[] = [
-        { purpose: 44, coinType: expectedCoinType, accountNumber: 0, isChange: false, index: 0 },
+        {
+          purpose: 44,
+          coinType: expectedCoinType,
+          accountNumber: 0,
+          isChange: false,
+          index: undefined,
+        },
       ]
       const accountTypes = adapter.getSupportedAccountTypes()
       accountTypes.forEach((accountType, i) => {
@@ -478,7 +496,13 @@ describe('BitcoinCashChainAdapter', () => {
     it('should respect accountNumber', async () => {
       const accountTypes = adapter.getSupportedAccountTypes()
       const expected: BIP44Params[] = [
-        { purpose: 44, coinType: expectedCoinType, accountNumber: 0, isChange: false, index: 0 },
+        {
+          purpose: 44,
+          coinType: expectedCoinType,
+          accountNumber: 0,
+          isChange: false,
+          index: undefined,
+        },
       ]
       accountTypes.forEach((accountType, accountNumber) => {
         const r = adapter.getBIP44Params({ accountNumber, accountType })

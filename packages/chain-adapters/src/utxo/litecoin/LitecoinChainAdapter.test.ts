@@ -355,11 +355,13 @@ describe('LitecoinChainAdapter', () => {
       const wallet: HDWallet = await getWallet()
       const adapter = new litecoin.ChainAdapter(args)
       const accountNumber = 0
+      const index = 0
 
       const addr: string | undefined = await adapter.getAddress({
         accountNumber,
         wallet,
         accountType: UtxoAccountType.P2pkh,
+        index,
       })
       expect(addr).toStrictEqual('LYXTv5RdsPYKC4qGmb6x6SuKoFMxUdSjLQ')
     })
@@ -398,11 +400,13 @@ describe('LitecoinChainAdapter', () => {
       const wallet: HDWallet = await getWallet()
       const adapter = new litecoin.ChainAdapter(args)
       const accountNumber = 1
+      const index = 0
 
       const addr: string | undefined = await adapter.getAddress({
         wallet,
         accountNumber,
         accountType: UtxoAccountType.P2pkh,
+        index,
       })
       expect(addr).toStrictEqual('LeRfQnpXQDe8nth9EWkduPnfkYuD1ASwAb')
     })
@@ -444,10 +448,11 @@ describe('LitecoinChainAdapter', () => {
         UtxoAccountType.SegwitP2sh,
         UtxoAccountType.SegwitNative,
       ]
+      const index = undefined
       const expected: BIP44Params[] = [
-        { purpose: 44, coinType: 2, accountNumber: 0, isChange: false, index: 0 },
-        { purpose: 49, coinType: 2, accountNumber: 0, isChange: false, index: 0 },
-        { purpose: 84, coinType: 2, accountNumber: 0, isChange: false, index: 0 },
+        { purpose: 44, coinType: 2, accountNumber: 0, isChange: false, index },
+        { purpose: 49, coinType: 2, accountNumber: 0, isChange: false, index },
+        { purpose: 84, coinType: 2, accountNumber: 0, isChange: false, index },
       ]
       accountTypes.forEach((accountType, i) => {
         const r = adapter.getBIP44Params({ accountNumber: 0, accountType })
@@ -460,10 +465,11 @@ describe('LitecoinChainAdapter', () => {
         UtxoAccountType.SegwitP2sh,
         UtxoAccountType.SegwitNative,
       ]
+      const index = undefined
       const expected: BIP44Params[] = [
-        { purpose: 44, coinType: 2, accountNumber: 0, isChange: false, index: 0 },
-        { purpose: 49, coinType: 2, accountNumber: 1, isChange: false, index: 0 },
-        { purpose: 84, coinType: 2, accountNumber: 2, isChange: false, index: 0 },
+        { purpose: 44, coinType: 2, accountNumber: 0, isChange: false, index },
+        { purpose: 49, coinType: 2, accountNumber: 1, isChange: false, index },
+        { purpose: 84, coinType: 2, accountNumber: 2, isChange: false, index },
       ]
       accountTypes.forEach((accountType, accountNumber) => {
         const r = adapter.getBIP44Params({ accountNumber, accountType })

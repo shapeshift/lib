@@ -347,15 +347,24 @@ describe('DogecoinChainAdapter', () => {
   })
 
   describe('getAddress', () => {
+    beforeEach(() => {
+      args.providers = {} as any
+      args.providers.http = {
+        getAccount: jest.fn().mockResolvedValue(getAccountMockResponse),
+      } as any
+    })
+
     it("should return a p2pkh address for valid first receive index (m/44'/3'/0'/0/0)", async () => {
       const wallet: HDWallet = await getWallet()
       const adapter = new dogecoin.ChainAdapter(args)
       const accountNumber = 0
+      const index = 0
 
       const addr: string | undefined = await adapter.getAddress({
         wallet,
         accountNumber,
         accountType: UtxoAccountType.P2pkh,
+        index,
       })
       console.info(`addr: ${addr}`)
       expect(addr).toStrictEqual('DQTjL9vfXVbMfCGM49KWeYvvvNzRPaoiFp')
@@ -395,11 +404,13 @@ describe('DogecoinChainAdapter', () => {
       const wallet: HDWallet = await getWallet()
       const adapter = new dogecoin.ChainAdapter(args)
       const accountNumber = 1
+      const index = 0
 
       const addr: string | undefined = await adapter.getAddress({
         wallet,
         accountNumber,
         accountType: UtxoAccountType.P2pkh,
+        index,
       })
       expect(addr).toStrictEqual('DSpBqkDV8g7C2MwpT2xmeyvsB89P5qmCbq')
     })
@@ -441,7 +452,7 @@ describe('DogecoinChainAdapter', () => {
     })
     it('should properly map account types to purposes', async () => {
       const expected: BIP44Params[] = [
-        { purpose: 44, coinType: 3, accountNumber: 0, isChange: false, index: 0 },
+        { purpose: 44, coinType: 3, accountNumber: 0, isChange: false, index: undefined },
       ]
       const accountTypes = adapter.getSupportedAccountTypes()
       accountTypes.forEach((accountType, i) => {
@@ -452,7 +463,7 @@ describe('DogecoinChainAdapter', () => {
     it('should respect accountNumber', async () => {
       const accountTypes = adapter.getSupportedAccountTypes()
       const expected: BIP44Params[] = [
-        { purpose: 44, coinType: 3, accountNumber: 0, isChange: false, index: 0 },
+        { purpose: 44, coinType: 3, accountNumber: 0, isChange: false, index: undefined },
       ]
       accountTypes.forEach((accountType, accountNumber) => {
         const r = adapter.getBIP44Params({ accountNumber, accountType })
