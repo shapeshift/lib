@@ -230,6 +230,7 @@ export enum SwapErrorType {
   POOL_NOT_FOUND = 'POOL_NOT_FOUND',
   GET_TRADE_TXS_FAILED = 'GET_TRADE_TXS_FAILED',
   TRADE_FAILED = 'TRADE_FAILED',
+  OUTBOUND_CHAIN_HALTED = 'OUTBOUND_CHAIN_HALTED',
 }
 export interface Swapper<T extends ChainId> {
   /** Human-readable swapper name */
