@@ -43,17 +43,26 @@ const generateAssetData = async () => {
   // deterministic order so diffs are readable
   const orderedAssetList = orderBy(filteredWithColors, 'assetId')
 
-  const ethTokenNames = ethAssets.map((asset) => asset.name)
+  const ethAssetNames = ethAssets.map((asset) => asset.name)
+  const avalancheAssetNames = avalancheAssets.map((asset) => asset.name)
+  const optimismAssetNames = optimismAssets.map((asset) => asset.name)
+
   const generatedAssetData = orderedAssetList.reduce<AssetsById>((acc, asset) => {
     const { chainReference } = fromAssetId(asset.assetId)
 
-    // mark any avalanche assets that also exist on ethereum
-    if (chainReference === CHAIN_REFERENCE.AvalancheCChain && ethTokenNames.includes(asset.name)) {
+    // mark any avalanche assets that also exist on other evm chains
+    if (
+      chainReference === CHAIN_REFERENCE.AvalancheCChain &&
+      ethAssetNames.concat(optimismAssetNames).includes(asset.name)
+    ) {
       asset.name = `${asset.name} on Avalanche`
     }
 
-    // mark any optimism assets that also exist on ethereum
-    if (chainReference === CHAIN_REFERENCE.OptimismMainnet && ethTokenNames.includes(asset.name)) {
+    // mark any optimism assets that also exist on other evm chains
+    if (
+      chainReference === CHAIN_REFERENCE.OptimismMainnet &&
+      ethAssetNames.concat(avalancheAssetNames).includes(asset.name)
+    ) {
       asset.name = `${asset.name} on Optimism`
     }
 

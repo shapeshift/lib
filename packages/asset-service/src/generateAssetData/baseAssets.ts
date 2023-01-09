@@ -122,7 +122,7 @@ export const thorchain: Asset = {
 export const optimism: Asset = {
   assetId: caip.optimismAssetId,
   chainId: caip.optimismChainId,
-  name: 'Ethereum on Optimism',
+  name: 'Ethereum',
   symbol: 'ETH',
   precision: 18,
   color: '#5C6BC0',

@@ -64521,7 +64521,7 @@
   "eip155:10/erc20:0x3f56e0c36d275367b8c502090edf38289b3dea0d": {
     "assetId": "eip155:10/erc20:0x3f56e0c36d275367b8c502090edf38289b3dea0d",
     "chainId": "eip155:10",
-    "name": "Qi Dao",
+    "name": "Qi Dao on Optimism",
     "precision": 18,
     "color": "#F16868",
     "icon": "https://assets.coingecko.com/coins/images/15329/thumb/qi.png?1620540969",
@@ -64737,7 +64737,7 @@
   "eip155:10/erc20:0x73cb180bf0521828d8849bc8cf2b920918e23032": {
     "assetId": "eip155:10/erc20:0x73cb180bf0521828d8849bc8cf2b920918e23032",
     "chainId": "eip155:10",
-    "name": "USD ",
+    "name": "USD on Optimism",
     "precision": 6,
     "color": "#BFC5D3",
     "icon": "https://assets.coingecko.com/coins/images/25757/thumb/USD__logo.png?1653519267",
@@ -68145,7 +68145,7 @@
   "eip155:43114/erc20:0xa56f9a54880afbc30cf29bb66d2d9adcdcaeadd6": {
     "assetId": "eip155:43114/erc20:0xa56f9a54880afbc30cf29bb66d2d9adcdcaeadd6",
     "chainId": "eip155:43114",
-    "name": "Qi Dao",
+    "name": "Qi Dao on Avalanche",
     "precision": 18,
     "color": "#F16868",
     "icon": "https://assets.coingecko.com/coins/images/15329/thumb/qi.png?1620540969",
@@ -69417,7 +69417,7 @@
   "eip155:43114/erc20:0xe80772eaf6e2e18b651f160bc9158b2a5cafca65": {
     "assetId": "eip155:43114/erc20:0xe80772eaf6e2e18b651f160bc9158b2a5cafca65",
     "chainId": "eip155:43114",
-    "name": "USD ",
+    "name": "USD on Avalanche",
     "precision": 6,
     "color": "#BFC5D3",
     "icon": "https://assets.coingecko.com/coins/images/25757/thumb/USD__logo.png?1653519267",
