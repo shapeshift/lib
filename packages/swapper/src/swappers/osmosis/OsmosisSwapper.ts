@@ -292,7 +292,6 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     let cosmosIbcTradeId = ''
 
     if (!isFromOsmo) {
-
       sellAddress = await cosmosAdapter.getAddress({ wallet, accountNumber })
 
       if (!sellAddress)
