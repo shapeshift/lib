@@ -266,10 +266,14 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       receiveAddress,
     } = trade
 
+    console.log('execute 0')
+
     const isFromOsmo = sellAsset.assetId === osmosisAssetId
+    console.log('execute 1')
     const sellAssetDenom = symbolDenomMapping[sellAsset.symbol as keyof SymbolDenomMapping]
     const buyAssetDenom = symbolDenomMapping[buyAsset.symbol as keyof SymbolDenomMapping]
     let ibcSellAmount
+    console.log('execute 2')
 
     const osmosisAdapter = this.deps.adapterManager.get(osmosisChainId) as
       | osmosis.ChainAdapter
@@ -284,14 +288,18 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         code: SwapErrorType.EXECUTE_TRADE_FAILED,
       })
     }
+    console.log('execute 3')
 
     const feeData = await osmosisAdapter.getFeeData({})
     const gas = feeData.fast.chainSpecific.gasLimit
 
     let sellAddress
     let cosmosIbcTradeId = ''
+    console.log('execute 4', isFromOsmo)
 
     if (!isFromOsmo) {
+      console.log('execute 5')
+
       sellAddress = await cosmosAdapter.getAddress({ wallet, accountNumber })
 
       if (!sellAddress)
@@ -322,6 +330,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         'uatom',
         COSMO_OSMO_CHANNEL,
         feeData.fast.txFee,
+        accountNumber,
         cosmosSdkAccountNumber,
         sequence,
         gas,
@@ -402,6 +411,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         buyAssetDenom,
         OSMO_COSMO_CHANNEL,
         '0',
+        accountNumber,
         ibcAccountNumber,
         ibcSequence,
         gas,
