@@ -84,14 +84,16 @@ export class ZrxSwapper<T extends EvmSupportedChainIds> implements Swapper<T> {
     const { assetIds = [], sellAssetId } = args
     return assetIds.filter(
       (id) =>
-        id.startsWith(this.chainId) &&
-        sellAssetId?.startsWith(this.chainId) &&
+        id.startsWith(`${this.chainId}/`) &&
+        sellAssetId?.startsWith(`${this.chainId}/`) &&
         !UNSUPPORTED_ASSETS.includes(id),
     )
   }
 
   filterAssetIdsBySellable(assetIds: AssetId[] = []): AssetId[] {
-    return assetIds.filter((id) => id.startsWith(this.chainId) && !UNSUPPORTED_ASSETS.includes(id))
+    return assetIds.filter(
+      (id) => id.startsWith(`${this.chainId}/`) && !UNSUPPORTED_ASSETS.includes(id),
+    )
   }
 
   async getTradeTxs(tradeResult: TradeResult): Promise<TradeTxs> {
