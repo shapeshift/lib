@@ -1,5 +1,5 @@
 import { Asset } from '@shapeshiftoss/asset-service'
-import { AssetId, ChainId } from '@shapeshiftoss/caip'
+import { AssetId, ChainId, fromAssetId } from '@shapeshiftoss/caip'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
 import {
@@ -84,15 +84,15 @@ export class ZrxSwapper<T extends EvmSupportedChainIds> implements Swapper<T> {
     const { assetIds = [], sellAssetId } = args
     return assetIds.filter(
       (id) =>
-        id.startsWith(`${this.chainId}/`) &&
-        sellAssetId?.startsWith(`${this.chainId}/`) &&
+        fromAssetId(id).chainId === this.chainId &&
+        fromAssetId(sellAssetId).chainId === this.chainId &&
         !UNSUPPORTED_ASSETS.includes(id),
     )
   }
 
   filterAssetIdsBySellable(assetIds: AssetId[] = []): AssetId[] {
     return assetIds.filter(
-      (id) => id.startsWith(`${this.chainId}/`) && !UNSUPPORTED_ASSETS.includes(id),
+      (id) => fromAssetId(id).chainId === this.chainId && !UNSUPPORTED_ASSETS.includes(id),
     )
   }
 
