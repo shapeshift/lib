@@ -133,8 +133,6 @@ describe('OptimismChainAdapter', () => {
             chainSpecific: {
               gasLimit: '21000',
               gasPrice: '5',
-              maxFeePerGas: '300',
-              maxPriorityFeePerGas: '10',
             },
             txFee: '105000',
           },
@@ -142,8 +140,6 @@ describe('OptimismChainAdapter', () => {
             chainSpecific: {
               gasLimit: '21000',
               gasPrice: '6',
-              maxFeePerGas: '330',
-              maxPriorityFeePerGas: '11',
             },
             txFee: '126000',
           },
@@ -151,8 +147,6 @@ describe('OptimismChainAdapter', () => {
             chainSpecific: {
               gasLimit: '21000',
               gasPrice: '5',
-              maxFeePerGas: '270',
-              maxPriorityFeePerGas: '9',
             },
             txFee: '105000',
           },
@@ -176,18 +170,12 @@ describe('OptimismChainAdapter', () => {
         expect.objectContaining({
           average: {
             gasPrice: '5',
-            maxFeePerGas: '300',
-            maxPriorityFeePerGas: '10',
           },
           fast: {
             gasPrice: '6',
-            maxFeePerGas: '330',
-            maxPriorityFeePerGas: '11',
           },
           slow: {
             gasPrice: '5',
-            maxFeePerGas: '270',
-            maxPriorityFeePerGas: '9',
           },
         }),
       )
