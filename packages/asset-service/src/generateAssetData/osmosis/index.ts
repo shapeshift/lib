@@ -18,8 +18,8 @@ type OsmoAsset = {
   display: string
   symbol: string
   logo_URIs: {
-    png: string
-    svg: string
+    png?: string
+    svg?: string
   }
   coingecko_id: string
   pools?: {
@@ -74,7 +74,7 @@ export const getAssets = async (): Promise<Asset[]> => {
       name: getAssetName(current),
       precision,
       color: colorMap[assetId] ?? '#FFFFFF',
-      icon: current.logo_URIs.png,
+      icon: current.logo_URIs.png ?? current.logo_URIs.svg ?? '',
       explorer: osmosis.explorer,
       explorerAddressLink: osmosis.explorerAddressLink,
       explorerTxLink: osmosis.explorerTxLink,
