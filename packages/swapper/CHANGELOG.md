@@ -1,3 +1,45 @@
+# [@shapeshiftoss/swapper-v15.4.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.4.0...@shapeshiftoss/swapper-v15.4.1) (2023-01-12)
+
+
+### Bug Fixes
+
+* changing pagination to 10 broke things. changes it back to 1000 ([#1164](https://github.com/shapeshift/lib/issues/1164)) ([67f860c](https://github.com/shapeshift/lib/commit/67f860c4160f634116d2eebef901a94141ab92d0))
+
+# [@shapeshiftoss/swapper-v15.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.3.3...@shapeshiftoss/swapper-v15.4.0) (2023-01-12)
+
+
+### Features
+
+* **swapper:** add multi-account support to CoW Swap ([#1162](https://github.com/shapeshift/lib/issues/1162)) ([c6d396e](https://github.com/shapeshift/lib/commit/c6d396e816d90b314dc03594eb7acda6b47f32b2))
+
+# [@shapeshiftoss/swapper-v15.3.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.3.2...@shapeshiftoss/swapper-v15.3.3) (2023-01-11)
+
+
+### Bug Fixes
+
+* **swapper:** cache osmo pools endpoint ([#1161](https://github.com/shapeshift/lib/issues/1161)) ([3e150ee](https://github.com/shapeshift/lib/commit/3e150ee91b4cc44f618bd34725f778b9dc5fd0a3))
+
+# [@shapeshiftoss/swapper-v15.3.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.3.1...@shapeshiftoss/swapper-v15.3.2) (2023-01-11)
+
+
+### Bug Fixes
+
+* cosmos account number ([#1160](https://github.com/shapeshift/lib/issues/1160)) ([d76ceaa](https://github.com/shapeshift/lib/commit/d76ceaab080cd5194f7220e6ae66bc8eceb3bf92))
+
+# [@shapeshiftoss/swapper-v15.3.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.3.0...@shapeshiftoss/swapper-v15.3.1) (2023-01-11)
+
+
+### Bug Fixes
+
+* use cosmos sdk account number in osmo buildTradeTx ([#1159](https://github.com/shapeshift/lib/issues/1159)) ([4992b0f](https://github.com/shapeshift/lib/commit/4992b0ff1c72fad44156faf8b27924809ad679bc))
+
+# [@shapeshiftoss/swapper-v15.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.2.2...@shapeshiftoss/swapper-v15.3.0) (2023-01-10)
+
+
+### Features
+
+* **swapper:** export `getInboundAddressDataForChain` ([#1158](https://github.com/shapeshift/lib/issues/1158)) ([8cc30f8](https://github.com/shapeshift/lib/commit/8cc30f8d3727a1f84f09b721ee5511fcb65c7414))
+
 # [@shapeshiftoss/swapper-v15.2.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.2.1...@shapeshiftoss/swapper-v15.2.2) (2023-01-09)
 
 

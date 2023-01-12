@@ -10,9 +10,21 @@ import {
   SwapErrorType,
   TradeResult,
 } from '../../../api'
+import { createCache } from '../../../utils'
 import { bn, bnOrZero } from '../../utils/bignumber'
 import { OSMOSIS_PRECISION } from './constants'
 import { IbcTransferInput, PoolInfo } from './types'
+
+// Create cached axios service for pools endpoint because it gets called a LOT
+const cache = createCache(3000, ['/osmosis/gamm/v1beta1/pools/'])
+const osmoPoolsService = axios.create({
+  timeout: 10000,
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  },
+  adapter: cache.adapter,
+})
 
 export interface SymbolDenomMapping {
   OSMO: string
@@ -115,11 +127,12 @@ export const pollForAtomChannelBalance = async (
 const findPool = async (sellAssetSymbol: string, buyAssetSymbol: string, osmoUrl: string) => {
   const sellAssetDenom = symbolDenomMapping[sellAssetSymbol as keyof SymbolDenomMapping]
   const buyAssetDenom = symbolDenomMapping[buyAssetSymbol as keyof SymbolDenomMapping]
+
   const poolsUrl = osmoUrl + '/osmosis/gamm/v1beta1/pools?pagination.limit=1000'
 
   const poolsResponse = await (async () => {
     try {
-      return axios.get(poolsUrl)
+      return osmoPoolsService.get(poolsUrl)
     } catch (e) {
       throw new SwapError('failed to get pool', {
         code: SwapErrorType.POOL_NOT_FOUND,
@@ -204,6 +217,7 @@ export const performIbcTransfer = async (
   sourceChannel: string,
   feeAmount: string,
   accountNumber: number,
+  ibcAccountNumber: number,
   sequence: string,
   gas: string,
   feeDenom: string,
@@ -261,7 +275,7 @@ export const performIbcTransfer = async (
       tx,
       addressNList: toAddressNList(bip44Params),
       chain_id: fromChainId(adapter.getChainId()).chainReference,
-      account_number: accountNumber.toString(),
+      account_number: ibcAccountNumber.toString(),
       sequence,
     },
     wallet,
@@ -295,6 +309,8 @@ export const buildTradeTx = async ({
 }) => {
   const responseAccount = await adapter.getAccount(osmoAddress)
 
+  // note - this is a cosmos sdk specific account_number, not a bip44Params accountNumber
+  const account_number = responseAccount.chainSpecific.accountNumber || '0'
   const sequence = responseAccount.chainSpecific.sequence || '0'
 
   const tx: Osmosis.StdTx = {
@@ -337,7 +353,7 @@ export const buildTradeTx = async ({
       tx,
       addressNList: toAddressNList(bip44Params),
       chain_id: CHAIN_REFERENCE.OsmosisMainnet,
-      account_number: accountNumber.toString(),
+      account_number,
       sequence,
     },
     wallet,
