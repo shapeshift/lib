@@ -59,27 +59,12 @@ export class ChainAdapter extends EvmBaseAdapter<KnownChainIds.OptimismMainnet> 
     return {
       fast: {
         gasPrice: calcFee(feeData.gasPrice, 'fast', nc),
-        ...(feeData.maxFeePerGas &&
-          feeData.maxPriorityFeePerGas && {
-            maxFeePerGas: calcFee(feeData.maxFeePerGas, 'fast', nc),
-            maxPriorityFeePerGas: calcFee(feeData.maxPriorityFeePerGas, 'fast', nc),
-          }),
       },
       average: {
         gasPrice: calcFee(feeData.gasPrice, 'average', nc),
-        ...(feeData.maxFeePerGas &&
-          feeData.maxPriorityFeePerGas && {
-            maxFeePerGas: calcFee(feeData.maxFeePerGas, 'average', nc),
-            maxPriorityFeePerGas: calcFee(feeData.maxPriorityFeePerGas, 'average', nc),
-          }),
       },
       slow: {
         gasPrice: calcFee(feeData.gasPrice, 'slow', nc),
-        ...(feeData.maxFeePerGas &&
-          feeData.maxPriorityFeePerGas && {
-            maxFeePerGas: calcFee(feeData.maxFeePerGas, 'slow', nc),
-            maxPriorityFeePerGas: calcFee(feeData.maxPriorityFeePerGas, 'slow', nc),
-          }),
       },
     }
   }
