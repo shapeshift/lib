@@ -16,7 +16,7 @@ import { OSMOSIS_PRECISION } from './constants'
 import { IbcTransferInput, PoolInfo } from './types'
 
 // Create cached axios service for pools endpoint because it gets called a LOT
-const cache = createCache(3000, ['/osmosis/gamm/v1beta1/pools/'])
+const cache = createCache(3000, ['/osmosis/gamm/v1beta1/pools'])
 const osmoPoolsService = axios.create({
   timeout: 10000,
   headers: {
