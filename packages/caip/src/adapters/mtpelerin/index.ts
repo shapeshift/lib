@@ -9,6 +9,7 @@ import {
   ethAssetId,
   ethChainId,
   optimismAssetId,
+  optimismChainId,
 } from '../../constants'
 
 /**
@@ -85,8 +86,6 @@ const MtPelerinSymbolToAssetIds: Record<string, AssetId[]> = {
     '[tezos_mainnet]/KT1JBNFcB5tiycHNdYGYCtR3kk6JaJysUCi8': 'EURL',
     '[arbitrum_mainnet]/0x0000000000000000000000000000000000000000': 'ETH',
     '[arbitrum_mainnet]/0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8': 'USDC',
-    '[optimism_mainnet]/0x0000000000000000000000000000000000000000': 'ETH',
-    '[optimism_mainnet]/0x7F5c764cBc14f9669B88837ca1490cCa17c31607': 'USDC',
     '[avalanche_mainnet]/0x9fB1d52596c44603198fB0aee434fac3a679f702': 'jEUR',
     '[avalanche_mainnet]/0x2d5563da42b06FbBF9c67b7DC073cF6A7842239e': 'jCHF',
     '[avalanche_mainnet]/0x5c49b268c9841AFF1Cc3B0a418ff5c3442eE3F3b': 'MAI',
@@ -123,6 +122,7 @@ const chainIdToMtPelerinNetworkCodeMap: Record<ChainId, string> = {
   [ethChainId]: 'mainnet',
   [btcChainId]: 'bitcoin_mainnet',
   [avalancheChainId]: 'avalanche_mainnet', // this is actually the C-Chain
+  [optimismChainId]: 'optimism_mainnet',
 } as const
 
 /**
