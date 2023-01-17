@@ -8,19 +8,21 @@ import {
   btcChainId,
   ethAssetId,
   ethChainId,
+  optimismAssetId,
 } from '../../constants'
 
 /**
  * provided from https://api.mtPelerin.com/currencies/tokens
  */
 const MtPelerinSymbolToAssetIds: Record<string, AssetId[]> = {
-  ETH: [ethAssetId],
+  ETH: [ethAssetId, optimismAssetId],
   BTC: [btcAssetId],
   DAI: ['eip155:1/erc20:0x6b175474e89094c44da98b954eedeac495271d0f'],
   USDT: ['eip155:1/erc20:0xdac17f958d2ee523a2206206994597c13d831ec7'],
   USDC: [
     'eip155:1/erc20:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
     'eip155:43114/erc20:0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e',
+    'eip155:10/erc20:0x7f5c764cbc14f9669b88837ca1490cca17c31607',
   ],
   jEUR: ['eip155:1/erc20:0x0f17bc9a994b87b5225cfb6a2cd4d667adb4f20b'],
   jCHF: ['eip155:1/erc20:0x53dfea0a8cc2a2a2e425e1c174bc162999723ea0'],
