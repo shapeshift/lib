@@ -56,33 +56,33 @@ export class ChainAdapter extends EvmBaseAdapter<KnownChainIds.AvalancheMainnet>
   }
 
   async getGasFeeData(): Promise<GasFeeDataEstimate> {
-    const feeData = await this.providers.http.getGasFees()
+    const { gasPrice, maxFeePerGas, maxPriorityFeePerGas } = await this.api.getGasFees()
 
     const scalars = { fast: bn(1.2), average: bn(1), slow: bn(0.8) }
 
     return {
       fast: {
-        gasPrice: calcFee(feeData.gasPrice, 'fast', scalars),
-        ...(feeData.maxFeePerGas &&
-          feeData.maxPriorityFeePerGas && {
-            maxFeePerGas: calcFee(feeData.maxFeePerGas, 'fast', scalars),
-            maxPriorityFeePerGas: calcFee(feeData.maxPriorityFeePerGas, 'fast', scalars),
+        gasPrice: calcFee(gasPrice, 'fast', scalars),
+        ...(maxFeePerGas &&
+          maxPriorityFeePerGas && {
+            maxFeePerGas: calcFee(maxFeePerGas, 'fast', scalars),
+            maxPriorityFeePerGas: calcFee(maxPriorityFeePerGas, 'fast', scalars),
           }),
       },
       average: {
-        gasPrice: calcFee(feeData.gasPrice, 'average', scalars),
-        ...(feeData.maxFeePerGas &&
-          feeData.maxPriorityFeePerGas && {
-            maxFeePerGas: calcFee(feeData.maxFeePerGas, 'average', scalars),
-            maxPriorityFeePerGas: calcFee(feeData.maxPriorityFeePerGas, 'average', scalars),
+        gasPrice: calcFee(gasPrice, 'average', scalars),
+        ...(maxFeePerGas &&
+          maxPriorityFeePerGas && {
+            maxFeePerGas: calcFee(maxFeePerGas, 'average', scalars),
+            maxPriorityFeePerGas: calcFee(maxPriorityFeePerGas, 'average', scalars),
           }),
       },
       slow: {
-        gasPrice: calcFee(feeData.gasPrice, 'slow', scalars),
-        ...(feeData.maxFeePerGas &&
-          feeData.maxPriorityFeePerGas && {
-            maxFeePerGas: calcFee(feeData.maxFeePerGas, 'slow', scalars),
-            maxPriorityFeePerGas: calcFee(feeData.maxPriorityFeePerGas, 'slow', scalars),
+        gasPrice: calcFee(gasPrice, 'slow', scalars),
+        ...(maxFeePerGas &&
+          maxPriorityFeePerGas && {
+            maxFeePerGas: calcFee(maxFeePerGas, 'slow', scalars),
+            maxPriorityFeePerGas: calcFee(maxPriorityFeePerGas, 'slow', scalars),
           }),
       },
     }
