@@ -44,6 +44,10 @@ export const utxoSelect = (input: UTXOSelectInput) => {
     return coinSelect<unchained.bitcoin.Utxo>(utxos, outputs, Number(input.satoshiPerByte))
   })()
 
+  /**
+   * note - the 0-indexed output is the `to` address, and if `input.from` is included as an argument, the
+   * 1-indexed output will be the change address, which we overwrite below
+   */
   if (input.from && result?.outputs?.[1]?.value) {
     // If input contains a `from` param, inputs will be filtered to only keep UTXOs from that address
     // The change address will be set to this from address, so that it can be reused
