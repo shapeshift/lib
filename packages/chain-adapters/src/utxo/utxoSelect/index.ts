@@ -48,7 +48,7 @@ export const utxoSelect = (input: UTXOSelectInput) => {
     // If input contains a `from` param, inputs will be filtered to only keep UTXOs from that address
     // The change address will be set to this from address, so that it can be reused
     // Reusing addresses is an xpub antipattern and totally voids UTXO privacy guarantees, thus input.from should only be used
-    // when dealing with destinations that expect address reuse e.g THORSwap
+    // when dealing with destinations that expect address reuse e.g THORChain savers
     const { value } = result.outputs[1]
     result.outputs[1] = { address: input.from, value }
   }
