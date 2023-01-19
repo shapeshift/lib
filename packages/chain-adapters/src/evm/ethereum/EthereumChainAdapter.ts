@@ -12,7 +12,7 @@ import {
   ZrxGasApiResponse,
 } from '../../types'
 import { bn, bnOrZero } from '../../utils/bignumber'
-import { calcFee as calcFee2, ChainAdapterArgs, EvmBaseAdapter } from '../EvmBaseAdapter'
+import { calcFee, ChainAdapterArgs, EvmBaseAdapter } from '../EvmBaseAdapter'
 import { GasFeeDataEstimate } from '../types'
 
 const SUPPORTED_CHAIN_IDS = [KnownChainIds.EthereumMainnet]
@@ -81,24 +81,24 @@ export class ChainAdapter extends EvmBaseAdapter<KnownChainIds.EthereumMainnet> 
         gasPrice: bnOrZero(medianFees.fast).toString(),
         ...(feeData.maxFeePerGas &&
           feeData.maxPriorityFeePerGas && {
-            maxFeePerGas: calcFee2(feeData.maxFeePerGas, 'fast', scalars),
-            maxPriorityFeePerGas: calcFee2(feeData.maxPriorityFeePerGas, 'fast', scalars),
+            maxFeePerGas: calcFee(feeData.maxFeePerGas, 'fast', scalars),
+            maxPriorityFeePerGas: calcFee(feeData.maxPriorityFeePerGas, 'fast', scalars),
           }),
       },
       average: {
         gasPrice: bnOrZero(medianFees.standard).toString(),
         ...(feeData.maxFeePerGas &&
           feeData.maxPriorityFeePerGas && {
-            maxFeePerGas: calcFee2(feeData.maxFeePerGas, 'average', scalars),
-            maxPriorityFeePerGas: calcFee2(feeData.maxPriorityFeePerGas, 'average', scalars),
+            maxFeePerGas: calcFee(feeData.maxFeePerGas, 'average', scalars),
+            maxPriorityFeePerGas: calcFee(feeData.maxPriorityFeePerGas, 'average', scalars),
           }),
       },
       slow: {
         gasPrice: bnOrZero(medianFees.low).toString(),
         ...(feeData.maxFeePerGas &&
           feeData.maxPriorityFeePerGas && {
-            maxFeePerGas: calcFee2(feeData.maxFeePerGas, 'slow', scalars),
-            maxPriorityFeePerGas: calcFee2(feeData.maxPriorityFeePerGas, 'slow', scalars),
+            maxFeePerGas: calcFee(feeData.maxFeePerGas, 'slow', scalars),
+            maxPriorityFeePerGas: calcFee(feeData.maxPriorityFeePerGas, 'slow', scalars),
           }),
       },
     }

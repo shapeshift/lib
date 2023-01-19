@@ -223,53 +223,6 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
     }
   }
 
-  protected async estimateFeeData({
-    to,
-    value,
-    chainSpecific: { contractAddress, from, contractData },
-    sendMax = false,
-    gasFeeData: { fast, average, slow },
-  }: EstimateFeeDataInput<T>): Promise<FeeDataEstimate<EvmChainId>> {
-    const isErc20Send = !!contractAddress
-
-    // get the exact send max value for an erc20 send to ensure we have the correct input data when estimating fees
-    if (sendMax && isErc20Send) {
-      const account = await this.getAccount(from)
-      const erc20Balance = account.chainSpecific.tokens?.find((token) => {
-        const { assetReference } = fromAssetId(token.assetId)
-        return assetReference === contractAddress.toLowerCase()
-      })?.balance
-
-      if (!erc20Balance) throw new Error('no balance')
-
-      value = erc20Balance
-    }
-
-    const data = contractData ?? (await getErc20Data(to, value, contractAddress))
-
-    const { gasLimit } = await this.providers.http.estimateGas({
-      from,
-      to: isErc20Send ? contractAddress : to,
-      value: isErc20Send ? '0' : value,
-      data,
-    })
-
-    return {
-      fast: {
-        txFee: bnOrZero(bn(fast.gasPrice).times(gasLimit)).toPrecision(),
-        chainSpecific: { gasLimit, ...fast },
-      },
-      average: {
-        txFee: bnOrZero(bn(average.gasPrice).times(gasLimit)).toPrecision(),
-        chainSpecific: { gasLimit, ...average },
-      },
-      slow: {
-        txFee: bnOrZero(bn(slow.gasPrice).times(gasLimit)).toPrecision(),
-        chainSpecific: { gasLimit, ...slow },
-      },
-    }
-  }
-
   protected async buildEstimateGasRequest({
     to,
     value,
@@ -295,7 +248,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
 
     return {
       from,
-      to: contractAddress ?? to,
+      to: isErc20Send ? contractAddress : to,
       value: isErc20Send ? '0' : value,
       data,
     }
