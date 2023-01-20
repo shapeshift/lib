@@ -38,14 +38,8 @@ import {
   toAddressNList,
   toRootDerivationPath,
 } from '../utils'
-import { bn, bnOrZero } from '../utils/bignumber'
-import {
-  BuildCustomTxInput,
-  EstimateFeeDataInput,
-  EstimateGasRequest,
-  Fees,
-  GasFeeDataEstimate,
-} from './types'
+import { bnOrZero } from '../utils/bignumber'
+import { BuildCustomTxInput, EstimateGasRequest, Fees, GasFeeDataEstimate } from './types'
 import { getErc20Data, getGeneratedAssetData } from './utils'
 
 export const evmChainIds = [
