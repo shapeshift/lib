@@ -28439,7 +28439,7 @@
     "chainId": "eip155:1",
     "name": "inheritance Art",
     "precision": 18,
-    "color": "#F6F6F1",
+    "color": "#F3F1EB",
     "icon": "https://assets.coingecko.com/coins/images/24221/thumb/iAI.jpg?1646919582",
     "symbol": "IAI",
     "explorer": "https://etherscan.io",

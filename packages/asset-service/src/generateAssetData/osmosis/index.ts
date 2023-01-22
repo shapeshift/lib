@@ -56,7 +56,7 @@ export const getAssets = async (): Promise<Asset[]> => {
   */
   const lpAssetsAdded = new Set()
 
-  return await assetData.assets.reduce<Promise<Asset[]>>(async (accPrevious, current) => {
+  return assetData.assets.reduce<Promise<Asset[]>>(async (accPrevious, current) => {
     const acc = await accPrevious
     if (!current) return acc
 
