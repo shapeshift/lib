@@ -68,13 +68,11 @@ export const getAssets = async (): Promise<Asset[]> => {
 
   /* Fetch asset list */
   const currentAssetListsHash = await getCurrentHash('osmosis-labs/assetlists')
-  console.info('currentAssetListsHash', currentAssetListsHash)
   const { data: assetData } = await axios.get<OsmosisAssetList>(
     `https://raw.githack.com/osmosis-labs/assetlists/${currentAssetListsHash}/osmosis-1/osmosis-1.assetlist.json`,
   )
 
   if (!assetData) throw new Error('Could not get Osmosis asset data!')
-  console.info('assetData', assetData)
 
   /* Osmosis pool IDs are guaranteed to be unique integers, so we use a set to keep track of 
     which pools we've already seen. A lookup is necessary because the Osmosis asset list 
