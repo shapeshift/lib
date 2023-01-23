@@ -98,17 +98,20 @@ export class MarketServiceManager {
       result = Object.fromEntries(
         Object.entries(result).sort(([, a], [, b]) => (a.marketCap < b.marketCap ? 1 : -1)),
       )
-    } else {
-      /** Go through market providers listed above and look for market data for all assets.
-       * Once data is found, exit the loop and return result. If no data is found for any
-       * provider, throw an error.
-       */
-      for (let i = 0; i < this.marketProviders.length && !result; i++) {
-        try {
-          result = await this.marketProviders[i].findAll(args)
-        } catch (e) {
-          console.info(e)
-        }
+
+      if (!result) throw new Error('Cannot find market service provider for market data.')
+      return result
+    }
+
+    /** Go through market providers listed above and look for market data for all assets.
+     * Once data is found, exit the loop and return result. If no data is found for any
+     * provider, throw an error.
+     */
+    for (let i = 0; i < this.marketProviders.length && !result; i++) {
+      try {
+        result = await this.marketProviders[i].findAll(args)
+      } catch (e) {
+        console.info(e)
       }
     }
 
