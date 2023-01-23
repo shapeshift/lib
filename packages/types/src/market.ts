@@ -36,6 +36,7 @@ export type PriceHistoryType = (args: PriceHistoryArgs) => Promise<HistoryData[]
 
 export type FindAllMarketArgs = {
   count: number
+  fetchFromAllProviders?: boolean
 }
 
 export type MarketCapResult = {
