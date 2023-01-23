@@ -1146,7 +1146,7 @@ describe('parseTx', () => {
         data: {
           assetId: 'eip155:1/erc20:0x514910771af9ca656af840dff83e8264ecf986ca',
           method: 'approve',
-          parser: 'yearn',
+          parser: 'erc20',
           value: '392318858461667547739736838950479151006397215279002157055',
         },
         status: TxStatus.Confirmed,
@@ -1173,10 +1173,7 @@ describe('parseTx', () => {
         address,
         chainId: 'eip155:1',
         confirmations: tx.confirmations,
-        data: {
-          method: 'deposit',
-          parser: 'yearn',
-        },
+        data: undefined,
         status: TxStatus.Confirmed,
         fee: {
           value: '18139009291874667',
@@ -1220,10 +1217,7 @@ describe('parseTx', () => {
         address,
         chainId: 'eip155:1',
         confirmations: tx.confirmations,
-        data: {
-          method: 'withdraw',
-          parser: 'yearn',
-        },
+        data: undefined,
         status: TxStatus.Confirmed,
         fee: {
           value: '19460274119661600',
@@ -1267,10 +1261,7 @@ describe('parseTx', () => {
         address,
         chainId: 'eip155:1',
         confirmations: tx.confirmations,
-        data: {
-          method: 'deposit',
-          parser: 'yearn',
-        },
+        data: undefined,
         status: TxStatus.Confirmed,
         fee: {
           value: '9099683709794574',
