@@ -1,6 +1,7 @@
+import dotenv from 'dotenv'
+
 // import { JsonRpcProvider } from '@ethersproject/providers'
 // import { HistoryTimeframe } from '@shapeshiftoss/types'
-
 // import { HistoryTimeframe } from '@shapeshiftoss/types'
 // import { Yearn } from '@yfi/sdk'
 // import { CoinGeckoMarketService } from './coingecko/coingecko'
@@ -9,6 +10,7 @@
 // import { OsmosisMarketService } from './osmosis/osmosis'
 // import { FOXY_ASSET_ID, FoxyMarketService } from './foxy/foxy'
 // import { MarketServiceManager } from './market-service-manager'
+dotenv.config()
 
 const main = async (): Promise<void> => {
   // const assetId = 'eip155:1/erc20:0xa258c4606ca8206d8aa700ce2143d7db854d168c' // WETH Vault
@@ -46,13 +48,21 @@ const main = async (): Promise<void> => {
   // })
   // console.log({ data })
   // /***** MARKET SERVICE findAll() *****/
+  // if (
+  //   !process.env.COINGECKO_API_KEY ||
+  //   !process.env.ETHEREUM_NODE_URL ||
+  //   !process.env.UNCHAINED_ETHEREUM_HTTP_URL ||
+  //   !process.env.UNCHAINED_ETHEREUM_WS_URL
+  // ) {
+  //   throw new Error('Please ensure that all environment variables are set in market-service/.env')
+  // }
   // const marketServiceManager = new MarketServiceManager({
-  //   coinGeckoAPIKey: 'CG-we5Z4KbdYMCgMUVAqDjQMWfc',
+  //   coinGeckoAPIKey: process.env.COINGECKO_API_KEY,
   //   yearnChainReference: 1, // CHAIN_REFERENCE.EthereumMainnet is '1', yearn requires strict number union
   //   providerUrls: {
-  //     jsonRpcProviderUrl: 'https://dev-daemon.ethereum.shapeshift.com',
-  //     unchainedEthereumHttpUrl: 'https://dev-api.ethereum.shapeshift.com',
-  //     unchainedEthereumWsUrl: 'wss://dev-api.ethereum.shapeshift.com',
+  //     jsonRpcProviderUrl: process.env.ETHEREUM_NODE_URL,
+  //     unchainedEthereumHttpUrl: process.env.UNCHAINED_ETHEREUM_HTTP_URL,
+  //     unchainedEthereumWsUrl: process.env.UNCHAINED_ETHEREUM_WS_URL,
   //   },
   // })
   // const label = 'Time Elapsed'
