@@ -92,6 +92,8 @@ export class MarketServiceManager {
           result[k] = result[k] ?? v
         }
       }
+      // Make sure results are sorted by market cap
+      allResults.sort((a, b) => (a.liquidity < b.liquidity ? 1 : -1))
     } else {
       /** Go through market providers listed above and look for market data for all assets.
        * Once data is found, exit the loop and return result. If no data is found for any
