@@ -87,11 +87,17 @@ export class MarketServiceManager {
       const allResults = (await Promise.allSettled(promises))
         .filter((res) => res.status === 'fulfilled' && res.value)
         .map((res) => (res as PromiseFulfilledResult<MarketCapResult>).value)
+
+      /* Merge all results into result object*/
       for (let i = 0; i < allResults.length; i++) {
         for (const [k, v] of Object.entries(allResults[i])) {
           result[k] = result[k] ?? v
         }
       }
+      /* Make sure results are sorted by market cap */
+      result = Object.fromEntries(
+        Object.entries(result).sort(([, a], [, b]) => (a.marketCap < b.marketCap ? 1 : -1)),
+      )
     } else {
       /** Go through market providers listed above and look for market data for all assets.
        * Once data is found, exit the loop and return result. If no data is found for any
