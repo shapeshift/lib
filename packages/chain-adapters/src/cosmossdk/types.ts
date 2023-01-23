@@ -90,7 +90,7 @@ export type FeeData = {
 }
 
 export type CosmosSDKToken = {
-  assetId: AssetId | string
+  assetId: AssetId
   amount: string
 }
 
