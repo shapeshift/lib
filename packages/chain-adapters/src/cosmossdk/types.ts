@@ -10,6 +10,7 @@ export type Account = {
   redelegations: Redelegation[]
   undelegations: Undelegation[]
   rewards: ValidatorReward[]
+  assets: CosmosSDKToken[]
 }
 
 export type Message = {
