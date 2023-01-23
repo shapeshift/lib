@@ -1,5 +1,5 @@
 // import { JsonRpcProvider } from '@ethersproject/providers'
-import { HistoryTimeframe } from '@shapeshiftoss/types'
+// import { HistoryTimeframe } from '@shapeshiftoss/types'
 
 // import { HistoryTimeframe } from '@shapeshiftoss/types'
 // import { Yearn } from '@yfi/sdk'
@@ -7,7 +7,8 @@ import { HistoryTimeframe } from '@shapeshiftoss/types'
 // import { YearnVaultMarketCapService } from './yearn/yearn-vaults'
 // import { YearnTokenMarketCapService } from './yearn/yearn-tokens'
 // import { OsmosisMarketService } from './osmosis/osmosis'
-import { FOXY_ASSET_ID, FoxyMarketService } from './foxy/foxy'
+// import { FOXY_ASSET_ID, FoxyMarketService } from './foxy/foxy'
+// import { MarketServiceManager } from './market-service-manager'
 
 const main = async (): Promise<void> => {
   // const assetId = 'eip155:1/erc20:0xa258c4606ca8206d8aa700ce2143d7db854d168c' // WETH Vault
@@ -17,25 +18,25 @@ const main = async (): Promise<void> => {
   // const assetId = 'eip155:1/erc20:0x93ed140172ff226dad1f7f3650489b8daa07ae7f' // Zapper Token
   // const assetId = 'eip155:1/erc20:0x3f1b0278a9ee595635b61817630cc19de792f506' // Zapper Token
   // const assetId = 'cosmos:osmosis-1/slip44:118' // Osmosis
-  const assetId = FOXY_ASSET_ID // FOXy
-  const timeframe = HistoryTimeframe.YEAR
+  // const assetId = FOXY_ASSET_ID // FOXy
+  // const timeframe = HistoryTimeframe.YEAR
   // const assetId = 'bip122:000000000019d6689c085ae165831e93/slip44:0' // BTC
   // const provider = new JsonRpcProvider('https://daemon.ethereum.shapeshift.com')
   // const yearnSdk = new Yearn(1, { provider })
   // const yearnMarketService = new YearnTokenMarketCapService({ yearnSdk })
   // const osmosisMarketService = new OsmosisMarketService()
-  const foxyMarketService = new FoxyMarketService({
-    coinGeckoAPIKey: '', // REACT_APP_COINGECKO_API_KEY
-    providerUrls: {
-      jsonRpcProviderUrl: '', // REACT_APP_ETHEREUM_NODE_URL
-      unchainedEthereumHttpUrl: '', // REACT_APP_UNCHAINED_ETHEREUM_HTTP_URL
-      unchainedEthereumWsUrl: '', // REACT_APP_UNCHAINED_ETHEREUM_WS_URL
-    },
-  })
+  // const foxyMarketService = new FoxyMarketService({
+  //   coinGeckoAPIKey: '', // REACT_APP_COINGECKO_API_KEY
+  //   providerUrls: {
+  //     jsonRpcProviderUrl: '', // REACT_APP_ETHEREUM_NODE_URL
+  //     unchainedEthereumHttpUrl: '', // REACT_APP_UNCHAINED_ETHEREUM_HTTP_URL
+  //     unchainedEthereumWsUrl: '', // REACT_APP_UNCHAINED_ETHEREUM_WS_URL
+  //   },
+  // })
   // const cgMarketService = new CoinGeckoMarketService()
   // const data = await yearnMarketService.findAll()
   // const data = await yearnMarketService.findByAssetId({ assetId })
-  const data = await foxyMarketService.findPriceHistoryByAssetId({ assetId, timeframe })
+  // const data = await foxyMarketService.findPriceHistoryByAssetId({ assetId, timeframe })
   // const data = await foxyMarketService.findByAssetId({ assetId })
   // const data = await foxyMarketService.findAll()
   // const data = await yearnMarketService.findAll()
@@ -43,7 +44,22 @@ const main = async (): Promise<void> => {
   //   assetId,
   //   timeframe: HistoryTimeframe.DAY
   // })
-  console.log({ data })
+  // console.log({ data })
+  // /***** MARKET SERVICE findAll() *****/
+  // const marketServiceManager = new MarketServiceManager({
+  //   coinGeckoAPIKey: 'CG-we5Z4KbdYMCgMUVAqDjQMWfc',
+  //   yearnChainReference: 1, // CHAIN_REFERENCE.EthereumMainnet is '1', yearn requires strict number union
+  //   providerUrls: {
+  //     jsonRpcProviderUrl: 'https://dev-daemon.ethereum.shapeshift.com',
+  //     unchainedEthereumHttpUrl: 'https://dev-api.ethereum.shapeshift.com',
+  //     unchainedEthereumWsUrl: 'wss://dev-api.ethereum.shapeshift.com',
+  //   },
+  // })
+  // const label = 'Time Elapsed'
+  // console.time(label)
+  // const results = await marketServiceManager.findAll({ fetchFromAllProviders: true, count: 1000 })
+  // console.timeEnd(label)
+  // console.log(`Price data obtained for ${Object.entries(results).length} assets`)
 }
 
 main()
