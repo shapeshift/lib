@@ -1,3 +1,4 @@
+import { AssetId } from '@shapeshiftoss/caip'
 import * as unchained from '@shapeshiftoss/unchained-client'
 
 import * as types from '../types'
@@ -89,7 +90,7 @@ export type FeeData = {
 }
 
 export type CosmosSDKToken = {
-  denom: string
+  assetId: AssetId | string
   amount: string
 }
 

@@ -1,4 +1,4 @@
-import { AssetId, ChainId, fromChainId } from '@shapeshiftoss/caip'
+import { AssetId, ChainId, fromChainId, generateAssetIdFromOsmosisDenom } from '@shapeshiftoss/caip'
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import { bech32 } from 'bech32'
@@ -194,7 +194,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
 
         const assets = data.assets.map<CosmosSDKToken>((asset) => ({
           amount: asset.amount,
-          denom: asset.denom,
+          assetId: generateAssetIdFromOsmosisDenom(asset.denom),
         }))
 
         return { ...data, delegations, redelegations, undelegations, rewards, assets }
