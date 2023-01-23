@@ -58,54 +58,9 @@ export class MarketServiceManager {
 
   async findAll(args: FindAllMarketArgs): Promise<MarketCapResult> {
     let result: MarketCapResult | null = null
-    if (args.fetchFromAllProviders) {
-      /** Some of the providers above have performance issues. Instead of modifying the default behavior,
-       * we'll just use a blacklist exclude the questionable providers with the fetchFromAllProviders option is enabled.
-       */
-      const blacklistedProviders = [
-        CoinCapMarketService, // Response is sometimes slow (~500ms), (128 results returned, 0 unique)
-        // YearnTokenMarketCapService, // API errors, response is very slow (~4000ms) (208 results returned, 107 unique)
-        // YearnVaultMarketCapService, // API errors, response is slow (~5500ms) (107 results returned, 107 unique)
-        IdleMarketService, // (0 results returned)
-        FoxyMarketService, // (0 results returned)
-      ]
-
-      const marketProviders = this.marketProviders.filter((provider) =>
-        blacklistedProviders.every((blacklisted) => !(provider instanceof blacklisted)),
-      )
-      /** Call findAll() method on every eligible market provider in parallel.
-       * Wait for all promises to either resolve or reject, then merge results
-       * from all resolved promises, Results from more reliable providers will be prioritized over
-       * identical results from less reliable providers.
-       */
-      result = {}
-      const promises = []
-      for (let i = 0; i < marketProviders.length; i++) {
-        promises.push(marketProviders[i].findAll(args))
-      }
-      const allResults = (await Promise.allSettled(promises))
-        .filter((res) => res.status === 'fulfilled' && res.value)
-        .map((res) => (res as PromiseFulfilledResult<MarketCapResult>).value)
-
-      /* Merge all results into result object*/
-      for (let i = 0; i < allResults.length; i++) {
-        for (const [k, v] of Object.entries(allResults[i])) {
-          result[k] = result[k] ?? v
-        }
-      }
-      /* Make sure results are sorted by market cap */
-      result = Object.fromEntries(
-        Object.entries(result).sort(([, a], [, b]) => (a.marketCap < b.marketCap ? 1 : -1)),
-      )
-
-      if (!result) throw new Error('Cannot find market service provider for market data.')
-      return result
-    }
-
-    /** Go through market providers listed above and look for market data for all assets.
-     * Once data is found, exit the loop and return result. If no data is found for any
-     * provider, throw an error.
-     */
+    // Go through market providers listed above and look for market data for all assets.
+    // Once data is found, exit the loop and return result. If no data is found for any
+    // provider, throw an error.
     for (let i = 0; i < this.marketProviders.length && !result; i++) {
       try {
         result = await this.marketProviders[i].findAll(args)
@@ -113,7 +68,6 @@ export class MarketServiceManager {
         console.info(e)
       }
     }
-
     if (!result) throw new Error('Cannot find market service provider for market data.')
     return result
   }
