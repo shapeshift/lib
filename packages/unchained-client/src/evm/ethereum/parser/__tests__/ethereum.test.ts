@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 import { Dex, Trade, TradeType, TransferType, TxStatus } from '../../../../types'
 import { ParsedTx as Tx } from '../../../parser'
 import {
@@ -7,6 +9,7 @@ import {
   WETH_CONTRACT_MAINNET,
 } from '../constants'
 import { TransactionParser } from '../index'
+import { YEARN_VAULTS_URL } from '../yearn'
 import ethSelfSend from './mockData/ethSelfSend'
 import foxClaim from './mockData/foxClaim'
 import foxExit from './mockData/foxExit'
@@ -51,16 +54,23 @@ import zrxTradeEthToMatic from './mockData/zrxTradeEthToMatic'
 import zrxTradeTetherToKishu from './mockData/zrxTradeTetherToKishu'
 import zrxTradeTribeToEth from './mockData/zrxTradeTribeToEth'
 
-jest.mock('@yfi/sdk', () => ({
-  Yearn: jest.fn().mockImplementation(() => ({
-    vaults: {
-      get: () => [
-        { address: '0x671a912C10bba0CFA74Cfc2d6Fba9BA1ed9530B2' },
-        { address: '0x5f18C75AbDAe578b483E5F43f12a39cF75b973a9' },
-      ],
-    },
-  })),
-}))
+jest.mock('axios')
+
+const mockedAxios = axios as jest.Mocked<typeof axios>
+
+mockedAxios.get.mockImplementation((url) => {
+  switch (url) {
+    case YEARN_VAULTS_URL:
+      return Promise.resolve({
+        data: [
+          { address: '0x671a912C10bba0CFA74Cfc2d6Fba9BA1ed9530B2' },
+          { address: '0x5f18C75AbDAe578b483E5F43f12a39cF75b973a9' },
+        ],
+      })
+    default:
+      return Promise.resolve({ data: undefined })
+  }
+})
 
 const txParser = new TransactionParser({ rpcUrl: '', chainId: 'eip155:1' })
 
@@ -1146,7 +1156,7 @@ describe('parseTx', () => {
         data: {
           assetId: 'eip155:1/erc20:0x514910771af9ca656af840dff83e8264ecf986ca',
           method: 'approve',
-          parser: 'erc20',
+          parser: 'yearn',
           value: '392318858461667547739736838950479151006397215279002157055',
         },
         status: TxStatus.Confirmed,
@@ -1173,7 +1183,10 @@ describe('parseTx', () => {
         address,
         chainId: 'eip155:1',
         confirmations: tx.confirmations,
-        data: undefined,
+        data: {
+          method: 'deposit',
+          parser: 'yearn',
+        },
         status: TxStatus.Confirmed,
         fee: {
           value: '18139009291874667',
@@ -1217,7 +1230,10 @@ describe('parseTx', () => {
         address,
         chainId: 'eip155:1',
         confirmations: tx.confirmations,
-        data: undefined,
+        data: {
+          method: 'withdraw',
+          parser: 'yearn',
+        },
         status: TxStatus.Confirmed,
         fee: {
           value: '19460274119661600',
@@ -1261,7 +1277,10 @@ describe('parseTx', () => {
         address,
         chainId: 'eip155:1',
         confirmations: tx.confirmations,
-        data: undefined,
+        data: {
+          method: 'deposit',
+          parser: 'yearn',
+        },
         status: TxStatus.Confirmed,
         fee: {
           value: '9099683709794574',
