@@ -35,14 +35,28 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
 }) => {
   try {
     const inboundAddress = await getInboundAddressDataForChain(deps.daemonUrl, sellAsset.assetId)
-    const vault = inboundAddress?.address
+    const activeVault = inboundAddress?.address
+    const haltedVault = !activeVault
+      ? await (async () => {
+          // getInboundAddressDataForChain defaults to returning no addresses when pools are halted - refetch, this time including halted pools
+          const inboundAddressIncludeHalted = await getInboundAddressDataForChain(
+            deps.daemonUrl,
+            sellAsset.assetId,
+            false,
+          )
 
-    if (!vault)
+          return inboundAddressIncludeHalted?.address
+        })()
+      : null
+
+    if (!(activeVault || haltedVault)) {
       throw new SwapError(`[getThorTxInfo]: vault not found for asset`, {
         code: SwapErrorType.RESPONSE_ERROR,
         details: { inboundAddress, sellAsset },
       })
+    }
 
+    const vault = activeVault ?? haltedVault
     const limit = await getLimit({
       buyAssetId: buyAsset.assetId,
       sellAmountCryptoBaseUnit,
@@ -60,7 +74,8 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
 
     return {
       opReturnData: memo,
-      vault,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      vault: vault!,
       pubkey: xpub,
     }
   } catch (e) {
