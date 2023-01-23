@@ -68,6 +68,7 @@ const main = async (): Promise<void> => {
   // const label = 'Time Elapsed'
   // console.time(label)
   // const results = await marketServiceManager.findAll({ fetchFromAllProviders: true, count: 1000 })
+  // console.log(results)
   // console.timeEnd(label)
   // console.log(`Price data obtained for ${Object.entries(results).length} assets`)
 }
