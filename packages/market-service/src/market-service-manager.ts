@@ -64,8 +64,8 @@ export class MarketServiceManager {
        */
       const blacklistedProviders = [
         CoinCapMarketService, // Response is sometimes slow (~500ms), (128 results returned, 0 unique)
-        YearnTokenMarketCapService, // API errors, response is very slow (~4000ms) (208 results returned, 107 unique)
-        YearnVaultMarketCapService, // API errors, response is slow (~5500ms) (107 results returned, 107 unique)
+        // YearnTokenMarketCapService, // API errors, response is very slow (~4000ms) (208 results returned, 107 unique)
+        // YearnVaultMarketCapService, // API errors, response is slow (~5500ms) (107 results returned, 107 unique)
         IdleMarketService, // (0 results returned)
         FoxyMarketService, // (0 results returned)
       ]
