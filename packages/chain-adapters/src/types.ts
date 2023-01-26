@@ -228,7 +228,7 @@ type ChainSpecificGetFeeDataInput<T> = ChainSpecific<
   }
 >
 export type GetFeeDataInput<T extends ChainId> = {
-  // Optional hex-encoded calldata
+  // Optional hex-encoded calldata for EVM chains, UTF-8 for others
   // NOT to be used with ERC20s since this will be used in-place of the ERC20 calldata
   memo?: string
   to: string
