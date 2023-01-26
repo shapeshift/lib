@@ -8,7 +8,7 @@ import {
   UNI_V2_FOX_STAKING_REWARDS_V3,
   WETH_CONTRACT_MAINNET,
 } from '../constants'
-import { TransactionParser, ZRX_PROXY_CONTRACT } from '../index'
+import { TransactionParser, ZRX_ETHEREUM_PROXY_CONTRACT } from '../index'
 import { YEARN_VAULTS_URL } from '../yearn'
 import ethSelfSend from './mockData/ethSelfSend'
 import foxClaim from './mockData/foxClaim'
@@ -327,7 +327,7 @@ describe('parseTx', () => {
       const buyTransfer = {
         assetId: 'eip155:1/slip44:60',
         components: [{ value: '541566754246167133' }],
-        from: ZRX_PROXY_CONTRACT,
+        from: ZRX_ETHEREUM_PROXY_CONTRACT,
         to: address,
         totalValue: '541566754246167133',
         type: TransferType.Receive,
@@ -385,7 +385,7 @@ describe('parseTx', () => {
         assetId: 'eip155:1/slip44:60',
         components: [{ value: '10000000000000000000' }],
         from: address,
-        to: ZRX_PROXY_CONTRACT,
+        to: ZRX_ETHEREUM_PROXY_CONTRACT,
         totalValue: '10000000000000000000',
         type: TransferType.Send,
       }

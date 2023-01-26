@@ -2,7 +2,7 @@ import { optimismAssetId, optimismChainId } from '@shapeshiftoss/caip'
 
 import { Dex, Trade, TradeType, Transfer, TransferType, TxStatus } from '../../../../types'
 import { ParsedTx } from '../../../parser'
-import { TransactionParser, ZRX_PROXY_CONTRACT } from '../index'
+import { TransactionParser, ZRX_OPTIMISM_PROXY_CONTRACT } from '../index'
 import erc20Approve from './mockData/erc20Approve'
 import ethSelfSend from './mockData/ethSelfSend'
 import ethStandard from './mockData/ethStandard'
@@ -459,7 +459,7 @@ describe('parseTx', () => {
         assetId: optimismAssetId,
         components: [{ value: '34100000000000000' }],
         from: address,
-        to: ZRX_PROXY_CONTRACT,
+        to: ZRX_OPTIMISM_PROXY_CONTRACT,
         token: undefined,
         totalValue: '34100000000000000',
         type: TransferType.Send,
