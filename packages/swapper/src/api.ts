@@ -1,6 +1,6 @@
 import { Asset } from '@shapeshiftoss/asset-service'
 import { AssetId, ChainId } from '@shapeshiftoss/caip'
-import { avalanche, cosmos, ethereum, osmosis } from '@shapeshiftoss/chain-adapters'
+import { CosmosSdkChainId, EvmChainId, UtxoChainId } from '@shapeshiftoss/chain-adapters'
 import { createErrorClass } from '@shapeshiftoss/errors'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { ChainSpecific, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
@@ -47,6 +47,9 @@ type ChainSpecificQuoteFeeData<T extends ChainId> = ChainSpecific<
     [KnownChainIds.CosmosMainnet]: {
       estimatedGas: string
     }
+    [KnownChainIds.ThorchainMainnet]: {
+      estimatedGas: string
+    }
   }
 >
 
@@ -81,33 +84,16 @@ type CommonTradeInput = {
   accountNumber: number
 }
 
-export type EvmSupportedChainIds = KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
-
-export type CosmosSdkSupportedChainIds =
-  | KnownChainIds.CosmosMainnet
-  | KnownChainIds.OsmosisMainnet
-  | KnownChainIds.ThorchainMainnet
-
-export type EvmSupportedChainAdapter = ethereum.ChainAdapter | avalanche.ChainAdapter
-
-export type CosmosSdkSupportedChainAdapters = cosmos.ChainAdapter | osmosis.ChainAdapter
-
-export type UtxoSupportedChainIds =
-  | KnownChainIds.BitcoinMainnet
-  | KnownChainIds.DogecoinMainnet
-  | KnownChainIds.LitecoinMainnet
-  | KnownChainIds.BitcoinCashMainnet
-
 export type GetEvmTradeQuoteInput = CommonTradeInput & {
-  chainId: EvmSupportedChainIds
+  chainId: EvmChainId
 }
 
 export type GetCosmosSdkTradeQuoteInput = CommonTradeInput & {
-  chainId: CosmosSdkSupportedChainIds
+  chainId: CosmosSdkChainId
 }
 
 export type GetUtxoTradeQuoteInput = CommonTradeInput & {
-  chainId: UtxoSupportedChainIds
+  chainId: UtxoChainId
   accountType: UtxoAccountType
   accountNumber: number
   xpub: string
