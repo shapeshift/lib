@@ -13,6 +13,8 @@ import {
   TradeQuote,
 } from '../../../api'
 import { DEFAULT_SLIPPAGE } from '../../utils/constants'
+import { getCosmosTxData } from '../cosmossdk/getCosmosTxData'
+import { makeTradeTx } from '../evm/makeTradeTx'
 import { getThorTradeQuote } from '../getThorTradeQuote/getTradeQuote'
 import {
   ThorCosmosSdkSupportedChainId,
@@ -20,9 +22,7 @@ import {
   ThorUtxoSupportedChainId,
 } from '../ThorchainSwapper'
 import { ThorchainSwapperDeps, ThorTrade } from '../types'
-import { getThorTxInfo as getBtcThorTxInfo } from '../utils/bitcoin/utils/getThorTxData'
-import { getCosmosTxData } from '../utils/cosmos/getCosmosTxData'
-import { makeTradeTx } from '../utils/evm/makeTradeTx'
+import { getThorTxInfo } from '../utxo/utils/getThorTxData'
 
 type BuildTradeArgs = {
   deps: ThorchainSwapperDeps
@@ -80,7 +80,7 @@ export const buildTrade = async ({ deps, input }: BuildTradeArgs): Promise<ThorT
         txData: ethTradeTx.txToSign,
       }
     } else if (chainNamespace === CHAIN_NAMESPACE.Utxo) {
-      const { vault, opReturnData } = await getBtcThorTxInfo({
+      const { vault, opReturnData } = await getThorTxInfo({
         deps,
         sellAsset,
         buyAsset,

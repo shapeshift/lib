@@ -22,7 +22,6 @@ import {
   ThorUtxoSupportedChainId,
 } from '../ThorchainSwapper'
 import { ThorchainSwapperDeps } from '../types'
-import { getThorTxInfo as getBtcThorTxInfo } from '../utils/bitcoin/utils/getThorTxData'
 import {
   MAX_THORCHAIN_TRADE,
   THOR_MINIMUM_PADDING,
@@ -34,6 +33,7 @@ import { getUsdRate } from '../utils/getUsdRate/getUsdRate'
 import { isRune } from '../utils/isRune/isRune'
 import { getEvmTxFees } from '../utils/txFeeHelpers/evmTxFees/getEvmTxFees'
 import { getUtxoTxFees } from '../utils/txFeeHelpers/utxoTxFees/getUtxoTxFees'
+import { getThorTxInfo } from '../utxo/utils/getThorTxData'
 import { getSlippage } from './getSlippage'
 
 type CommonQuoteFields = Omit<TradeQuote<ChainId>, 'allowanceContract' | 'feeData'>
@@ -164,7 +164,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
 
       case CHAIN_NAMESPACE.Utxo:
         return (async (): Promise<TradeQuote<ThorUtxoSupportedChainId>> => {
-          const { vault, opReturnData, pubkey } = await getBtcThorTxInfo({
+          const { vault, opReturnData, pubkey } = await getThorTxInfo({
             deps,
             sellAsset,
             buyAsset,

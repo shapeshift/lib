@@ -4,12 +4,12 @@ import { CosmosSdkBaseAdapter, thorchain } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
-import { SwapError, SwapErrorType, TradeQuote } from '../../../../api'
-import { ThorCosmosSdkSupportedChainId } from '../../ThorchainSwapper'
-import type { ThorchainSwapperDeps } from '../../types'
-import { getInboundAddressDataForChain } from '../getInboundAddressDataForChain'
-import { getLimit } from '../getLimit/getLimit'
-import { makeSwapMemo } from '../makeSwapMemo/makeSwapMemo'
+import { SwapError, SwapErrorType, TradeQuote } from '../../../api'
+import { ThorCosmosSdkSupportedChainId } from '../ThorchainSwapper'
+import type { ThorchainSwapperDeps } from '../types'
+import { getInboundAddressDataForChain } from '../utils/getInboundAddressDataForChain'
+import { getLimit } from '../utils/getLimit/getLimit'
+import { makeSwapMemo } from '../utils/makeSwapMemo/makeSwapMemo'
 
 type GetCosmosTxDataInput = {
   accountNumber: number

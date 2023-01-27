@@ -4,9 +4,9 @@ import { EvmBaseAdapter } from '@shapeshiftoss/chain-adapters'
 import { ETHSignTx, HDWallet } from '@shapeshiftoss/hdwallet-core'
 import { numberToHex } from 'web3-utils'
 
-import { SwapError, SwapErrorType } from '../../../../api'
-import { ThorEvmSupportedChainId } from '../../ThorchainSwapper'
-import type { ThorchainSwapperDeps } from '../../types'
+import { SwapError, SwapErrorType } from '../../../api'
+import { ThorEvmSupportedChainId } from '../ThorchainSwapper'
+import type { ThorchainSwapperDeps } from '../types'
 import { getThorTxInfo } from './utils/getThorTxData'
 
 type MakeTradeTxArgs = {
