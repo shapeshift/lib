@@ -184,6 +184,7 @@ export enum SwapperName {
 export enum SwapperType {
   ZrxEthereum = '0xEthereum',
   ZrxAvalanche = '0xAvalanche',
+  ZrxOptimism = '0xOptimism',
   Thorchain = 'Thorchain',
   Osmosis = 'Osmosis',
   CowSwap = 'CoW Swap',

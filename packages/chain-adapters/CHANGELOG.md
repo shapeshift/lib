@@ -1,3 +1,17 @@
+# [@shapeshiftoss/chain-adapters-v10.13.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v10.12.0...@shapeshiftoss/chain-adapters-v10.13.0) (2023-01-26)
+
+
+### Features
+
+* support EVM memos / UTXOs OP_RETURNs as memos ([#1180](https://github.com/shapeshift/lib/issues/1180)) ([c3cec68](https://github.com/shapeshift/lib/commit/c3cec688cc4f092f45d17b7a5d34194175ca6096))
+
+# [@shapeshiftoss/chain-adapters-v10.12.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v10.11.0...@shapeshiftoss/chain-adapters-v10.12.0) (2023-01-26)
+
+
+### Features
+
+* expose coinSelect from chain adapters ([#1179](https://github.com/shapeshift/lib/issues/1179)) ([1c2098c](https://github.com/shapeshift/lib/commit/1c2098cab1ac5ce46e02343bc7f609adb263cfaf))
+
 # [@shapeshiftoss/chain-adapters-v10.11.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v10.10.0...@shapeshiftoss/chain-adapters-v10.11.0) (2023-01-23)
 
 
