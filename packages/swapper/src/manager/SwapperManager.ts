@@ -1,13 +1,16 @@
 import { ChainId } from '@shapeshiftoss/caip'
-import { isUndefined } from 'lodash'
+import { isUndefined, sortBy } from 'lodash'
 import uniq from 'lodash/uniq'
 
 import {
   BuyAssetBySellIdInput,
   ByPairInput,
   GetBestSwapperArgs,
+  GetSwappersArgs,
+  GetSwappersReturn,
   SupportedSellAssetsInput,
   Swapper,
+  SwapperWithQuoteDetails,
   TradeQuote,
 } from '..'
 import { SwapError, SwapErrorType, SwapperType } from '../api'
@@ -79,6 +82,7 @@ export class SwapperManager {
    *
    * @param args {GetBestSwapperArgs}
    * @returns {Promise<Swapper<ChainId> | undefined>}
+   * @deprecated Use getSwappers instead
    */
   async getBestSwapper(args: GetBestSwapperArgs): Promise<Swapper<ChainId> | undefined> {
     const { sellAsset, buyAsset, feeAsset } = args
@@ -93,6 +97,7 @@ export class SwapperManager {
     const quotePromises: Promise<SwapperQuoteTuple>[] = supportedSwappers.map(
       async (swapper) => [swapper, await swapper.getTradeQuote(args)] as const,
     )
+
     const settledQuoteRequests = await Promise.allSettled(quotePromises)
     // For each swapper, get receive amount/(input amount + gas fee), where all values are in fiat
     const fulfilledQuoteTuples = settledQuoteRequests
@@ -127,6 +132,45 @@ export class SwapperManager {
 
     const bestSwapper = bestQuoteTuple?.[0]
     return bestSwapper
+  }
+
+  /**
+   *
+   * @param args {GetSwappersArgs}
+   * @returns {Promise<GetSwappersReturn[] | undefined>}
+   */
+  async getSwappers(args: GetSwappersArgs): Promise<GetSwappersReturn | undefined> {
+    const { sellAsset, buyAsset, feeAsset } = args
+
+    // Get all swappers that support the pair
+    const supportedSwappers: Swapper<ChainId>[] = this.getSwappersByPair({
+      sellAssetId: sellAsset.assetId,
+      buyAssetId: buyAsset.assetId,
+    })
+
+    const settledSwapperDetailRequests: PromiseSettledResult<SwapperWithQuoteDetails>[] =
+      await Promise.allSettled(
+        supportedSwappers.map(async (swapper) => {
+          const quote = await swapper.getTradeQuote(args)
+          const ratio = await getRatioFromQuote(quote, swapper, feeAsset)
+
+          return {
+            swapper,
+            quote,
+            inputOutputRatio: ratio,
+          }
+        }),
+      )
+
+    // Swappers with quote and ratio details, sorted by descending ratio (best to worst)
+    const swappersWithDetail: SwapperWithQuoteDetails[] = sortBy(
+      settledSwapperDetailRequests
+        .filter(isFulfilled)
+        .map((swapperDetailRequest) => swapperDetailRequest.value),
+      ['inputOutputRatio'],
+    ).reverse()
+
+    return swappersWithDetail
   }
 
   /**
