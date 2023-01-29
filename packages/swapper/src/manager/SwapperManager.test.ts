@@ -1,6 +1,6 @@
 import { ChainId } from '@shapeshiftoss/caip'
 
-import { Swapper, SwapperType } from '../api'
+import { Swapper, SwapperType, SwapperWithQuoteDetails } from '../api'
 import { CowSwapper, ThorchainSwapper, ZrxSwapper } from '../swappers'
 import { ETH } from '../swappers/utils/test-data/assets'
 import { setupQuote } from '../swappers/utils/test-data/setupSwapQuote'
@@ -247,6 +247,89 @@ describe('SwapperManager', () => {
       const { quoteInput } = setupQuote()
       const bestSwapper = await swapperManager.getBestSwapper({ ...quoteInput, feeAsset: ETH })
       expect(bestSwapper).toEqual(zrxEthereumSwapper)
+
+      expect(swapperManagerMock).toHaveBeenCalledTimes(1)
+      expect(cowSwapperGetUsdRateMock).toHaveBeenCalledTimes(3)
+      expect(zrxEthereumSwapperGetUsdRateMock).toHaveBeenCalledTimes(3)
+      expect(zrxAvalancheSwapperGetUsdRateMock).toHaveBeenCalledTimes(0)
+      expect(zrxOptimismSwapperGetUsdRateMock).toHaveBeenCalledTimes(0)
+      expect(cowSwapperGetUsdTradeQuoteMock).toHaveBeenCalledTimes(1)
+      expect(zrxEthereumSwapperGetUsdTradeQuoteMock).toHaveBeenCalledTimes(1)
+      expect(zrxAvalancheSwapperGetUsdTradeQuoteMock).toHaveBeenCalledTimes(0)
+      expect(zrxOptimismSwapperGetUsdTradeQuoteMock).toHaveBeenCalledTimes(0)
+
+      cowSwapperGetUsdRateMock.mockRestore()
+      zrxEthereumSwapperGetUsdRateMock.mockRestore()
+      zrxAvalancheSwapperGetUsdRateMock.mockRestore()
+      zrxOptimismSwapperGetUsdRateMock.mockRestore()
+      swapperManagerMock.mockRestore()
+    })
+  })
+
+  describe('getSwappers', () => {
+    it('should return the supported swappers with quote and ratio details, sorted by ratio', async () => {
+      const cowSwapperGetUsdRateMock = jest
+        .spyOn(cowSwapper, 'getUsdRate')
+        .mockImplementation(
+          jest
+            .fn()
+            .mockResolvedValueOnce(0.04)
+            .mockResolvedValueOnce(1300)
+            .mockResolvedValueOnce(1300),
+        )
+
+      const zrxEthereumSwapperGetUsdRateMock = jest
+        .spyOn(zrxEthereumSwapper, 'getUsdRate')
+        .mockImplementation(
+          jest
+            .fn()
+            .mockResolvedValueOnce(0.04)
+            .mockResolvedValueOnce(1300)
+            .mockResolvedValueOnce(1300),
+        )
+
+      const zrxAvalancheSwapperGetUsdRateMock = jest.spyOn(zrxAvalancheSwapper, 'getUsdRate')
+      const zrxOptimismSwapperGetUsdRateMock = jest.spyOn(zrxOptimismSwapper, 'getUsdRate')
+
+      const cowSwapperGetUsdTradeQuoteMock = jest
+        .spyOn(cowSwapper, 'getTradeQuote')
+        .mockImplementation(jest.fn().mockResolvedValueOnce(badTradeQuote))
+
+      const zrxEthereumSwapperGetUsdTradeQuoteMock = jest
+        .spyOn(zrxEthereumSwapper, 'getTradeQuote')
+        .mockImplementation(jest.fn().mockResolvedValueOnce(goodTradeQuote))
+
+      const zrxAvalancheSwapperGetUsdTradeQuoteMock = jest.spyOn(
+        zrxAvalancheSwapper,
+        'getTradeQuote',
+      )
+
+      const zrxOptimismSwapperGetUsdTradeQuoteMock = jest.spyOn(zrxOptimismSwapper, 'getTradeQuote')
+
+      const swapperManagerMock = jest.spyOn(SwapperManager.prototype, 'getSwappersByPair')
+      const swapperManager = new SwapperManager()
+
+      swapperManager
+        .addSwapper(cowSwapper)
+        .addSwapper(zrxEthereumSwapper)
+        .addSwapper(zrxAvalancheSwapper)
+        .addSwapper(zrxOptimismSwapper)
+
+      const { quoteInput } = setupQuote()
+      const swappers = await swapperManager.getSwappers({ ...quoteInput, feeAsset: ETH })
+      const expectedSwappers: SwapperWithQuoteDetails[] = [
+        {
+          swapper: zrxEthereumSwapper,
+          quote: goodTradeQuote,
+          inputOutputRatio: 0.5030325781663417,
+        },
+        {
+          swapper: cowSwapper,
+          quote: badTradeQuote,
+          inputOutputRatio: 0.3433182480125743,
+        },
+      ]
+      expect(swappers).toEqual(expectedSwappers)
 
       expect(swapperManagerMock).toHaveBeenCalledTimes(1)
       expect(cowSwapperGetUsdRateMock).toHaveBeenCalledTimes(3)
