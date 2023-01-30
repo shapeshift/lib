@@ -82,7 +82,7 @@ export class SwapperManager {
    *
    * @param args {GetBestSwapperArgs}
    * @returns {Promise<Swapper<ChainId> | undefined>}
-   * @deprecated Use getSwappers instead
+   * @deprecated Use getSwappersWithQuoteMetadata instead
    */
   async getBestSwapper(args: GetBestSwapperArgs): Promise<Swapper<ChainId> | undefined> {
     const { sellAsset, buyAsset, feeAsset } = args
