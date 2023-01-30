@@ -575,9 +575,6 @@ describe('parseTx', () => {
     const expectedWithFee = { ...expected, fee }
     const actualWithFee = await txParser.parse(txWithFee, address)
 
-    console.log('EXPECTED WITH FEE', expectedWithFee)
-    console.log('ACTUAL WITH FEE', actualWithFee)
-
     expect(expectedWithFee).toEqual(actualWithFee)
 
     const expectedNoFee = expected
