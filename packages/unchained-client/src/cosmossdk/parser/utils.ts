@@ -1,4 +1,5 @@
 import {
+  adapters,
   AssetId,
   cosmosAssetId,
   fromAssetId,
@@ -24,6 +25,7 @@ const assetIdByDenom = new Map<string, AssetId>([
 
 export const getAssetIdByDenom = (denom: string, assetId: string): AssetId | undefined => {
   if (assetIdByDenom.has(denom)) return assetIdByDenom.get(denom) as AssetId
+  if (assetId === osmosisAssetId) return adapters.osmosisDenomToAssetId(denom)
 
   const { chainId } = fromAssetId(assetId)
 
@@ -116,6 +118,18 @@ export const metaData = (
       return {
         parser: 'swap',
         method: msg.type,
+      }
+    case 'join_pool':
+      return {
+        parser: 'lp',
+        method: msg.type,
+        pool: event['pool_joined']['pool_id'],
+      }
+    case 'exit_pool':
+      return {
+        parser: 'lp',
+        method: msg.type,
+        pool: event['pool_exited']['pool_id'],
       }
     case 'send':
       // known message types with no applicable metadata
