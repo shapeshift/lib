@@ -139,7 +139,7 @@ export class SwapperManager {
    * @param args {GetSwappersArgs}
    * @returns {Promise<GetSwappersReturn[] | undefined>}
    */
-  async getSwappers(args: GetSwappersArgs): Promise<GetSwappersReturn | undefined> {
+  async getSwappersWithQuoteDetails(args: GetSwappersArgs): Promise<GetSwappersReturn> {
     const { sellAsset, buyAsset, feeAsset } = args
 
     // Get all swappers that support the pair

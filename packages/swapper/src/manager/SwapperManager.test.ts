@@ -316,7 +316,10 @@ describe('SwapperManager', () => {
         .addSwapper(zrxOptimismSwapper)
 
       const { quoteInput } = setupQuote()
-      const swappers = await swapperManager.getSwappers({ ...quoteInput, feeAsset: ETH })
+      const swappers = await swapperManager.getSwappersWithQuoteDetails({
+        ...quoteInput,
+        feeAsset: ETH,
+      })
       const expectedSwappers: SwapperWithQuoteDetails[] = [
         {
           swapper: zrxEthereumSwapper,
