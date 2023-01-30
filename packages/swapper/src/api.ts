@@ -61,8 +61,6 @@ export type ByPairInput = {
   buyAssetId: AssetId
 }
 
-export type GetBestSwapperArgs = GetTradeQuoteInput & { feeAsset: Asset }
-
 export type GetSwappersWithQuoteMetadataArgs = GetTradeQuoteInput & { feeAsset: Asset }
 
 export type SwapperWithQuoteMetadata = {
