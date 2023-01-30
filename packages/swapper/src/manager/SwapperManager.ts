@@ -6,11 +6,11 @@ import {
   BuyAssetBySellIdInput,
   ByPairInput,
   GetBestSwapperArgs,
-  GetSwappersArgs,
-  GetSwappersReturn,
+  GetSwappersWithQuoteMetadataArgs,
+  GetSwappersWithQuoteMetadataReturn,
   SupportedSellAssetsInput,
   Swapper,
-  SwapperWithQuoteDetails,
+  SwapperWithQuoteMetadata,
   TradeQuote,
 } from '..'
 import { SwapError, SwapErrorType, SwapperType } from '../api'
@@ -136,10 +136,14 @@ export class SwapperManager {
 
   /**
    *
-   * @param args {GetSwappersArgs}
-   * @returns {Promise<GetSwappersReturn[] | undefined>}
+   * Returns an ordered list of SwapperWithQuoteMetadata objects, descending from best to worst input output ratios
+   *
+   * @param args {GetSwappersWithQuoteMetadataArgs}
+   * @returns {Promise<GetSwappersWithQuoteMetadataReturn>}
    */
-  async getSwappersWithQuoteDetails(args: GetSwappersArgs): Promise<GetSwappersReturn> {
+  async getSwappersWithQuoteMetadata(
+    args: GetSwappersWithQuoteMetadataArgs,
+  ): Promise<GetSwappersWithQuoteMetadataReturn> {
     const { sellAsset, buyAsset, feeAsset } = args
 
     // Get all swappers that support the pair
@@ -148,7 +152,7 @@ export class SwapperManager {
       buyAssetId: buyAsset.assetId,
     })
 
-    const settledSwapperDetailRequests: PromiseSettledResult<SwapperWithQuoteDetails>[] =
+    const settledSwapperDetailRequests: PromiseSettledResult<SwapperWithQuoteMetadata>[] =
       await Promise.allSettled(
         supportedSwappers.map(async (swapper) => {
           const quote = await swapper.getTradeQuote(args)
@@ -162,8 +166,8 @@ export class SwapperManager {
         }),
       )
 
-    // Swappers with quote and ratio details, sorted by descending ratio (best to worst)
-    const swappersWithDetail: SwapperWithQuoteDetails[] = sortBy(
+    // Swappers with quote and ratio details, sorted by descending input output ratio (best to worst)
+    const swappersWithDetail: SwapperWithQuoteMetadata[] = sortBy(
       settledSwapperDetailRequests
         .filter(isFulfilled)
         .map((swapperDetailRequest) => swapperDetailRequest.value),

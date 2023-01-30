@@ -1,6 +1,6 @@
 import { ChainId } from '@shapeshiftoss/caip'
 
-import { Swapper, SwapperType, SwapperWithQuoteDetails } from '../api'
+import { Swapper, SwapperType, SwapperWithQuoteMetadata } from '../api'
 import { CowSwapper, ThorchainSwapper, ZrxSwapper } from '../swappers'
 import { ETH } from '../swappers/utils/test-data/assets'
 import { setupQuote } from '../swappers/utils/test-data/setupSwapQuote'
@@ -266,7 +266,7 @@ describe('SwapperManager', () => {
     })
   })
 
-  describe('getSwappers', () => {
+  describe('getSwappersWithQuoteMetadata', () => {
     it('should return the supported swappers with quote and ratio details, sorted by ratio', async () => {
       const cowSwapperGetUsdRateMock = jest
         .spyOn(cowSwapper, 'getUsdRate')
@@ -316,11 +316,11 @@ describe('SwapperManager', () => {
         .addSwapper(zrxOptimismSwapper)
 
       const { quoteInput } = setupQuote()
-      const swappers = await swapperManager.getSwappersWithQuoteDetails({
+      const swappers = await swapperManager.getSwappersWithQuoteMetadata({
         ...quoteInput,
         feeAsset: ETH,
       })
-      const expectedSwappers: SwapperWithQuoteDetails[] = [
+      const expectedSwappers: SwapperWithQuoteMetadata[] = [
         {
           swapper: zrxEthereumSwapper,
           quote: goodTradeQuote,

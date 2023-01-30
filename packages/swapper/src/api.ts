@@ -64,14 +64,14 @@ export type ByPairInput = {
 /** @deprecated in favour of GetSwappersArgs */
 export type GetBestSwapperArgs = GetTradeQuoteInput & { feeAsset: Asset }
 
-export type GetSwappersArgs = GetTradeQuoteInput & { feeAsset: Asset }
+export type GetSwappersWithQuoteMetadataArgs = GetTradeQuoteInput & { feeAsset: Asset }
 
-export type SwapperWithQuoteDetails = {
+export type SwapperWithQuoteMetadata = {
   swapper: Swapper<ChainId>
   quote: TradeQuote<ChainId>
   inputOutputRatio: number | undefined
 }
-export type GetSwappersReturn = SwapperWithQuoteDetails[]
+export type GetSwappersWithQuoteMetadataReturn = SwapperWithQuoteMetadata[]
 
 export type BuyAssetBySellIdInput = {
   sellAssetId: AssetId
