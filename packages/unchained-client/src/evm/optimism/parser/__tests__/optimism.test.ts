@@ -499,7 +499,7 @@ describe('parseTx', () => {
       expect(actual).toEqual(expected)
     })
 
-    it.only('should be able to parse token -> eth', async () => {
+    it('should be able to parse token -> eth', async () => {
       const { tx } = zrxTradeOpToEth
       const address = '0x6bF198c2B5c8E48Af4e876bc2173175b89b1DA0C'
       const trade: Trade = { dexName: Dex.Zrx, type: TradeType.Trade }
