@@ -11,6 +11,7 @@ import tokenSelfSend from './mockData/tokenSelfSend'
 import tokenStandard from './mockData/tokenStandard'
 import zrxTradeEthToUsdc from './mockData/zrxTradeEthToUsdc'
 import zrxTradeUsdcToOp from './mockData/zrxTradeUsdcToOp'
+import zrxTradeOpToEth from './mockData/zrxTradeOpToEth'
 
 const txParser = new TransactionParser({ rpcUrl: '', chainId: optimismChainId })
 
@@ -494,6 +495,55 @@ describe('parseTx', () => {
       }
 
       const actual = await txParser.parse(tx, address)
+
+      expect(actual).toEqual(expected)
+    })
+
+    it.only('should be able to parse token -> eth', async () => {
+      const { tx } = zrxTradeOpToEth
+      const address = '0x6bF198c2B5c8E48Af4e876bc2173175b89b1DA0C'
+      const trade: Trade = { dexName: Dex.Zrx, type: TradeType.Trade }
+
+      const sellTransfer: Transfer = {
+        assetId: 'eip155:10/erc20:0x4200000000000000000000000000000000000042',
+        components: [{ value: '500000000000000000' }],
+        from: address,
+        to: '0xA3128d9b7Cca7d5Af29780a56abEec12B05a6740',
+        token: opToken,
+        totalValue: '500000000000000000',
+        type: TransferType.Send,
+      }
+
+      const buyTransfer: Transfer = {
+        assetId: optimismAssetId,
+        components: [{ value: '692386565390547' }],
+        from: '0xA3128d9b7Cca7d5Af29780a56abEec12B05a6740',
+        to: address,
+        totalValue: '692386565390547',
+        type: TransferType.Receive,
+      }
+
+      const expected: ParsedTx = {
+        txid: tx.txid,
+        blockHeight: tx.blockHeight,
+        blockTime: tx.timestamp,
+        blockHash: tx.blockHash,
+        address,
+        chainId: optimismChainId,
+        confirmations: tx.confirmations,
+        data: { parser: 'zrx' },
+        status: TxStatus.Confirmed,
+        fee: {
+          value: '571214858294392',
+          assetId: optimismAssetId,
+        },
+        transfers: [sellTransfer, buyTransfer],
+        trade,
+      }
+
+      const actual = await txParser.parse(tx, address)
+
+      console.log({ transfers: actual.transfers })
 
       expect(actual).toEqual(expected)
     })
