@@ -1,5 +1,5 @@
 import {
-  adapters,
+  ASSET_NAMESPACE,
   AssetId,
   cosmosAssetId,
   fromAssetId,
@@ -25,13 +25,18 @@ const assetIdByDenom = new Map<string, AssetId>([
 
 export const getAssetIdByDenom = (denom: string, assetId: string): AssetId | undefined => {
   if (assetIdByDenom.has(denom)) return assetIdByDenom.get(denom) as AssetId
-  if (assetId === osmosisAssetId) return adapters.osmosisDenomToAssetId(denom)
 
   const { chainId } = fromAssetId(assetId)
 
-  const [assetNamespace, assetReference] = denom.split('/')
+  const [assetNamespace, assetReference] = denom.includes('gamm/pool')
+    ? [ASSET_NAMESPACE.ibc, denom]
+    : denom.split('/')
   if (assetNamespace === 'ibc' && assetReference) {
-    return toAssetId({ chainId, assetNamespace, assetReference })
+    return toAssetId({
+      chainId,
+      assetNamespace,
+      assetReference,
+    })
   }
 
   logger.warn(`unknown denom: ${denom}`)
