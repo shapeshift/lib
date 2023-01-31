@@ -10,8 +10,8 @@ import { opToken, usdcToken } from './mockData/tokens'
 import tokenSelfSend from './mockData/tokenSelfSend'
 import tokenStandard from './mockData/tokenStandard'
 import zrxTradeEthToUsdc from './mockData/zrxTradeEthToUsdc'
-import zrxTradeUsdcToOp from './mockData/zrxTradeUsdcToOp'
 import zrxTradeOpToEth from './mockData/zrxTradeOpToEth'
+import zrxTradeUsdcToOp from './mockData/zrxTradeUsdcToOp'
 
 const txParser = new TransactionParser({ rpcUrl: '', chainId: optimismChainId })
 
