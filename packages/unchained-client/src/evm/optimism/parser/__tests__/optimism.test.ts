@@ -543,8 +543,6 @@ describe('parseTx', () => {
 
       const actual = await txParser.parse(tx, address)
 
-      console.log({ transfers: actual.transfers })
-
       expect(actual).toEqual(expected)
     })
 
