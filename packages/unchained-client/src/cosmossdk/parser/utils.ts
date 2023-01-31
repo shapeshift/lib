@@ -31,12 +31,9 @@ export const getAssetIdByDenom = (denom: string, assetId: string): AssetId | und
   const [assetNamespace, assetReference] = denom.includes('gamm/pool')
     ? [ASSET_NAMESPACE.ibc, denom]
     : denom.split('/')
+
   if (assetNamespace === 'ibc' && assetReference) {
-    return toAssetId({
-      chainId,
-      assetNamespace,
-      assetReference,
-    })
+    return toAssetId({ chainId, assetNamespace, assetReference })
   }
 
   logger.warn(`unknown denom: ${denom}`)
