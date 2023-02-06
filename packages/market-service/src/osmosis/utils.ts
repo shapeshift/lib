@@ -3,7 +3,7 @@ import axios from 'axios'
 
 import { OsmosisMarketData, OsmosisPool } from './osmosis-types'
 
-const OSMOSIS_LCD_BASE_URL = 'http://daemon.osmosis.shapeshift.com/lcd/osmosis/'
+const OSMOSIS_LCD_BASE_URL = 'https://daemon.osmosis.shapeshift.com/lcd/osmosis/'
 const OSMOSIS_IMPERATOR_BASE_URL = 'https://api-osmosis.imperator.co/'
 
 export const isOsmosisLpAsset = (assetReference: AssetReference | string): boolean => {
@@ -59,7 +59,7 @@ export const getPoolMarketData = async (
     if (poolId && !isNumeric(poolId))
       throw new Error(`Cannot fetch price info for invalid pool ID${poolId}`)
     const {
-      data: [MarketData, _],
+      data: [MarketData],
     } = await axios.get<OsmosisMarketData[]>(
       (() => {
         const url = new URL(`pools/v2/${poolId}`, OSMOSIS_IMPERATOR_BASE_URL)
