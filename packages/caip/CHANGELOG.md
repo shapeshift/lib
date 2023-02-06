@@ -1,3 +1,17 @@
+# [@shapeshiftoss/caip-v8.12.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.11.0...@shapeshiftoss/caip-v8.12.0) (2023-02-02)
+
+
+### Features
+
+* **caip:** generate asset ids from osmosis lp token denoms ([#1189](https://github.com/shapeshift/lib/issues/1189)) ([7efb75e](https://github.com/shapeshift/lib/commit/7efb75ee63a55a8ff1ab94e8e053736f8a6b07ad))
+
+# [@shapeshiftoss/caip-v8.11.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.10.0...@shapeshiftoss/caip-v8.11.0) (2023-02-01)
+
+
+### Features
+
+* add support for eth and usdt on optimism banxa ([#1186](https://github.com/shapeshift/lib/issues/1186)) ([92441d9](https://github.com/shapeshift/lib/commit/92441d973cdab4f9cda414d83f3aa1fe13cf1d7d))
+
 # [@shapeshiftoss/caip-v8.10.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.9.0...@shapeshiftoss/caip-v8.10.0) (2023-01-23)
 
 

@@ -1,3 +1,25 @@
+# [@shapeshiftoss/swapper-v16.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v16.0.1...@shapeshiftoss/swapper-v16.0.2) (2023-02-04)
+
+# [@shapeshiftoss/swapper-v16.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v16.0.0...@shapeshiftoss/swapper-v16.0.1) (2023-01-31)
+
+
+### Bug Fixes
+
+* use correct sell amount for approve infinite ([#1184](https://github.com/shapeshift/lib/issues/1184)) ([5e5c6a1](https://github.com/shapeshift/lib/commit/5e5c6a1c0ccd6fab15fc7c516c8847f356c661ce))
+
+# [@shapeshiftoss/swapper-v16.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.8.0...@shapeshiftoss/swapper-v16.0.0) (2023-01-30)
+
+
+### Features
+
+* **swapper:** add getSwappersWithQuoteMetadata method ([#1182](https://github.com/shapeshift/lib/issues/1182)) ([ee35823](https://github.com/shapeshift/lib/commit/ee358230a62b75788d3ff24f1923c511f166b708))
+
+
+### BREAKING CHANGES
+
+* **swapper:** removes getBestSwapper method
+BREAKING CHANGES: removes getBestSwapperMethod
+
 # [@shapeshiftoss/swapper-v15.8.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.7.0...@shapeshiftoss/swapper-v15.8.0) (2023-01-26)
 
 
