@@ -3,9 +3,6 @@ import axios from 'axios'
 
 import { OsmosisMarketData, OsmosisPool } from './osmosis-types'
 
-const OSMOSIS_LCD_BASE_URL = 'https://daemon.osmosis.shapeshift.com/lcd/osmosis/'
-const OSMOSIS_IMPERATOR_BASE_URL = 'https://api-osmosis.imperator.co/'
-
 export const isOsmosisLpAsset = (assetReference: AssetReference | string): boolean => {
   return assetReference.startsWith('gamm/pool/')
 }
@@ -16,7 +13,10 @@ const isNumeric = (s: string) => {
   return !Number.isNaN(Number(s))
 }
 
-export const getPool = async (poolId: string): Promise<OsmosisPool | undefined> => {
+export const getPool = async (
+  poolId: string,
+  baseUrl: string,
+): Promise<OsmosisPool | undefined> => {
   try {
     /* Fetch Osmosis pool metadata */
     if (!isNumeric(poolId)) throw new Error(`Cannot fetch pool info for invalid pool ID${poolId}`)
@@ -24,35 +24,36 @@ export const getPool = async (poolId: string): Promise<OsmosisPool | undefined> 
       data: { pool: poolData },
     } = await axios.get<{ pool: OsmosisPool }>(
       (() => {
-        const url = new URL(`gamm/v1beta1/pools/${poolId}`, OSMOSIS_LCD_BASE_URL)
+        const url = new URL(`/lcd/osmosis/gamm/v1beta1/pools/${poolId}`, baseUrl)
         return url.toString()
       })(),
     )
     return poolData
   } catch (error) {
-    console.error({ fn: 'getPools', error }, `Error fetching metadata for Osmosis pool ${poolId}`)
+    console.error({ fn: 'getPool', error }, `Error fetching metadata for Osmosis pool ${poolId}`)
     return undefined
   }
 }
 
-export const getAllPools = async (): Promise<OsmosisPool[] | undefined> => {
+export const getAllPools = async (baseUrl: string): Promise<OsmosisPool[] | undefined> => {
   try {
     /* Fetch metedata for all Osmosis pools */
     const { data } = await axios.get<{ pools: OsmosisPool[] }>(
       (() => {
-        const url = new URL(`gamm/v1beta1/pools`, OSMOSIS_LCD_BASE_URL)
+        const url = new URL(`/lcd/osmosis/gamm/v1beta1/pools`, baseUrl)
         return url.toString()
       })(),
     )
     return data.pools
   } catch (error) {
-    console.error({ fn: 'getPools', error }, `Error fetching metadata for Osmosis pools`)
+    console.error({ fn: 'getAllPools', error }, `Error fetching metadata for Osmosis pools`)
     return undefined
   }
 }
 
 export const getPoolMarketData = async (
-  poolId?: string,
+  poolId: string,
+  baseUrl: string,
 ): Promise<OsmosisMarketData | undefined> => {
   try {
     /* Fetch Osmosis pool price data */
@@ -62,7 +63,7 @@ export const getPoolMarketData = async (
       data: [MarketData],
     } = await axios.get<OsmosisMarketData[]>(
       (() => {
-        const url = new URL(`pools/v2/${poolId}`, OSMOSIS_IMPERATOR_BASE_URL)
+        const url = new URL(`/pools/v2/${poolId}`, baseUrl)
         return url.toString()
       })(),
     )
@@ -76,21 +77,24 @@ export const getPoolMarketData = async (
   }
 }
 
-export const getAllPoolMarketData = async (): Promise<
-  { [k: string]: OsmosisMarketData[] } | undefined
-> => {
+export const getAllPoolMarketData = async (
+  baseUrl: string,
+): Promise<{ [k: string]: OsmosisMarketData[] } | undefined> => {
   try {
     /* Fetch price data for all Osmosis pools */
     const { data } = await axios.get<Record<string, OsmosisMarketData[]>>(
       (() => {
-        const url = new URL(`pools/v2/all`, OSMOSIS_IMPERATOR_BASE_URL)
+        const url = new URL(`/pools/v2/all`, baseUrl)
         url.searchParams.set('low_liquidity', 'true')
         return url.toString()
       })(),
     )
     return data
   } catch (error) {
-    console.error({ fn: 'getMarketData', error }, `Error fetching price data for Osmosis pools`)
+    console.error(
+      { fn: 'getAllPoolMarketData', error },
+      `Error fetching price data for Osmosis pools`,
+    )
     return undefined
   }
 }

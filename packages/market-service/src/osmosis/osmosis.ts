@@ -10,16 +10,22 @@ import {
 import axios from 'axios'
 
 import { MarketService } from '../api'
+import { ProviderUrls } from '../market-service-manager'
 import { bn, bnOrZero } from '../utils/bignumber'
 import { isValidDate } from '../utils/isValidDate'
 import { OsmosisHistoryData, OsmosisMarketCap } from './osmosis-types'
 import { getPool, getPoolIdFromAssetReference, getPoolMarketData, isOsmosisLpAsset } from './utils'
 
 export class OsmosisMarketService implements MarketService {
-  baseUrl = 'https://api-osmosis.imperator.co'
+  baseUrl: string // Unused, but present to satisfy MarketService interface definition
+  providerUrls: ProviderUrls
+
+  constructor(providerUrls: ProviderUrls) {
+    this.providerUrls = providerUrls
+  }
 
   async findAll() {
-    const osmosisApiUrl = `${this.baseUrl}/tokens/v2/all`
+    const osmosisApiUrl = `${this.providerUrls.osmosisMarketDataUrl}/tokens/v2/all`
     try {
       const { data: osmosisData }: { data: OsmosisMarketCap[] } = await axios.get(osmosisApiUrl)
       const results = osmosisData
@@ -58,25 +64,25 @@ export class OsmosisMarketService implements MarketService {
         const id = getPoolIdFromAssetReference(assetReference)
         if (!id) return null
 
-        const poolData = await getPool(id)
-        const marketData = await getPoolMarketData(id)
+        const poolData = await getPool(id, this.providerUrls.osmosisPoolMetadataUrl)
+        const marketData = await getPoolMarketData(id, this.providerUrls.osmosisMarketDataUrl)
         if (!(poolData && poolData.total_shares && marketData)) return null
 
         return {
           price: bnOrZero(marketData.liquidity)
             .dividedBy(bnOrZero(poolData.total_shares.amount))
-            .toString(),
-          marketCap: bnOrZero(marketData.liquidity).toString(),
-          volume: bn(marketData.volume_24h).toString(),
+            .toFixed(),
+          marketCap: bnOrZero(marketData.liquidity).toFixed(),
+          volume: bn(marketData.volume_24h).toFixed(),
           changePercent24Hr: 0,
-          supply: bnOrZero(poolData.total_shares.amount).toString(),
-          maxSupply: bnOrZero(poolData.total_shares.amount).toString(),
+          supply: bnOrZero(poolData.total_shares.amount).toFixed(),
+          maxSupply: bnOrZero(poolData.total_shares.amount).toFixed(),
         }
       }
 
       const symbol = adapters.assetIdToOsmosis(assetId)
       const { data }: { data: OsmosisMarketCap[] } = await axios.get(
-        `${this.baseUrl}/tokens/v2/${symbol}`,
+        `${this.providerUrls.osmosisMarketDataUrl}/tokens/v2/${symbol}`,
       )
       const marketData = data[0]
 
@@ -147,9 +153,9 @@ export class OsmosisMarketService implements MarketService {
     try {
       // Historical timeframe data from the v2 endpoint currently does not support ranges greater than 1 month
       // and v1 doesn't support ranges less than 7 week, so we use both to get all ranges.
-      const url = `${this.baseUrl}/tokens/${isV1 ? 'v1' : 'v2'}/historical/${symbol}/chart?${
-        isV1 ? 'range' : 'tf'
-      }=${range}`
+      const url = `${this.providerUrls.osmosisMarketDataUrl}/tokens/${
+        isV1 ? 'v1' : 'v2'
+      }/historical/${symbol}/chart?${isV1 ? 'range' : 'tf'}=${range}`
 
       const { data } = await axios.get<OsmosisHistoryData[]>(url)
 
