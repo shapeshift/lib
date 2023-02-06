@@ -1,4 +1,4 @@
-import { adapters } from '@shapeshiftoss/caip'
+import { adapters, fromAssetId } from '@shapeshiftoss/caip'
 import {
   HistoryData,
   HistoryTimeframe,
@@ -13,6 +13,7 @@ import { MarketService } from '../api'
 import { bn, bnOrZero } from '../utils/bignumber'
 import { isValidDate } from '../utils/isValidDate'
 import { OsmosisHistoryData, OsmosisMarketCap } from './osmosis-types'
+import { getPool, getPoolIdFromAssetReference, getPoolMarketData, isOsmosisLpAsset } from './utils'
 
 export class OsmosisMarketService implements MarketService {
   baseUrl = 'https://api-osmosis.imperator.co'
@@ -49,6 +50,30 @@ export class OsmosisMarketService implements MarketService {
     if (!adapters.assetIdToOsmosis(assetId)) return null
 
     try {
+      const assetReference = fromAssetId(assetId).assetReference
+      if (isOsmosisLpAsset(assetReference)) {
+        /* No market exists for Osmosis pool assets, but we can calculate the 'price' of each pool token
+      by dividing the pool TVL by the total number of pool tokens. */
+
+        const id = getPoolIdFromAssetReference(assetReference)
+        if (!id) return null
+
+        const poolData = await getPool(id)
+        const marketData = await getPoolMarketData(id)
+        if (!(poolData && poolData.total_shares && marketData)) return null
+
+        return {
+          price: bnOrZero(marketData.liquidity)
+            .dividedBy(bnOrZero(poolData.total_shares.amount))
+            .toString(),
+          marketCap: bnOrZero(marketData.liquidity).toString(),
+          volume: bn(marketData.volume_24h).toString(),
+          changePercent24Hr: 0,
+          supply: bnOrZero(poolData.total_shares.amount).toString(),
+          maxSupply: bnOrZero(poolData.total_shares.amount).toString(),
+        }
+      }
+
       const symbol = adapters.assetIdToOsmosis(assetId)
       const { data }: { data: OsmosisMarketCap[] } = await axios.get(
         `${this.baseUrl}/tokens/v2/${symbol}`,
