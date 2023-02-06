@@ -18,8 +18,8 @@ const osmosisMarketService = new OsmosisMarketService({
   jsonRpcProviderUrl: '',
   unchainedEthereumHttpUrl: '',
   unchainedEthereumWsUrl: '',
-  osmosisMarketDataUrl: 'https://api-osmosis.imperator.co/',
-  osmosisPoolMetadataUrl: 'https://daemon.osmosis.shapeshift.com/',
+  osmosisMarketDataUrl: '',
+  osmosisPoolMetadataUrl: '',
 })
 
 describe('osmosis market service', () => {
