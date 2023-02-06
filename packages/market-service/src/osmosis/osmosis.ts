@@ -1,5 +1,4 @@
 import { adapters, fromAssetId } from '@shapeshiftoss/caip'
-import { adapters, fromAssetId } from '@shapeshiftoss/caip'
 import {
   HistoryData,
   HistoryTimeframe,
@@ -15,7 +14,6 @@ import { ProviderUrls } from '../market-service-manager'
 import { bn, bnOrZero } from '../utils/bignumber'
 import { isValidDate } from '../utils/isValidDate'
 import { OsmosisHistoryData, OsmosisMarketCap } from './osmosis-types'
-import { getPool, getPoolIdFromAssetReference, getPoolMarketData, isOsmosisLpAsset } from './utils'
 import { getPool, getPoolIdFromAssetReference, getPoolMarketData, isOsmosisLpAsset } from './utils'
 
 export class OsmosisMarketService implements MarketService {
