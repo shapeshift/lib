@@ -7,6 +7,7 @@ import orderBy from 'lodash/orderBy'
 import { Asset } from '../service/AssetService'
 import * as avalanche from './avalanche'
 import { atom, bitcoin, bitcoincash, dogecoin, litecoin, thorchain } from './baseAssets'
+import * as bsc from './bsc'
 import * as ethereum from './ethereum'
 import * as optimism from './optimism'
 import * as osmosis from './osmosis'
@@ -20,6 +21,7 @@ const generateColorMap = async () => {
   const osmosisAssets = await osmosis.getAssets()
   const avalancheAssets = await avalanche.getAssets()
   const optimismAssets = await optimism.getAssets()
+  const bscAssets = await bsc.getAssets()
 
   // all assets, included assets to be blacklisted
   const unfilteredAssetData: Asset[] = [
@@ -33,6 +35,7 @@ const generateColorMap = async () => {
     ...osmosisAssets,
     ...avalancheAssets,
     ...optimismAssets,
+    ...bscAssets,
   ]
   // remove blacklisted assets
   const filteredAssetData = filterOutBlacklistedAssets(unfilteredAssetData)
