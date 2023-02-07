@@ -98,6 +98,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.CosmosMainn
         value,
         wallet,
       } = tx
+      tx.memo ??= ''
 
       const from = await this.getAddress({ accountNumber, wallet })
       const account = await this.getAccount(from)
