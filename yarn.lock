@@ -3091,6 +3091,20 @@
     axios-retry "^3.2.5"
     ws "^8.8.0"
 
+"@shapeshiftoss/chain-adapters@^10.0.0":
+  version "10.14.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/chain-adapters/-/chain-adapters-10.14.0.tgz#92ee0d607910e307ee3b53014c015d99718ea857"
+  integrity sha512-6l7fUK54zQYwExKtQVvpyjuQuXXoK5B8yOxuwJ192ZkwlsMbj2HfAJnqPWqvakbZhHMkyjbJuMaiGRf8LSP8LA==
+  dependencies:
+    axios "^0.26.1"
+    bech32 "^2.0.0"
+    bignumber.js "^9.0.2"
+    bitcoinjs-lib "^5.2.0"
+    coinselect "^3.1.13"
+    ethers "^5.4.7"
+    multicoin-address-validator "^0.5.12"
+    web3-utils "1.7.4"
+
 "@shapeshiftoss/common-api@^8.1.0":
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/common-api/-/common-api-8.1.0.tgz#243f356d467478c5d09f82a86bda75af37624ba7"
