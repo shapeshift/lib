@@ -14,7 +14,13 @@ import {
 jest.mock('axios')
 
 const mockedAxios = axios as jest.Mocked<typeof axios>
-const osmosisMarketService = new OsmosisMarketService()
+const osmosisMarketService = new OsmosisMarketService({
+  jsonRpcProviderUrl: '',
+  unchainedEthereumHttpUrl: '',
+  unchainedEthereumWsUrl: '',
+  osmosisMarketDataUrl: 'https://api-osmosis.imperator.co/',
+  osmosisPoolMetadataUrl: 'https://daemon.osmosis.shapeshift.com',
+})
 
 describe('osmosis market service', () => {
   describe('findAll', () => {
