@@ -39,7 +39,7 @@ import {
   toRootDerivationPath,
 } from '../utils'
 import { bnOrZero } from '../utils/bignumber'
-import { avalanche, ethereum, optimism } from '.'
+import { avalanche, bsc, ethereum, optimism } from '.'
 import { BuildCustomTxInput, EstimateGasRequest, Fees, GasFeeDataEstimate } from './types'
 import { getErc20Data, getGeneratedAssetData } from './utils'
 
@@ -47,11 +47,16 @@ export const evmChainIds = [
   KnownChainIds.EthereumMainnet,
   KnownChainIds.AvalancheMainnet,
   KnownChainIds.OptimismMainnet,
+  KnownChainIds.BnbSmartChainMainnet,
 ] as const
 
 export type EvmChainId = typeof evmChainIds[number]
 
-export type EvmChainAdapter = ethereum.ChainAdapter | avalanche.ChainAdapter | optimism.ChainAdapter
+export type EvmChainAdapter =
+  | ethereum.ChainAdapter
+  | avalanche.ChainAdapter
+  | optimism.ChainAdapter
+  | bsc.ChainAdapter
 
 export const isEvmChainId = (
   maybeEvmChainId: string | EvmChainId,
@@ -69,7 +74,11 @@ export const calcFee = (
   return bnOrZero(fee).times(scalars[speed]).toFixed(0, BigNumber.ROUND_CEIL).toString()
 }
 
-type EvmApi = unchained.ethereum.V1Api | unchained.avalanche.V1Api | unchained.optimism.V1Api
+type EvmApi =
+  | unchained.ethereum.V1Api
+  | unchained.avalanche.V1Api
+  | unchained.optimism.V1Api
+  | unchained.bnbsmartchain.V1Api
 
 export interface ChainAdapterArgs<T = EvmApi> {
   chainId?: EvmChainId
@@ -91,7 +100,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
   protected readonly defaultBIP44Params: BIP44Params
   protected readonly supportedChainIds: ChainId[]
   protected readonly providers: {
-    http: unchained.ethereum.V1Api | unchained.avalanche.V1Api | unchained.optimism.V1Api
+    http: EvmApi
     ws: unchained.ws.Client<unchained.evm.types.Tx>
   }
 
