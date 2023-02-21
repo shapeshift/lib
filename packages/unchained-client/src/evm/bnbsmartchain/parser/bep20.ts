@@ -1,13 +1,13 @@
 import { ChainId, toAssetId } from '@shapeshiftoss/caip'
 import { BigNumber, ethers } from 'ethers'
 
-import { BaseTxMetadata } from '../../types'
-import erc20 from './abi/erc20'
-import { SubParser, Tx, TxSpecific } from './types'
-import { getSigHash } from './utils'
+import { BaseTxMetadata } from '../../../types'
+import { SubParser, Tx, TxSpecific } from '../../parser/types'
+import { getSigHash } from '../../parser/utils'
+import bep20 from './abi/bep20'
 
 export interface TxMetadata extends BaseTxMetadata {
-  parser: 'erc20'
+  parser: 'bep20'
   assetId: string
   value?: string
 }
@@ -21,7 +21,7 @@ export class Parser<T extends Tx> implements SubParser<T> {
   provider: ethers.providers.JsonRpcProvider
 
   readonly chainId: ChainId
-  readonly abiInterface = new ethers.utils.Interface(erc20)
+  readonly abiInterface = new ethers.utils.Interface(bep20)
 
   readonly supportedFunctions = {
     approveSigHash: this.abiInterface.getSighash('approve'),
@@ -47,11 +47,11 @@ export class Parser<T extends Tx> implements SubParser<T> {
     const data: TxMetadata = {
       assetId: toAssetId({
         chainId: this.chainId,
-        assetNamespace: 'erc20',
+        assetNamespace: 'bep20',
         assetReference: tx.to,
       }),
       method: decoded.name,
-      parser: 'erc20',
+      parser: 'bep20',
     }
 
     switch (txSigHash) {
