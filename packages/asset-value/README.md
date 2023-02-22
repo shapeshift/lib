@@ -129,7 +129,7 @@ export const selectAccountBalancesByAccountId(state, id: AccountId){
 
 // Component.tsx
 const serializedBalanceData = useAppSelector(state => selectAccountBalancesByAccountId(state, accountId))
-const doubledBalances: AssetValue[] = serializedBalanceData.map(data: SerializedAssetValue => {
+const doubledBalances: AssetValue[] = serializedBalanceData.map((data: SerializedAssetValue) => {
     return (new AssetValue(data)).multipliedBy(2)
 })
 
