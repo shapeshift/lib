@@ -79,5 +79,9 @@ describe('assertIsValidMemo', () => {
     expect(() =>
       assertIsValidMemo('s:RUNE.BTC:Bc1qkw9g3tgv6m2gwc4x4hvdefcwt0uxeedfgag27h:420:ss:0'),
     ).toThrow()
+
+    expect(() =>
+      assertIsValidMemo('s:BTC.BTC:0x8a65ac0E23F31979db06Ec62Af62b132a6dF4741:420:ss:0'),
+    ).toThrow()
   })
 })
