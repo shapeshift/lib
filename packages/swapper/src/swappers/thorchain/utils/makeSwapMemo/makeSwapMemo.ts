@@ -1,13 +1,15 @@
-import { adapters, thorchainAssetId } from '@shapeshiftoss/caip'
+import { adapters, fromAssetId, thorchainAssetId } from '@shapeshiftoss/caip'
 
 import { SwapError, SwapErrorType } from '../../../../api'
 import { THORCHAIN_AFFILIATE_BIPS, THORCHAIN_AFFILIATE_NAME } from '../constants'
+import { isValidAddress } from './isValidAddress'
 
 // BTC (and likely other utxo coins) can only support up to 80 character memos
 const MAX_LENGTH = 80
 
 // use symbol of thor Asset?
 const runeThorId = 'RUNE'
+
 /**
  * @returns thorchain memo shortened to a max of 80 characters as described:
  * https://dev.thorchain.org/thorchain-dev/memos#mechanism-for-transaction-intent
@@ -22,8 +24,10 @@ export const makeSwapMemo = ({
   limit: string
 }): string => {
   const isRune = buyAssetId === thorchainAssetId
+  const buyAssetChainId = fromAssetId(buyAssetId).chainId
   const thorId = isRune ? runeThorId : adapters.assetIdToPoolAssetId({ assetId: buyAssetId })
-  if (!thorId)
+
+  if (!thorId || !isValidAddress(buyAssetChainId, thorId, destinationAddress))
     throw new SwapError('[makeSwapMemo] - undefined thorId for given buyAssetId', {
       code: SwapErrorType.MAKE_MEMO_FAILED,
       details: { buyAssetId },
