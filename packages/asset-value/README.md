@@ -123,7 +123,7 @@ export const selectAccountBalancesByAccountId(state, id: AccountId){
     const balances = state.portfolio.accountBalances.ById[id]
     return Object.entries(balances).map((assetId: AssetId, balance: string) => {
             const asset = state.assets[id]
-            return new AssetValue(asset, value: balance, format: AssetValueFormat.BASE_UNIT).toSerialized()
+            return (new AssetValue(asset, value: balance, format: AssetValueFormat.BASE_UNIT)).toSerialized()
     })
 }
 
