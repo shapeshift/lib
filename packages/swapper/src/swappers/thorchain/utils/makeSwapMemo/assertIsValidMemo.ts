@@ -51,11 +51,13 @@ export const isValidMemoAddress = (chainId: ChainId, thorId: string, address: st
 export const assertIsValidMemo = (memo: string): void => {
   // BTC (and likely other utxo coins) can only support up to 80 character (byte) memos
   const MAX_MEMO_LENGTH = 80
+  const MEMO_PART_DELIMITER = ':'
+  const POOL_PART_DELIMITER = '.'
 
-  const memoParts = memo.split(':')
+  const memoParts = memo.split(MEMO_PART_DELIMITER)
   const pool = memoParts[1]
   const address = memoParts[2]
-  const buyAssetChainId = thorChainAssetToChainId.get(pool.split('.')[0])
+  const buyAssetChainId = thorChainAssetToChainId.get(pool.split(POOL_PART_DELIMITER)[0])
   const isAddressValid = buyAssetChainId
     ? isValidMemoAddress(buyAssetChainId, pool, address)
     : undefined
