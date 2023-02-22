@@ -7,7 +7,7 @@ describe('makeSwapMemo', () => {
       destinationAddress: '0x8a65ac0E23F31979db06Ec62Af62b132a6dF4741',
       limit: '420',
     })
-    expect(memo).toEqual('s:ETH.USDC-B48:0x8a65ac0E23F31979db06Ec62Af62b132a6dF4741:420:ss:25')
+    expect(memo).toEqual('s:ETH.USDC-B48:0x8a65ac0E23F31979db06Ec62Af62b132a6dF4741:420:ss:0')
   })
 
   it('should make a trade to eth memo', () => {
@@ -16,7 +16,7 @@ describe('makeSwapMemo', () => {
       destinationAddress: '0x8a65ac0E23F31979db06Ec62Af62b132a6dF4741',
       limit: '420',
     })
-    expect(memo).toEqual('s:ETH.ETH:0x8a65ac0E23F31979db06Ec62Af62b132a6dF4741:420:ss:25')
+    expect(memo).toEqual('s:ETH.ETH:0x8a65ac0E23F31979db06Ec62Af62b132a6dF4741:420:ss:0')
   })
 
   it('should make a trade to btc memo', () => {
@@ -25,7 +25,7 @@ describe('makeSwapMemo', () => {
       destinationAddress: 'bc1qkw9g3tgv6m2gwc4x4hvdefcwt0uxeedfgag27h',
       limit: '420',
     })
-    expect(memo).toEqual('s:BTC.BTC:bc1qkw9g3tgv6m2gwc4x4hvdefcwt0uxeedfgag27h:420:ss:25')
+    expect(memo).toEqual('s:BTC.BTC:bc1qkw9g3tgv6m2gwc4x4hvdefcwt0uxeedfgag27h:420:ss:0')
   })
 })
 
