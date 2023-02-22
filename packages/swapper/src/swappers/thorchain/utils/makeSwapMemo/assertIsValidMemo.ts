@@ -27,7 +27,7 @@ const thorChainAssetToChainId: Map<string, ChainId> = new Map([
   ['RUNE', thorchainChainId],
 ])
 
-export const isValidAddress = (chainId: ChainId, thorId: string, address: string): boolean => {
+export const isValidMemoAddress = (chainId: ChainId, thorId: string, address: string): boolean => {
   switch (true) {
     case thorId.startsWith('ETH.'):
     case thorId.startsWith('AVAX.'):
@@ -39,10 +39,9 @@ export const isValidAddress = (chainId: ChainId, thorId: string, address: string
       const chainLabel = chainIdToChainLabel(chainId)
       return WAValidator.validate(address, chainLabel)
     }
-    case thorId.startsWith('GAIA:'):
+    case thorId.startsWith('GAIA.'):
       return address.startsWith('cosmos')
-    case thorId.startsWith('RUNE:'):
-    case thorId.startsWith('THOR:'):
+    case thorId.startsWith('RUNE.'):
       return address.startsWith('thor')
     default:
       return false
@@ -58,7 +57,7 @@ export const assertIsValidMemo = (memo: string): void => {
   const address = memoParts[2]
   const buyAssetChainId = thorChainAssetToChainId.get(pool.split('.')[0])
   const isAddressValid = buyAssetChainId
-    ? isValidAddress(buyAssetChainId, pool, address)
+    ? isValidMemoAddress(buyAssetChainId, pool, address)
     : undefined
 
   if (!isAddressValid) {
