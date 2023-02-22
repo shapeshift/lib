@@ -5,6 +5,7 @@
     // Configure imports and their directory resolution
     "paths": {
       "@shapeshiftoss/asset-service/*": ["packages/asset-service"],
+      "@shapeshiftoss/asset-value/*": ["packages/asset-value"],
       "@shapeshiftoss/caip/*": ["packages/caip"],
       "@shapeshiftoss/chain-adapters/*": ["packages/chain-adapters"],
       "@shapeshiftoss/investory-foxy/*": ["packages/investory-foxy"],

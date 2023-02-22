@@ -1,0 +1,36 @@
+{
+  "name": "@shapeshiftoss/asset-value",
+  "version": "1.0.0",
+  "description": "Math and formatting utility class for asset data",
+  "homepage": "https://github.com/shapeshift/lib/tree/main/packages/asset-value",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/*.js",
+    "dist/*.d.ts",
+    "dist/service"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pastaghost/asset-value"
+  },
+  "scripts": {
+    "build": "yarn clean && yarn compile",
+    "clean": "rm -rf dist && rm -rf tsconfig.build.tsbuildinfo",
+    "compile": "tsc -p tsconfig.build.json",
+    "dev": "tsc --watch",
+    "prepare": "yarn build",
+    "test": "jest test",
+    "type-check": "tsc --project ./tsconfig.build.json --noEmit"
+  },
+  "dependencies": {
+    "@shapeshiftoss/asset-service": "^8.8.1",
+    "@shapeshiftoss/caip": "^8.13.0",
+    "bignumber.js": "^9.1.1",
+    "ts-md5": "^1.3.1"
+  }
+}
