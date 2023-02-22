@@ -56,7 +56,11 @@ With AssetValue instances, this is much simpler. Just call the `toPrecision()` f
 ```typescript
 import { AssetValue } from '@shapeshiftoss/asset-value'
 
+// Return a string formatted to the native asset precision or DEFAULT_FORMAT_DECIMALS, whichever is lower.
 const underlyingAsset0Amount: string = asset0Amount.toPrecision()
+
+// Return a string formatted to six decimal places or DEFAULT_FORMAT_DECIMALS, whichever is lower.
+const underlyingAsset0Amount: string = asset0Amount.toPrecision(6)
 ```
 
 Likewise, for a string contining the numerical value in baseunit representation, call the `toBaseUnit()` formatting method of the AssetValue.
@@ -67,6 +71,16 @@ import { AssetValue } from '@shapeshiftoss/asset-value'
 const underlyingAsset0Amount: string = asset0Amount.toBaseUnit()
 ```
 
+In cases where some formatting other than what is available through either `toPrecision()` or `toBaseUnit()` is needed, `toFixed()` is available and functions exactly like the [corresponding method](https://mikemcl.github.io/bignumber.js/#toFix) from [bignumber.js](https://mikemcl.github.io/bignumber.js).
+
+```typescript
+import { AssetValue } from '@shapeshiftoss/asset-value'
+import BigNumber from 'bignumber.js'
+
+const amountTo18DecimalPlaces: string = asset0Amount.toFixed(18, BigNumber.ROUND_DOWN)
+```
+
+</br>
 ### Math
 
 The AssetValue class keeps track of the appropriate precision for the value based on the asset used to initialize the instance. This way, you don't need to keep track of which set of units the value is in or what the correct precision for the asset is. In fact, there is no longer any concept of precision or baseunit representations for values. You can perform arbitrary arithmetic operations on AssetValues as needed and then call whichever formatting method is appropriate when you need a string representation of the value.
@@ -87,6 +101,7 @@ const product: AssetValue = av1.multipliedBy('100')
 const percent: AssetValue = av1.dividedBy(100)
 ```
 
+</br>
 ### Redux
 
 For Redux-compatibility, AssetValues are serializable.
