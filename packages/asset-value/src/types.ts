@@ -25,7 +25,7 @@ export type AssetValueParams = {
 export type SerializedAssetValue = string
 
 export const isAssetValueParams = (
-  params: AssetValueParams | SerializedAssetValue
+  params: AssetValueParams | SerializedAssetValue,
 ): params is AssetValueParams => {
   const _params = params as AssetValueParams
   if (
