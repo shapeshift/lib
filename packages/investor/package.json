@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/investor",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "A core abstraction for single-sided staking plugins",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -26,7 +26,7 @@
     "test": "jest --coverage"
   },
   "devDependencies": {
-    "@shapeshiftoss/hdwallet-core": "^1.42.0",
+    "@shapeshiftoss/hdwallet-core": "^1.43.0",
     "@shapeshiftoss/types": "8.1.0",
     "bignumber.js": "^9.0.2"
   }

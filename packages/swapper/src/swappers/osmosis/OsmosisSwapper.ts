@@ -274,7 +274,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       receiveAddress,
     } = trade
 
-    if (!receiveAccountNumber)
+    if (receiveAccountNumber === undefined)
       throw new SwapError('Receive account number not provided', {
         code: SwapErrorType.RECEIVE_ACCOUNT_NUMBER_NOT_PROVIDED,
       })
@@ -365,7 +365,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     const cosmosAddress = isFromOsmo ? receiveAddress : sellAddress
     const signTxInput = await buildTradeTx({
       osmoAddress,
-      accountNumber: receiveAccountNumber,
+      accountNumber: isFromOsmo ? accountNumber : receiveAccountNumber,
       adapter: osmosisAdapter,
       buyAssetDenom,
       sellAssetDenom,

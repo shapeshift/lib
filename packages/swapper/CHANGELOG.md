@@ -1,3 +1,24 @@
+# [@shapeshiftoss/swapper-v17.3.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v17.3.3...@shapeshiftoss/swapper-v17.3.4) (2023-02-24)
+
+
+### Bug Fixes
+
+* **swapper:** unrug osmo->atom cross-chain swaps ([#1213](https://github.com/shapeshift/lib/issues/1213)) ([9548be7](https://github.com/shapeshift/lib/commit/9548be7cb1b8bb2ae723cd4534491837fb9c4fc0))
+
+# [@shapeshiftoss/swapper-v17.3.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v17.3.2...@shapeshiftoss/swapper-v17.3.3) (2023-02-23)
+
+
+### Bug Fixes
+
+* **swapper:** osmosis account 0 receiveAccountNumber ([#1211](https://github.com/shapeshift/lib/issues/1211)) ([125141c](https://github.com/shapeshift/lib/commit/125141c8e316b172c32fb6e5101eb1d1817a5b44))
+
+# [@shapeshiftoss/swapper-v17.3.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v17.3.1...@shapeshiftoss/swapper-v17.3.2) (2023-02-23)
+
+
+### Bug Fixes
+
+* **chain-adapters:** use snake_case for all osmosis tx fields ([#1205](https://github.com/shapeshift/lib/issues/1205)) ([957569a](https://github.com/shapeshift/lib/commit/957569a5e3460ae56a40d6d8337398504f741a8f))
+
 # [@shapeshiftoss/swapper-v17.3.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v17.3.0...@shapeshiftoss/swapper-v17.3.1) (2023-02-23)
 
 
