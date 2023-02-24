@@ -39,7 +39,7 @@ import {
   toRootDerivationPath,
 } from '../utils'
 import { bnOrZero } from '../utils/bignumber'
-import { avalanche, bsc, ethereum, optimism } from '.'
+import { avalanche, bnbsmartchain, ethereum, optimism } from '.'
 import { BuildCustomTxInput, EstimateGasRequest, Fees, GasFeeDataEstimate } from './types'
 import { getErc20Data, getGeneratedAssetData } from './utils'
 
@@ -56,7 +56,7 @@ export type EvmChainAdapter =
   | ethereum.ChainAdapter
   | avalanche.ChainAdapter
   | optimism.ChainAdapter
-  | bsc.ChainAdapter
+  | bnbsmartchain.ChainAdapter
 
 export const isEvmChainId = (
   maybeEvmChainId: string | EvmChainId,
