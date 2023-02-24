@@ -135,7 +135,7 @@ export const optimism: Asset = {
   explorerTxLink: 'https://optimistic.etherscan.io/tx/',
 }
 
-export const bsc: Asset = {
+export const bnbsmartchain: Asset = {
   assetId: caip.bscAssetId,
   chainId: caip.bscChainId,
   name: 'BNB',

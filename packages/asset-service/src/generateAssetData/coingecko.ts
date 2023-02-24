@@ -11,7 +11,7 @@ import {
 import axios from 'axios'
 
 import { Asset } from '../service/AssetService'
-import { avax, bsc, ethereum, optimism } from './baseAssets'
+import { avax, bnbsmartchain, ethereum, optimism } from './baseAssets'
 import { colorMap } from './colorMap'
 
 type Token = {
@@ -61,9 +61,9 @@ export async function getAssets(chainId: ChainId): Promise<Asset[]> {
         return {
           assetNamespace: ASSET_NAMESPACE.bep20,
           category: adapters.chainIdToCoingeckoAssetPlatform(chainId),
-          explorer: bsc.explorer,
-          explorerAddressLink: bsc.explorerAddressLink,
-          explorerTxLink: bsc.explorerTxLink,
+          explorer: bnbsmartchain.explorer,
+          explorerAddressLink: bnbsmartchain.explorerAddressLink,
+          explorerTxLink: bnbsmartchain.explorerTxLink,
         }
       default:
         throw new Error(`no coingecko token support for chainId: ${chainId}`)

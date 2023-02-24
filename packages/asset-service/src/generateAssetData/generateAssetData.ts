@@ -1,6 +1,6 @@
 import 'dotenv/config'
 
-import { CHAIN_REFERENCE, fromAssetId } from '@shapeshiftoss/caip'
+import { avalancheAssetId, CHAIN_REFERENCE, ethAssetId, fromAssetId } from '@shapeshiftoss/caip'
 import fs from 'fs'
 import merge from 'lodash/merge'
 import orderBy from 'lodash/orderBy'
@@ -8,12 +8,11 @@ import orderBy from 'lodash/orderBy'
 import { Asset, AssetsById } from '../service/AssetService'
 import * as avalanche from './avalanche'
 import { atom, bitcoin, bitcoincash, dogecoin, litecoin, thorchain } from './baseAssets'
-import * as bsc from './bsc'
+import * as bnbsmartchain from './bnbsmartchain'
 import * as ethereum from './ethereum'
 import * as optimism from './optimism'
 import * as osmosis from './osmosis'
 import { overrideAssets } from './overrides'
-import { setColors } from './setColors'
 import { filterOutBlacklistedAssets } from './utils'
 
 const generateAssetData = async () => {
@@ -21,7 +20,7 @@ const generateAssetData = async () => {
   const osmosisAssets = await osmosis.getAssets()
   const avalancheAssets = await avalanche.getAssets()
   const optimismAssets = await optimism.getAssets()
-  const bscAssets = await bsc.getAssets()
+  const bnbsmartchainAssets = await bnbsmartchain.getAssets()
 
   // all assets, included assets to be blacklisted
   const unfilteredAssetData: Asset[] = [
@@ -35,34 +34,45 @@ const generateAssetData = async () => {
     ...osmosisAssets,
     ...avalancheAssets,
     ...optimismAssets,
-    ...bscAssets,
+    ...bnbsmartchainAssets,
   ]
+
   // remove blacklisted assets
   const filteredAssetData = filterOutBlacklistedAssets(unfilteredAssetData)
 
-  // For coins not currently in the color map, check to see if we can generate a color from the icon
-  const filteredWithColors = await setColors(filteredAssetData)
-
   // deterministic order so diffs are readable
-  const orderedAssetList = orderBy(filteredWithColors, 'assetId')
+  const orderedAssetList = orderBy(filteredAssetData, 'assetId')
 
   const ethAssetNames = ethAssets.map((asset) => asset.name)
   const avalancheAssetNames = avalancheAssets.map((asset) => asset.name)
   const optimismAssetNames = optimismAssets.map((asset) => asset.name)
-  const bscAssetNames = bscAssets.map((asset) => asset.name)
+  const bnbsmartchainAssetNames = bnbsmartchainAssets.map((asset) => asset.name)
 
   const generatedAssetData = orderedAssetList.reduce<AssetsById>((acc, asset) => {
     const { chainReference } = fromAssetId(asset.assetId)
 
+    // mark any ethereum assets that also exist on other evm chains
+    if (
+      chainReference === CHAIN_REFERENCE.EthereumMainnet &&
+      asset.assetId !== ethAssetId &&
+      avalancheAssetNames
+        .concat(optimismAssetNames)
+        .concat(bnbsmartchainAssetNames)
+        .includes(asset.name)
+    ) {
+      asset.name = `${asset.name} on Ethereum`
+    }
+
     // mark any avalanche assets that also exist on other evm chains
     if (
       chainReference === CHAIN_REFERENCE.AvalancheCChain &&
-      ethAssetNames.concat(optimismAssetNames).concat(bscAssetNames).includes(asset.name)
+      asset.assetId !== avalancheAssetId &&
+      ethAssetNames.concat(optimismAssetNames).concat(bnbsmartchainAssetNames).includes(asset.name)
     ) {
       asset.name = `${asset.name} on Avalanche`
     }
 
-    // mark any bsc assets that also exist on other evm chains
+    // mark any bnbsmartchain assets that also exist on other evm chains
     if (
       chainReference === CHAIN_REFERENCE.BnbSmartChainMainnet &&
       ethAssetNames.concat(optimismAssetNames).concat(avalancheAssetNames).includes(asset.name)
@@ -73,7 +83,7 @@ const generateAssetData = async () => {
     // mark any optimism assets that also exist on other evm chains
     if (
       chainReference === CHAIN_REFERENCE.OptimismMainnet &&
-      ethAssetNames.concat(avalancheAssetNames).concat(bscAssetNames).includes(asset.name)
+      ethAssetNames.concat(avalancheAssetNames).concat(bnbsmartchainAssetNames).includes(asset.name)
     ) {
       asset.name = `${asset.name} on Optimism`
     }
