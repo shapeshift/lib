@@ -282,7 +282,7 @@ export enum ChainAdapterDisplayName {
   Ethereum = 'Ethereum',
   Avalanche = 'Avalanche C-Chain',
   Optimism = 'Optimism',
-  Bsc = 'BNB Smart Chain',
+  BnbSmartChain = 'BNB Smart Chain',
   Cosmos = 'Cosmos',
   Bitcoin = 'Bitcoin',
   BitcoinCash = 'Bitcoin Cash',
