@@ -1,3 +1,68 @@
+# [@shapeshiftoss/swapper-v17.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v17.3.5...@shapeshiftoss/swapper-v17.4.0) (2023-02-27)
+
+
+### Features
+
+* **swapper:** unrug THOR swaps to RUNE ([#1217](https://github.com/shapeshift/lib/issues/1217)) ([d2aa35d](https://github.com/shapeshift/lib/commit/d2aa35d572ec003d80af047c95a940ffa76c923b))
+
+# [@shapeshiftoss/swapper-v17.3.5](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v17.3.4...@shapeshiftoss/swapper-v17.3.5) (2023-02-24)
+
+# [@shapeshiftoss/swapper-v17.3.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v17.3.3...@shapeshiftoss/swapper-v17.3.4) (2023-02-24)
+
+
+### Bug Fixes
+
+* **swapper:** unrug osmo->atom cross-chain swaps ([#1213](https://github.com/shapeshift/lib/issues/1213)) ([9548be7](https://github.com/shapeshift/lib/commit/9548be7cb1b8bb2ae723cd4534491837fb9c4fc0))
+
+# [@shapeshiftoss/swapper-v17.3.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v17.3.2...@shapeshiftoss/swapper-v17.3.3) (2023-02-23)
+
+
+### Bug Fixes
+
+* **swapper:** osmosis account 0 receiveAccountNumber ([#1211](https://github.com/shapeshift/lib/issues/1211)) ([125141c](https://github.com/shapeshift/lib/commit/125141c8e316b172c32fb6e5101eb1d1817a5b44))
+
+# [@shapeshiftoss/swapper-v17.3.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v17.3.1...@shapeshiftoss/swapper-v17.3.2) (2023-02-23)
+
+
+### Bug Fixes
+
+* **chain-adapters:** use snake_case for all osmosis tx fields ([#1205](https://github.com/shapeshift/lib/issues/1205)) ([957569a](https://github.com/shapeshift/lib/commit/957569a5e3460ae56a40d6d8337398504f741a8f))
+
+# [@shapeshiftoss/swapper-v17.3.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v17.3.0...@shapeshiftoss/swapper-v17.3.1) (2023-02-23)
+
+
+### Bug Fixes
+
+* **swapper:** osmosis multi-account swaps ([#1210](https://github.com/shapeshift/lib/issues/1210)) ([6b5a7ab](https://github.com/shapeshift/lib/commit/6b5a7abfd50a77f1b3dfeef556e5ebac679891eb))
+
+# [@shapeshiftoss/swapper-v17.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v17.2.0...@shapeshiftoss/swapper-v17.3.0) (2023-02-23)
+
+
+### Features
+
+* enable Avalanche on THORSwapper ([#1208](https://github.com/shapeshift/lib/issues/1208)) ([95ae357](https://github.com/shapeshift/lib/commit/95ae3577254f37ff4fe7ede70dc2271148f026cf))
+
+# [@shapeshiftoss/swapper-v17.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v17.1.0...@shapeshiftoss/swapper-v17.2.0) (2023-02-23)
+
+
+### Features
+
+* **swapper:** update default slippage to .2% ([#1207](https://github.com/shapeshift/lib/issues/1207)) ([fc9eade](https://github.com/shapeshift/lib/commit/fc9eade5083c5e04c061cac69790ceb6eb5527e6))
+
+# [@shapeshiftoss/swapper-v17.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v17.0.2...@shapeshiftoss/swapper-v17.1.0) (2023-02-22)
+
+
+### Features
+
+* **swapper:** add memo assertion ([#1204](https://github.com/shapeshift/lib/issues/1204)) ([caec5ed](https://github.com/shapeshift/lib/commit/caec5ed7b8e3b420d557b157567801750430d949))
+
+# [@shapeshiftoss/swapper-v17.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v17.0.1...@shapeshiftoss/swapper-v17.0.2) (2023-02-22)
+
+
+### Bug Fixes
+
+* magic strings and mutation are bad ([#1203](https://github.com/shapeshift/lib/issues/1203)) ([000eb40](https://github.com/shapeshift/lib/commit/000eb407ba9effbfa4481a58ae5746ea09f753e9))
+
 # [@shapeshiftoss/swapper-v17.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v17.0.0...@shapeshiftoss/swapper-v17.0.1) (2023-02-11)
 
 # [@shapeshiftoss/swapper-v17.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v16.0.2...@shapeshiftoss/swapper-v17.0.0) (2023-02-08)
