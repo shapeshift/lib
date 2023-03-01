@@ -1,6 +1,6 @@
 import { Asset } from '@shapeshiftoss/asset-service'
 import { AssetId, ChainId, fromAssetId } from '@shapeshiftoss/caip'
-import { avalanche, ethereum, optimism } from '@shapeshiftoss/chain-adapters'
+import { avalanche, bnbsmartchain, ethereum, optimism } from '@shapeshiftoss/chain-adapters'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
 import {
@@ -33,11 +33,13 @@ export type ZrxSupportedChainId =
   | KnownChainIds.EthereumMainnet
   | KnownChainIds.AvalancheMainnet
   | KnownChainIds.OptimismMainnet
+  | KnownChainIds.BnbSmartChainMainnet
 
 export type ZrxSupportedChainAdapter =
   | ethereum.ChainAdapter
   | avalanche.ChainAdapter
   | optimism.ChainAdapter
+  | bnbsmartchain.ChainAdapter
 
 export class ZrxSwapper<T extends ZrxSupportedChainId> implements Swapper<T> {
   readonly name = SwapperName.Zrx

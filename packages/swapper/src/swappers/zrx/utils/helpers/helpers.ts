@@ -2,6 +2,7 @@ import { Asset } from '@shapeshiftoss/asset-service'
 import {
   AssetId,
   avalancheAssetId,
+  bscAssetId,
   ethAssetId,
   fromAssetId,
   optimismAssetId,
@@ -22,6 +23,8 @@ export const baseUrlFromChainId = (chainId: string): string => {
       return 'https://avalanche.api.0x.org/'
     case KnownChainIds.OptimismMainnet:
       return 'https://optimism.api.0x.org/'
+    case KnownChainIds.BnbSmartChainMainnet:
+      return 'https://bsc.api.0x.org/'
     default:
       throw new SwapError(`baseUrlFromChainId] - Unsupported chainId: ${chainId}`, {
         code: SwapErrorType.UNSUPPORTED_CHAIN,
@@ -37,6 +40,8 @@ export const usdcContractFromChainId = (chainId: string): string => {
       return '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e'
     case KnownChainIds.OptimismMainnet:
       return '0x7f5c764cbc14f9669b88837ca1490cca17c31607'
+    case KnownChainIds.BnbSmartChainMainnet:
+      return '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d'
     default:
       throw new SwapError(`usdcContractFromChainId] - Unsupported chainId: ${chainId}`, {
         code: SwapErrorType.UNSUPPORTED_CHAIN,
@@ -53,6 +58,8 @@ export const isNativeEvmAsset = (assetId: AssetId): boolean => {
       return assetId === avalancheAssetId
     case KnownChainIds.OptimismMainnet:
       return assetId === optimismAssetId
+    case KnownChainIds.BnbSmartChainMainnet:
+      return assetId === bscAssetId
     default:
       return false
   }
