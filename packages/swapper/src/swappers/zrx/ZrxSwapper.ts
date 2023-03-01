@@ -59,6 +59,8 @@ export class ZrxSwapper<T extends ZrxSupportedChainId> implements Swapper<T> {
         return SwapperType.ZrxAvalanche
       case KnownChainIds.OptimismMainnet:
         return SwapperType.ZrxOptimism
+      case KnownChainIds.BnbSmartChainMainnet:
+        return SwapperType.ZrxBnbSmartChain
       default:
         throw new SwapError('[getType]', {
           code: SwapErrorType.UNSUPPORTED_CHAIN,
