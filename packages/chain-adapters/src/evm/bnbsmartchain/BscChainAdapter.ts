@@ -41,7 +41,9 @@ export class ChainAdapter extends EvmBaseAdapter<KnownChainIds.BnbSmartChainMain
   }
 
   getName() {
-    const enumIndex = Object.values(ChainAdapterDisplayName).indexOf(ChainAdapterDisplayName.BnbSmartChain)
+    const enumIndex = Object.values(ChainAdapterDisplayName).indexOf(
+      ChainAdapterDisplayName.BnbSmartChain,
+    )
     return Object.keys(ChainAdapterDisplayName)[enumIndex]
   }
 

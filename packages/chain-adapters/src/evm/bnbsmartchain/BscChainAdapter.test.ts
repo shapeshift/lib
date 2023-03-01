@@ -560,8 +560,6 @@ describe('BscChainAdapter', () => {
         sendMax: true,
       } as unknown as BuildSendTxInput<KnownChainIds.BnbSmartChainMainnet>
 
-      console.log({ tx })
-
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
           addressNList: toAddressNList(adapter.getBIP44Params({ accountNumber: 0 })),

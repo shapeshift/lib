@@ -163,14 +163,16 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
   }
 
   private async assertSwitchChain(wallet: ETHWallet) {
-    const walletChainReference = await wallet.ethGetChainId?.()
+    if (!wallet.ethGetChainId) return
+
+    const walletChainReference = await wallet.ethGetChainId()
     const adapterChainReference = Number(fromChainId(this.chainId).chainReference)
 
     // switch chain not needed if wallet and adapter chains match
     if (walletChainReference === adapterChainReference) return
 
     // error if wallet and adapter chains don't match, but switch chain isn't supported by the wallet
-    if (!supportsEthSwitchChain(wallet)) {
+    if (!wallet.ethSwitchChain) {
       throw new Error(
         `wallet does not support switching chains: wallet network (${walletChainReference}) and adapter network (${adapterChainReference}) do not match.`,
       )
@@ -200,8 +202,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
       },
     }[this.chainId]
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    await wallet.ethSwitchChain!({
+    await wallet.ethSwitchChain({
       chainId: utils.hexValue(adapterChainReference),
       chainName: this.getDisplayName(),
       nativeCurrency: {
