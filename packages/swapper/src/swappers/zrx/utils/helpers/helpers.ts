@@ -32,7 +32,7 @@ export const baseUrlFromChainId = (chainId: string): string => {
   }
 }
 
-export const usdcContractFromChainId = (chainId: string): string => {
+export const usdcTokenFromChainId = (chainId: string): string => {
   switch (chainId) {
     case KnownChainIds.EthereumMainnet:
       return '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
@@ -41,7 +41,7 @@ export const usdcContractFromChainId = (chainId: string): string => {
     case KnownChainIds.OptimismMainnet:
       return '0x7f5c764cbc14f9669b88837ca1490cca17c31607'
     case KnownChainIds.BnbSmartChainMainnet:
-      return '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d'
+      return '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d'
     default:
       throw new SwapError(`usdcContractFromChainId] - Unsupported chainId: ${chainId}`, {
         code: SwapErrorType.UNSUPPORTED_CHAIN,
@@ -65,22 +65,27 @@ export const isNativeEvmAsset = (assetId: AssetId): boolean => {
   }
 }
 
-export const getUsdRate = async (asset: Asset): Promise<string> => {
-  const { assetReference: erc20Address, assetNamespace } = fromAssetId(asset.assetId)
-  const { symbol } = asset
+export const assetToToken = (asset: Asset): string => {
+  const { assetReference, assetNamespace } = fromAssetId(asset.assetId)
+  return assetNamespace === 'slip44' ? asset.symbol : assetReference
+}
 
+export const getUsdRate = async (sellAsset: Asset): Promise<string> => {
   try {
-    const USDC_CONTRACT_ADDRESS = usdcContractFromChainId(asset.chainId)
-    if (erc20Address?.toLowerCase() === USDC_CONTRACT_ADDRESS) return '1' // Will break if comparing against usdc
-    const baseUrl = baseUrlFromChainId(asset.chainId)
+    const usdcToken = usdcTokenFromChainId(sellAsset.chainId)
+    const sellToken = fromAssetId(sellAsset.assetId).assetReference
+
+    if (sellToken === usdcToken) return '1' // Will break if comparing against usdc
+
+    const baseUrl = baseUrlFromChainId(sellAsset.chainId)
     const zrxService = zrxServiceFactory(baseUrl)
     const rateResponse: AxiosResponse<ZrxPriceResponse> = await zrxService.get<ZrxPriceResponse>(
       '/swap/v1/price',
       {
         params: {
-          buyToken: USDC_CONTRACT_ADDRESS,
+          buyToken: usdcToken,
           buyAmount: '1000000000', // rate is imprecise for low $ values, hence asking for $1000
-          sellToken: assetNamespace === 'erc20' ? erc20Address : symbol,
+          sellToken: assetToToken(sellAsset),
         },
       },
     )
