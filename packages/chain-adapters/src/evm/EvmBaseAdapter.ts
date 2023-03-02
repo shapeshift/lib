@@ -7,7 +7,6 @@ import {
   supportsAvalanche,
   supportsBSC,
   supportsETH,
-  supportsEthSwitchChain,
   supportsOptimism,
 } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
