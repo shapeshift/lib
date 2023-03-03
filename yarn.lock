@@ -3204,7 +3204,18 @@
     web-encoding "^1.1.0"
     wif "^2.0.6"
 
-"@shapeshiftoss/hdwallet-core@1.43.0", "@shapeshiftoss/hdwallet-core@^1.43.0":
+"@shapeshiftoss/hdwallet-core@1.46.0", "@shapeshiftoss/hdwallet-core@^1.46.0":
+  version "1.46.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/hdwallet-core/-/hdwallet-core-1.46.0.tgz#183233df1d0856125bbf5132eb981a3afecd4890"
+  integrity sha512-Pf/LNZbsrIU0Ex4oVlGTxuX5KZ3uUMhfjQiWZ7gEt964MfABxc46bm2TOiCJTxd0FhHpgCUSGTLztZ0Qj6DMIQ==
+  dependencies:
+    eip-712 "^1.0.0"
+    eventemitter2 "^5.0.1"
+    lodash "^4.17.21"
+    rxjs "^6.4.0"
+    type-assertions "^1.1.0"
+
+"@shapeshiftoss/hdwallet-core@^1.43.0":
   version "1.43.0"
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/hdwallet-core/-/hdwallet-core-1.43.0.tgz#936c10f1f95c08bd0af010164cc9f291361e99dc"
   integrity sha512-HwnXGhAWVXUtNeQd05b67riiBao6poUIiTG24qwEU6G7wertUEqVtll0laa94NO+pa0BWlKFqJTPg52Scl71Kg==
@@ -3225,14 +3236,14 @@
     rxjs "^6.4.0"
     type-assertions "^1.1.0"
 
-"@shapeshiftoss/hdwallet-native@^1.43.0":
-  version "1.43.0"
-  resolved "https://registry.yarnpkg.com/@shapeshiftoss/hdwallet-native/-/hdwallet-native-1.43.0.tgz#6d32e763cedf2be6a553c2286fb664e3c16c732a"
-  integrity sha512-LkExNduqMlwvF6VJdvgd0UrFrGpBbsNDazkHQC+oe/vEMCZqubCyV/ERyTXRkws/HUbl5lcpvT3nsybLVtMtmQ==
+"@shapeshiftoss/hdwallet-native@^1.46.0":
+  version "1.46.0"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/hdwallet-native/-/hdwallet-native-1.46.0.tgz#fd381bab2b88fc00a55ddf40f3eaff5f41b82342"
+  integrity sha512-5F16YA6JDffFzfcTV5uE8r4fobSojuc7j0eYNiSKXu1dqYjqsKHwNzTm1ZYORF7kmzvZoAMT8W8nLVxwopF3HA==
   dependencies:
     "@shapeshiftoss/bitcoinjs-lib" "5.2.0-shapeshift.2"
     "@shapeshiftoss/fiosdk" "1.2.1-shapeshift.6"
-    "@shapeshiftoss/hdwallet-core" "1.43.0"
+    "@shapeshiftoss/hdwallet-core" "1.46.0"
     "@shapeshiftoss/proto-tx-builder" "^0.7.0"
     "@zxing/text-encoding" "^0.9.0"
     bchaddrjs "^0.4.9"
@@ -3252,6 +3263,19 @@
     tendermint-tx-builder "^1.0.9"
     tiny-secp256k1 "^1.1.6"
     web-encoding "^1.1.0"
+
+"@shapeshiftoss/investor-foxy@^7.0.0":
+  version "7.1.3"
+  resolved "https://registry.yarnpkg.com/@shapeshiftoss/investor-foxy/-/investor-foxy-7.1.3.tgz#6e7ede7dd028e8b11c48059327653c339b1ed45b"
+  integrity sha512-iKWk4rDv7Wf5c2dNrkD1JIWJQQoxjElRNQancN8/ICKqOHvFhAzlLSMvuTqzaCQx93YyD8seS1ID8v2X7ePR9g==
+  dependencies:
+    "@ethersproject/providers" "^5.5.3"
+    axios "^0.26.1"
+    bignumber.js "^9.1.1"
+    lodash "^4.17.21"
+    web3 "1.7.4"
+    web3-core "1.7.4"
+    web3-utils "1.7.4"
 
 "@shapeshiftoss/proto-tx-builder@^0.7.0":
   version "0.7.0"
