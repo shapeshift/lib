@@ -188,7 +188,7 @@ export enum SwapperName {
   CowSwap = 'CoW Swap',
   Zrx = '0x',
   Test = 'Test',
-  LiFi = 'Li.Fi',
+  LIFI = 'LI.FI',
 }
 
 export enum SwapperType {
@@ -199,7 +199,7 @@ export enum SwapperType {
   Osmosis = 'Osmosis',
   CowSwap = 'CoW Swap',
   Test = 'Test',
-  LiFi = 'Li.Fi',
+  LIFI = 'LI.FI',
 }
 
 export type TradeTxs = {
