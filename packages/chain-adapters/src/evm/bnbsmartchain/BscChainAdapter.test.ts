@@ -44,7 +44,7 @@ const gasLimit = '42000'
 const contractAddress = '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d'
 const value = 400
 
-const makeChainSpecific = (chainSpecificAdditionalProps?: { erc20ContractAddress: string }) =>
+const makeChainSpecific = (chainSpecificAdditionalProps?: { tokenContractAddress: string }) =>
   merge({ gasPrice, gasLimit }, chainSpecificAdditionalProps)
 
 const makeGetGasFeesMockedResponse = (overrideArgs?: { gasPrice?: string }) =>
@@ -380,7 +380,7 @@ describe('BscChainAdapter', () => {
         wallet: await getWallet(),
         accountNumber,
         value,
-        chainSpecific: makeChainSpecific({ erc20ContractAddress: contractAddress }),
+        chainSpecific: makeChainSpecific({ tokenContractAddress: contractAddress }),
       } as unknown as BuildSendTxInput<KnownChainIds.BnbSmartChainMainnet>
 
       await expect(adapter.buildSendTransaction(tx)).rejects.toThrow(
@@ -440,7 +440,7 @@ describe('BscChainAdapter', () => {
       expect(args.providers.http.getAccount).toHaveBeenCalledTimes(1)
     })
 
-    it('sendmax: true without chainSpecific.erc20ContractAddress should throw if balance is 0', async () => {
+    it('sendmax: true without chainSpecific.tokenContractAddress should throw if balance is 0', async () => {
       const httpProvider = {
         getAccount: jest
           .fn<any, any>()
@@ -463,7 +463,7 @@ describe('BscChainAdapter', () => {
       expect(args.providers.http.getAccount).toHaveBeenCalledTimes(1)
     })
 
-    it('sendMax: true without chainSpecific.erc20ContractAddress - should build a tx with full account balance - gas fee', async () => {
+    it('sendMax: true without chainSpecific.tokenContractAddress - should build a tx with full account balance - gas fee', async () => {
       const balance = '2500000'
       const expectedValue = numberToHex(
         bn(balance).minus(bn(gasLimit).multipliedBy(gasPrice)) as any,
@@ -519,7 +519,7 @@ describe('BscChainAdapter', () => {
         accountNumber,
         to: ZERO_ADDRESS,
         value,
-        chainSpecific: makeChainSpecific({ erc20ContractAddress: contractAddress }),
+        chainSpecific: makeChainSpecific({ tokenContractAddress: contractAddress }),
       } as unknown as BuildSendTxInput<KnownChainIds.BnbSmartChainMainnet>
 
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
@@ -538,7 +538,7 @@ describe('BscChainAdapter', () => {
       expect(args.providers.http.getAccount).toHaveBeenCalledTimes(1)
     })
 
-    it('sendmax: true with chainSpecific.erc20ContractAddress should build a tx with full account balance - gas fee', async () => {
+    it('sendmax: true with chainSpecific.tokenContractAddress should build a tx with full account balance - gas fee', async () => {
       const httpProvider = {
         getAccount: jest
           .fn<any, any>()
@@ -555,7 +555,7 @@ describe('BscChainAdapter', () => {
         accountNumber,
         to: EOA_ADDRESS,
         value,
-        chainSpecific: makeChainSpecific({ erc20ContractAddress: contractAddress }),
+        chainSpecific: makeChainSpecific({ tokenContractAddress: contractAddress }),
         sendMax: true,
       } as unknown as BuildSendTxInput<KnownChainIds.BnbSmartChainMainnet>
 
@@ -575,7 +575,7 @@ describe('BscChainAdapter', () => {
       expect(args.providers.http.getAccount).toHaveBeenCalledTimes(1)
     })
 
-    it('sendmax: true with chainSpecific.erc20ContractAddress should throw if token balance is 0', async () => {
+    it('sendmax: true with chainSpecific.tokenContractAddress should throw if token balance is 0', async () => {
       const httpProvider = {
         getAccount: jest
           .fn<any, any>()
@@ -592,7 +592,7 @@ describe('BscChainAdapter', () => {
         accountNumber,
         to: EOA_ADDRESS,
         value,
-        chainSpecific: makeChainSpecific({ erc20ContractAddress: contractAddress }),
+        chainSpecific: makeChainSpecific({ tokenContractAddress: contractAddress }),
         sendMax: true,
       } as unknown as BuildSendTxInput<KnownChainIds.BnbSmartChainMainnet>
 
