@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/investor-foxy",
-  "version": "8.0.0",
+  "version": "8.0.1",
   "description": "An API layer for interaction with the ShapeShift FOXy contract",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -38,13 +38,13 @@
   "peerDependencies": {
     "@shapeshiftoss/caip": "^8.0.0",
     "@shapeshiftoss/chain-adapters": "^11.0.0",
-    "@shapeshiftoss/hdwallet-core": "^1.45.0",
+    "@shapeshiftoss/hdwallet-core": "^1.46.0",
     "@shapeshiftoss/types": "^8.1.0"
   },
   "devDependencies": {
     "@shapeshiftoss/caip": "^8.0.0",
     "@shapeshiftoss/chain-adapters": "^11.0.0",
-    "@shapeshiftoss/hdwallet-core": "^1.45.0",
+    "@shapeshiftoss/hdwallet-core": "^1.46.0",
     "@shapeshiftoss/types": "^8.1.0",
     "@shapeshiftoss/unchained-client": "^10.0.1"
   }
