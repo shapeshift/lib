@@ -283,8 +283,7 @@ describe('BscChainAdapter', () => {
     })
   })
 
-  // eslint-disable-next-line jest/no-disabled-tests
-  describe.skip('signAndBroadcastTransaction', () => {
+  describe('signAndBroadcastTransaction', () => {
     it('should throw if no hash is returned by wallet.ethSendTx', async () => {
       const adapter = new bsc.ChainAdapter(makeChainAdapterArgs())
       const wallet = await getWallet()
