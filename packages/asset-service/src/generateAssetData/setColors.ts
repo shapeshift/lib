@@ -5,9 +5,7 @@ import { Asset } from '../service/AssetService'
 const toHex = (num: number): string => num.toString(16).toUpperCase().padStart(2, '0')
 
 export const setColors = async (assets: Asset[]): Promise<Asset[]> => {
-  const filteredAssets = assets.filter(
-    (asset) => asset.color === '#FFFFFF' && asset.icon && !asset.icon.includes('yearn'),
-  )
+  const filteredAssets = assets.filter((asset) => asset.color === '#FFFFFF' && asset.icon)
 
   for await (const [index, asset] of filteredAssets.entries()) {
     try {
