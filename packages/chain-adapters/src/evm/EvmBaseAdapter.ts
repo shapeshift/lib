@@ -219,7 +219,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
   }> {
     try {
       const { to, wallet, accountNumber, sendMax = false } = tx
-      const { erc20ContractAddress, gasPrice, gasLimit, maxFeePerGas, maxPriorityFeePerGas } =
+      const { tokenContractAddress, gasPrice, gasLimit, maxFeePerGas, maxPriorityFeePerGas } =
         tx.chainSpecific
 
       if (!tx.to) throw new Error(`${this.getName()}ChainAdapter: to is required`)
@@ -230,20 +230,20 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
 
       await this.assertSwitchChain(wallet)
 
-      const destAddress = erc20ContractAddress ?? to
+      const destAddress = tokenContractAddress ?? to
 
       const from = await this.getAddress({ accountNumber, wallet })
       const account = await this.getAccount(from)
 
-      const isErc20Send = !!erc20ContractAddress
+      const isTokenSend = !!tokenContractAddress
 
       if (sendMax) {
-        if (isErc20Send) {
-          const erc20Balance = account.chainSpecific.tokens?.find((token) => {
-            return fromAssetId(token.assetId).assetReference === erc20ContractAddress.toLowerCase()
+        if (isTokenSend) {
+          const tokenBalance = account.chainSpecific.tokens?.find((token) => {
+            return fromAssetId(token.assetId).assetReference === tokenContractAddress.toLowerCase()
           })?.balance
-          if (!erc20Balance) throw new Error('no balance')
-          tx.value = erc20Balance
+          if (!tokenBalance) throw new Error('no balance')
+          tx.value = tokenBalance
         } else {
           if (bnOrZero(account.balance).isZero()) throw new Error('no balance')
 
@@ -253,7 +253,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
           tx.value = bnOrZero(account.balance).minus(fee).toString()
         }
       }
-      const data = tx.memo || (await getErc20Data(to, tx.value, erc20ContractAddress))
+      const data = tx.memo || (await getErc20Data(to, tx.value, tokenContractAddress))
 
       const fees = ((): Fees => {
         if (maxFeePerGas && maxPriorityFeePerGas) {
@@ -269,7 +269,7 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
       const bip44Params = this.getBIP44Params({ accountNumber })
       const txToSign = {
         addressNList: toAddressNList(bip44Params),
-        value: numberToHex(isErc20Send ? '0' : tx.value),
+        value: numberToHex(isTokenSend ? '0' : tx.value),
         to: destAddress,
         chainId: Number(fromChainId(this.chainId).chainReference),
         data,
@@ -290,27 +290,27 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
     chainSpecific: { contractAddress, from, contractData },
     sendMax = false,
   }: GetFeeDataInput<T>): Promise<EstimateGasRequest> {
-    const isErc20Send = !!contractAddress
+    const isTokenSend = !!contractAddress
 
     // get the exact send max value for an erc20 send to ensure we have the correct input data when estimating fees
-    if (sendMax && isErc20Send) {
+    if (sendMax && isTokenSend) {
       const account = await this.getAccount(from)
-      const erc20Balance = account.chainSpecific.tokens?.find((token) => {
+      const tokenBalance = account.chainSpecific.tokens?.find((token) => {
         const { assetReference } = fromAssetId(token.assetId)
         return assetReference === contractAddress.toLowerCase()
       })?.balance
 
-      if (!erc20Balance) throw new Error('no balance')
+      if (!tokenBalance) throw new Error('no balance')
 
-      value = erc20Balance
+      value = tokenBalance
     }
 
     const data = memo || contractData || (await getErc20Data(to, value, contractAddress))
 
     return {
       from,
-      to: isErc20Send ? contractAddress : to,
-      value: isErc20Send ? '0' : value,
+      to: isTokenSend ? contractAddress : to,
+      value: isTokenSend ? '0' : value,
       data,
     }
   }
