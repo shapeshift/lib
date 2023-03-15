@@ -3,6 +3,7 @@ import {
   AssetId,
   avalancheAssetId,
   bscAssetId,
+  ChainId,
   ethAssetId,
   fromAssetId,
   optimismAssetId,
@@ -32,7 +33,7 @@ export const baseUrlFromChainId = (chainId: string): string => {
   }
 }
 
-export const usdcTokenFromChainId = (chainId: string): string => {
+export const usdcContractAddressFromChainId = (chainId: ChainId): string => {
   switch (chainId) {
     case KnownChainIds.EthereumMainnet:
       return '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
@@ -65,6 +66,7 @@ export const isNativeEvmAsset = (assetId: AssetId): boolean => {
   }
 }
 
+// converts an asset to zrx token (symbol or contract address)
 export const assetToToken = (asset: Asset): string => {
   const { assetReference, assetNamespace } = fromAssetId(asset.assetId)
   return assetNamespace === 'slip44' ? asset.symbol : assetReference
@@ -72,10 +74,10 @@ export const assetToToken = (asset: Asset): string => {
 
 export const getUsdRate = async (sellAsset: Asset): Promise<string> => {
   try {
-    const usdcToken = usdcTokenFromChainId(sellAsset.chainId)
-    const sellToken = fromAssetId(sellAsset.assetId).assetReference
+    const usdcContractAddress = usdcContractAddressFromChainId(sellAsset.chainId)
+    const sellAssetContractAddress = fromAssetId(sellAsset.assetId).assetReference
 
-    if (sellToken === usdcToken) return '1' // Will break if comparing against usdc
+    if (sellAssetContractAddress === usdcContractAddress) return '1' // Will break if comparing against usdc
 
     const baseUrl = baseUrlFromChainId(sellAsset.chainId)
     const zrxService = zrxServiceFactory(baseUrl)
@@ -83,7 +85,7 @@ export const getUsdRate = async (sellAsset: Asset): Promise<string> => {
       '/swap/v1/price',
       {
         params: {
-          buyToken: usdcToken,
+          buyToken: usdcContractAddress,
           buyAmount: '1000000000', // rate is imprecise for low $ values, hence asking for $1000
           sellToken: assetToToken(sellAsset),
         },
