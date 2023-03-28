@@ -6,7 +6,7 @@ import { find } from 'lodash'
 
 import { SwapError, SwapErrorType, TradeResult } from '../../../api'
 import { bn, bnOrZero } from '../../utils/bignumber'
-import { OSMOSIS_MIN_FEE, OsmosisSupportedChainAdapter } from '../OsmosisSwapper'
+import { OsmosisSupportedChainAdapter } from '../OsmosisSwapper'
 import { OSMOSIS_PRECISION } from './constants'
 import { osmoService } from './osmoService'
 import { IbcTransferInput, PoolInfo } from './types'
@@ -303,7 +303,7 @@ export const buildTradeTx = async ({
     fee: {
       amount: [
         {
-          amount: OSMOSIS_MIN_FEE,
+          amount: osmosis.MIN_FEE,
           denom: 'uosmo',
         },
       ],
