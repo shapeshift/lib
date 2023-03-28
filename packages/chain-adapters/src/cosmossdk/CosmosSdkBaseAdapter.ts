@@ -2,7 +2,6 @@ import { AssetId, ChainId, fromChainId, generateAssetIdFromOsmosisDenom } from '
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import { bech32 } from 'bech32'
-import BigNumber from 'bignumber.js'
 
 import { ChainAdapter as IChainAdapter } from '../api'
 import { ErrorHandler } from '../error/ErrorHandler'
@@ -56,16 +55,6 @@ export const assertIsValidatorAddress = (validator: string, chainId: CosmosSdkCh
   if (CHAIN_ID_TO_BECH32_VAL_PREFIX[chainId] !== bech32.decode(validator).prefix) {
     throw new Error(`CosmosSdkBaseAdapter: invalid validator address ${validator}`)
   }
-}
-
-type ConfirmationSpeed = 'slow' | 'average' | 'fast'
-
-export const calcFee = (
-  fee: string | number | BigNumber,
-  speed: ConfirmationSpeed,
-  scalars: Record<ConfirmationSpeed, BigNumber>,
-): string => {
-  return bnOrZero(fee).times(scalars[speed]).toFixed(0, BigNumber.ROUND_CEIL).toString()
 }
 
 const transformValidator = (validator: unchained.cosmossdk.types.Validator): Validator => ({

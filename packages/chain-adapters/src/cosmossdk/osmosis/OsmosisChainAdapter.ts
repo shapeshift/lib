@@ -19,10 +19,9 @@ import {
   SignTxInput,
 } from '../../types'
 import { toAddressNList } from '../../utils'
-import { bn } from '../../utils/bignumber'
+import { bn, calcFee } from '../../utils'
 import {
   assertIsValidatorAddress,
-  calcFee,
   ChainAdapterArgs,
   CosmosSdkBaseAdapter,
 } from '../CosmosSdkBaseAdapter'
