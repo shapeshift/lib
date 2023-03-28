@@ -44,6 +44,8 @@ import {
 } from './utils/helpers'
 import { OsmosisTradeResult, OsmoSwapperDeps } from './utils/types'
 
+export const OSMOSIS_MIN_FEE = '750'
+
 export type OsmosisSupportedChainId = KnownChainIds.CosmosMainnet | KnownChainIds.OsmosisMainnet
 
 export type OsmosisSupportedChainAdapter = cosmos.ChainAdapter | osmosis.ChainAdapter
@@ -411,7 +413,7 @@ export class OsmosisSwapper implements Swapper<ChainId> {
         this.deps.cosmosUrl,
         buyAssetDenom,
         OSMO_COSMO_CHANNEL,
-        '0',
+        OSMOSIS_MIN_FEE,
         accountNumber,
         ibcAccountNumber,
         ibcSequence,
