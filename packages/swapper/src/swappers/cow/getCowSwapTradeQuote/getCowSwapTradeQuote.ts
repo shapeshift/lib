@@ -65,12 +65,13 @@ export async function getCowSwapTradeQuote(
     const { minimum, maximum } = await getCowSwapMinMax(deps, sellAsset, buyAsset)
 
     const minQuoteSellAmount = bnOrZero(minimum).times(bn(10).exponentiatedBy(sellAsset.precision))
+    const isSellAmountBelowMinimum = bnOrZero(sellAmountBeforeFeesCryptoBaseUnit).lt(
+      minQuoteSellAmount,
+    )
 
     // making sure we do not have decimals for cowswap api (can happen at least from minQuoteSellAmount)
     const normalizedSellAmountCryptoBaseUnit = normalizeIntegerAmount(
-      bnOrZero(sellAmountBeforeFeesCryptoBaseUnit).lt(minQuoteSellAmount)
-        ? minQuoteSellAmount
-        : sellAmountBeforeFeesCryptoBaseUnit,
+      isSellAmountBelowMinimum ? minQuoteSellAmount : sellAmountBeforeFeesCryptoBaseUnit,
     )
 
     const apiInput: CowSwapSellQuoteApiInput = {
@@ -142,15 +143,16 @@ export async function getCowSwapTradeQuote(
 
     const feeData = feeDataOptions['fast']
 
-    // If original sellAmount is < minQuoteSellAmount, we don't want to replace it with normalizedSellAmount
+    const isQuoteSellAmountBelowMinimum = bnOrZero(sellAmountCryptoBaseUnit).lt(minQuoteSellAmount)
+    // If isQuoteSellAmountBelowMinimum we don't want to replace it with normalizedSellAmount
     // The purpose of this was to get a quote from CowSwap even with small amounts
-    const quoteSellAmountCryptoBaseUnit = bnOrZero(sellAmountCryptoBaseUnit).lt(minQuoteSellAmount)
+    const quoteSellAmountCryptoBaseUnit = isQuoteSellAmountBelowMinimum
       ? sellAmountBeforeFeesCryptoBaseUnit
       : normalizedSellAmountCryptoBaseUnit
 
-    // Similarly, if original sellAmount is < minQuoteSellAmount, we can't use the buy amount from the quote
-    // because we aren't actually selling the minimum amount
-    const quoteBuyAmountCryptoBaseUnit = bnOrZero(sellAmountCryptoBaseUnit).lt(minQuoteSellAmount)
+    // Similarly, if isQuoteSellAmountBelowMinimum we can't use the buy amount from the quote
+    // because we aren't actually selling the minimum amount (we are attempting to sell an amount less than it)
+    const quoteBuyAmountCryptoBaseUnit = isQuoteSellAmountBelowMinimum
       ? '0'
       : buyAmountCryptoBaseUnit
 
