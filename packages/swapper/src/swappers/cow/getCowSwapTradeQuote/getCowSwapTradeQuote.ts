@@ -67,7 +67,7 @@ export async function getCowSwapTradeQuote(
     const minQuoteSellAmount = bnOrZero(minimum).times(bn(10).exponentiatedBy(sellAsset.precision))
 
     // making sure we do not have decimals for cowswap api (can happen at least from minQuoteSellAmount)
-    const normalizedSellAmount = normalizeIntegerAmount(
+    const normalizedSellAmountCryptoBaseUnit = normalizeIntegerAmount(
       bnOrZero(sellAmountBeforeFeesCryptoBaseUnit).lt(minQuoteSellAmount)
         ? minQuoteSellAmount
         : sellAmountBeforeFeesCryptoBaseUnit,
@@ -82,7 +82,7 @@ export async function getCowSwapTradeQuote(
       partiallyFillable: false,
       from: DEFAULT_ADDRESS,
       kind: ORDER_KIND_SELL,
-      sellAmountBeforeFee: normalizedSellAmount,
+      sellAmountBeforeFee: normalizedSellAmountCryptoBaseUnit,
     }
 
     /**
@@ -144,9 +144,15 @@ export async function getCowSwapTradeQuote(
 
     // If original sellAmount is < minQuoteSellAmount, we don't want to replace it with normalizedSellAmount
     // The purpose of this was to get a quote from CowSwap even with small amounts
-    const quoteSellAmount = bnOrZero(sellAmountCryptoBaseUnit).lt(minQuoteSellAmount)
+    const quoteSellAmountCryptoBaseUnit = bnOrZero(sellAmountCryptoBaseUnit).lt(minQuoteSellAmount)
       ? sellAmountBeforeFeesCryptoBaseUnit
-      : normalizedSellAmount
+      : normalizedSellAmountCryptoBaseUnit
+
+    // Similarly, if original sellAmount is < minQuoteSellAmount, we can't use the buy amount from the quote
+    // because we aren't actually selling the minimum amount
+    const quoteBuyAmountCryptoBaseUnit = bnOrZero(sellAmountCryptoBaseUnit).lt(minQuoteSellAmount)
+      ? '0'
+      : buyAmountCryptoBaseUnit
 
     return {
       rate,
@@ -164,8 +170,8 @@ export async function getCowSwapTradeQuote(
         buyAssetTradeFeeUsd: '0', // Trade fees for buy Asset are always 0 since trade fees are subtracted from sell asset
         sellAssetTradeFeeUsd,
       },
-      sellAmountBeforeFeesCryptoBaseUnit: quoteSellAmount,
-      buyAmountCryptoBaseUnit,
+      sellAmountBeforeFeesCryptoBaseUnit: quoteSellAmountCryptoBaseUnit,
+      buyAmountCryptoBaseUnit: quoteBuyAmountCryptoBaseUnit,
       sources: DEFAULT_SOURCE,
       allowanceContract: COW_SWAP_VAULT_RELAYER_ADDRESS,
       buyAsset,
