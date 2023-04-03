@@ -158,7 +158,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
       const msg: Message = {
         type: 'thorchain/MsgDeposit',
         value: {
-          coins: [{ asset: 'rune', amount: bnOrZero(value).toString() }],
+          coins: [{ asset: 'THOR.RUNE', amount: bnOrZero(value).toString() }],
           memo,
           signer: from,
         },
