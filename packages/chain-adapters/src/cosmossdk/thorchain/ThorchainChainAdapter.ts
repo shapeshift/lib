@@ -155,7 +155,7 @@ export class ChainAdapter extends CosmosSdkBaseAdapter<KnownChainIds.ThorchainMa
       const from = await this.getAddress({ accountNumber, wallet })
       const account = await this.getAccount(from)
       
-      //ref: asset names: https://dev.thorchain.org/thorchain-dev/concepts/memos#asset-abbreviations
+      // ref: asset names: https://dev.thorchain.org/thorchain-dev/concepts/memos#asset-abbreviations
       const msg: Message = {
         type: 'thorchain/MsgDeposit',
         value: {
