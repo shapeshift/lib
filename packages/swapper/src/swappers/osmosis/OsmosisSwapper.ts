@@ -384,7 +384,11 @@ export class OsmosisSwapper implements Swapper<ChainId> {
     const signed = await osmosisAdapter.signTransaction(signTxInput)
     const tradeId = await osmosisAdapter.broadcastTransaction(signed)
 
-    if (!isToOsmosisNetworkAsset) {
+    if (isToOsmosisNetworkAsset) {
+      return isFromOsmosisNetworkAsset
+        ? { tradeId, previousCosmosTxid: tradeId }
+        : { tradeId, previousCosmosTxid: cosmosIbcTradeId }
+    } else {
       /** If the buy asset is not on the Osmosis Network, we need to bridge the
        * asset from the Osmosis network to the buy asset network.
        */
@@ -430,7 +434,5 @@ export class OsmosisSwapper implements Swapper<ChainId> {
       )
       return { tradeId, previousCosmosTxid: cosmosTxHistory.transactions[0]?.txid, cosmosAddress }
     }
-
-    return { tradeId, previousCosmosTxid: cosmosIbcTradeId }
   }
 }
