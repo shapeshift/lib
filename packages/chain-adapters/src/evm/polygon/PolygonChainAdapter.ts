@@ -18,9 +18,9 @@ export class ChainAdapter extends EvmBaseAdapter<KnownChainIds.PolygonMainnet> {
     accountNumber: 0,
   }
 
-  private readonly api: unchained.bnbsmartchain.V1Api
+  private readonly api: unchained.polygon.V1Api
 
-  constructor(args: ChainAdapterArgs<unchained.bnbsmartchain.V1Api>) {
+  constructor(args: ChainAdapterArgs<unchained.polygon.V1Api>) {
     super({
       chainId: DEFAULT_CHAIN_ID,
       supportedChainIds: SUPPORTED_CHAIN_IDS,
@@ -29,15 +29,15 @@ export class ChainAdapter extends EvmBaseAdapter<KnownChainIds.PolygonMainnet> {
     })
 
     this.api = args.providers.http
-    this.assetId = bscAssetId
-    this.parser = new unchained.bnbsmartchain.TransactionParser({
+    this.assetId = polygonAssetId
+    this.parser = new unchained.polygon.TransactionParser({
       chainId: this.chainId,
       rpcUrl: this.rpcUrl,
     })
   }
 
   getDisplayName() {
-    return ChainAdapterDisplayName.BnbSmartChain
+    return ChainAdapterDisplayName.Polygon
   }
 
   getName() {
@@ -47,8 +47,8 @@ export class ChainAdapter extends EvmBaseAdapter<KnownChainIds.PolygonMainnet> {
     return Object.keys(ChainAdapterDisplayName)[enumIndex]
   }
 
-  getType(): KnownChainIds.BnbSmartChainMainnet {
-    return KnownChainIds.BnbSmartChainMainnet
+  getType(): KnownChainIds.PolygonMainnet {
+    return KnownChainIds.PolygonMainnet
   }
 
   getFeeAssetId(): AssetId {
@@ -68,8 +68,8 @@ export class ChainAdapter extends EvmBaseAdapter<KnownChainIds.PolygonMainnet> {
   }
 
   async getFeeData(
-    input: GetFeeDataInput<KnownChainIds.BnbSmartChainMainnet>,
-  ): Promise<FeeDataEstimate<KnownChainIds.BnbSmartChainMainnet>> {
+    input: GetFeeDataInput<KnownChainIds.PolygonMainnet>,
+  ): Promise<FeeDataEstimate<KnownChainIds.PolygonMainnet>> {
     const req = await this.buildEstimateGasRequest(input)
 
     const { gasLimit } = await this.api.estimateGas(req)

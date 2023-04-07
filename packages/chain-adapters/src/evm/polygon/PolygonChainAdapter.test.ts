@@ -4,7 +4,7 @@
  * Test BscChainAdapter
  * @group unit
  */
-import { ASSET_REFERENCE, bscAssetId, bscChainId, fromChainId } from '@shapeshiftoss/caip'
+import { ASSET_REFERENCE, fromChainId, polygonAssetId, polygonChainId } from '@shapeshiftoss/caip'
 import { ETHSignMessage, ETHSignTx, ETHWallet } from '@shapeshiftoss/hdwallet-core'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
@@ -71,14 +71,14 @@ const makeGetAccountMockResponse = (balance: {
 })
 
 const makeChainAdapterArgs = (overrideArgs?: {
-  providers?: { http: unchained.bnbsmartchain.V1Api }
+  providers?: { http: unchained.polygon.V1Api }
   chainId?: EvmChainId
-}): ChainAdapterArgs<unchained.bnbsmartchain.V1Api> =>
+}): ChainAdapterArgs<unchained.polygon.V1Api> =>
   merge(
     {
       providers: {
-        http: {} as unchained.bnbsmartchain.V1Api,
-        ws: {} as unchained.ws.Client<unchained.bnbsmartchain.Tx>,
+        http: {} as unchained.polygon.V1Api,
+        ws: {} as unchained.ws.Client<unchained.polygon.Tx>,
       },
       rpcUrl: '',
     },
@@ -88,21 +88,21 @@ const makeChainAdapterArgs = (overrideArgs?: {
 describe('BscChainAdapter', () => {
   describe('constructor', () => {
     it('should return chainAdapter with mainnet chainId if called with no chainId', () => {
-      const adapter = new bsc.ChainAdapter(makeChainAdapterArgs())
-      expect(adapter.getChainId()).toEqual(bscChainId)
+      const adapter = new polygon.ChainAdapter(makeChainAdapterArgs())
+      expect(adapter.getChainId()).toEqual(polygonChainId)
     })
 
     it('should return chainAdapter with valid chainId if called with valid chainId', () => {
       const args = makeChainAdapterArgs({ chainId: KnownChainIds.BnbSmartChainMainnet })
-      const adapter = new bsc.ChainAdapter(args)
-      expect(adapter.getChainId()).toEqual(bscChainId)
+      const adapter = new polygon.ChainAdapter(args)
+      expect(adapter.getChainId()).toEqual(polygonChainId)
     })
   })
 
   describe('getFeeAssetId', () => {
     it('should return the correct fee assetId', () => {
-      const adapter = new bsc.ChainAdapter(makeChainAdapterArgs())
-      expect(adapter.getFeeAssetId()).toEqual(bscAssetId)
+      const adapter = new polygon.ChainAdapter(makeChainAdapterArgs())
+      expect(adapter.getFeeAssetId()).toEqual(polygonAssetId)
     })
   })
 
@@ -111,10 +111,10 @@ describe('BscChainAdapter', () => {
       const httpProvider = {
         estimateGas: jest.fn().mockResolvedValue(makeEstimateGasMockedResponse()),
         getGasFees: jest.fn().mockResolvedValue(makeGetGasFeesMockedResponse()),
-      } as unknown as unchained.bnbsmartchain.V1Api
+      } as unknown as unchained.polygon.V1Api
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new bsc.ChainAdapter(args)
+      const adapter = new polygon.ChainAdapter(args)
 
       const data = await adapter.getFeeData({
         to: '0x642F4Bda144C63f6DC47EE0fDfbac0a193e2eDb7',
@@ -157,10 +157,10 @@ describe('BscChainAdapter', () => {
     it('should return current network gas fees', async () => {
       const httpProvider = {
         getGasFees: jest.fn().mockResolvedValue(makeGetGasFeesMockedResponse()),
-      } as unknown as unchained.bnbsmartchain.V1Api
+      } as unknown as unchained.polygon.V1Api
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new bsc.ChainAdapter(args)
+      const adapter = new polygon.ChainAdapter(args)
 
       const data = await adapter.getGasFeeData()
 
@@ -175,7 +175,7 @@ describe('BscChainAdapter', () => {
   })
 
   describe('getAddress', () => {
-    const adapter = new bsc.ChainAdapter(makeChainAdapterArgs())
+    const adapter = new polygon.ChainAdapter(makeChainAdapterArgs())
     const accountNumber = 0
     const fn = jest.fn()
 
@@ -204,21 +204,21 @@ describe('BscChainAdapter', () => {
     const invalidAddressTuple = { valid: false, result: ValidAddressResultType.Invalid }
 
     it('should return true for a valid address', async () => {
-      const adapter = new bsc.ChainAdapter(makeChainAdapterArgs())
+      const adapter = new polygon.ChainAdapter(makeChainAdapterArgs())
       const res = await adapter.validateAddress('0x3f2329C9ADFbcCd9A84f52c906E936A42dA18CB8')
 
       expect(res).toMatchObject(validAddressTuple)
     })
 
     it('should return false for an empty address', async () => {
-      const adapter = new bsc.ChainAdapter(makeChainAdapterArgs())
+      const adapter = new polygon.ChainAdapter(makeChainAdapterArgs())
       const res = await adapter.validateAddress('')
 
       expect(res).toMatchObject(invalidAddressTuple)
     })
 
     it('should return false for an invalid address', async () => {
-      const adapter = new bsc.ChainAdapter(makeChainAdapterArgs())
+      const adapter = new polygon.ChainAdapter(makeChainAdapterArgs())
       const res = await adapter.validateAddress('foobar')
 
       expect(res).toMatchObject(invalidAddressTuple)
@@ -232,9 +232,9 @@ describe('BscChainAdapter', () => {
         getAccount: jest
           .fn<any, any>()
           .mockResolvedValue(makeGetAccountMockResponse({ balance, tokenBalance: '424242' })),
-      } as unknown as unchained.bnbsmartchain.V1Api
+      } as unknown as unchained.polygon.V1Api
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new bsc.ChainAdapter(args)
+      const adapter = new polygon.ChainAdapter(args)
 
       const tx = {
         wallet: await getWallet(),
@@ -242,7 +242,7 @@ describe('BscChainAdapter', () => {
           addressNList: toAddressNList(adapter.getBIP44Params({ accountNumber: 0 })),
           value: '0xf0',
           to: EOA_ADDRESS,
-          chainId: Number(fromChainId(bscChainId).chainReference),
+          chainId: Number(fromChainId(polygonChainId).chainReference),
           data: '0x',
           nonce: '0x0',
           gasPrice: '0x12a05f200',
@@ -261,9 +261,9 @@ describe('BscChainAdapter', () => {
         getAccount: jest
           .fn<any, any>()
           .mockResolvedValue(makeGetAccountMockResponse({ balance, tokenBalance: '424242' })),
-      } as unknown as unchained.bnbsmartchain.V1Api
+      } as unknown as unchained.polygon.V1Api
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new bsc.ChainAdapter(args)
+      const adapter = new polygon.ChainAdapter(args)
 
       const tx = {
         wallet: await getWallet(),
@@ -271,7 +271,7 @@ describe('BscChainAdapter', () => {
           addressNList: toAddressNList(adapter.getBIP44Params({ accountNumber: 0 })),
           value: '0x0',
           to: EOA_ADDRESS,
-          chainId: Number(fromChainId(bscChainId).chainReference),
+          chainId: Number(fromChainId(polygonChainId).chainReference),
           data: 'notHexString',
           nonce: '0x0',
           gasPrice: '0x29d41057e0',
@@ -285,7 +285,7 @@ describe('BscChainAdapter', () => {
 
   describe('signAndBroadcastTransaction', () => {
     it('should throw if no hash is returned by wallet.ethSendTx', async () => {
-      const adapter = new bsc.ChainAdapter(makeChainAdapterArgs())
+      const adapter = new polygon.ChainAdapter(makeChainAdapterArgs())
       const wallet = await getWallet()
 
       wallet.ethSendTx = async () => null
@@ -298,7 +298,7 @@ describe('BscChainAdapter', () => {
     })
 
     it('should return the hash returned by wallet.ethSendTx', async () => {
-      const adapter = new bsc.ChainAdapter(makeChainAdapterArgs())
+      const adapter = new polygon.ChainAdapter(makeChainAdapterArgs())
       const wallet = await getWallet()
 
       wallet.ethSendTx = async () => ({
@@ -315,7 +315,7 @@ describe('BscChainAdapter', () => {
 
   describe('signMessage', () => {
     it('should sign a properly formatted signMessageInput object', async () => {
-      const adapter = new bsc.ChainAdapter(makeChainAdapterArgs())
+      const adapter = new polygon.ChainAdapter(makeChainAdapterArgs())
       const wallet = await getWallet()
 
       const message: SignMessageInput<ETHSignMessage> = {
@@ -332,7 +332,7 @@ describe('BscChainAdapter', () => {
     })
 
     it('should throw if wallet.ethSignMessage returns null', async () => {
-      const adapter = new bsc.ChainAdapter(makeChainAdapterArgs())
+      const adapter = new polygon.ChainAdapter(makeChainAdapterArgs())
       const wallet = await getWallet()
 
       wallet.ethSignMessage = async () => null
@@ -357,10 +357,10 @@ describe('BscChainAdapter', () => {
 
       const httpProvider = {
         sendTx: jest.fn().mockResolvedValue(expectedResult),
-      } as unknown as unchained.bnbsmartchain.V1Api
+      } as unknown as unchained.polygon.V1Api
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new bsc.ChainAdapter(args)
+      const adapter = new polygon.ChainAdapter(args)
 
       const mockTx = '0x123'
       const result = await adapter.broadcastTransaction(mockTx)
@@ -374,7 +374,7 @@ describe('BscChainAdapter', () => {
     const accountNumber = 0
 
     it('should throw if passed tx has no "to" property', async () => {
-      const adapter = new bsc.ChainAdapter(makeChainAdapterArgs())
+      const adapter = new polygon.ChainAdapter(makeChainAdapterArgs())
 
       const tx = {
         wallet: await getWallet(),
@@ -389,7 +389,7 @@ describe('BscChainAdapter', () => {
     })
 
     it('should throw if passed tx has no "value" property', async () => {
-      const adapter = new bsc.ChainAdapter(makeChainAdapterArgs())
+      const adapter = new polygon.ChainAdapter(makeChainAdapterArgs())
 
       const tx = {
         wallet: await getWallet(),
@@ -408,10 +408,10 @@ describe('BscChainAdapter', () => {
         getAccount: jest
           .fn<any, any>()
           .mockResolvedValue(makeGetAccountMockResponse({ balance: '0', tokenBalance: '424242' })),
-      } as unknown as unchained.bnbsmartchain.V1Api
+      } as unknown as unchained.polygon.V1Api
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new bsc.ChainAdapter(args)
+      const adapter = new polygon.ChainAdapter(args)
 
       const wallet = await getWallet()
       wallet.ethGetAddress = async () => ZERO_ADDRESS
@@ -427,7 +427,7 @@ describe('BscChainAdapter', () => {
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
           addressNList: toAddressNList(adapter.getBIP44Params({ accountNumber: 0 })),
-          chainId: Number(fromChainId(bscChainId).chainReference),
+          chainId: Number(fromChainId(polygonChainId).chainReference),
           data: '',
           gasLimit: numberToHex(gasLimit),
           gasPrice: numberToHex(gasPrice),
@@ -445,10 +445,10 @@ describe('BscChainAdapter', () => {
         getAccount: jest
           .fn<any, any>()
           .mockResolvedValue(makeGetAccountMockResponse({ balance: '0', tokenBalance: '424242' })),
-      } as unknown as unchained.bnbsmartchain.V1Api
+      } as unknown as unchained.polygon.V1Api
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new bsc.ChainAdapter(args)
+      const adapter = new polygon.ChainAdapter(args)
 
       const tx = {
         wallet: await getWallet(),
@@ -472,10 +472,10 @@ describe('BscChainAdapter', () => {
         getAccount: jest
           .fn<any, any>()
           .mockResolvedValue(makeGetAccountMockResponse({ balance, tokenBalance: '424242' })),
-      } as unknown as unchained.bnbsmartchain.V1Api
+      } as unknown as unchained.polygon.V1Api
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new bsc.ChainAdapter(args)
+      const adapter = new polygon.ChainAdapter(args)
 
       const tx = {
         wallet: await getWallet(),
@@ -489,7 +489,7 @@ describe('BscChainAdapter', () => {
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
           addressNList: toAddressNList(adapter.getBIP44Params({ accountNumber: 0 })),
-          chainId: Number(fromChainId(bscChainId).chainReference),
+          chainId: Number(fromChainId(polygonChainId).chainReference),
           data: '',
           gasLimit: numberToHex(gasLimit),
           gasPrice: numberToHex(gasPrice),
@@ -509,10 +509,10 @@ describe('BscChainAdapter', () => {
           .mockResolvedValue(
             makeGetAccountMockResponse({ balance: '2500000', tokenBalance: '424242' }),
           ),
-      } as unknown as unchained.bnbsmartchain.V1Api
+      } as unknown as unchained.polygon.V1Api
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new bsc.ChainAdapter(args)
+      const adapter = new polygon.ChainAdapter(args)
 
       const tx = {
         wallet: await getWallet(),
@@ -525,7 +525,7 @@ describe('BscChainAdapter', () => {
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
           addressNList: toAddressNList(adapter.getBIP44Params({ accountNumber: 0 })),
-          chainId: Number(fromChainId(bscChainId).chainReference),
+          chainId: Number(fromChainId(polygonChainId).chainReference),
           data: '0xa9059cbb00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000190',
           gasLimit: numberToHex(gasLimit),
           gasPrice: numberToHex(gasPrice),
@@ -545,10 +545,10 @@ describe('BscChainAdapter', () => {
           .mockResolvedValue(
             makeGetAccountMockResponse({ balance: '2500000', tokenBalance: '424242' }),
           ),
-      } as unknown as unchained.bnbsmartchain.V1Api
+      } as unknown as unchained.polygon.V1Api
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new bsc.ChainAdapter(args)
+      const adapter = new polygon.ChainAdapter(args)
 
       const tx = {
         wallet: await getWallet(),
@@ -562,7 +562,7 @@ describe('BscChainAdapter', () => {
       await expect(adapter.buildSendTransaction(tx)).resolves.toStrictEqual({
         txToSign: {
           addressNList: toAddressNList(adapter.getBIP44Params({ accountNumber: 0 })),
-          chainId: Number(fromChainId(bscChainId).chainReference),
+          chainId: Number(fromChainId(polygonChainId).chainReference),
           data: '0xa9059cbb000000000000000000000000d8da6bf26964af9d7eed9e03e53415d37aa960450000000000000000000000000000000000000000000000000000000000067932',
           gasLimit: numberToHex(gasLimit),
           gasPrice: numberToHex(gasPrice),
@@ -582,10 +582,10 @@ describe('BscChainAdapter', () => {
           .mockResolvedValue(
             makeGetAccountMockResponse({ balance: '2500000', tokenBalance: undefined }),
           ),
-      } as unknown as unchained.bnbsmartchain.V1Api
+      } as unknown as unchained.polygon.V1Api
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
-      const adapter = new bsc.ChainAdapter(args)
+      const adapter = new polygon.ChainAdapter(args)
 
       const tx = {
         wallet: await getWallet(),
@@ -603,7 +603,7 @@ describe('BscChainAdapter', () => {
   })
 
   describe('getBIP44Params', () => {
-    const adapter = new bsc.ChainAdapter(makeChainAdapterArgs())
+    const adapter = new polygon.ChainAdapter(makeChainAdapterArgs())
 
     it('should return the correct coinType', async () => {
       const result = adapter.getBIP44Params({ accountNumber: 0 })
