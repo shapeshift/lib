@@ -31,7 +31,7 @@ export const ethChainId: ChainId = 'eip155:1'
 export const avalancheChainId: ChainId = 'eip155:43114'
 export const optimismChainId: ChainId = 'eip155:10'
 export const bscChainId: ChainId = 'eip155:56'
-export const polygonChainId: AssetId = 'eip155:137'
+export const polygonChainId: ChainId = 'eip155:137'
 
 export const cosmosChainId: ChainId = 'cosmos:cosmoshub-4'
 export const osmosisChainId: ChainId = 'cosmos:osmosis-1'

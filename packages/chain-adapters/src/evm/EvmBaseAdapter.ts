@@ -51,6 +51,7 @@ export const evmChainIds = [
   KnownChainIds.AvalancheMainnet,
   KnownChainIds.OptimismMainnet,
   KnownChainIds.BnbSmartChainMainnet,
+  KnownChainIds.PolygonMainnet,
 ] as const
 
 export type EvmChainId = typeof evmChainIds[number]
@@ -60,6 +61,7 @@ export type EvmChainAdapter =
   | avalanche.ChainAdapter
   | optimism.ChainAdapter
   | bnbsmartchain.ChainAdapter
+  | polygonchain.ChainAdapter
 
 export const isEvmChainId = (
   maybeEvmChainId: string | EvmChainId,
