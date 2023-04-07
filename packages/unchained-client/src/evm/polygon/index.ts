@@ -1,2 +1,2 @@
-export * from '../../generated/optimism'
+export * from '../../generated/polygon'
 export * from './parser'

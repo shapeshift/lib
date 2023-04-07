@@ -42,7 +42,7 @@ import {
   toRootDerivationPath,
 } from '../utils'
 import { bnOrZero } from '../utils/bignumber'
-import { avalanche, bnbsmartchain, ethereum, optimism } from '.'
+import { avalanche, bnbsmartchain, ethereum, optimism, polygon } from '.'
 import { BuildCustomTxInput, EstimateGasRequest, Fees, GasFeeDataEstimate } from './types'
 import { getErc20Data } from './utils'
 
@@ -61,7 +61,7 @@ export type EvmChainAdapter =
   | avalanche.ChainAdapter
   | optimism.ChainAdapter
   | bnbsmartchain.ChainAdapter
-  | polygonchain.ChainAdapter
+  | polygon.ChainAdapter
 
 export const isEvmChainId = (
   maybeEvmChainId: string | EvmChainId,
@@ -74,6 +74,7 @@ type EvmApi =
   | unchained.avalanche.V1Api
   | unchained.optimism.V1Api
   | unchained.bnbsmartchain.V1Api
+  | unchained.polygon.V1Api
 
 export interface ChainAdapterArgs<T = EvmApi> {
   chainId?: EvmChainId
@@ -179,6 +180,11 @@ export abstract class EvmBaseAdapter<T extends EvmChainId> implements IChainAdap
         name: 'BNB',
         symbol: 'BNB',
         explorer: 'https://bscscan.com',
+      },
+      [KnownChainIds.PolygonMainnet]: {
+        name: 'Polygon',
+        symbol: 'MATIC',
+        explorer: 'https://polygonscan.com/',
       },
       [KnownChainIds.EthereumMainnet]: {
         name: 'Ethereum',
