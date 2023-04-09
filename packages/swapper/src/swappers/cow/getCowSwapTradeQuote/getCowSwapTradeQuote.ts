@@ -62,16 +62,24 @@ export async function getCowSwapTradeQuote(
 
     const buyToken =
       buyAsset.assetId !== ethAssetId ? buyAssetErc20Address : COW_SWAP_ETH_MARKER_ADDRESS
-    const { minimum, maximum } = await getCowSwapMinMax(deps, sellAsset, buyAsset)
+    const { minimumAmountCryptoHuman, maximumAmountCryptoHuman } = await getCowSwapMinMax(
+      deps,
+      sellAsset,
+      buyAsset,
+    )
 
-    const minQuoteSellAmount = bnOrZero(minimum).times(bn(10).exponentiatedBy(sellAsset.precision))
+    const minQuoteSellAmountCryptoBaseUnit = bnOrZero(minimumAmountCryptoHuman).times(
+      bn(10).exponentiatedBy(sellAsset.precision),
+    )
     const isSellAmountBelowMinimum = bnOrZero(sellAmountBeforeFeesCryptoBaseUnit).lt(
-      minQuoteSellAmount,
+      minQuoteSellAmountCryptoBaseUnit,
     )
 
     // making sure we do not have decimals for cowswap api (can happen at least from minQuoteSellAmount)
     const normalizedSellAmountCryptoBaseUnit = normalizeIntegerAmount(
-      isSellAmountBelowMinimum ? minQuoteSellAmount : sellAmountBeforeFeesCryptoBaseUnit,
+      isSellAmountBelowMinimum
+        ? minQuoteSellAmountCryptoBaseUnit
+        : sellAmountBeforeFeesCryptoBaseUnit,
     )
 
     const apiInput: CowSwapSellQuoteApiInput = {
@@ -143,7 +151,9 @@ export async function getCowSwapTradeQuote(
 
     const feeData = feeDataOptions['fast']
 
-    const isQuoteSellAmountBelowMinimum = bnOrZero(sellAmountCryptoBaseUnit).lt(minQuoteSellAmount)
+    const isQuoteSellAmountBelowMinimum = bnOrZero(sellAmountCryptoBaseUnit).lt(
+      minQuoteSellAmountCryptoBaseUnit,
+    )
     // If isQuoteSellAmountBelowMinimum we don't want to replace it with normalizedSellAmount
     // The purpose of this was to get a quote from CowSwap even with small amounts
     const quoteSellAmountCryptoBaseUnit = isQuoteSellAmountBelowMinimum
@@ -158,8 +168,8 @@ export async function getCowSwapTradeQuote(
 
     return {
       rate,
-      minimumCryptoHuman: minimum,
-      maximum,
+      minimumCryptoHuman: minimumAmountCryptoHuman,
+      maximum: maximumAmountCryptoHuman,
       feeData: {
         networkFeeCryptoBaseUnit: '0', // no miner fee for CowSwap
         chainSpecific: {
