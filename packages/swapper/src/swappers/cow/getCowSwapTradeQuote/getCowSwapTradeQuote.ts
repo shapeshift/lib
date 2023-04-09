@@ -121,6 +121,10 @@ export async function getCowSwapTradeQuote(
       },
     } = quoteResponse
 
+    const quoteSellAmountPlusFeesCryptoBaseUnit = bnOrZero(sellAmountCryptoBaseUnit).plus(
+      feeAmountInSellTokenCryptoBaseUnit,
+    )
+
     const buyCryptoAmount = bn(buyAmountCryptoBaseUnit).div(
       bn(10).exponentiatedBy(buyAsset.precision),
     )
@@ -151,7 +155,7 @@ export async function getCowSwapTradeQuote(
 
     const feeData = feeDataOptions['fast']
 
-    const isQuoteSellAmountBelowMinimum = bnOrZero(sellAmountCryptoBaseUnit).lt(
+    const isQuoteSellAmountBelowMinimum = quoteSellAmountPlusFeesCryptoBaseUnit.lt(
       minQuoteSellAmountCryptoBaseUnit,
     )
     // If isQuoteSellAmountBelowMinimum we don't want to replace it with normalizedSellAmount
