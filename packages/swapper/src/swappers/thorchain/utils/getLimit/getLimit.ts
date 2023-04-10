@@ -32,13 +32,13 @@ export const getLimit = async ({
   slippageTolerance,
   buyAssetTradeFeeUsd,
 }: GetLimitArgs): Promise<string> => {
-  const tradeRate = await getTradeRate(
+  const tradeRate = await getTradeRate({
     sellAsset,
     buyAssetId,
     sellAmountCryptoBaseUnit,
     receiveAddress,
     deps,
-  )
+  })
   const sellAssetChainFeeAssetId = deps.adapterManager.get(sellAsset.chainId)?.getFeeAssetId()
   const buyAssetChainFeeAssetId = deps.adapterManager
     .get(fromAssetId(buyAssetId).chainId)

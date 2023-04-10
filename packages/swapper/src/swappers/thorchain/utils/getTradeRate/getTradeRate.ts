@@ -2,7 +2,7 @@ import { Asset } from '@shapeshiftoss/asset-service'
 import { adapters, AssetId } from '@shapeshiftoss/caip'
 
 import { SwapError, SwapErrorType } from '../../../../api'
-import { BN, bn, bnOrZero, fromBaseUnit, toBaseUnit } from '../../../utils/bignumber'
+import { BN, bn, bnOrZero, toBaseUnit } from '../../../utils/bignumber'
 import { ThorchainSwapperDeps, ThornodePoolResponse, ThornodeQuoteResponse } from '../../types'
 import { getPriceRatio } from '../getPriceRatio/getPriceRatio'
 import { isRune } from '../isRune/isRune'
@@ -21,16 +21,22 @@ export const getSwapOutput = (inputAmount: BN, pool: ThornodePoolResponse, toRun
 // https://docs.thorchain.org/how-it-works/prices
 // TODO this does not support swaps between native "RUNE"
 // Rune swaps use a different calculation because its 1 hop between pools instead of 2
-export const getTradeRate = async (
-  sellAsset: Asset,
-  buyAssetId: AssetId,
-  sellAmountCryptoPrecision: string,
-  receiveAddress: string,
-  deps: ThorchainSwapperDeps,
-): Promise<string> => {
+export const getTradeRate = async ({
+  sellAsset,
+  buyAssetId,
+  sellAmountCryptoBaseUnit: sellAmountCryptoBaseUnit,
+  receiveAddress,
+  deps,
+}: {
+  sellAsset: Asset
+  buyAssetId: AssetId
+  sellAmountCryptoBaseUnit: string
+  receiveAddress: string
+  deps: ThorchainSwapperDeps
+}): Promise<string> => {
   // TODO(gomes): is this still valid?
   // we can't get a quote for a zero amount so use getPriceRatio between pools instead
-  if (bnOrZero(sellAmountCryptoPrecision).eq(0)) {
+  if (bnOrZero(sellAmountCryptoBaseUnit).eq(0)) {
     return getPriceRatio(deps, {
       sellAssetId: sellAsset.assetId,
       buyAssetId,
@@ -56,10 +62,12 @@ export const getTradeRate = async (
     })
   }
 
-  // All thorchain pool amounts are base 8 regardless of token precision
-  const sellAmountCryptoThorBaseUnit = bn(
-    toBaseUnit(fromBaseUnit(sellAmountCryptoPrecision, sellAsset.precision), THOR_PRECISION),
+  const sellAmountCryptoPrecision = bn(sellAmountCryptoBaseUnit).div(
+    bn(10).pow(sellAsset.precision),
   )
+  // All thorchain pool amounts are base 8 regardless of token precision
+  const sellAmountCryptoThorBaseUnit = bn(toBaseUnit(sellAmountCryptoPrecision, THOR_PRECISION))
+
   const { data } = await thorService.get<ThornodeQuoteResponse>(
     `${deps.daemonUrl}/lcd/thorchain/quote/swap?amount=${sellAmountCryptoThorBaseUnit}&from_asset=${sellPoolId}&to_asset=${buyPoolId}&destination=${receiveAddress}`,
   )

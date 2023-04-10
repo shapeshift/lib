@@ -34,7 +34,7 @@ const thorchainSwapperDeps: ThorchainSwapperDeps = {
 }
 
 describe('getLimit', () => {
-  it('should get limit when buy asset is EVM fee asset and sell asset is a UTXO', async () => {
+  it('should get limit when sell asset is EVM fee asset and buy asset is a UTXO', async () => {
     ;(getUsdRate as jest.Mock<unknown>)
       .mockReturnValueOnce(Promise.resolve('1595')) // sellFeeAssetUsdRate (ETH)
       .mockReturnValueOnce(Promise.resolve('20683')) // buyAssetUsdRate (BTC)
@@ -45,6 +45,7 @@ describe('getLimit', () => {
     const getLimitArgs: GetLimitArgs = {
       sellAsset: ETH,
       buyAssetId: BTC.assetId,
+      receiveAddress: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
       sellAmountCryptoBaseUnit: '82535000000000000',
       deps: thorchainSwapperDeps,
       slippageTolerance: DEFAULT_SLIPPAGE,
@@ -54,7 +55,7 @@ describe('getLimit', () => {
     expect(limit).toBe('592056')
   })
 
-  it('should get limit when buy asset is EVM non-fee asset and sell asset is a UTXO', async () => {
+  it('should get limit when sell asset is EVM non-fee asset and buy asset is a UTXO', async () => {
     ;(getUsdRate as jest.Mock<unknown>)
       .mockReturnValueOnce(Promise.resolve('1595')) // sellFeeAssetUsdRate (ETH)
       .mockReturnValueOnce(Promise.resolve('20683')) // buyAssetUsdRate (BTC)
@@ -65,6 +66,7 @@ describe('getLimit', () => {
     const getLimitArgs: GetLimitArgs = {
       sellAsset: FOX,
       buyAssetId: BTC.assetId,
+      receiveAddress: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
       sellAmountCryptoBaseUnit: '489830019000000000000',
       deps: thorchainSwapperDeps,
       slippageTolerance: DEFAULT_SLIPPAGE,
@@ -85,6 +87,7 @@ describe('getLimit', () => {
     const getLimitArgs: GetLimitArgs = {
       sellAsset: FOX,
       buyAssetId: RUNE.assetId,
+      receiveAddress: 'thor1234j5yq9qg7xqf0yq9qg7xqf0yq9qg7xqf0yq9q',
       sellAmountCryptoBaseUnit: '984229076000000000000',
       deps: thorchainSwapperDeps,
       slippageTolerance: DEFAULT_SLIPPAGE,
@@ -107,6 +110,7 @@ describe('getLimit', () => {
     const getLimitArgs: GetLimitArgs = {
       sellAsset: RUNE,
       buyAssetId: FOX.assetId,
+      receiveAddress: '0xFooBar',
       sellAmountCryptoBaseUnit: '988381400',
       deps: thorchainSwapperDeps,
       slippageTolerance: DEFAULT_SLIPPAGE,
