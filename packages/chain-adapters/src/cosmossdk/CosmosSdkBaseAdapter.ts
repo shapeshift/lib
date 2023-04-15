@@ -4,6 +4,7 @@ import * as unchained from '@shapeshiftoss/unchained-client'
 import { bech32 } from 'bech32'
 
 import { ChainAdapter as IChainAdapter } from '../api'
+import { SHAPESHIFT_TRACKING_ID } from '../constants'
 import { ErrorHandler } from '../error/ErrorHandler'
 import {
   Account,
@@ -298,7 +299,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
       accountNumber,
       chainSpecific: { gas, fee },
       msg,
-      memo = '',
+      memo,
     } = tx
 
     const bip44Params = this.getBIP44Params({ accountNumber })
@@ -307,7 +308,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
       fee: { amount: [{ amount: bnOrZero(fee).toString(), denom: this.denom }], gas },
       msg: [msg],
       signatures: [],
-      memo,
+      memo: memo ?? SHAPESHIFT_TRACKING_ID, // Apply tracking ID to all transactions where no memo is provided. Pass '' in memo field when tracking ID should not be applied.
     }
 
     const txToSign = {
